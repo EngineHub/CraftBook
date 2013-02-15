@@ -90,7 +90,7 @@ public class CustomCrafting implements Listener {
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
 
         if(!ItemUtil.isStackValid(event.getCurrentItem()))
