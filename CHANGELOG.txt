@@ -1,3 +1,20 @@
+3.5.5 Beta 1
+* Fix Combine Harvester sometimes not returning drops.
++ Added IC Keep Loaded option. Keeps chunks with ST IC's in them loaded.
+* Fix WorldGuard flag protection.
+* Allowed WorldEdit to be in the lib directory, instead of the plugin directory.
+* Fixed Tune IC Error.
+* Made Crush better piston mech work with Sticky Pistons.
+* Fixed bug with invert on Item Sorter.
+* Made ProgrammableFireworkDisplay check if the chunk is loaded.
+* Improved Custom Crafting recipe examples.
+* Fixed CraftBook overriding other plugins recipes.
+* Fix Set-Door/Set-Bridge not working with only x and y offsets.
+* Fixed container stacker not working with 2 stacks that'd add up to over 64.
++ Add permission nodes to Custom Crafting.
+* Made Cannon/Fan Dispenser Recipes more normal.
++ Added support for CreatureSpawner/AES to spawn Wither Skeletons.
+
 3.5.4
 * Bonemeal terraformer can now grow crops a few stages instead of just 1.
 * Fixed a few /cb reload bugs.
