@@ -81,7 +81,7 @@ public class ICUtil {
             // set the new data
             block.setData((byte) newData, true);
             // apply physics to the source block the lever is attached to
-            source.setData((byte)newData, true);
+            source.setData(source.getData(), true);
 
             // lets call blockredstone events on the source block and the lever
             // in order to correctly update all surrounding blocks
