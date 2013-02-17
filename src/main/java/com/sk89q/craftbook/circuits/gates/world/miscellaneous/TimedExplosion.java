@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -14,7 +14,9 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class TimedExplosion extends AbstractIC {
 
@@ -22,8 +24,7 @@ public class TimedExplosion extends AbstractIC {
     private float yield;
     private boolean flamey;
 
-    Block signBlock;
-    Block infront;
+    private Block center;
 
     public TimedExplosion(Server server, ChangedSign block, ICFactory factory) {
 
@@ -33,28 +34,28 @@ public class TimedExplosion extends AbstractIC {
     @Override
     public void load() {
 
+        if(getLine(3).length() > 0 && !getLine(3).contains(":")) {
+            getSign().setLine(2, getSign().getLine(2) + ":" + getSign().getLine(3));
+            getSign().update(false);
+        }
         try {
-            ticks = Integer.parseInt(getSign().getLine(2));
+            ticks = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getSign().getLine(2).replace("!", ""))[0]);
         } catch (Exception e) {
             ticks = -1;
         }
 
         try {
-            yield = Float.parseFloat(getSign().getLine(3).replace("!", ""));
+            yield = Float.parseFloat(RegexUtil.COLON_PATTERN.split(getSign().getLine(2).replace("!", ""))[1]);
         } catch (Exception e) {
             yield = -1;
         }
 
         try {
-            flamey = getSign().getLine(3).endsWith("!");
+            flamey = getSign().getLine(2).endsWith("!");
         } catch (Exception ignored) {
         }
 
-        try {
-            signBlock = BukkitUtil.toSign(getSign()).getBlock();
-            infront = signBlock.getRelative(SignUtil.getBack(signBlock).getOppositeFace());
-        } catch (Exception ignored) {
-        }
+        center = ICUtil.parseBlockLocation(getSign(), 3);
     }
 
     @Override
@@ -73,7 +74,10 @@ public class TimedExplosion extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            TNTPrimed tnt = (TNTPrimed) signBlock.getWorld().spawnEntity(BlockUtil.getBlockCentre(infront),
+            Location loc = center.getLocation();
+            while(!BlockType.canPassThrough(loc.getBlock().getTypeId()))
+                loc = loc.add(0, 1, 0);
+            TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(BlockUtil.getBlockCentre(loc.getBlock()),
                     EntityType.PRIMED_TNT);
             tnt.setIsIncendiary(flamey);
             if (ticks > 0) {
@@ -107,7 +111,7 @@ public class TimedExplosion extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"time in ticks", "explosion radius (ending with ! makes fire)"};
+            String[] lines = new String[] {"time in ticks:radius (ending with ! makes fire)", "x:y:z offset"};
             return lines;
         }
     }
