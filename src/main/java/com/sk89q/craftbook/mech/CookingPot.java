@@ -86,7 +86,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
          */
         @Override
         public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                                 ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
@@ -132,8 +132,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
                         || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
                         && plugin.getConfiguration().cookingPotOres) {
-                    decreaseMultiplier(sign, 1);
                     lastTick += getMultiplier(sign);
+                    decreaseMultiplier(sign, 1);
                 }
                 if (lastTick >= 50) {
                     Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
@@ -154,7 +154,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             chest.update();
                             break;
                         }
-                        lastTick = 0;
+                        lastTick -= 50;
                     }
                 }
             }
@@ -198,7 +198,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-        event.getPlayer().setFireTicks(20);
+        if(!(event.getClickedBlock().getState() instanceof Sign))
+            return;
+        event.getPlayer().setFireTicks(getMultiplier((Sign) event.getClickedBlock().getState()));
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         player.printError("mech.cook.ouch");
     }
@@ -209,12 +211,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         Block block = event.getBlock();
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            try {
-                if (event.getNewCurrent() > event.getOldCurrent()) {
-                    increaseMultiplier(sign, 1);
-                }
-                sign.update();
-            } catch (Exception ignored) {
+            if (event.getNewCurrent() > event.getOldCurrent()) {
+                increaseMultiplier(sign, 1);
             }
         }
     }
@@ -245,10 +243,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {
-            multiplier = 1;
-            if (plugin.getConfiguration().cookingPotFuel) {
-                multiplier = 0;
-            }
+            multiplier = plugin.getConfiguration().cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
         }
         if (multiplier < 0) return plugin.getConfiguration().cookingPotFuel ? 0 : 1;
@@ -266,7 +261,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     private enum Ingredients {
         COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200), SNOWBALL(ItemID.SNOWBALL,
                 -20), SNOW(BlockID.SNOW_BLOCK,
-                -100);
+                        -100);
 
         private int id;
         private int mult;
