@@ -26,6 +26,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -205,8 +206,10 @@ public class Updater {
         try {
             // Download the file
             URL url = new URL(u);
-            int fileLength = url.openConnection().getContentLength();
-            in = new BufferedInputStream(url.openStream());
+            URLConnection connect = url.openConnection();
+            connect.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.15 (KHTML, like Gecko) Chrome/24.0.1295.0 Safari/537.15");
+            int fileLength = connect.getContentLength();
+            in = new BufferedInputStream(connect.getInputStream());
             fout = new FileOutputStream(folder.getAbsolutePath() + "/" + file);
 
             byte[] data = new byte[BYTE_SIZE];
@@ -236,8 +239,10 @@ public class Updater {
             if (announce) {
                 plugin.getLogger().info("Finished updating.");
                 for(OfflinePlayer op : plugin.getServer().getOperators()) {
-                    if(op.isOnline())
-                        op.getPlayer().sendMessage("A CraftBook update has been downloaded! Check in /plugins/update/ for it!");
+                    if(op.isOnline()) {
+                        op.getPlayer().sendMessage(ChatColor.YELLOW + "A CraftBook update has been downloaded! Check in /plugins/update/ for it!");
+                        op.getPlayer().sendMessage(ChatColor.YELLOW + "Make sure to read the changelog in the .zip!");
+                    }
                 }
             }
         } catch (Exception ex) {
