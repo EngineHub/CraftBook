@@ -112,6 +112,13 @@ public class RecipeManager extends LocalConfiguration {
             else
                 throw new InvalidCraftingException("Result is invalid in recipe: "+ id);
 
+            if(iterator.hasNext()) {
+                ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
+                while(iterator.hasNext())
+                    extraResults.add(iterator.next());
+                addAdvancedData("extra-results", extraResults);
+            }
+
             String permNode = config.getString("crafting-recipes." + id + ".permission-node", null);
             if (permNode != null)
                 addAdvancedData("permission-node", permNode);

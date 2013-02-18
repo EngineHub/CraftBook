@@ -90,6 +90,7 @@ public class CustomCrafting implements Listener {
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");
     }
 
+    @SuppressWarnings("unchecked")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
 
@@ -105,7 +106,18 @@ public class CustomCrafting implements Listener {
                         event.setCancelled(true);
                     }
                 }
+                if(advancedRecipes.get(rec).hasAdvancedData("extra-results")) {
+                    ArrayList<CraftingItemStack> stacks = (ArrayList<CraftingItemStack>) advancedRecipes.get(rec).getAdvancedData("extra-results");
+                    for(CraftingItemStack stack : stacks) {
+                        HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
+                        if(!leftovers.isEmpty()) {
+                            for(ItemStack istack : leftovers.values())
+                                event.getWhoClicked().getWorld().dropItemNaturally(event.getWhoClicked().getLocation(), istack);
+                        }
+                    }
+                }
                 bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
+                break;
             }
         }
         if(bits != null) {
