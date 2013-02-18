@@ -132,6 +132,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
                         || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
                         && plugin.getConfiguration().cookingPotOres) {
+                    if(getMultiplier(sign) < 0)
+                        return;
                     lastTick += getMultiplier(sign);
                     decreaseMultiplier(sign, 1);
                 }
@@ -219,8 +221,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public void setMultiplier(Sign sign, int amount) {
 
-        int min = plugin.getConfiguration().cookingPotFuel ? 0 : 1;
-        if (amount < min) {
+        int min = 1;
+        if (amount < min && !plugin.getConfiguration().cookingPotFuel) {
             amount = min;
         }
         sign.setLine(3, String.valueOf(amount));
@@ -259,9 +261,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     private enum Ingredients {
-        COAL(ItemID.COAL, 10), LAVA(ItemID.LAVA_BUCKET, 500), BLAZE(ItemID.BLAZE_ROD, 200), SNOWBALL(ItemID.SNOWBALL,
-                -20), SNOW(BlockID.SNOW_BLOCK,
-                        -100);
+        COAL(ItemID.COAL, 20), LAVA(ItemID.LAVA_BUCKET, 6000), BLAZE(ItemID.BLAZE_ROD, 500), BLAZEDUST(ItemID.BLAZE_POWDER, 250), SNOWBALL(ItemID.SNOWBALL, -40), SNOW(BlockID.SNOW_BLOCK, -100), ICE(BlockID.ICE, -1000);
 
         private int id;
         private int mult;
