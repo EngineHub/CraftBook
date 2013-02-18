@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -26,6 +27,9 @@ public class CustomDrops implements Listener {
 
         if (plugin.getConfiguration().customDropPermissions
                 && !plugin.wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
+
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
+            return;
 
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
