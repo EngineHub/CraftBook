@@ -129,13 +129,16 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             int z = b.getZ();
             Block cb = sign.getWorld().getBlockAt(x, y, z);
             if (cb.getTypeId() == BlockID.CHEST) {
+                if(getMultiplier(sign) < 0) {
+                    increaseMultiplier(sign, 1);
+                    return;
+                }
                 if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
                         || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
                         && plugin.getConfiguration().cookingPotOres) {
-                    if(getMultiplier(sign) < 0)
-                        return;
                     lastTick += getMultiplier(sign);
-                    decreaseMultiplier(sign, 1);
+                    if(getMultiplier(sign) > 0)
+                        decreaseMultiplier(sign, 1);
                 }
                 if (lastTick >= 50) {
                     Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
@@ -182,6 +185,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 ItemStack itemInHand = player.getItemInHand();
                 if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount()
                         > 0) {
+                    int itemID = itemInHand.getTypeId();
                     increaseMultiplier(sign, Ingredients.getTime(itemInHand.getTypeId()));
                     if (itemInHand.getAmount() <= 1) {
                         itemInHand.setTypeId(0);
@@ -189,6 +193,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     } else {
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
+                    if(itemID == ItemID.LAVA_BUCKET)
+                        player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
                     player.sendMessage("You give the pot fuel!");
                 } else if (plugin.getConfiguration().cookingPotSignOpen) {
                     player.openInventory(((Chest) cb.getState()).getBlockInventory());
@@ -248,7 +254,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             multiplier = plugin.getConfiguration().cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
         }
-        if (multiplier < 0) return plugin.getConfiguration().cookingPotFuel ? 0 : 1;
+        if (multiplier < 0 && !plugin.getConfiguration().cookingPotFuel) return 1;
         return multiplier;
     }
 
