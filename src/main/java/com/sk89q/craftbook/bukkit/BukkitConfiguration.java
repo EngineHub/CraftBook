@@ -88,7 +88,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         useBlockDistance = config.getBoolean("use-block-distance", false);
 
         config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
-        obeyWorldguard = config.getBoolean("check-worldguard-flags", true);
+        obeyWorldguard = config.getBoolean("check-worldguard-flags", false);
 
         config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection.");
         advancedBlockChecks = config.getBoolean("advanced-block-checks", false);
