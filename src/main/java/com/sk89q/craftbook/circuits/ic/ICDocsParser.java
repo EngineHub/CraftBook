@@ -36,12 +36,12 @@ public class ICDocsParser {
             if (ric.getFactory().getLineHelp()[0] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 3: " + parseLine(ric.getFactory().getLineHelp()[0]));
             } else {
-                player.sendMessage(ChatColor.GRAY + "Line 3: Blank.");
+                player.sendMessage(ChatColor.DARK_GRAY + "Line 3: Blank.");
             }
             if (ric.getFactory().getLineHelp()[1] != null) {
                 player.sendMessage(ChatColor.YELLOW + "Line 4: " + parseLine(ric.getFactory().getLineHelp()[1]));
             } else {
-                player.sendMessage(ChatColor.GRAY + "Line 4: Blank.");
+                player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
             player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
                     .toUpperCase());
@@ -52,9 +52,9 @@ public class ICDocsParser {
     private static String parseLine(String line) {
 
         if(line.contains("+o"))
-            line = ChatColor.GREEN + line + " (Optional)";
+            line = ChatColor.GRAY + line + " (Optional)";
 
-        line = line.replace("{", ChatColor.GREEN + "");
+        line = line.replace("{", ChatColor.GRAY + "");
         line = line.replace("}", ChatColor.YELLOW + "");
 
         return line.replace("+o", "");
