@@ -846,7 +846,8 @@ public class CraftBookPlugin extends JavaPlugin {
             return !event.isCancelled() || event.canBuild();
         }
         if (!config.obeyWorldguard) return true;
-        return worldGuardPlugin != null && worldGuardPlugin.canBuild(player, block);
+        if (worldGuardPlugin == null) return true;
+        return worldGuardPlugin.canBuild(player, block);
     }
 
     /**
@@ -869,7 +870,8 @@ public class CraftBookPlugin extends JavaPlugin {
             return !event.isCancelled();
         }
         if (!config.obeyWorldguard) return true;
-        return worldGuardPlugin != null && worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
+        if (worldGuardPlugin == null) return true;
+        return worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
     }
 
     /**
