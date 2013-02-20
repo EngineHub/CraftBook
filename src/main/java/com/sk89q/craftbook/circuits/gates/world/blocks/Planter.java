@@ -271,7 +271,7 @@ public class Planter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Item to plant id:data", "radius=x:y:z offset"};
+            String[] lines = new String[] {"Item to plant id{:data}", "+oradius=x:y:z offset"};
             return lines;
         }
     }

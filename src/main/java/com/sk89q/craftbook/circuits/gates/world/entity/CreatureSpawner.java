@@ -354,7 +354,7 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"entitytype", "data*amount"};
+            String[] lines = new String[] {"entitytype", "+odata*amount"};
             return lines;
         }
 

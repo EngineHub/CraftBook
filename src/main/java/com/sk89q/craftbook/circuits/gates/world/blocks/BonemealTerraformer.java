@@ -324,7 +324,7 @@ public class BonemealTerraformer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius", null};
+            String[] lines = new String[] {"+oradius", null};
             return lines;
         }
     }

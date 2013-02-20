@@ -199,7 +199,7 @@ public class Spigot extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius", "y offset"};
+            String[] lines = new String[] {"+oradius", "+oy offset"};
             return lines;
         }
 

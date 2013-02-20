@@ -111,8 +111,8 @@ public class BlockBreaker extends AbstractIC {
 
                     List<ItemStack> items = new ArrayList<ItemStack>();
                     items.add(blockstack);
-                    if (((CircuitCore) CircuitCore.inst()).getPipeFactory() != null)
-                        if (((CircuitCore) CircuitCore.inst()).getPipeFactory().detect(BukkitUtil.toWorldVector(pipe),
+                    if (CircuitCore.inst().getPipeFactory() != null)
+                        if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(pipe),
                                 items) != null) {
                             continue;
                         }
@@ -168,7 +168,7 @@ public class BlockBreaker extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Optional block ID", null};
+            String[] lines = new String[] {"Block ID{:Data}", null};
             return lines;
         }
     }

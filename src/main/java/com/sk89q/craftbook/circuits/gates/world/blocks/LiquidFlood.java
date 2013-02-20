@@ -133,7 +133,7 @@ public class LiquidFlood extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"water/lava", "radius=x:y:z offset"};
+            String[] lines = new String[] {"+owater/lava", "+oradius=x:y:z offset"};
             return lines;
         }
     }

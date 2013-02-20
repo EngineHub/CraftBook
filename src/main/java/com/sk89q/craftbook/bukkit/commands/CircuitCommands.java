@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.ICDocsParser;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.NestedCommand;
@@ -43,7 +44,7 @@ public class CircuitCommands {
 
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
-            circuitCore.generateICDocs(player, args.getString(0));
+            ICDocsParser.generateICDocs(player, args.getString(0));
         }
 
         @Command(aliases = {"list"}, desc = "List available IC's",

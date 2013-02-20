@@ -14,68 +14,50 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.circuits.gates.world.blocks;
+package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import org.bukkit.Server;
-import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
-import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 
-public class LavaSensor extends AbstractIC {
+public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
 
-    private Block center;
-
-    public LavaSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public LavaSensorST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
-    public void load() {
-
-        center = ICUtil.parseBlockLocation(getSign());
-    }
-
-    @Override
     public String getTitle() {
 
-        return "Lava Sensor";
+        return "Self-triggered Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "LAVA SENSOR";
+        return "ST LAVA SENSOR";
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public void think(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, hasLava());
-        }
+        chip.setOutput(0, hasLava());
     }
 
-    /**
-     * Returns true if the sign has lava at the specified location.
-     *
-     * @return
-     */
-    protected boolean hasLava() {
+    @Override
+    public boolean isActive() {
 
-        int blockID = center.getTypeId();
-
-        return blockID == 10 || blockID == 11;
+        return true;
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends LavaSensor.Factory {
 
         public Factory(Server server) {
 
@@ -85,7 +67,7 @@ public class LavaSensor extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new LavaSensor(getServer(), sign, this);
+            return new LavaSensorST(getServer(), sign, this);
         }
 
         @Override
@@ -93,18 +75,6 @@ public class LavaSensor extends AbstractIC {
 
             ICUtil.verifySignSyntax(sign);
         }
-
-        @Override
-        public String getShortDescription() {
-
-            return "Outputs high if lava is at given offset.";
-        }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {"x:y:z Offset", null};
-            return lines;
-        }
     }
+
 }

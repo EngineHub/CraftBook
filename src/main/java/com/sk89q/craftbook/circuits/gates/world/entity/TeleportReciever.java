@@ -90,7 +90,7 @@ public class TeleportReciever extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"frequency name", "welcome text"};
+            String[] lines = new String[] {"frequency name", "+owelcome text"};
             return lines;
         }
     }

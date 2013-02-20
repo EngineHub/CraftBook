@@ -147,7 +147,7 @@ public class Irrigator extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", null};
+            String[] lines = new String[] {"+oradius=x:y:z offset", null};
             return lines;
         }
     }

@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.circuits.gates.world.blocks;
+package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import org.bukkit.Server;
 
@@ -26,9 +26,9 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 
-public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
+public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
 
-    public LavaSensorST(Server server, ChangedSign sign, ICFactory factory) {
+    public WaterSensorST(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -36,19 +36,19 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
     @Override
     public String getTitle() {
 
-        return "Self-triggered Lava Sensor";
+        return "Self-triggered Water Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ST LAVA SENSOR";
+        return "ST WATER SENSOR";
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, hasLava());
+        chip.setOutput(0, hasWater());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
         return true;
     }
 
-    public static class Factory extends LavaSensor.Factory {
+    public static class Factory extends WaterSensor.Factory {
 
         public Factory(Server server) {
 
@@ -67,7 +67,7 @@ public class LavaSensorST extends LavaSensor implements SelfTriggeredIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new LavaSensorST(getServer(), sign, this);
+            return new WaterSensorST(getServer(), sign, this);
         }
 
         @Override

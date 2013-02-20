@@ -22,7 +22,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -85,7 +84,7 @@ public abstract class AbstractIC implements IC {
     public void onRightClick(Player p) {
 
         if (p.isSneaking()) {
-            CircuitCore.inst().generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil
+            ICDocsParser.generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil
                     .LEFT_BRACKET_PATTERN.split(getSign
                             ().getLine(1))[1])[0]);
         }

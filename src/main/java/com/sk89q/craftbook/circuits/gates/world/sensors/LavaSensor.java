@@ -14,50 +14,68 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.circuits.gates.world.blocks;
+package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.circuits.ic.AbstractIC;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 
-public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
+public class LavaSensor extends AbstractIC {
 
-    public WaterSensorST(Server server, ChangedSign sign, ICFactory factory) {
+    private Block center;
+
+    public LavaSensor(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
 
     @Override
+    public void load() {
+
+        center = ICUtil.parseBlockLocation(getSign());
+    }
+
+    @Override
     public String getTitle() {
 
-        return "Self-triggered Water Sensor";
+        return "Lava Sensor";
     }
 
     @Override
     public String getSignTitle() {
 
-        return "ST WATER SENSOR";
+        return "LAVA SENSOR";
     }
 
     @Override
-    public void think(ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        chip.setOutput(0, hasWater());
+        if (chip.getInput(0)) {
+            chip.setOutput(0, hasLava());
+        }
     }
 
-    @Override
-    public boolean isActive() {
+    /**
+     * Returns true if the sign has lava at the specified location.
+     *
+     * @return
+     */
+    protected boolean hasLava() {
 
-        return true;
+        int blockID = center.getTypeId();
+
+        return blockID == 10 || blockID == 11;
     }
 
-    public static class Factory extends WaterSensor.Factory {
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -67,7 +85,7 @@ public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new WaterSensorST(getServer(), sign, this);
+            return new LavaSensor(getServer(), sign, this);
         }
 
         @Override
@@ -75,6 +93,18 @@ public class WaterSensorST extends WaterSensor implements SelfTriggeredIC {
 
             ICUtil.verifySignSyntax(sign);
         }
-    }
 
+        @Override
+        public String getShortDescription() {
+
+            return "Outputs high if lava is at given offset.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            String[] lines = new String[] {"x:y:z Offset", null};
+            return lines;
+        }
+    }
 }

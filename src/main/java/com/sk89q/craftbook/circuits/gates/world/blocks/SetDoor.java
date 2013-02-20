@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import com.sk89q.craftbook.util.BlockUtil;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,6 +12,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -183,7 +183,7 @@ public class SetDoor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID:onData-offID:offData", "offset x,y,z:width,height"};
+            String[] lines = new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
             return lines;
         }
     }

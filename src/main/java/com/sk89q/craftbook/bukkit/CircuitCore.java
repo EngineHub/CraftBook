@@ -74,8 +74,6 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.CultivatorST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.FlexibleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Irrigator;
 import com.sk89q.craftbook.circuits.gates.world.blocks.IrrigatorST;
-import com.sk89q.craftbook.circuits.gates.world.blocks.LavaSensor;
-import com.sk89q.craftbook.circuits.gates.world.blocks.LavaSensorST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFlood;
 import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFloodST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.MultipleSetBlock;
@@ -94,8 +92,6 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBridge;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Spigot;
-import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensor;
-import com.sk89q.craftbook.circuits.gates.world.blocks.WaterSensorST;
 import com.sk89q.craftbook.circuits.gates.world.entity.AdvancedEntitySpawner;
 import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvester;
 import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvesterST;
@@ -159,12 +155,16 @@ import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.LavaSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.LavaSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensorST;
+import com.sk89q.craftbook.circuits.gates.world.sensors.WaterSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.WaterSensorST;
 import com.sk89q.craftbook.circuits.gates.world.weather.RainSensor;
 import com.sk89q.craftbook.circuits.gates.world.weather.RainSensorST;
 import com.sk89q.craftbook.circuits.gates.world.weather.ServerTimeModulus;
@@ -311,7 +311,7 @@ public class CircuitCore implements LocalComponent {
 
         if (config.ICEnabled) {
             registerICs();
-            registerMechanic(ICFactory = new ICMechanicFactory(icManager));
+            registerMechanic(ICFactory = new ICMechanicFactory(getIcManager()));
         }
 
         // Let's register mechanics!
@@ -531,7 +531,7 @@ public class CircuitCore implements LocalComponent {
     public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
         if (CraftBookPlugin.inst().getConfiguration().disabledICs.contains(name)) return false;
-        return icManager.register(name, longName, factory, families);
+        return getIcManager().register(name, longName, factory, families);
     }
 
     /**
@@ -582,64 +582,25 @@ public class CircuitCore implements LocalComponent {
 
     public List<RegisteredICFactory> getICList() {
 
-        if(icManager == null)
+        if(getIcManager() == null)
             return new ArrayList<RegisteredICFactory>();
         List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
-        for (Map.Entry<String, RegisteredICFactory> e : icManager.registered.entrySet()) {
+        for (Map.Entry<String, RegisteredICFactory> e : getIcManager().registered.entrySet()) {
             ics.add(e.getValue());
         }
         return ics;
     }
 
-    public void generateICDocs(Player player, String id) {
-
-        RegisteredICFactory ric = icManager.registered.get(id.toLowerCase());
-        if (ric == null) {
-            try {
-                ric = icManager.registered.get(getSearchID(player, id));
-                if (ric == null) {
-                    player.sendMessage(ChatColor.RED + "Invalid IC!");
-                    return;
-                }
-            } catch (Exception e) {
-                player.sendMessage(ChatColor.RED + "Invalid IC!");
-                return;
-            }
-        }
-        try {
-            IC ic = ric.getFactory().create(null);
-            player.sendMessage(" "); // To space the area
-            player.sendMessage(ChatColor.BLUE + ic.getTitle() + " (" + ric.getId() + ") Documentation");
-            if (plugin.getConfiguration().ICShortHandEnabled && ric.getShorthand() != null) {
-                player.sendMessage(ChatColor.YELLOW + "Shorthand: =" + ric.getShorthand());
-            }
-            player.sendMessage(ChatColor.YELLOW + "Desc: " + ric.getFactory().getShortDescription());
-            if (ric.getFactory().getLineHelp()[0] != null) {
-                player.sendMessage(ChatColor.YELLOW + "Line 3: " + ric.getFactory().getLineHelp()[0]);
-            } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 3: Blank.");
-            }
-            if (ric.getFactory().getLineHelp()[1] != null) {
-                player.sendMessage(ChatColor.YELLOW + "Line 4: " + ric.getFactory().getLineHelp()[1]);
-            } else {
-                player.sendMessage(ChatColor.YELLOW + "Line 4: Blank.");
-            }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
-                    .toUpperCase());
-        } catch (Exception ignored) {
-        }
-    }
-
     public String getSearchID(Player p, String search) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(icManager.registered.keySet());
+        icNameList.addAll(getIcManager().registered.keySet());
 
         Collections.sort(icNameList);
 
         for (String ic : icNameList) {
             try {
-                RegisteredICFactory ric = icManager.registered.get(ic);
+                RegisteredICFactory ric = getIcManager().registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
                         && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
@@ -662,7 +623,7 @@ public class CircuitCore implements LocalComponent {
     public String[] generateICText(Player p, String search, char[] parameters) {
 
         ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(icManager.registered.keySet());
+        icNameList.addAll(getIcManager().registered.keySet());
 
         Collections.sort(icNameList);
 
@@ -672,7 +633,7 @@ public class CircuitCore implements LocalComponent {
             try {
                 thisIC:
                 {
-                RegisteredICFactory ric = icManager.registered.get(ic);
+                RegisteredICFactory ric = getIcManager().registered.get(ic);
                 IC tic = ric.getFactory().create(null);
                 if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
                         && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
@@ -717,5 +678,9 @@ public class CircuitCore implements LocalComponent {
         }
 
         return strings.toArray(new String[strings.size()]);
+    }
+
+    public ICManager getIcManager () {
+        return icManager;
     }
 }

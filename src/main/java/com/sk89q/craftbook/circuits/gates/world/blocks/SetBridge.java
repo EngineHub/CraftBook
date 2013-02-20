@@ -1,5 +1,9 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
@@ -12,9 +16,6 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 /**
  * @author Silthus
@@ -177,7 +178,7 @@ public class SetBridge extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID:onData-offID:offData", "offset x,y,z:width,depth"};
+            String[] lines = new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
             return lines;
         }
 
