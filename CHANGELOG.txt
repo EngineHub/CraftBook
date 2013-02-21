@@ -1,3 +1,16 @@
+3.5.5
++ Added offset support to Timed Explosion IC.
+* Fix magical data transformation of IC's.
+* Fix few cooking pot bugs.
+* Re-balanced cooking pots.
+* Stopped custom drops working in creative.
++ Added 'custom results' support to custom crafting.
++ Added a User Agent to the auto updater, because google chrome is awesome.
+* Fix cooking pot not giving back buckets.
+* Disabled WG Flag Checks by default.
+* Fixed WG Flag Checks without WG installed.
++ Added 'Optional' Grey Text to IC DOCS.
+
 3.5.5 Beta 1
 * Fix Combine Harvester sometimes not returning drops.
 + Added IC Keep Loaded option. Keeps chunks with ST IC's in them loaded.
