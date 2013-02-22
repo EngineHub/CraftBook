@@ -48,6 +48,38 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 @Deprecated
 public class Cauldron extends AbstractMechanic {
 
+    public static boolean isACauldron(BlockWorldVector pt) {
+        World world = BukkitUtil.toBlock(pt).getWorld();
+
+        int ix = pt.getBlockX();
+        int iy = pt.getBlockY();
+        int iz = pt.getBlockZ();
+
+        int below = world.getBlockTypeIdAt(ix, iy - 1, iz);
+        int below2 = world.getBlockTypeIdAt(ix, iy - 2, iz);
+        int s1 = world.getBlockTypeIdAt(ix + 1, iy, iz);
+        int s3 = world.getBlockTypeIdAt(ix - 1, iy, iz);
+        int s2 = world.getBlockTypeIdAt(ix, iy, iz + 1);
+        int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
+
+        int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+
+        // stop strange lava ids
+        if (below == 11) {
+            below = 10;
+        }
+        if (below2 == 11) {
+            below2 = 10;
+        }
+        // Preliminary check so we don't waste CPU cycles
+        if ((below == BlockID.LAVA || below2 == BlockID.LAVA) && (s1 == blockID || s2 == blockID || s3 == blockID ||
+                s4 == blockID)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static class Factory extends AbstractMechanicFactory<Cauldron> {
 
         protected final CauldronCookbook recipes;
@@ -64,7 +96,7 @@ public class Cauldron extends AbstractMechanic {
             // check if this looks at all like something we're interested in
             // first
             if (block.getTypeId() == BlockID.AIR) return null;
-            return new Cauldron(recipes, pt);
+            return isACauldron(pt) ? new Cauldron(recipes, pt) : null;
         }
     }
 
@@ -244,8 +276,8 @@ public class Cauldron extends AbstractMechanic {
 
                 // Get rid of the blocks in world
                 for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
-                // This is not a fast operation, but we should not have
-                // too many ingredients
+                    // This is not a fast operation, but we should not have
+                    // too many ingredients
                 {
                     if (ingredients.contains(entry.getValue())) {
                         // Some blocks need to removed first otherwise they will
@@ -297,7 +329,7 @@ public class Cauldron extends AbstractMechanic {
      */
     public void findCauldronContents(World world, BlockWorldVector pt, int minY, int maxY, Map<BlockWorldVector,
             Tuple2<Integer, Short>> visited)
-            throws NotACauldronException {
+                    throws NotACauldronException {
 
         int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 

@@ -199,7 +199,7 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getBlock());
 
         try {
-            List<Mechanic> mechanics = load(pos);
+            List<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
                 if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
@@ -242,13 +242,14 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
 
         try {
-            List<Mechanic> mechanics = load(pos);
+            List<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
                     if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
+                        logger.severe(aMechanic.getClass().getName());
                         player.printError("area.permissions");
-                        return 0;
+                        return 0; 
                     }
 
                     aMechanic.onRightClick(event);
@@ -283,7 +284,7 @@ public class MechanicManager {
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
-            List<Mechanic> mechanics = load(pos);
+            List<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
@@ -320,7 +321,7 @@ public class MechanicManager {
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
-            List<Mechanic> mechanics = load(pos);
+            List<Mechanic> mechanics = load(pos, null);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onBlockRedstoneChange(event);
@@ -340,15 +341,18 @@ public class MechanicManager {
      * manager).
      *
      * @param pos
+     * @param player If a player is available, the player who is interacting.
      *
      * @return a list of all {@link Mechanic} at the location;
      *
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> load(BlockWorldVector pos) throws InvalidMechanismException {
+    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
 
         List<Mechanic> detectedMechanics = detect(pos);
+        if(player != null)
+            detectedMechanics.addAll(detect(pos,player));
 
         Mechanic ptMechanic = triggersManager.get(pos);
 
@@ -501,6 +505,32 @@ public class MechanicManager {
     }
 
     /**
+     * Attempt to detect a mechanic at a location. This is only called in response to events for which a trigger
+     * block for an existing
+     * PersistentMechanic cannot be found.
+     *
+     * @param pos
+     * @param player
+     *
+     * @return a {@link Mechanic} if a mechanism could be found at the location; null otherwise
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
+     *                                   but the mechanism is misconfigured and inoperable.
+     */
+    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
+
+        List<Mechanic> mechanics = new ArrayList<Mechanic>();
+
+        for (MechanicFactory<? extends Mechanic> factory : factories) {
+            Mechanic mechanic;
+            if ((mechanic = factory.detect(pos, player)) != null) {
+                mechanics.add(mechanic);
+            }
+        }
+        return mechanics;
+    }
+
+    /**
      * Attempt to detect a mechanic at a location, with player information available.
      *
      * @param pos
@@ -555,7 +585,7 @@ public class MechanicManager {
                 if (state == null) continue;
                 if (state instanceof Sign) {
                     try {
-                        load(toWorldVector(state.getBlock()));
+                        load(toWorldVector(state.getBlock()), null);
                     } catch (InvalidMechanismException ignored) {
                     } catch (Exception t) {
                         BukkitUtil.printStacktrace(t);

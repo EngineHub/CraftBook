@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -43,6 +43,19 @@ public interface MechanicFactory<T extends Mechanic> {
     public T detect(BlockWorldVector pos) throws InvalidMechanismException;
 
     /**
+     * Detect the mechanic at interacted location.
+     *
+     * @param pos
+     * @param player
+     *
+     * @return a {@link AbstractMechanic} if a mechanism could be found at the location; null otherwise
+     *
+     * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
+     *                                   but the mechanism is misconfigured and inoperable.
+     */
+    public T detect(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException;
+
+    /**
      * Detect the mechanic at a placed sign.
      *
      * @param pos
@@ -56,6 +69,6 @@ public interface MechanicFactory<T extends Mechanic> {
      * @throws ProcessedMechanismException
      */
     public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-            ProcessedMechanismException;
+    ProcessedMechanismException;
 
 }
