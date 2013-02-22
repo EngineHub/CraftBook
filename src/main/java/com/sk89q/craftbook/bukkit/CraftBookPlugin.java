@@ -152,8 +152,7 @@ public class CraftBookPlugin extends JavaPlugin {
         managerAdapter.register(manager);
     }
 
-    public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world,
-            boolean vehicle) {
+    public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world, boolean vehicle) {
 
         managerAdapter.register(manager, player, block, world, vehicle);
     }

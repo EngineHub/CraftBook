@@ -244,6 +244,10 @@ public class BetterPistons extends AbstractMechanic {
                                     }
                                 }
                                 trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
+                                if(trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.STONE_BUTTON || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.WOODEN_BUTTON) {
+                                    if((trigger.getRelative(piston.getFacing(), i).getData() & 0x8) == 0x8)
+                                        trigger.getRelative(piston.getFacing(), i).setData((byte) (trigger.getRelative(piston.getFacing(), i).getData() ^ 0x8));
+                                }
                             }
                         }
                     }, 2L*(p+1));
@@ -286,6 +290,10 @@ public class BetterPistons extends AbstractMechanic {
                                     }
                                     trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                    if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.STONE_BUTTON || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.WOODEN_BUTTON) {
+                                        if((trigger.getRelative(piston.getFacing(), i+1).getData() & 0x8) == 0x8)
+                                            trigger.getRelative(piston.getFacing(), i+1).setData((byte) (trigger.getRelative(piston.getFacing(), i+1).getData() ^ 0x8));
+                                    }
                                 }
                             }
                         }

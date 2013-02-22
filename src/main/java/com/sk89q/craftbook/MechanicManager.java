@@ -200,15 +200,15 @@ public class MechanicManager {
 
         try {
             List<Mechanic> mechanics = load(pos);
+            if(mechanics.size() > 0) {
+                // A mechanic has been found, check if we can actually build here.
+                if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
+                    player.printError("area.permissions");
+                    return 0;
+                }
+            }
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
-
-                    // A mechanic has been found, check if we can actually build here.
-                    if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
-
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
