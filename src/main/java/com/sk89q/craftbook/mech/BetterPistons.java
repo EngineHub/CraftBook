@@ -233,7 +233,7 @@ public class BetterPistons extends AbstractMechanic {
                         public void run () {
                             for(int x = fp == 0 ? 2 : 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
                                 final int i = x;
-                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.equals(trigger.getRelative(piston.getFacing(), i+1)) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || trigger.getRelative(piston.getFacing(), i+1).getState() != null && trigger.getRelative(piston.getFacing(), i+1).getState() instanceof InventoryHolder || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
+                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.equals(trigger.getRelative(piston.getFacing(), i+1)) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                     break;
                                 }
@@ -243,11 +243,7 @@ public class BetterPistons extends AbstractMechanic {
                                         ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                     }
                                 }
-                                trigger.getRelative(piston.getFacing(), i).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i+1).getTypeId(), trigger.getRelative(piston.getFacing(), i+1).getData(), true);
-                                if(trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.STONE_BUTTON || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.WOODEN_BUTTON) {
-                                    if((trigger.getRelative(piston.getFacing(), i).getData() & 0x8) == 0x8)
-                                        trigger.getRelative(piston.getFacing(), i).setData((byte) (trigger.getRelative(piston.getFacing(), i).getData() ^ 0x8));
-                                }
+                                copyData(trigger.getRelative(piston.getFacing(), i+1), trigger.getRelative(piston.getFacing(), i));
                             }
                         }
                     }, 2L*(p+1));
@@ -279,7 +275,7 @@ public class BetterPistons extends AbstractMechanic {
                         public void run () {
                             for(int x = fblock+2; x >= 2; x--) {
                                 final int i = x;
-                                if(trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getState() != null && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
+                                if(trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
                                     continue;
                                 if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
                                     for(Entity ent : trigger.getRelative(piston.getFacing(), i+1).getChunk().getEntities()) {
@@ -288,18 +284,38 @@ public class BetterPistons extends AbstractMechanic {
                                             ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                         }
                                     }
-                                    trigger.getRelative(piston.getFacing(), i+1).setTypeIdAndData(trigger.getRelative(piston.getFacing(), i).getTypeId(), trigger.getRelative(piston.getFacing(), i).getData(), true);
+                                    copyData(trigger.getRelative(piston.getFacing(), i), trigger.getRelative(piston.getFacing(), i+1));
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
-                                    if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.STONE_BUTTON || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.WOODEN_BUTTON) {
-                                        if((trigger.getRelative(piston.getFacing(), i+1).getData() & 0x8) == 0x8)
-                                            trigger.getRelative(piston.getFacing(), i+1).setData((byte) (trigger.getRelative(piston.getFacing(), i+1).getData() ^ 0x8));
-                                    }
                                 }
                             }
                         }
 
                     }, 2L*(p+1));
                 }
+            }
+        }
+    }
+
+    /**
+     * Used for moving a block to elsewhere.
+     * 
+     * @param from The from block.
+     * @param to The block the data is being moved to.
+     */
+    public void copyData(Block from, Block to) {
+
+        to.setTypeIdAndData(from.getTypeId(), from.getData(), true);
+        if(to.getTypeId() == BlockID.STONE_BUTTON || to.getTypeId() == BlockID.WOODEN_BUTTON) {
+            if((to.getData() & 0x8) == 0x8)
+                to.setData((byte) (to.getData() ^ 0x8));
+        }
+        if(from.getState() != null) { //We've got a tile entity here, do extra stuff.
+
+            if(from.getState() instanceof Sign) {
+                for(int i = 0; i < 4; i++)
+                    ((Sign) to.getState()).setLine(i, ((Sign) from.getState()).getLine(i));
+            } else if (from.getState() instanceof InventoryHolder) {
+                ((InventoryHolder) to.getState()).getInventory().setContents(((InventoryHolder) from.getState()).getInventory().getContents());
             }
         }
     }
