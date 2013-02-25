@@ -330,7 +330,7 @@ public class BetterPistons extends AbstractMechanic {
             default: 
                 return true;
         }
-    }
+    } 
 
     private final Block trigger;
     private final Block sign;
