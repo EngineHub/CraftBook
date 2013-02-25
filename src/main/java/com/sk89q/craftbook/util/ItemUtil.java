@@ -115,7 +115,7 @@ public class ItemUtil {
 
     public static boolean isCookable(ItemStack item) {
 
-        return getCookedResult(item) != null;
+        return getCookedResult(item) != null && !item.getItemMeta().hasDisplayName();
     }
 
     public static ItemStack getCookedResult(ItemStack item) {
@@ -138,7 +138,7 @@ public class ItemUtil {
 
     public static boolean isSmeltable(ItemStack item) {
 
-        return getSmeletedResult(item) != null;
+        return getSmeletedResult(item) != null && !item.getItemMeta().hasDisplayName();
     }
 
     public static ItemStack getSmeletedResult(ItemStack item) {
