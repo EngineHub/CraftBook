@@ -1,3 +1,13 @@
+3.5.6
+* Buttons moved by BetterPistons will default to unpressed state, so they don't get stuck.
+* Improved performance by not having lightstone ammeter and cauldron initialize on right click/redstone event.
+* Removed a few redundant IC checks, which caused more harm than good.
+* Fix sugar cane not being harvested by the Combine Harvester.
+* Fix a cooking pot dupe bug.
++ Added support for BetterPistons to move Containers and Signs, and keep the contents/text.
+* Fix an error with recipes using the SHAPED wrapper type.
+* Improved CustomCrafting checks, to remove false positives.
+
 3.5.5
 + Added offset support to Timed Explosion IC.
 * Fix magical data transformation of IC's.
