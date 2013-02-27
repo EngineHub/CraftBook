@@ -100,7 +100,7 @@ public class RecipeManager extends LocalConfiguration {
         private void load() throws InvalidCraftingException {
 
             type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + ".type"));
-            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3) {
+            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3 && type != RecipeType.SHAPED) {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
                 items = getHashItems("crafting-recipes." + id + ".ingredients");
