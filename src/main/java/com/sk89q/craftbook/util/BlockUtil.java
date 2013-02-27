@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.blocks.BlockID;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+
+import com.sk89q.worldedit.blocks.BlockID;
 
 public class BlockUtil {
 

@@ -161,7 +161,7 @@ public class CustomCrafting implements Listener {
                         if(test.size() > 0)
                             return false;
                     }
-                }
+                } 
                 else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
                     if(((ShapelessRecipe) rec1).getIngredientList().size() != ((ShapelessRecipe) rec2).getIngredientList().size())
                         return false;
