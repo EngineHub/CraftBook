@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -231,12 +232,13 @@ public class BetterPistons extends AbstractMechanic {
 
                         @Override
                         public void run () {
-                            for(int x = fp == 0 ? 2 : 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
-                                final int i = x;
-                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.equals(trigger.getRelative(piston.getFacing(), i+1)) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
+                            for(int x = 1; x <= fblock+(fp == 0 ? 2 : 1); x++) {
+                                final int i = x; 
+                                if(x >= fblock+(fp == 0 ? 2 : 1) || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
-                                    break;
-                                }
+                                    Bukkit.getLogger().severe(x + " Is X!");
+                                    break; 
+                                } 
                                 for(Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
 
                                     if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing(), i).getLocation()) < 0.5) {
@@ -309,14 +311,21 @@ public class BetterPistons extends AbstractMechanic {
             if((to.getData() & 0x8) == 0x8)
                 to.setData((byte) (to.getData() ^ 0x8));
         }
-        if(from.getState() != null) { //We've got a tile entity here, do extra stuff.
 
-            if(from.getState() instanceof Sign) {
-                for(int i = 0; i < 4; i++)
-                    ((Sign) to.getState()).setLine(i, ((Sign) from.getState()).getLine(i));
-            } else if (from.getState() instanceof InventoryHolder) {
-                ((InventoryHolder) to.getState()).getInventory().setContents(((InventoryHolder) from.getState()).getInventory().getContents());
+        if(from.getState() instanceof Sign) {
+            Sign state = (Sign) to.getState();
+            for(int i = 0; i < 4; i++)
+                state.setLine(i, ((Sign) from.getState()).getLine(i));
+            state.update();
+        } else if (from.getState() instanceof InventoryHolder) {
+            BlockState state = to.getState();
+            BlockState fromState = from.getState();
+            for(int slot = 0; slot < ((InventoryHolder) state).getInventory().getSize(); slot++) {
+                ((InventoryHolder) state).getInventory().setItem(slot, ((InventoryHolder) fromState).getInventory().getItem(slot));
+                ((InventoryHolder) fromState).getInventory().setItem(slot, null);
             }
+            state.update();
+            fromState.update();
         }
     }
 
