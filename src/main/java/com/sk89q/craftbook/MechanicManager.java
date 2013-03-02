@@ -617,6 +617,8 @@ public class MechanicManager {
         applicable.addAll(watchBlockManager.getByChunk(chunk));
 
         for (Mechanic m : applicable) {
+            if (event.isCancelled())
+                return;
             unload(m, event);
         }
     }
@@ -647,6 +649,9 @@ public class MechanicManager {
                     (), t);
             BukkitUtil.printStacktrace(t);
         }
+
+        if (event.isCancelled())
+            return;
 
         synchronized (this) {
             thinkingMechanics.remove(mechanic);
