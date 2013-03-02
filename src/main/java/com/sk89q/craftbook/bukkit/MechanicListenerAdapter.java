@@ -23,6 +23,7 @@ import java.util.List;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -58,6 +59,8 @@ public class MechanicListenerAdapter {
     MechanicPlayerListener playerListener = new MechanicPlayerListener();
     MechanicBlockListener blockListener = new MechanicBlockListener();
     MechanicWorldListener worldListener = new MechanicWorldListener();
+
+    public static ArrayList<Event> ignoredEvents = new ArrayList<Event>();
 
     /**
      * Constructs the adapter.
@@ -126,9 +129,13 @@ public class MechanicListenerAdapter {
 
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onPlayerInteract(PlayerInteractEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 for (MechanicManager manager : managers) {
                     manager.dispatchBlockRightClick(event);
@@ -174,25 +181,37 @@ public class MechanicListenerAdapter {
 
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onSignChange(SignChangeEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             for (MechanicManager manager : managers) {
                 manager.dispatchSignChange(event);
             }
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onBlockBreak(BlockBreakEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             for (MechanicManager manager : managers) {
                 manager.dispatchBlockBreak(event);
             }
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             int oldLevel = event.getOldCurrent();
             int newLevel = event.getNewCurrent();
             Block block = event.getBlock();
@@ -357,9 +376,13 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is loaded.
          */
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onChunkLoad(final ChunkLoadEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             CraftBookPlugin.server().getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override
@@ -373,9 +396,13 @@ public class MechanicListenerAdapter {
         /**
          * Called when a chunk is unloaded.
          */
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        @EventHandler(priority = EventPriority.HIGHEST)
         public void onChunkUnload(ChunkUnloadEvent event) {
 
+            if (ignoredEvents.contains(event)) {
+                ignoredEvents.remove(event);
+                return;
+            }
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
 

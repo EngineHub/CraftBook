@@ -13,6 +13,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.PersistentMechanic;
+import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
@@ -21,7 +22,7 @@ import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class ChunkAnchor extends PersistentMechanic {
+public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMechanic {
 
     public static class Factory extends AbstractMechanicFactory<ChunkAnchor> {
 
@@ -128,7 +129,7 @@ public class ChunkAnchor extends PersistentMechanic {
     @Override
     public boolean isActive() {
 
-        return true;
+        return isOn;
     }
 
     @Override
@@ -142,5 +143,10 @@ public class ChunkAnchor extends PersistentMechanic {
 
         if (!isOn && CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
         event.setCancelled(true);
+    }
+
+    @Override
+    public void think () {
+        //Do nothing. We are ST so it keeps running, to keep chunks loaded.
     }
 }

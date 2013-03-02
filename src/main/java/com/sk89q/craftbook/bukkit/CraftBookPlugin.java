@@ -867,6 +867,7 @@ public class CraftBookPlugin extends JavaPlugin {
         if (config.advancedBlockChecks) {
 
             PlayerInteractEvent event = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), loc.getBlock(), BlockFace.UP);
+            MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }
