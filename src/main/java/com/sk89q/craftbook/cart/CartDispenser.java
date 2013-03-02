@@ -54,7 +54,7 @@ public class CartDispenser extends CartMechanism {
         for (Chest c : RailUtil.getNearbyChests(blocks.base)) {
             Inventory inv = inf ? null : c.getInventory();
 
-            CartType type = CartType.fromString(blocks.getSign().getLine(3));
+            CartType type = CartType.fromString(blocks.getSign().getLine(0));
 
             // go
             if (cart == null) {
