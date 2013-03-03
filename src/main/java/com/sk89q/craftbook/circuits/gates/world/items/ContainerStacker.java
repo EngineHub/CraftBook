@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
@@ -51,6 +54,9 @@ public class ContainerStacker extends AbstractIC {
             for (int i = 0; i < c.getInventory().getSize(); i++) {
                 ItemStack it = c.getInventory().getItem(i);
                 if (ItemUtil.isStackValid(it)) {
+
+                    if(((Factory)getFactory()).blacklist.contains(it.getTypeId()))
+                        continue;
                     int amount = it.getAmount();
                     if (it.getAmount() < 64) {
 
@@ -92,6 +98,8 @@ public class ContainerStacker extends AbstractIC {
 
     public static class Factory extends AbstractICFactory {
 
+        List<Integer> blacklist = new ArrayList<Integer>();
+
         public Factory(Server server) {
 
             super(server);
@@ -115,5 +123,17 @@ public class ContainerStacker extends AbstractIC {
             String[] lines = new String[] {null, null};
             return lines;
         }
+
+        @Override
+        public void addConfiguration(YAMLProcessor config, String path) {
+            blacklist = config.getIntList(path + "blacklist", blacklist);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+
+            return true;
+        }
+
     }
 }
