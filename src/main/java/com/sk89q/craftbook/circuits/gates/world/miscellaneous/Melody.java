@@ -128,7 +128,7 @@ public class Melody extends AbstractIC {
                     if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
                         continue;
                     }
-                    jNote.play(player, sequencer);
+                    jNote.play(player, sequencer, BukkitUtil.toSign(getSign()).getLocation(), radius);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             } else if (!chip.getInput(0) && sequencer != null) {

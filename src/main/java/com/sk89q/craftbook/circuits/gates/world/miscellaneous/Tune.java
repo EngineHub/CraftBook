@@ -57,7 +57,7 @@ public class Tune extends AbstractIC {
                         player.getLocation(), radius)) {
                     continue;
                 }
-                jNote.play(player, sequencer);
+                jNote.play(player, sequencer, BukkitUtil.toSign(getSign()).getLocation(), radius);
             }
         } else if (!chip.getInput(0) && sequencer != null) {
             sequencer.stop();

@@ -8,6 +8,7 @@ package com.sk89q.craftbook.circuits.jinglenote;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -22,7 +23,7 @@ public class JingleNoteManager {
      */
     protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
-    public void play(Player player, JingleSequencer sequencer) {
+    public void play(Player player, JingleSequencer sequencer, Location centre, int radius) {
 
         String name = player.getName();
 
@@ -33,7 +34,7 @@ public class JingleNoteManager {
             instances.remove(name);
         }
 
-        JingleNotePlayer notePlayer = new JingleNotePlayer(name, sequencer);
+        JingleNotePlayer notePlayer = new JingleNotePlayer(name, sequencer, centre, radius);
         Thread thread = new Thread(notePlayer);
         thread.setDaemon(true);
         thread.setPriority(Thread.MAX_PRIORITY);
