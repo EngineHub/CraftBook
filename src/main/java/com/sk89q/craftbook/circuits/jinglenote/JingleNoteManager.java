@@ -8,8 +8,8 @@ package com.sk89q.craftbook.circuits.jinglenote;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import com.sk89q.craftbook.circuits.jinglenote.bukkit.BukkitJingleNotePlayer;
+import com.sk89q.worldedit.WorldVector;
 
 /**
  * A manager of play instances.
@@ -23,36 +23,32 @@ public class JingleNoteManager {
      */
     protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
-    public void play(Player player, JingleSequencer sequencer, Location centre, int radius) {
-
-        String name = player.getName();
+    public void play(String player, JingleSequencer sequencer, WorldVector centre, int radius) {
 
         // Existing player found!
-        if (instances.containsKey(name)) {
-            JingleNotePlayer existing = instances.get(name);
+        if (instances.containsKey(player)) {
+            JingleNotePlayer existing = instances.get(player);
             existing.stop();
-            instances.remove(name);
+            instances.remove(player);
         }
 
-        JingleNotePlayer notePlayer = new JingleNotePlayer(name, sequencer, centre, radius);
+        JingleNotePlayer notePlayer = new BukkitJingleNotePlayer(player, sequencer, centre, radius);
         Thread thread = new Thread(notePlayer);
         thread.setDaemon(true);
         thread.setPriority(Thread.MAX_PRIORITY);
-        thread.setName("JingleNotePlayer for " + player.getName());
+        thread.setName("JingleNotePlayer for " + player);
         thread.start();
 
-        instances.put(name, notePlayer);
+        instances.put(player, notePlayer);
     }
 
-    public boolean stop(Player player) {
-
-        String name = player.getName();
+    public boolean stop(String player) {
 
         // Existing player found!
-        if (instances.containsKey(name)) {
-            JingleNotePlayer existing = instances.get(name);
+        if (instances.containsKey(player)) {
+            JingleNotePlayer existing = instances.get(player);
             existing.stop();
-            instances.remove(name);
+            instances.remove(player);
             return true;
         }
         return false;

@@ -13,13 +13,13 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.worldedit.WorldVector;
 
 public class Playlist {
 
@@ -38,7 +38,7 @@ public class Playlist {
     volatile MidiJingleSequencer midiSequencer;
     volatile StringJingleSequencer stringSequencer;
 
-    private Location centre;
+    private WorldVector centre;
     private int radius;
 
     public Playlist(String name) {
@@ -53,7 +53,7 @@ public class Playlist {
         }
     }
 
-    public Playlist(String name, Location centre, int radius) {
+    public Playlist(String name, WorldVector centre, int radius) {
 
         players = new HashSet<Player>();
         lastPlayers = new HashSet<Player>();
@@ -152,7 +152,7 @@ public class Playlist {
                                 if(lastPlayers.contains(p))
                                     continue;
 
-                                jNote.play(p, midiSequencer, centre, radius);
+                                jNote.play(p.getName(), midiSequencer, centre, radius);
                             }
 
                             for(Player p : lastPlayers) {
@@ -160,7 +160,7 @@ public class Playlist {
                                 if(players.contains(p))
                                     continue;
 
-                                jNote.stop(p);
+                                jNote.stop(p.getName());
                             }
 
                             lastPlayers = (HashSet<Player>) players.clone();
@@ -185,7 +185,7 @@ public class Playlist {
                                 if(lastPlayers.contains(p))
                                     continue;
 
-                                jNote.play(p, stringSequencer, centre, radius);
+                                jNote.play(p.getName(), stringSequencer, centre, radius);
                             }
 
                             for(Player p : lastPlayers) {
@@ -193,7 +193,7 @@ public class Playlist {
                                 if(players.contains(p))
                                     continue;
 
-                                jNote.stop(p);
+                                jNote.stop(p.getName());
                             }
 
                             lastPlayers = (HashSet<Player>) players.clone();
@@ -252,7 +252,7 @@ public class Playlist {
                         }
 
                         for(Player player : players)
-                            jNote.play(player, midiSequencer, centre, radius);
+                            jNote.play(player.getName(), midiSequencer, centre, radius);
 
                         try {
                             Thread.sleep(1000L);
@@ -281,7 +281,7 @@ public class Playlist {
                     stringSequencer = new StringJingleSequencer(tune, 0);
 
                     for(Player player : players)
-                        jNote.play(player, stringSequencer, centre, radius);
+                        jNote.play(player.getName(), stringSequencer, centre, radius);
 
                     try {
                         Thread.sleep(1000L);

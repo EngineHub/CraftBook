@@ -39,7 +39,7 @@ public class Jukebox extends AbstractIC {
             radius = -1;
         }
 
-        playlist = new Playlist(plist, BukkitUtil.toSign(getSign()).getLocation(), radius);
+        playlist = new Playlist(plist, getSign().getBlockVector(), radius);
     }
 
     @Override

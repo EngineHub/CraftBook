@@ -5,7 +5,6 @@
 
 package com.sk89q.craftbook.circuits.jinglenote;
 
-import org.bukkit.Sound;
 
 /**
  * Interface for a sequencer.
@@ -20,18 +19,18 @@ public interface JingleSequencer {
 
     public class Note {
 
-        Sound instrument;
+        Instrument instrument;
         byte note;
         float velocity;
 
-        public Note(Sound instrument, byte note, float velocity) {
+        public Note(Instrument instrument, byte note, float velocity) {
 
             this.instrument = instrument;
             this.note = note;
             this.velocity = velocity;
         }
 
-        public Sound getInstrument() {
+        public Instrument getInstrument() {
 
             return instrument;
         }
@@ -43,7 +42,7 @@ public interface JingleSequencer {
 
         public float getVelocity() {
 
-            if (instrument == Sound.NOTE_PLING) return velocity / 256;
+            if (instrument == Instrument.GUITAR) return velocity / 256;
             return velocity / 64;
         }
     }

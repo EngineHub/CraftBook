@@ -52,7 +52,7 @@ public class Melody extends AbstractIC {
         try {
             sequencer.stop();
             for (Player player : getServer().getOnlinePlayers()) {
-                jNote.stop(player);
+                jNote.stop(player.getName());
             }
             jNote.stopAll();
         } catch (Exception ignored) {
@@ -116,7 +116,7 @@ public class Melody extends AbstractIC {
 
                 if (sequencer != null || jNote != null) {
                     for (Player player : getServer().getOnlinePlayers()) {
-                        jNote.stop(player);
+                        jNote.stop(player.getName());
                     }
                     jNote.stopAll();
                 }
@@ -128,13 +128,13 @@ public class Melody extends AbstractIC {
                     if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
                         continue;
                     }
-                    jNote.play(player, sequencer, BukkitUtil.toSign(getSign()).getLocation(), radius);
+                    jNote.play(player.getName(), sequencer, getSign().getBlockVector(), radius);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             } else if (!chip.getInput(0) && sequencer != null) {
                 sequencer.stop();
                 for (Player player : getServer().getOnlinePlayers()) {
-                    jNote.stop(player);
+                    jNote.stop(player.getName());
                 }
                 jNote.stopAll();
             }
