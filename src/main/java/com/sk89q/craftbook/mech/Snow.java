@@ -264,6 +264,9 @@ public class Snow implements Listener {
 
     public void incrementData(final Block block, final int depth) {
 
+        if(block.getLocation().getY() == 0)
+            return;
+
         if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
