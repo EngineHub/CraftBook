@@ -1,3 +1,11 @@
+3.5.7
+* Fix SuperSticky piston eating blocks.
+* Fix some bugs with ChunkAnchors
+* Moved the 'type' of a CartDispenser to the first line to stop conflicts.
++ Added support for JingleNote to not play music for people outside the radius.
++ Added a Blacklist for Container Stacker IC.
+* Fix snow stacking on the void.
+
 3.5.6
 * Buttons moved by BetterPistons will default to unpressed state, so they don't get stuck.
 * Improved performance by not having lightstone ammeter and cauldron initialize on right click/redstone event.
