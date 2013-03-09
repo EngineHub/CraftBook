@@ -161,7 +161,7 @@ public class ContainerCollector extends AbstractIC {
 
     private static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
 
-        return slot == null || ItemUtil.areItemsIdentical(stack, slot);
+        return slot == null || ItemUtil.areItemsIdentical(stack, slot) && stack.getAmount() + slot.getAmount() <= 64;
     }
 
     public static class Factory extends AbstractICFactory {

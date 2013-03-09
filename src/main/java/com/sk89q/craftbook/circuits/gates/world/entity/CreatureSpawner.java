@@ -42,6 +42,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -57,6 +58,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -116,6 +118,8 @@ public class CreatureSpawner extends AbstractIC {
             // spawn amount of mobs
             for (int i = 0; i < amount; i++) {
                 Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
+                if(entity instanceof Skeleton)
+                    ((Skeleton) entity).getEquipment().setItemInHand(new ItemStack(ItemID.BOW, 1));
                 setEntityData(entity, data);
             }
         }
