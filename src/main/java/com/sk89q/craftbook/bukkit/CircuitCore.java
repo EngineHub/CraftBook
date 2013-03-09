@@ -431,7 +431,7 @@ public class CircuitCore implements LocalComponent {
     }
 
     /**
-     * Register a mechanic if possible
+     * Register an ic if possible
      *
      * @param name
      * @param factory
