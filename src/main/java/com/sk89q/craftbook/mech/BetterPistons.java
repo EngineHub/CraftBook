@@ -227,15 +227,16 @@ public class BetterPistons extends AbstractMechanic {
                 final int fblock = block;
 
                 for(int p = 0; p < amount; p++) {
+                    final int fp = p;
 
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
                         @Override
                         public void run () {
-                            for(int x = 2; x <= fblock+2; x++) {
+                            for(int x = 1; x <= fblock+2; x++) {
                                 int i = x; 
-                                if(x == 2 && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder) {
-                                    i = 1;  
+                                if(x == 1 && !(trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder) && fp == 0) {
+                                    x = i = 2;  
                                 }
                                 if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
