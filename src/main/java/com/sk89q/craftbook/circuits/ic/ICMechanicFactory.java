@@ -74,6 +74,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
             if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
                 sign.setLine(1, "[MC1421]S");
+            else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
+                sign.setLine(1, "[MC1422]S");
             else
                 sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
             sign.update(false);

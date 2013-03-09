@@ -11,10 +11,11 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
-public class ContentsSensor extends AbstractIC {
+public class ContentsSensor extends AbstractIC implements SelfTriggeredIC {
 
     public ContentsSensor (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -50,6 +51,12 @@ public class ContentsSensor extends AbstractIC {
 
         if(chip.getInput(0))
             chip.setOutput(0, sense());
+    }
+
+    @Override
+    public void think (ChipState chip) {
+
+        chip.setOutput(0, sense());
     }
 
     public boolean sense() {
@@ -99,5 +106,10 @@ public class ContentsSensor extends AbstractIC {
             String[] lines = new String[] {"item id:data", "slot (optional)"};
             return lines;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

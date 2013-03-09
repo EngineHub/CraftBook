@@ -146,7 +146,6 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.XPSpawner;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ContentsSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.ContentsSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor;
@@ -415,6 +414,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1277", "radio player", new RadioPlayer.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
+        registerIC("MC1422", "monostable", new Monostable.Factory(server), familySISO, familyAISO);
         registerIC("MC1510", "send message", new MessageSender.Factory(server), familySISO, familyAISO);
         registerIC("MC2100", "delayer", new Delayer.Factory(server), familySISO, familyAISO);
         registerIC("MC2101", "inv delayer", new NotDelayer.Factory(server), familySISO, familyAISO);
@@ -502,12 +502,10 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO); // Restricted
         //FIXME registerIC("MC0267", "sense move st", new MovementSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0268", "sense contents st", new ContentsSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
         registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0272", "sense playe st", new PlayerSensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0420", "clock st", new ClockST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0421", "monostable", new Monostable.Factory(server), familySISO, familyAISO);
         registerIC("MC0500", "range output", new RangedOutput.Factory(server), familySISO, familyAISO);
         // Xtra ICs
         // SISOs
