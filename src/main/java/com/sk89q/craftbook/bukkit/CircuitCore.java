@@ -415,6 +415,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
         registerIC("MC1422", "monostable", new Monostable.Factory(server), familySISO, familyAISO);
+        registerIC("MC1500", "range output", new RangedOutput.Factory(server), familySISO, familyAISO);
         registerIC("MC1510", "send message", new MessageSender.Factory(server), familySISO, familyAISO);
         registerIC("MC2100", "delayer", new Delayer.Factory(server), familySISO, familyAISO);
         registerIC("MC2101", "inv delayer", new NotDelayer.Factory(server), familySISO, familyAISO);
@@ -506,7 +507,6 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0272", "sense playe st", new PlayerSensorST.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC0420", "clock st", new ClockST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0500", "range output", new RangedOutput.Factory(server), familySISO, familyAISO);
         // Xtra ICs
         // SISOs
         registerIC("MCX230", "rain sense", new RainSensor.Factory(server), familySISO, familyAISO);
