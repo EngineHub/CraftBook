@@ -10,8 +10,9 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 
-public class TimeSet extends AbstractIC {
+public class TimeSet extends AbstractIC implements SelfTriggeredIC {
 
     public TimeSet(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -49,6 +50,17 @@ public class TimeSet extends AbstractIC {
         }
     }
 
+    @Override
+    public void think(ChipState chip) {
+
+        try {
+            if (chip.getInput(0)) {
+                BukkitUtil.toSign(getSign()).getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
@@ -74,5 +86,10 @@ public class TimeSet extends AbstractIC {
             String[] lines = new String[] {"time to set", null};
             return lines;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

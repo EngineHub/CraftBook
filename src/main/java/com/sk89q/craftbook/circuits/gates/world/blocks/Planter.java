@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -32,14 +33,14 @@ import com.sk89q.worldedit.blocks.ItemID;
  *
  * @authors Drathus, Me4502
  */
-public class Planter extends AbstractIC {
+public class Planter extends AbstractIC implements SelfTriggeredIC {
 
     public Planter(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
 
-    ItemStack item;
+    ItemStack item; 
     Block target;
     Block onBlock;
     Vector offset;
@@ -92,6 +93,12 @@ public class Planter extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, plant());
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        plant();
     }
 
     public boolean plant() {
@@ -274,5 +281,10 @@ public class Planter extends AbstractIC {
             String[] lines = new String[] {"Item to plant id{:data}", "+oradius=x:y:z offset"};
             return lines;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

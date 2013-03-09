@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -25,8 +25,9 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 
-public class DaySensor extends AbstractIC {
+public class DaySensor extends AbstractIC implements SelfTriggeredIC {
 
     public DaySensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -51,6 +52,12 @@ public class DaySensor extends AbstractIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, isDay());
         }
+    }
+
+    @Override
+    public void think(ChipState chip) {
+
+        chip.setOutput(0, isDay());
     }
 
     long day;
@@ -116,5 +123,10 @@ public class DaySensor extends AbstractIC {
             String[] lines = new String[] {"custom day start", "custom day end"};
             return lines;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

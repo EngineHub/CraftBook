@@ -22,7 +22,6 @@ import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.gates.logic.AndGate;
 import com.sk89q.craftbook.circuits.gates.logic.Clock;
 import com.sk89q.craftbook.circuits.gates.logic.ClockDivider;
-import com.sk89q.craftbook.circuits.gates.logic.ClockST;
 import com.sk89q.craftbook.circuits.gates.logic.CombinationLock;
 import com.sk89q.craftbook.circuits.gates.logic.Counter;
 import com.sk89q.craftbook.circuits.gates.logic.DeMultiplexer;
@@ -54,7 +53,6 @@ import com.sk89q.craftbook.circuits.gates.logic.Pulser;
 import com.sk89q.craftbook.circuits.gates.logic.Random3Bit;
 import com.sk89q.craftbook.circuits.gates.logic.Random5Bit;
 import com.sk89q.craftbook.circuits.gates.logic.RandomBit;
-import com.sk89q.craftbook.circuits.gates.logic.RandomBitST;
 import com.sk89q.craftbook.circuits.gates.logic.RangedOutput;
 import com.sk89q.craftbook.circuits.gates.logic.Repeater;
 import com.sk89q.craftbook.circuits.gates.logic.RsNandLatch;
@@ -63,63 +61,39 @@ import com.sk89q.craftbook.circuits.gates.logic.ToggleFlipFlop;
 import com.sk89q.craftbook.circuits.gates.logic.XnorGate;
 import com.sk89q.craftbook.circuits.gates.logic.XorGate;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreaker;
-import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreakerST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformer;
-import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformerST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvester;
-import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvesterST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Cultivator;
-import com.sk89q.craftbook.circuits.gates.world.blocks.CultivatorST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.FlexibleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Irrigator;
-import com.sk89q.craftbook.circuits.gates.world.blocks.IrrigatorST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFlood;
-import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFloodST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.MultipleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Planter;
-import com.sk89q.craftbook.circuits.gates.world.blocks.PlanterST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Pump;
-import com.sk89q.craftbook.circuits.gates.world.blocks.PumpST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAbove;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveChest;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveChestST;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelow;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowChest;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowChestST;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowST;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBridge;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Spigot;
 import com.sk89q.craftbook.circuits.gates.world.entity.AdvancedEntitySpawner;
 import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvester;
-import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvesterST;
 import com.sk89q.craftbook.circuits.gates.world.entity.CreatureSpawner;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannon;
-import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannonST;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrap;
-import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrapST;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportReciever;
-import com.sk89q.craftbook.circuits.gates.world.entity.TeleportRecieverST;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportTransmitter;
 import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafter;
-import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafterST;
 import com.sk89q.craftbook.circuits.gates.world.items.ChestStocker;
-import com.sk89q.craftbook.circuits.gates.world.items.ChestStockerST;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollector;
-import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollectorST;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenser;
-import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenserST;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerStacker;
-import com.sk89q.craftbook.circuits.gates.world.items.ContainerStackerST;
 import com.sk89q.craftbook.circuits.gates.world.items.Distributer;
-import com.sk89q.craftbook.circuits.gates.world.items.DistributerST;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemDispenser;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemFan;
-import com.sk89q.craftbook.circuits.gates.world.items.ItemFanST;
 import com.sk89q.craftbook.circuits.gates.world.items.Sorter;
-import com.sk89q.craftbook.circuits.gates.world.items.SorterST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowBarrage;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowShooter;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.FireBarrage;
@@ -130,9 +104,7 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.LightningSummon;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Melody;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.MessageSender;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffect;
-import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ParticleEffectST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducer;
-import com.sk89q.craftbook.circuits.gates.world.miscellaneous.PotionInducerST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ProgrammableFireworkShow;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.RadioPlayer;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.RadioStation;
@@ -140,40 +112,26 @@ import com.sk89q.craftbook.circuits.gates.world.miscellaneous.SoundEffect;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.TimedExplosion;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.Tune;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiver;
-import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessReceiverST;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.WirelessTransmitter;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.XPSpawner;
 import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.BlockSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ContentsSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.DaySensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.EntitySensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LavaSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.LavaSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensorST;
 import com.sk89q.craftbook.circuits.gates.world.sensors.WaterSensor;
-import com.sk89q.craftbook.circuits.gates.world.sensors.WaterSensorST;
 import com.sk89q.craftbook.circuits.gates.world.weather.RainSensor;
-import com.sk89q.craftbook.circuits.gates.world.weather.RainSensorST;
 import com.sk89q.craftbook.circuits.gates.world.weather.ServerTimeModulus;
 import com.sk89q.craftbook.circuits.gates.world.weather.TStormSensor;
-import com.sk89q.craftbook.circuits.gates.world.weather.TStormSensorST;
 import com.sk89q.craftbook.circuits.gates.world.weather.TimeControl;
 import com.sk89q.craftbook.circuits.gates.world.weather.TimeControlAdvanced;
 import com.sk89q.craftbook.circuits.gates.world.weather.TimeFaker;
 import com.sk89q.craftbook.circuits.gates.world.weather.TimeSet;
-import com.sk89q.craftbook.circuits.gates.world.weather.TimeSetST;
 import com.sk89q.craftbook.circuits.gates.world.weather.WeatherControl;
 import com.sk89q.craftbook.circuits.gates.world.weather.WeatherControlAdvanced;
 import com.sk89q.craftbook.circuits.gates.world.weather.WeatherFaker;
@@ -463,50 +421,6 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC5000", "perlstone", PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
         registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
 
-        // Self triggered
-        registerIC("MC0020", "random 1 st", new RandomBitST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0111", "receiver st", new WirelessReceiverST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0113", "tele-in st", new TeleportRecieverST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0202", "c dispense st", new ContainerDispenserST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0204", "trap st", new EntityTrapST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0205", "set above st", new SetBlockAboveST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0206", "set below st", new SetBlockBelowST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0209", "collector st", new ContainerCollectorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0210", "emitter st", new ParticleEffectST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0215", "set a chest st", new SetBlockAboveChestST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0216", "set b chest st", new SetBlockBelowChestST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0217", "pot induce st", new PotionInducerST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0219", "auto craft st", new AutomaticCrafterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0220", "a bl break st", new BlockBreakerST.Factory(server, false), familySISO, familyAISO);
-        registerIC("MC0221", "b bl break st", new BlockBreakerST.Factory(server, true), familySISO, familyAISO);
-        registerIC("MC0222", "liq flood st", new LiquidFloodST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0223", "terraform st", new BonemealTerraformerST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0225", "pump st", new PumpST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0228", "ent cannon st", new EntityCannonST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0229", "sorter st", new SorterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0230", "sense day st", new DaySensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0232", "time set st", new TimeSetST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0233", "item fan st", new ItemFanST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0234", "planter st", new PlanterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0235", "cultivator st", new CultivatorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0238", "irrigate st", new IrrigatorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0239", "harvester st", new CombineHarvesterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0242", "stocker st", new ChestStockerST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0243", "distributer st", new DistributerST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0244", "animal harvest st", new AnimalHarvesterST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0245", "cont stacker st", new ContainerStackerST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0260", "sense water st", new WaterSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0261", "sense lava st", new LavaSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0262", "sense light st", new LightSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0263", "sense block st", new BlockSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0264", "sense item st", new ItemSensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0265", "sense n item s", new ItemNotSensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0266", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO); // Restricted
-        //FIXME registerIC("MC0267", "sense move st", new MovementSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0270", "sense power st", new PowerSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MC0271", "sense entit st", new EntitySensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0272", "sense playe st", new PlayerSensorST.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC0420", "clock st", new ClockST.Factory(server), familySISO, familyAISO);
         // Xtra ICs
         // SISOs
         registerIC("MCX230", "rain sense", new RainSensor.Factory(server), familySISO, familyAISO);
@@ -514,9 +428,6 @@ public class CircuitCore implements LocalComponent {
         registerIC("MCX233", "weather set", new WeatherControl.Factory(server), familySISO, familyAISO);
         // 3ISOs
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
-        // Self triggered
-        registerIC("MCZ230", "rain sense st", new RainSensorST.Factory(server), familySISO, familyAISO);
-        registerIC("MCZ231", "storm sense st", new TStormSensorST.Factory(server), familySISO, familyAISO);
     }
 
     /**

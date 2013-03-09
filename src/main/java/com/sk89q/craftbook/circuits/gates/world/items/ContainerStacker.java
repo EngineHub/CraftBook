@@ -15,11 +15,12 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class ContainerStacker extends AbstractIC {
+public class ContainerStacker extends AbstractIC implements SelfTriggeredIC {
 
     public ContainerStacker (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -40,6 +41,17 @@ public class ContainerStacker extends AbstractIC {
 
         if(chip.getInput(0))
             stack();
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
+    }
+
+    @Override
+    public void think (ChipState chip) {
+
+        stack();
     }
 
     public void stack() {

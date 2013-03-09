@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -26,9 +26,10 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 
-public class LavaSensor extends AbstractIC {
+public class LavaSensor extends AbstractIC implements SelfTriggeredIC {
 
     private Block center;
 
@@ -53,6 +54,18 @@ public class LavaSensor extends AbstractIC {
     public String getSignTitle() {
 
         return "LAVA SENSOR";
+    }
+
+    @Override
+    public void think(ChipState chip) {
+
+        chip.setOutput(0, hasLava());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
     }
 
     @Override

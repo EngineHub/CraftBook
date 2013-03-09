@@ -7,12 +7,13 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 
 /**
  * @author Silthus
  */
-public class ItemNotSensor extends ItemSensor {
+public class ItemNotSensor extends ItemSensor implements SelfTriggeredIC {
 
     public ItemNotSensor(Server server, ChangedSign block, ICFactory factory) {
 
@@ -37,6 +38,18 @@ public class ItemNotSensor extends ItemSensor {
         if (chip.getInput(0)) {
             chip.setOutput(0, !isDetected());
         }
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, !isDetected());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
     }
 
     public static class Factory extends ItemSensor.Factory {

@@ -81,6 +81,12 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             sign.update(false);
         }
 
+        if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
+            sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
+            sign.update(false);
+        }
+
+
         if (!manager.hasCustomPrefix(prefix)) return null;
 
         String id = matcher.group(1);

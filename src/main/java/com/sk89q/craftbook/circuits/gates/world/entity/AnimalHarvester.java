@@ -17,6 +17,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -25,7 +26,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
-public class AnimalHarvester extends AbstractIC {
+public class AnimalHarvester extends AbstractIC implements SelfTriggeredIC {
 
     public AnimalHarvester (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -68,6 +69,18 @@ public class AnimalHarvester extends AbstractIC {
 
     @Override
     public void trigger (ChipState chip) {
+
+        if(chip.getInput(0))
+            chip.setOutput(0, harvest());
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
+    }
+
+    @Override
+    public void think (ChipState chip) {
 
         if(chip.getInput(0))
             chip.setOutput(0, harvest());

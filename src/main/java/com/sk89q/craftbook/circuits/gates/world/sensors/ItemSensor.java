@@ -14,6 +14,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -26,7 +27,7 @@ import com.sk89q.worldedit.blocks.ItemType;
 /**
  * @author Silthus
  */
-public class ItemSensor extends AbstractIC {
+public class ItemSensor extends AbstractIC implements SelfTriggeredIC {
 
     private int item;
     private short data;
@@ -96,6 +97,18 @@ public class ItemSensor extends AbstractIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, isDetected());
         }
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, isDetected());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
     }
 
     protected boolean isDetected() {

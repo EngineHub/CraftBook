@@ -18,6 +18,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -25,7 +26,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
-public class BonemealTerraformer extends AbstractIC {
+public class BonemealTerraformer extends AbstractIC implements SelfTriggeredIC {
 
     Vector radius;
 
@@ -58,6 +59,18 @@ public class BonemealTerraformer extends AbstractIC {
         if (chip.getInput(0)) {
             terraform(true);
         }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        terraform(false);
     }
 
     public void terraform(boolean overrideChance) {

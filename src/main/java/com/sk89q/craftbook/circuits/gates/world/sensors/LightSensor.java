@@ -26,10 +26,11 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
-public class LightSensor extends AbstractIC {
+public class LightSensor extends AbstractIC implements SelfTriggeredIC {
 
     public LightSensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -54,6 +55,18 @@ public class LightSensor extends AbstractIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, getTargetLighted());
         }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState chip) {
+
+        chip.setOutput(0, getTargetLighted());
     }
 
     @Override

@@ -12,12 +12,13 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class LiquidFlood extends AbstractIC {
+public class LiquidFlood extends AbstractIC implements SelfTriggeredIC {
 
     Vector radius;
     String liquid;
@@ -109,6 +110,18 @@ public class LiquidFlood extends AbstractIC {
     public void trigger(ChipState chip) {
 
         doStuff(chip);
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        doStuff(state);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

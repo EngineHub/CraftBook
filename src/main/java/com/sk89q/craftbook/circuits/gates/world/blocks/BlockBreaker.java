@@ -20,12 +20,13 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class BlockBreaker extends AbstractIC {
+public class BlockBreaker extends AbstractIC implements SelfTriggeredIC {
 
     boolean above;
 
@@ -53,6 +54,18 @@ public class BlockBreaker extends AbstractIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, breakBlock());
         }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, breakBlock());
     }
 
     Block broken, chest;

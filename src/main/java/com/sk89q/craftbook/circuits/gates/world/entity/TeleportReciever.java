@@ -12,10 +12,11 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 
-public class TeleportReciever extends AbstractIC {
+public class TeleportReciever extends AbstractIC implements SelfTriggeredIC {
 
     public TeleportReciever(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -51,6 +52,18 @@ public class TeleportReciever extends AbstractIC {
         if (chip.getInput(0)) {
             check();
         }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState chip) {
+
+        check();
     }
 
     public void check() {

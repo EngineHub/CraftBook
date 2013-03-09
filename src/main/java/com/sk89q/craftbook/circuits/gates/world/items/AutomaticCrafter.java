@@ -28,13 +28,14 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
+public class AutomaticCrafter extends AbstractIC implements PipeInputIC, SelfTriggeredIC {
 
     public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
 
@@ -62,6 +63,18 @@ public class AutomaticCrafter extends AbstractIC implements PipeInputIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, doStuff(true, true));
         }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, doStuff(true, true));
     }
 
     public boolean craft(Dispenser disp) {

@@ -10,11 +10,12 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class BlockSensor extends AbstractIC {
+public class BlockSensor extends AbstractIC implements SelfTriggeredIC {
 
     private Block center;
     private int id;
@@ -60,6 +61,12 @@ public class BlockSensor extends AbstractIC {
         if (chip.getInput(0)) {
             chip.setOutput(0, ((Factory) getFactory()).invert ? !hasBlock() : hasBlock());
         }
+    }
+
+    @Override
+    public void think(ChipState chip) {
+
+        chip.setOutput(0, ((Factory) getFactory()).invert ? !hasBlock() : hasBlock());
     }
 
     /**
@@ -128,5 +135,10 @@ public class BlockSensor extends AbstractIC {
 
             return true;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

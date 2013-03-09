@@ -22,13 +22,14 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class Distributer extends AbstractIC implements PipeInputIC {
+public class Distributer extends AbstractIC implements PipeInputIC, SelfTriggeredIC {
 
     public Distributer(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -70,6 +71,18 @@ public class Distributer extends AbstractIC implements PipeInputIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, distribute());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, distribute());
     }
 
     public boolean distribute() {

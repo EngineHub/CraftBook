@@ -16,6 +16,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -25,7 +26,7 @@ import com.sk89q.worldedit.Vector;
 /**
  * @author Me4502
  */
-public class PotionInducer extends AbstractIC {
+public class PotionInducer extends AbstractIC implements SelfTriggeredIC {
 
     public PotionInducer(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -110,6 +111,18 @@ public class PotionInducer extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, induce());
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, induce());
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

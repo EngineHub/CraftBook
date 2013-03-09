@@ -14,10 +14,11 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
-public class ItemFan extends AbstractIC {
+public class ItemFan extends AbstractIC implements SelfTriggeredIC {
 
     public ItemFan(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -52,6 +53,12 @@ public class ItemFan extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, push());
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        state.setOutput(0, push());
     }
 
     public boolean push() {
@@ -109,5 +116,10 @@ public class ItemFan extends AbstractIC {
             String[] lines = new String[] {"force (default 1)", null};
             return lines;
         }
+    }
+
+    @Override
+    public boolean isActive () {
+        return true;
     }
 }

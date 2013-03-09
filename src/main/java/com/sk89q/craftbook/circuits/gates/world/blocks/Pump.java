@@ -12,6 +12,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -20,7 +21,7 @@ import com.sk89q.worldedit.blocks.ItemID;
 /**
  * @author Me4502
  */
-public class Pump extends AbstractIC {
+public class Pump extends AbstractIC implements SelfTriggeredIC {
 
     public Pump(Server server, ChangedSign block, ICFactory factory) {
 
@@ -44,6 +45,20 @@ public class Pump extends AbstractIC {
 
         if (chip.getInput(0)) {
             chip.setOutput(0, scan());
+        }
+    }
+
+    @Override
+    public boolean isActive() {
+
+        return true;
+    }
+
+    @Override
+    public void think(ChipState state) {
+
+        if (state.getInput(0)) {
+            state.setOutput(0, scan());
         }
     }
 
