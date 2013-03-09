@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.util.Vector;
 
@@ -230,11 +232,14 @@ public class BetterPistons extends AbstractMechanic {
 
                         @Override
                         public void run () {
-                            for(int x = 1; x <= fblock+1; x++) {
-                                final int i = x; 
-                                if(x >= fblock+1 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
+                            for(int x = 2; x <= fblock+2; x++) {
+                                int i = x; 
+                                if(x == 2 && trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder) {
+                                    i = 1;  
+                                }
+                                if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
-                                    break; 
+                                    break;
                                 } 
                                 for(Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
 
@@ -272,7 +277,7 @@ public class BetterPistons extends AbstractMechanic {
 
                         @Override
                         public void run () {
-                            for(int x = fblock+2; x >= 2; x--) {
+                            for(int x = fblock+2; x >= 1; x--) {
                                 final int i = x;
                                 if(trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
                                     continue;
@@ -303,35 +308,48 @@ public class BetterPistons extends AbstractMechanic {
      */
     public void copyData(Block from, Block to) {
 
-        to.setTypeIdAndData(from.getTypeId(), from.getData(), true);
+        if(from.getState() instanceof DoubleChest || to.getState() instanceof DoubleChest)
+            return;
+
+        int type = from.getTypeId();
+        byte data = from.getData();
+
+        ItemStack[] oldInventory = null;
+        if (from.getState() instanceof InventoryHolder) {
+            oldInventory = ((InventoryHolder) from.getState()).getInventory().getContents().clone();
+            InventoryHolder fromState = (InventoryHolder) from.getState();
+            fromState.getInventory().clear();
+            ((BlockState) fromState).update();
+            from.setTypeId(0);
+        }
+        to.setTypeIdAndData(type, data, true);
         if(to.getTypeId() == BlockID.STONE_BUTTON || to.getTypeId() == BlockID.WOODEN_BUTTON) {
             if((to.getData() & 0x8) == 0x8)
                 to.setData((byte) (to.getData() ^ 0x8));
         }
 
-        if(from.getState() instanceof Sign) {
+        if(to.getState() instanceof Sign) {
             Sign state = (Sign) to.getState();
             for(int i = 0; i < 4; i++)
                 state.setLine(i, ((Sign) from.getState()).getLine(i));
             state.update();
-        } else if (from.getState() instanceof InventoryHolder) {
-            BlockState state = to.getState();
-            BlockState fromState = from.getState();
-            for(int slot = 0; slot < ((InventoryHolder) state).getInventory().getSize(); slot++) {
-                ((InventoryHolder) state).getInventory().setItem(slot, ((InventoryHolder) fromState).getInventory().getItem(slot));
-                ((InventoryHolder) fromState).getInventory().setItem(slot, null);
-            }
-            state.update();
-            fromState.update();
+        } else if (to.getState() instanceof InventoryHolder) {
+            InventoryHolder state = (InventoryHolder) to.getState();
+            state.getInventory().setContents(oldInventory);
+            ((BlockState) state).update(true);
         }
     }
 
     public boolean canPistonPushBlock(Block block) {
 
+        if(block.getState() instanceof DoubleChest)
+            return false;
+
         switch(block.getTypeId()) {
 
             case BlockID.BEDROCK:
             case BlockID.OBSIDIAN:
+            case BlockID.PISTON_MOVING_PIECE:
                 return false;
             default: 
                 return true;
