@@ -45,7 +45,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         ICMaxRange = config.getInt("circuits.ics.max-radius", 15);
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
         ICKeepLoaded = config.getBoolean("circuits.ics.keep-loaded", false);
-        config.addNode("circuits.ics.disallowed-ics");
         disabledICs = new HashSet<String>(config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>()));
         ICdefaultCoordinate = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
 
