@@ -19,15 +19,14 @@ package com.sk89q.craftbook.circuits.gates.logic;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 
-public class Clock extends AbstractIC implements SelfTriggeredIC {
+public class Clock extends AbstractSelfTriggeredIC {
 
     public Clock(Server server, ChangedSign psign, ICFactory factory) {
 
