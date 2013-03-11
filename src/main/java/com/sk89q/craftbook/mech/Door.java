@@ -315,11 +315,10 @@ public class Door extends AbstractMechanic {
                 }
             }
 
-        flipState(player);
-
         event.setCancelled(true);
 
-        player.print("mech.door.toggle");
+        if(flipState(player))
+            player.print("mech.door.toggle");
     }
 
     @Override
@@ -333,7 +332,7 @@ public class Door extends AbstractMechanic {
         flipState(null);
     }
 
-    private void flipState(LocalPlayer player) {
+    private boolean flipState(LocalPlayer player) {
         // this is kinda funky, but we only check one position
         // to see if the door is open and/or closable.
         // efficiency choice :/
@@ -351,67 +350,56 @@ public class Door extends AbstractMechanic {
         // obsidian in the middle of a wooden door, just weird
         // results.
         if (canPassThrough(hinge.getTypeId())) {
-            new ToggleRegionClosed(player).run();
+            return closeDoor(player);
         } else {
-            new ToggleRegionOpen().run();
+            return openDoor();
         }
     }
 
-    private class ToggleRegionOpen implements Runnable {
+    public boolean openDoor() {
 
-        @Override
-        public void run() {
-
-            for (BlockVector bv : toggle) {
-                Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                int oldType = b.getTypeId();
-                if (b.getTypeId() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
-                    b.setTypeId(BlockID.AIR);
-                    if (plugin.getConfiguration().safeDestruction) {
-                        Sign s = (Sign) trigger.getState();
-                        if (oldType != 0) {
-                            addBlocks(s, 1);
-                        }
+        for (BlockVector bv : toggle) {
+            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            int oldType = b.getTypeId();
+            if (b.getTypeId() == getDoorMaterial() || canPassThrough(b.getTypeId())) {
+                b.setTypeId(BlockID.AIR);
+                if (plugin.getConfiguration().safeDestruction) {
+                    Sign s = (Sign) trigger.getState();
+                    if (oldType != 0) {
+                        addBlocks(s, 1);
                     }
                 }
             }
         }
+
+        return true;
     }
 
-    private class ToggleRegionClosed implements Runnable {
+    public boolean closeDoor(LocalPlayer player) {
 
-        final LocalPlayer player;
-
-        public ToggleRegionClosed(LocalPlayer player) {
-
-            this.player = player;
-        }
-
-        @Override
-        public void run() {
-
-            for (BlockVector bv : toggle) {
-                Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-                if (canPassThrough(b.getTypeId())) {
-                    if (plugin.getConfiguration().safeDestruction) {
-                        Sign s = (Sign) trigger.getState();
-                        if (hasEnoughBlocks(s)) {
-                            b.setTypeId(getDoorMaterial());
-                            b.setData(getDoorData());
-                            removeBlocks(s, 1);
-                        } else {
-                            if (player != null) {
-                                player.printError("mech.not-enough-blocks");
-                            }
-                            return;
-                        }
-                    } else {
+        for (BlockVector bv : toggle) {
+            Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            if (canPassThrough(b.getTypeId())) {
+                if (plugin.getConfiguration().safeDestruction) {
+                    Sign s = (Sign) trigger.getState();
+                    if (hasEnoughBlocks(s)) {
                         b.setTypeId(getDoorMaterial());
                         b.setData(getDoorData());
+                        removeBlocks(s, 1);
+                    } else {
+                        if (player != null) {
+                            player.printError("mech.not-enough-blocks");
+                        } 
+                        return false;
                     }
+                } else {
+                    b.setTypeId(getDoorMaterial());
+                    b.setData(getDoorData());
                 }
             }
         }
+
+        return true;
     }
 
     private int getDoorMaterial() {
