@@ -26,7 +26,7 @@ public class CircuitCommands {
 
     }
 
-    @Command(aliases = {"ic"}, desc = "Commands to manage Craftbook IC's")
+    @Command(aliases = {"ic","circuit"}, desc = "Commands to manage Craftbook IC's")
     @NestedCommand(ICCommands.class)
     public void icCmd(CommandContext context, CommandSender sender) {
 
