@@ -1,7 +1,6 @@
 package com.sk89q.craftbook;
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
@@ -19,7 +18,7 @@ public abstract class LocalConfiguration {
     public boolean ICCached;
     public boolean ICShortHandEnabled;
     public int ICMaxRange;
-    public Set<String> disabledICs;
+    public List<String> disabledICs;
     public boolean ICKeepLoaded;
     public LocationCheckType ICdefaultCoordinate;
 

@@ -439,7 +439,9 @@ public class CircuitCore implements LocalComponent {
      */
     public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
-        if (CraftBookPlugin.inst().getConfiguration().disabledICs.contains(name)) return false;
+        for(String ic : CraftBookPlugin.inst().getConfiguration().disabledICs)
+            if(ic.equalsIgnoreCase(name))
+                return false;
         return getIcManager().register(name, longName, factory, families);
     }
 
