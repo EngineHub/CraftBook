@@ -153,7 +153,9 @@ public class CustomCrafting implements Listener {
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
             if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe || rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
                 if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
-                    if(((ShapedRecipe) rec1).getShape().length != ((ShapedRecipe) rec2).getShape().length) {
+                    if(((ShapedRecipe) rec1).getShape().length == ((ShapedRecipe) rec2).getShape().length) {
+                        if(((ShapedRecipe) rec1).getIngredientMap().values().size() != ((ShapedRecipe) rec2).getIngredientMap().values().size())
+                            return false;
                         List<ItemStack> test = new ArrayList<ItemStack>();
                         test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
                         if(!test.removeAll(((ShapedRecipe) rec2).getIngredientMap().values()))
