@@ -1,3 +1,13 @@
+3.6 Beta 1
+* Remade the ST IC system.
+  * ST IC's now use the same ID as their triggered equivalent, but have an S after the [mcxxxx], hence it is [mcxxxx]S.
+  * In turn, this makes the plugin smaller in size and easier to manage.
+* Many BetterPistons bug fixes.
+* CreatureSpawner spawns skeletons with bows.
+* Fix doors and bridges saying it was toggled successfully when it wasn't.
++ Added a /circuits alias of /ic
+* Fix disabled-ics.
+
 3.5.7
 * Fix SuperSticky piston eating blocks.
 * Fix some bugs with ChunkAnchors
