@@ -51,8 +51,8 @@ public class CartDispenser extends CartMechanism {
         // detect intentions
         Power pow = isActive(blocks.rail, blocks.base, blocks.sign);
         boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
-        for (Chest c : RailUtil.getNearbyChests(blocks.base)) {
-            Inventory inv = inf ? null : c.getInventory();
+
+        if(inf) {
 
             CartType type = CartType.fromString(blocks.getSign().getLine(0));
 
@@ -61,7 +61,7 @@ public class CartDispenser extends CartMechanism {
                 switch (pow) {
                     case ON:
                         if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("collect"))
-                            dispense(blocks, inv, type);
+                            dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
                     case NA:
@@ -73,8 +73,36 @@ public class CartDispenser extends CartMechanism {
                     case OFF:
                     case NA:
                         if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("dispense"))
-                            collect(cart, inv);
+                            collect(cart, null);
                         return;
+                }
+            }
+        } else {
+            for (Chest c : RailUtil.getNearbyChests(blocks.base)) {
+                Inventory inv = c.getInventory();
+
+                CartType type = CartType.fromString(blocks.getSign().getLine(0));
+
+                // go
+                if (cart == null) {
+                    switch (pow) {
+                        case ON:
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("collect"))
+                                dispense(blocks, inv, type);
+                            return;
+                        case OFF: // power going off doesn't eat a cart unless the cart moves.
+                        case NA:
+                    }
+                } else {
+                    switch (pow) {
+                        case ON: // there's already a cart moving on the dispenser so don't spam.
+                            return;
+                        case OFF:
+                        case NA:
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("dispense"))
+                                collect(cart, inv);
+                            return;
+                    }
                 }
             }
         }
