@@ -34,7 +34,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Diode;
+import org.bukkit.material.Button;
+import org.bukkit.material.Directional;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -303,14 +304,19 @@ public class MechanicListenerAdapter {
                     handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
                 }
                 return;
-            } else if (type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON) {
+            } else if (type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON || type == BlockID.COMPARATOR_OFF || type == BlockID.COMPARATOR_ON) {
 
-                Diode diode = (Diode) block.getState().getData();
+                Directional diode = (Directional) block.getState().getData();
                 BlockFace f = diode.getFacing();
                 handleDirectWireInput(new WorldVector(w, x + f.getModX(), y, z + f.getModZ()), block, oldLevel, newLevel);
                 if(block.getRelative(f).getTypeId() != 0)
                     handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
                 return;
+            } else if (type == BlockID.STONE_BUTTON || type == BlockID.WOODEN_BUTTON) {
+
+                Button button = (Button) block.getState().getData();
+                BlockFace f = button.getAttachedFace();
+                handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
             }
             // For redstone wires and repeaters, the code already exited this method
             // Non-wire blocks proceed
