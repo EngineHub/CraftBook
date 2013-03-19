@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.world.weather;
 
-import net.minecraft.server.v1_5_R1.Packet70Bed;
+import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_5_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
+import org.bukkit.WeatherType;
+import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -15,7 +15,9 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.worldedit.Vector;
 
 /**
  * @author Me4502
@@ -61,7 +63,7 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius", null};
+            String[] lines = new String[] {"radius", "rain (If it should rain)"};
             return lines;
         }
     }
@@ -77,37 +79,33 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
 
     }
 
+    private ArrayList<String> players = new ArrayList<String>();
+
+    Vector radius;
+    boolean rain;
+
+    @Override
+    public void load() {
+
+        radius = ICUtil.parseRadius(getSign());
+        rain = getLine(3).equals("rain");
+    }
+
     @Override
     public void think(ChipState chip) {
 
-        try {
-            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            if (chip.getInput(0)) {
-                int dist = Integer.parseInt(getSign().getLine(2));
-                if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
-                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
-                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension,
-                            new Packet70Bed(2, 0));
-                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension,
-                            new Packet70Bed(1, 0));
-                }
-            } else if (!chip.getInput(0)) {
-                int dist = Integer.parseInt(getSign().getLine(2));
-                if (!BukkitUtil.toSign(getSign()).getWorld().hasStorm()) {
-                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension,
-                            new Packet70Bed(2, 0));
-                } else {
-                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist + 2,
-                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension,
-                            new Packet70Bed(1, 0));
-                    ((CraftServer) getServer()).getHandle().sendPacketNearby(b.getX(), b.getY() + 1, b.getZ(), dist,
-                            ((CraftWorld) BukkitUtil.toSign(getSign()).getWorld()).getHandle().dimension,
-                            new Packet70Bed(2, 0));
+        if (chip.getInput(0)) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+
+                if (!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(),
+                        BukkitUtil.toSign(getSign()).getLocation(), radius)) {
+                    p.setPlayerWeather(rain ? WeatherType.DOWNFALL : WeatherType.CLEAR);
+                    players.add(p.getName());
+                } else if (players.contains(p.getName())) {
+                    p.resetPlayerWeather();
+                    players.remove(p.getName());
                 }
             }
-        } catch (Throwable ignored) {
         }
     }
 }
