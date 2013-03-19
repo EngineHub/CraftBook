@@ -36,6 +36,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Button;
 import org.bukkit.material.Directional;
+import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
@@ -316,6 +317,11 @@ public class MechanicListenerAdapter {
 
                 Button button = (Button) block.getState().getData();
                 BlockFace f = button.getAttachedFace();
+                handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
+            } else if (type == BlockID.LEVER) {
+
+                Lever lever = (Lever) block.getState().getData();
+                BlockFace f = lever.getAttachedFace();
                 handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
             }
             // For redstone wires and repeaters, the code already exited this method
