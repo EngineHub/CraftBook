@@ -32,6 +32,7 @@ import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -569,7 +570,9 @@ public class MechanicManager {
      */
     protected boolean passesFilter(Event event) {
 
-        // TODO FIXME
+        if(event instanceof Cancellable && ((Cancellable) event).isCancelled() && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks)
+            return false;
+
         return true;
     }
 
