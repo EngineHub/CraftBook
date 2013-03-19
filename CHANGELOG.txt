@@ -1,3 +1,15 @@
+3.6 Beta 2
+* Fix AutoCrafter and Custom Crafting bugs.
++ Added support for multiple ID's on Minecart Collect/Deposit signs.
+* Made CartDispenser not require a chest if 'inf' is set.
+* Upgraded to 1.5. Added all 1.5 blocks to neccesary places eg Rails.
+* Minor changes to how CraftBook displays corrupt signs/skulls/etc.
+* Made WeatherFaker use the new bukkit API. It now works on any mc version from now on.
+* Fix a few advanced-block-checks and made it more performance friendly.
++ Added enforce-gate-type option to make sure people can't change the contents of a gates type.
++ Added new blocks to the redstone handling code. Also tweaked levers/buttons so they can trigger mechanics on the opposite side of the block they're attached to.
+* Fixed a few bugs where IC's which should always be ST were not ST.
+
 3.6 Beta 1
 * Remade the ST IC system.
   * ST IC's now use the same ID as their triggered equivalent, but have an S after the [mcxxxx], hence it is [mcxxxx]S.

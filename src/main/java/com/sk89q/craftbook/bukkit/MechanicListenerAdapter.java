@@ -322,7 +322,7 @@ public class MechanicListenerAdapter {
 
                 Lever lever = (Lever) block.getState().getData();
                 BlockFace f = lever.getAttachedFace();
-                handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y + f.getModY()*2, z + f.getModZ()*2), block, oldLevel, newLevel);
             }
             // For redstone wires and repeaters, the code already exited this method
             // Non-wire blocks proceed
