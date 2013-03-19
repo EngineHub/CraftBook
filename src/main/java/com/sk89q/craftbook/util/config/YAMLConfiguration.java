@@ -158,6 +158,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         gateLimitColumns = config.getBoolean("mechanics.gate.limit-columns", true);
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
         gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
+        gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
 
         // Hidden Switch Configuration Listener
         hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);

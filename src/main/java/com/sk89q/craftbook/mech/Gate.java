@@ -623,6 +623,8 @@ public class Gate extends AbstractMechanic {
 
     public int getGateBlock() {
 
+        int gateBlock = 0;
+
         if (!sign.getLine(0).isEmpty()) {
             try {
                 return Integer.parseInt(sign.getLine(0));
@@ -639,7 +641,7 @@ public class Gate extends AbstractMechanic {
                 for (int y1 = y - 2; y1 <= y + 1; y1++) {
                     for (int z1 = z - 1; z1 <= z + 1; z1++) {
                         if (getFirstBlock(new WorldVector(world, x1, y1, z1)) != 0) {
-                            return getFirstBlock(new WorldVector(world, x1, y1, z1));
+                            gateBlock = getFirstBlock(new WorldVector(world, x1, y1, z1));
                         }
                     }
                 }
@@ -649,13 +651,17 @@ public class Gate extends AbstractMechanic {
                 for (int y1 = y - 3; y1 <= y + 6; y1++) {
                     for (int z1 = z - 3; z1 <= z + 3; z1++) {
                         if (getFirstBlock(new WorldVector(world, x1, y1, z1)) != 0) {
-                            return getFirstBlock(new WorldVector(world, x1, y1, z1));
+                            gateBlock = getFirstBlock(new WorldVector(world, x1, y1, z1));
                         }
                     }
                 }
             }
         }
-        return 0;
+
+        if(plugin.getConfiguration().gateEnforceType && gateBlock != 0)
+            sign.setLine(0, String.valueOf(gateBlock));
+
+        return gateBlock;
     }
 
     public int getFirstBlock(WorldVector pt) {

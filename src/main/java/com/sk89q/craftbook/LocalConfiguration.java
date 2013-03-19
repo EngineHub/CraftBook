@@ -113,6 +113,7 @@ public abstract class LocalConfiguration {
     public boolean gateLimitColumns;
     public int gateColumnLimit;
     public List<Integer> gateBlocks;
+    public boolean gateEnforceType;
     // Mechanics - Hidden Switch
     public boolean hiddenSwitchEnabled;
     public boolean hiddenSwitchAnyside;
