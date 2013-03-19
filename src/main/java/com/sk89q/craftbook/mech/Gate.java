@@ -658,8 +658,10 @@ public class Gate extends AbstractMechanic {
             }
         }
 
-        if(plugin.getConfiguration().gateEnforceType && gateBlock != 0)
+        if(plugin.getConfiguration().gateEnforceType && gateBlock != 0) {
             sign.setLine(0, String.valueOf(gateBlock));
+            sign.update();
+        }
 
         return gateBlock;
     }
