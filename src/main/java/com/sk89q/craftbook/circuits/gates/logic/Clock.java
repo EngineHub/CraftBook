@@ -34,6 +34,12 @@ public class Clock extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+
+        return true;
+    }
+
+    @Override
     public String getTitle() {
 
         return "Clock";

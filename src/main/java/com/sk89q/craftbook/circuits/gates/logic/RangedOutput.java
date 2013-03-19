@@ -39,6 +39,12 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+
+        return true;
+    }
+
+    @Override
     public void think(ChipState chip) {
 
         chip.setOutput(0, shouldOutput(chip));

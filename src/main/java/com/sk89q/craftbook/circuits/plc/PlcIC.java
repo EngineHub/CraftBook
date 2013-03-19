@@ -366,6 +366,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             public void load() {
 
             }
+
+            @Override
+            public boolean isAlwaysST () {
+                return false;
+            }
         };
     }
 

@@ -15,4 +15,10 @@ public abstract class AbstractSelfTriggeredIC extends AbstractIC implements Self
 
         return true;
     }
+
+    @Override
+    public boolean isAlwaysST() {
+
+        return false;
+    }
 }

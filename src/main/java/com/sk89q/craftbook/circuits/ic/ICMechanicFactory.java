@@ -127,7 +127,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && sign.getLine(1).endsWith("S")) return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
+        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
         else return new ICMechanic(id, ic, family, pt);
     }
 
