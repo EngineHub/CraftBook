@@ -2,6 +2,8 @@ package com.sk89q.craftbook.cart;
 
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
+import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.Inventory;
@@ -124,6 +126,10 @@ public class CartDispenser extends CartMechanism {
                 cartType = ItemType.STORAGE_MINECART.getID();
             } else if (cart instanceof PoweredMinecart) {
                 cartType = ItemType.POWERED_MINECART.getID();
+            } else if (cart instanceof ExplosiveMinecart) {
+                cartType = ItemType.TNT_MINECART.getID();
+            } else if (cart instanceof HopperMinecart) {
+                cartType = ItemType.HOPPER_MINECART.getID();
             }
             inv.addItem(new ItemStack(cartType, 1));
         }
@@ -145,6 +151,12 @@ public class CartDispenser extends CartMechanism {
             } else if (type.equals(CartType.PoweredMinecart)) {
                 if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
                 inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+            } else if (type.equals(CartType.TNTMinecart)) {
+                if (!inv.contains(ItemType.TNT_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.TNT_MINECART.getID(), 1));
+            } else if (type.equals(CartType.HopperMinecart)) {
+                if (!inv.contains(ItemType.HOPPER_MINECART.getID())) return;
+                inv.removeItem(new ItemStack(ItemType.HOPPER_MINECART.getID(), 1));
             }
         }
         blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
@@ -152,7 +164,7 @@ public class CartDispenser extends CartMechanism {
 
     public enum CartType {
         Minecart("Minecart", Minecart.class), StorageMinecart("Storage", StorageMinecart.class),
-        PoweredMinecart("Powered", PoweredMinecart.class);
+        PoweredMinecart("Powered", PoweredMinecart.class), TNTMinecart("TNT", ExplosiveMinecart.class), HopperMinecart("Hopper", org.bukkit.entity.minecart.HopperMinecart.class);
 
         private final Class<? extends Minecart> cl;
         private final String name;

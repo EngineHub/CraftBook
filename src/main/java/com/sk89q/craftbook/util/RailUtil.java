@@ -47,15 +47,13 @@ public class RailUtil {
         return containers;
     }
 
-    private static final int[] trackBlocks = new int[] {
-        BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL,
-        BlockID.DETECTOR_RAIL
+    private static final int[] trackBlocks = new int[] { BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL, BlockID.ACTIVATOR_RAIL
     };
 
     public static boolean isTrack(int id) {
 
         if (CraftBookPlugin.inst().getConfiguration().minecartPressurePlateIntersection)
-            if (id == BlockID.STONE_PRESSURE_PLATE || id == BlockID.WOODEN_PRESSURE_PLATE)
+            if (id == BlockID.STONE_PRESSURE_PLATE || id == BlockID.WOODEN_PRESSURE_PLATE || id == BlockID.PRESSURE_PLATE_HEAVY || id == BlockID.PRESSURE_PLATE_LIGHT)
                 return true;
 
         for (int trackBlock : trackBlocks) {
