@@ -102,7 +102,7 @@ public class MessageSender extends AbstractIC {
         public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
 
             if (!sign.getLine(2).equalsIgnoreCase(player.getName()))
-                if (!ICMechanicFactory.checkPermissionsBoolean(player, this, "restricted.mc1510"))
+                if (!ICMechanicFactory.hasRestrictedPermissions(player, this, "mc1510"))
                     throw new ICVerificationException("You don't have permission to use other players!");
         }
 
