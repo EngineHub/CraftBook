@@ -17,15 +17,18 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
-    int radius;
-    int yOffset;
+    Vector radius;
+    Location offset;
 
     public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
@@ -35,17 +38,8 @@ public class Spigot extends AbstractIC {
     @Override
     public void load() {
 
-        try {
-            radius = Integer.parseInt(getSign().getLine(2));
-        } catch (Exception ignored) {
-            radius = 15;
-        }
-
-        try {
-            yOffset = Integer.parseInt(getSign().getLine(3));
-        } catch (Exception ignored) {
-            yOffset = 1;
-        }
+        radius = ICUtil.parseRadius(getSign());
+        offset = ICUtil.parseBlockLocation(getSign()).getLocation();
     }
 
     @Override
@@ -70,7 +64,7 @@ public class Spigot extends AbstractIC {
 
     public boolean search() {
 
-        Block off = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, yOffset, 0);
+        Block off = offset.getBlock();
         ArrayList<Location> searched = new ArrayList<Location>();
         return searchAt(searched, off);
     }
@@ -79,10 +73,7 @@ public class Spigot extends AbstractIC {
 
         if (searched.contains(off.getLocation())) return false;
         searched.add(off.getLocation());
-        if (off.getLocation()
-                .distanceSquared(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock().getRelative(0,
-                        yOffset, 0)).getLocation()) > radius
-                        * radius) return false;
+        if (LocationUtil.isWithinRadius(off.getLocation(), offset, radius)) return false;
         if (off.getTypeId() == 0) {
 
             int m = getFromChest();
@@ -199,7 +190,7 @@ public class Spigot extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oradius", "+oy offset"};
+            String[] lines = new String[] {"+oradius=x:y:z offset", null};
             return lines;
         }
 

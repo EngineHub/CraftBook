@@ -16,7 +16,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -35,27 +34,8 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        centre = BukkitUtil.toSign(getSign()).getLocation();
-
+        centre = ICUtil.parseBlockLocation(getSign()).getLocation();
         radius = ICUtil.parseRadius(getSign());
-
-        try {
-            String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 2);
-            if (getSign().getLine(2).contains("=")) {
-                String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
-                int x = Integer.parseInt(splitCoords[0]);
-                int y = Integer.parseInt(splitCoords[1]);
-                int z = Integer.parseInt(splitCoords[2]);
-                if (x > 16) x = 16;
-                if (x < -16) x = -16;
-                if (y > 16) y = 16;
-                if (y < -16) y = -16;
-                if (z > 16) z = 16;
-                if (z < -16) z = -16;
-                centre.add(x, y, z);
-            }
-        } catch (Exception ignored) {
-        }
     }
 
     @Override

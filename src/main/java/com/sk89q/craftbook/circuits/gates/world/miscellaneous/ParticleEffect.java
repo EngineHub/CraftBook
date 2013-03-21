@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -13,6 +13,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -64,7 +65,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
     int effectID;
     int effectData;
     int times;
-    Vector offset;
+    Location offset;
 
     @Override
     public void load() {
@@ -88,12 +89,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
             times = 1;
         }
 
-        try {
-            String[] off = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1], 2);
-            offset = new Vector(Double.parseDouble(off[0]), Double.parseDouble(off[1]), Double.parseDouble(off[2]));
-        } catch (Exception e) {
-            offset = new Vector(0, 1, 0);
-        }
+        offset = ICUtil.parseBlockLocation(getSign()).getLocation();
     }
 
     public void doEffect() {

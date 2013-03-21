@@ -22,7 +22,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -35,7 +34,6 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    Vector offset;
     Vector radius;
 
     Block target;
@@ -45,29 +43,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     public void load() {
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-
         radius = ICUtil.parseRadius(getSign(), 3);
-
-        try {
-            try {
-                String[] loc = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(3))[1]);
-                offset = new Vector(Integer.parseInt(loc[0]), Integer.parseInt(loc[1]), Integer.parseInt(loc[2]));
-                if (offset.getX() > 16) offset.setX(16);
-                if (offset.getY() > 16) offset.setY(16);
-                if (offset.getZ() > 16) offset.setZ(16);
-
-                if (offset.getX() < -16) offset.setX(-16);
-                if (offset.getY() < -16) offset.setY(-16);
-                if (offset.getZ() < -16) offset.setZ(-16);
-            } catch (Exception e) {
-                offset = new Vector(0, 2, 0);
-            }
-
-        } catch (Exception e) {
-            offset = new Vector(0, 2, 0);
-        }
-
-        target = onBlock.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
+        target = ICUtil.parseBlockLocation(getSign(), 3);
     }
 
     @Override

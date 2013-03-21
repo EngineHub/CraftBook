@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,11 +40,13 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     }
 
     Vector radius;
+    Location offset;
 
     @Override
     public void load() {
 
         radius = ICUtil.parseRadius(getSign());
+        offset = ICUtil.parseBlockLocation(getSign()).getLocation();
 
     }
 
@@ -64,7 +67,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
             for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
                 for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    Block b = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z).getBlock();
+                    Block b = offset.add(x, y, z).getBlock();
                     if (b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
                         if (b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
                             b.setTypeId(BlockID.SOIL);

@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 
@@ -50,19 +49,8 @@ public class TeleportTransmitter extends AbstractIC {
     public void load() {
 
         band = getLine(2);
-        offset = BukkitUtil.toSign(getSign()).getLocation();
+        offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         radius = ICUtil.parseRadius(getSign(), 3);
-        try {
-            String[] splitEquals = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(3), 2);
-            if (getSign().getLine(3).contains("=")) {
-                String[] splitCoords = RegexUtil.COLON_PATTERN.split(splitEquals[1]);
-                int x = Integer.parseInt(splitCoords[0]);
-                int y = Integer.parseInt(splitCoords[1]);
-                int z = Integer.parseInt(splitCoords[2]);
-                offset.add(x, y, z);
-            }
-        } catch (Exception e) {
-        }
     }
 
     @Override

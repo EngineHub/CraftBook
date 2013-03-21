@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -26,7 +27,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractSelfTriggeredIC {
@@ -71,17 +72,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        try {
-            String[] st = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
-            if (st.length != 3) throw new Exception();
-            x = Integer.parseInt(st[0]);
-            y = Integer.parseInt(st[1]);
-            z = Integer.parseInt(st[2]);
-        } catch (Exception ignored) {
-            x = 0;
-            y = 1;
-            z = 0;
-        }
+        centre = ICUtil.parseBlockLocation(getSign()).getLocation();
 
         try {
             min = Byte.parseByte(getSign().getLine(2));
@@ -95,14 +86,12 @@ public class LightSensor extends AbstractSelfTriggeredIC {
         }
     }
 
-    int x;
-    int y;
-    int z;
+    Location centre;
     byte min;
 
     protected boolean getTargetLighted() {
 
-        return hasLight(min, x, y, z);
+        return hasLight(min, centre.getBlockX(), centre.getBlockY(), centre.getBlockZ());
     }
 
     /**

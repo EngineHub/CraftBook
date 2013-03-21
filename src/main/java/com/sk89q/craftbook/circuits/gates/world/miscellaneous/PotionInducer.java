@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -19,7 +20,6 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
 /**
@@ -45,6 +45,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
     }
 
     Vector radius;
+    Location offset;
     int effectID, effectAmount, effectTime;
     boolean mobs;
     boolean players;
@@ -85,13 +86,14 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         }
         line4 = line4.replace("m", "").replace("p", "");
         radius = ICUtil.parseRadius(getSign(), 3);
+        offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
     }
 
     public boolean induce() {
 
         boolean value = false;
         // chunks
-        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation(), radius)) {
+        for (Entity entity : LocationUtil.getNearbyEntities(offset, radius)) {
             if (entity.isValid() && entity instanceof LivingEntity) {
                 LivingEntity liv = (LivingEntity) entity;
                 if (!mobs && !(liv instanceof Player)) continue;

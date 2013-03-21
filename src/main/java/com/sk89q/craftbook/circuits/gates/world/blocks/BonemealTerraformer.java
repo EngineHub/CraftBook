@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
@@ -20,7 +21,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -28,6 +28,7 @@ import com.sk89q.worldedit.blocks.ItemID;
 public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
     Vector radius;
+    Location location;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -38,6 +39,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public void load() {
 
         radius = ICUtil.parseRadius(getSign());
+        location = ICUtil.parseBlockLocation(getSign()).getLocation();
     }
 
     @Override
@@ -68,14 +70,13 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
     public void terraform(boolean overrideChance) {
 
-        BlockWorldVector position = getSign().getBlockVector();
         for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
             for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
                 for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
                     if (overrideChance || CraftBookPlugin.inst().getRandom().nextInt(40) == 0) {
-                        int rx = position.getBlockX() - x;
-                        int ry = position.getBlockY() - y;
-                        int rz = position.getBlockZ() - z;
+                        int rx = location.getBlockX() - x;
+                        int ry = location.getBlockY() - y;
+                        int rz = location.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                         if (b.getTypeId() == BlockID.CROPS && b.getData() < 0x7) {
                             if (consumeBonemeal()) {
@@ -330,7 +331,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oradius", null};
+            String[] lines = new String[] {"+oradius=x:y:z", null};
             return lines;
         }
     }
