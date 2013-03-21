@@ -25,6 +25,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Clock extends AbstractSelfTriggeredIC {
 
@@ -88,6 +89,8 @@ public class Clock extends AbstractSelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory {
 
+        public boolean inverted = false;
+
         public Factory(Server server) {
 
             super(server);
@@ -129,6 +132,18 @@ public class Clock extends AbstractSelfTriggeredIC {
             String[] lines = new String[] {"ticks required", "current ticks"};
             return lines;
         }
+
+        @Override
+        public void addConfiguration(YAMLProcessor config, String path) {
+
+            inverted = config.getBoolean(path + "inverted", false);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+
+            return true;
+        }
     }
 
     @Override
@@ -140,7 +155,7 @@ public class Clock extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        if (!chip.getInput(0)) {
+        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
             triggerClock(chip);
         }
     }
