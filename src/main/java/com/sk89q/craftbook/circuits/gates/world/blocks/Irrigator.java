@@ -2,7 +2,6 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.HashMap;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -28,13 +27,17 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    Location centre;
+    Block centre;
     Vector radius;
 
     @Override
     public void load() {
 
-        centre = ICUtil.parseBlockLocation(getSign()).getLocation();
+        if (getLine(2).contains("=")) {
+            centre = ICUtil.parseBlockLocation(getSign(), 2);
+        } else {
+            centre = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        }
         radius = ICUtil.parseRadius(getSign());
     }
 
@@ -67,10 +70,10 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
             for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
                 for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    int rx = centre.getBlockX() - x;
-                    int ry = centre.getBlockY() - y;
-                    int rz = centre.getBlockZ() - z;
-                    Block b = centre.getWorld().getBlockAt(rx, ry, rz);
+                    int rx = centre.getX() - x;
+                    int ry = centre.getY() - y;
+                    int rz = centre.getZ() - z;
+                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
                     if (b.getTypeId() == BlockID.SOIL && b.getData() < 0x1) {
                         if (consumeWater()) {
                             b.setData((byte) 0x8, false);
