@@ -93,6 +93,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
                     if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                         ItemStack item = c.getInventory().getItem(slot);
                         item.setDurability((short) (item.getDurability() + 1));
+                        if(item.getDurability() < 0)
+                            item = null;
                         c.getInventory().setItem(slot, item);
                         return true;
                     }
@@ -104,8 +106,6 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     }
 
     public static class Factory extends AbstractICFactory {
-
-        int maxradius;
 
         public Factory(Server server) {
 

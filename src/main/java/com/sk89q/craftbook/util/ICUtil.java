@@ -131,6 +131,10 @@ public class ICUtil {
         } catch (ArrayIndexOutOfBoundsException e) {
             // do nothing and use defaults
         }
+
+        if(offsetX == 0 && offsetY == 0 && offsetZ == 0)
+            return target;
+
         if (relative == LocationCheckType.RELATIVE) {
             target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
         } else if (relative == LocationCheckType.OFFSET){

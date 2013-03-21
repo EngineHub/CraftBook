@@ -39,6 +39,7 @@ public class Planter extends AbstractSelfTriggeredIC {
     }
 
     ItemStack item; 
+
     Block target;
     Block onBlock;
     Vector radius;
@@ -50,9 +51,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         if (item == null) item = new ItemStack(295, 1);
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-
         radius = ICUtil.parseRadius(getSign(), 3);
-
         target = ICUtil.parseBlockLocation(getSign(), 3);
     }
 
@@ -260,10 +259,5 @@ public class Planter extends AbstractSelfTriggeredIC {
             String[] lines = new String[] {"Item to plant id{:data}", "+oradius=x:y:z offset"};
             return lines;
         }
-    }
-
-    @Override
-    public boolean isActive () {
-        return true;
     }
 }

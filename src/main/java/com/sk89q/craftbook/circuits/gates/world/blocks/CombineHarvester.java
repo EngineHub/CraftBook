@@ -35,7 +35,6 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     }
 
     Vector radius;
-
     Block target;
     Block onBlock;
 
