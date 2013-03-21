@@ -164,6 +164,8 @@ public class ItemUtil {
                 return new ItemStack(BlockID.GLASS);
             case ItemID.CLAY_BALL:
                 return new ItemStack(ItemID.BRICK_BAR);
+            case BlockID.NETHERRACK:
+                return new ItemStack(ItemID.NETHER_BRICK);
             default:
                 return null;
         }
