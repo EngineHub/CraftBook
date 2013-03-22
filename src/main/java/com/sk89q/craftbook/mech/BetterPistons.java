@@ -20,6 +20,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -173,10 +174,18 @@ public class BetterPistons extends AbstractMechanic {
         if(type == Types.CRUSH && event.getNewCurrent() > event.getOldCurrent()) {
             PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
             piston.setPowered(false);
-            if(trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.BEDROCK)
+            if(!canPistonPushBlock(trigger.getRelative(piston.getFacing())))
                 return;
             trigger.getRelative(piston.getFacing()).breakNaturally();
             trigger.getRelative(piston.getFacing()).setTypeId(0, false);
+
+            if(CraftBookPlugin.inst().getConfiguration().pistonsCrusherInstaKill) {
+                for(Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
+                    if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
+                        EntityUtil.killEntity(ent);
+                    }
+                }
+            }
         } else if(type == Types.BOUNCE && event.getNewCurrent() > event.getOldCurrent()) {
             PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
             if(piston.isSticky())
@@ -192,9 +201,8 @@ public class BetterPistons extends AbstractMechanic {
 
             Vector vel = new Vector(piston.getFacing().getModX()*mult, piston.getFacing().getModY()*mult, piston.getFacing().getModZ()*mult);
             if(trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION) {
-                for(Entity ent : trigger.getChunk().getEntities()) {
-
-                    if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing()).getLocation()) < 0.5) {
+                for(Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
+                    if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                         ent.setVelocity(vel);
                     }
                 }
@@ -244,7 +252,7 @@ public class BetterPistons extends AbstractMechanic {
                                 } 
                                 for(Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
 
-                                    if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing(), i).getLocation()) < 0.5) {
+                                    if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i))) {
                                         ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                     }
                                 }
@@ -285,7 +293,7 @@ public class BetterPistons extends AbstractMechanic {
                                 if(trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0) {
                                     for(Entity ent : trigger.getRelative(piston.getFacing(), i+1).getChunk().getEntities()) {
 
-                                        if(ent.getLocation().getBlock().getLocation().distanceSquared(trigger.getRelative(piston.getFacing(), i+1).getLocation()) < 0.5) {
+                                        if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i+1))) {
                                             ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                         }
                                     }

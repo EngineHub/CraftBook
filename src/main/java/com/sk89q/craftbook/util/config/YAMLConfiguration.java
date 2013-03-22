@@ -87,6 +87,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Better Pistons Configuration Listener
         pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", true);
         pistonsCrusher = config.getBoolean("mechanics.better-pistons.crushers", true);
+        pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);

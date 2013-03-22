@@ -57,6 +57,7 @@ public abstract class LocalConfiguration {
     public int pistonMaxDistance;
     public boolean pistonsEnabled;
     public boolean pistonsCrusher;
+    public boolean pistonsCrusherInstaKill;
     public boolean pistonsSuperSticky;
     public boolean pistonsBounce;
     public boolean pistonsSuperPush;
