@@ -138,17 +138,14 @@ public class MechanicListenerAdapter {
                 ignoredEvents.remove(event);
                 return;
             }
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                for (MechanicManager manager : managers) {
-                    manager.dispatchBlockRightClick(event);
-                }
-            }
 
-            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                for (MechanicManager manager : managers) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                for (MechanicManager manager : managers)
+                    manager.dispatchBlockRightClick(event);
+
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+                for (MechanicManager manager : managers)
                     manager.dispatchBlockLeftClick(event);
-                }
-            }
         }
     }
 
@@ -190,9 +187,8 @@ public class MechanicListenerAdapter {
                 ignoredEvents.remove(event);
                 return;
             }
-            for (MechanicManager manager : managers) {
+            for (MechanicManager manager : managers)
                 manager.dispatchSignChange(event);
-            }
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
@@ -202,9 +198,8 @@ public class MechanicListenerAdapter {
                 ignoredEvents.remove(event);
                 return;
             }
-            for (MechanicManager manager : managers) {
+            for (MechanicManager manager : managers)
                 manager.dispatchBlockBreak(event);
-            }
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
@@ -243,7 +238,7 @@ public class MechanicListenerAdapter {
 
             if (type == BlockID.REDSTONE_WIRE) {
 
-                if (CraftBookPlugin.inst().getConfiguration().indirectRedstone){
+                if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) {
 
                     // power all blocks around the redstone wire on the same y level
                     // north/south
@@ -351,9 +346,8 @@ public class MechanicListenerAdapter {
         protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
             Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-            for (MechanicManager manager : managers) {
+            for (MechanicManager manager : managers)
                 manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
-            }
         }
     }
 
@@ -400,7 +394,8 @@ public class MechanicListenerAdapter {
                 @Override
                 public void run() {
 
-                    for (MechanicManager manager : managers) { manager.enumerate(event.getChunk()); }
+                    for (MechanicManager manager : managers) 
+                        manager.enumerate(event.getChunk());
                 }
             }, 2);
         }
@@ -418,10 +413,8 @@ public class MechanicListenerAdapter {
             int chunkX = event.getChunk().getX();
             int chunkZ = event.getChunk().getZ();
 
-            for (MechanicManager manager : managers) {
-                manager.unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ),
-                        event);
-            }
+            for (MechanicManager manager : managers)
+                manager.unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
         }
     }
 }

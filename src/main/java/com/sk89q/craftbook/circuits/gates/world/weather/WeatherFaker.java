@@ -69,6 +69,12 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+
+        return true;
+    }
+
+    @Override
     public boolean isActive() {
 
         return true;

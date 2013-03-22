@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
@@ -18,7 +18,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 
-public class TeleportTransmitter extends AbstractIC {
+public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
     public TeleportTransmitter(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -56,24 +56,22 @@ public class TeleportTransmitter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            Player closest = null;
+        if (chip.getInput(0))
+            sendPlayer();
+    }
 
-            for (Player e : offset.getWorld().getPlayers()) {
-                if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius)) {
-                    continue;
-                }
+    public void sendPlayer() {
+        Player closest = null;
 
-                if (closest == null) closest = e;
-                else if (closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e
-                        .getLocation().distanceSquared(
-                                BukkitUtil.toSign(getSign()).getLocation())) closest = e;
-            }
-            if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(),
-                    closest.getName())))
-                closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
-            return;
+        for (Player e : offset.getWorld().getPlayers()) {
+            if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius))
+                continue;
+
+            if (closest == null) closest = e;
+            else if (closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation())) closest = e;
         }
+        if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
+            closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
     }
 
     public static Tuple2<Long, String> getValue(String band) {
@@ -129,5 +127,12 @@ public class TeleportTransmitter extends AbstractIC {
             String[] lines = new String[] {"frequency name", "radius=x:y:z offset"};
             return lines;
         }
+    }
+
+    @Override
+    public void think (ChipState chip) {
+
+        if (chip.getInput(0))
+            sendPlayer();
     }
 }

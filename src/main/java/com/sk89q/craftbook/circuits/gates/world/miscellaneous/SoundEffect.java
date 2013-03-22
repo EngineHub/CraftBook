@@ -11,6 +11,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -43,6 +44,15 @@ public class SoundEffect extends AbstractIC {
 
         String soundName = getSign().getLine(3).trim();
         sound = Sound.valueOf(soundName);
+        if(sound == null) {
+            for(Sound sound : Sound.values()) {
+
+                if(soundName.trim().length() > 14 && sound.name().length() > 15 && sound.name().startsWith(soundName)) {
+                    this.sound = sound;
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -98,6 +108,24 @@ public class SoundEffect extends AbstractIC {
 
             String[] lines = new String[] {"volume:pitch", "sound name"};
             return lines;
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            Sound sound = Sound.valueOf(sign.getLine(3).trim());
+            if(sound == null) {
+                for(Sound s : Sound.values()) {
+
+                    if(sign.getLine(3).trim().length() > 14 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
+                        sound = s;
+                        break;
+                    }
+                }
+            }
+
+            if(sound == null)
+                throw new ICVerificationException("Unknown Sound!");
         }
     }
 }
