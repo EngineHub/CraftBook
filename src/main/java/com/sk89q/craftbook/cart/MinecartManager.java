@@ -83,6 +83,7 @@ public class MinecartManager {
 
     public void enter(VehicleEnterEvent event) {
 
+        if(!event.getVehicle().getLocation().getChunk().isLoaded()) return;
         try {
             Block block = event.getVehicle().getLocation().getBlock();
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
