@@ -89,11 +89,7 @@ public class MinecartManager {
             cmb.setFromBlock(block); // WAI
             CartMechanism thingy = mechanisms.get(new ItemInfo(cmb.base.getTypeId(), cmb.base.getData()));
             if (thingy != null) {
-                Location to = event.getVehicle().getLocation();
-                Location from = event.getEntered().getLocation();
-                boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
-                        && from.getBlockZ() == to.getBlockZ();
-                thingy.enter((Minecart) event.getVehicle(), event.getEntered(), cmb, crossesBlockBoundary);
+                thingy.enter((Minecart) event.getVehicle(), event.getEntered(), cmb);
             }
         } catch (InvalidMechanismException ignored) {
             /* okay, so there's nothing interesting to see here. carry on then, eh? */

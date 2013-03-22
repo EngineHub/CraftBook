@@ -55,7 +55,7 @@ public class CartStation extends CartMechanism {
     }
 
     @Override
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks) {
         // validate
         if (cart == null) return;
         if (!blocks.matches("station")) return;

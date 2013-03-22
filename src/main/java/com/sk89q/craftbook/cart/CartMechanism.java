@@ -38,7 +38,7 @@ public abstract class CartMechanism {
      */
     public abstract void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor);
 
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks, boolean minor) {
+    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks) {
 
     }
 
@@ -50,8 +50,8 @@ public abstract class CartMechanism {
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
-            BlockFace.NORTH, BlockFace.EAST,
-            BlockFace.SOUTH, BlockFace.WEST
+        BlockFace.NORTH, BlockFace.EAST,
+        BlockFace.SOUTH, BlockFace.WEST
     };
 
     /**
