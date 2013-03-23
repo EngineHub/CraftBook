@@ -57,6 +57,21 @@ public class ICMechanic extends PersistentMechanic {
     }
 
     @Override
+    public boolean equals(Object o) {
+
+        if(o instanceof ICMechanic)
+            return ((ICMechanic) o).id.equals(id) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ();
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return (pos.getBlockX() * 1103515245 + 12345 ^ pos.getBlockY() * 1103515245 + 12345 ^ pos.getBlockZ() * 1103515245 + 12345 ^ id.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
+    }
+
+    @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
         BlockWorldVector pt = getTriggerPositions().get(0);
