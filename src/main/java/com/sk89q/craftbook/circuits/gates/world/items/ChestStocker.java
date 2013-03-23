@@ -2,12 +2,10 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -15,7 +13,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class ChestStocker extends AbstractSelfTriggeredIC {
@@ -67,13 +64,13 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
 
     public boolean stock() {
 
-        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(offset.getBlockX(), offset.getBlockY(),
-                offset.getBlockZ());
+        if (offset.getBlock().getTypeId() == BlockID.CHEST) {
 
-        if (chest.getTypeId() == BlockID.CHEST) {
-
-            Chest c = (Chest) chest.getState();
-            if (c.getInventory().addItem(item.clone()).isEmpty()) return true;
+            Chest c = (Chest) offset.getBlock().getState();
+            if (c.getInventory().addItem(item.clone()).isEmpty()) {
+                c.update();
+                return true;
+            }
         }
         return false;
     }
