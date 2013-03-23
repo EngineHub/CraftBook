@@ -2,9 +2,11 @@ package com.sk89q.craftbook.mech;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -49,11 +51,17 @@ public class SignCopier extends AbstractMechanic {
 
             Sign s = (Sign) event.getClickedBlock().getState();
 
-            for(int i = 0; i < signs.get(player.getName()).length; i++) {
-                s.setLine(i, signs.get(player.getName())[i]);
+            SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), signs.get(player.getName()));
+            Bukkit.getPluginManager().callEvent(sev);
+
+            if(!sev.isCancelled()) {
+                for(int i = 0; i < signs.get(player.getName()).length; i++) {
+                    s.setLine(i, signs.get(player.getName())[i]);
+                }
+
+                s.update();
             }
 
-            s.update();
             player.print("mech.signcopy.paste");
         }
     }
