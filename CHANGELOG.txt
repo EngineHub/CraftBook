@@ -1,3 +1,14 @@
+3.6 Beta 3
+* Fix a bug where MC1510 would allow players without restricted perms to use BROADCAST.
++ Added NetherRack -> NetherBrick support to Cooking Pot.
+* Upgraded to 1.5.1
+* Changed the offset of many IC's so they work the same way.
+* Sound Effect IC will now allow sounds with a greater length than the sign.
+* Temporary possible workaround for the vehicle crash in bukkit.
++ Added an option for Crush piston to kill entities.
++ Added a sign copying mechanic using Ink Sacs.
+* Possible subtle performance improvements.
+
 3.6 Beta 2
 * Fix AutoCrafter and Custom Crafting bugs.
 + Added support for multiple ID's on Minecart Collect/Deposit signs.

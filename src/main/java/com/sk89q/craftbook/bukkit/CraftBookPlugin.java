@@ -149,6 +149,7 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.5.7", "1853");
         versionConverter.put("3.6b1", "1859");
         versionConverter.put("3.6b2", "1873");
+        versionConverter.put("3.6b3", "1886");
     }
 
     public void registerManager(MechanicManager manager) {
