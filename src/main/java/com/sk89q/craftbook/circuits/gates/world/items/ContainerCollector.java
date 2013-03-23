@@ -1,16 +1,12 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,9 +18,9 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -80,6 +76,9 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         int z = b.getZ();
         Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
 
+        if(!(bl instanceof InventoryHolder))
+            return false;
+
         boolean collected = false;
         for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
             if (!(en instanceof Item)) {
@@ -105,69 +104,19 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
                 }
 
                 // Add the items to a container, and destroy them.
-                if (addToContainer(bl, stack)) {
+                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)bl.getState(), stack);
+                if(leftovers.isEmpty()) {
                     item.remove();
                     collected = true;
+                } else {
+                    if(leftovers.get(0).getAmount() == stack.getAmount())
+                        continue;
+                    else
+                        item.getItemStack().setAmount(leftovers.get(0).getAmount());
                 }
             }
         }
         return collected;
-    }
-
-    private boolean addToContainer(Block bl, ItemStack stack) {
-
-        int type = bl.getTypeId();
-        if (type == BlockID.CHEST || type == BlockID.DISPENSER) {
-            BlockState state = bl.getState();
-            Inventory inventory = ((InventoryHolder) state).getInventory();
-            if (inventory.firstEmpty() != -1) {
-                inventory.addItem(stack);
-                state.update();
-                return true;
-            }
-        } else if (type == BlockID.BREWING_STAND) {
-
-            if (!ItemUtil.isAPotionIngredient(stack)) return false;
-            BrewingStand brewingStand = (BrewingStand) bl.getState();
-            BrewerInventory inv = brewingStand.getInventory();
-            if (fitsInSlot(stack, inv.getIngredient())) {
-                if (inv.getIngredient() == null) {
-                    inv.setIngredient(stack);
-                } else {
-                    ItemUtil.addToStack(inv.getIngredient(), stack);
-                }
-                brewingStand.update();
-                return true;
-            }
-        } else if (type == BlockID.FURNACE || type == BlockID.BURNING_FURNACE) {
-
-            Furnace furnace = (Furnace) bl.getState();
-            FurnaceInventory inv = furnace.getInventory();
-
-            if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, inv.getSmelting())) {
-                if (inv.getSmelting() == null) {
-                    inv.setSmelting(stack);
-                } else {
-                    ItemUtil.addToStack(inv.getSmelting(), stack);
-                }
-                furnace.update();
-                return true;
-            } else if (ItemUtil.isAFuel(stack) && fitsInSlot(stack, inv.getFuel())) {
-                if (inv.getFuel() == null) {
-                    inv.setFuel(stack);
-                } else {
-                    ItemUtil.addToStack(inv.getFuel(), stack);
-                }
-                furnace.update();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
-
-        return slot == null || ItemUtil.areItemsIdentical(stack, slot) && stack.getAmount() + slot.getAmount() <= 64;
     }
 
     public static class Factory extends AbstractICFactory {

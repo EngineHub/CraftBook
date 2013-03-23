@@ -3,7 +3,12 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Furnace;
+import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -14,14 +19,99 @@ public class InventoryUtil {
     /**
      * Adds items to an inventory, returning the leftovers.
      * 
-     * @param inv The inventory to add the items to.
+     * @param block The InventoryHolder to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToInventory(Inventory inv, ItemStack ... stacks) {
+    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder block, ItemStack ... stacks) {
 
         //TODO finish this (Make it call the seperate specific methods in this class.
-        return null;
+
+        if(block instanceof Furnace) {
+
+            return addItemsToFurnace((Furnace) block, stacks);
+        } else if(block instanceof BrewingStand) {
+
+            return addItemsToBrewingStand((BrewingStand) block, stacks);
+        } else { //Basic inventories like chests, dispensers, storage carts, etc.
+
+            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(block.getInventory().addItem(stacks).values());
+            if(block instanceof BlockState)
+                ((BlockState) block).update();
+            return leftovers;
+        }
+    }
+
+    /**
+     * Adds items to a furnace, returning the leftovers.
+     * 
+     * @param furnace The Furnace to add the items to.
+     * @param stacks The stacks to add to the inventory.
+     * @return The stacks that could not be added.
+     */
+    public static ArrayList<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
+
+        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+
+        for(ItemStack stack : stacks) {
+
+            if(!ItemUtil.isStackValid(stack))
+                continue;
+
+            if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
+                if (furnace.getInventory().getSmelting() == null) {
+                    furnace.getInventory().setSmelting(stack);
+                } else {
+                    leftovers.add(ItemUtil.addToStack(furnace.getInventory().getSmelting(), stack));
+                }
+            } else if (ItemUtil.isAFuel(stack) && fitsInSlot(stack, furnace.getInventory().getFuel())) {
+                if (furnace.getInventory().getFuel() == null) {
+                    furnace.getInventory().setFuel(stack);
+                } else {
+                    leftovers.add(ItemUtil.addToStack(furnace.getInventory().getFuel(), stack));
+                }
+            } else {
+                leftovers.add(stack);
+            }
+        }
+
+        furnace.update();
+
+        return leftovers;
+    }
+
+    /**
+     * Adds items to a BrewingStand, returning the leftovers.
+     * 
+     * @param brewingStand The BrewingStand to add the items to.
+     * @param stacks The stacks to add to the inventory.
+     * @return The stacks that could not be added.
+     */
+    public static ArrayList<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
+
+        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+
+        for(ItemStack stack : stacks) {
+
+            if (!ItemUtil.isAPotionIngredient(stack)) {
+                leftovers.add(stack);
+                continue;
+            }
+            BrewerInventory inv = brewingStand.getInventory();
+            if (InventoryUtil.fitsInSlot(stack, inv.getIngredient())) {
+                if (inv.getIngredient() == null) {
+                    inv.setIngredient(stack);
+                } else {
+                    leftovers.add(ItemUtil.addToStack(inv.getIngredient(), stack));
+                }
+            } else {
+                leftovers.add(stack);
+            }
+        }
+
+        brewingStand.update();
+
+        return leftovers;
     }
 
     /**
@@ -66,5 +156,17 @@ public class InventoryUtil {
         }
 
         return itemsToFind.isEmpty();
+    }
+
+    /**
+     * Checks whether the itemstack can easily stack onto the other itemstack.
+     * 
+     * @param stack The stack to add.
+     * @param slot The base stack.
+     * @return whether it can be added or not.
+     */
+    public static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
+
+        return slot == null || ItemUtil.areItemsIdentical(stack, slot) && stack.getAmount() + slot.getAmount() <= 64;
     }
 }
