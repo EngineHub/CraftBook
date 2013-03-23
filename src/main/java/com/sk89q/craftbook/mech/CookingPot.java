@@ -18,6 +18,7 @@ import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
@@ -26,7 +27,6 @@ import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -47,6 +47,18 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         super();
         this.pt = pt;
+
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        if (block.getState() instanceof Sign) {
+
+            sign = BukkitUtil.toChangedSign((Sign) block.getState());
+            try {
+                lastTick = Integer.parseInt(sign.getLine(2));
+            } catch (Exception e) {
+                sign.setLine(2, "0");
+                sign.update(false);
+            }
+        }
     }
 
     @Override
@@ -54,6 +66,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         return true;
     }
+
+    int lastTick = 0, oldTick;
+    ChangedSign sign;
 
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
 
@@ -111,94 +126,90 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void think() {
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
-            int lastTick = 0, oldTick;
-            try {
-                lastTick = Integer.parseInt(sign.getLine(2));
-            } catch (Exception e) {
-                sign.setLine(2, String.valueOf(lastTick));
-                sign.update();
+        oldTick = lastTick;
+        if (lastTick < 0) lastTick = 0;
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
+        int x = b.getX();
+        int y = b.getY() + 2;
+        int z = b.getZ();
+        Block cb = b.getWorld().getBlockAt(x, y, z);
+        if (cb.getTypeId() == BlockID.CHEST) {
+            if(getMultiplier(sign) < 0) {
+                increaseMultiplier(sign, 1);
+                return;
             }
-            oldTick = lastTick;
-            if (lastTick < 0) lastTick = 0;
-            Block b = SignUtil.getBackBlock(sign.getBlock());
-            int x = b.getX();
-            int y = b.getY() + 2;
-            int z = b.getZ();
-            Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getTypeId() == BlockID.CHEST) {
-                if(getMultiplier(sign) < 0) {
-                    increaseMultiplier(sign, 1);
-                    return;
-                }
-                if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
-                        || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
-                        && plugin.getConfiguration().cookingPotOres) {
-                    lastTick += getMultiplier(sign);
-                    if(getMultiplier(sign) > 0)
-                        decreaseMultiplier(sign, 1);
-                }
-                if (lastTick >= 50) {
-                    Block fire = sign.getWorld().getBlockAt(x, y - 1, z);
-                    if (fire.getTypeId() == BlockID.FIRE) {
-                        Chest chest = (Chest) cb.getState();
-                        for (ItemStack i : chest.getInventory().getContents()) {
-                            if (i == null) {
-                                continue;
-                            }
-                            ItemStack cooked = ItemUtil.getCookedResult(i);
-                            if (cooked == null) {
-                                if (plugin.getConfiguration().cookingPotOres)
-                                    cooked = ItemUtil.getSmeletedResult(i);
-                                if (cooked == null) continue;
-                            }
-                            if (chest.getInventory().addItem(cooked).isEmpty())
-                                chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
-                            chest.update();
-                            break;
+            if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
+                    || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
+                    && plugin.getConfiguration().cookingPotOres) {
+                lastTick += getMultiplier(sign);
+                if(getMultiplier(sign) > 0)
+                    decreaseMultiplier(sign, 1);
+            }
+            if (lastTick >= 50) {
+                Block fire = b.getWorld().getBlockAt(x, y - 1, z);
+                if (fire.getTypeId() == BlockID.FIRE) {
+                    Chest chest = (Chest) cb.getState();
+                    for (ItemStack i : chest.getInventory().getContents()) {
+                        if (i == null) {
+                            continue;
                         }
-                        lastTick -= 50;
+                        ItemStack cooked = ItemUtil.getCookedResult(i);
+                        if (cooked == null) {
+                            if (plugin.getConfiguration().cookingPotOres)
+                                cooked = ItemUtil.getSmeletedResult(i);
+                            if (cooked == null) continue;
+                        }
+                        if (chest.getInventory().addItem(cooked).isEmpty())
+                            chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
+                        chest.update();
+                        break;
                     }
-                }
+                    lastTick -= 50;
+                } else
+                    lastTick = 0;
             }
             if (lastTick != oldTick) {
                 sign.setLine(2, String.valueOf(lastTick));
-                sign.update();
+                sign.update(false);
             }
+        }
+    }
+
+    @Override
+    public void unload() {
+
+        if (lastTick != oldTick) {
+            sign.setLine(2, String.valueOf(lastTick));
+            sign.update(false);
         }
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getClickedBlock().getState() instanceof Sign) {
-            Sign sign = (Sign) event.getClickedBlock().getState();
-            Block b = SignUtil.getBackBlock(sign.getBlock());
-            int x = b.getX();
-            int y = b.getY() + 2;
-            int z = b.getZ();
-            Block cb = sign.getWorld().getBlockAt(x, y, z);
-            if (cb.getTypeId() == BlockID.CHEST) {
-                Player player = event.getPlayer();
-                ItemStack itemInHand = player.getItemInHand();
-                if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount()
-                        > 0) {
-                    int itemID = itemInHand.getTypeId();
-                    increaseMultiplier(sign, Ingredients.getTime(itemInHand.getTypeId()));
-                    if (itemInHand.getAmount() <= 1) {
-                        itemInHand.setTypeId(0);
-                        player.setItemInHand(null);
-                    } else {
-                        itemInHand.setAmount(itemInHand.getAmount() - 1);
-                    }
-                    if(itemID == ItemID.LAVA_BUCKET)
-                        player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
-                    player.sendMessage("You give the pot fuel!");
-                } else if (plugin.getConfiguration().cookingPotSignOpen) {
-                    player.openInventory(((Chest) cb.getState()).getBlockInventory());
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
+        int x = b.getX();
+        int y = b.getY() + 2;
+        int z = b.getZ();
+        Block cb = b.getWorld().getBlockAt(x, y, z);
+        if (cb.getTypeId() == BlockID.CHEST) {
+            Player player = event.getPlayer();
+            ItemStack itemInHand = player.getItemInHand();
+            if (itemInHand != null && Ingredients.isIngredient(itemInHand.getTypeId()) && itemInHand.getAmount()
+                    > 0) {
+                int itemID = itemInHand.getTypeId();
+                increaseMultiplier(sign, Ingredients.getTime(itemInHand.getTypeId()));
+                if (itemInHand.getAmount() <= 1) {
+                    itemInHand.setTypeId(0);
+                    player.setItemInHand(null);
+                } else {
+                    itemInHand.setAmount(itemInHand.getAmount() - 1);
                 }
+                if(itemID == ItemID.LAVA_BUCKET)
+                    player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
+                player.sendMessage("You give the pot fuel!");
+            } else if (plugin.getConfiguration().cookingPotSignOpen) {
+                player.openInventory(((Chest) cb.getState()).getBlockInventory());
             }
         }
     }
@@ -208,7 +219,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         if(!(event.getClickedBlock().getState() instanceof Sign))
             return;
-        event.getPlayer().setFireTicks(getMultiplier((Sign) event.getClickedBlock().getState()));
+        event.getPlayer().setFireTicks(getMultiplier(sign));
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         player.printError("mech.cook.ouch");
     }
@@ -216,36 +227,31 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        Block block = event.getBlock();
-        if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
-            if (event.getNewCurrent() > event.getOldCurrent()) {
-                increaseMultiplier(sign, 1);
-            }
-        }
+        if (event.getNewCurrent() > event.getOldCurrent())
+            increaseMultiplier(sign, 1);
     }
 
-    public void setMultiplier(Sign sign, int amount) {
+    public void setMultiplier(ChangedSign sign, int amount) {
 
         int min = 1;
         if (amount < min && !plugin.getConfiguration().cookingPotFuel) {
             amount = min;
         }
         sign.setLine(3, String.valueOf(amount));
-        sign.update();
+        sign.update(false);
     }
 
-    public void increaseMultiplier(Sign sign, int amount) {
+    public void increaseMultiplier(ChangedSign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public void decreaseMultiplier(Sign sign, int amount) {
+    public void decreaseMultiplier(ChangedSign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) - amount);
     }
 
-    public int getMultiplier(Sign sign) {
+    public int getMultiplier(ChangedSign sign) {
 
         int multiplier;
         try {
