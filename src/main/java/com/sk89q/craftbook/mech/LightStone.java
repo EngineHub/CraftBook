@@ -83,7 +83,7 @@ public class LightStone extends AbstractMechanic {
         public LightStone detect (BlockWorldVector pt, LocalPlayer player) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block != null && player.getTypeInHand() == CraftBookPlugin.inst().getConfiguration().lightstoneItem) return new LightStone();
+            if (block != null && player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().lightstoneItem) return new LightStone();
 
             return null;
         }

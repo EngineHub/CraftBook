@@ -31,6 +31,7 @@ import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.MapChanger;
 import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
+import com.sk89q.craftbook.mech.SignCopier;
 import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.XPStorer;
@@ -118,8 +119,9 @@ public class MechanicalCore implements LocalComponent {
         if (config.cauldronEnabled) registerMechanic(new ImprovedCauldron.Factory());
         if (config.xpStorerEnabled) registerMechanic(new XPStorer.Factory());
         if (config.mapChangerEnabled) registerMechanic(new MapChanger.Factory());
+        if (config.signCopyEnabled) registerMechanic(new SignCopier.Factory());
         for(Types type : BetterPistons.Types.values())
-            if (config.pistonsEnabled) registerMechanic(new BetterPistons.Factory(type));
+            if (config.pistonsEnabled && Types.isEnabled(type)) registerMechanic(new BetterPistons.Factory(type));
 
         // Special mechanics.
         if (plugin.getEconomy() != null && config.paymentEnabled) {

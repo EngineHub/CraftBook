@@ -50,5 +50,7 @@ mech.lightswitch.create:Light Switch Created!
 mech.painting.editing:You are now editing this painting!
 mech.painting.stop:You are no longer editing this painting!
 mech.painting.used:This painting is already being edited by
+mech.signcopy.copy:You have copied the sign!
+mech.signcopy.paste:You have pasted the sign!
 
 vehicles.create-permission:You don't have permissions to create this vehicle mechanic!

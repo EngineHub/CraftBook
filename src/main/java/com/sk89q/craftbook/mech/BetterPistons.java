@@ -372,5 +372,19 @@ public class BetterPistons extends AbstractMechanic {
     public static enum Types {
 
         CRUSH, SUPERSTICKY, BOUNCE, SUPERPUSH;
+
+        public static boolean isEnabled(Types type) {
+
+            if(type == CRUSH)
+                return CraftBookPlugin.inst().getConfiguration().pistonsCrusher;
+            else if(type == SUPERSTICKY)
+                return CraftBookPlugin.inst().getConfiguration().pistonsSuperSticky;
+            else if(type == BOUNCE)
+                return CraftBookPlugin.inst().getConfiguration().pistonsBounce;
+            else if(type == SUPERPUSH)
+                return CraftBookPlugin.inst().getConfiguration().pistonsSuperPush;
+            else
+                return CraftBookPlugin.inst().getConfiguration().pistonsEnabled;
+        }
     }
 }

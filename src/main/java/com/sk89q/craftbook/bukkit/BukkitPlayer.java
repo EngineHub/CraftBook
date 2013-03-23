@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -50,11 +50,11 @@ public class BukkitPlayer implements LocalPlayer {
             if (message == null || player == null || plugin == null || message.isEmpty()) return;
             if (plugin.getLanguageManager() == null || plugin.getLanguageManager().getPlayersLanguage(player) == null
                     || plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage
-                    (player)) == null)
+                            (player)) == null)
                 player.sendMessage(ChatColor.GOLD + message);
             player.sendMessage(ChatColor.GOLD
                     + plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage
-                    (player)));
+                            (player)));
         } catch (Exception e) {
         }
     }
@@ -122,7 +122,7 @@ public class BukkitPlayer implements LocalPlayer {
     }
 
     @Override
-    public int getTypeInHand() {
+    public int getHeldItemType() {
 
         if (player.getItemInHand() == null) return 0;
         return player.getItemInHand().getTypeId();
@@ -131,12 +131,19 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public boolean isHoldingBlock() {
 
-        return BlockType.fromID(getTypeInHand()) != null;
+        return BlockType.fromID(getHeldItemType()) != null;
     }
 
     @Override
     public String translate(String message) {
 
         return plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player));
+    }
+
+    @Override
+    public short getHeldItemData () {
+
+        if (player.getItemInHand() == null) return 0;
+        return player.getItemInHand().getDurability();
     }
 }

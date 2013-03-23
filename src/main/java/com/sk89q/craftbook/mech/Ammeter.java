@@ -131,7 +131,7 @@ public class Ammeter extends AbstractMechanic {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) {
-                return player.getTypeInHand() == CraftBookPlugin.inst().getConfiguration().ammeterItem ? new Ammeter() : null;
+                return player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().ammeterItem ? new Ammeter() : null;
             }
 
             return null;

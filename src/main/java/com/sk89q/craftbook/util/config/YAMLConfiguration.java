@@ -187,6 +187,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Payment Configuration Listener
         paymentEnabled = config.getBoolean("mechanics.payment.enable", true);
 
+        // SignCopy Configuration Listener
+        signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
+        signCopyItem = config.getInt("mechanics.sign-copy.item", ItemID.INK_SACK);
+
         // Snow Configuration Listener
         snowPiling = config.getBoolean("mechanics.snow.piling", false);
         snowTrample = config.getBoolean("mechanics.snow.trample", false);

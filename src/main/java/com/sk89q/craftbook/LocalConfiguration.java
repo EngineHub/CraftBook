@@ -134,6 +134,9 @@ public abstract class LocalConfiguration {
     public boolean paintingsEnabled;
     // Mechanics - Payment
     public boolean paymentEnabled;
+    // Mechanics - Lightstone
+    public boolean signCopyEnabled;
+    public int signCopyItem;
     // Mechanics - Snow
     public boolean snowPiling;
     public boolean snowTrample;
