@@ -19,6 +19,7 @@ package com.sk89q.craftbook;
 import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -200,7 +201,7 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getBlock());
 
         try {
-            List<Mechanic> mechanics = load(pos, player);
+            HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
                 if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
@@ -243,7 +244,7 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
 
         try {
-            List<Mechanic> mechanics = load(pos, player);
+            HashSet<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
@@ -285,7 +286,7 @@ public class MechanicManager {
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
-            List<Mechanic> mechanics = load(pos, player);
+            HashSet<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
@@ -322,7 +323,7 @@ public class MechanicManager {
         // See if this event could be occurring on any mechanism's triggering blocks
         BlockWorldVector pos = toWorldVector(event.getBlock());
         try {
-            List<Mechanic> mechanics = load(pos, null);
+            HashSet<Mechanic> mechanics = load(pos, null);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
                     aMechanic.onBlockRedstoneChange(event);
@@ -349,9 +350,9 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
+    protected HashSet<Mechanic> load(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
 
-        List<Mechanic> detectedMechanics = detect(pos);
+        HashSet<Mechanic> detectedMechanics = detect(pos);
         if(player != null)
             detectedMechanics.addAll(detect(pos,player));
 
@@ -421,10 +422,10 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
+    protected HashSet<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
             ChangedSign sign) throws InvalidMechanismException {
 
-        List<Mechanic> detectedMechanics = detect(pos, player, sign);
+        HashSet<Mechanic> detectedMechanics = detect(pos, player, sign);
 
         Mechanic ptMechanic = triggersManager.get(pos);
 
@@ -492,9 +493,9 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> detect(BlockWorldVector pos) throws InvalidMechanismException {
+    protected HashSet<Mechanic> detect(BlockWorldVector pos) throws InvalidMechanismException {
 
-        List<Mechanic> mechanics = new ArrayList<Mechanic>();
+        HashSet<Mechanic> mechanics = new HashSet<Mechanic>();
 
         for (MechanicFactory<? extends Mechanic> factory : factories) {
             Mechanic mechanic;
@@ -518,9 +519,9 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
+    protected HashSet<Mechanic> detect(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
 
-        List<Mechanic> mechanics = new ArrayList<Mechanic>();
+        HashSet<Mechanic> mechanics = new HashSet<Mechanic>();
 
         for (MechanicFactory<? extends Mechanic> factory : factories) {
             Mechanic mechanic;
@@ -542,10 +543,10 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected List<Mechanic> detect(BlockWorldVector pos, LocalPlayer player,
+    protected HashSet<Mechanic> detect(BlockWorldVector pos, LocalPlayer player,
             ChangedSign sign) throws InvalidMechanismException {
 
-        List<Mechanic> mechanics = new ArrayList<Mechanic>();
+        HashSet<Mechanic> mechanics = new HashSet<Mechanic>();
 
         for (MechanicFactory<? extends Mechanic> factory : factories) {
             try {
