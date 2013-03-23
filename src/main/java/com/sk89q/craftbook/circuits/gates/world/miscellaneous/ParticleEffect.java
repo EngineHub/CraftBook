@@ -99,7 +99,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
             if (effectID == 2001 && BlockType.fromID(effectData) == null) return;
             Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
             for (int i = 0; i < times; i++) {
-                b.getWorld().playEffect(b.getLocation().add(offset), Effect.getById(effectID), effectData, 50);
+                b.getWorld().playEffect(offset, Effect.getById(effectID), effectData, 50);
             }
         } catch (Exception ignored) {
         }
