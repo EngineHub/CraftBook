@@ -37,6 +37,7 @@ public class SignCopier extends AbstractMechanic {
 
             signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
             player.print("mech.signcopy.copy");
+            event.setCancelled(true);
         }
     }
 
@@ -63,6 +64,7 @@ public class SignCopier extends AbstractMechanic {
             }
 
             player.print("mech.signcopy.paste");
+            event.setCancelled(true);
         }
     }
 
