@@ -43,21 +43,17 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     /**
      * Construct a cooking pot for a location.
      */
-    public CookingPot(BlockWorldVector pt) {
+    public CookingPot(BlockWorldVector pt, ChangedSign sign) {
 
         super();
         this.pt = pt;
+        this.sign = sign;
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        if (block.getState() instanceof Sign) {
-
-            sign = BukkitUtil.toChangedSign((Sign) block.getState());
-            try {
-                lastTick = Integer.parseInt(sign.getLine(2));
-            } catch (Exception e) {
-                sign.setLine(2, "0");
-                sign.update(false);
-            }
+        try {
+            lastTick = Integer.parseInt(sign.getLine(2));
+        } catch (Exception e) {
+            sign.setLine(2, "0");
+            sign.update(false);
         }
     }
 
@@ -65,6 +61,20 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public boolean isActive() {
 
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if(o instanceof CookingPot)
+            return ((CookingPot) o).pt.getBlockX() == pt.getBlockX() && ((CookingPot) o).pt.getBlockY() == pt.getBlockY() && ((CookingPot) o).pt.getBlockZ() == pt.getBlockZ();
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return (pt.getBlockX() * 1103515245 + 12345 ^ pt.getBlockY() * 1103515245 + 12345 ^ pt.getBlockZ() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     int lastTick = 0, oldTick;
@@ -83,10 +93,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (block.getTypeId() == BlockID.WALL_SIGN) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
-                    Sign sign = (Sign) state;
+                    ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
                     if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                        sign.update();
-                        return new CookingPot(pt);
+                        return new CookingPot(pt, sign);
                     }
                 }
             }
