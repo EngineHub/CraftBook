@@ -129,6 +129,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         cookingPotFuel = config.getBoolean("mechanics.cooking-pot.require-fuel", true);
         cookingPotOres = config.getBoolean("mechanics.cooking-pot.cook-ores", false);
         cookingPotSignOpen = config.getBoolean("mechanics.cooking-pot.sign-click-open", true);
+        cookingPotDestroyBuckets = config.getBoolean("mechanics.cooking-pot.take-buckets", false);
 
         // Custom Crafting Configuration Listener
         customCraftingEnabled = config.getBoolean("mechanics.custom-crafting.enable", true);
