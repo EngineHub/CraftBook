@@ -127,7 +127,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
+        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
         else return new ICMechanic(id, ic, family, pt);
     }
 
@@ -205,7 +205,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICMechanic mechanic;
 
-            if (ic instanceof SelfTriggeredIC) {
+            if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
                 mechanic = new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
             } else {
                 mechanic = new ICMechanic(id, ic, family, pt);
@@ -221,6 +221,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         } else if (CraftBookPlugin.inst().getConfiguration().ICShortHandEnabled && sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
+            boolean st = id.toLowerCase().endsWith(" st");
+            id = id.toLowerCase().replace(" st", "");
+
             if (block.getTypeId() != BlockID.WALL_SIGN)
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
@@ -230,7 +233,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 return null;
             }
 
-            sign.setLine(1, "[" + shortId + "]");
+            sign.setLine(1, "[" + shortId + "]" + (st ? "S" : ""));
+            sign.update(false);
 
             detect(pt, player, sign, true);
         }
