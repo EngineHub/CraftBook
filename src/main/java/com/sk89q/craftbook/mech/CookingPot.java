@@ -43,18 +43,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     /**
      * Construct a cooking pot for a location.
      */
-    public CookingPot(BlockWorldVector pt, ChangedSign sign) {
+    public CookingPot(BlockWorldVector pt) {
 
         super();
         this.pt = pt;
-        this.sign = sign;
-
-        try {
-            lastTick = Integer.parseInt(sign.getLine(2));
-        } catch (Exception e) {
-            sign.setLine(2, "0");
-            sign.update(false);
-        }
     }
 
     @Override
@@ -77,9 +69,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         return (pt.getBlockX() * 1103515245 + 12345 ^ pt.getBlockY() * 1103515245 + 12345 ^ pt.getBlockZ() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
-    int lastTick = 0, oldTick;
-    ChangedSign sign;
-
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
 
         public Factory() {
@@ -95,7 +84,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 if (state instanceof Sign) {
                     ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
                     if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                        return new CookingPot(pt, sign);
+                        return new CookingPot(pt);
                     }
                 }
             }
@@ -135,13 +124,20 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void think() {
 
+        int lastTick = 0, oldTick;
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        ChangedSign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
             if (state instanceof Sign) {
-                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
-                this.sign = sign;
+                sign = BukkitUtil.toChangedSign((Sign) state);
             }
+        }
+        try {
+            lastTick = Integer.parseInt(sign.getLine(2));
+        } catch (Exception e) {
+            sign.setLine(2, "0");
+            sign.update(false);
         }
         oldTick = lastTick;
         if (lastTick < 0) lastTick = 0;
@@ -195,25 +191,24 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void unload() {
 
-        sign.setLine(2, String.valueOf(lastTick));
-        sign.update(false);
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
-        if (b.getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = b.getState();
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        ChangedSign sign = null;
+        if (block.getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = block.getState();
             if (state instanceof Sign) {
-                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
-                this.sign = sign;
+                sign = BukkitUtil.toChangedSign((Sign) state);
             }
         }
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
         int x = b.getX();
         int y = b.getY() + 2;
         int z = b.getZ();
-        Block cb = b.getWorld().getBlockAt(x, y, z);
+        Block cb = block.getWorld().getBlockAt(x, y, z);
         if (cb.getTypeId() == BlockID.CHEST) {
             Player player = event.getPlayer();
             ItemStack itemInHand = player.getItemInHand();
@@ -241,11 +236,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         if(!(event.getClickedBlock().getState() instanceof Sign))
             return;
-        if (event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = event.getClickedBlock().getState();
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        ChangedSign sign = null;
+        if (block.getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = block.getState();
             if (state instanceof Sign) {
-                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
-                this.sign = sign;
+                sign = BukkitUtil.toChangedSign((Sign) state);
             }
         }
         event.getPlayer().setFireTicks(getMultiplier(sign));
@@ -255,6 +251,15 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        ChangedSign sign = null;
+        if (block.getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = block.getState();
+            if (state instanceof Sign) {
+                sign = BukkitUtil.toChangedSign((Sign) state);
+            }
+        }
 
         if (event.getNewCurrent() > event.getOldCurrent())
             increaseMultiplier(sign, 1);
