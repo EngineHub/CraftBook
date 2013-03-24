@@ -135,6 +135,14 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void think() {
 
+        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        if (block.getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = block.getState();
+            if (state instanceof Sign) {
+                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
+                this.sign = sign;
+            }
+        }
         oldTick = lastTick;
         if (lastTick < 0) lastTick = 0;
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
@@ -187,16 +195,21 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void unload() {
 
-        if (lastTick != oldTick) {
-            sign.setLine(2, String.valueOf(lastTick));
-            sign.update(false);
-        }
+        sign.setLine(2, String.valueOf(lastTick));
+        sign.update(false);
     }
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
+        if (b.getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = b.getState();
+            if (state instanceof Sign) {
+                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
+                this.sign = sign;
+            }
+        }
         int x = b.getX();
         int y = b.getY() + 2;
         int z = b.getZ();
@@ -228,6 +241,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         if(!(event.getClickedBlock().getState() instanceof Sign))
             return;
+        if (event.getClickedBlock().getTypeId() == BlockID.WALL_SIGN) {
+            BlockState state = event.getClickedBlock().getState();
+            if (state instanceof Sign) {
+                ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
+                this.sign = sign;
+            }
+        }
         event.getPlayer().setFireTicks(getMultiplier(sign));
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         player.printError("mech.cook.ouch");
