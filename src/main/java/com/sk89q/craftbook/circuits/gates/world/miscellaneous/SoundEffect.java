@@ -70,9 +70,8 @@ public class SoundEffect extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
+        if (chip.getInput(0))
             doSound();
-        }
     }
 
     public void doSound() {

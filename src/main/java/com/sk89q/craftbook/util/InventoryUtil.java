@@ -19,25 +19,25 @@ public class InventoryUtil {
     /**
      * Adds items to an inventory, returning the leftovers.
      * 
-     * @param block The InventoryHolder to add the items to.
+     * @param container The InventoryHolder to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder block, ItemStack ... stacks) {
+    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
 
         //TODO finish this (Make it call the seperate specific methods in this class.
 
-        if(block instanceof Furnace) {
+        if(container instanceof Furnace) {
 
-            return addItemsToFurnace((Furnace) block, stacks);
-        } else if(block instanceof BrewingStand) {
+            return addItemsToFurnace((Furnace) container, stacks);
+        } else if(container instanceof BrewingStand) {
 
-            return addItemsToBrewingStand((BrewingStand) block, stacks);
+            return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
 
-            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(block.getInventory().addItem(stacks).values());
-            if(block instanceof BlockState)
-                ((BlockState) block).update();
+            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(container.getInventory().addItem(stacks).values());
+            if(container instanceof BlockState)
+                ((BlockState) container).update();
             return leftovers;
         }
     }

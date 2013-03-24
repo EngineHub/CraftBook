@@ -2,7 +2,6 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -17,6 +16,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -63,20 +63,15 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        doWant = ICUtil.getItem(getSign().getLine(2));
-        doNotWant = ICUtil.getItem(getSign().getLine(3));
+        doWant = ICUtil.getItem(getLine(2));
+        doNotWant = ICUtil.getItem(getLine(3));
     }
 
     protected boolean collect() {
 
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
 
-        int x = b.getX();
-        int y = b.getY() + 1;
-        int z = b.getZ();
-        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
-
-        if(!(bl instanceof InventoryHolder))
+        if(!(b instanceof InventoryHolder))
             return false;
 
         boolean collected = false;
@@ -86,33 +81,28 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
             }
             Item item = (Item) en;
             ItemStack stack = item.getItemStack();
-            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid()) {
+            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid())
                 continue;
-            }
-            Location location = item.getLocation();
-            int ix = location.getBlockX();
-            int iy = location.getBlockY();
-            int iz = location.getBlockZ();
-            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+
+            if (EntityUtil.isEntityInBlock(en, BukkitUtil.toSign(getSign()).getBlock())) {
 
                 // Check to see if it matches either test stack, if not stop
-                if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack)) {
+                if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack))
                     continue;
-                }
-                if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack)) {
+
+                if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack))
                     continue;
-                }
 
                 // Add the items to a container, and destroy them.
-                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)bl.getState(), stack);
+                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)b.getState(), stack);
                 if(leftovers.isEmpty()) {
                     item.remove();
                     collected = true;
                 } else {
-                    if(leftovers.get(0).getAmount() == stack.getAmount())
-                        continue;
-                    else
+                    if(leftovers.get(0).getAmount() != stack.getAmount()) {
                         item.getItemStack().setAmount(leftovers.get(0).getAmount());
+                        collected = true;
+                    }
                 }
             }
         }
@@ -144,10 +134,5 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
             String[] lines = new String[] {"included id:data", "excluded id:data"};
             return lines;
         }
-    }
-
-    @Override
-    public boolean isActive () {
-        return true;
     }
 }
