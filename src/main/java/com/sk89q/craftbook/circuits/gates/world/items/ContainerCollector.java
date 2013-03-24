@@ -71,7 +71,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
         Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
 
-        if(!(b instanceof InventoryHolder))
+        if(!(b.getState() instanceof InventoryHolder))
             return false;
 
         boolean collected = false;
