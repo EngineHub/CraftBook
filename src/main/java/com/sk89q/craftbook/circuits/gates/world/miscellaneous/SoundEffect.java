@@ -37,7 +37,7 @@ public class SoundEffect extends AbstractIC {
             volume = 100;
         }
         try {
-            pitch = (byte) (Integer.parseInt(split[1]) / 1.5873015873015873015873015873016);
+            pitch = Byte.parseByte(split[1]);
         } catch (Exception e) {
             pitch = 0;
         }
@@ -77,11 +77,8 @@ public class SoundEffect extends AbstractIC {
 
     public void doSound() {
 
-        try {
-            Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-            b.getWorld().playSound(b.getLocation(), sound, volume, pitch);
-        } catch (Exception ignored) {
-        }
+        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        b.getWorld().playSound(b.getLocation(), sound, volume, pitch);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
