@@ -16,8 +16,10 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -71,8 +73,12 @@ public class Netherrack extends AbstractMechanic {
 
         if (event.getNewCurrent() > 0 && canReplaceWithFire(above.getTypeId())) {
             above.setTypeId(BlockID.FIRE);
+            for(Player p : Bukkit.getOnlinePlayers())
+                p.sendBlockChange(above.getLocation(), BlockID.FIRE, (byte) 0);
         } else if (event.getNewCurrent() < 1 && above != null && above.getTypeId() == BlockID.FIRE) {
             above.setTypeId(BlockID.AIR);
+            for(Player p : Bukkit.getOnlinePlayers())
+                p.sendBlockChange(above.getLocation(), BlockID.AIR, (byte) 0);
         }
     }
 
