@@ -133,6 +133,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 sign = BukkitUtil.toChangedSign((Sign) state);
             }
         }
+        if(sign == null)
+            return;
         try {
             lastTick = Integer.parseInt(sign.getLine(2));
         } catch (Exception e) {
