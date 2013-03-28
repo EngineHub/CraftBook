@@ -159,37 +159,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         try {
-            String prefix = matcher.group(2);
-            // TODO: remove after some time to stop converting existing MCA ICs
-            // convert existing MCA ICs to the new [MCXXXX]A syntax
-            if (prefix.equalsIgnoreCase("MCA")) {
-                sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
-                sign.update(false);
-
-                return detect(pt, player, sign, shortHand);
-            }
-            if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
-                if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
-                    sign.setLine(1, "[MC1421]S");
-                else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
-                    sign.setLine(1, "[MC1422]S");
-                else
-                    sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
-                sign.update(false);
-
-                return detect(pt, player, sign, shortHand);
-            }
-
-            if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
-                sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
-                sign.update(false);
-
-                return detect(pt, player, sign, shortHand);
-            }
-        }
-        catch(Exception e){}
-
-        try {
             if (!manager.hasCustomPrefix(matcher.group(2))) {
                 matches = false;
             }
@@ -199,6 +168,37 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         if (matches) {
+
+            try {
+                String prefix = matcher.group(2);
+                // TODO: remove after some time to stop converting existing MCA ICs
+                // convert existing MCA ICs to the new [MCXXXX]A syntax
+                if (prefix.equalsIgnoreCase("MCA")) {
+                    sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
+                    sign.update(false);
+
+                    return detect(pt, player, sign, shortHand);
+                }
+                if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
+                    if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
+                        sign.setLine(1, "[MC1421]S");
+                    else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
+                        sign.setLine(1, "[MC1422]S");
+                    else
+                        sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
+                    sign.update(false);
+
+                    return detect(pt, player, sign, shortHand);
+                }
+
+                if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
+                    sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
+                    sign.update(false);
+
+                    return detect(pt, player, sign, shortHand);
+                }
+            }
+            catch(Exception e){}
 
             String id = matcher.group(1);
             String suffix = "";
