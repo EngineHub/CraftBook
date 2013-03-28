@@ -70,6 +70,8 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         if (prefix.equalsIgnoreCase("MCA")) {
             sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
             sign.update(false);
+
+            return detect(pt);
         }
         if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
             if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
@@ -79,13 +81,16 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             else
                 sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
             sign.update(false);
+
+            return detect(pt);
         }
 
         if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
             sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
             sign.update(false);
-        }
 
+            return detect(pt);
+        }
 
         if (!manager.hasCustomPrefix(prefix)) return null;
 
@@ -152,6 +157,35 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         if (!matcher.matches()) {
             matches = false;
         }
+
+        String prefix = matcher.group(2);
+        // TODO: remove after some time to stop converting existing MCA ICs
+        // convert existing MCA ICs to the new [MCXXXX]A syntax
+        if (prefix.equalsIgnoreCase("MCA")) {
+            sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
+            sign.update(false);
+
+            return detect(pt, player, sign, shortHand);
+        }
+        if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
+            if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
+                sign.setLine(1, "[MC1421]S");
+            else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
+                sign.setLine(1, "[MC1422]S");
+            else
+                sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
+            sign.update(false);
+
+            return detect(pt, player, sign, shortHand);
+        }
+
+        if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
+            sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
+            sign.update(false);
+
+            return detect(pt, player, sign, shortHand);
+        }
+
         try {
             if (!manager.hasCustomPrefix(matcher.group(2))) {
                 matches = false;
@@ -192,6 +226,10 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             ic.load();
 
             sign.setLine(1, "[" + registration.getId() + "]" + suffix);
+            if (!shortHand) {
+                sign.setLine(0, ic.getSignTitle());
+            }
+            sign.update(false);
 
             ICFamily family = registration.getFamilies()[0];
             if (suffix != null && !suffix.isEmpty()) {
@@ -209,10 +247,6 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 mechanic = new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
             } else {
                 mechanic = new ICMechanic(id, ic, family, pt);
-            }
-
-            if (!shortHand) {
-                sign.setLine(0, ic.getSignTitle());
             }
 
             player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");

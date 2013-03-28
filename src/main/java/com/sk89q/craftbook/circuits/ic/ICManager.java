@@ -130,7 +130,7 @@ public class ICManager {
      */
     public static boolean isCachedIC(BlockWorldVector pt) {
 
-        return CraftBookPlugin.inst().getConfiguration().ICCached && cachedICs.containsKey(pt);
+        return cachedICs.containsKey(pt);
     }
 
     /**
