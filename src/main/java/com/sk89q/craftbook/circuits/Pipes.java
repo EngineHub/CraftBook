@@ -14,6 +14,7 @@ import org.bukkit.material.PistonBaseMaterial;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CircuitCore;
@@ -23,6 +24,8 @@ import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -82,6 +85,21 @@ public class Pipes extends AbstractMechanic {
                 return null;
 
             if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, items, sign == null ? null : BukkitUtil.toChangedSign(sign));
+
+            return null;
+        }
+
+        @Override
+        public Pipes detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+
+            if(sign.getLine(1).equalsIgnoreCase("[Pipe]")) {
+                player.checkPermission("craftbook.circuits.pipes");
+
+                player.print("circuits.pipes.create");
+                sign.setLine(1, "[Pipe]");
+
+                throw new ProcessedMechanismException();
+            }
 
             return null;
         }

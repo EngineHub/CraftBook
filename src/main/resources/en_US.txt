@@ -53,4 +53,6 @@ mech.painting.used:This painting is already being edited by
 mech.signcopy.copy:You have copied the sign!
 mech.signcopy.paste:You have pasted the sign!
 
+circuits.pipes.create:Pipe created!
+
 vehicles.create-permission:You don't have permissions to create this vehicle mechanic!
