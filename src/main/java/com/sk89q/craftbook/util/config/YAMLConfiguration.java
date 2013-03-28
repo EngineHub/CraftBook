@@ -58,6 +58,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pipesDiagonal = config.getBoolean("circuits.pipes.allow-diagonal", false);
         pipeInsulator = config.getInt("circuits.pipes.insulator-block", BlockID.CLOTH);
         pipeStackPerPull = config.getBoolean("circuits.pipes.stack-per-move", true);
+        pipeRequireSign = config.getBoolean("circuits.pipes.require-sign", false);
 
         /* Mechanism Configuration */
 

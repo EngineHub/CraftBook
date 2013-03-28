@@ -33,6 +33,7 @@ public abstract class LocalConfiguration {
     public boolean pipesDiagonal;
     public int pipeInsulator;
     public boolean pipeStackPerPull;
+    public boolean pipeRequireSign;
 
     // Mechanics
     // Mechanics - AI

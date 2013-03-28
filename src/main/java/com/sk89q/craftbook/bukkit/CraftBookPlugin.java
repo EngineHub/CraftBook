@@ -703,7 +703,8 @@ public class CraftBookPlugin extends JavaPlugin {
             component.disable();
         }
         components.clear();
-        HandlerList.unregisterAll(this);
+        managerAdapter.clear();
+        HandlerList.unregisterAll(inst());
         config.unload();
         config.load();
         managerAdapter = new MechanicListenerAdapter();

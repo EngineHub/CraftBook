@@ -80,6 +80,16 @@ public class MechanicListenerAdapter {
     }
 
     /**
+     * Clears all the managers from the listeners.
+     */
+    public void clear() {
+
+        playerListener.managers.clear();
+        blockListener.managers.clear();
+        worldListener.managers.clear();
+    }
+
+    /**
      * Register events.
      *
      * @param manager
@@ -108,9 +118,9 @@ public class MechanicListenerAdapter {
      *
      * @author hash
      */
-    protected static class MechanicPlayerListener implements Listener {
+    protected class MechanicPlayerListener implements Listener {
 
-        protected static final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+        protected final List<MechanicManager> managers = new ArrayList<MechanicManager>();
 
         public void addManager(MechanicManager manager) {
 
@@ -154,9 +164,9 @@ public class MechanicListenerAdapter {
      *
      * @author sk89q
      */
-    protected static class MechanicBlockListener implements Listener {
+    protected class MechanicBlockListener implements Listener {
 
-        protected static final List<MechanicManager> managers = new ArrayList<MechanicManager>();
+        protected final List<MechanicManager> managers = new ArrayList<MechanicManager>();
 
         public void addManager(MechanicManager manager) {
 

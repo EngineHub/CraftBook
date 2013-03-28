@@ -13,6 +13,7 @@ import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CircuitCore;
@@ -41,7 +42,22 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt);
+            PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
+            Sign sign = null;
+            signCheck: {
+                for(BlockFace face : BlockFace.values()) {
+                    if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
+                        continue;
+                    sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
+                    if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+                        break signCheck;
+                }
+            }
+
+            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+                return null;
+
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign));
 
             return null;
         }
@@ -50,7 +66,22 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, items);
+            PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
+            Sign sign = null;
+            signCheck: {
+                for(BlockFace face : BlockFace.values()) {
+                    if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
+                        continue;
+                    sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
+                    if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+                        break signCheck;
+                }
+            }
+
+            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+                return null;
+
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, items, sign == null ? null : BukkitUtil.toChangedSign(sign));
 
             return null;
         }
@@ -61,20 +92,9 @@ public class Pipes extends AbstractMechanic {
      *
      * @param pt
      */
-    private Pipes(BlockWorldVector pt) {
+    private Pipes(BlockWorldVector pt, ChangedSign sign) {
 
         super();
-        PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-        Sign sign = null;
-        signCheck: {
-            for(BlockFace face : BlockFace.values()) {
-                if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
-                    continue;
-                sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
-                if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                    break signCheck;
-            }
-        }
 
         if(sign != null) {
 
@@ -85,21 +105,10 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    private Pipes(BlockWorldVector pt, List<ItemStack> items) {
+    private Pipes(BlockWorldVector pt, List<ItemStack> items, ChangedSign sign) {
 
         super();
         this.items.addAll(items);
-        PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-        Sign sign = null;
-        signCheck: {
-            for(BlockFace face : BlockFace.values()) {
-                if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
-                    continue;
-                sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
-                if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                    break signCheck;
-            }
-        }
 
         if(sign != null) {
 
