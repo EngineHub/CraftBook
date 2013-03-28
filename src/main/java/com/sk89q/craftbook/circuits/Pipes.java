@@ -45,22 +45,25 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
 
-            PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-            Sign sign = null;
-            signCheck: {
-                for(BlockFace face : BlockFace.values()) {
-                    if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
-                        continue;
-                    sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
-                    if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                        break signCheck;
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) {
+
+                PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
+                Sign sign = null;
+                signCheck: {
+                    for(BlockFace face : BlockFace.values()) {
+                        if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
+                            continue;
+                        sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
+                        if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+                            break signCheck;
+                    }
                 }
+
+                if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+                    return null;
+
+                return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign));
             }
-
-            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
-                return null;
-
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign));
 
             return null;
         }
@@ -69,22 +72,25 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-            Sign sign = null;
-            signCheck: {
-                for(BlockFace face : BlockFace.values()) {
-                    if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
-                        continue;
-                    sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
-                    if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                        break signCheck;
+            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) {
+
+                PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
+                Sign sign = null;
+                signCheck: {
+                    for(BlockFace face : BlockFace.values()) {
+                        if(face == piston.getFacing() || !(BukkitUtil.toBlock(pt).getRelative(face).getState() instanceof Sign))
+                            continue;
+                        sign = (Sign) BukkitUtil.toBlock(pt).getRelative(face).getState();
+                        if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+                            break signCheck;
+                    }
                 }
+
+                if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+                    return null;
+
+                return new Pipes(pt, items, sign == null ? null : BukkitUtil.toChangedSign(sign));
             }
-
-            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
-                return null;
-
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) return new Pipes(pt, items, sign == null ? null : BukkitUtil.toChangedSign(sign));
 
             return null;
         }
