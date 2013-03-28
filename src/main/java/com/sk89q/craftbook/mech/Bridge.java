@@ -341,7 +341,7 @@ public class Bridge extends AbstractMechanic {
                 b.setTypeId(BlockID.AIR);
                 if (plugin.getConfiguration().safeDestruction) {
                     ChangedSign s = BukkitUtil.toChangedSign(trigger);
-                    if (oldType != 0) {
+                    if (oldType == getBridgeMaterial()) {
                         addBlocks(s, 1);
                     }
                 }
