@@ -157,11 +157,6 @@ public class CraftBookPlugin extends JavaPlugin {
         managerAdapter.register(manager);
     }
 
-    public void registerManager(MechanicManager manager, boolean player, boolean block, boolean world, boolean vehicle) {
-
-        managerAdapter.register(manager, player, block, world, vehicle);
-    }
-
     /**
      * Called on plugin enable.
      */
@@ -263,6 +258,8 @@ public class CraftBookPlugin extends JavaPlugin {
      * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
      */
     public void registerGlobalEvents() {
+
+        getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
         if(getConfiguration().updateNotifier) {
 
