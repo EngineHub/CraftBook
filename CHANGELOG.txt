@@ -1,3 +1,20 @@
+3.6 Beta 4
+* Performance enhancements.
+* Bug fixes in Cooking Pot.
++ Added option to make cooking pots destroy buckets.
+* Bug fixes for ChestStocker IC.
+* Workaround for bukkit lever update issue.
+* Made SignCopier work with ST IC's.
+* Fix ParticleEffect offset being way off.
+* Fixed SignCopier allowing the sign to be broken.
+* Forced Redstone Netherrack to update the fire on the client. (Fixes a 1.5 bug)
+* Cleanup for ContainerCollector (It is now more stable)
++ Added [Pipe] signs to do filters for pipes. (With permission)
++ Added support for cart teleporters to teleport non-ridable carts.
++ Added a converter for IC's in the creation section, so people can create old IC's and have them be converted.
++ Added option to force pipes to have signs.
+* Fix /cb reload bugs.
+
 3.6 Beta 3
 * Fix a bug where MC1510 would allow players without restricted perms to use BROADCAST.
 + Added NetherRack -> NetherBrick support to Cooking Pot.
