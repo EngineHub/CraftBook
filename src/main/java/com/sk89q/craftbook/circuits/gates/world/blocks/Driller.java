@@ -47,7 +47,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if(new Random().nextInt(50) < 20)
+        if(new Random().nextInt(100) < 70)
             return false;
 
         Block blockToBreak = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
