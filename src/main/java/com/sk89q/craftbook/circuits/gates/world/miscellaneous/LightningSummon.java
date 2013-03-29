@@ -128,7 +128,7 @@ public class LightningSummon extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"x:y:z block offset", null};
+            String[] lines = new String[] {"+oradius=x:y:z block offset", "+ochance"};
             return lines;
         }
     }
