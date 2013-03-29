@@ -50,13 +50,40 @@ public class Driller extends AbstractSelfTriggeredIC {
         if(new Random().nextInt(100) < 70)
             return false;
 
-        Block blockToBreak = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
-        Block chest = blockToBreak.getRelative(0, 2, 0);
+        Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
+        InventoryHolder holder = null;
 
-        boolean hasChest = false;
-        if (chest != null && chest.getState() instanceof InventoryHolder) {
-            hasChest = true;
+        if(center.getRelative(0, 2, 0).getState() instanceof InventoryHolder) {
+            holder = (InventoryHolder) center.getRelative(0, 2, 0).getState();
         }
+
+        boolean hasHadTrue = false;
+
+        if(drillLine(holder, center.getRelative(-1, 0, -1)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(-1, 0, 0)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(-1, 0, 1)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, -1)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, 0)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, 1)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, -1)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, 0)))
+            hasHadTrue = true;
+        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, 1)))
+            hasHadTrue = true;
+
+        return hasHadTrue;
+    }
+
+    public boolean drillLine(InventoryHolder chest, Block blockToBreak) {
+
+        boolean hasChest = chest != null;
 
         while(blockToBreak.getTypeId() == 0) {
 
@@ -68,8 +95,8 @@ public class Driller extends AbstractSelfTriggeredIC {
         }
 
         List<ItemStack> drops = new ArrayList<ItemStack>(blockToBreak.getDrops());
-        if(hasChest && ((InventoryHolder) chest.getState()).getInventory().getItem(0) != null) {
-            drops = new ArrayList<ItemStack>(blockToBreak.getDrops(((InventoryHolder) chest.getState()).getInventory().getItem(0)));
+        if(hasChest && chest.getInventory().getItem(0) != null) {
+            drops = new ArrayList<ItemStack>(blockToBreak.getDrops(chest.getInventory().getItem(0)));
         }
 
         for(ItemStack stack : drops) {
@@ -78,7 +105,7 @@ public class Driller extends AbstractSelfTriggeredIC {
             toDrop.add(stack);
 
             if(hasChest) {
-                toDrop = new ArrayList<ItemStack>(((InventoryHolder) chest.getState()).getInventory().addItem(toDrop.toArray(new ItemStack[1])).values());
+                toDrop = new ArrayList<ItemStack>(chest.getInventory().addItem(toDrop.toArray(new ItemStack[1])).values());
             }
 
             if(!toDrop.isEmpty())
