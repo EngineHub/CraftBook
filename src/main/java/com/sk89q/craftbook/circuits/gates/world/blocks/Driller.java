@@ -2,7 +2,6 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -10,6 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
@@ -47,7 +47,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if(new Random().nextInt(100) < 60)
+        if(CraftBookPlugin.inst().getRandom().nextInt(100) < 60)
             return false;
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
@@ -59,7 +59,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
         boolean hasHadTrue = false;
 
-        int num = new Random().nextInt(9);
+        int num = CraftBookPlugin.inst().getRandom().nextInt(9);
 
         switch(num) {
             case 0:
