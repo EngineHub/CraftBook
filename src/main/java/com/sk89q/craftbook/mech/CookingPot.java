@@ -55,20 +55,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-
-        if(o instanceof CookingPot)
-            return ((CookingPot) o).pt.getBlockX() == pt.getBlockX() && ((CookingPot) o).pt.getBlockY() == pt.getBlockY() && ((CookingPot) o).pt.getBlockZ() == pt.getBlockZ();
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return (pt.getBlockX() * 1103515245 + 12345 ^ pt.getBlockY() * 1103515245 + 12345 ^ pt.getBlockZ() * 1103515245 + 12345) * 1103515245 + 12345;
-    }
-
     public static class Factory extends AbstractMechanicFactory<CookingPot> {
 
         public Factory() {
@@ -78,7 +64,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         @Override
         public CookingPot detect(BlockWorldVector pt) {
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+            Block block = BukkitUtil.toLocation(pt).getBlock();
             if (block.getTypeId() == BlockID.WALL_SIGN) {
                 BlockState state = block.getState();
                 if (state instanceof Sign) {
@@ -105,13 +91,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
 
-                sign.setLine(2, "0");
                 sign.setLine(1, "[Cook]");
-                if (CraftBookPlugin.inst().getConfiguration().cookingPotFuel) {
-                    sign.setLine(3, "0");
-                } else {
-                    sign.setLine(3, "1");
-                }
+                sign.setLine(2, "0");
+                sign.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
                 sign.update(false);
                 player.print("mech.cook.create");
             } else return null;
@@ -124,8 +106,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void think() {
 
-        int lastTick = 0, oldTick;
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        int lastTick = 0;
+        Block block = BukkitUtil.toLocation(pt).getBlock();
         ChangedSign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
@@ -136,18 +118,14 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if(sign == null)
             return;
         try {
-            lastTick = Integer.parseInt(sign.getLine(2));
+            lastTick = Integer.parseInt(sign.getLine(2).trim());
         } catch (Exception e) {
             sign.setLine(2, "0");
             sign.update(false);
         }
-        oldTick = lastTick;
-        if (lastTick < 0) lastTick = 0;
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
-        int x = b.getX();
-        int y = b.getY() + 2;
-        int z = b.getZ();
-        Block cb = b.getWorld().getBlockAt(x, y, z);
+        lastTick = Math.max(lastTick, 0);
+        Block b = SignUtil.getBackBlock(block);
+        Block cb = b.getRelative(0, 2, 0);
         if (cb.getTypeId() == BlockID.CHEST) {
             if(getMultiplier(sign) < 0) {
                 increaseMultiplier(sign, 1);
@@ -161,7 +139,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                     decreaseMultiplier(sign, 1);
             }
             if (lastTick >= 50) {
-                Block fire = b.getWorld().getBlockAt(x, y - 1, z);
+                Block fire = b.getRelative(0, 1, 0);
                 if (fire.getTypeId() == BlockID.FIRE) {
                     Chest chest = (Chest) cb.getState();
                     for (ItemStack i : chest.getInventory().getContents()) {
@@ -183,11 +161,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 } else
                     lastTick = 0;
             }
-            if (lastTick != oldTick) {
-                sign.setLine(2, String.valueOf(lastTick));
-                sign.update(false);
-            }
         }
+
+        sign.setLine(2, String.valueOf(lastTick));
+        sign.update(false);
     }
 
     @Override
@@ -198,19 +175,19 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
+        Block block = event.getClickedBlock();
         ChangedSign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
             if (state instanceof Sign) {
                 sign = BukkitUtil.toChangedSign((Sign) state);
             }
+        } else {
+            return;
         }
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
-        int x = b.getX();
-        int y = b.getY() + 2;
-        int z = b.getZ();
-        Block cb = block.getWorld().getBlockAt(x, y, z);
+
+        Block b = SignUtil.getBackBlock(block);
+        Block cb = b.getRelative(0, 2, 0);
         if (cb.getTypeId() == BlockID.CHEST) {
             Player player = event.getPlayer();
             ItemStack itemInHand = player.getItemInHand();
@@ -264,15 +241,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
 
         if (event.getNewCurrent() > event.getOldCurrent())
-            increaseMultiplier(sign, 1);
+            increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
     }
 
     public void setMultiplier(ChangedSign sign, int amount) {
 
-        int min = 1;
-        if (amount < min && !plugin.getConfiguration().cookingPotFuel) {
-            amount = min;
-        }
+        if(!plugin.getConfiguration().cookingPotFuel)
+            amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
         sign.update(false);
     }
@@ -291,12 +266,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         int multiplier;
         try {
-            multiplier = Integer.parseInt(sign.getLine(3));
+            multiplier = Integer.parseInt(sign.getLine(3).trim());
         } catch (Exception e) {
             multiplier = plugin.getConfiguration().cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
         }
-        if (multiplier < 0 && !plugin.getConfiguration().cookingPotFuel) return 1;
+        if (multiplier <= 0 && !plugin.getConfiguration().cookingPotFuel) return 1;
         return multiplier;
     }
 
