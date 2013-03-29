@@ -47,7 +47,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if(new Random().nextInt(100) < 70)
+        if(new Random().nextInt(100) < 20)
             return false;
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
@@ -83,6 +83,9 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drillLine(InventoryHolder chest, Block blockToBreak) {
 
+        if(new Random().nextInt(100) < 70)
+            return false;
+
         boolean hasChest = chest != null;
 
         while(blockToBreak.getTypeId() == 0) {
@@ -93,6 +96,8 @@ public class Driller extends AbstractSelfTriggeredIC {
             if(blockToBreak.getTypeId() == BlockID.BEDROCK)
                 return false;
         }
+
+        int brokenType = 0;
 
         List<ItemStack> drops = new ArrayList<ItemStack>(blockToBreak.getDrops());
         if(hasChest && chest.getInventory().getItem(0) != null) {
@@ -113,7 +118,11 @@ public class Driller extends AbstractSelfTriggeredIC {
                     BukkitUtil.toSign(getSign()).getBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getBlock().getLocation().add(0.5, 0.5, 0.5), d);
         }
 
+        brokenType = blockToBreak.getTypeId();
         blockToBreak.setTypeId(0);
+
+        if(brokenType == BlockID.LAVA || brokenType == BlockID.WATER || brokenType == BlockID.STATIONARY_LAVA || brokenType == BlockID.STATIONARY_WATER)
+            return false;
 
         return true;
     }
