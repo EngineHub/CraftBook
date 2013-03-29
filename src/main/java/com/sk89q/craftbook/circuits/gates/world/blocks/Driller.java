@@ -47,7 +47,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if(new Random().nextInt(100) < 20)
+        if(new Random().nextInt(100) < 60)
             return false;
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
@@ -59,32 +59,45 @@ public class Driller extends AbstractSelfTriggeredIC {
 
         boolean hasHadTrue = false;
 
-        if(drillLine(holder, center.getRelative(-1, 0, -1)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(-1, 0, 0)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(-1, 0, 1)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, -1)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, 0)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(0, 0, 1)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, -1)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, 0)))
-            hasHadTrue = true;
-        if(!hasHadTrue && drillLine(holder, center.getRelative(1, 0, 1)))
-            hasHadTrue = true;
+        int num = new Random().nextInt(9);
+
+        switch(num) {
+            case 0:
+                if(drillLine(holder, center.getRelative(-1, 0, -1)))
+                    hasHadTrue = true;
+            case 1:
+                if(drillLine(holder, center.getRelative(-1, 0, 0)))
+                    hasHadTrue = true;
+            case 2:
+                if(drillLine(holder, center.getRelative(-1, 0, 1)))
+                    hasHadTrue = true;
+            case 3:
+                if(drillLine(holder, center.getRelative(0, 0, -1)))
+                    hasHadTrue = true;
+            case 4:
+                if(drillLine(holder, center.getRelative(0, 0, 0)))
+                    hasHadTrue = true;
+            case 5:
+                if(drillLine(holder, center.getRelative(0, 0, 1)))
+                    hasHadTrue = true;
+            case 6:
+                if(drillLine(holder, center.getRelative(1, 0, -1)))
+                    hasHadTrue = true;
+            case 7:
+                if(drillLine(holder, center.getRelative(1, 0, 0)))
+                    hasHadTrue = true;
+            case 8:
+                if(drillLine(holder, center.getRelative(1, 0, 1)))
+                    hasHadTrue = true;
+            default:
+                if(drillLine(holder, center.getRelative(0, 0, 0)))
+                    hasHadTrue = true;
+        }
 
         return hasHadTrue;
     }
 
     public boolean drillLine(InventoryHolder chest, Block blockToBreak) {
-
-        if(new Random().nextInt(100) < 70)
-            return false;
 
         boolean hasChest = chest != null;
 
