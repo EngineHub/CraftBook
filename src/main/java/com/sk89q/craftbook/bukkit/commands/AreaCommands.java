@@ -6,24 +6,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.craftbook.mech.area.*;
+import com.sk89q.minecraft.util.commands.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicalCore;
-import com.sk89q.craftbook.mech.area.CopyManager;
-import com.sk89q.craftbook.mech.area.CuboidCopy;
-import com.sk89q.craftbook.mech.area.FlatCuboidCopy;
-import com.sk89q.craftbook.mech.area.MCEditCuboidCopy;
 import com.sk89q.craftbook.util.ArrayUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -212,6 +212,52 @@ public class AreaCommands {
         } else {
             player.printError("There are no saved areas in the '" + namespace + "' namespace.");
         }
+    }
+
+    @Command(aliases = "toggle", desc = "Toggle an area sign at the given location.",
+            usage = "[-w world] <x,y,z>",
+            flags = "sw:",
+            min = 1
+    )
+    @CommandPermissions("craftbook.mech.area.command.toggle")
+    public void toggle(CommandContext context, CommandSender sender) throws CommandException  {
+
+        World world = null;
+        boolean hasWorldFlag = context.hasFlag('w');
+
+        if (hasWorldFlag) {
+            world = Bukkit.getWorld(context.getFlag('w'));
+        } else if (sender instanceof Player) {
+            world = ((Player) sender).getWorld();
+        }
+
+        if (world == null) {
+            throw new CommandException("You must be a player or specify a valid world to use this command.");
+        }
+
+        int[] xyz = new int[3];
+        String[] loc = context.getString(0).split(",");
+
+        if (loc.length != 3) {
+            throw new CommandException("Invalid location specified.");
+        }
+
+        try {
+            for (int i = 0; i < xyz.length; i++) {
+                xyz[i] = Integer.parseInt(loc[i]);
+            }
+        } catch (NumberFormatException ex) {
+            throw new CommandException("Invalid location specified.");
+        }
+
+        BlockState block = world.getBlockAt(xyz[0], xyz[1], xyz[2]).getState();
+        if (!(block instanceof Sign)) throw new CommandException("No sign found at the specified location.");
+
+        if (!Area.toggleCold((Sign) block)) {
+            throw new CommandException("Failed to toggle an area at the specified location.");
+        }
+        // TODO Make a sender wrap for this
+        if (!context.hasFlag('s')) sender.sendMessage(ChatColor.YELLOW + "Area toggled!");
     }
 
     @Command(aliases = {"delete"}, desc = "Lists the areas of the given namespace or lists all areas.",
