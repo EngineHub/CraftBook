@@ -106,13 +106,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void think() {
 
-        int lastTick = 0;
+        int lastTick = 0, oldTick;
         Block block = BukkitUtil.toLocation(pt).getBlock();
-        ChangedSign sign = null;
+        Sign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
             if (state instanceof Sign) {
-                sign = BukkitUtil.toChangedSign((Sign) state);
+                sign = (Sign) state;
             }
         }
         if(sign == null)
@@ -121,8 +121,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             lastTick = Integer.parseInt(sign.getLine(2).trim());
         } catch (Exception e) {
             sign.setLine(2, "0");
-            sign.update(false);
+            sign.update();
         }
+        oldTick = lastTick;
         lastTick = Math.max(lastTick, 0);
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
@@ -163,8 +164,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             }
         }
 
-        sign.setLine(2, String.valueOf(lastTick));
-        sign.update(false);
+        if(oldTick != lastTick) {
+            sign.setLine(2, String.valueOf(lastTick));
+            sign.update();
+        }
     }
 
     @Override
@@ -176,15 +179,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public void onRightClick(PlayerInteractEvent event) {
 
         Block block = event.getClickedBlock();
-        ChangedSign sign = null;
+        Sign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
-            if (state instanceof Sign) {
-                sign = BukkitUtil.toChangedSign((Sign) state);
-            }
-        } else {
+            if (state instanceof Sign)
+                sign = (Sign) state;
+        } else
             return;
-        }
 
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
@@ -216,11 +217,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if(!(event.getClickedBlock().getState() instanceof Sign))
             return;
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        ChangedSign sign = null;
+        Sign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
             if (state instanceof Sign) {
-                sign = BukkitUtil.toChangedSign((Sign) state);
+                sign = (Sign) state;
             }
         }
         event.getPlayer().setFireTicks(getMultiplier(sign));
@@ -232,11 +233,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        ChangedSign sign = null;
+        Sign sign = null;
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
             if (state instanceof Sign) {
-                sign = BukkitUtil.toChangedSign((Sign) state);
+                sign = (Sign) state;
             }
         }
 
@@ -244,25 +245,25 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
     }
 
-    public void setMultiplier(ChangedSign sign, int amount) {
+    public void setMultiplier(Sign sign, int amount) {
 
         if(!plugin.getConfiguration().cookingPotFuel)
             amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
-        sign.update(false);
+        sign.update();
     }
 
-    public void increaseMultiplier(ChangedSign sign, int amount) {
+    public void increaseMultiplier(Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public void decreaseMultiplier(ChangedSign sign, int amount) {
+    public void decreaseMultiplier(Sign sign, int amount) {
 
         setMultiplier(sign, getMultiplier(sign) - amount);
     }
 
-    public int getMultiplier(ChangedSign sign) {
+    public int getMultiplier(Sign sign) {
 
         int multiplier;
         try {
