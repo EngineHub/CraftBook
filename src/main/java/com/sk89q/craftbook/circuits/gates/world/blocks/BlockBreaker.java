@@ -104,7 +104,6 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         if (data > 0 && data != broken.getData()) return false;
 
-        broken.getDrops();
         for (ItemStack blockstack : broken.getDrops()) {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());

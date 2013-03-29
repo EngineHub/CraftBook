@@ -65,6 +65,7 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformer;
 import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvester;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Cultivator;
+import com.sk89q.craftbook.circuits.gates.world.blocks.Driller;
 import com.sk89q.craftbook.circuits.gates.world.blocks.FlexibleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Irrigator;
 import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFlood;
@@ -350,6 +351,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1245", "cont stacker", new ContainerStacker.Factory(server), familySISO, familyAISO);
         registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); //Restricted
         //TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
+        registerIC("MC1248", "driller", new Driller.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1250", "shoot fire", new FireShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1251", "shoot fires", new FireBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1252", "flame thower", new FlameThrower.Factory(server), familySISO, familyAISO); // Restricted
