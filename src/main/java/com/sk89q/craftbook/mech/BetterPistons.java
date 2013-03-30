@@ -174,7 +174,7 @@ public class BetterPistons extends AbstractMechanic {
         if(type == Types.CRUSH && event.getNewCurrent() > event.getOldCurrent()) {
             PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
             piston.setPowered(false);
-            if(!canPistonPushBlock(trigger.getRelative(piston.getFacing())))
+            if(!canPistonPushBlock(trigger.getRelative(piston.getFacing())) || CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId()))
                 return;
             trigger.getRelative(piston.getFacing()).breakNaturally();
             trigger.getRelative(piston.getFacing()).setTypeId(0, false);

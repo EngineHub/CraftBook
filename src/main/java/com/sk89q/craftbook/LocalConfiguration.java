@@ -59,10 +59,11 @@ public abstract class LocalConfiguration {
     public boolean pistonsEnabled;
     public boolean pistonsCrusher;
     public boolean pistonsCrusherInstaKill;
+    public List<Integer> pistonsCrusherBlacklist;
     public boolean pistonsSuperSticky;
     public boolean pistonsBounce;
-    public boolean pistonsSuperPush;
     public List<Integer> pistonsBounceBlacklist;
+    public boolean pistonsSuperPush;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadWhenSneaking;
