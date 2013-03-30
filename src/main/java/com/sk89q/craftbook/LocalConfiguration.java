@@ -62,6 +62,7 @@ public abstract class LocalConfiguration {
     public boolean pistonsSuperSticky;
     public boolean pistonsBounce;
     public boolean pistonsSuperPush;
+    public List<Integer> pistonsBounceBlacklist;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadWhenSneaking;
