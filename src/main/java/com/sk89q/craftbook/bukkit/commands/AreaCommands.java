@@ -6,24 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sk89q.craftbook.mech.area.*;
-import com.sk89q.minecraft.util.commands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicalCore;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.area.CuboidCopy;
+import com.sk89q.craftbook.mech.area.FlatCuboidCopy;
+import com.sk89q.craftbook.mech.area.MCEditCuboidCopy;
 import com.sk89q.craftbook.util.ArrayUtil;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -218,7 +223,7 @@ public class AreaCommands {
             usage = "[-w world] <x,y,z>",
             flags = "sw:",
             min = 1
-    )
+            )
     @CommandPermissions("craftbook.mech.area.command.toggle")
     public void toggle(CommandContext context, CommandSender sender) throws CommandException  {
 
