@@ -249,7 +249,6 @@ public class MechanicManager {
                 if (aMechanic != null) {
 
                     if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
-                        logger.severe(aMechanic.getClass().getName());
                         player.printError("area.permissions");
                         return 0; 
                     }
