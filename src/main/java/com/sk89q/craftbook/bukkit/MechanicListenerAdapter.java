@@ -125,6 +125,34 @@ public class MechanicListenerAdapter implements Listener {
         }
         for (MechanicManager manager : managerList)
             manager.dispatchBlockBreak(event);
+
+        BlockWorldVector v = BukkitUtil.toWorldVector(event.getBlock());
+
+        LocalWorld w = BukkitUtil.getLocalWorld(event.getBlock().getWorld());
+        int x = v.getBlockX();
+        int y = v.getBlockY();
+        int z = v.getBlockZ();
+
+        switch(event.getBlock().getTypeId()) {
+
+            case BlockID.REDSTONE_TORCH_ON:
+            case BlockID.REDSTONE_BLOCK:
+
+                handleDirectWireInput(new WorldVector(w, x - 1, y, z), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x + 1, y, z), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x, y, z - 1), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x, y, z + 1), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), event.getBlock(), 15, 0);
+                handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), event.getBlock(), 15, 0);
+
+                // Can be triggered from below
+                handleDirectWireInput(new WorldVector(w, x, y + 1, z), event.getBlock(), 15, 0);
+                return;
+            default:
+                return;
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
