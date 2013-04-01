@@ -109,19 +109,23 @@ public class SoundEffect extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            Sound sound = Sound.valueOf(sign.getLine(3).trim());
-            if(sound == null) {
-                for(Sound s : Sound.values()) {
+            try {
+                Sound sound = Sound.valueOf(sign.getLine(3).trim());
+                if(sound == null) {
+                    for(Sound s : Sound.values()) {
 
-                    if(sign.getLine(3).trim().length() > 14 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
-                        sound = s;
-                        break;
+                        if(sign.getLine(3).trim().length() > 14 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
+                            sound = s;
+                            break;
+                        }
                     }
                 }
+                if(sound == null)
+                    throw new ICVerificationException("Unknown Sound!");
             }
-
-            if(sound == null)
+            catch(Exception e) {
                 throw new ICVerificationException("Unknown Sound!");
+            }
         }
     }
 }
