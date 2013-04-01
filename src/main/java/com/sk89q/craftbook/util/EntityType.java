@@ -10,12 +10,15 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
+import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 
 public enum EntityType {
     PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'),
-    CART_STORAGE('S'), CART_POWERED('E');
+    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), CART_TNT('T');
+
 
     public boolean is(Entity entity) {
 
@@ -36,8 +39,14 @@ public enum EntityType {
                 return entity instanceof StorageMinecart;
             case CART_POWERED:
                 return entity instanceof PoweredMinecart;
+            case CART_HOPPER:
+                return entity instanceof HopperMinecart;
+            case CART_TNT:
+                return entity instanceof ExplosiveMinecart;
             case ANY:
                 return true;
+            default:
+                break;
         }
         return false;
     }
