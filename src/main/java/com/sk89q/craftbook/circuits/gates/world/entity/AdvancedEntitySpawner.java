@@ -69,6 +69,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
+        if(!location.getChunk().isLoaded())
+            return;
+
         if (!chip.getInput(0)) return;
         Block left = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock());
         ChangedSign effectSign = null;

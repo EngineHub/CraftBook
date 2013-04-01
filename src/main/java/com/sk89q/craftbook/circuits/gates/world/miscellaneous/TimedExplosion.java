@@ -75,6 +75,10 @@ public class TimedExplosion extends AbstractIC {
 
         if (chip.getInput(0)) {
             Location loc = center.getLocation();
+
+            if(!loc.getChunk().isLoaded())
+                return;
+
             while(!BlockType.canPassThrough(loc.getBlock().getTypeId()))
                 loc = loc.add(0, 1, 0);
             TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(BlockUtil.getBlockCentre(loc.getBlock()),

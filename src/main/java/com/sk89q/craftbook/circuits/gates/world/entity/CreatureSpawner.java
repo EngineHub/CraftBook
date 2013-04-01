@@ -107,6 +107,9 @@ public class CreatureSpawner extends AbstractIC {
 
         Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
+        if(!center.getChunk().isLoaded())
+            return;
+
         if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
 
             org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
