@@ -366,17 +366,17 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     public void startComponents() {
-        // Circuits
-        if (config.enableCircuits) {
-            CircuitCore circuitCore = new CircuitCore();
-            circuitCore.enable();
-            components.add(circuitCore);
-        }
         // Mechanics
         if (config.enableMechanisms) {
             MechanicalCore mechanicalCore = new MechanicalCore();
             mechanicalCore.enable();
             components.add(mechanicalCore);
+        }
+        // Circuits
+        if (config.enableCircuits) {
+            CircuitCore circuitCore = new CircuitCore();
+            circuitCore.enable();
+            components.add(circuitCore);
         }
         // Vehicles
         if (config.enableVehicles) {

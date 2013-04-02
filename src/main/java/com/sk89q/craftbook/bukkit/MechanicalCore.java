@@ -98,6 +98,10 @@ public class MechanicalCore implements LocalComponent {
         BukkitConfiguration config = plugin.getConfiguration();
 
         // Let's register mechanics!
+
+        //Register Chunk Anchors first so that they are always the first mechanics to be checked for, allowing other mechanics to stay loaded in unloaded chunks.
+        if (config.chunkAnchorEnabled) registerMechanic(new ChunkAnchor.Factory());
+
         if (config.ammeterEnabled) registerMechanic(new Ammeter.Factory());
         if (config.bookcaseEnabled) {
             plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt", false);
@@ -110,7 +114,6 @@ public class MechanicalCore implements LocalComponent {
         if (config.teleporterEnabled) registerMechanic(new Teleporter.Factory());
         if (config.areaEnabled) registerMechanic(new Area.Factory());
         if (config.commandSignEnabled) registerMechanic(new Command.Factory());
-        if (config.chunkAnchorEnabled) registerMechanic(new ChunkAnchor.Factory());
         if (config.lightstoneEnabled) registerMechanic(new LightStone.Factory());
         if (config.lightSwitchEnabled) registerMechanic(new LightSwitch.Factory());
         if (config.hiddenSwitchEnabled) registerMechanic(new HiddenSwitch.Factory());
