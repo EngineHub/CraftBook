@@ -62,8 +62,6 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class MechanicManager {
 
-    public static final boolean DEBUG = false;
-
     /**
      * Logger for errors. The Minecraft namespace is required so that messages are part of Minecraft's root logger.
      */

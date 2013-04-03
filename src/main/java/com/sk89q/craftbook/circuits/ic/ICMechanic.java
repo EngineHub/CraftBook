@@ -60,7 +60,7 @@ public class ICMechanic extends PersistentMechanic {
     public boolean equals(Object o) {
 
         if(o instanceof ICMechanic)
-            return ((ICMechanic) o).id.equals(id) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ();
+            return ((ICMechanic) o).id.equals(id) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ() && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle()) && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle());
 
         return false;
     }
@@ -68,7 +68,7 @@ public class ICMechanic extends PersistentMechanic {
     @Override
     public int hashCode() {
 
-        return (pos.getBlockX() * 1103515245 + 12345 ^ pos.getBlockY() * 1103515245 + 12345 ^ pos.getBlockZ() * 1103515245 + 12345 ^ id.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
+        return (pos.getBlockX() * 1103515245 + 12345 ^ pos.getBlockY() * 1103515245 + 12345 ^ pos.getBlockZ() * 1103515245 + 12345 ^ id.hashCode() * 1103515245 + 12345 ^ ic.getSignTitle().hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ICMechanic extends PersistentMechanic {
             };
             // FIXME: these should be registered with a global scheduler so we can end up with one runnable actually
             // running per set of inputs in a given time window.
-            CraftBookPlugin.server().getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), runnable, 2);
+            CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), runnable, 2);
         }
     }
 

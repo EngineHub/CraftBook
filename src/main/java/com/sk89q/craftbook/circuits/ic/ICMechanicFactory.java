@@ -213,6 +213,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             if (ICManager.isCachedIC(pt)) {
+
+                if(CraftBookPlugin.inst().getConfiguration().debugMode)
+                    CraftBookPlugin.inst().getLogger().warning("Existing IC found at selected location!");
                 ICManager.removeCachedIC(pt);
             }
 

@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.CraftbookRuntimeException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
@@ -53,7 +54,7 @@ class TriggerBlockManager {
      */
     public void register(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) {
+        if (CraftBookPlugin.inst().getConfiguration().debugMode) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
                 if (triggers.get(p) != null)
                     throw new CraftbookRuntimeException(new IllegalStateException(p + " has already been claimed by " +
@@ -73,7 +74,7 @@ class TriggerBlockManager {
      */
     public void deregister(PersistentMechanic m) {
         // Debugging code
-        if (MechanicManager.DEBUG) {
+        if (CraftBookPlugin.inst().getConfiguration().debugMode) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
                 if (triggers.get(p) != m)
                     throw new CraftbookRuntimeException(new IllegalStateException(p + " was occupied by another " +

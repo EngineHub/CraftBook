@@ -3,7 +3,7 @@ package com.sk89q.craftbook.util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -48,7 +48,7 @@ public class RedstoneUtil {
 
         Block pow = mech.getRelative(face);
 
-        if(MechanicManager.DEBUG)
+        if(CraftBookPlugin.inst().getConfiguration().debugMode)
             debug(pow);
 
         if (isPotentialPowerSource(mech, pow)) {

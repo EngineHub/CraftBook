@@ -30,6 +30,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public String language;
     public List<String> languages;
 
+    public boolean debugMode;
+
     private final CraftBookPlugin plugin;
 
     public BukkitConfiguration(YAMLProcessor config, CraftBookPlugin plugin) {
@@ -98,6 +100,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
         languages = config.getStringList("languages", Arrays.asList("en_US"));
+
+        config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
+        debugMode = config.getBoolean("debug-mode", debugMode);
 
         super.load();
     }
