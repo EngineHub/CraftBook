@@ -42,9 +42,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     public void load() {
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
-        radius = ICUtil.parseRadius(getSign(), 3);
+        radius = ICUtil.parseRadius(getSign());
         if (getLine(3).contains("=")) {
-            target = ICUtil.parseBlockLocation(getSign(), 3);
+            target = ICUtil.parseBlockLocation(getSign());
         } else {
             target = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
         }
