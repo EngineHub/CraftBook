@@ -146,7 +146,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                     if (b.getTypeId() != 0) continue;
 
-                    if (itemPlantableOnBlock(item.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
+                    if (itemPlantableOnBlock(stack.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
 
                         return b;
                     }
