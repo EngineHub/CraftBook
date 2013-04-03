@@ -48,7 +48,6 @@ public class Planter extends AbstractSelfTriggeredIC {
     public void load() {
 
         item = ICUtil.getItem(getLine(2));
-        if (item == null) item = new ItemStack(295, 1);
 
         onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
 
@@ -86,7 +85,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     public boolean plant() {
 
-        if (!plantableItem(item.getTypeId())) return false;
+        if (item != null && !plantableItem(item.getTypeId())) return false;
 
         if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
 
@@ -95,15 +94,13 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                 if (!ItemUtil.isStackValid(it)) continue;
 
-                if (it.getTypeId() != item.getTypeId()) continue;
-
-                if (item.getDurability() != 0 && it.getDurability() != item.getDurability()) continue;
+                if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
 
                 Block b = null;
 
                 if ((b = searchBlocks(it)) != null) {
                     if (c.getInventory().removeItem(new ItemStack(it.getTypeId(), 1, it.getDurability())).isEmpty()) {
-                        b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
+                        b.setTypeIdAndData(getBlockByItem(it.getTypeId()), (byte) it.getDurability(), true);
                         return true;
                     }
                 }
@@ -116,10 +113,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                 if (!ItemUtil.isStackValid(itemEnt.getItemStack())) continue;
 
-                if (itemEnt.getItemStack().getTypeId() == item.getTypeId()
-                        && (item.getDurability() == 0 || itemEnt.getItemStack().getDurability() == item.getDurability
-                        () || itemEnt.getItemStack()
-                        .getData().getData() == item.getData().getData())) {
+                if (item == null || ItemUtil.areItemsIdentical(item, itemEnt.getItemStack())) {
                     Location loc = itemEnt.getLocation();
 
                     if (LocationUtil.isWithinRadius(target.getLocation(), loc, radius)) {
@@ -128,7 +122,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                         if ((b = searchBlocks(itemEnt.getItemStack())) != null) {
                             if (ItemUtil.takeFromEntity(itemEnt)) {
-                                b.setTypeIdAndData(getBlockByItem(item.getTypeId()), (byte) item.getDurability(), true);
+                                b.setTypeIdAndData(getBlockByItem(itemEnt.getItemStack().getTypeId()), (byte) itemEnt.getItemStack().getDurability(), true);
                                 return true;
                             }
                         }
