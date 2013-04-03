@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public abstract class CartUtils {
+public class CartUtils {
 
     public static void reverse(Minecart cart) {
 

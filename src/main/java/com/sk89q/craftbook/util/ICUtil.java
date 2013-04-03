@@ -38,9 +38,6 @@ import com.sk89q.worldedit.blocks.ItemType;
  */
 public class ICUtil {
 
-    // private static BlockFace[] REDSTONE_CONTACT_FACES =
-    // {BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
-
     public ICUtil() {
 
     }

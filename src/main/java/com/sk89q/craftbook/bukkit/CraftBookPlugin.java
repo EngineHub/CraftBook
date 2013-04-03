@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -48,7 +51,6 @@ import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.GeneralUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -215,7 +217,7 @@ public class CraftBookPlugin extends JavaPlugin {
         try {
             config.load();
         } catch (Throwable e) {
-            getLogger().severe(GeneralUtil.getStackTrace(e));
+            getLogger().severe(getStackTrace(e));
             getServer().shutdown();
         }
 
@@ -916,5 +918,13 @@ public class CraftBookPlugin extends JavaPlugin {
     public File getFile() {
 
         return super.getFile();
+    }
+
+    public static String getStackTrace(Throwable ex) {
+
+        Writer out = new StringWriter();
+        PrintWriter pw = new PrintWriter(out);
+        ex.printStackTrace(pw);
+        return out.toString();
     }
 }

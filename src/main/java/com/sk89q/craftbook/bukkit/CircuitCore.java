@@ -15,6 +15,7 @@ import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
@@ -223,7 +224,7 @@ public class CircuitCore implements LocalComponent {
         try {
             icConfiguration.load();
         } catch (Throwable e) {
-            e.printStackTrace();
+            BukkitUtil.printStacktrace(e);
         }
     }
 

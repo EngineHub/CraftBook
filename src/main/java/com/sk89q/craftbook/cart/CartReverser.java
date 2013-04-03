@@ -1,5 +1,5 @@
 package com.sk89q.craftbook.cart;
-import static com.sk89q.craftbook.cart.CartUtils.reverse;
+import static com.sk89q.craftbook.util.CartUtils.reverse;
 
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;

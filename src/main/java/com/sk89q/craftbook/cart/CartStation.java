@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.cart;
 
-import static com.sk89q.craftbook.cart.CartUtils.stop;
+import static com.sk89q.craftbook.util.CartUtils.stop;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

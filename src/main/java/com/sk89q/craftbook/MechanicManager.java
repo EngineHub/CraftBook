@@ -644,8 +644,12 @@ public class MechanicManager {
         }
 
         try {
+            if (event != null) {
+                mechanic.unloadWithEvent(event);
+                if(event.isCancelled())
+                    return;
+            }
             mechanic.unload();
-            if (event != null) mechanic.unloadWithEvent(event);
         } catch (Throwable t) { // Mechanic failed to unload for some reason
             logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
                     (), t);

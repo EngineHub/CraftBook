@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
+import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -12,7 +13,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author hash
  */
-public abstract class RedstoneUtil {
+public class RedstoneUtil {
 
     /**
      * Represents the power input state of a mechanism.
@@ -46,7 +47,10 @@ public abstract class RedstoneUtil {
     public static Power isPowered(Block mech, BlockFace face) {
 
         Block pow = mech.getRelative(face);
-        // debug(pow);
+
+        if(MechanicManager.DEBUG)
+            debug(pow);
+
         if (isPotentialPowerSource(mech, pow)) {
             if (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) return Power.ON;
             return Power.OFF;
@@ -66,14 +70,17 @@ public abstract class RedstoneUtil {
                 || typeId == BlockID.REDSTONE_TORCH_ON
                 || typeId == BlockID.REDSTONE_TORCH_OFF
                 || typeId == BlockID.WOODEN_PRESSURE_PLATE
-                || typeId == BlockID.STONE_PRESSURE_PLATE;
-        // return BlockType.isRedstoneBlock(pow.getTypeId());
+                || typeId == BlockID.STONE_PRESSURE_PLATE
+                || typeId == BlockID.PRESSURE_PLATE_LIGHT
+                || typeId == BlockID.PRESSURE_PLATE_HEAVY
+                || typeId == BlockID.COMPARATOR_OFF
+                || typeId == BlockID.COMPARATOR_ON
+                || typeId == BlockID.REDSTONE_BLOCK;
     }
 
     public static boolean isPotentialPowerSource(Block pow) {
 
         return isPotentialPowerSource(pow.getTypeId());
-        // return BlockType.isRedstoneBlock(pow.getTypeId());
     }
 
     /**

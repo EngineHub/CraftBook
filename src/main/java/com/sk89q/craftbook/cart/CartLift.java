@@ -6,6 +6,8 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
 
+import com.sk89q.craftbook.util.CartUtils;
+
 public class CartLift extends CartMechanism {
 
     @Override

@@ -131,11 +131,11 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             }
         }
 
-        boolean isST = sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST();
-
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && isST) return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
-        else return new ICMechanic(id, ic, family, pt);
+        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) 
+            return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
+        else 
+            return new ICMechanic(id, ic, family, pt);
     }
 
     /**
@@ -248,9 +248,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICMechanic mechanic;
 
-            boolean isST = sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST();
-
-            if (ic instanceof SelfTriggeredIC && isST) {
+            if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
                 mechanic = new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
             } else {
                 mechanic = new ICMechanic(id, ic, family, pt);
