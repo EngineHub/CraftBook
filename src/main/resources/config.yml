@@ -54,7 +54,7 @@ mechanics:
         enable: true
         require-sneak: true
         regen-health: true
-        blocks: [53, 67, 108, 109, 114, 128, 134, 135, 136]
+        blocks: [53, 67, 108, 109, 114, 128, 134, 135, 136, 156]
     chunk-anchor:
         enable: true
     command-sign:
