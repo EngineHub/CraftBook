@@ -31,6 +31,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public List<String> languages;
 
     public boolean debugMode;
+    public List<String> debugFlags;
 
     private final CraftBookPlugin plugin;
 
@@ -70,7 +71,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
         config.setComment("enable-vehicles", "If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.");
         enableVehicles = config.getBoolean("enable-vehicles", true);
 
-
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
 
@@ -103,6 +103,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
         debugMode = config.getBoolean("debug-mode", false);
+
+        config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
+        debugFlags = config.getStringList("debug-flags", null);
 
         super.load();
     }

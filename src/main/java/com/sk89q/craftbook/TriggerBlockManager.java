@@ -54,7 +54,7 @@ class TriggerBlockManager {
      */
     public void register(PersistentMechanic m) {
         // Debugging code
-        if (CraftBookPlugin.inst().getConfiguration().debugMode) {
+        if(CraftBookPlugin.isDebugFlagEnabled("triggers")) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
                 if (triggers.get(p) != null)
                     throw new CraftbookRuntimeException(new IllegalStateException(p + " has already been claimed by " +
@@ -74,7 +74,7 @@ class TriggerBlockManager {
      */
     public void deregister(PersistentMechanic m) {
         // Debugging code
-        if (CraftBookPlugin.inst().getConfiguration().debugMode) {
+        if(CraftBookPlugin.isDebugFlagEnabled("triggers")) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
                 if (triggers.get(p) != m)
                     throw new CraftbookRuntimeException(new IllegalStateException(p + " was occupied by another " +

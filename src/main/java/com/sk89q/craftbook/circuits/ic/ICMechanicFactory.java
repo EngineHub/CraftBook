@@ -214,7 +214,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             if (ICManager.isCachedIC(pt)) {
 
-                if(CraftBookPlugin.inst().getConfiguration().debugMode)
+                if(CraftBookPlugin.isDebugFlagEnabled("ic-create"))
                     CraftBookPlugin.inst().getLogger().warning("Existing IC found at selected location!");
                 ICManager.removeCachedIC(pt);
             }

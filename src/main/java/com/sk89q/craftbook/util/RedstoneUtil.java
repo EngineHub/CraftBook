@@ -48,7 +48,7 @@ public class RedstoneUtil {
 
         Block pow = mech.getRelative(face);
 
-        if(CraftBookPlugin.inst().getConfiguration().debugMode)
+        if(CraftBookPlugin.isDebugFlagEnabled("redstone"))
             debug(pow);
 
         if (isPotentialPowerSource(mech, pow)) {

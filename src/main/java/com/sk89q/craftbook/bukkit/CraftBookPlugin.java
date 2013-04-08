@@ -927,4 +927,18 @@ public class CraftBookPlugin extends JavaPlugin {
         ex.printStackTrace(pw);
         return out.toString();
     }
+
+    public static boolean isDebugFlagEnabled(String flag) {
+
+        if(!inst().getConfiguration().debugMode || inst().getConfiguration().debugFlags == null || inst().getConfiguration().debugFlags.isEmpty())
+            return false;
+
+        for(String testflag : inst().getConfiguration().debugFlags) {
+
+            if(testflag.equalsIgnoreCase(flag))
+                return true;
+        }
+
+        return false;
+    }
 }

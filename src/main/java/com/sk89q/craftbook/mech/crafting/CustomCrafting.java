@@ -158,7 +158,10 @@ public class CustomCrafting implements Listener {
                             return false;
                         List<ItemStack> test = new ArrayList<ItemStack>();
                         test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
-                        if(!test.removeAll(((ShapedRecipe) rec2).getIngredientMap().values()))
+                        while(test.remove(null)){}
+                        if(test.size() == 0)
+                            return true;
+                        if(!test.removeAll(((ShapedRecipe) rec2).getIngredientMap().values()) && test.size() > 0)
                             return false;
                         if(test.size() > 0)
                             return false;
@@ -170,7 +173,10 @@ public class CustomCrafting implements Listener {
 
                     List<ItemStack> test = new ArrayList<ItemStack>();
                     test.addAll(((ShapelessRecipe) rec1).getIngredientList());
-                    if(!test.removeAll(((ShapelessRecipe) rec2).getIngredientList()))
+                    while(test.remove(null)){}
+                    if(test.size() == 0)
+                        return true;
+                    if(!test.removeAll(((ShapelessRecipe) rec2).getIngredientList()) && test.size() > 0)
                         return false;
                     if(test.size() > 0)
                         return false;
