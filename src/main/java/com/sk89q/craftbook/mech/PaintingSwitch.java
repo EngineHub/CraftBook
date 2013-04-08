@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import java.util.HashMap;
 
 import org.bukkit.Art;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -91,6 +92,7 @@ public class PaintingSwitch implements Listener {
         if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
             Painting p = players.remove(event.getPlayer().getName());
             if (p != null) {
+                event.getPlayer().sendMessage(ChatColor.RED + "mech.painting.range");
                 paintings.remove(p);
             }
 
