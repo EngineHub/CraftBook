@@ -85,7 +85,7 @@ public class ItemDispenser extends AbstractIC {
 
                         ItemStack stack = item.clone();
 
-                        BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(loc.getBlock().getRelative(0, y,
+                        BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y,
                                 0).getLocation(), stack);
                         return;
                     }
