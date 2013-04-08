@@ -39,6 +39,31 @@ public class ItemUtil {
         }
     }
 
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> include, List<ItemStack> exclude) {
+
+        List<ItemStack> ret = new ArrayList<ItemStack>();
+
+        for(ItemStack item : stacks) {
+
+            checks: {
+            for(ItemStack inc : include) {
+
+                if(!areItemsIdentical(item, inc))
+                    break checks;
+            }
+            for(ItemStack inc : exclude) {
+
+                if(areItemsIdentical(item, inc))
+                    break checks;
+            }
+
+            ret.add(item);
+        }
+        }
+
+        return ret;
+    }
+
     public static ItemStack[] removeNulls(ItemStack[] array) {
 
         List<ItemStack> list = new ArrayList<ItemStack>();
