@@ -1,3 +1,25 @@
+3.6
+* Fix a bridge dupe bug.
+* Fix IC's not being converted on creation.
++ Added radius and chance to Zeus Bolt IC.
+* Many changes to cooking pots.
++ Added a driller IC. Acts like a BuildCraft quarry in a 3x3 area.
++ Added a command to toggle 'Toggle Areas' from the console. (Also Command Blocks)
++ Added a blacklist to BetterPistons Bounce and Crush.
+* Removed some redundant debug code that printed weird stuff to the console.
+* Fix Sound Effect IC and Particle Effect IC not popping off if the verification failed.
+* Fix Potion Inducer radius bug.
+* Fixed entity spawning IC's spawning in unloaded chunks.
++ Added new 1.5 blocks to places that they should be added.
+* Fix an IC error.
+* Fix a chunk anchor issue.
++ Added debug mode and debug flags options. Allows a fine tuned debug mode.
+* Fix CombineHarvester radius.
+* Planter IC will now plant anything if no ID is provided.
+* Fix a few CartDeposit bugs.
++ Added exclusions to pipes, and the ability to have inclusions and exclusions on pipe put pistons.
+* Fix pipe bug where items would dissapear.
+
 3.6 Beta 4
 * Performance enhancements.
 * Bug fixes in Cooking Pot.
