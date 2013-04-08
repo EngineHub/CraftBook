@@ -2,6 +2,7 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -10,6 +11,8 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -36,6 +39,7 @@ public class CartDeposit extends CartMechanism {
         // go
         String[] dataTypes = RegexUtil.COMMA_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
 
+        List<ItemInfo> items = new ArrayList<ItemInfo>();
         for(String data : dataTypes) {
             int itemID = -1;
             byte itemData = -1;
@@ -48,127 +52,141 @@ public class CartDeposit extends CartMechanism {
                 continue;
             }
 
-            Inventory cartinventory = ((StorageMinecart) cart).getInventory();
-            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(); 
+            items.add(new ItemInfo(itemID, itemData));
+        }
 
-            // search for containers
-            ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
+        Inventory cartinventory = ((StorageMinecart) cart).getInventory();
+        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(); 
 
-            // are there any containers?
-            if (containers.isEmpty()) return;
+        // search for containers
+        ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
 
-            if (collecting) {
-                // collecting
-                ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
-                if (!data.isEmpty()) {
-                    for (ItemStack item : cartinventory.getContents()) {
-                        if (item == null) {
-                            continue;
-                        }
-                        if (itemID < 0 || itemID == item.getTypeId()) {
-                            if (itemData < 0 || itemData == item.getDurability()) {
+        // are there any containers?
+        if (containers.isEmpty()) return;
+
+        if (collecting) {
+            // collecting
+            ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
+            if (!items.isEmpty()) {
+                for (ItemStack item : cartinventory.getContents()) {
+                    if (item == null) {
+                        continue;
+                    }
+                    for(ItemInfo inf : items) {
+                        if (inf.getId() < 0 || inf.getId() == item.getTypeId()) {
+                            if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
                                 transferItems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                                 cartinventory.remove(item);
                             }
                         }
                     }
-                } else {
-                    transferItems.addAll(Arrays.asList(cartinventory.getContents()));
-                    cartinventory.clear();
                 }
+            } else {
+                transferItems.addAll(Arrays.asList(cartinventory.getContents()));
+                cartinventory.clear();
+            }
 
-                while (transferItems.remove(null)) {
+            while (transferItems.remove(null)) {
+            }
+
+            // is cart non-empty?
+            if (transferItems.isEmpty()) return;
+
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit")) {
+                CraftBookPlugin.inst().getLogger().info("collecting " + transferItems.size() + " item stacks");
+                for (ItemStack stack: transferItems) 
+                    CraftBookPlugin.inst().getLogger().info("collecting " + stack.getAmount() + " items of type " + stack.getType().toString());
+            }
+
+            for (Chest container : containers) {
+                if (transferItems.isEmpty()) {
+                    break;
                 }
+                Inventory containerinventory = container.getInventory();
 
-                // is cart non-empty?
-                if (transferItems.isEmpty()) return;
-
-                // System.out.println("collecting " + transferItems.size() + " item stacks");
-                // for (ItemStack stack: transferItems) System.out.println("collecting " + stack.getAmount() + " items of
-                // type " + stack.getType().toString());
-
-                for (Chest container : containers) {
-                    if (transferItems.isEmpty()) {
-                        break;
-                    }
-                    Inventory containerinventory = container.getInventory();
-
-                    leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()
-                                                                                                    ])).values());
-                    transferItems.clear();
-                    transferItems.addAll(leftovers);
-                    leftovers.clear();
-
-                    container.update();
-                }
-
-                // System.out.println("collected items. " + transferItems.size() + " stacks left over.");
-
-                leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values
-                        ());
+                leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()
+                                                                                                ])).values());
                 transferItems.clear();
                 transferItems.addAll(leftovers);
                 leftovers.clear();
 
-                // System.out.println("collection done. " + transferItems.size() + " stacks wouldn't fit back.");
-            } else {
-                // depositing
-                ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
+                container.update();
+            }
 
-                for (Chest container : containers) {
-                    Inventory containerinventory = container.getInventory();
-                    if (!data.isEmpty()) {
-                        for (ItemStack item : containerinventory.getContents()) {
-                            if (item == null) {
-                                continue;
-                            }
-                            if (itemID < 0 || itemID == item.getTypeId())
-                                if (itemData < 0 || itemData == item.getDurability()) {
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit"))
+                CraftBookPlugin.inst().getLogger().info("collected items. " + transferItems.size() + " stacks left over.");
+
+            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values
+                    ());
+            transferItems.clear();
+            transferItems.addAll(leftovers);
+            leftovers.clear();
+
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit"))
+                CraftBookPlugin.inst().getLogger().info("collection done. " + transferItems.size() + " stacks wouldn't fit back.");
+        } else {
+            // depositing
+            ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
+
+            for (Chest container : containers) {
+                Inventory containerinventory = container.getInventory();
+                if (!items.isEmpty()) {
+                    for (ItemStack item : containerinventory.getContents()) {
+                        if (item == null) {
+                            continue;
+                        }
+                        for(ItemInfo inf : items) {
+                            if (inf.getId() < 0 || inf.getId() == item.getTypeId())
+                                if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
                                     transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(),
                                             item.getDurability()));
                                     containerinventory.remove(item);
                                 }
                         }
-                    } else {
-                        transferitems.addAll(Arrays.asList(containerinventory.getContents()));
-                        containerinventory.clear();
                     }
-                    container.update();
+                } else {
+                    transferitems.addAll(Arrays.asList(containerinventory.getContents()));
+                    containerinventory.clear();
                 }
+                container.update();
+            }
 
-                while (transferitems.remove(null)) {
+            while (transferitems.remove(null)) {
+            }
+
+            // are chests empty?
+            if (transferitems.isEmpty()) return;
+
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit")) {
+                CraftBookPlugin.inst().getLogger().info("depositing " + transferitems.size() + " stacks");
+                for (ItemStack stack: transferitems) 
+                    CraftBookPlugin.inst().getLogger().info("depositing " + stack.getAmount() + " items oftype " + stack.getType().toString());
+            }
+
+            leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values
+                    ());
+            transferitems.clear();
+            transferitems.addAll(leftovers);
+            leftovers.clear();
+
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit"))
+                CraftBookPlugin.inst().getLogger().info("deposited, " + transferitems.size() + " items left over.");
+
+            for (Chest container : containers) {
+                if (transferitems.isEmpty()) {
+                    break;
                 }
+                Inventory containerinventory = container.getInventory();
 
-                // are chests empty?
-                if (transferitems.isEmpty()) return;
-
-                // System.out.println("depositing " + transferitems.size() + " stacks");
-                // for (ItemStack stack: transferitems) System.out.println("depositing " + stack.getAmount() + " items of
-                // type " + stack.getType().toString());
-
-                leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values
-                        ());
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()
+                                                                                                ])).values());
                 transferitems.clear();
                 transferitems.addAll(leftovers);
                 leftovers.clear();
-
-                // System.out.println("deposited, " + transferitems.size() + " items left over.");
-
-                for (Chest container : containers) {
-                    if (transferitems.isEmpty()) {
-                        break;
-                    }
-                    Inventory containerinventory = container.getInventory();
-
-                    leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()
-                                                                                                    ])).values());
-                    transferitems.clear();
-                    transferitems.addAll(leftovers);
-                    leftovers.clear();
-                }
-
-                // System.out.println("deposit done. " + transferitems.size() + " items wouldn't fit back.");
             }
+
+            if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit"))
+                CraftBookPlugin.inst().getLogger().info("deposit done. " + transferitems.size() + " items wouldn't fit back.");
         }
     }
 

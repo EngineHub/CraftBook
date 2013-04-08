@@ -98,18 +98,18 @@ public class RedstoneUtil {
 
     public static void debug(Block block) {
 
-        System.out.println("block " + block + " power debug:");
-        System.out.println("\tblock.isBlockPowered() : " + block.isBlockPowered());
-        System.out.println("\tblock.isBlockIndirectlyPowered() : " + block.isBlockIndirectlyPowered());
+        CraftBookPlugin.inst().getLogger().info("block " + block + " power debug:");
+        CraftBookPlugin.inst().getLogger().info("\tblock.isBlockPowered() : " + block.isBlockPowered());
+        CraftBookPlugin.inst().getLogger().info("\tblock.isBlockIndirectlyPowered() : " + block.isBlockIndirectlyPowered());
         for (BlockFace bf : BlockFace.values()) {
-            System.out.println("\tblock.isBlockFacePowered(" + bf + ") : " + block.isBlockFacePowered(bf));
-            System.out.println("\tblock.getFace(" + bf + ").isBlockPowered() : " + block.getRelative(bf)
+            CraftBookPlugin.inst().getLogger().info("\tblock.isBlockFacePowered(" + bf + ") : " + block.isBlockFacePowered(bf));
+            CraftBookPlugin.inst().getLogger().info("\tblock.getFace(" + bf + ").isBlockPowered() : " + block.getRelative(bf)
                     .isBlockPowered());
-            System.out.println("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + block
+            CraftBookPlugin.inst().getLogger().info("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + block
                     .isBlockFaceIndirectlyPowered(bf));
-            System.out.println("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
+            CraftBookPlugin.inst().getLogger().info("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
                     + block.getRelative(bf).isBlockIndirectlyPowered());
         }
-        System.out.println();
+        CraftBookPlugin.inst().getLogger().info("");
     }
 }

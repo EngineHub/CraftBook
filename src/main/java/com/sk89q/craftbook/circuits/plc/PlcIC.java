@@ -234,7 +234,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         for (String s : ((BookMeta) book.getItemMeta()).getPages()) {
             code.append(s).append("\n");
         }
-        System.out.println(code);
+        if(CraftBookPlugin.isDebugFlagEnabled("plc"))
+            CraftBookPlugin.inst().getLogger().info(code.toString());
         return code.toString();
     }
 
