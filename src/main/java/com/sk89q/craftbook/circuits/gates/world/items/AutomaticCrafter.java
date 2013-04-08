@@ -124,8 +124,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                     List<ItemStack> items = new ArrayList<ItemStack>();
                     items.add(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult());
                     if (CircuitCore.inst().getPipeFactory() != null)
-                        if (CircuitCore.inst().getPipeFactory()
-                                .detect(BukkitUtil.toWorldVector(b), items) != null) {
+                        if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b), items) != null) {
                             pipes = true;
                         }
                 }

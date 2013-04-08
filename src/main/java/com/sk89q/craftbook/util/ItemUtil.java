@@ -17,6 +17,13 @@ public class ItemUtil {
 
     }
 
+    /**
+     * Add an itemstack to an existing itemstack.
+     * 
+     * @param base The itemstack to be added to.
+     * @param toAdd The itemstack to add to the base.
+     * @return The unaddable items.
+     */
     public static ItemStack addToStack(ItemStack base, ItemStack toAdd) {
 
         if (!areItemsIdentical(base, toAdd)) return toAdd;

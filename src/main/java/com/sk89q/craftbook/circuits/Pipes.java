@@ -302,6 +302,8 @@ public class Pipes extends AbstractMechanic {
 
         if (block.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
+            List<ItemStack> leftovers = new ArrayList<ItemStack>();
+
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
             if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
@@ -329,10 +331,11 @@ public class Pipes extends AbstractMechanic {
                 }
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
+
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
                         if (item == null) continue;
-                        ((InventoryHolder) fac.getState()).getInventory().addItem(item);
+                        leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
                     }
                 }
             } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
@@ -342,18 +345,27 @@ public class Pipes extends AbstractMechanic {
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
+
+
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
                         if (item == null) continue;
                         if(f.getInventory().getResult() == null)
                             f.getInventory().setResult(item);
                         else
-                            ItemUtil.addToStack(f.getInventory().getResult(), item);
+                            leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
                     }
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
                 if (!items.isEmpty()) for (ItemStack item : items) {
+                    if (item == null) continue;
+                    block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
+                }
+            }
+
+            if (!leftovers.isEmpty()) {
+                for (ItemStack item : leftovers) {
                     if (item == null) continue;
                     block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
                 }
