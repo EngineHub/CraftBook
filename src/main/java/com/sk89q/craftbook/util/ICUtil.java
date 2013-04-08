@@ -197,7 +197,11 @@ public class ICUtil {
 
     public static Vector parseRadius(ChangedSign sign, int lPos) {
 
-        String line = sign.getLine(lPos);
+        return parseRadius(sign.getLine(lPos));
+    }
+
+    public static Vector parseRadius(String line) {
+
         Vector radius = new Vector(10,10,10); // default radius is 10.
         try {
             String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
