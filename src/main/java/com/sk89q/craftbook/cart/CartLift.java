@@ -15,6 +15,7 @@ public class CartLift extends CartMechanism {
         // validate
         if (cart == null) return;
         if (blocks.sign == null) return;
+        if (minor) return;
         if (!(blocks.matches("cartlift up") || blocks.matches("cartlift down"))) return;
 
         // go
@@ -27,18 +28,18 @@ public class CartLift extends CartMechanism {
 
         while (true) {
 
-            if(destination.getLocation().getY() == 0 && !up)
+            if(destination.getLocation().getY() <= 0 && !up)
                 return;
-            if(destination.getLocation().getY() == destination.getWorld().getMaxHeight() && up)
+            if(destination.getLocation().getY() >= destination.getWorld().getMaxHeight() && up)
                 return;
+
             destination = destination.getRelative(face);
 
             BlockState state = destination.getState();
             if (state instanceof Sign && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP).getTypeId()) {
                 String testLine = ((Sign) state).getLine(2);
 
-                if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]")
-                        || testLine.equalsIgnoreCase("[CartLift]")) {
+                if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {
                     destination = destination.getRelative(BlockFace.UP, 2);
                     break;
                 }
