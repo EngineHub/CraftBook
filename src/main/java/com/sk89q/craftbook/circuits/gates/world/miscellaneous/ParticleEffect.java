@@ -133,20 +133,25 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(sign.getLine(2))[0], 2);
-            int effectID, effectData;
             try {
-                effectID = Integer.parseInt(eff[0]);
-            } catch (Exception e) {
-                effectID = Effect.valueOf(eff[0]).getId();
+                String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(sign.getLine(2))[0], 2);
+                int effectID, effectData;
+                try {
+                    effectID = Integer.parseInt(eff[0]);
+                } catch (Exception e) {
+                    effectID = Effect.valueOf(eff[0]).getId();
+                }
+                if (Effect.getById(effectID) == null) throw new ICVerificationException("Invalid effect!");
+                try {
+                    effectData = Integer.parseInt(eff[1]);
+                } catch (Exception e) {
+                    effectData = 0;
+                }
+                if (effectID == 2001 && BlockType.fromID(effectData) == null) throw new ICVerificationException("Invalid block ID for effect!");
             }
-            if (Effect.getById(effectID) == null) throw new ICVerificationException("Invalid effect!");
-            try {
-                effectData = Integer.parseInt(eff[1]);
-            } catch (Exception e) {
-                effectData = 0;
+            catch(Exception e) {
+                throw new ICVerificationException("Invalid effect!");
             }
-            if (effectID == 2001 && BlockType.fromID(effectData) == null) throw new ICVerificationException("Invalid block ID for effect!");
         }
     }
 }
