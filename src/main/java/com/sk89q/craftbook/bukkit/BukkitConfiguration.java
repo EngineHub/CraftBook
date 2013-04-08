@@ -102,7 +102,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         languages = config.getStringList("languages", Arrays.asList("en_US"));
 
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
-        debugMode = config.getBoolean("debug-mode", debugMode);
+        debugMode = config.getBoolean("debug-mode", false);
 
         super.load();
     }

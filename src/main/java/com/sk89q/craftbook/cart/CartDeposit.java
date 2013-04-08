@@ -24,7 +24,6 @@ public class CartDeposit extends CartMechanism {
         // care?
         if (minor) return;
         if (!(cart instanceof StorageMinecart)) return;
-        Inventory cartinventory = ((StorageMinecart) cart).getInventory();
 
         // enabled?
         if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
@@ -34,15 +33,7 @@ public class CartDeposit extends CartMechanism {
         if (!blocks.matches("collect") && !blocks.matches("deposit")) return;
         boolean collecting = blocks.matches("collect");
 
-        // search for containers
-        ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
-
-        // are there any containers?
-        if (containers.isEmpty()) return;
-
         // go
-        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
-
         String[] dataTypes = RegexUtil.COMMA_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
 
         for(String data : dataTypes) {
@@ -51,14 +42,25 @@ public class CartDeposit extends CartMechanism {
             try {
                 String[] splitLine = RegexUtil.COLON_PATTERN.split(data);
                 itemID = Integer.parseInt(splitLine[0]);
-                itemData = Byte.parseByte(splitLine[1]);
+                if(splitLine.length > 1)
+                    itemData = Byte.parseByte(splitLine[1]);
             } catch (Exception ignored) {
+                continue;
             }
+
+            Inventory cartinventory = ((StorageMinecart) cart).getInventory();
+            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(); 
+
+            // search for containers
+            ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
+
+            // are there any containers?
+            if (containers.isEmpty()) return;
 
             if (collecting) {
                 // collecting
                 ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
-                if (!((Sign) blocks.sign.getState()).getLine(2).isEmpty()) {
+                if (!data.isEmpty()) {
                     for (ItemStack item : cartinventory.getContents()) {
                         if (item == null) {
                             continue;
@@ -115,7 +117,7 @@ public class CartDeposit extends CartMechanism {
 
                 for (Chest container : containers) {
                     Inventory containerinventory = container.getInventory();
-                    if (!((Sign) blocks.sign.getState()).getLine(2).isEmpty()) {
+                    if (!data.isEmpty()) {
                         for (ItemStack item : containerinventory.getContents()) {
                             if (item == null) {
                                 continue;
