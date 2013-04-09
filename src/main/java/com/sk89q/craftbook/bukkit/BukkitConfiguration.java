@@ -27,6 +27,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean experimentalClicks;
 
     public boolean updateNotifier;
+    public boolean easterEggs;
 
     public String language;
     public List<String> languages;
@@ -110,6 +111,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
         debugFlags = config.getStringList("debug-flags", null);
+
+        config.setComment("easter-eggs", "Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)");
+        easterEggs = config.getBoolean("easter-eggs", true);
 
         super.load();
     }

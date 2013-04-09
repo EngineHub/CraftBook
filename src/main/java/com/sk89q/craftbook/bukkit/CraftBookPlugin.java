@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.jar.JarFile;
@@ -252,6 +253,28 @@ public class CraftBookPlugin extends JavaPlugin {
         // Let's start the show
         registerGlobalEvents();
         startComponents();
+
+        if(getConfiguration().easterEggs) {
+            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+
+                @Override
+                public void run () {
+
+                    Calendar date = Calendar.getInstance();
+
+                    if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
+                        getLogger().info("Happy reddit cakeday me4502!");
+                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
+                        getLogger().info("Happy birthday me4502!");
+                    else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
+                        getLogger().info("Happy new years!");
+                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
+                        getLogger().info("Happy birthday CraftBook!");
+                    else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
+                        getLogger().info("Happy birthday Me4502ian CraftBook!");
+                }
+            }, 20L);
+        }
     }
 
     public boolean updateAvailable = false;
@@ -271,7 +294,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
             try {
                 int ver = Integer.parseInt(getDescription().getVersion().split("-")[0]);
-                if (ver < 1541) //Not valid.
+                if (ver < 1541) //Not valid prior to this version.
                     exempt = true;
             }
             catch(Exception e) {
