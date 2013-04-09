@@ -53,7 +53,7 @@ public class CartUtils {
         if (passenger != null) {
             cart.eject();
             passenger.teleport(destination);
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), new Runnable() {
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override
                 public void run() {

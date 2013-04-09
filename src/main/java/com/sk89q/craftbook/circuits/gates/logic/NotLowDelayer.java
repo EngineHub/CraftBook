@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.logic;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -17,7 +18,7 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
  */
 public class NotLowDelayer extends AbstractIC {
 
-    private int taskId;
+    private BukkitTask taskId;
 
     public NotLowDelayer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -41,10 +42,10 @@ public class NotLowDelayer extends AbstractIC {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
-            Bukkit.getScheduler().cancelTask(taskId);
+            taskId.cancel();
             chip.setOutput(0, false);
         } else {
-            taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), new Runnable() {
+            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override
                 public void run() {

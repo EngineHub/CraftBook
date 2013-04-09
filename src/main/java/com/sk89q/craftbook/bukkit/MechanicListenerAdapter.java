@@ -264,8 +264,14 @@ public class MechanicListenerAdapter implements Listener {
             Directional diode = (Directional) block.getState().getData();
             BlockFace f = diode.getFacing();
             handleDirectWireInput(new WorldVector(w, x + f.getModX(), y, z + f.getModZ()), block, oldLevel, newLevel);
-            if(block.getRelative(f).getTypeId() != 0)
+            if(block.getRelative(f).getTypeId() != 0) {
                 handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX(), y + 1, z + f.getModZ()), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX() + 1, y - 1, z + f.getModZ()), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX() - 1, y - 1, z + f.getModZ()), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX() + 1, y - 1, z + f.getModZ() + 1), block, oldLevel, newLevel);
+                handleDirectWireInput(new WorldVector(w, x + f.getModX() - 1, y - 1, z + f.getModZ() - 1), block, oldLevel, newLevel);
+            }
             return;
         } else if (type == BlockID.STONE_BUTTON || type == BlockID.WOODEN_BUTTON || type == BlockID.LEVER) {
 
@@ -300,6 +306,8 @@ public class MechanicListenerAdapter implements Listener {
     protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+        if(block.getLocation().distanceSquared(sourceBlock.getLocation()) < 1) //The same block, don't run.
+            return;
         for (MechanicManager manager : managerList)
             manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
     }
@@ -314,7 +322,7 @@ public class MechanicListenerAdapter implements Listener {
             ignoredEvents.remove(event);
             return;
         }
-        CraftBookPlugin.server().getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), new Runnable() {
+        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
             @Override
             public void run() {

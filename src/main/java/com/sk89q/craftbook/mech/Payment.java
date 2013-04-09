@@ -73,7 +73,7 @@ public class Payment extends AbstractMechanic {
                 BlockFace bface = sign.getBlock().getFace(back);
                 Block redstoneItem = back.getRelative(bface);
                 if (setState(sign.getBlock(), true)) {
-                    CraftBookPlugin.inst().getServer().getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(),
+                    CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
                             new TurnOff(redstoneItem), 20L);
                 }
             } else {
@@ -153,7 +153,7 @@ public class Payment extends AbstractMechanic {
          */
         @Override
         public Payment detect(BlockWorldVector pt, LocalPlayer player,
-                              ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Pay]")) {

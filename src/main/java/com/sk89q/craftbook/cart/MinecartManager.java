@@ -99,8 +99,7 @@ public class MinecartManager {
 
     public void impact(BlockRedstoneEvent event) {
 
-        CraftBookPlugin.server().getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(),
-                new DelayedImpact(event));
+        CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), new DelayedImpact(event));
     }
 
     /**

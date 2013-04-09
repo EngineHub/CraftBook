@@ -234,7 +234,7 @@ public class VehicleCore implements LocalComponent {
             if (plugin.getConfiguration().minecartRemoveOnExit) {
                 vehicle.remove();
             } else if (plugin.getConfiguration().minecartDecayWhenEmpty) {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) vehicle),
+                Bukkit.getScheduler().runTaskLater(plugin, new Decay((Minecart) vehicle),
                         plugin.getConfiguration().minecartDecayTime);
             }
         }
@@ -329,7 +329,7 @@ public class VehicleCore implements LocalComponent {
                     if (!ent.isEmpty()) {
                         continue;
                     }
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Decay((Minecart) ent),
+                    Bukkit.getScheduler().runTaskLater(plugin, new Decay((Minecart) ent),
                             plugin.getConfiguration().minecartDecayTime);
                 }
             }

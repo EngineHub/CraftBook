@@ -401,7 +401,7 @@ public class Gate extends AbstractMechanic {
 
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 
             @Override
             public void run() {

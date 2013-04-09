@@ -29,7 +29,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
         @Override
         public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player,
-                                   ChangedSign sign) throws InvalidMechanismException {
+                ChangedSign sign) throws InvalidMechanismException {
             // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
             // FIXME In the future add a check here to test if you can actually build wall signs on this block.
             // World wrd = BukkitUtil.toWorld(pos);
@@ -200,7 +200,7 @@ public class HiddenSwitch extends AbstractMechanic {
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };
-                Bukkit.getScheduler().scheduleSyncDelayedTask(CraftBookPlugin.inst(), turnOff, 1 * 20L);
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, 1 * 20L);
             }
         }
     }

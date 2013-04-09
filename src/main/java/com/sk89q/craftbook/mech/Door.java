@@ -16,6 +16,7 @@ package com.sk89q.craftbook.mech;
  * see <http://www.gnu.org/licenses/>.
  */
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -329,7 +330,13 @@ public class Door extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger))) return;
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        flipState(null);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+            @Override
+            public void run () {
+                flipState(null);
+            }
+        }, 2L);
     }
 
     private boolean flipState(LocalPlayer player) {
