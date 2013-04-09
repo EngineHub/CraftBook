@@ -451,8 +451,7 @@ public class Gate extends AbstractMechanic {
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.isEmpty()) {
                     try {
-                        int iLine0 = Integer.parseInt(line0);
-                        if (iLine0 != 0 && !isValidGateBlock(iLine0)) {
+                        if (!isValidGateBlock(Integer.parseInt(line0))) {
                             throw new NumberFormatException();
                         }
                     } catch (NumberFormatException e) {
@@ -461,12 +460,10 @@ public class Gate extends AbstractMechanic {
                 } else {
                 }
                 sign.setLine(1, "[Gate]");
-                if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate" + "" +
-                        ".infinite")) {
+                if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
                     sign.setLine(3, "0");
-                } else if (!sign.getLine(3).equalsIgnoreCase("infinite")) {
+                else if (!sign.getLine(3).equalsIgnoreCase("infinite"))
                     sign.setLine(3, "0");
-                }
                 sign.update(false);
                 player.print("mech.gate.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[DGate]")) {
@@ -484,6 +481,7 @@ public class Gate extends AbstractMechanic {
                     }
                 } else {
                 }
+                sign.setLine(0, "");
                 sign.setLine(1, "[DGate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate" + "" +
                         ".infinite")) {
