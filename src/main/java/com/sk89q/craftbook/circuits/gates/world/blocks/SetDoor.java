@@ -140,6 +140,8 @@ public class SetDoor extends AbstractIC {
         } else {
             setDoor(false);
         }
+
+        chip.setOutput(0, chip.getInput(0));
     }
 
     private void setDoor(boolean open) {
