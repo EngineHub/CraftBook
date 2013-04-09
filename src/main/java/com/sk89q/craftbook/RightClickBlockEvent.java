@@ -3,6 +3,9 @@ package com.sk89q.craftbook;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+/**
+ * An event that overrides the right click actions, allowing an event to override the block that was right clicked.
+ */
 public class RightClickBlockEvent extends PlayerInteractEvent {
 
     @SuppressWarnings("unused")
