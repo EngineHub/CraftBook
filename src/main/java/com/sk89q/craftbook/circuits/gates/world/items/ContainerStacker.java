@@ -78,7 +78,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
                             if (ii == i)
                                 continue;
                             ItemStack itt = c.getInventory().getItem(ii);
-                            if (ItemUtil.isStackValid(itt) && ItemUtil.areItemsIdentical(it, itt)) {
+                            if (ItemUtil.isStackValid(itt) && ItemUtil.areItemsIdentical(it, itt) && it.getEnchantments().isEmpty() && !itt.getEnchantments().isEmpty() && !it.hasItemMeta() && !itt.hasItemMeta()) {
 
                                 if (amount + itt.getAmount() <= 64) {
                                     amount += itt.getAmount();
