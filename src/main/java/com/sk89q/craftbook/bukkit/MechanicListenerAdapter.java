@@ -33,9 +33,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.material.Button;
+import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
-import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.RightClickBlockEvent;
@@ -268,16 +267,11 @@ public class MechanicListenerAdapter implements Listener {
             if(block.getRelative(f).getTypeId() != 0)
                 handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
             return;
-        } else if (type == BlockID.STONE_BUTTON || type == BlockID.WOODEN_BUTTON) {
+        } else if (type == BlockID.STONE_BUTTON || type == BlockID.WOODEN_BUTTON || type == BlockID.LEVER) {
 
-            Button button = (Button) block.getState().getData();
+            Attachable button = (Attachable) block.getState().getData();
             BlockFace f = button.getAttachedFace();
             handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
-        } else if (type == BlockID.LEVER) {
-
-            Lever lever = (Lever) block.getState().getData();
-            BlockFace f = lever.getAttachedFace();
-            handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y + f.getModY()*2, z + f.getModZ()*2), block, oldLevel, newLevel);
         }
         // For redstone wires and repeaters, the code already exited this method
         // Non-wire blocks proceed
