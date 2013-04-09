@@ -1,0 +1,27 @@
+package com.sk89q.craftbook;
+
+import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+public class RightClickBlockEvent extends PlayerInteractEvent {
+
+    @SuppressWarnings("unused")
+    private static final long serialVersionUID = 1031838877588760298L;
+
+    protected final Block clicked;
+
+    public RightClickBlockEvent(PlayerInteractEvent event, Block block) {
+
+        super(event.getPlayer(), event.getAction(), event.getItem(), event.getClickedBlock(), event.getBlockFace());
+        if(block == null)
+            clicked = event.getClickedBlock();
+        else
+            clicked = block;
+    }
+
+    @Override
+    public Block getClickedBlock() {
+
+        return clicked;
+    }
+}

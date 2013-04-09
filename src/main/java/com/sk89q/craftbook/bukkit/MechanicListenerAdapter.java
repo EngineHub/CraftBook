@@ -38,6 +38,7 @@ import org.bukkit.material.Directional;
 import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.RightClickBlockEvent;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
@@ -96,9 +97,15 @@ public class MechanicListenerAdapter implements Listener {
             return;
         }
 
+        boolean isRightClick = false;
+
+        if(CraftBookPlugin.inst().getConfiguration().experimentalClicks && event.getAction() == Action.RIGHT_CLICK_AIR) {
+            isRightClick = event.getPlayer().getTargetBlock(null, 5).getTypeId() != 0;
+        }
+
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
             for (MechanicManager manager : managerList)
-                manager.dispatchBlockRightClick(event);
+                manager.dispatchBlockRightClick(new RightClickBlockEvent(event, isRightClick ? event.getPlayer().getTargetBlock(null, 5) : null));
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK)
             for (MechanicManager manager : managerList)

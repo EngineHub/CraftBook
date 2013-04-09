@@ -228,7 +228,7 @@ public class MechanicManager {
      *
      * @return the number of mechanics to processed
      */
-    public short dispatchBlockRightClick(PlayerInteractEvent event) {
+    public short dispatchBlockRightClick(RightClickBlockEvent event) {
 
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
