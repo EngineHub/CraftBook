@@ -103,7 +103,7 @@ public class MechanicListenerAdapter implements Listener {
             isRightClick = event.getPlayer().getTargetBlock(null, 5).getTypeId() != 0;
         }
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || isRightClick)
             for (MechanicManager manager : managerList)
                 manager.dispatchBlockRightClick(new RightClickBlockEvent(event, isRightClick ? event.getPlayer().getTargetBlock(null, 5) : null));
 
