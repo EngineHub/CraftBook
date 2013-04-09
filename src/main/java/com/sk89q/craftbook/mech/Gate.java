@@ -481,7 +481,6 @@ public class Gate extends AbstractMechanic {
                     }
                 } else {
                 }
-                sign.setLine(0, "");
                 sign.setLine(1, "[DGate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate" + "" +
                         ".infinite")) {
