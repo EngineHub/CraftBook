@@ -100,7 +100,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         config.setComment("use-experimental-clicks", "Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.");
         experimentalClicks = config.getBoolean("use-experimental-clicks", false);
 
-        config.setComment("language", "The default language for CraftBook.");
+        config.setComment("language", "The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.");
         language = config.getString("language", "en_US");
 
         config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
