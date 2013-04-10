@@ -26,8 +26,6 @@ public class MinecartManager {
 
     /**
      * Reloads or sets the configuration of the {@link MinecartManager}.
-     *
-     * @param cfg - The {@link VehiclesConfiguration} to read
      */
     public void reloadConfiguration() {
 

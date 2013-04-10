@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -122,7 +123,7 @@ public class InventoryUtil {
      * @param stacks The stacks to check.
      * @return whether the inventory contains all the items. If there are no items to check, it returns true.
      */
-    public boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
+    public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
 
         ArrayList<ItemStack> itemsToFind = (ArrayList<ItemStack>) Arrays.asList(stacks);
 
@@ -156,6 +157,32 @@ public class InventoryUtil {
         }
 
         return itemsToFind.isEmpty();
+    }
+
+    /**
+     * Removes items from an inventory.
+     * 
+     * @param inv The inventory to remove it from.
+     * @param stacks The stacks to remove.
+     * @return Whether the stacks were removed.
+     */
+    public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack ... stacks) {
+
+        List<ItemStack> leftovers = new ArrayList<ItemStack>(inv.getInventory().removeItem(stacks).values());
+
+        if(!leftovers.isEmpty()) {
+            List<ItemStack> itemsToAdd = Arrays.asList(stacks);
+            for(ItemStack left : leftovers) {
+                itemsToAdd.remove(left);
+            }
+
+            inv.getInventory().addItem(itemsToAdd.toArray(new ItemStack[itemsToAdd.size()]));
+        }
+
+        if(inv instanceof BlockState)
+            ((BlockState) inv).update();
+
+        return leftovers.isEmpty();
     }
 
     /**
