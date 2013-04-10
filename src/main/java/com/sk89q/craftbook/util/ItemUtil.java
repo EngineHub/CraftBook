@@ -99,6 +99,11 @@ public class ItemUtil {
         return areItemsIdentical(item, new MaterialData(type, data));
     }
 
+    public static boolean areItemsIdentical(ItemStack item, int type, short data) {
+
+        return areItemsIdentical(item, new MaterialData(type, (byte) data));
+    }
+
     public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
 
         return areItemsIdentical(item.getData(), data);

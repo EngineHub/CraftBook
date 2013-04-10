@@ -37,10 +37,8 @@ public class CartDeposit extends CartMechanism {
         boolean collecting = blocks.matches("collect");
 
         // go
-        String[] dataTypes = RegexUtil.COMMA_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2));
-
         List<ItemInfo> items = new ArrayList<ItemInfo>();
-        for(String data : dataTypes) {
+        for(String data : RegexUtil.COMMA_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2))) {
             int itemID = -1;
             byte itemData = -1;
             try {
@@ -116,8 +114,7 @@ public class CartDeposit extends CartMechanism {
             if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit"))
                 CraftBookPlugin.inst().getLogger().info("collected items. " + transferItems.size() + " stacks left over.");
 
-            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values
-                    ());
+            leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
             transferItems.clear();
             transferItems.addAll(leftovers);
             leftovers.clear();
@@ -138,8 +135,7 @@ public class CartDeposit extends CartMechanism {
                         for(ItemInfo inf : items) {
                             if (inf.getId() < 0 || inf.getId() == item.getTypeId())
                                 if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
-                                    transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(),
-                                            item.getDurability()));
+                                    transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
                                     containerinventory.remove(item);
                                 }
                         }
