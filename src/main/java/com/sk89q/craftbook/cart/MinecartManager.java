@@ -72,6 +72,8 @@ public class MinecartManager {
             if (thingy != null) {
                 Location from = event.getFrom();
                 Location to = event.getTo();
+                if(from.distanceSquared(to) > 2*2) //Further than max distance
+                    return;
                 boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
                         && from.getBlockZ() == to.getBlockZ();
                 thingy.impact((Minecart) event.getVehicle(), cmb, crossesBlockBoundary);
