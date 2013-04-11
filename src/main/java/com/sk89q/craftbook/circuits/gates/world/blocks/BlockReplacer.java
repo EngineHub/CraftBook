@@ -17,6 +17,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -64,10 +65,14 @@ public class BlockReplacer extends AbstractIC {
 
         String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
         delay = Integer.parseInt(data[0]);
-        mode = Integer.parseInt(data[1]);
-        physics = data[2].equalsIgnoreCase("1");
-
-        mode = 0; //For now.
+        if(data.length > 1)
+            mode = Integer.parseInt(data[1]);
+        else
+            mode = 0;
+        if(data.length > 2)
+            physics = data[2].equalsIgnoreCase("1");
+        else
+            physics = true;
     }
 
     public boolean replaceBlocks(final boolean on, final Block block, final List<Location> traversedBlocks) {
@@ -157,9 +162,60 @@ public class BlockReplacer extends AbstractIC {
         }
 
         @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            String[] ids = RegexUtil.MINUS_PATTERN.split(sign.getLine(2));
+
+            String[] onIds = RegexUtil.COLON_PATTERN.split(ids[0]);
+            try {
+                Integer.parseInt(onIds[0]);
+            }
+            catch(Exception e){
+                throw new ICVerificationException("Must provide an on ID!");
+            }
+            try {
+                if(onIds.length > 1)
+                    Byte.parseByte(onIds[1]);
+            }
+            catch(Exception e){
+                throw new ICVerificationException("Invalid on Data!");
+            }
+
+            String[] offIds = RegexUtil.COLON_PATTERN.split(ids[1]);
+            try {
+                Integer.parseInt(offIds[0]);
+            }
+            catch(Exception e){
+                throw new ICVerificationException("Must provide an off ID!");
+            }
+            try {
+                if(offIds.length > 1)
+                    Byte.parseByte(offIds[1]);
+            }
+            catch(Exception e){
+                throw new ICVerificationException("Invalid off Data!");
+            }
+
+            String[] data = RegexUtil.COLON_PATTERN.split(sign.getLine(3));
+            try {
+                Integer.parseInt(data[0]);
+            }
+            catch(Exception e){
+                throw new ICVerificationException("Must provide a delay!");
+            }
+            try {
+                if(data.length > 1)
+                    Integer.parseInt(data[1]);
+            }
+            catch(Exception e) {
+                throw new ICVerificationException("Invalid mode!");
+            }
+        }
+
+        @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID{:onData}-offID{:offData}}", "+odelay:mode:physics"};
+            String[] lines = new String[] {"onID{:onData}-offID{:offData}}", "delay{:mode:physics}"};
             return lines;
         }
     }
