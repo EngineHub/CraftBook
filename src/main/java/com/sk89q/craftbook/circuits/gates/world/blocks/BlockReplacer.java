@@ -72,7 +72,7 @@ public class BlockReplacer extends AbstractIC {
 
     public boolean replaceBlocks(final boolean on, final Block block, final List<Location> traversedBlocks) {
 
-        if(traversedBlocks.size() > 1000)
+        if(traversedBlocks.size() > 15000)
             return true;
 
         if(mode == 0) {
