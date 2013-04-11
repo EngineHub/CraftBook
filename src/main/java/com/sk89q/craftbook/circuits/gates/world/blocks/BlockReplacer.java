@@ -42,7 +42,6 @@ public class BlockReplacer extends AbstractIC {
     int delay;
     int mode;
     boolean physics;
-    int curTicks;
 
     @Override
     public void load() {
@@ -67,62 +66,49 @@ public class BlockReplacer extends AbstractIC {
         delay = Integer.parseInt(data[0]);
         mode = Integer.parseInt(data[1]);
         physics = data[2].equalsIgnoreCase("1");
-        try {
-            curTicks = Integer.parseInt(data[3]);
-        }
-        catch(Exception e){}
 
         mode = 0; //For now.
     }
 
     public boolean replaceBlocks(final boolean on, final Block block, final List<Location> traversedBlocks) {
 
-        if(curTicks < delay) {
+        if(traversedBlocks.size() > 1000)
+            return true;
 
-            curTicks++;
-            getSign().setLine(3, delay + ":" + mode + ":" + (physics ? "1" : "0") + ":" + curTicks);
-            getSign().update(false);
-        } else {
+        if(mode == 0) {
+            for(final BlockFace f : BlockFace.values()) {
 
-            curTicks = 0;
-            getSign().setLine(3, delay + ":" + mode + ":" + (physics ? "1" : "0") + ":" + curTicks);
-            getSign().update(false);
+                if(traversedBlocks.contains(block.getRelative(f).getLocation()))
+                    continue;
+                traversedBlocks.add(block.getRelative(f).getLocation());
 
-            if(mode == 0) {
-                for(final BlockFace f : BlockFace.values()) {
+                if(block.getRelative(f).getTypeId() == onId && (onData == -1 || onData == block.getRelative(f).getData())) {
 
-                    if(traversedBlocks.contains(block.getRelative(f).getLocation()))
-                        continue;
-                    traversedBlocks.add(block.getRelative(f).getLocation());
+                    if(!on)
+                        block.setTypeIdAndData(offId, offData == -1 ? 0 : offData, physics);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
-                    if(block.getRelative(f).getTypeId() == onId && (onData == -1 || onData == block.getRelative(f).getData())) {
+                        @Override
+                        public void run () {
+                            replaceBlocks(on, block.getRelative(f), traversedBlocks);
+                        }
+                    }, delay);
+                } else if (block.getRelative(f).getTypeId() == offId && (offData == -1 || offData == block.getRelative(f).getData())) {
 
-                        if(!on)
-                            block.setTypeIdAndData(offId, offData == -1 ? 0 : offData, physics);
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                    if(on)
+                        block.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
-                            @Override
-                            public void run () {
-                                replaceBlocks(on, block.getRelative(f), traversedBlocks);
-                            }
-                        }, delay);
-                    } else if (block.getRelative(f).getTypeId() == offId && (offData == -1 || offData == block.getRelative(f).getData())) {
-
-                        if(on)
-                            block.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                            @Override
-                            public void run () {
-                                replaceBlocks(on, block.getRelative(f), traversedBlocks);
-                            }
-                        }, delay);
-                    }
+                        @Override
+                        public void run () {
+                            replaceBlocks(on, block.getRelative(f), traversedBlocks);
+                        }
+                    }, delay);
                 }
             }
         }
 
-        return false;
+        return traversedBlocks.size() > 0;
     }
 
     public boolean replaceBlocks(boolean on) {
@@ -164,7 +150,7 @@ public class BlockReplacer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID{:onData}-offID{:offData}}", "+odelay:mode:physics:tick"};
+            String[] lines = new String[] {"onID{:onData}-offID{:offData}}", "+odelay:mode:physics"};
             return lines;
         }
     }
