@@ -43,12 +43,6 @@ public class RainSensor extends AbstractSelfTriggeredIC {
         chip.setOutput(0, BukkitUtil.toSign(getSign()).getWorld().hasStorm());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {

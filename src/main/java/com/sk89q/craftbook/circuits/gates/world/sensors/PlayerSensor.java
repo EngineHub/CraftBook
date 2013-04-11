@@ -57,12 +57,6 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         state.setOutput(0, isDetected());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     Vector radius;
 
     Location location;

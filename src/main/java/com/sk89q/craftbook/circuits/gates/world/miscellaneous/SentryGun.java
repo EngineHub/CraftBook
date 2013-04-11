@@ -55,12 +55,6 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void think(ChipState state) {
 
         shoot();

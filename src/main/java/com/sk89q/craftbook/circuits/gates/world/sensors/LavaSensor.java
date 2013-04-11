@@ -62,12 +62,6 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {

@@ -63,6 +63,7 @@ import com.sk89q.craftbook.circuits.gates.logic.XnorGate;
 import com.sk89q.craftbook.circuits.gates.logic.XorGate;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreaker;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
+import com.sk89q.craftbook.circuits.gates.world.blocks.BlockReplacer;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BonemealTerraformer;
 import com.sk89q.craftbook.circuits.gates.world.blocks.CombineHarvester;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Cultivator;
@@ -320,6 +321,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1211", "set bridge", new SetBridge.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1212", "set door", new SetDoor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1213", "sound", new SoundEffect.Factory(server), familySISO, familyAISO); // Restricted
+        //TODO empty slot.
         registerIC("MC1215", "set a chest", new SetBlockAboveChest.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1216", "set b chest", new SetBlockBelowChest.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1217", "pot induce", new PotionInducer.Factory(server), familySISO, familyAISO);
@@ -354,7 +356,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); //Restricted
         //TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
         registerIC("MC1248", "driller", new Driller.Factory(server), familySISO, familyAISO); //Restricted
-        //TODO Block Replacer (MC1249)
+        registerIC("MC1249", "replacer", new BlockReplacer.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1250", "shoot fire", new FireShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1251", "shoot fires", new FireBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1252", "flame thower", new FlameThrower.Factory(server), familySISO, familyAISO); // Restricted

@@ -51,12 +51,6 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void think(ChipState chip) {
 
         chip.setOutput(0, stock());

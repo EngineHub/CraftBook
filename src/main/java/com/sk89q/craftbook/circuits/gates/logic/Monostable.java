@@ -83,12 +83,6 @@ public class Monostable extends AbstractSelfTriggeredIC {
         getSign().setLine(3, Integer.toString(tick));
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {

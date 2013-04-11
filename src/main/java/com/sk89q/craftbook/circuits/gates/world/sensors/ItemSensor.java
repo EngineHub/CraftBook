@@ -104,12 +104,6 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
         state.setOutput(0, isDetected());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     protected boolean isDetected() {
 
         for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {

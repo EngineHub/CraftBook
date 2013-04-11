@@ -55,12 +55,6 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         chip.setOutput(0, hurt());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     Vector radius;
     int damage;
     EntityType type;

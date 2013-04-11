@@ -43,12 +43,6 @@ public class TStormSensor extends AbstractSelfTriggeredIC {
         chip.setOutput(0, BukkitUtil.toSign(getSign()).getWorld().isThundering());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {

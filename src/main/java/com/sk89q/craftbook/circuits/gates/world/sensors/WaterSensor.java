@@ -69,12 +69,6 @@ public class WaterSensor extends AbstractSelfTriggeredIC {
         chip.setOutput(0, hasWater());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     /**
      * Returns true if the sign has water at the specified location.
      *

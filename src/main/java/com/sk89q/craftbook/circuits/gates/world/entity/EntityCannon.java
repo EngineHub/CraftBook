@@ -45,12 +45,6 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void think(ChipState state) {
 
         state.setOutput(0, shoot());

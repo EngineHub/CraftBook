@@ -120,12 +120,6 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         state.setOutput(0, induce());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {

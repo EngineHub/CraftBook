@@ -46,12 +46,6 @@ public class ItemNotSensor extends ItemSensor implements SelfTriggeredIC {
         state.setOutput(0, !isDetected());
     }
 
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
     public static class Factory extends ItemSensor.Factory {
 
         public Factory(Server server) {

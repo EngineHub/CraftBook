@@ -85,12 +85,6 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void trigger(ChipState chip) {
 
     }

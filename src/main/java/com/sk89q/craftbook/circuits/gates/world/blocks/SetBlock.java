@@ -76,12 +76,6 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void think(ChipState chip) {
 
         onTrigger();

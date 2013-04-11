@@ -49,12 +49,6 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    @Override
     public void think(ChipState state) {
 
         if (state.getInput(0)) {
