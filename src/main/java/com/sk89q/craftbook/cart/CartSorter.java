@@ -101,7 +101,6 @@ public class CartSorter extends CartMechanism {
                     }
                     break;
                 default:
-                    cart.remove();
                     return;
             }
         } else {
@@ -155,7 +154,6 @@ public class CartSorter extends CartMechanism {
                     }
                     break;
                 default:
-                    cart.remove();
                     return;
             }
         }
