@@ -28,9 +28,9 @@ public class CartLift extends CartMechanism {
 
         while (true) {
 
-            if(destination.getLocation().getY() <= 0 && !up)
+            if(destination.getLocation().getY() <= 1 && !up)
                 return;
-            if(destination.getLocation().getY() >= destination.getWorld().getMaxHeight() && up)
+            if(destination.getLocation().getY() >= destination.getWorld().getMaxHeight()-1 && up)
                 return;
 
             destination = destination.getRelative(face);
