@@ -2,8 +2,9 @@ package com.sk89q.craftbook;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -38,31 +39,29 @@ public class LanguageManager {
         List<String> languages = plugin.getConfiguration().languages;
         for (String language : languages) {
             language = language.trim();
-            HashMap<String, String> languageData = new HashMap<String, String>();
+            HashMap<String, String> languageData = null;
             File f = new File(plugin.getDataFolder(), language + ".txt");
             try {
-                BufferedReader br = new BufferedReader(new FileReader(f));
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
                 String line;
+                languageData = new HashMap<String, String>();
                 while ((line = br.readLine()) != null) {
-                    if (line.trim().length() == 0 || line.trim().startsWith("#"))
+                    line = line.trim();
+                    if (line.length() == 0 || line.startsWith("#"))
                         continue;
-                    String[] split = RegexUtil.COLON_PATTERN.split(line);
-                    if (split.length != 2) {
+                    String[] split = RegexUtil.COLON_PATTERN.split(line, 2);
+                    if (split.length < 2)
                         continue;
-                    }
                     languageData.put(split[0], split[1]);
                 }
                 br.close();
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE,
-                        "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator +
-                        language + ".txt");
+                plugin.getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator + language + ".txt");
             }
             languageMap.put(language, languageData);
         }
     }
 
-    @Deprecated
     public String getString(String message) {
 
         HashMap<String, String> languageData = languageMap.get(plugin.getConfiguration().language);
@@ -91,7 +90,7 @@ public class LanguageManager {
     public String getPlayersLanguage(Player p) {
 
         try {
-            Field d = LocaleLanguage.class.getDeclaredField("d");
+            Field d = LocaleLanguage.class.getDeclaredField("e");
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer) p).getHandle().getLocale());
         } catch (Throwable e) {
