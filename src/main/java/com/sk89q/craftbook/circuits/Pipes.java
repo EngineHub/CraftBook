@@ -391,15 +391,16 @@ public class Pipes extends AbstractMechanic {
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
-                if (!items.isEmpty()) for (ItemStack item : items) {
-                    if (item == null) continue;
-                    block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
-                }
+                if (!items.isEmpty()) 
+                    for (ItemStack item : items) {
+                        if (!ItemUtil.isStackValid(item)) continue;
+                        block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
+                    }
             }
 
             if (!leftovers.isEmpty()) {
                 for (ItemStack item : leftovers) {
-                    if (item == null) continue;
+                    if (!ItemUtil.isStackValid(item)) continue;
                     block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
                 }
             }
