@@ -116,7 +116,18 @@ public class Clock extends AbstractSelfTriggeredIC {
             interval = Math.min(interval, 150);
 
             sign.setLine(2, Integer.toString(interval));
-            sign.setLine(3, "0");
+
+            int tick;
+            try {
+                tick = Integer.parseInt(sign.getLine(3));
+            } catch (NumberFormatException e) {
+                tick = 0;
+            }
+
+            tick = Math.max(tick, 0);
+            tick = Math.min(tick, interval);
+
+            sign.setLine(3, Integer.toString(tick));
             sign.update(false);
         }
 
