@@ -124,7 +124,7 @@ public class AreaCommands {
 
             // Save
             try {
-                CopyManager.getInstance().save(world, namespace, id, copy);
+                CopyManager.getInstance().save(world, namespace, id.toLowerCase(), copy);
                 player.print("Area saved as '" + id + "' under the '" + namespace + "' namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());
@@ -132,7 +132,7 @@ public class AreaCommands {
                 player.print(e.getMessage());
             }
         } catch (NoClassDefFoundError e) {
-            throw new CommandException("WorldEdit.jar does not exist in plugins/.");
+            throw new CommandException("WorldEdit.jar does not exist in plugins/, or is outdated. (Or you are using an outdated version of CraftBook)");
         }
     }
 

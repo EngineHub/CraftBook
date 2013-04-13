@@ -106,8 +106,8 @@ public class Area extends AbstractMechanic {
         private void isValidArea(ChangedSign sign) throws InvalidMechanismException {
 
             String namespace = sign.getLine(0).trim();
-            String areaOn = sign.getLine(2).trim();
-            String areaOff = sign.getLine(3).trim();
+            String areaOn = sign.getLine(2).trim().toLowerCase();
+            String areaOff = sign.getLine(3).trim().toLowerCase();
             if (CopyManager.isExistingArea(plugin.getDataFolder(), namespace, areaOn)) {
                 if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return;
                 if (CopyManager.isExistingArea(plugin.getDataFolder(), namespace, areaOff)) return;
@@ -195,8 +195,8 @@ public class Area extends AbstractMechanic {
         try {
             World world = sign.getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "");
-            String inactiveID = sign.getLine(3).replace("-", "");
+            String id = sign.getLine(2).replace("-", "").toLowerCase();
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
 
             CuboidCopy copy = CopyManager.getInstance().load(world, namespace, id);
 
@@ -245,8 +245,8 @@ public class Area extends AbstractMechanic {
         try {
             World world = sign.getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "");
-            String inactiveID = sign.getLine(3).replace("-", "");
+            String id = sign.getLine(2).replace("-", "").toLowerCase();
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
 
             CuboidCopy copy = CopyManager.getInstance().load(world, namespace, id);
 
@@ -288,7 +288,7 @@ public class Area extends AbstractMechanic {
     private static boolean checkSign(Sign sign) {
 
         String namespace = sign.getLine(0);
-        String id = sign.getLine(2);
+        String id = sign.getLine(2).toLowerCase();
 
         if (id == null || id.isEmpty() || id.length() < 1) return false;
         if (namespace == null || namespace.isEmpty() || namespace.length() < 1) return false;
@@ -306,8 +306,8 @@ public class Area extends AbstractMechanic {
 
     private static boolean coldCheckToggleState(Sign sign) {
 
-        String line3 = sign.getLine(2);
-        String line4 = sign.getLine(3);
+        String line3 = sign.getLine(2).toLowerCase();
+        String line4 = sign.getLine(3).toLowerCase();
         return pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
