@@ -209,6 +209,10 @@ public class MechanicManager {
             }
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
+                        return returnValue;
+
                     aMechanic.onBlockBreak(event);
                     returnValue++;
                 }
@@ -245,6 +249,9 @@ public class MechanicManager {
             HashSet<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
+                        return returnValue;
 
                     if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
                         player.printError("area.permissions");
@@ -286,6 +293,9 @@ public class MechanicManager {
             HashSet<Mechanic> mechanics = load(pos, player);
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
+
+                    if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
+                        return returnValue;
 
                     if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation())) {
                         player.printError("area.permissions");

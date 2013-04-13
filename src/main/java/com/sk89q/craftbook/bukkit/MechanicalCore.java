@@ -102,6 +102,7 @@ public class MechanicalCore implements LocalComponent {
         //Register Chunk Anchors first so that they are always the first mechanics to be checked for, allowing other mechanics to stay loaded in unloaded chunks.
         if (config.chunkAnchorEnabled) registerMechanic(new ChunkAnchor.Factory());
 
+        if (config.signCopyEnabled) registerMechanic(new SignCopier.Factory()); // Keep SignCopy close to the start, so it can copy mechanics without triggering them.
         if (config.ammeterEnabled) registerMechanic(new Ammeter.Factory());
         if (config.bookcaseEnabled) {
             plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt", false);
@@ -122,7 +123,6 @@ public class MechanicalCore implements LocalComponent {
         if (config.cauldronEnabled) registerMechanic(new ImprovedCauldron.Factory());
         if (config.xpStorerEnabled) registerMechanic(new XPStorer.Factory());
         if (config.mapChangerEnabled) registerMechanic(new MapChanger.Factory());
-        if (config.signCopyEnabled) registerMechanic(new SignCopier.Factory());
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled && Types.isEnabled(type)) registerMechanic(new BetterPistons.Factory(type));
 
