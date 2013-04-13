@@ -213,6 +213,8 @@ public class VehicleCore implements LocalComponent {
         @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleEnter(VehicleEnterEvent event) {
 
+            if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getChunk()))
+                return;
             Vehicle vehicle = event.getVehicle();
 
             if (!(vehicle instanceof Minecart)) return;
