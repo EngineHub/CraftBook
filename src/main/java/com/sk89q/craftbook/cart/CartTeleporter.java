@@ -17,6 +17,7 @@ public class CartTeleporter extends CartMechanism {
         // validate
         if (cart == null) return;
         if (blocks.sign == null) return;
+        if (minor) return;
         if (!blocks.matches("teleport")) return;
 
         // go

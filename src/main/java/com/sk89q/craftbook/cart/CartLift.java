@@ -34,7 +34,7 @@ public class CartLift extends CartMechanism {
 
             destination = destination.getRelative(face);
 
-            if (destination.getState() instanceof Sign && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP).getTypeId()) {
+            if (destination.getState() instanceof Sign && blocks.base.getTypeId() == destination.getRelative(BlockFace.UP, 1).getTypeId()) {
 
                 Sign state = (Sign) destination.getState();
                 String testLine = state.getLine(1);
