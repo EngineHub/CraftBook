@@ -16,7 +16,7 @@ public class CartTeleporter extends CartMechanism {
     public void impact(final Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
         if (cart == null) return;
-
+        if (blocks.sign == null) return;
         if (!blocks.matches("teleport")) return;
 
         // go
