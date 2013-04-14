@@ -15,6 +15,7 @@ public class CartLift extends CartMechanism {
         // validate
         if (cart == null) return;
         if (blocks.sign == null) return;
+        if (minor) return;
         if (!(blocks.matches("cartlift up") || blocks.matches("cartlift down"))) return;
 
         // go
