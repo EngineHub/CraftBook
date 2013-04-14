@@ -18,17 +18,14 @@ package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractSelfTriggeredIC {
 
@@ -85,7 +82,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
 
     protected boolean getTargetLighted() {
 
-        return hasLight(min, centre.getBlockX(), centre.getBlockY(), centre.getBlockZ());
+        return hasLight(min);
     }
 
     /**
@@ -93,11 +90,9 @@ public class LightSensor extends AbstractSelfTriggeredIC {
      *
      * @return
      */
-    private boolean hasLight(byte specifiedLevel, int x, int y, int z) {
+    private boolean hasLight(byte specifiedLevel) {
 
-        Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
-        Block backBlock = signBlock.getRelative(SignUtil.getBack(signBlock));
-        byte lightLevel = backBlock.getRelative(x, y, z).getLightLevel();
+        byte lightLevel = centre.getBlock().getLightLevel();
 
         return lightLevel >= specifiedLevel;
     }
