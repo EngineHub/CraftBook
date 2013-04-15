@@ -58,12 +58,12 @@ public class TopLevelCommands {
         @CommandPermissions("craftbook.update")
         public void update(CommandContext context, CommandSender sender) {
             if(!CraftBookPlugin.inst().getConfiguration().updateNotifier || !CraftBookPlugin.inst().updateAvailable) {
-                sender.sendMessage("Unknown command. Type \"help\" for help.");
+                sender.sendMessage("No updates are available!");
                 return;
             }
             Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
             if(updater.getResult() == UpdateResult.NO_UPDATE)
-                sender.sendMessage("Unknown command. Type \"help\" for help.");
+                sender.sendMessage("No updates are available!");
         }
 
         @Command(aliases = "about", desc = "Gives info about craftbook.")
