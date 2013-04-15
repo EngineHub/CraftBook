@@ -80,6 +80,7 @@ public class LanguageManager {
         String translated = languageData.get(ChatColor.stripColor(message));
         if (translated == null || translated.length() == 0) {
             languageData = languageMap.get(plugin.getConfiguration().language);
+            if(languageData == null) return message;
             translated = languageData.get(ChatColor.stripColor(message));
             if (translated == null) return message;
             else return translated;

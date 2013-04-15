@@ -168,8 +168,6 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        managerAdapter = new MechanicListenerAdapter();
-        mechanicClock = new MechanicClock();
         // Check plugin for checking the active states of a plugin
         Plugin checkPlugin;
 
@@ -188,6 +186,21 @@ public class CraftBookPlugin extends JavaPlugin {
                 return;
             }
         }
+
+        // Resolve ProtocolLib
+        checkPlugin = getServer().getPluginManager().getPlugin("ProtocolLib");
+        if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
+            protocolLib = (ProtocolLibrary) checkPlugin;
+        } else protocolLib = null;
+
+        // Resolve WorldGuard
+        checkPlugin = getServer().getPluginManager().getPlugin("WorldGuard");
+        if (checkPlugin != null && checkPlugin instanceof WorldGuardPlugin) {
+            worldGuardPlugin = (WorldGuardPlugin) checkPlugin;
+        } else worldGuardPlugin = null;
+
+        managerAdapter = new MechanicListenerAdapter();
+        mechanicClock = new MechanicClock();
 
         // Setup Config and the Commands Manager
         final CraftBookPlugin plugin = this;
@@ -223,10 +236,6 @@ public class CraftBookPlugin extends JavaPlugin {
             getServer().shutdown();
         }
 
-        // Initialize the language manager.
-        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
-        languageManager = new LanguageManager();
-
         // Resolve Vault
         try {
             RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
@@ -237,49 +246,25 @@ public class CraftBookPlugin extends JavaPlugin {
             economy = null;
         }
 
-        // Resolve ProtocolLib
-
-        checkPlugin = getServer().getPluginManager().getPlugin("ProtocolLib");
-        if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
-            protocolLib = (ProtocolLibrary) checkPlugin;
-        } else protocolLib = null;
-
-        // Resolve WorldGuard
-        checkPlugin = getServer().getPluginManager().getPlugin("WorldGuard");
-        if (checkPlugin != null && checkPlugin instanceof WorldGuardPlugin) {
-            worldGuardPlugin = (WorldGuardPlugin) checkPlugin;
-        } else worldGuardPlugin = null;
-
         // Let's start the show
+        setupCraftBook();
         registerGlobalEvents();
         startComponents();
-
-        if(getConfiguration().easterEggs) {
-            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-
-                @Override
-                public void run () {
-
-                    Calendar date = Calendar.getInstance();
-
-                    if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
-                        getLogger().info("Happy reddit cakeday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
-                        getLogger().info("Happy birthday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
-                        getLogger().info("Happy new years!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
-                        getLogger().info("Happy birthday CraftBook!");
-                    else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
-                        getLogger().info("Happy birthday Me4502ian CraftBook!");
-                }
-            }, 20L);
-        }
     }
 
     public boolean updateAvailable = false;
     String latestVersion = null;
     long updateSize = 0;
+
+    /**
+     * Register basic things to the plugin. For example, languages.
+     */
+    public void setupCraftBook() {
+
+        // Initialize the language manager.
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
+        languageManager = new LanguageManager();
+    }
 
     /**
      * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
@@ -337,6 +322,28 @@ public class CraftBookPlugin extends JavaPlugin {
             } else {
                 getLogger().info("The Auto-Updater is disabled for your version!");
             }
+        }
+
+        if(getConfiguration().easterEggs) {
+            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+
+                @Override
+                public void run () {
+
+                    Calendar date = Calendar.getInstance();
+
+                    if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
+                        getLogger().info("Happy reddit cakeday me4502!");
+                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
+                        getLogger().info("Happy birthday me4502!");
+                    else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
+                        getLogger().info("Happy new years!");
+                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
+                        getLogger().info("Happy birthday CraftBook!");
+                    else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
+                        getLogger().info("Happy birthday Me4502ian CraftBook!");
+                }
+            }, 20L);
         }
 
         try {
@@ -734,6 +741,7 @@ public class CraftBookPlugin extends JavaPlugin {
         config.load();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
+        setupCraftBook();
         registerGlobalEvents();
         startComponents();
     }
