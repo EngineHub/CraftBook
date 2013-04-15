@@ -42,7 +42,8 @@ public class NotLowDelayer extends AbstractIC {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
-            taskId.cancel();
+            if(taskId != null)
+                taskId.cancel();
             chip.setOutput(0, false);
         } else {
             taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {

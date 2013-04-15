@@ -61,7 +61,8 @@ public class Delayer extends AbstractIC {
                 }
             }, tdelay);
         } else {
-            taskId.cancel();
+            if(taskId != null)
+                taskId.cancel();
             chip.setOutput(0, false);
         }
     }

@@ -53,7 +53,8 @@ public class NotDelayer extends AbstractIC {
                 }
             }, delay * 20);
         } else {
-            taskId.cancel();
+            if(taskId != null)
+                taskId.cancel();
             chip.setOutput(0, true);
         }
     }
