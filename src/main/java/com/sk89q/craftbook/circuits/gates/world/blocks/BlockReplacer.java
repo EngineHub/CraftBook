@@ -129,6 +129,7 @@ public class BlockReplacer extends AbstractIC {
             if(on)
                 block.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
         List<Location> traversedBlocks = new ArrayList<Location>();
+        traversedBlocks.add(block.getLocation());
         return replaceBlocks(on, block, traversedBlocks);
     }
 
