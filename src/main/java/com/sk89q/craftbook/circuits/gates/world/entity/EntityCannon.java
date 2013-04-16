@@ -50,22 +50,20 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         state.setOutput(0, shoot());
     }
 
-    /**
-     * This method launches near by entities
-     *
-     * @return true if a entity was thrown.
-     */
-    protected boolean shoot() {
+    double x,y,z;
+    EntityType type;
+    Location location;
 
-        boolean resultBoolean = false;
-        Location location = BukkitUtil.toSign(getSign()).getLocation();
-        EntityType type = EntityType.MOB_HOSTILE;
+    @Override
+    public void load() {
+
+        location = BukkitUtil.toSign(getSign()).getLocation();
+        type = EntityType.MOB_HOSTILE;
 
         if (!getSign().getLine(3).isEmpty()) {
             type = EntityType.fromString(getSign().getLine(3));
         }
 
-        double x,y,z;
         try {
             String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
             x = Double.parseDouble(split[0]);
@@ -77,6 +75,16 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
             y = 1;
             z = 0;
         }
+    }
+
+    /**
+     * This method launches near by entities
+     *
+     * @return true if a entity was thrown.
+     */
+    protected boolean shoot() {
+
+        boolean resultBoolean = false;
 
         for (Entity e : LocationUtil.getNearbyEntities(location, BukkitUtil.toVector(new Vector(3,3,3)))) {
             if (e.isDead() || !e.isValid()) {
