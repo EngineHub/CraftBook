@@ -87,12 +87,12 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         boolean resultBoolean = false;
 
         for (Entity e : LocationUtil.getNearbyEntities(location, BukkitUtil.toVector(new Vector(3,3,3)))) {
-            if (e.isDead() || !e.isValid()) {
+
+            if (e.isDead() || !e.isValid())
                 continue;
-            }
-            if (!type.is(e)) {
+
+            if (!type.is(e))
                 continue;
-            }
 
             e.setVelocity(new Vector(x, y, z).add(e.getVelocity()));
 

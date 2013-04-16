@@ -13,6 +13,8 @@ public class RightClickBlockEvent extends PlayerInteractEvent {
 
     protected final Block clicked;
 
+    PlayerInteractEvent event;
+
     public RightClickBlockEvent(PlayerInteractEvent event, Block block) {
 
         super(event.getPlayer(), event.getAction(), event.getItem(), event.getClickedBlock(), event.getBlockFace());
@@ -26,5 +28,17 @@ public class RightClickBlockEvent extends PlayerInteractEvent {
     public Block getClickedBlock() {
 
         return clicked;
+    }
+
+    @Override
+    public boolean isCancelled() {
+
+        return event.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean stuff) {
+
+        event.setCancelled(stuff);
     }
 }
