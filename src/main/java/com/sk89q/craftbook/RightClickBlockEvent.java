@@ -22,6 +22,8 @@ public class RightClickBlockEvent extends PlayerInteractEvent {
             clicked = event.getClickedBlock();
         else
             clicked = block;
+
+        this.event = event;
     }
 
     @Override
