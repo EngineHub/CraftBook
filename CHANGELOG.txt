@@ -1,3 +1,32 @@
+3.6.1
++ Added a message that occurs if you are too far away and try to change a painting.
+* Fix Potion Inducer 'm' dissapearing.
+* Small change to Item Dispenser.
+* Fixed CartLift.
+* Fixed Deposit/Collect multiple item id's.
++ Added new experimental right clicking function.
+* Fix container stacker stacking items with meta info.
+* Fix gate dupe bug.
++ Add easter eggs to startup process.
+* Made SetBridge and SetDoor output their inputs for easy compactability.
+* Fix a few redstone bugs.
+* Fix CustomDrops messing with XP.
++ Added info to the 'language' configuration node.
+* Made vehicles less laggy.
++ Added Animal Breeder IC. (MC1280)
++ Added Block Replacer IC. (MC1249)
+* Fix CartSorter erasing carts.
+* Allowed languages to use special characters. (Eg, chinese)
+* Fix pipe errors involving AIR.
+* Allow Clock IC's ticks to be set, to allow offsets.
+* Fix [Area] weird area name case issues.
+* Fixed SignCopier triggering mechanics, and made advanced-block-checks improve performance.
+* Fixed light level IC.
+* Fixed languages breaking on reload.
+* Slight changes to /cb update.
+* Fix delayer errors.
+* Minor changes to Entity Cannon.
+
 3.6
 * Fix a bridge dupe bug.
 * Fix IC's not being converted on creation.
