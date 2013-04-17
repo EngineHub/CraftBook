@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -145,38 +146,39 @@ public class CustomCrafting implements Listener {
             meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
             res.setItemMeta(meta);
         }
-        return null;
+        return res;
     }
 
     private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
 
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
-            if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe || rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
-                if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
+            if(rec1.getClass().getName().equalsIgnoreCase(rec2.getClass().getName())) {
+                if(rec1 instanceof ShapedRecipe) {
                     if(((ShapedRecipe) rec1).getShape().length == ((ShapedRecipe) rec2).getShape().length) {
-                        if(((ShapedRecipe) rec1).getIngredientMap().values().size() != ((ShapedRecipe) rec2).getIngredientMap().values().size())
+                        if(VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec1).getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec2).getIngredientMap().values()).size())
                             return false;
                         List<ItemStack> test = new ArrayList<ItemStack>();
                         test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
-                        while(test.remove(null)){}
+                        test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
                         if(test.size() == 0)
                             return true;
-                        if(!test.removeAll(((ShapedRecipe) rec2).getIngredientMap().values()) && test.size() > 0)
+                        if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec2).getIngredientMap().values())) && test.size() > 0)
                             return false;
                         if(test.size() > 0)
                             return false;
                     }
                 } 
-                else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
-                    if(((ShapelessRecipe) rec1).getIngredientList().size() != ((ShapelessRecipe) rec2).getIngredientList().size())
+                else if(rec1 instanceof ShapelessRecipe) {
+
+                    if(VerifyUtil.withoutNulls(((ShapelessRecipe) rec1).getIngredientList()).size() != VerifyUtil.withoutNulls(((ShapelessRecipe) rec2).getIngredientList()).size())
                         return false;
 
                     List<ItemStack> test = new ArrayList<ItemStack>();
                     test.addAll(((ShapelessRecipe) rec1).getIngredientList());
-                    while(test.remove(null)){}
+                    test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
                     if(test.size() == 0)
                         return true;
-                    if(!test.removeAll(((ShapelessRecipe) rec2).getIngredientList()) && test.size() > 0)
+                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(((ShapelessRecipe) rec2).getIngredientList())) && test.size() > 0)
                         return false;
                     if(test.size() > 0)
                         return false;

@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import java.util.Collection;
+
 /**
  * A util file to verify many different things.
  */
@@ -21,5 +23,12 @@ public class VerifyUtil {
             radius = maxradius;
 
         return radius;
+    }
+
+    public static <T> Collection<T> withoutNulls(Collection<T> list) {
+
+        while(list.remove(null)){}
+
+        return list;
     }
 }
