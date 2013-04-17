@@ -6,18 +6,18 @@ import java.util.Set;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 
 public enum EntityType {
     PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'),
-    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), CART_TNT('T');
+    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), EXPLOSIVE('T');
 
 
     public boolean is(Entity entity) {
@@ -41,8 +41,8 @@ public enum EntityType {
                 return entity instanceof PoweredMinecart;
             case CART_HOPPER:
                 return entity instanceof HopperMinecart;
-            case CART_TNT:
-                return entity instanceof ExplosiveMinecart;
+            case EXPLOSIVE:
+                return entity instanceof Explosive;
             case ANY:
                 return true;
             default:
