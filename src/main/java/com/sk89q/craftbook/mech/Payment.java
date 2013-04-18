@@ -1,19 +1,17 @@
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -57,9 +55,8 @@ public class Payment extends AbstractMechanic {
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
             BlockState state = block.getState();
-            if (state instanceof Sign) {
+            if (state instanceof Sign)
                 sign = (Sign) state;
-            }
         }
 
         if (sign == null) return;
@@ -70,15 +67,12 @@ public class Payment extends AbstractMechanic {
         if (CraftBookPlugin.inst().getEconomy().withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess())
             if (CraftBookPlugin.inst().getEconomy().depositPlayer(reciever, money).transactionSuccess()) {
                 Block back = SignUtil.getBackBlock(sign.getBlock());
-                BlockFace bface = sign.getBlock().getFace(back);
+                BlockFace bface = SignUtil.getBack(sign.getBlock());
                 Block redstoneItem = back.getRelative(bface);
-                if (setState(sign.getBlock(), true)) {
-                    CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
-                            new TurnOff(redstoneItem), 20L);
-                }
-            } else {
+                if (ICUtil.setState(redstoneItem, true, back))
+                    CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new TurnOff(redstoneItem, back), 20L);
+            } else
                 CraftBookPlugin.inst().getEconomy().depositPlayer(event.getPlayer().getName(), money);
-            }
 
         event.setCancelled(true);
     }
@@ -86,43 +80,20 @@ public class Payment extends AbstractMechanic {
     private static class TurnOff implements Runnable {
 
         final Block block;
+        final Block source;
 
-        public TurnOff(Block block) {
+        public TurnOff(Block block, Block source) {
 
             this.block = block;
+            this.source = source;
         }
 
         @Override
         public void run() {
 
-            setState(block, false);
+            ICUtil.setState(block, false, source);
         }
 
-    }
-
-    public static boolean setState(Block block, boolean state) {
-
-        if (block.getTypeId() != BlockID.LEVER) return false;
-        byte data = block.getData();
-        int newData;
-
-        Block sourceBlock = block.getRelative(((Lever) block.getState().getData()).getAttachedFace());
-
-        if (!state) {
-            newData = data & 0x7;
-        } else {
-            newData = data | 0x8;
-        }
-
-        if (newData != data) {
-            block.setData((byte) newData, true);
-            int oldS = state ? 0 : 1;
-            int newS = state ? 1 : 0;
-            BlockRedstoneEvent event = new BlockRedstoneEvent(sourceBlock, oldS, newS);
-            Bukkit.getPluginManager().callEvent(event);
-            return true;
-        }
-        return false;
     }
 
     public static class Factory extends AbstractMechanicFactory<Payment> {
