@@ -134,6 +134,9 @@ public class Pipes extends AbstractMechanic {
                 exceptions.add(ICUtil.getItem(line4));
             }
         }
+
+        while(filters.remove(null)){}
+        while(exceptions.remove(null)){}
     }
 
     private Pipes(BlockWorldVector pt, List<ItemStack> items, ChangedSign sign) {
@@ -226,7 +229,7 @@ public class Pipes extends AbstractMechanic {
                             List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
 
                             for (ItemStack item : filteredItems) {
-                                if (item == null) continue;
+                                if (!ItemUtil.isStackValid(item)) continue;
                                 newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
                             }
 
@@ -243,7 +246,7 @@ public class Pipes extends AbstractMechanic {
                             Furnace furnace = (Furnace) fac.getState();
 
                             for (ItemStack item : filteredItems) {
-                                if (item == null) continue;
+                                if (!ItemUtil.isStackValid(item)) continue;
                                 if (ItemUtil.isAFuel(item)) {
                                     if (ItemUtil.isStackValid(furnace.getInventory().getFuel())) {
 
@@ -293,8 +296,7 @@ public class Pipes extends AbstractMechanic {
                                 if (icmech == null) continue;
                                 if (!(icmech.getIC() instanceof PipeInputIC)) continue;
                                 List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
-                                List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil
-                                        .toWorldVector(off), filteredItems);
+                                List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil.toWorldVector(off), filteredItems);
 
                                 items.removeAll(filteredItems);
                                 items.addAll(newItems);
@@ -312,8 +314,7 @@ public class Pipes extends AbstractMechanic {
 
     private boolean isValidPipeBlock(int typeId) {
 
-        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE ||
-                typeId == BlockID.WALL_SIGN;
+        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE || typeId == BlockID.WALL_SIGN;
     }
 
     public void startPipe(Block block) {
@@ -333,26 +334,9 @@ public class Pipes extends AbstractMechanic {
                     if (!ItemUtil.isStackValid(stack))
                         continue;
 
-                    boolean passesFilters = true;
-                    for (ItemStack fil : filters) {
-
-                        passesFilters = false;
-                        if(ItemUtil.areItemsIdentical(fil, stack)) {
-                            passesFilters = true;
-                            break;
-                        }
-                    }
-                    if(!passesFilters)
+                    if(!doesItemPassFilters(stack))
                         continue;
-                    for (ItemStack fil : exceptions) {
 
-                        if(ItemUtil.areItemsIdentical(fil, stack)) {
-                            passesFilters = false;
-                            break;
-                        }
-                    }
-                    if(!passesFilters)
-                        continue;
                     items.add(stack.clone());
                     ((InventoryHolder) fac.getState()).getInventory().remove(stack);
                     if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull)
@@ -370,11 +354,12 @@ public class Pipes extends AbstractMechanic {
             } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
 
                 Furnace f = (Furnace) fac.getState();
+                if(!doesItemPassFilters(f.getInventory().getResult()))
+                    return;
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
                 visitedPipes.add(BukkitUtil.toVector(fac));
                 searchNearbyPipes(block);
-
 
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
@@ -401,6 +386,42 @@ public class Pipes extends AbstractMechanic {
                 }
             }
         }
+    }
+
+    public boolean doesItemPassFilters(ItemStack stack) {
+
+        if(!ItemUtil.isStackValid(stack))
+            return false;
+        boolean passesFilters = true;
+        if(filters.size() > 0) {
+            for (ItemStack fil : filters) {
+
+                if(!ItemUtil.isStackValid(fil))
+                    continue;
+                passesFilters = false;
+                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                    passesFilters = true;
+                    break;
+                }
+            }
+            if(!passesFilters)
+                return false;
+        }
+        if(exceptions.size() > 0) {
+            for (ItemStack fil : exceptions) {
+
+                if(!ItemUtil.isStackValid(fil))
+                    continue;
+                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                    passesFilters = false;
+                    break;
+                }
+            }
+            if(!passesFilters)
+                return false;
+        }
+
+        return passesFilters;
     }
 
     /**

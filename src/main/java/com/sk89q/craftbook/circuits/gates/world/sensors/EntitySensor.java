@@ -46,7 +46,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         getSign().setLine(3, getLine(3).toUpperCase());
 
         // lets get the types to detect first
-        types = EntityType.getDetected(getLine(3).split("<")[0].split("<=")[0].split(">=")[0].split("==")[0].split(">")[0].trim());
+        types = EntityType.getDetected(getLine(3).split("<")[0].trim().split("<=")[0].trim().split(">=")[0].trim().split("==")[0].trim().split(">")[0].trim());
 
         if(getLine(3).contains(">="))
             minMode = 0;
@@ -63,15 +63,15 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
         try {
             if(minMode == 0)
-                minimum = Short.parseShort(getLine(3).split(">=")[1]);
+                minimum = Short.parseShort(getLine(3).split(">=")[1].trim());
             else if(minMode == 1)
-                minimum = Short.parseShort(getLine(3).split("==")[1]);
+                minimum = Short.parseShort(getLine(3).split("==")[1].trim());
             else if(minMode == 2)
-                minimum = Short.parseShort(getLine(3).split(">")[1]);
+                minimum = Short.parseShort(getLine(3).split(">")[1].trim());
             else if(minMode == 3)
-                minimum = Short.parseShort(getLine(3).split("<=")[1]);
+                minimum = Short.parseShort(getLine(3).split("<=")[1].trim());
             else if(minMode == 4)
-                minimum = Short.parseShort(getLine(3).split("<")[1]);
+                minimum = Short.parseShort(getLine(3).split("<")[1].trim());
         } catch (Exception e) {
             minimum = 1;
         }
@@ -129,18 +129,18 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                     if (type.is(entity)) { // Check Radius
                         if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
                             cur++;
-                        if(minMode == 0 && cur >= minimum)
-                            return true;
-                        else if (minMode == 1 && cur == minimum)
-                            return true;
-                        else if (minMode == 2 && cur > minimum)
-                            return true;
                     }
                 }
             }
         }
 
-        if (minMode == 3 && cur <= minimum)
+        if(minMode == 0 && cur >= minimum)
+            return true;
+        else if (minMode == 1 && cur == minimum)
+            return true;
+        else if (minMode == 2 && cur > minimum)
+            return true;
+        else if (minMode == 3 && cur <= minimum)
             return true;
         else if (minMode == 4 && cur < minimum)
             return true;

@@ -57,6 +57,8 @@ public class ItemUtil {
             if(include.size() > 0) {
                 for(ItemStack inc : include) {
 
+                    if(!ItemUtil.isStackValid(inc))
+                        continue;
                     if(!areItemsIdentical(item, inc))
                         break checks;
                 }
@@ -64,12 +66,14 @@ public class ItemUtil {
             if(exclude.size() > 0) {
                 for(ItemStack inc : exclude) {
 
+                    if(!ItemUtil.isStackValid(inc))
+                        continue;
                     if(areItemsIdentical(item, inc))
                         break checks;
                 }
             }
 
-            ret.add(item);
+            ret.add(item.clone());
         }
         }
 
