@@ -31,6 +31,8 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
     private Block center; 
     private Vector radius;
 
+    private short minimum;
+
     public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
@@ -39,10 +41,16 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        getSign().setLine(3, getSign().getLine(3).toUpperCase());
+        getSign().setLine(3, getLine(3).toUpperCase());
 
         // lets get the types to detect first
-        types = EntityType.getDetected(getSign().getLine(3).trim());
+        types = EntityType.getDetected(getLine(3).split(">")[0].trim());
+
+        try {
+            minimum = Short.parseShort(getLine(3).split(">")[1]);
+        } catch (Exception e) {
+            minimum = 1;
+        }
 
         // if the line contains a = the offset is given
         // the given string should look something like that:
@@ -89,13 +97,16 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
     protected boolean isDetected() {
 
+        short cur = 0;
+
         for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
             if (entity.isValid()) {
                 for (EntityType type : types) { // Check Type
                     if (type.is(entity)) { // Check Radius
                         if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
+                            cur++;
+                        if(cur >= minimum)
                             return true;
-                        break;
                     }
                 }
             }
@@ -131,7 +142,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", "Entity Types"};
+            String[] lines = new String[] {"radius=x:y:z offset", "Entity Types{>minimum}"};
             return lines;
         }
     }
