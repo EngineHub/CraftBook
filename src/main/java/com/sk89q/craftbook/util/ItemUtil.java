@@ -39,6 +39,14 @@ public class ItemUtil {
         }
     }
 
+    /**
+     * Filter a list of items by inclusions and exclusions.
+     * 
+     * @param stacks The base list of items.
+     * @param include The list of items to include, skipped if empty.
+     * @param exclude The list of items to exclude, skipped if empty.
+     * @return The list of items that have been filtered.
+     */
     public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> include, List<ItemStack> exclude) {
 
         List<ItemStack> ret = new ArrayList<ItemStack>();

@@ -917,11 +917,11 @@ public class CraftBookPlugin extends JavaPlugin {
      *
      * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
      */
-    public boolean canUse(Player player, Location loc) {
+    public boolean canUse(Player player, Location loc, BlockFace face) {
 
         if (config.advancedBlockChecks) {
 
-            PlayerInteractEvent event = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), loc.getBlock(), BlockFace.UP);
+            PlayerInteractEvent event = new PlayerInteractEvent(player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
             if(event.isCancelled())
