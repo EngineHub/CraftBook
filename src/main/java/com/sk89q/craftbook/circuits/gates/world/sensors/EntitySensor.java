@@ -33,6 +33,8 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
     private short minimum;
 
+    private short minMode;
+
     public EntitySensor(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
@@ -44,10 +46,24 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         getSign().setLine(3, getLine(3).toUpperCase());
 
         // lets get the types to detect first
-        types = EntityType.getDetected(getLine(3).split(">")[0].trim());
+        types = EntityType.getDetected(getLine(3).split(">=")[0].split("==")[0].split(">")[0].trim());
+
+        if(getLine(3).contains(">="))
+            minMode = 0;
+        else if (getLine(3).contains("=="))
+            minMode = 1;
+        else if (getLine(3).contains(">"))
+            minMode = 2;
+        else
+            minMode = 0;
 
         try {
-            minimum = Short.parseShort(getLine(3).split(">")[1]);
+            if(minMode == 0)
+                minimum = Short.parseShort(getLine(3).split(">=")[1]);
+            else if(minMode == 1)
+                minimum = Short.parseShort(getLine(3).split("==")[1]);
+            else if(minMode == 2)
+                minimum = Short.parseShort(getLine(3).split(">")[1]);
         } catch (Exception e) {
             minimum = 1;
         }
@@ -105,7 +121,11 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                     if (type.is(entity)) { // Check Radius
                         if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
                             cur++;
-                        if(cur >= minimum)
+                        if(minMode == 0 && cur >= minimum)
+                            return true;
+                        else if (minMode == 1 && cur == minimum)
+                            return true;
+                        else if (minMode == 2 && cur > minimum)
                             return true;
                     }
                 }
@@ -142,7 +162,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", "Entity Types{>minimum}"};
+            String[] lines = new String[] {"radius=x:y:z offset", "Entity Types{(>=|==|>)minimum}"};
             return lines;
         }
     }
