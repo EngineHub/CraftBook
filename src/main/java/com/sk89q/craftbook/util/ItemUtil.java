@@ -46,15 +46,19 @@ public class ItemUtil {
         for(ItemStack item : stacks) {
 
             checks: {
-            for(ItemStack inc : include) {
+            if(include.size() > 0) {
+                for(ItemStack inc : include) {
 
-                if(!areItemsIdentical(item, inc))
-                    break checks;
+                    if(!areItemsIdentical(item, inc))
+                        break checks;
+                }
             }
-            for(ItemStack inc : exclude) {
+            if(exclude.size() > 0) {
+                for(ItemStack inc : exclude) {
 
-                if(areItemsIdentical(item, inc))
-                    break checks;
+                    if(areItemsIdentical(item, inc))
+                        break checks;
+                }
             }
 
             ret.add(item);

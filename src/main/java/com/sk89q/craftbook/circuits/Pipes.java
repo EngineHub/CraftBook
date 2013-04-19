@@ -24,6 +24,7 @@ import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockVector;
@@ -95,9 +96,10 @@ public class Pipes extends AbstractMechanic {
 
     public static Sign getSignOnPiston(PistonBaseMaterial piston, Block block) {
 
-        Sign sign = null;
-
         for(BlockFace face : BlockFace.values()) {
+
+            Sign sign = null;
+
             if(face == piston.getFacing() || !(block.getRelative(face).getState() instanceof Sign))
                 continue;
             sign = (Sign) block.getRelative(face).getState();
@@ -116,14 +118,18 @@ public class Pipes extends AbstractMechanic {
     private Pipes(BlockWorldVector pt, ChangedSign sign) {
 
         super();
+        scanSign(sign);
+    }
+
+    public void scanSign(ChangedSign sign) {
 
         if(sign != null) {
 
-            for(String line3 : sign.getLine(2).split(",")) {
+            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
 
                 filters.add(ICUtil.getItem(line3));
             }
-            for(String line4 : sign.getLine(3).split(",")) {
+            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
 
                 exceptions.add(ICUtil.getItem(line4));
             }
@@ -135,17 +141,7 @@ public class Pipes extends AbstractMechanic {
         super();
         this.items.addAll(items);
 
-        if(sign != null) {
-
-            for(String line3 : sign.getLine(2).split(",")) {
-
-                filters.add(ICUtil.getItem(line3));
-            }
-            for(String line4 : sign.getLine(3).split(",")) {
-
-                exceptions.add(ICUtil.getItem(line4));
-            }
-        }
+        scanSign(sign);
         startPipe(BukkitUtil.toBlock(pt));
     }
 
@@ -216,10 +212,10 @@ public class Pipes extends AbstractMechanic {
 
                         if(sign != null) {
 
-                            for(String line3 : sign.getLine(2).split(",")) {
+                            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
                                 pFilters.add(ICUtil.getItem(line3));
                             }
-                            for(String line4 : sign.getLine(3).split(",")) {
+                            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
                                 pExceptions.add(ICUtil.getItem(line4));
                             }
                         }
@@ -231,8 +227,7 @@ public class Pipes extends AbstractMechanic {
 
                             for (ItemStack item : filteredItems) {
                                 if (item == null) continue;
-                                newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item)
-                                        .values());
+                                newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
                             }
 
                             items.removeAll(filteredItems);
@@ -347,11 +342,12 @@ public class Pipes extends AbstractMechanic {
                             break;
                         }
                     }
+                    if(!passesFilters)
+                        continue;
                     for (ItemStack fil : exceptions) {
 
-                        passesFilters = false;
-                        if(!ItemUtil.areItemsIdentical(fil, stack)) {
-                            passesFilters = true;
+                        if(ItemUtil.areItemsIdentical(fil, stack)) {
+                            passesFilters = false;
                             break;
                         }
                     }
