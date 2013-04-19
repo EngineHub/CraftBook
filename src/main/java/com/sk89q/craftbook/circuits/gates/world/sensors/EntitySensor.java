@@ -46,7 +46,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         getSign().setLine(3, getLine(3).toUpperCase());
 
         // lets get the types to detect first
-        types = EntityType.getDetected(getLine(3).split(">=")[0].split("==")[0].split(">")[0].trim());
+        types = EntityType.getDetected(getLine(3).split("<")[0].split("<=")[0].split(">=")[0].split("==")[0].split(">")[0].trim());
 
         if(getLine(3).contains(">="))
             minMode = 0;
@@ -54,6 +54,10 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
             minMode = 1;
         else if (getLine(3).contains(">"))
             minMode = 2;
+        else if (getLine(3).contains("<="))
+            minMode = 3;
+        else if (getLine(3).contains("<"))
+            minMode = 4;
         else
             minMode = 0;
 
@@ -64,6 +68,10 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                 minimum = Short.parseShort(getLine(3).split("==")[1]);
             else if(minMode == 2)
                 minimum = Short.parseShort(getLine(3).split(">")[1]);
+            else if(minMode == 3)
+                minimum = Short.parseShort(getLine(3).split("<=")[1]);
+            else if(minMode == 4)
+                minimum = Short.parseShort(getLine(3).split("<")[1]);
         } catch (Exception e) {
             minimum = 1;
         }
@@ -131,6 +139,12 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                 }
             }
         }
+
+        if (minMode == 3 && cur <= minimum)
+            return true;
+        else if (minMode == 4 && cur < minimum)
+            return true;
+
         return false;
     }
 

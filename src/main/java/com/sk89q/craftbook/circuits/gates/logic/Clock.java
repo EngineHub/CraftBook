@@ -57,6 +57,14 @@ public class Clock extends AbstractSelfTriggeredIC {
 
     }
 
+    @Override
+    public void think(ChipState chip) {
+
+        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
+            triggerClock(chip);
+        }
+    }
+
     short tick, reset;
 
     protected void triggerClock(ChipState chip) {
@@ -154,14 +162,6 @@ public class Clock extends AbstractSelfTriggeredIC {
         public boolean needsConfiguration() {
 
             return true;
-        }
-    }
-
-    @Override
-    public void think(ChipState chip) {
-
-        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
-            triggerClock(chip);
         }
     }
 }
