@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -19,6 +20,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 public class FlameThrower extends AbstractIC {
 
     int distance;
+    int delay;
 
     public FlameThrower(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -29,8 +31,15 @@ public class FlameThrower extends AbstractIC {
     public void load() {
 
         try {
-            distance = Integer.parseInt(getSign().getLine(2));
+            distance = Integer.parseInt(getLine(2));
         } catch (Exception ignored) {
+            distance = 10;
+        }
+
+        try {
+            delay = Integer.parseInt(getLine(3));
+        } catch (Exception ignored) {
+            delay = 0;
         }
     }
 
@@ -52,20 +61,44 @@ public class FlameThrower extends AbstractIC {
         sendFlames(chip.getInput(0));
     }
 
-    public void sendFlames(boolean make) {
+    public void sendFlames(final boolean make) {
 
-        Block block = BukkitUtil.toSign(getSign()).getBlock();
-        BlockFace direction = SignUtil.getBack(block);
-        Block fire = block.getRelative(direction, 2);
-        for (int i = 0; i < distance; i++) {
-            if (make) {
-                if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
-                    fire.setTypeId(BlockID.FIRE);
+        final Block block = BukkitUtil.toSign(getSign()).getBlock();
+        final BlockFace direction = SignUtil.getBack(block);
+
+        if(delay <= 0) {
+
+            Block fire = block.getRelative(direction, 2);
+            for (int i = 0; i < distance; i++) {
+                if (make) {
+                    if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
+                        fire.setTypeId(BlockID.FIRE);
+                    }
+                } else if (fire.getTypeId() == BlockID.FIRE) {
+                    fire.setTypeId(BlockID.AIR);
                 }
-            } else if (fire.getTypeId() == BlockID.FIRE) {
-                fire.setTypeId(BlockID.AIR);
+                fire = fire.getRelative(direction);
             }
-            fire = fire.getRelative(direction);
+        } else {
+
+            for (int i = 0; i < distance; i++) {
+                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                    @Override
+                    public void run () {
+
+                        Block fire = block.getRelative(direction, 2+distance);
+                        if (make) {
+                            if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
+                                fire.setTypeId(BlockID.FIRE);
+                            }
+                        } else if (fire.getTypeId() == BlockID.FIRE) {
+                            fire.setTypeId(BlockID.AIR);
+                        }
+                    }
+
+                }, delay*distance);
+            }
         }
     }
 
@@ -96,13 +129,14 @@ public class FlameThrower extends AbstractIC {
                 if (distance > 20) throw new ICVerificationException("Distance too great!");
 
             } catch (Exception ignored) {
+                throw new ICVerificationException("Invalid distance!");
             }
         }
 
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"distance", null};
+            String[] lines = new String[] {"distance", "delay"};
             return lines;
         }
     }
