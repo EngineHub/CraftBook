@@ -55,13 +55,20 @@ public class ItemUtil {
 
             checks: {
             if(include.size() > 0) {
+                boolean passes = false;
                 for(ItemStack inc : include) {
 
                     if(!ItemUtil.isStackValid(inc))
                         continue;
                     if(!areItemsIdentical(item, inc))
-                        break checks;
+                        passes = false;
+                    else {
+                        passes = true;
+                        break;
+                    }
                 }
+                if(!passes)
+                    break checks;
             }
             if(exclude.size() > 0) {
                 for(ItemStack inc : exclude) {
