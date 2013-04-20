@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
+import java.util.HashMap;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -7,6 +9,7 @@ import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.InventoryHolder;
@@ -89,13 +92,15 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     @Override
     public void unload() {
+        lastEntity.clear();
         lastEntity = null;
     }
 
-    Entity lastEntity;
+    HashMap<EntityType, Entity> lastEntity = new HashMap<EntityType, Entity>();
 
     public boolean breed() {
 
+        lastEntity.clear();
         InventoryHolder inv = null;
 
         if(chest.getState() instanceof InventoryHolder)
@@ -113,7 +118,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                     if(breedAnimal(inv, entity))
                         return true;
                     else
-                        lastEntity = entity;
+                        lastEntity.put(entity.getType(), entity);
                 }
             }
         }
@@ -123,15 +128,12 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     public boolean canBreed(Entity entity) {
 
-        if(lastEntity != null)
-            return lastEntity.getType() == entity.getType();
-
         return entity instanceof Cow || entity instanceof Sheep || entity instanceof Pig || entity instanceof Chicken;
     }
 
     public boolean breedAnimal(InventoryHolder inv, Entity entity) {
 
-        if(lastEntity != null) {
+        if(lastEntity.get(entity.getType()) != null) {
 
             if (entity instanceof Cow || entity instanceof Sheep) {
 
