@@ -4,7 +4,6 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
@@ -88,6 +87,13 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
             chip.setOutput(0, breed());
     }
 
+    @Override
+    public void unload() {
+        lastEntity = null;
+    }
+
+    Entity lastEntity;
+
     public boolean breed() {
 
         InventoryHolder inv = null;
@@ -100,12 +106,14 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
         for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
             if (entity.isValid() && entity instanceof Ageable) {
-                if(((Ageable) entity).canBreed())
+                if(((Ageable) entity).canBreed() || !canBreed(entity))
                     continue;
                 // Check Radius
                 if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                    if(canBreed(entity))
-                        return breedAnimal(inv, entity);
+                    if(breedAnimal(inv, entity))
+                        return true;
+                    else
+                        lastEntity = entity;
                 }
             }
         }
@@ -115,40 +123,48 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     public boolean canBreed(Entity entity) {
 
+        if(lastEntity != null)
+            return lastEntity.getType() == entity.getType();
+
         return entity instanceof Cow || entity instanceof Sheep || entity instanceof Pig || entity instanceof Chicken;
     }
 
     public boolean breedAnimal(InventoryHolder inv, Entity entity) {
 
-        if (entity instanceof Cow || entity instanceof Sheep) {
+        if(lastEntity != null) {
 
-            if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.WHEAT, 1))) {
+            if (entity instanceof Cow || entity instanceof Sheep) {
 
-                if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.WHEAT, 1))) {
-                    ((Animals) entity).setBreed(true);
-                    return true;
+                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.WHEAT, 2))) {
+
+                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.WHEAT, 2))) {
+                        Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
+                        animal.setBaby();
+                        return true;
+                    }
+                }
+            }
+            else if (entity instanceof Pig) {
+
+                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.CARROT, 2))) {
+
+                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.CARROT, 2))) {
+                        Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
+                        animal.setBaby();
+                        return true;
+                    }
+                }
+            } else if (entity instanceof Chicken) {
+                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.SEEDS, 2))) {
+
+                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.SEEDS, 2))) {
+                        Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
+                        animal.setBaby();
+                        return true;
+                    }
                 }
             }
         }
-        else if (entity instanceof Pig) {
-
-            if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.CARROT, 1))) {
-
-                if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.CARROT, 1))) {
-                    ((Animals) entity).setBreed(true);
-                    return true;
-                }
-            }
-        } else if (entity instanceof Chicken) {
-            if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.SEEDS, 1))) {
-
-                if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.SEEDS, 1))) {
-                    ((Animals) entity).setBreed(true);
-                    return true;
-                }
-            }
-        }
-
         return false;
     }
 
