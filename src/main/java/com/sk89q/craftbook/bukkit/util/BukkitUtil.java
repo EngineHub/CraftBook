@@ -69,9 +69,9 @@ public class BukkitUtil {
     public static ChangedSign toChangedSign(Block sign) {
 
         if (sign.getTypeId() != BlockID.WALL_SIGN && sign.getTypeId() != BlockID.SIGN_POST) return null;
-        if (sign.getState() == null) {
-
-            Bukkit.getLogger().severe("You have a corrupt sign at: X:" + sign.getLocation().getBlockX() + " Y:" + sign.getLocation().getBlockY() + " Z:" + sign.getLocation().getBlockZ() + ". This has nothing to do with CraftBook!");
+        try {
+            sign.getState();
+        } catch (NullPointerException ex) {
             return null;
         }
         return toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines());
@@ -84,9 +84,12 @@ public class BukkitUtil {
 
     public static Sign toSign(ChangedSign sign) {
 
-        if(sign.hasChanged())
-            sign.update(false);
-        return ((BukkitChangedSign) sign).getSign();
+        try {
+            if (sign.hasChanged()) sign.update(false);
+            return ((BukkitChangedSign) sign).getSign();
+        } catch (NullPointerException ex) {
+            return null;
+        }
     }
 
     private static final Map<World, LocalWorld> wlw = new HashMap<World, LocalWorld>();
