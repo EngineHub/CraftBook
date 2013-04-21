@@ -97,14 +97,15 @@ public class Driller extends AbstractSelfTriggeredIC {
 
         boolean hasChest = chest != null;
 
-        while (blockToBreak.getTypeId() == 0) {
+        int brokenType = 0;
+        while (brokenType == 0) {
 
             if (blockToBreak.getLocation().getBlockY() == 0) return false;
             blockToBreak = blockToBreak.getRelative(0, -1, 0);
-            if (blockToBreak.getTypeId() == BlockID.BEDROCK || !BlockType.isNaturalTerrainBlock(blockToBreak.getTypeId())) return false;
+            brokenType = blockToBreak.getTypeId();
+            if (brokenType == BlockID.BEDROCK) return false;
+            if (brokenType != BlockID.AIR && !BlockType.isNaturalTerrainBlock(brokenType)) return false;
         }
-
-        int brokenType = 0;
 
         List<ItemStack> drops = new ArrayList<ItemStack>(blockToBreak.getDrops());
         if(hasChest && chest.getInventory().getItem(0) != null) {
