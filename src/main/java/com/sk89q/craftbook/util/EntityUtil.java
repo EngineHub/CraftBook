@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
 public class EntityUtil {
 
@@ -17,11 +18,19 @@ public class EntityUtil {
     public static boolean isEntityInBlock(Entity entity, Block block) {
 
         Location entLoc = entity.getLocation().getBlock().getLocation();
+        int heightOffset = 0;
 
-        if(entLoc.getBlockX() == block.getLocation().getBlockX())
-            if(entLoc.getBlockY() == block.getLocation().getBlockY())
-                if(entLoc.getBlockZ() == block.getLocation().getBlockZ())
-                    return true;
+        if(entity instanceof LivingEntity) {
+            heightOffset = (int) Math.floor(((LivingEntity) entity).getEyeHeight());
+        }
+
+        while(heightOffset >= 0) {
+            if(entLoc.getBlockX() == block.getLocation().getBlockX())
+                if(entLoc.getBlockY()+heightOffset == block.getLocation().getBlockY())
+                    if(entLoc.getBlockZ() == block.getLocation().getBlockZ())
+                        return true;
+            heightOffset --;
+        }
 
         return false;
     }
