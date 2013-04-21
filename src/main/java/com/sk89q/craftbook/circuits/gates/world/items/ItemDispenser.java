@@ -45,16 +45,17 @@ public class ItemDispenser extends AbstractIC {
 
         int amount = 1;
 
+        item = ICUtil.getItem(getLine(2));
+        if(item == null)
+            item = new ItemStack(1, 1);
+
         try {
-            amount = Math.min(64, Math.max(1, Integer.parseInt(getSign().getLine(3))));
+            amount = Math.min(item.getMaxStackSize(), Math.max(1, Integer.parseInt(getSign().getLine(3))));
         } catch (Exception ignored) {
             amount = 1;
         }
         if (amount < 1) amount = 1;
 
-        item = ICUtil.getItem(getLine(2));
-        if(item == null)
-            item = new ItemStack(1, 1);
         item.setAmount(amount);
     }
 
