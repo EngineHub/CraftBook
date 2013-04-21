@@ -55,7 +55,7 @@ public class CustomCrafting implements Listener {
                     plugin.getServer().addRecipe(sh);
                     if(r.hasAdvancedData())
                         advancedRecipes.put(sh, r);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED2X2 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED3X3 || r.getType() == RecipeManager.Recipe.RecipeType.SHAPED) {
+                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED) {
                     ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                     sh.shape(r.getShape());
                     for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {

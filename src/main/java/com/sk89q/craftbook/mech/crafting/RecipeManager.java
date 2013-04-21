@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -100,7 +101,7 @@ public class RecipeManager extends LocalConfiguration {
         private void load() throws InvalidCraftingException {
 
             type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + ".type"));
-            if (type != RecipeType.SHAPED2X2 && type != RecipeType.SHAPED3X3 && type != RecipeType.SHAPED) {
+            if (type != RecipeType.SHAPED) {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
                 items = getHashItems("crafting-recipes." + id + ".ingredients");
@@ -228,7 +229,7 @@ public class RecipeManager extends LocalConfiguration {
         }
 
         public enum RecipeType {
-            SHAPELESS("Shapeless"), SHAPED3X3("Shaped3x3"), SHAPED2X2("Shaped2x2"), FURNACE("Furnace"), SHAPED("Shaped");
+            SHAPELESS("Shapeless"), FURNACE("Furnace"), SHAPED("Shaped");
 
             private String name;
 
@@ -244,7 +245,15 @@ public class RecipeManager extends LocalConfiguration {
 
             public static RecipeType getTypeFromName(String name) {
 
-                for (RecipeType t : RecipeType.values()) { if (t.getName().equalsIgnoreCase(name)) return t; }
+                if(name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
+                    CraftBookPlugin.logger().warning("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
+                    return SHAPED;
+                }
+
+                for (RecipeType t : RecipeType.values()) {
+                    if (t.getName().equalsIgnoreCase(name))
+                        return t;
+                }
                 return SHAPELESS; // Default to shapeless
             }
         }
