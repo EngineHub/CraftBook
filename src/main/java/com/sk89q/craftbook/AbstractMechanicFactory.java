@@ -22,6 +22,9 @@ import com.sk89q.worldedit.BlockWorldVector;
 
 public abstract class AbstractMechanicFactory<T extends Mechanic> implements MechanicFactory<T> {
 
+    public AbstractMechanicFactory() {
+    }
+
     @Override
     public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
         return null;

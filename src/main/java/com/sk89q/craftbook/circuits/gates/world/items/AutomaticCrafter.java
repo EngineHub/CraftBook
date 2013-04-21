@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +18,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -114,21 +114,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         boolean pipes = false;
 
-        if (CircuitCore.inst().getPipeFactory() != null) {
-            Block b = disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing());
-            if (b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-                PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
-                if (p.getFacing() == ((org.bukkit.material.Dispenser) disp.getData()).getFacing().getOppositeFace()) {
-                    List<ItemStack> items = new ArrayList<ItemStack>();
-                    items.add(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult());
-                    if (CircuitCore.inst().getPipeFactory() != null)
-                        if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b), items) != null) {
-                            pipes = true;
-                        }
-                }
-            }
-        }
+        if(Pipes.Factory.setupPipes(disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing()), getBackBlock(), Arrays.asList(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult())) != null)
+            pipes = true;
 
         if (!pipes) {
             disp.getInventory().addItem(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult());

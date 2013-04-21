@@ -37,30 +37,37 @@ public class Pipes extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Pipes> {
 
-        public Factory() {
+        /**
+         * Used to construct a pipe from a mechanic as an output method.
+         *
+         * @param pipe The pipe start block. Doesn't need to be a pipe.
+         * @param source The block that the pipe is facing.
+         * @param items The items to send to the pipe.
+         * @return The pipe constructed, otherwise null.
+         */
+        public static Pipes setupPipes(Block pipe, Block source, List<ItemStack> items) {
 
-        }
+            if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
-        @Override
-        public Pipes detect(BlockWorldVector pt) {
+                PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();
+                Block fac = pipe.getRelative(p.getFacing());
+                if (fac.getLocation().equals(source.getLocation())) {
 
-            int type = BukkitUtil.toWorld(pt).getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
-
-            if (type == BlockID.PISTON_STICKY_BASE) {
-
-                PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-                Sign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
-
-                if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
-                    return null;
-
-                return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign));
+                    if (CircuitCore.inst().getPipeFactory() != null)
+                        return CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(pipe), items);
+                }
             }
 
             return null;
         }
 
-        public Pipes detect(BlockWorldVector pt, List<ItemStack> items) {
+        @Override
+        public Pipes detect(BlockWorldVector pt) {
+
+            return detectWithItems(pt, null);
+        }
+
+        public Pipes detectWithItems(BlockWorldVector pt, List<ItemStack> items) {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
@@ -72,7 +79,7 @@ public class Pipes extends AbstractMechanic {
                 if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                     return null;
 
-                return new Pipes(pt, items, sign == null ? null : BukkitUtil.toChangedSign(sign));
+                return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign), items);
             }
 
             return null;
@@ -113,12 +120,20 @@ public class Pipes extends AbstractMechanic {
     /**
      * Construct the mechanic for a location.
      *
-     * @param pt
+     * @param pt The location
+     * @param sign The sign
+     * @items The items to start with (Optional)
      */
-    private Pipes(BlockWorldVector pt, ChangedSign sign) {
+    private Pipes(BlockWorldVector pt, ChangedSign sign, List<ItemStack> items) {
 
         super();
+
         scanSign(sign);
+
+        if(items != null && !items.isEmpty()) {
+            this.items.addAll(items);
+            startPipe(BukkitUtil.toBlock(pt));
+        }
     }
 
     public void scanSign(ChangedSign sign) {
@@ -137,15 +152,6 @@ public class Pipes extends AbstractMechanic {
 
         while(filters.remove(null)){}
         while(exceptions.remove(null)){}
-    }
-
-    private Pipes(BlockWorldVector pt, List<ItemStack> items, ChangedSign sign) {
-
-        super();
-        this.items.addAll(items);
-
-        scanSign(sign);
-        startPipe(BukkitUtil.toBlock(pt));
     }
 
     private List<ItemStack> filters = new ArrayList<ItemStack>();

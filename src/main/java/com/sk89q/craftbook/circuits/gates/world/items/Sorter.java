@@ -34,7 +34,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         super(server, sign, factory);
     }
 
-    Block chestBlock; 
+    Block chestBlock;
     boolean inverted;
 
     @Override
@@ -108,7 +108,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
                         List<ItemStack> items = new ArrayList<ItemStack>();
                         items.add(item.getItemStack());
                         if (CircuitCore.inst().getPipeFactory() != null)
-                            if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b),
+                            if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b),
                                     items) != null) {
                                 item.remove();
                                 pipes = true;
@@ -147,7 +147,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
                 List<ItemStack> items = new ArrayList<ItemStack>();
                 items.add(item);
                 if (CircuitCore.inst().getPipeFactory() != null)
-                    if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(b),
+                    if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b),
                             items) != null) {
                         pipes = true;
                     }

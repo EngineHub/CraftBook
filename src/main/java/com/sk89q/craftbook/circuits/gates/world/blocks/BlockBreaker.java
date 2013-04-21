@@ -1,8 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Server;
@@ -10,11 +9,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -108,20 +106,10 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
-            if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
-                PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();
-                Block fac = pipe.getRelative(p.getFacing());
-                if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
+            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), Arrays.asList(blockstack)) != null)
+                continue;
 
-                    List<ItemStack> items = new ArrayList<ItemStack>();
-                    items.add(blockstack);
-                    if (CircuitCore.inst().getPipeFactory() != null)
-                        if (CircuitCore.inst().getPipeFactory().detect(BukkitUtil.toWorldVector(pipe), items) != null) {
-                            continue;
-                        }
-                }
-            }
             if (hasChest) {
                 Chest c = (Chest) chest.getState();
                 HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
