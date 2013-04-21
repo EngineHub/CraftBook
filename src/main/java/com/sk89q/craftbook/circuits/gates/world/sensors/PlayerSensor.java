@@ -17,7 +17,6 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -95,14 +94,14 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
                 location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
             } else {
                 getSign().setLine(2, radiusString);
-                location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+                location = getBackBlock().getLocation();
             }
         } catch (Exception e) {
-            location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+            location = getBackBlock().getLocation();
             BukkitUtil.printStacktrace(e);
         }
         if(reg == null && location == null)
-            location = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+            location = getBackBlock().getLocation();
     }
 
     protected boolean isDetected() {

@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -15,7 +14,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -85,7 +83,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         if(getLine(2).contains("="))
             offset = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
         else
-            offset = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0, 1, 0);
+            offset = getBackBlock().getLocation().add(0, 1, 0);
     }
 
     public void doEffect() {

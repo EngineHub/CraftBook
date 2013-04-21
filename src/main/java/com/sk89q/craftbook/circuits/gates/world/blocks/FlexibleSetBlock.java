@@ -20,7 +20,6 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -29,7 +28,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class FlexibleSetBlock extends AbstractIC {
 
@@ -101,7 +99,7 @@ public class FlexibleSetBlock extends AbstractIC {
 
         hold = line4.toUpperCase().contains("H");
 
-        body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        body = getBackBlock();
 
         x = body.getX();
         y = body.getY();

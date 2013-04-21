@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -36,7 +35,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         if (getLine(2).contains("=")) {
             centre = ICUtil.parseBlockLocation(getSign(), 2);
         } else {
-            centre = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            centre = getBackBlock();
         }
         radius = ICUtil.parseRadius(getSign());
     }
@@ -88,7 +87,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
 
     public boolean consumeWater() {
 
-        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block chest = getBackBlock().getRelative(0, 1, 0);
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
             HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));

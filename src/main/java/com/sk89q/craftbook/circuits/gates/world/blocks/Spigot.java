@@ -10,7 +10,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -19,7 +18,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -102,7 +100,7 @@ public class Spigot extends AbstractIC {
 
     public int getFromChest() {
 
-        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
+        Block chest = getBackBlock().getRelative(0, -1, 0);
 
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();
@@ -129,7 +127,7 @@ public class Spigot extends AbstractIC {
     public int getFromChest(int m) {
 
         m = parse(m);
-        Block chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
+        Block chest = getBackBlock().getRelative(0, -1, 0);
 
         if (chest.getTypeId() == BlockID.CHEST) {
             Chest c = (Chest) chest.getState();

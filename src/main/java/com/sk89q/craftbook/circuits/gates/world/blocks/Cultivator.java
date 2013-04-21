@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -44,12 +43,12 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        onBlock = getBackBlock();
         radius = ICUtil.parseRadius(getSign(), 2);
         if (getLine(2).contains("=")) {
             target = ICUtil.parseBlockLocation(getSign(), 2);
         } else {
-            target = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            target = getBackBlock();
         }
     }
 

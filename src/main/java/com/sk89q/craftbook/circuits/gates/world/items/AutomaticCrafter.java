@@ -30,7 +30,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -190,7 +189,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     public boolean doStuff(boolean craft, boolean collect) {
 
         boolean ret = false;
-        Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block crafter = getBackBlock().getRelative(0, 1, 0);
         if (crafter.getTypeId() == BlockID.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
             if (collect) {
@@ -306,7 +305,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     @Override
     public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
 
-        Block crafter = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block crafter = getBackBlock().getRelative(0, 1, 0);
         if (crafter.getTypeId() == BlockID.DISPENSER) {
             Dispenser disp = (Dispenser) crafter.getState();
 

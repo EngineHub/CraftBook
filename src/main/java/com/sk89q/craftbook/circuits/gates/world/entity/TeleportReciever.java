@@ -6,13 +6,11 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 
 public class TeleportReciever extends AbstractSelfTriggeredIC {
@@ -70,7 +68,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
             return;
         }
 
-        p.teleport(SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0.5, 1.5, 0.5));
+        p.teleport(getBackBlock().getLocation().add(0.5, 1.5, 0.5));
         p.sendMessage(ChatColor.YELLOW + welcome);
     }
 

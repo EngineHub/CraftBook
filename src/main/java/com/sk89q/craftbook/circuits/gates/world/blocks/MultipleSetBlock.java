@@ -20,7 +20,6 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -28,7 +27,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class MultipleSetBlock extends AbstractIC {
 
@@ -57,7 +55,7 @@ public class MultipleSetBlock extends AbstractIC {
 
         String[] coords = RegexUtil.COLON_PATTERN.split(line3,4);
 
-        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block body = getBackBlock();
         x = body.getX();
         y = body.getY();
         z = body.getZ();
@@ -136,7 +134,7 @@ public class MultipleSetBlock extends AbstractIC {
             setdata = offdata;
         }
 
-        Block body = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block body = getBackBlock();
 
         if (dim.length == 3) {
             int dimX = Integer.parseInt(dim[0]);

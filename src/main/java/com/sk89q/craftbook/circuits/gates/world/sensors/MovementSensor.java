@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -17,7 +16,6 @@ import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
 /**
@@ -62,7 +60,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
             center = ICUtil.parseBlockLocation(getSign());
         } else {
             getSign().setLine(2, radiusString);
-            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            center = getBackBlock();
         }
         getSign().update(false);
     }

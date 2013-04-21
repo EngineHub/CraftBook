@@ -51,7 +51,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         }
         left = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getLine(2))[0]);
         right = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getLine(2))[1]);
-        chestBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        chestBlock = getBackBlock().getRelative(0, 1, 0);
     }
 
     @Override

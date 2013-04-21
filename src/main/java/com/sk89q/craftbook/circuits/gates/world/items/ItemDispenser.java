@@ -29,7 +29,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class ItemDispenser extends AbstractIC {
@@ -76,7 +75,7 @@ public class ItemDispenser extends AbstractIC {
 
         if (chip.getInput(0)) {
             if (item.getTypeId() != 36) {
-                Location loc = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1,
+                Location loc = getBackBlock().getRelative(0, 1,
                         0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = 10;
 

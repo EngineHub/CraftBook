@@ -46,7 +46,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -56,7 +55,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -105,7 +103,7 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block center = getBackBlock();
 
         if(!center.getChunk().isLoaded())
             return;

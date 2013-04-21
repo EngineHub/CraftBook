@@ -20,7 +20,6 @@ import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 /**
  * @author Me4502
@@ -69,7 +68,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
     protected boolean collect() {
 
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block b = getBackBlock().getRelative(0, 1, 0);
 
         if(!(b.getState() instanceof InventoryHolder))
             return false;

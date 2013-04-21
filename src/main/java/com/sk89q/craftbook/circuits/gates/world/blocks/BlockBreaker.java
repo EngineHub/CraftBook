@@ -81,7 +81,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         if (chest == null || broken == null) {
 
-            Block bl = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            Block bl = getBackBlock();
 
             if (above) {
                 chest = bl.getRelative(0, 1, 0);
@@ -107,7 +107,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         for (ItemStack blockstack : broken.getDrops()) {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-            Block pipe = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+            Block pipe = getBackBlock().getRelative(back);
             if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();

@@ -18,7 +18,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -49,13 +48,13 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         item = ICUtil.getItem(getLine(2));
 
-        onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        onBlock = getBackBlock();
 
         radius = ICUtil.parseRadius(getSign(), 3);
         if (getLine(3).contains("=")) {
             target = ICUtil.parseBlockLocation(getSign(), 3);
         } else {
-            target = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            target = getBackBlock();
         }
     }
 

@@ -16,7 +16,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -26,7 +25,6 @@ import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -55,10 +53,10 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
             center = ICUtil.parseBlockLocation(getSign());
         } else {
             getSign().setLine(2, radiusString);
-            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            center = getBackBlock();
         }
 
-        chest = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(BlockFace.UP);
+        chest = getBackBlock().getRelative(BlockFace.UP);
     }
 
     @Override

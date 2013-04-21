@@ -8,14 +8,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class ItemFan extends AbstractSelfTriggeredIC {
 
@@ -64,7 +62,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
 
         boolean returnValue = false;
 
-        Block aboveBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block aboveBlock = getBackBlock().getRelative(0, 1, 0);
 
         for (Entity en : aboveBlock.getChunk().getEntities()) {
             if (!(en instanceof Item)) {

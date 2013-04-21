@@ -32,7 +32,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public void load() {
 
         type = EntityType.fromString(getSign().getLine(2));
-        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        center = getBackBlock();
         radius = Integer.parseInt(getSign().getLine(3));
     }
 

@@ -40,7 +40,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     @Override
     public void load() {
 
-        chestBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        chestBlock = getBackBlock().getRelative(0, 1, 0);
         inverted = getSign().getLine(2).equalsIgnoreCase("invert");
     }
 

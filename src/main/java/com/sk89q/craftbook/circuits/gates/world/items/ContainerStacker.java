@@ -16,7 +16,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ContainerStacker extends AbstractSelfTriggeredIC {
@@ -55,7 +54,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
     public void stack() {
 
-        Block b = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block b = getBackBlock();
 
         int x = b.getX();
         int y = b.getY() + 1;

@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockLauncher extends AbstractIC {
 
@@ -72,14 +71,14 @@ public class BlockLauncher extends AbstractIC {
 
     public void launch() {
 
-        Block above = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, 1, 0);
+        Block above = getBackBlock().getRelative(0, 1, 0);
         int timeout = 12;
         while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() >= 255) {
             above = above.getRelative(0, 1, 0);
             timeout--;
         }
         if (velocity.getY() < 0) {
-            above = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
+            above = getBackBlock().getRelative(0, -1, 0);
             timeout = 12;
             while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() <= 1) {
                 above = above.getRelative(0, -1, 0);

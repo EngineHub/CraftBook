@@ -46,7 +46,7 @@ public class SetBridge extends AbstractIC {
     @Override
     public void load() {
 
-        center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        center = getBackBlock();
         faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {

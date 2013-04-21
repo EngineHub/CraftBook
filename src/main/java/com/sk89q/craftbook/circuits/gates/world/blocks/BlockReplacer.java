@@ -11,7 +11,6 @@ import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -20,7 +19,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class BlockReplacer extends AbstractIC {
 
@@ -120,7 +118,7 @@ public class BlockReplacer extends AbstractIC {
 
     public boolean replaceBlocks(boolean on) {
 
-        Block block = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        Block block = getBackBlock();
         if(block.getTypeId() == onId && (onData == -1 || onData == block.getData())) {
             if(!on)
                 block.setTypeIdAndData(offId, offData == -1 ? 0 : offData, physics);

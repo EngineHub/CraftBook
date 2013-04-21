@@ -41,12 +41,12 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        onBlock = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+        onBlock = getBackBlock();
         radius = ICUtil.parseRadius(getSign());
         if (getLine(3).contains("=")) {
             target = ICUtil.parseBlockLocation(getSign());
         } else {
-            target = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock());
+            target = getBackBlock();
         }
     }
 
@@ -99,7 +99,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     public void collectDrops(ItemStack[] drops) {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-        Block pipe = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+        Block pipe = getBackBlock().getRelative(back);
         if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
             PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();

@@ -31,7 +31,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
 public class LightningSummon extends AbstractIC {
@@ -53,9 +52,9 @@ public class LightningSummon extends AbstractIC {
             if(getLine(2).contains("="))
                 center = ICUtil.parseBlockLocation(getSign()).getLocation();
             else 
-                center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+                center = getBackBlock().getLocation();
         } else {
-            center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+            center = getBackBlock().getLocation();
             radius = new Vector(1,1,1);
         }
 

@@ -17,7 +17,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class Driller extends AbstractSelfTriggeredIC {
@@ -50,7 +49,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         if(CraftBookPlugin.inst().getRandom().nextInt(100) < 60)
             return false;
 
-        Block center = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(0, -1, 0);
+        Block center = getBackBlock().getRelative(0, -1, 0);
         InventoryHolder holder = null;
 
         if(center.getRelative(0, 2, 0).getState() instanceof InventoryHolder) {
