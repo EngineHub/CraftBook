@@ -23,7 +23,6 @@ public class EntityUtil {
         if(entity instanceof LivingEntity) {
             heightOffset = (int) Math.floor(((LivingEntity) entity).getEyeHeight());
         }
-
         while(heightOffset >= 0) {
             if(entLoc.getBlockX() == block.getLocation().getBlockX())
                 if(entLoc.getBlockY()+heightOffset == block.getLocation().getBlockY())

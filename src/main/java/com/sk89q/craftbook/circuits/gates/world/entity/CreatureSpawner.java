@@ -154,6 +154,11 @@ public class CreatureSpawner extends AbstractIC {
             ((Tameable) ent).setOwner(Bukkit.getPlayer(data[1]));
         }
 
+        if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("name")) {
+            ((LivingEntity) ent).setCustomName(data[1]);
+            ((LivingEntity) ent).setCustomNameVisible(true);
+        }
+
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {
             ((Ageable) ent).setBaby();
             ((Ageable) ent).setAgeLock(true);
