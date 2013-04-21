@@ -90,7 +90,7 @@ public class RecipeManager extends LocalConfiguration {
 
         private Recipe(String id, YAMLProcessor config) throws InvalidCraftingException {
 
-            this.id = id; 
+            this.id = id;
             this.config = config;
             ingredients = new ArrayList<CraftingItemStack>();
             items = new HashMap<CraftingItemStack, Character>();
@@ -183,6 +183,9 @@ public class RecipeManager extends LocalConfiguration {
                         itemStack.setAmount(config.getInt(path + "." + item, 1));
                         if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 1) {
                             itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))[1]);
+                        }
+                        if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 2) {
+                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))).subList(2, RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length));
                         }
                         items.add(itemStack);
                     }

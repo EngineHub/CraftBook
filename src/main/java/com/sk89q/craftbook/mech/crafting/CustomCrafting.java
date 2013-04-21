@@ -138,12 +138,18 @@ public class CustomCrafting implements Listener {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
         ItemStack res = stack.clone();
         if(recipe.getResult().hasAdvancedData("name")) {
             ItemMeta meta = res.getItemMeta();
             meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
+            res.setItemMeta(meta);
+        }
+        if(recipe.getResult().hasAdvancedData("lore")) {
+            ItemMeta meta = res.getItemMeta();
+            meta.setLore((List<String>) recipe.getResult().getAdvancedData("lore"));
             res.setItemMeta(meta);
         }
         return res;
@@ -167,7 +173,7 @@ public class CustomCrafting implements Listener {
                         if(test.size() > 0)
                             return false;
                     }
-                } 
+                }
                 else if(rec1 instanceof ShapelessRecipe) {
 
                     if(VerifyUtil.withoutNulls(((ShapelessRecipe) rec1).getIngredientList()).size() != VerifyUtil.withoutNulls(((ShapelessRecipe) rec2).getIngredientList()).size())
