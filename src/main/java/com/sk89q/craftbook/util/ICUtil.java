@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
+import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -243,7 +244,9 @@ public class ICUtil {
                     }
                     data = Integer.parseInt(split[1]);
                 }
-                return new ItemStack(id, 1, (short) data);
+                ItemStack rVal = new ItemStack(id, 1, (short) data);
+                rVal.setData(new MaterialData(id, (byte)data));
+                return rVal;
             } else {
                 int id = 0;
                 try {
@@ -256,7 +259,7 @@ public class ICUtil {
                         id = ItemType.lookup(line).getID();
                     }
                 }
-                return new ItemStack(id, 1, (short) 0);
+                return new ItemStack(id, 1);
             }
         } catch (Exception ignored) {
         }
