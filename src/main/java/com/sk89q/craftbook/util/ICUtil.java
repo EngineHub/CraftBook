@@ -118,7 +118,9 @@ public class ICUtil {
                         try {
                             if(selector instanceof CuboidRegionSelector) {
 
-                                Vector centre = selector.getRegion().getMaximumPoint().subtract(selector.getRegion().getMinimumPoint());
+                                Vector centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
+
+                                centre = centre.divide(2);
 
                                 Vector offset = sign.getBlockVector().subtract(centre);
 
