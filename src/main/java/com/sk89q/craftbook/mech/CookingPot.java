@@ -127,6 +127,8 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         lastTick = Math.max(lastTick, 0);
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
+        if (!CraftBookPlugin.inst().getRandom().nextBoolean())
+            return;
         if (cb.getTypeId() == BlockID.CHEST) {
             if(getMultiplier(sign) < 0) {
                 increaseMultiplier(sign, 1);
@@ -135,9 +137,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory())
                     || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory())
                     && plugin.getConfiguration().cookingPotOres) {
-                lastTick += getMultiplier(sign);
-                if(getMultiplier(sign) > 0)
-                    decreaseMultiplier(sign, 1);
+                if(lastTick < 500) {
+                    lastTick += 1;
+                    if(getMultiplier(sign) > 0)
+                        decreaseMultiplier(sign, 1);
+                }
             }
             if (lastTick >= 50) {
                 Block fire = b.getRelative(0, 1, 0);
@@ -153,10 +157,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                                 cooked = ItemUtil.getSmeletedResult(i);
                             if (cooked == null) continue;
                         }
-                        if (chest.getInventory().addItem(cooked).isEmpty())
+                        if (chest.getInventory().addItem(cooked).isEmpty()) {
                             chest.getInventory().removeItem(new ItemStack(i.getType(), 1, i.getDurability()));
-                        chest.update();
-                        break;
+                            chest.update();
+                            break;
+                        }
                     }
                     lastTick -= 50;
                 } else
