@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
@@ -18,7 +17,9 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class Driller extends AbstractSelfTriggeredIC {
 
@@ -104,7 +105,8 @@ public class Driller extends AbstractSelfTriggeredIC {
             blockToBreak = blockToBreak.getRelative(0, -1, 0);
             brokenType = blockToBreak.getTypeId();
             if (brokenType == BlockID.BEDROCK) return false;
-            if (brokenType != BlockID.AIR && !BlockType.isNaturalTerrainBlock(brokenType)) return false;
+            if (!((Factory)getFactory()).breakNonNatural)
+                if (brokenType != BlockID.AIR && !BlockType.isNaturalTerrainBlock(brokenType)) return false;
         }
 
         List<ItemStack> drops = new ArrayList<ItemStack>(blockToBreak.getDrops());
@@ -143,6 +145,8 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
+        boolean breakNonNatural;
+
         public Factory(Server server) {
 
             super(server);
@@ -164,6 +168,18 @@ public class Driller extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {null, null};
+        }
+
+        @Override
+        public void addConfiguration(YAMLProcessor config, String path) {
+
+            breakNonNatural = config.getBoolean(path + "break-unnatural-blocks", false);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+
+            return true;
         }
     }
 }

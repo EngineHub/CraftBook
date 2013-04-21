@@ -148,8 +148,7 @@ public class Clock extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"ticks required", "current ticks"};
-            return lines;
+            return new String[] {"ticks required", "current ticks"};
         }
 
         @Override
