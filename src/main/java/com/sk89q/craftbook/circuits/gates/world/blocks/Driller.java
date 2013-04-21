@@ -5,18 +5,21 @@ import java.util.List;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -122,6 +125,12 @@ public class Driller extends AbstractSelfTriggeredIC {
             if (hasChest) {
                 toDrop = new ArrayList<ItemStack>(chest.getInventory().addItem(toDrop.toArray(new ItemStack[1])).values());
             }
+
+            BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+            Block pipe = getBackBlock().getRelative(back);
+
+            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), toDrop) != null)
+                continue;
 
             if (!toDrop.isEmpty()) {
                 for (ItemStack d : toDrop) {
