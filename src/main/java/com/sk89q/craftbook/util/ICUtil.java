@@ -24,13 +24,18 @@ import org.bukkit.material.Lever;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.RegionSelector;
 
 /**
  * IC utility functions.
@@ -93,6 +98,47 @@ public class ICUtil {
         }
 
         return false;
+    }
+
+    public static void parseSignFlags(LocalPlayer player, ChangedSign sign) {
+
+        for(int i = 2; i < 4; i++) {
+
+            if(sign.getLine(i).contains("[off]")) {
+
+                if(CraftBookPlugin.inst().getWorldEdit() == null) {
+                    sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                    player.printError("worldedit.ic.notfound");
+                } else {
+
+                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector().isDefined()) {
+
+                        RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+
+                        try {
+                            if(selector instanceof CuboidRegionSelector) {
+
+                                Vector centre = selector.getRegion().getMaximumPoint().subtract(selector.getRegion().getMinimumPoint());
+                                sign.setLine(i, sign.getLine(i).replace("[off]", centre.getX() + ":" + centre.getY() + ":" + centre.getZ()));
+                                //} else if (selector instanceof SphereRegionSelector) {
+
+                                //TODO spherical reions.
+                            } else { // Unsupported.
+                                sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                                player.printError("worldedit.ic.unsupported");
+                            }
+                        }
+                        catch(IncompleteRegionException e) {
+                            player.printError("worldedit.ic.noselection");
+                        }
+                    } else {
+                        player.printError("worldedit.ic.noselection");
+                    }
+                }
+            }
+        }
+
+        sign.update(false);
     }
 
     public static Block parseBlockLocation(ChangedSign sign, int lPos, LocationCheckType relative) {

@@ -57,3 +57,7 @@ mech.signcopy.paste:You have pasted the sign!
 circuits.pipes.create:Pipe created!
 
 vehicles.create-permission:You don't have permissions to create this vehicle mechanic!
+
+worldedit.ic.unsupported:WorldEdit selection type currently unsupported for IC's!
+worldedit.ic.notfound:WorldEdit not found!
+worldedit.ic.noselection:No selection was found!

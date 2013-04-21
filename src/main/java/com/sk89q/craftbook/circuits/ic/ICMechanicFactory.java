@@ -25,6 +25,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -132,9 +133,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) 
+        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
             return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
-        else 
+        else
             return new ICMechanic(id, ic, family, pt);
     }
 
@@ -225,6 +226,9 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             ICFactory factory = registration.getFactory();
 
             checkPermissions(player, factory, registration.getId().toLowerCase());
+
+            //WorldEdit offset/radius tools.
+            ICUtil.parseSignFlags(player, sign);
 
             factory.verify(sign);
 
