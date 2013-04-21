@@ -28,10 +28,10 @@ public class ItemUtil {
 
         if (!areItemsIdentical(base, toAdd)) return toAdd;
 
-        if (base.getAmount() + toAdd.getAmount() > 64) {
+        if (base.getAmount() + toAdd.getAmount() > base.getMaxStackSize()) {
 
-            toAdd.setAmount(base.getAmount() + toAdd.getAmount() - 64);
-            base.setAmount(64);
+            toAdd.setAmount(base.getAmount() + toAdd.getAmount() - base.getMaxStackSize());
+            base.setAmount(base.getMaxStackSize());
             return toAdd;
         } else {
             base.setAmount(base.getAmount() + toAdd.getAmount());

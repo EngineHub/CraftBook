@@ -161,7 +161,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                         ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
                                 item.getItemStack());
                         if (it == null) continue outer;
-                        if (it.getAmount() < 64) {
+                        if (it.getAmount() < it.getMaxStackSize()) {
                             it.setAmount(it.getAmount() + 1);
                             newAmount -= 1;
                         } else if (newAmount > 0) {
@@ -319,7 +319,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 for (int i = 0; i < ite.getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
                     if (!ItemUtil.isStackValid(it) || !ItemUtil.areItemsIdentical(ite, it)) continue;
-                    if (it.getAmount() < 64) {
+                    if (it.getAmount() < it.getMaxStackSize()) {
                         it.setAmount(it.getAmount() + 1);
                         newAmount -= 1;
                     } else {
