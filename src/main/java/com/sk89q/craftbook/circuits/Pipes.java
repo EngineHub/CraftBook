@@ -46,7 +46,7 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) {
+            if (type == BlockID.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
                 Sign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
@@ -64,7 +64,7 @@ public class Pipes extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.PISTON_STICKY_BASE || type == BlockID.PISTON_BASE) {
+            if (type == BlockID.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
                 Sign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
@@ -162,6 +162,9 @@ public class Pipes extends AbstractMechanic {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
 
+                    if(items.isEmpty())
+                        return;
+
                     if (!config.pipesDiagonal) {
                         if (x != 0 && y != 0) continue;
                         if (x != 0 && z != 0) continue;
@@ -235,8 +238,6 @@ public class Pipes extends AbstractMechanic {
 
                             items.removeAll(filteredItems);
                             items.addAll(newItems);
-
-                            if (!items.isEmpty()) searchNearbyPipes(block);
                         } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
 
                             List<ItemStack> newItems = new ArrayList<ItemStack>();
@@ -283,9 +284,6 @@ public class Pipes extends AbstractMechanic {
 
                             items.removeAll(filteredItems);
                             items.addAll(newItems);
-
-                            if (!items.isEmpty()) searchNearbyPipes(block);
-
                         } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
 
                             CircuitCore circuitCore = CircuitCore.inst();
@@ -300,8 +298,6 @@ public class Pipes extends AbstractMechanic {
 
                                 items.removeAll(filteredItems);
                                 items.addAll(newItems);
-
-                                if (!items.isEmpty()) searchNearbyPipes(block);
                             } catch (Exception e) {
                                 BukkitUtil.printStacktrace(e);
                             }
@@ -372,7 +368,7 @@ public class Pipes extends AbstractMechanic {
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
-                if (!items.isEmpty()) 
+                if (!items.isEmpty())
                     for (ItemStack item : items) {
                         if (!ItemUtil.isStackValid(item)) continue;
                         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
