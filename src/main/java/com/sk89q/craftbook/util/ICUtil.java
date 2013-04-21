@@ -119,7 +119,10 @@ public class ICUtil {
                             if(selector instanceof CuboidRegionSelector) {
 
                                 Vector centre = selector.getRegion().getMaximumPoint().subtract(selector.getRegion().getMinimumPoint());
-                                sign.setLine(i, sign.getLine(i).replace("[off]", centre.getX() + ":" + centre.getY() + ":" + centre.getZ()));
+
+                                Vector offset = sign.getBlockVector().subtract(centre);
+
+                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + (offset.getX() == offset.getBlockX() ? offset.getBlockX() : offset.getX()) + ":" + (offset.getY() == offset.getBlockY() ? offset.getBlockY() : offset.getY()) + ":" + (offset.getZ() == offset.getBlockZ() ? offset.getBlockZ() : offset.getZ())));
                                 //} else if (selector instanceof SphereRegionSelector) {
 
                                 //TODO spherical reions.
