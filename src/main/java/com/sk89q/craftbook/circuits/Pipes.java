@@ -244,6 +244,8 @@ public class Pipes extends AbstractMechanic {
 
                             items.removeAll(filteredItems);
                             items.addAll(newItems);
+
+                            if (!items.isEmpty()) searchNearbyPipes(block);
                         } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
 
                             List<ItemStack> newItems = new ArrayList<ItemStack>();
@@ -290,6 +292,8 @@ public class Pipes extends AbstractMechanic {
 
                             items.removeAll(filteredItems);
                             items.addAll(newItems);
+
+                            if (!items.isEmpty()) searchNearbyPipes(block);
                         } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
 
                             CircuitCore circuitCore = CircuitCore.inst();
@@ -304,6 +308,8 @@ public class Pipes extends AbstractMechanic {
 
                                 items.removeAll(filteredItems);
                                 items.addAll(newItems);
+
+                                if (!items.isEmpty()) searchNearbyPipes(block);
                             } catch (Exception e) {
                                 BukkitUtil.printStacktrace(e);
                             }
@@ -429,9 +435,9 @@ public class Pipes extends AbstractMechanic {
     /**
      * Raised when an input redstone current changes.
      */
-    @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+     @Override
+     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        startPipe(event.getBlock());
-    }
+         startPipe(event.getBlock());
+     }
 }

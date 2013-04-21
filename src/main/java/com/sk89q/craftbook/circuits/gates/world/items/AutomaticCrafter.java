@@ -114,7 +114,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         boolean pipes = false;
 
-        if(Pipes.Factory.setupPipes(disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing()), getBackBlock(), Arrays.asList(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult())) != null)
+        if(Pipes.Factory.setupPipes(disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing()), disp.getBlock(), Arrays.asList(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult())) != null)
             pipes = true;
 
         if (!pipes) {
