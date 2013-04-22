@@ -345,7 +345,7 @@ public class Pipes extends AbstractMechanic {
                     if(!doesItemPassFilters(stack))
                         continue;
 
-                    items.add(stack.clone());
+                    items.add(stack);
                     ((InventoryHolder) fac.getState()).getInventory().remove(stack);
                     if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull)
                         break;
@@ -435,9 +435,9 @@ public class Pipes extends AbstractMechanic {
     /**
      * Raised when an input redstone current changes.
      */
-     @Override
-     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    @Override
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-         startPipe(event.getBlock());
-     }
+        startPipe(event.getBlock());
+    }
 }

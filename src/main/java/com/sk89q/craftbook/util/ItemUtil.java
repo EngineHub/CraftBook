@@ -80,7 +80,7 @@ public class ItemUtil {
                 }
             }
 
-            ret.add(item.clone());
+            ret.add(item);
         }
         }
 
