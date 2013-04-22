@@ -70,8 +70,7 @@ public abstract class AbstractICFactory implements ICFactory {
     @Override
     public String[] getLineHelp() {
 
-        String[] lines = new String[] {null, null};
-        return lines;
+        return new String[] {null, null};
     }
 
     @Override

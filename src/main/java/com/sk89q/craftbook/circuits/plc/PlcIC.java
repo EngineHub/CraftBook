@@ -23,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -122,7 +124,19 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         World w = BukkitUtil.toWorld(sign.getLocalWorld());
         File worldDir = w.getWorldFolder();
-        File targetDir = new File(worldDir, "craftbook-plcs");
+        File targetDir = new File(new File(worldDir, "craftbook"), "plcs");
+        if(new File(worldDir, "craftbook-plcs").exists()) {
+
+            File oldFolder = new File(worldDir, "craftbook-plcs");
+            if(!targetDir.exists())
+                targetDir.mkdirs();
+            try {
+                Files.move(oldFolder.toPath(), targetDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                logger.warning("Failed to copy PLC States over to new directory!");
+            }
+            oldFolder.delete();
+        }
         targetDir.mkdirs();
         return new File(targetDir, getFileName());
     }

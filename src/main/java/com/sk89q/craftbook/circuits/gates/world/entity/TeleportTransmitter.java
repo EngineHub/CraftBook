@@ -6,7 +6,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -25,8 +24,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    protected static final HistoryHashMap<String, Tuple2<Long, String>> memory = new HistoryHashMap<String,
-            Tuple2<Long, String>>(50);
+    protected static final HistoryHashMap<String, Tuple2<Long, String>> memory = new HistoryHashMap<String, Tuple2<Long, String>>(50);
 
     protected String band;
 
@@ -60,15 +58,22 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             sendPlayer();
     }
 
+    @Override
+    public void think (ChipState chip) {
+
+        if (chip.getInput(0))
+            sendPlayer();
+    }
+
     public void sendPlayer() {
         Player closest = null;
 
         for (Player e : offset.getWorld().getPlayers()) {
-            if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius))
+            if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius) || e.isDead())
                 continue;
 
             if (closest == null) closest = e;
-            else if (closest.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation()) > e.getLocation().distanceSquared(BukkitUtil.toSign(getSign()).getLocation())) closest = e;
+            else if (closest.getLocation().distanceSquared(offset) > e.getLocation().distanceSquared(offset)) closest = e;
         }
         if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
             closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
@@ -124,15 +129,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"frequency name", "radius=x:y:z offset"};
-            return lines;
+            return new String[] {"frequency name", "radius=x:y:z offset"};
         }
-    }
-
-    @Override
-    public void think (ChipState chip) {
-
-        if (chip.getInput(0))
-            sendPlayer();
     }
 }
