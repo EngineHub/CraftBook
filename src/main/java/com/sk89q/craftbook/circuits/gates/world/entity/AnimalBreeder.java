@@ -98,7 +98,10 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     public boolean breed() {
 
-        lastEntity.clear();
+        if(lastEntity != null)
+            lastEntity.clear();
+        else
+            lastEntity = new HashMap<EntityType, Entity>();
         InventoryHolder inv = null;
 
         if(chest.getState() instanceof InventoryHolder)
