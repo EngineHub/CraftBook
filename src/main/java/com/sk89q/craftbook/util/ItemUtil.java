@@ -10,7 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.blocks.ItemType;
 
 public class ItemUtil {
 
@@ -328,5 +330,44 @@ public class ItemUtil {
         }
 
         return smallest;
+    }
+
+    /**
+     * Parse an item from a line of text.
+     * 
+     * @param line The line to parse it from.
+     * @return The item to create.
+     */
+    public static ItemStack getItem(String line) {
+
+        if (line == null || line.isEmpty())
+            return null;
+
+        int id = 0;
+        int data = 0;
+        int amount = 1;
+
+        String[] amountSplit = RegexUtil.ASTERISK_PATTERN.split(line, 2);
+        String[] dataSplit = RegexUtil.COLON_PATTERN.split(amountSplit[0], 2);
+        try {
+            id = Integer.parseInt(dataSplit[0]);
+            if (line.contains(":"))
+                data = Integer.parseInt(dataSplit[1]);
+        } catch (NumberFormatException e) {
+            try {
+                id = BlockType.lookup(dataSplit[0]).getID();
+                if (id < 0) id = 0;
+            } catch (Exception ee) {
+                id = ItemType.lookup(dataSplit[0]).getID();
+            }
+            if (line.contains(":"))
+                data = Integer.parseInt(dataSplit[1]);
+        }
+        if(amountSplit.length > 1)
+            amount = Integer.parseInt(amountSplit[1]);
+
+        ItemStack rVal = new ItemStack(id, amount, (short) data);
+        rVal.setData(new MaterialData(id, (byte)data));
+        return rVal;
     }
 }

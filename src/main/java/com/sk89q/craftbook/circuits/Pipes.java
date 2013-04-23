@@ -24,7 +24,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -54,18 +53,16 @@ public class Pipes extends AbstractMechanic {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();
                 Block fac = pipe.getRelative(p.getFacing());
-                if (fac.getLocation().equals(source.getLocation())) {
-
+                if (fac.getLocation().equals(source.getLocation()))
                     if (CircuitCore.inst().getPipeFactory() != null)
                         return CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(pipe), items);
-                }
             }
 
             return null;
         }
 
         @Override
-        public Pipes detect(BlockWorldVector pt) {
+        public Pipes detect(BlockWorldVector pt) throws InvalidMechanismException {
 
             return detectWithItems(pt, null);
         }
@@ -145,11 +142,11 @@ public class Pipes extends AbstractMechanic {
 
             for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
 
-                filters.add(ICUtil.getItem(line3));
+                filters.add(ItemUtil.getItem(line3.trim()));
             }
             for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
 
-                exceptions.add(ICUtil.getItem(line4));
+                exceptions.add(ItemUtil.getItem(line4.trim()));
             }
         }
 
@@ -240,10 +237,10 @@ public class Pipes extends AbstractMechanic {
                 if(sign != null) {
 
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ICUtil.getItem(line3));
+                        pFilters.add(ItemUtil.getItem(line3.trim()));
                     }
                     for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ICUtil.getItem(line4));
+                        pExceptions.add(ItemUtil.getItem(line4.trim()));
                     }
 
                     while(pFilters.remove(null)){}
@@ -364,7 +361,7 @@ public class Pipes extends AbstractMechanic {
      * Raised when an input redstone current changes.
      */
     @Override
-    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+    public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
 
         startPipe(event.getBlock());
     }

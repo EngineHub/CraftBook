@@ -11,7 +11,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class ContentsSensor extends AbstractSelfTriggeredIC {
@@ -23,7 +22,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        item = ICUtil.getItem(getLine(2));
+        item = ItemUtil.getItem(getLine(2));
         if(getLine(3).isEmpty())
             slot = -1;
         else {
@@ -91,7 +90,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            ItemStack item = ICUtil.getItem(sign.getLine(2));
+            ItemStack item = ItemUtil.getItem(sign.getLine(2));
             if(item == null)
                 throw new ICVerificationException("Invalid item to detect!");
         }

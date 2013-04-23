@@ -13,6 +13,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class ChestStocker extends AbstractSelfTriggeredIC {
@@ -32,7 +33,7 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
             offset = getBackBlock().getRelative(0, 1, 0).getLocation();
         else
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
-        item = ICUtil.getItem(getLine(2));
+        item = ItemUtil.getItem(getLine(2));
     }
 
     @Override

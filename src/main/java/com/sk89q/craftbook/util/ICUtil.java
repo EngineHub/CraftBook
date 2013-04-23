@@ -19,9 +19,7 @@ package com.sk89q.craftbook.util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
-import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -32,8 +30,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.RegionSelector;
 
@@ -271,50 +267,6 @@ public class ICUtil {
             // do nothing and use default radius
         }
         return radius;
-    }
-
-    public static ItemStack getItem(String line) {
-
-        if (line == null || line.isEmpty()) {
-            return null;
-        }
-        try {
-            if (line.contains(":")) {
-                String[] split = RegexUtil.COLON_PATTERN.split(line, 2);
-                int id = 0;
-                int data = 0;
-                try {
-                    id = Integer.parseInt(split[0]);
-                    data = Integer.parseInt(split[1]);
-                } catch (NumberFormatException e) {
-                    try {
-                        id = BlockType.lookup(split[0]).getID();
-                        if (id < 0) throw new NullPointerException();
-                    } catch (Exception ee) {
-                        id = ItemType.lookup(split[0]).getID();
-                    }
-                    data = Integer.parseInt(split[1]);
-                }
-                ItemStack rVal = new ItemStack(id, 1, (short) data);
-                rVal.setData(new MaterialData(id, (byte)data));
-                return rVal;
-            } else {
-                int id = 0;
-                try {
-                    id = Integer.parseInt(line);
-                } catch (NumberFormatException e) {
-                    try {
-                        id = BlockType.lookup(line).getID();
-                        if (id < 0) throw new NullPointerException();
-                    } catch (Exception ee) {
-                        id = ItemType.lookup(line).getID();
-                    }
-                }
-                return new ItemStack(id, 1);
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
     }
 
     public enum LocationCheckType {

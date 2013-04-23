@@ -17,7 +17,6 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
@@ -62,8 +61,8 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        doWant = ICUtil.getItem(getLine(2));
-        doNotWant = ICUtil.getItem(getLine(3));
+        doWant = ItemUtil.getItem(getLine(2));
+        doNotWant = ItemUtil.getItem(getLine(3));
     }
 
     protected boolean collect() {
