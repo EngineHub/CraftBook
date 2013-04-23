@@ -306,7 +306,7 @@ public class Pipes extends AbstractMechanic {
                     if (!ItemUtil.isStackValid(stack))
                         continue;
 
-                    if(!doesItemPassFilters(stack))
+                    if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
                         continue;
 
                     items.add(stack);
@@ -326,7 +326,7 @@ public class Pipes extends AbstractMechanic {
             } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
 
                 Furnace f = (Furnace) fac.getState();
-                if(!doesItemPassFilters(f.getInventory().getResult()))
+                if(!ItemUtil.doesItemPassFilters(f.getInventory().getResult(), filters, exceptions))
                     return;
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
@@ -358,42 +358,6 @@ public class Pipes extends AbstractMechanic {
                 }
             }
         }
-    }
-
-    public boolean doesItemPassFilters(ItemStack stack) {
-
-        if(!ItemUtil.isStackValid(stack))
-            return false;
-        boolean passesFilters = true;
-        if(filters.size() > 0) {
-            for (ItemStack fil : filters) {
-
-                if(!ItemUtil.isStackValid(fil))
-                    continue;
-                passesFilters = false;
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
-                    passesFilters = true;
-                    break;
-                }
-            }
-            if(!passesFilters)
-                return false;
-        }
-        if(exceptions.size() > 0) {
-            for (ItemStack fil : exceptions) {
-
-                if(!ItemUtil.isStackValid(fil))
-                    continue;
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
-                    passesFilters = false;
-                    break;
-                }
-            }
-            if(!passesFilters)
-                return false;
-        }
-
-        return passesFilters;
     }
 
     /**

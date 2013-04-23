@@ -44,50 +44,63 @@ public class ItemUtil {
      * Filter a list of items by inclusions and exclusions.
      * 
      * @param stacks The base list of items.
-     * @param include The list of items to include, skipped if empty.
-     * @param exclude The list of items to exclude, skipped if empty.
+     * @param inclusions The list of items to include, skipped if empty.
+     * @param exclusions The list of items to exclude, skipped if empty.
      * @return The list of items that have been filtered.
      */
-    public static List<ItemStack> filterItems(List<ItemStack> stacks, HashSet<ItemStack> include, HashSet<ItemStack> exclude) {
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
 
         List<ItemStack> ret = new ArrayList<ItemStack>();
 
         for(ItemStack stack : stacks) {
 
-            boolean passesFilters = true;
-            if(include.size() > 0) {
-                for (ItemStack fil : include) {
-
-                    if(!ItemUtil.isStackValid(fil))
-                        continue;
-                    passesFilters = false;
-                    if(ItemUtil.areItemsIdentical(fil, stack)) {
-                        passesFilters = true;
-                        break;
-                    }
-                }
-                if(!passesFilters)
-                    continue;
-            }
-            if(exclude.size() > 0) {
-                for (ItemStack fil : exclude) {
-
-                    if(!ItemUtil.isStackValid(fil))
-                        continue;
-                    if(ItemUtil.areItemsIdentical(fil, stack)) {
-                        passesFilters = false;
-                        break;
-                    }
-                }
-                if(!passesFilters)
-                    continue;
-            }
-
-            if(passesFilters)
+            if(doesItemPassFilters(stack, inclusions, exclusions))
                 ret.add(stack);
         }
 
         return ret;
+    }
+
+    /**
+     * Check whether or not an item passes filters.
+     * 
+     * @param stacks The item to check if it passes.
+     * @param inclusions The list of items to include, skipped if empty.
+     * @param exclusions The list of items to exclude, skipped if empty.
+     * @return If the item passes the filters.
+     */
+    public static boolean doesItemPassFilters(ItemStack stack, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
+
+        boolean passesFilters = true;
+        if(inclusions.size() > 0) {
+            for (ItemStack fil : inclusions) {
+
+                if(!ItemUtil.isStackValid(fil))
+                    continue;
+                passesFilters = false;
+                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                    passesFilters = true;
+                    break;
+                }
+            }
+            if(!passesFilters)
+                return false;
+        }
+        if(exclusions.size() > 0) {
+            for (ItemStack fil : exclusions) {
+
+                if(!ItemUtil.isStackValid(fil))
+                    continue;
+                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                    passesFilters = false;
+                    break;
+                }
+            }
+            if(!passesFilters)
+                return false;
+        }
+
+        return passesFilters;
     }
 
     public static ItemStack[] removeNulls(ItemStack[] array) {
