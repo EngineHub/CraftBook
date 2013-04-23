@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -156,8 +157,8 @@ public class Pipes extends AbstractMechanic {
         while(exceptions.remove(null)){}
     }
 
-    private List<ItemStack> filters = new ArrayList<ItemStack>();
-    private List<ItemStack> exceptions = new ArrayList<ItemStack>();
+    private HashSet<ItemStack> filters = new HashSet<ItemStack>();
+    private HashSet<ItemStack> exceptions = new HashSet<ItemStack>();
 
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private List<BlockVector> visitedPipes = new ArrayList<BlockVector>();
@@ -233,8 +234,8 @@ public class Pipes extends AbstractMechanic {
 
                 Sign sign = getSignOnPiston(p, bl);
 
-                List<ItemStack> pFilters = new ArrayList<ItemStack>();
-                List<ItemStack> pExceptions = new ArrayList<ItemStack>();
+                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
+                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
 
                 if(sign != null) {
 

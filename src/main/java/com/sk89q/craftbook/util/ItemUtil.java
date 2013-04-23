@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.entity.Item;
@@ -47,41 +48,43 @@ public class ItemUtil {
      * @param exclude The list of items to exclude, skipped if empty.
      * @return The list of items that have been filtered.
      */
-    public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> include, List<ItemStack> exclude) {
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, HashSet<ItemStack> include, HashSet<ItemStack> exclude) {
 
         List<ItemStack> ret = new ArrayList<ItemStack>();
 
-        for(ItemStack item : stacks) {
+        for(ItemStack stack : stacks) {
 
-            checks: {
+            boolean passesFilters = true;
             if(include.size() > 0) {
-                boolean passes = false;
-                for(ItemStack inc : include) {
+                for (ItemStack fil : include) {
 
-                    if(!ItemUtil.isStackValid(inc))
+                    if(!ItemUtil.isStackValid(fil))
                         continue;
-                    if(!areItemsIdentical(item, inc))
-                        passes = false;
-                    else {
-                        passes = true;
+                    passesFilters = false;
+                    if(ItemUtil.areItemsIdentical(fil, stack)) {
+                        passesFilters = true;
                         break;
                     }
                 }
-                if(!passes)
-                    break checks;
+                if(!passesFilters)
+                    continue;
             }
             if(exclude.size() > 0) {
-                for(ItemStack inc : exclude) {
+                for (ItemStack fil : exclude) {
 
-                    if(!ItemUtil.isStackValid(inc))
+                    if(!ItemUtil.isStackValid(fil))
                         continue;
-                    if(areItemsIdentical(item, inc))
-                        break checks;
+                    if(ItemUtil.areItemsIdentical(fil, stack)) {
+                        passesFilters = false;
+                        break;
+                    }
                 }
+                if(!passesFilters)
+                    continue;
             }
 
-            ret.add(item);
-        }
+            if(passesFilters)
+                ret.add(stack);
         }
 
         return ret;
