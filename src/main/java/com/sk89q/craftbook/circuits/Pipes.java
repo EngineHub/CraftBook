@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -164,6 +165,8 @@ public class Pipes extends AbstractMechanic {
 
         BukkitConfiguration config = CraftBookPlugin.inst().getConfiguration();
 
+        LinkedList<Block> searchQueue = new LinkedList<Block>();
+
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
@@ -210,110 +213,116 @@ public class Pipes extends AbstractMechanic {
 
                     visitedPipes.add(bv);
 
-                    if (off.getTypeId() == BlockID.GLASS) {
+                    if(off.getTypeId() == BlockID.GLASS)
+                        searchQueue.add(off);
+                    else if(off.getTypeId() == BlockID.PISTON_BASE)
+                        searchQueue.add(0, off); //Pistons are treated with higher priority.
+                }
+            }
+        }
 
-                        searchNearbyPipes(off);
-                    } else if (off.getTypeId() == BlockID.PISTON_BASE) {
+        for(Block bl : searchQueue) {
+            if (bl.getTypeId() == BlockID.GLASS)
+                searchNearbyPipes(bl);
+            else if (bl.getTypeId() == BlockID.PISTON_BASE) {
 
-                        PistonBaseMaterial p = (PistonBaseMaterial) off.getState().getData();
+                PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
 
-                        Sign sign = getSignOnPiston(p, off);
+                Sign sign = getSignOnPiston(p, bl);
 
-                        List<ItemStack> pFilters = new ArrayList<ItemStack>();
-                        List<ItemStack> pExceptions = new ArrayList<ItemStack>();
+                List<ItemStack> pFilters = new ArrayList<ItemStack>();
+                List<ItemStack> pExceptions = new ArrayList<ItemStack>();
 
-                        if(sign != null) {
+                if(sign != null) {
 
-                            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                                pFilters.add(ICUtil.getItem(line3));
-                            }
-                            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                                pExceptions.add(ICUtil.getItem(line4));
-                            }
-                        }
+                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                        pFilters.add(ICUtil.getItem(line3));
+                    }
+                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                        pExceptions.add(ICUtil.getItem(line4));
+                    }
+                }
 
-                        Block fac = off.getRelative(p.getFacing());
-                        if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
-                            List<ItemStack> newItems = new ArrayList<ItemStack>();
-                            List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
+                Block fac = bl.getRelative(p.getFacing());
+                if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
+                    List<ItemStack> newItems = new ArrayList<ItemStack>();
+                    List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
 
-                            for (ItemStack item : filteredItems) {
-                                if (!ItemUtil.isStackValid(item)) continue;
-                                newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
-                            }
+                    for (ItemStack item : filteredItems) {
+                        if (!ItemUtil.isStackValid(item)) continue;
+                        newItems.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                    }
 
-                            items.removeAll(filteredItems);
-                            items.addAll(newItems);
+                    items.removeAll(filteredItems);
+                    items.addAll(newItems);
 
-                            if (!items.isEmpty()) searchNearbyPipes(block);
-                        } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
+                    if (!items.isEmpty()) searchNearbyPipes(block);
+                } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
 
-                            List<ItemStack> newItems = new ArrayList<ItemStack>();
-                            List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
+                    List<ItemStack> newItems = new ArrayList<ItemStack>();
+                    List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
 
-                            newItems.addAll(filteredItems);
-                            Furnace furnace = (Furnace) fac.getState();
+                    newItems.addAll(filteredItems);
+                    Furnace furnace = (Furnace) fac.getState();
 
-                            for (ItemStack item : filteredItems) {
-                                if (!ItemUtil.isStackValid(item)) continue;
-                                if (ItemUtil.isAFuel(item)) {
-                                    if (ItemUtil.isStackValid(furnace.getInventory().getFuel())) {
+                    for (ItemStack item : filteredItems) {
+                        if (!ItemUtil.isStackValid(item)) continue;
+                        if (ItemUtil.isAFuel(item)) {
+                            if (ItemUtil.isStackValid(furnace.getInventory().getFuel())) {
 
-                                        if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getFuel())) {
+                                if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getFuel())) {
 
-                                            newItems.remove(item);
-                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel(),
-                                                    item);
-                                            if (newStack != null) newItems.add(newStack);
-                                        }
-                                    } else {
-
-                                        furnace.getInventory().setFuel(item);
-                                        newItems.remove(item);
-                                    }
-                                } else if (ItemUtil.isSmeltable(item)) {
-
-                                    if (ItemUtil.isStackValid(furnace.getInventory().getSmelting())) {
-
-                                        if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getSmelting())) {
-
-                                            newItems.remove(item);
-                                            ItemStack newStack = ItemUtil.addToStack(furnace.getInventory()
-                                                    .getSmelting(), item);
-                                            if (newStack != null) newItems.add(newStack);
-                                        }
-                                    } else {
-
-                                        furnace.getInventory().setSmelting(item);
-                                        newItems.remove(item);
-                                    }
+                                    newItems.remove(item);
+                                    ItemStack newStack = ItemUtil.addToStack(furnace.getInventory().getFuel(),
+                                            item);
+                                    if (newStack != null) newItems.add(newStack);
                                 }
+                            } else {
+
+                                furnace.getInventory().setFuel(item);
+                                newItems.remove(item);
                             }
+                        } else if (ItemUtil.isSmeltable(item)) {
 
-                            items.removeAll(filteredItems);
-                            items.addAll(newItems);
+                            if (ItemUtil.isStackValid(furnace.getInventory().getSmelting())) {
 
-                            if (!items.isEmpty()) searchNearbyPipes(block);
-                        } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
+                                if (ItemUtil.areItemsIdentical(item, furnace.getInventory().getSmelting())) {
 
-                            CircuitCore circuitCore = CircuitCore.inst();
-                            if (circuitCore.getICFactory() == null) continue;
+                                    newItems.remove(item);
+                                    ItemStack newStack = ItemUtil.addToStack(furnace.getInventory()
+                                            .getSmelting(), item);
+                                    if (newStack != null) newItems.add(newStack);
+                                }
+                            } else {
 
-                            try {
-                                ICMechanic icmech = circuitCore.getICFactory().detect(BukkitUtil.toWorldVector(fac));
-                                if (icmech == null) continue;
-                                if (!(icmech.getIC() instanceof PipeInputIC)) continue;
-                                List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
-                                List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil.toWorldVector(off), filteredItems);
-
-                                items.removeAll(filteredItems);
-                                items.addAll(newItems);
-
-                                if (!items.isEmpty()) searchNearbyPipes(block);
-                            } catch (Exception e) {
-                                BukkitUtil.printStacktrace(e);
+                                furnace.getInventory().setSmelting(item);
+                                newItems.remove(item);
                             }
                         }
+                    }
+
+                    items.removeAll(filteredItems);
+                    items.addAll(newItems);
+
+                    if (!items.isEmpty()) searchNearbyPipes(block);
+                } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
+
+                    CircuitCore circuitCore = CircuitCore.inst();
+                    if (circuitCore.getICFactory() == null) continue;
+
+                    try {
+                        ICMechanic icmech = circuitCore.getICFactory().detect(BukkitUtil.toWorldVector(fac));
+                        if (icmech == null) continue;
+                        if (!(icmech.getIC() instanceof PipeInputIC)) continue;
+                        List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
+                        List<ItemStack> newItems = ((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil.toWorldVector(bl), filteredItems);
+
+                        items.removeAll(filteredItems);
+                        items.addAll(newItems);
+
+                        if (!items.isEmpty()) searchNearbyPipes(block);
+                    } catch (Exception e) {
+                        BukkitUtil.printStacktrace(e);
                     }
                 }
             }
