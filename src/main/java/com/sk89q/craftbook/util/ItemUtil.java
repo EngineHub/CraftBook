@@ -244,28 +244,72 @@ public class ItemUtil {
         }
     }
 
+    /**
+     * Checks whether the item is usable as a fuel in a furnace.
+     * 
+     * @param item The item to check.
+     * @return Whether it is usable in a furnace.
+     */
     public static boolean isAFuel(ItemStack item) {
 
-        int i = item.getTypeId();
-        return i == ItemID.COAL || i == BlockID.LOG || i == BlockID.WOOD || i == BlockID.WOODEN_STEP || i == BlockID
-                .SAPLING || i == ItemID.WOOD_AXE
-                || i == ItemID.WOOD_HOE || i == ItemID.WOOD_PICKAXE || i == ItemID.WOOD_SHOVEL || i == ItemID.WOOD_SWORD
-                || i == BlockID.WOODEN_PRESSURE_PLATE || i == ItemID.STICK || i == BlockID.FENCE || i == BlockID
-                .WOODEN_STAIRS
-                || i == BlockID.TRAP_DOOR || i == BlockID.WORKBENCH || i == BlockID.CHEST || i == BlockID.JUKEBOX ||
-                i == BlockID.NOTE_BLOCK
-                || i == BlockID.BROWN_MUSHROOM_CAP || i == BlockID.RED_MUSHROOM_CAP || i == ItemID.BLAZE_ROD || i ==
-                ItemID.LAVA_BUCKET;
+        switch(item.getTypeId()) {
+            case ItemID.COAL:
+            case BlockID.LOG:
+            case BlockID.WOOD:
+            case BlockID.WOODEN_STEP:
+            case BlockID.SAPLING:
+            case ItemID.WOOD_AXE:
+            case ItemID.WOOD_HOE:
+            case ItemID.WOOD_PICKAXE:
+            case ItemID.WOOD_SHOVEL:
+            case ItemID.WOOD_SWORD:
+            case BlockID.WOODEN_PRESSURE_PLATE:
+            case ItemID.STICK:
+            case BlockID.FENCE:
+            case BlockID.FENCE_GATE:
+            case BlockID.WOODEN_STAIRS:
+            case BlockID.TRAP_DOOR:
+            case BlockID.WORKBENCH:
+            case BlockID.CHEST:
+            case BlockID.TRAPPED_CHEST:
+            case BlockID.JUKEBOX:
+            case BlockID.NOTE_BLOCK:
+            case BlockID.BROWN_MUSHROOM_CAP:
+            case BlockID.RED_MUSHROOM_CAP:
+            case ItemID.BLAZE_ROD:
+            case ItemID.LAVA_BUCKET:
+            case BlockID.BOOKCASE:
+                return true;
+            default:
+                return false;
+        }
     }
 
+    /**
+     * Checks whether an item is a potion ingredient.
+     * 
+     * @param item The item to check.
+     * @return If the item is a potion ingredient.
+     */
     public static boolean isAPotionIngredient(ItemStack item) {
 
-        int i = item.getTypeId();
-        return i == ItemID.NETHER_WART_SEED || i == ItemID.LIGHTSTONE_DUST || i == ItemID.REDSTONE_DUST || i ==
-                ItemID.SPIDER_EYE
-                || i == ItemID.MAGMA_CREAM || i == ItemID.SUGAR || i == ItemID.GLISTERING_MELON || i == ItemID
-                .GHAST_TEAR || i == ItemID.BLAZE_POWDER
-                || i == ItemID.FERMENTED_SPIDER_EYE || i == ItemID.SULPHUR;
+        switch(item.getTypeId()) {
+            case ItemID.NETHER_WART_SEED:
+            case ItemID.LIGHTSTONE_DUST:
+            case ItemID.REDSTONE_DUST:
+            case ItemID.SPIDER_EYE:
+            case ItemID.MAGMA_CREAM:
+            case ItemID.SUGAR:
+            case ItemID.GLISTERING_MELON:
+            case ItemID.GHAST_TEAR:
+            case ItemID.BLAZE_POWDER:
+            case ItemID.FERMENTED_SPIDER_EYE:
+            case ItemID.SULPHUR:
+            case ItemID.GOLDEN_CARROT:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean containsRawFood(Inventory inv) {
