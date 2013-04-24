@@ -21,6 +21,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -59,7 +60,7 @@ public class BetterPistons extends AbstractMechanic {
                 Block sign = block.getRelative(piston.getFacing().getOppositeFace());
                 Types type = null;
                 signCheck: {
-                    for(BlockFace face : BlockFace.values()) {
+                    for(BlockFace face : LocationUtil.getDirectFaces()) {
                         if(face == piston.getFacing())
                             continue;
                         sign = block.getRelative(face);
@@ -242,14 +243,14 @@ public class BetterPistons extends AbstractMechanic {
                         @Override
                         public void run () {
                             for(int x = 1; x <= fblock+2; x++) {
-                                int i = x; 
+                                int i = x;
                                 if(x == 1 && !(trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder) && fp == 0) {
-                                    x = i = 2;  
+                                    x = i = 2;
                                 }
                                 if(x >= fblock+2 || trigger.getRelative(piston.getFacing(), i+1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i+1))) {
                                     trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                                     break;
-                                } 
+                                }
                                 for(Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
 
                                     if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i))) {
@@ -360,10 +361,10 @@ public class BetterPistons extends AbstractMechanic {
             case BlockID.OBSIDIAN:
             case BlockID.PISTON_MOVING_PIECE:
                 return false;
-            default: 
+            default:
                 return true;
         }
-    } 
+    }
 
     private final Block trigger;
     private final Block sign;

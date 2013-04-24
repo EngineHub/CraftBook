@@ -351,7 +351,7 @@ public class ItemUtil {
         String[] dataSplit = RegexUtil.COLON_PATTERN.split(amountSplit[0], 2);
         try {
             id = Integer.parseInt(dataSplit[0]);
-            if (line.contains(":"))
+            if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
         } catch (NumberFormatException e) {
             try {
@@ -360,7 +360,7 @@ public class ItemUtil {
             } catch (Exception ee) {
                 id = ItemType.lookup(dataSplit[0]).getID();
             }
-            if (line.contains(":"))
+            if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
         }
         if(amountSplit.length > 1)

@@ -26,7 +26,9 @@ import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockVector;
@@ -103,13 +105,17 @@ public class Pipes extends AbstractMechanic {
 
     public static Sign getSignOnPiston(PistonBaseMaterial piston, Block block) {
 
-        for(BlockFace face : BlockFace.values()) {
+        for(BlockFace face : LocationUtil.getDirectFaces()) {
 
             Sign sign = null;
 
             if(face == piston.getFacing() || !(block.getRelative(face).getState() instanceof Sign))
                 continue;
             sign = (Sign) block.getRelative(face).getState();
+            if(sign.getBlock().getTypeId() != BlockID.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
+                continue;
+            if(!SignUtil.getBackBlock(sign.getBlock()).getLocation().equals(block.getLocation()))
+                continue;
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
                 return sign;
         }

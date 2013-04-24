@@ -18,6 +18,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 public class BlockReplacer extends AbstractIC {
@@ -79,7 +80,7 @@ public class BlockReplacer extends AbstractIC {
             return true;
 
         if(mode == 0) {
-            for(BlockFace f : BlockFace.values()) {
+            for(BlockFace f : LocationUtil.getDirectFaces()) {
 
                 final Block b = block.getRelative(f);
 

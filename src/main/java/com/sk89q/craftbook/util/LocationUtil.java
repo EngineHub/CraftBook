@@ -263,4 +263,9 @@ public final class LocationUtil {
         }
         return radiusEntities.toArray(new Player[radiusEntities.size()]);
     }
+
+    public static BlockFace[] getDirectFaces() {
+
+        return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
+    }
 }
