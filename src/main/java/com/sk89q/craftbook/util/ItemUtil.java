@@ -393,7 +393,10 @@ public class ItemUtil {
                 id = BlockType.lookup(dataSplit[0]).getID();
                 if (id < 0) id = 0;
             } catch (Exception ee) {
-                id = ItemType.lookup(dataSplit[0]).getID();
+                try {
+                    id = ItemType.lookup(dataSplit[0]).getID();
+                }
+                catch(Exception eee){}
             }
             if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
