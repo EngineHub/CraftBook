@@ -386,8 +386,6 @@ public class ItemUtil {
         String[] dataSplit = RegexUtil.COLON_PATTERN.split(amountSplit[0], 2);
         try {
             id = Integer.parseInt(dataSplit[0]);
-            if (dataSplit.length > 1)
-                data = Integer.parseInt(dataSplit[1]);
         } catch (NumberFormatException e) {
             try {
                 id = BlockType.lookup(dataSplit[0]).getID();
@@ -398,11 +396,17 @@ public class ItemUtil {
                 }
                 catch(Exception eee){}
             }
+        }
+        try {
             if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
         }
-        if(amountSplit.length > 1)
-            amount = Integer.parseInt(amountSplit[1]);
+        catch(Exception e){}
+        try {
+            if(amountSplit.length > 1)
+                amount = Integer.parseInt(amountSplit[1]);
+        }
+        catch(Exception e){}
 
         ItemStack rVal = new ItemStack(id, amount, (short) data);
         rVal.setData(new MaterialData(id, (byte)data));
