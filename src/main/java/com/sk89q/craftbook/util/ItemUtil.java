@@ -131,14 +131,14 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
-    public static boolean areItemsIdentical(ItemStack item, int type, byte data, short durability) {
+    public static boolean areItemsIdentical(ItemStack item, int type, byte data) {
 
-        return areItemsIdentical(item, new MaterialData(type, data), durability);
+        return areItemsIdentical(item, new MaterialData(type, data));
     }
 
-    public static boolean areItemsIdentical(ItemStack item, MaterialData data, short durability) {
+    public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
 
-        return areItemsIdentical(item.getData(), item.getDurability(), data, durability);
+        return areItemsIdentical(item.getData(), data);
     }
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
@@ -146,12 +146,12 @@ public class ItemUtil {
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else
-            return areItemsIdentical(item.getData(), item.getDurability(), item2.getData(), item2.getDurability());
+            return areItemsIdentical(item.getData(), item2.getData());
     }
 
-    public static boolean areItemsIdentical(MaterialData data, short dur, MaterialData comparedData, short comparedDur) {
+    public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
 
-        return data.getItemTypeId() == comparedData.getItemTypeId() && data.getData() == data.getData() && dur == comparedDur;
+        return data.getItemTypeId() == comparedData.getItemTypeId() && (data.getData() == comparedData.getData() || data.getData() < 0 || comparedData.getData() < 0);
     }
 
     public static void setItemTypeAndData(ItemStack item, int type, byte data) {
@@ -379,7 +379,7 @@ public class ItemUtil {
             return null;
 
         int id = 0;
-        int data = 0;
+        int data = -1;
         int amount = 1;
 
         String[] amountSplit = RegexUtil.ASTERISK_PATTERN.split(line, 2);
