@@ -66,6 +66,7 @@ public class TopLevelCommands {
             if (context.hasFlag('c')) {
 
                 CraftBookPlugin.inst().checkForUpdates();
+                sender.sendMessage(CraftBookPlugin.inst().getLatestVersion() + " is the latest version available, and the updatability of it is: " + CraftBookPlugin.inst().isUpdateAvailable());
             } else {
 
                 if(!CraftBookPlugin.inst().updateAvailable) {

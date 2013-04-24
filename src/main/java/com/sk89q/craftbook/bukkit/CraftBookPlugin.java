@@ -258,6 +258,16 @@ public class CraftBookPlugin extends JavaPlugin {
     String latestVersion = null;
     long updateSize = 0;
 
+    public String getLatestVersion() {
+
+        return latestVersion;
+    }
+
+    public boolean isUpdateAvailable() {
+
+        return updateAvailable;
+    }
+
     /**
      * Register basic things to the plugin. For example, languages.
      */
