@@ -57,6 +57,8 @@ public class VehicleCore implements LocalComponent {
 
     private Map<String, String> stationSelection;
 
+    protected Vector minecartFallSpeed;
+
     public static boolean isEnabled() {
 
         return instance != null;
@@ -83,6 +85,9 @@ public class VehicleCore implements LocalComponent {
 
         // Register events
         registerEvents();
+
+        if(plugin.getConfiguration().minecartFallModifierEnabled)
+            minecartFallSpeed = new Vector(plugin.getConfiguration().minecartFallHorizontalSpeed, plugin.getConfiguration().minecartFallVerticalSpeed, plugin.getConfiguration().minecartFallHorizontalSpeed);
     }
 
     @Override
@@ -108,10 +113,6 @@ public class VehicleCore implements LocalComponent {
     }
 
     class CraftBookVehicleListener implements Listener {
-
-        public CraftBookVehicleListener() {
-
-        }
 
         /**
          * Called when a vehicle hits an entity
@@ -220,6 +221,8 @@ public class VehicleCore implements LocalComponent {
                         plugin.getConfiguration().minecartOffRailSpeedModifier,
                         plugin.getConfiguration().minecartOffRailSpeedModifier));
             minecart.setMaxSpeed(minecart.getMaxSpeed() * plugin.getConfiguration().minecartMaxSpeedModifier);
+            if (plugin.getConfiguration().minecartFallModifierEnabled && minecartFallSpeed != null)
+                minecart.setFlyingVelocityMod(minecartFallSpeed);
         }
 
         /**
@@ -264,6 +267,9 @@ public class VehicleCore implements LocalComponent {
         public void onVehicleMove(VehicleMoveEvent event) {
             // Ignore events not relating to minecarts.
             if (!(event.getVehicle() instanceof Minecart)) return;
+
+            if (plugin.getConfiguration().minecartFallModifierEnabled && minecartFallSpeed != null)
+                ((Minecart) event.getVehicle()).setFlyingVelocityMod(minecartFallSpeed);
 
             if (plugin.getConfiguration().minecartStoragePlaceRails && event.getVehicle() instanceof StorageMinecart) {
 
