@@ -254,7 +254,7 @@ public final class LocationUtil {
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
                     if(!(e instanceof Player))
                         continue;
-                    if (e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l
+                    if (getDistanceSquared(e.getLocation(), l) <= radius * radius && e.getLocation().getBlock() != l
                             .getBlock()) {
                         radiusEntities.add((Player) e);
                     }

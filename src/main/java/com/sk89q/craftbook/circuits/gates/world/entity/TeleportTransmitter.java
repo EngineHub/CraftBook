@@ -73,7 +73,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
                 continue;
 
             if (closest == null) closest = e;
-            else if (closest.getLocation().distanceSquared(offset) > e.getLocation().distanceSquared(offset)) closest = e;
+            else if (LocationUtil.getDistanceSquared(closest.getLocation(), offset) > LocationUtil.getDistanceSquared(e.getLocation(), offset)) closest = e;
         }
         if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
             closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");

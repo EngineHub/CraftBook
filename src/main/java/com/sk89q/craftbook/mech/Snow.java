@@ -23,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -331,11 +332,8 @@ public class Snow implements Listener {
 
         block.setTypeIdAndData(block.getTypeId(), data, false);
         for (Player p : block.getWorld().getPlayers()) {
-            if (p.getLocation().distanceSquared(block.getLocation()) < CraftBookPlugin.inst().getServer()
-                    .getViewDistance() * 16
-                    * CraftBookPlugin.inst().getServer().getViewDistance() * 16) {
+            if (LocationUtil.getDistanceSquared(p.getLocation(), block.getLocation()) < CraftBookPlugin.inst().getServer().getViewDistance() * 16 * CraftBookPlugin.inst().getServer().getViewDistance() * 16)
                 p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
-            }
         }
     }
 

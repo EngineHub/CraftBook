@@ -12,6 +12,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 
 public class PlayerUtil {
@@ -145,14 +146,10 @@ public class PlayerUtil {
             } else if (filter.equalsIgnoreCase("#near")) {
                 List<Player> players = new ArrayList<Player>();
                 Player sourcePlayer = checkPlayer(source);
-                World sourceWorld = sourcePlayer.getWorld();
-                org.bukkit.util.Vector sourceVector = sourcePlayer.getLocation().toVector();
 
                 for (Player player : CraftBookPlugin.server().getOnlinePlayers()) {
-                    if (player.getWorld().equals(sourceWorld) && player.getLocation().toVector().distanceSquared
-                            (sourceVector) < 900) {
+                    if (player.getWorld().equals(sourcePlayer.getWorld()) && LocationUtil.getDistanceSquared(player.getLocation(), sourcePlayer.getLocation()) < 900)
                         players.add(player);
-                    }
                 }
 
                 return checkPlayerMatch(players);

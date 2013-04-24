@@ -13,6 +13,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 
 public class MinecartManager {
@@ -70,7 +71,7 @@ public class MinecartManager {
             if (thingy != null) {
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                if(from.distanceSquared(to) > 2*2) //Further than max distance
+                if(LocationUtil.getDistanceSquared(from, to) > 2*2) //Further than max distance
                     return;
                 boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
                         && from.getBlockZ() == to.getBlockZ();

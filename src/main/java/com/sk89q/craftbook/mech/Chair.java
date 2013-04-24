@@ -19,6 +19,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -161,9 +162,8 @@ public class Chair implements Listener {
                     chairs.remove(pl);
                     continue;
                 }
-                if (!plugin.getConfiguration().chairBlocks.contains(getChair(p).getTypeId())
-                        || !p.getWorld().equals(getChair(p).getWorld()) || p.getLocation().distanceSquared(getChair
-                                (p).getLocation()) > 1)
+
+                if (!plugin.getConfiguration().chairBlocks.contains(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).getLocation()) > 1.5)
                     removeChair(p);
                 else {
                     addChair(p, getChair(p)); // For any new players.

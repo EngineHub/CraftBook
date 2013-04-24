@@ -306,7 +306,7 @@ public class MechanicListenerAdapter implements Listener {
     protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-        if(block.getLocation().distanceSquared(sourceBlock.getLocation()) < 1) //The same block, don't run.
+        if(block.getLocation().equals(sourceBlock.getLocation())) //The same block, don't run.
             return;
         for (MechanicManager manager : managerList)
             manager.dispatchBlockRedstoneChange(new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel));
@@ -327,7 +327,7 @@ public class MechanicListenerAdapter implements Listener {
             @Override
             public void run() {
 
-                for (MechanicManager manager : managerList) 
+                for (MechanicManager manager : managerList)
                     manager.enumerate(event.getChunk());
             }
         }, 2);

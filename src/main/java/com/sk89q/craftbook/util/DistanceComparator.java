@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -60,8 +60,9 @@ public class DistanceComparator<T extends BlockState> implements Comparator<Bloc
         Block b1 = o1.getBlock();
         Block b2 = o2.getBlock();
 
-        double dist1 = b1.getLocation().distanceSquared(BukkitUtil.toLocation(b1.getWorld(), origin));
-        double dist2 = b2.getLocation().distanceSquared(BukkitUtil.toLocation(b2.getWorld(), origin));
+
+        double dist1 = LocationUtil.getDistanceSquared(b1.getLocation(), BukkitUtil.toLocation(b1.getWorld(), origin));
+        double dist2 = LocationUtil.getDistanceSquared(b2.getLocation(), BukkitUtil.toLocation(b2.getWorld(), origin));
 
         if (dist1 < dist2) return -1;
         else if (dist1 > dist2) return 1;
