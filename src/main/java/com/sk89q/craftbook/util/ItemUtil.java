@@ -16,10 +16,6 @@ import com.sk89q.worldedit.blocks.ItemType;
 
 public class ItemUtil {
 
-    private ItemUtil() {
-
-    }
-
     /**
      * Add an itemstack to an existing itemstack.
      * 

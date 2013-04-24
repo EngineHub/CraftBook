@@ -146,7 +146,7 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.5.2", "1749");
         versionConverter.put("3.5.3", "1766");
         versionConverter.put("3.5.4", "1795");
-        versionConverter.put("3.5.5b1","1816"); 
+        versionConverter.put("3.5.5b1","1816");
         versionConverter.put("3.5.5", "1828");
         versionConverter.put("3.5.6", "1839");
         versionConverter.put("3.5.7", "1853");
@@ -156,6 +156,7 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.6b4", "1921");
         versionConverter.put("3.6",   "1955");
         versionConverter.put("3.6.1", "1999");
+        versionConverter.put("3.6.2", "2051");
     }
 
     public void registerManager(MechanicManager manager) {

@@ -1,3 +1,37 @@
+3.6.2
+* Fixed experimental right click support.
+* Optimized advanced data support in CustomCrafting.
+* Made 'T' EntityType explosive, not just TNT Carts.
++ Added 'R' EntityType for Rideable entities.
+* Fix Payment mechanic.
+* Improve Vehicle collision code. (Fixes a few boat/cart bugs)
+* Fix pipe inclusions/exlusions filters.
+* Fix pipes finding weird signs in weird places and using them.
+* Made pipes take priority for pistons, so that a pipe with pistons extending off of it will take priority.
+* Fix CraftBook triggering Cheat Protections for Incorrect Direction of right clicks.
++ Add delay option to FlameThrower IC.
++ Added amount filters to EntitySensor IC.
+* Fix AnimalBreeder.
+* Enhanced ChestStocker so it defaults to the block above the back block, not the back block.
+* Minor optimization to ContainerSensor.
+* Fix a few peculiarities with max stack sizes of less than 64.
+* Few tweaks to Driller IC.
+* Fix a few data detecting bugs with IC's and Pipes.
++ Added a configuration option to driller to allow or disallow it to break non-natural blocks.
+* Few balance tweaks to Cooking Pot.
+* Heavily optimize pipes.
++ Added pipe support to driller.
++ Added lore support to Custom Crafting.
+* Enhanced the checks to see if an entity is standing in a block.
++ Added support for entity spawner IC's to set a mobs name.
++ Added WIP WorldEdit support to IC creation. If you select a region with WorldEdit, and put [off] on an IC sign, it should use the region centre as an offset.
+* Convert PLC folder to a new folder format. (Will be used for future stuff)
+* Fix BetterPistons using signs out of reach that it shouldn't use.
+* Fix BlockReplacer replacing incorrect blocks.
+* Tweaked location calculations to always agree with block location config value.
++ Added option to tweak minecart fall speed modifiers. Allows for minecart jumps and flying carts.
+* Fix a rare memory leak that if a component(mech/circuits/vehicles) is disabled, and /cb reload is used that it stays loaded.
+
 3.6.1
 + Added a message that occurs if you are too far away and try to change a painting.
 * Fix Potion Inducer 'm' dissapearing.
