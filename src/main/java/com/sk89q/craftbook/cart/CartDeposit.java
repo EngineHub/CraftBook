@@ -54,7 +54,7 @@ public class CartDeposit extends CartMechanism {
         }
 
         Inventory cartinventory = ((StorageMinecart) cart).getInventory();
-        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(); 
+        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         // search for containers
         ArrayList<Chest> containers = RailUtil.getNearbyChests(blocks.base);
@@ -73,7 +73,7 @@ public class CartDeposit extends CartMechanism {
                     for(ItemInfo inf : items) {
                         if (inf.getId() < 0 || inf.getId() == item.getTypeId()) {
                             if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
-                                transferItems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                                transferItems.add(item.clone());
                                 cartinventory.remove(item);
                             }
                         }
@@ -92,7 +92,7 @@ public class CartDeposit extends CartMechanism {
 
             if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit")) {
                 CraftBookPlugin.inst().getLogger().info("collecting " + transferItems.size() + " item stacks");
-                for (ItemStack stack: transferItems) 
+                for (ItemStack stack: transferItems)
                     CraftBookPlugin.inst().getLogger().info("collecting " + stack.getAmount() + " items of type " + stack.getType().toString());
             }
 
@@ -135,7 +135,7 @@ public class CartDeposit extends CartMechanism {
                         for(ItemInfo inf : items) {
                             if (inf.getId() < 0 || inf.getId() == item.getTypeId())
                                 if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
-                                    transferitems.add(new ItemStack(item.getTypeId(), item.getAmount(), item.getDurability()));
+                                    transferitems.add(item.clone());
                                     containerinventory.remove(item);
                                 }
                         }
@@ -155,7 +155,7 @@ public class CartDeposit extends CartMechanism {
 
             if(CraftBookPlugin.isDebugFlagEnabled("cart-deposit")) {
                 CraftBookPlugin.inst().getLogger().info("depositing " + transferitems.size() + " stacks");
-                for (ItemStack stack: transferitems) 
+                for (ItemStack stack: transferitems)
                     CraftBookPlugin.inst().getLogger().info("depositing " + stack.getAmount() + " items oftype " + stack.getType().toString());
             }
 
