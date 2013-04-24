@@ -54,16 +54,28 @@ public class TopLevelCommands {
             sender.sendMessage("The CraftBook config has been reloaded.");
         }
 
-        @Command(aliases = "update", desc = "Updates CraftBook.")
+        @Command(aliases = "update", desc = "Updates CraftBook.", flags = "c", max = 0)
         @CommandPermissions("craftbook.update")
         public void update(CommandContext context, CommandSender sender) {
-            if(!CraftBookPlugin.inst().getConfiguration().updateNotifier || !CraftBookPlugin.inst().updateAvailable) {
-                sender.sendMessage("No updates are available!");
+
+            if(!CraftBookPlugin.inst().getConfiguration().updateNotifier) {
+                sender.sendMessage("Functionality disabled!");
                 return;
             }
-            Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
-            if(updater.getResult() == UpdateResult.NO_UPDATE)
-                sender.sendMessage("No updates are available!");
+
+            if (context.hasFlag('c')) {
+
+                CraftBookPlugin.inst().checkForUpdates();
+            } else {
+
+                if(!CraftBookPlugin.inst().updateAvailable) {
+                    sender.sendMessage("No updates are available!");
+                    return;
+                }
+                Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
+                if(updater.getResult() == UpdateResult.NO_UPDATE)
+                    sender.sendMessage("No updates are available!");
+            }
         }
 
         @Command(aliases = "about", desc = "Gives info about craftbook.")
@@ -97,7 +109,7 @@ public class TopLevelCommands {
                 sender.sendMessage(ChatColor.YELLOW + "Now uploading to Pastebin...");
                 PastebinPoster.paste(report.toString(), new PasteCallback() {
 
-                    @Override 
+                    @Override
                     public void handleSuccess(String url) {
                         // Hope we don't have a thread safety issue here
                         sender.sendMessage(ChatColor.YELLOW + "CraftBook report (1 hour): " + url);

@@ -277,53 +277,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(getConfiguration().updateNotifier) {
 
-            boolean exempt = false;
-
-            try {
-                int ver = Integer.parseInt(getDescription().getVersion().split("-")[0]);
-                if (ver < 1541) //Not valid prior to this version.
-                    exempt = true;
-            }
-            catch(Exception e) {
-                exempt = true;
-            }
-
-            if(!exempt) {
-                final Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
-                getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
-
-                    @Override
-                    public void run () {
-                        updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
-                        latestVersion = updater.getLatestVersionString(); // Get the latest version
-                        Bukkit.getLogger().info(latestVersion);
-                        updateSize = updater.getFileSize(); // Get latest size
-
-                        if(updateAvailable) {
-
-                            for (Player player : getServer().getOnlinePlayers()) {
-                                if (hasPermission(player, "craftbook.update")) {
-                                    player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
-                                    player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
-                                }
-                            }
-
-                            getServer().getPluginManager().registerEvents(new Listener() {
-                                @EventHandler
-                                public void onPlayerJoin (PlayerJoinEvent event) {
-                                    Player player = event.getPlayer();
-                                    if (hasPermission(player, "craftbook.update")) {
-                                        player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
-                                        player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
-                                    }
-                                }
-                            }, CraftBookPlugin.inst());
-                        }
-                    }
-                }, 10L);
-            } else {
-                getLogger().info("The Auto-Updater is disabled for your version!");
-            }
+            checkForUpdates();
         }
 
         if(getConfiguration().easterEggs) {
@@ -397,6 +351,51 @@ public class CraftBookPlugin extends JavaPlugin {
                 });
         } catch (Throwable e1) {
             BukkitUtil.printStacktrace(e1);
+        }
+    }
+
+    public void checkForUpdates() {
+
+        boolean exempt = false;
+
+        try {
+            int ver = Integer.parseInt(getDescription().getVersion().split("-")[0]);
+            if (ver < 1541) //Not valid prior to this version.
+                exempt = true;
+        }
+        catch(Exception e) {
+            exempt = true;
+        }
+
+        if(!exempt) {
+            final Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
+            updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
+            latestVersion = updater.getLatestVersionString(); // Get the latest version
+            getLogger().info(latestVersion + " is the latest version available, and the updatability of it is: " + updater.getResult().name());
+            updateSize = updater.getFileSize(); // Get latest size
+
+            if(updateAvailable) {
+
+                for (Player player : getServer().getOnlinePlayers()) {
+                    if (hasPermission(player, "craftbook.update")) {
+                        player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
+                        player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
+                    }
+                }
+
+                getServer().getPluginManager().registerEvents(new Listener() {
+                    @EventHandler
+                    public void onPlayerJoin (PlayerJoinEvent event) {
+                        Player player = event.getPlayer();
+                        if (hasPermission(player, "craftbook.update")) {
+                            player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
+                            player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
+                        }
+                    }
+                }, CraftBookPlugin.inst());
+            }
+        } else {
+            getLogger().info("The Auto-Updater is disabled for your version!");
         }
     }
 
