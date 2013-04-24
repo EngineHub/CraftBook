@@ -135,19 +135,14 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
-    public static boolean areItemsIdentical(ItemStack item, int type, byte data) {
+    public static boolean areItemsIdentical(ItemStack item, int type, byte data, short durability) {
 
-        return areItemsIdentical(item, new MaterialData(type, data));
+        return areItemsIdentical(item, new MaterialData(type, data), durability);
     }
 
-    public static boolean areItemsIdentical(ItemStack item, int type, short data) {
+    public static boolean areItemsIdentical(ItemStack item, MaterialData data, short durability) {
 
-        return areItemsIdentical(item, new MaterialData(type, (byte) data));
-    }
-
-    public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
-
-        return areItemsIdentical(item.getData(), data);
+        return areItemsIdentical(item.getData(), item.getDurability(), data, durability);
     }
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
@@ -155,12 +150,12 @@ public class ItemUtil {
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else
-            return areItemsIdentical(item.getData(), item2.getData());
+            return areItemsIdentical(item.getData(), item.getDurability(), item2.getData(), item2.getDurability());
     }
 
-    public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
+    public static boolean areItemsIdentical(MaterialData data, short dur, MaterialData comparedData, short comparedDur) {
 
-        return data.getItemTypeId() == comparedData.getItemTypeId() && data.getData() == data.getData();
+        return data.getItemTypeId() == comparedData.getItemTypeId() && data.getData() == data.getData() && dur == comparedDur;
     }
 
     public static void setItemTypeAndData(ItemStack item, int type, byte data) {
