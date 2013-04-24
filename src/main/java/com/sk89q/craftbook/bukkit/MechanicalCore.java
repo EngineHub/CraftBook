@@ -85,7 +85,7 @@ public class MechanicalCore implements LocalComponent {
     public void disable() {
 
         unregisterAllMechanics();
-        // Nothing to do at the current time
+        instance = null;
     }
 
     public CopyManager getCopyManager() {

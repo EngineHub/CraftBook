@@ -236,6 +236,7 @@ public class CircuitCore implements LocalComponent {
         unregisterAllMechanics();
         ICManager.emptyCache();
         icConfiguration.unload();
+        instance = null;
     }
 
     public File getFireworkFolder() {

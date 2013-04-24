@@ -93,7 +93,7 @@ public class VehicleCore implements LocalComponent {
     @Override
     public void disable() {
 
-        // Nothing to do at the current time
+        instance = null;
     }
 
     protected void registerEvents() {
