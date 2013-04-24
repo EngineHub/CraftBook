@@ -120,7 +120,21 @@ public class ICUtil {
 
                                 Vector offset = sign.getBlockVector().subtract(centre);
 
-                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + (offset.getX() == offset.getBlockX() ? offset.getBlockX() : offset.getX()) + ":" + (offset.getY() == offset.getBlockY() ? offset.getBlockY() : offset.getY()) + ":" + (offset.getZ() == offset.getBlockZ() ? offset.getBlockZ() : offset.getZ())));
+                                String x,y,z;
+
+                                x = Double.toString(offset.getX() == offset.getBlockX() ? offset.getBlockX() : offset.getX());
+                                if (x.endsWith(".0"))
+                                    x = x.substring(x.length() - 2);
+
+                                y = Double.toString(offset.getY() == offset.getBlockY() ? offset.getBlockY() : offset.getY());
+                                if (y.endsWith(".0"))
+                                    y = y.substring(y.length() - 2);
+
+                                z = Double.toString(offset.getZ() == offset.getBlockZ() ? offset.getBlockZ() : offset.getZ());
+                                if (z.endsWith(".0"))
+                                    z = z.substring(z.length() - 2);
+
+                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
                                 //} else if (selector instanceof SphereRegionSelector) {
 
                                 //TODO spherical reions.
