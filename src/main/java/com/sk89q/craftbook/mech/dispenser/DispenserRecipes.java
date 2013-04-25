@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,7 @@ public class DispenserRecipes implements Listener {
 
     private final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    private final ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+    private final HashSet<Recipe> recipes = new HashSet<Recipe>();
 
     private static DispenserRecipes instance;
 
@@ -34,6 +34,23 @@ public class DispenserRecipes implements Listener {
         addRecipe(new Cannon());
     }
 
+    /**
+     * Unloads the instanceof DispenserRecipes.
+     */
+    public static void unload() {
+
+        if(instance == null)
+            return;
+
+        instance.recipes.clear();
+        instance = null;
+    }
+
+    /**
+     * Gets the instance of this DispenserRecipe manager.
+     * 
+     * @return The instance
+     */
     public static DispenserRecipes inst() {
 
         return instance;

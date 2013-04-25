@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mech.ai;
 
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -10,7 +10,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class ZombieAIMechanic extends BaseAIMechanic implements TargetAIMechanic {
 
-    public ZombieAIMechanic(Entity entity) {
+    public ZombieAIMechanic(EntityType entity) {
 
         super(entity);
     }

@@ -86,6 +86,7 @@ public class MechanicalCore implements LocalComponent {
 
         unregisterAllMechanics();
         instance = null;
+        DispenserRecipes.unload();
     }
 
     public CopyManager getCopyManager() {

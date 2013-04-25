@@ -17,8 +17,8 @@ public class XPShooter extends ItemShooter {
 
         super(ItemID.BOTTLE_O_ENCHANTING, new int[] {
                 BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR,
-                ItemID.REDSTONE_DUST, ItemID.GLASS_BOTTLE,
-                ItemID.REDSTONE_DUST, BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR
+                ItemID.REDSTONE_DUST, ItemID.GLASS_BOTTLE, ItemID.REDSTONE_DUST,
+                BlockID.AIR, ItemID.REDSTONE_DUST, BlockID.AIR
         });
     }
 }

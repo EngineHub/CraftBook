@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.mech.ai;
 
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
 public class BaseAIMechanic {
 
-    public Entity entity;
+    public EntityType[] entityType;
 
-    public BaseAIMechanic(Entity entity) {
+    public BaseAIMechanic(EntityType ... entityType) {
 
-        this.entity = entity;
+        this.entityType = entityType;
     }
 }
