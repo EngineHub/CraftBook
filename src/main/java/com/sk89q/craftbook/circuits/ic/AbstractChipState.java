@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.ic;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -21,6 +22,8 @@ public abstract class AbstractChipState implements ChipState {
 
     protected AbstractChipState(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
 
+        // Check this here to prevent and handle future NPEs
+        Validate.notNull(sign, "Null ChangedSign found: " + source.toString());
         this.sign = sign;
         this.source = source;
         this.selfTriggered = selfTriggered;

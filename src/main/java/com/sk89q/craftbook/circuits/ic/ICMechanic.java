@@ -90,16 +90,22 @@ public class ICMechanic extends PersistentMechanic {
                 public void run() {
 
                     if (block.getTypeId() != BlockID.WALL_SIGN) return;
-                    ChipState chipState = family.detect(BukkitUtil.toWorldVector(source),
-                            BukkitUtil.toChangedSign(block));
-                    int cnt = 0;
-                    for (int i = 0; i < chipState.getInputCount(); i++) {
-                        if (chipState.isTriggered(i)) {
-                            cnt++;
+                    try {
+                        ChipState chipState = family.detect(BukkitUtil.toWorldVector(source),
+                                BukkitUtil.toChangedSign(block));
+                        int cnt = 0;
+                        for (int i = 0; i < chipState.getInputCount(); i++) {
+                            if (chipState.isTriggered(i)) {
+                                cnt++;
+                            }
                         }
-                    }
-                    if (cnt > 0) {
-                        ic.trigger(chipState);
+                        if (cnt > 0) {
+                            ic.trigger(chipState);
+                        }
+                    } catch (NullPointerException ex) {
+                        // Exclude these NPEs so that we don't spam consoles because of Bukkit
+                        if (ex.getMessage().contains("Null ChangedSign found")) return;
+                        ex.printStackTrace();
                     }
                 }
             };
