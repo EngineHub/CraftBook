@@ -20,6 +20,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -102,6 +103,13 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             return craft(disp);
         }
 
+        ItemStack result = CustomCrafting.craftItem(recipe);
+
+        if(!ItemUtil.isStackValid(result)) {
+            CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result!");
+            return false;
+        }
+
         ItemStack[] replace = new ItemStack[9];
         for (int i = 0; i < disp.getInventory().getContents().length; i++) {
             if (disp.getInventory().getContents()[i] == null) {
@@ -114,11 +122,11 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         boolean pipes = false;
 
-        if(Pipes.Factory.setupPipes(disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing()), disp.getBlock(), Arrays.asList(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult())) != null)
+        if(Pipes.Factory.setupPipes(disp.getBlock().getRelative(((org.bukkit.material.Dispenser) disp.getData()).getFacing()), disp.getBlock(), Arrays.asList(result)) != null)
             pipes = true;
 
         if (!pipes) {
-            disp.getInventory().addItem(CustomCrafting.craftItem(recipe) != null ? CustomCrafting.craftItem(recipe) : recipe.getResult());
+            disp.getInventory().addItem(result);
             for(int i = 0; i < recipe.getResult().getAmount(); i++)
                 disp.dispense();
         }

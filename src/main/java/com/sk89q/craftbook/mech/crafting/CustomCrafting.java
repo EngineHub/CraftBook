@@ -135,7 +135,7 @@ public class CustomCrafting implements Listener {
             }
         }
 
-        return null;
+        return recipe.getResult();
     }
 
     @SuppressWarnings("unchecked")
