@@ -127,7 +127,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         if (!pipes) {
             disp.getInventory().addItem(result);
-            for(int i = 0; i < recipe.getResult().getAmount(); i++)
+            for(int i = 0; i < result.getAmount(); i++)
                 disp.dispense();
         }
         disp.getInventory().setContents(replace);
