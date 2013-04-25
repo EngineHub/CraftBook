@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
@@ -45,5 +48,14 @@ public class EntityUtil {
             ((Damageable) ent).damage(((Damageable) ent).getHealth());
         else
             ent.remove();
+    }
+
+    public static org.bukkit.entity.EntityType[] parseEntityList(List<String> list) {
+
+        List<org.bukkit.entity.EntityType> ents = new ArrayList<org.bukkit.entity.EntityType>();
+        for(String s : list)
+            ents.add(org.bukkit.entity.EntityType.fromName(s));
+
+        return ents.toArray(new org.bukkit.entity.EntityType[ents.size()]);
     }
 }

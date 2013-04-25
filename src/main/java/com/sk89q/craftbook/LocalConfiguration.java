@@ -38,8 +38,8 @@ public abstract class LocalConfiguration {
     // Mechanics
     // Mechanics - AI
     public boolean aiEnabled;
-    public boolean aiZombieEnabled;
-    public boolean aiSkeletonEnabled;
+    public List<String> aiVisionEnabled;
+    public List<String> aiCritBowEnabled;
     // Mechanics - Ammeter
     public boolean ammeterEnabled;
     public int ammeterItem;

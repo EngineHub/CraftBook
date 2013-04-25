@@ -12,9 +12,10 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
 import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
-import com.sk89q.craftbook.mech.ai.SkeletonAIMechanic;
+import com.sk89q.craftbook.mech.ai.CriticalBotAIMechanic;
 import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
-import com.sk89q.craftbook.mech.ai.ZombieAIMechanic;
+import com.sk89q.craftbook.mech.ai.VisionAIMechanic;
+import com.sk89q.craftbook.util.EntityUtil;
 
 public class AIMechanic implements Listener {
 
@@ -24,12 +25,10 @@ public class AIMechanic implements Listener {
 
         if (!CraftBookPlugin.inst().getConfiguration().aiEnabled) return;
 
-        if (CraftBookPlugin.inst().getConfiguration().aiZombieEnabled) {
-            registerAIMechanic(new ZombieAIMechanic(EntityType.ZOMBIE));
-        }
-        if (CraftBookPlugin.inst().getConfiguration().aiSkeletonEnabled) {
-            registerAIMechanic(new SkeletonAIMechanic(EntityType.SKELETON));
-        }
+        if(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled.size() > 0)
+            registerAIMechanic(new VisionAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled)));
+        if (CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled.size() > 0)
+            registerAIMechanic(new CriticalBotAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

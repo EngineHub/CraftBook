@@ -27,8 +27,6 @@ circuits:
 mechanics:
     ai:
         enable: true
-        zombie-enable: true
-        skeleton-enable: true
     ammeter:
         enable: true
         item: 263
