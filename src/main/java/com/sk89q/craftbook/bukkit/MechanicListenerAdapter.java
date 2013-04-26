@@ -130,34 +130,36 @@ public class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        switch(event.getBlock().getTypeId()) {
+        if(!CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock().getLocation()) || CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled()) {
+            switch(event.getBlock().getTypeId()) {
 
-            case BlockID.REDSTONE_TORCH_ON:
-            case BlockID.REDSTONE_REPEATER_ON:
-            case BlockID.REDSTONE_BLOCK:
-            case BlockID.COMPARATOR_ON:
-                handleRedstoneForBlock(event.getBlock(), 15, 0);
-                break;
-            case BlockID.REDSTONE_WIRE:
-                if(event.getBlock().getData() > 0)
-                    handleRedstoneForBlock(event.getBlock(), event.getBlock().getData(), 0);
-                break;
-            case BlockID.LEVER:
-                if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                case BlockID.REDSTONE_TORCH_ON:
+                case BlockID.REDSTONE_REPEATER_ON:
+                case BlockID.REDSTONE_BLOCK:
+                case BlockID.COMPARATOR_ON:
                     handleRedstoneForBlock(event.getBlock(), 15, 0);
-                break;
-            case BlockID.WOODEN_BUTTON:
-            case BlockID.STONE_BUTTON:
-                if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
-                    handleRedstoneForBlock(event.getBlock(), 15, 0);
-                break;
-            case BlockID.STONE_PRESSURE_PLATE:
-            case BlockID.WOODEN_PRESSURE_PLATE:
-            case BlockID.PRESSURE_PLATE_HEAVY:
-            case BlockID.PRESSURE_PLATE_LIGHT:
-                if(((org.bukkit.material.PressurePlate) event.getBlock().getState().getData()).isPressed())
-                    handleRedstoneForBlock(event.getBlock(), 15, 0);
-                break;
+                    break;
+                case BlockID.REDSTONE_WIRE:
+                    if(event.getBlock().getData() > 0)
+                        handleRedstoneForBlock(event.getBlock(), event.getBlock().getData(), 0);
+                    break;
+                case BlockID.LEVER:
+                    if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                        handleRedstoneForBlock(event.getBlock(), 15, 0);
+                    break;
+                case BlockID.WOODEN_BUTTON:
+                case BlockID.STONE_BUTTON:
+                    if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                        handleRedstoneForBlock(event.getBlock(), 15, 0);
+                    break;
+                case BlockID.STONE_PRESSURE_PLATE:
+                case BlockID.WOODEN_PRESSURE_PLATE:
+                case BlockID.PRESSURE_PLATE_HEAVY:
+                case BlockID.PRESSURE_PLATE_LIGHT:
+                    if(((org.bukkit.material.PressurePlate) event.getBlock().getState().getData()).isPressed())
+                        handleRedstoneForBlock(event.getBlock(), 15, 0);
+                    break;
+            }
         }
 
         for (MechanicManager manager : managerList)
