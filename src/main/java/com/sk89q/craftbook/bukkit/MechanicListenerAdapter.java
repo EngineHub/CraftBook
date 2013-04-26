@@ -129,36 +129,39 @@ public class MechanicListenerAdapter implements Listener {
             ignoredEvents.remove(event);
             return;
         }
-        for (MechanicManager manager : managerList)
-            manager.dispatchBlockBreak(event);
-
-        BlockWorldVector v = BukkitUtil.toWorldVector(event.getBlock());
-
-        LocalWorld w = BukkitUtil.getLocalWorld(event.getBlock().getWorld());
-        int x = v.getBlockX();
-        int y = v.getBlockY();
-        int z = v.getBlockZ();
 
         switch(event.getBlock().getTypeId()) {
 
             case BlockID.REDSTONE_TORCH_ON:
+            case BlockID.REDSTONE_REPEATER_ON:
             case BlockID.REDSTONE_BLOCK:
-
-                handleDirectWireInput(new WorldVector(w, x - 1, y, z), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x + 1, y, z), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x, y, z - 1), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x, y, z + 1), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), event.getBlock(), 15, 0);
-                handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), event.getBlock(), 15, 0);
-
-                // Can be triggered from below
-                handleDirectWireInput(new WorldVector(w, x, y + 1, z), event.getBlock(), 15, 0);
-                return;
-            default:
-                return;
+            case BlockID.COMPARATOR_ON:
+                handleRedstoneForBlock(event.getBlock(), 15, 0);
+                break;
+            case BlockID.REDSTONE_WIRE:
+                if(event.getBlock().getData() > 0)
+                    handleRedstoneForBlock(event.getBlock(), event.getBlock().getData(), 0);
+                break;
+            case BlockID.LEVER:
+                if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                    handleRedstoneForBlock(event.getBlock(), 15, 0);
+                break;
+            case BlockID.WOODEN_BUTTON:
+            case BlockID.STONE_BUTTON:
+                if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                    handleRedstoneForBlock(event.getBlock(), 15, 0);
+                break;
+            case BlockID.STONE_PRESSURE_PLATE:
+            case BlockID.WOODEN_PRESSURE_PLATE:
+            case BlockID.PRESSURE_PLATE_HEAVY:
+            case BlockID.PRESSURE_PLATE_LIGHT:
+                if(((org.bukkit.material.PressurePlate) event.getBlock().getState().getData()).isPressed())
+                    handleRedstoneForBlock(event.getBlock(), 15, 0);
+                break;
         }
+
+        for (MechanicManager manager : managerList)
+            manager.dispatchBlockBreak(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -171,6 +174,12 @@ public class MechanicListenerAdapter implements Listener {
         int oldLevel = event.getOldCurrent();
         int newLevel = event.getNewCurrent();
         Block block = event.getBlock();
+
+        handleRedstoneForBlock(block, oldLevel, newLevel);
+    }
+
+    public void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
+
         World world = block.getWorld();
         BlockWorldVector v = BukkitUtil.toWorldVector(block);
 
