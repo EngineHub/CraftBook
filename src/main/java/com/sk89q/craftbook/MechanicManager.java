@@ -255,7 +255,7 @@ public class MechanicManager {
 
                     if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace())) {
                         player.printError("area.permissions");
-                        return 0; 
+                        return 0;
                     }
 
                     aMechanic.onRightClick(event);
@@ -596,7 +596,7 @@ public class MechanicManager {
                 if (state == null) continue;
                 if (state instanceof Sign) {
                     try {
-                        load(toWorldVector(state.getBlock()), null);
+                        load(BukkitUtil.toWorldVector(state.getBlock()), null);
                     } catch (InvalidMechanismException ignored) {
                     } catch (Throwable t) {
                         BukkitUtil.printStacktrace(t);

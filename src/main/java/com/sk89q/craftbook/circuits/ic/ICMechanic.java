@@ -60,7 +60,7 @@ public class ICMechanic extends PersistentMechanic {
     public boolean equals(Object o) {
 
         if(o instanceof ICMechanic)
-            return ((ICMechanic) o).id.equals(id) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ() && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle()) && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle());
+            return ((ICMechanic) o).id.equals(id) && pos.getWorld().equals(((ICMechanic) o).pos.getWorld()) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ() && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle()) && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle());
 
         return false;
     }
@@ -68,7 +68,7 @@ public class ICMechanic extends PersistentMechanic {
     @Override
     public int hashCode() {
 
-        return (pos.getBlockX() * 1103515245 + 12345 ^ pos.getBlockY() * 1103515245 + 12345 ^ pos.getBlockZ() * 1103515245 + 12345 ^ id.hashCode() * 1103515245 + 12345 ^ ic.getSignTitle().hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
+        return (pos.getBlockX() * 1103515245 + 12345 ^ pos.getBlockY() * 1103515245 + 12345 ^ pos.getBlockZ() * 1103515245 + 12345 ^ id.hashCode() * 1103515245 + 12345 ^ ic.getSignTitle().hashCode() * 1103515245 + 12345 ^ pos.getWorld().hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override
