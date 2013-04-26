@@ -29,11 +29,6 @@ public class BlockUtil {
         return false;
     }
 
-    public static void setBlockTypeAndData(Block block, int type, byte data) {
-
-        block.setTypeIdAndData(type, data, true);
-    }
-
     public static boolean isBlockSolid(int id) {
 
         switch (id) {
