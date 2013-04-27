@@ -219,14 +219,14 @@ public class Area extends AbstractMechanic {
                 setToggledState(sign, false);
             } else {
 
-                copy = CopyManager.getInstance().load(world, namespace, inactiveID);
-
                 // toggle the area on
                 // if this is a save area save it before toggling off
                 if (saveOnToggle && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
+                    copy = CopyManager.getInstance().load(world, namespace, inactiveID);
                     copy.copy();
                     CopyManager.getInstance().save(world, namespace, inactiveID, copy);
-                }
+                } else
+                    copy = CopyManager.getInstance().load(world, namespace, id);
                 copy.paste();
                 setToggledState(sign, true);
             }
@@ -275,14 +275,14 @@ public class Area extends AbstractMechanic {
                 setToggledState(sign, false);
             } else {
 
-                copy = CopyManager.getInstance().load(world, namespace, inactiveID);
-
                 // toggle the area on
                 // if this is a save area save it before toggling off
                 if (save && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
+                    copy = CopyManager.getInstance().load(world, namespace, inactiveID);
                     copy.copy();
                     CopyManager.getInstance().save(world, namespace, inactiveID, copy);
-                }
+                } else
+                    copy = CopyManager.getInstance().load(world, namespace, id);
                 copy.paste();
                 setToggledState(sign, true);
             }
