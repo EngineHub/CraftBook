@@ -87,7 +87,9 @@ public class RecipeCommands {
                 advancedData.put("extra-results", results.subList(1, results.size()));
 
             try {
-                MechanicalCore.inst().getCustomCrafting().addRecipe(new RecipeManager.Recipe(name, type, ingredients, results.get(0), advancedData));
+                RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, ingredients, results.get(0), advancedData);
+                RecipeManager.INSTANCE.addRecipe(recipe);
+                MechanicalCore.inst().getCustomCrafting().addRecipe(recipe);
                 RecipeManager.INSTANCE.save();
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {

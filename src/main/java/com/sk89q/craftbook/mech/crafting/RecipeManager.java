@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 public class RecipeManager extends LocalConfiguration {
 
     public static RecipeManager INSTANCE;
-    private Collection<Recipe> recipes;
+    private HashSet<Recipe> recipes;
     protected static YAMLProcessor config;
 
     public RecipeManager(YAMLProcessor config) {
@@ -34,7 +35,7 @@ public class RecipeManager extends LocalConfiguration {
     @Override
     public void load() {
 
-        recipes = new ArrayList<Recipe>();
+        recipes = new HashSet<Recipe>();
         if (config == null) {
             Bukkit.getLogger().severe("Failure loading recipes! Config is null!");
             return; // If the config is null, it can't continue.
@@ -65,6 +66,9 @@ public class RecipeManager extends LocalConfiguration {
             return; // If the config is null, it can't continue.
         }
 
+        config.clear();
+
+        config.addNode("crafting-recipes");
         for(Recipe recipe : recipes) {
             recipe.save();
         }
@@ -79,6 +83,11 @@ public class RecipeManager extends LocalConfiguration {
         return recipes;
     }
 
+    public void addRecipe(Recipe rec) {
+
+        recipes.add(rec);
+    }
+
     public static final class Recipe {
 
         private final String id;
@@ -88,6 +97,18 @@ public class RecipeManager extends LocalConfiguration {
         private HashMap<CraftingItemStack, Character> items;
         private CraftingItemStack result;
         private List<String> shape;
+
+        @Override
+        public boolean equals(Object o) {
+
+            return ((Recipe) o).getId() == id;
+        }
+
+        @Override
+        public int hashCode() {
+
+            return id.hashCode();
+        }
 
         public boolean hasAdvancedData() {
             if(ingredients != null) {
@@ -163,23 +184,31 @@ public class RecipeManager extends LocalConfiguration {
         @SuppressWarnings("unchecked")
         public void save() {
 
+            config.addNode("crafting-recipes." + id);
             config.setProperty("crafting-recipes." + id + ".type", type.name);
             if(type != RecipeType.SHAPED) {
+                HashMap<String, Integer> resz = new HashMap<String, Integer>();
                 for(CraftingItemStack stack : ingredients)
-                    config.setProperty("crafting-recipes." + id + ".ingredients." + stack.toString(), stack.getItemStack().getAmount());
+                    resz.put(stack.toString(), stack.getItemStack().getAmount());
+                config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
+                HashMap<String, Character> resz = new HashMap<String, Character>();
                 for(CraftingItemStack stack : items.keySet())
-                    config.setProperty("crafting-recipes." + id + ".ingredients." + stack.toString(), items.get(stack));
+                    resz.put(stack.toString(), items.get(stack));
+                config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }
 
-            config.setProperty("crafting-recipes." + id + ".results." + result.toString(), result.getItemStack().getAmount());
+            HashMap<String, Integer> resz = new HashMap<String, Integer>();
+            resz.put(result.toString(), result.getItemStack().getAmount());
             if(hasAdvancedData("extra-results")) {
 
-                ArrayList<CraftingItemStack> extraResults = (ArrayList<CraftingItemStack>) getAdvancedData("extra-results");
+                ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
+                extraResults.addAll((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
                 for(CraftingItemStack s : extraResults)
-                    config.setProperty("crafting-recipes." + id + ".results." + s.toString(), s.getItemStack().getAmount());
+                    resz.put(s.toString(), s.getItemStack().getAmount());
             }
+            config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
                 config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
         }
@@ -300,7 +329,8 @@ public class RecipeManager extends LocalConfiguration {
         }
 
         public void addAdvancedData(String key, Object data) {
-            Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
+            if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                CraftBookPlugin.logger().info("Adding advanced data of type: " + key + " to an ItemStack!");
             advancedData.put(key, data);
         }
     }

@@ -63,8 +63,11 @@ public class CustomCrafting implements Listener {
                     sh.addIngredient(is.getItemStack().getAmount(), is.getItemStack().getType(), is.getItemStack().getData().getData());
                 }
                 plugin.getServer().addRecipe(sh);
-                if(r.hasAdvancedData())
+                if(r.hasAdvancedData()) {
                     advancedRecipes.put(sh, r);
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("Adding a new recipe with advanced data!");
+                }
             } else if (r.getType() == RecipeManager.RecipeType.SHAPED) {
                 ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                 sh.shape(r.getShape());
@@ -72,16 +75,22 @@ public class CustomCrafting implements Listener {
                     sh.setIngredient(is.getValue().charValue(), is.getKey().getItemStack().getType(), is.getKey().getItemStack().getData().getData());
                 }
                 plugin.getServer().addRecipe(sh);
-                if(r.hasAdvancedData())
+                if(r.hasAdvancedData()) {
                     advancedRecipes.put(sh, r);
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("Adding a new recipe with advanced data!");
+                }
             } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
                 FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getItemStack().getType());
                 for (CraftingItemStack is : r.getIngredients()) {
                     sh.setInput(is.getItemStack().getType(), is.getItemStack().getData().getData());
                 }
                 plugin.getServer().addRecipe(sh);
-                if(r.hasAdvancedData())
+                if(r.hasAdvancedData()) {
                     advancedRecipes.put(sh, r);
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("Adding a new recipe with advanced data!");
+                }
             } else {
                 return false;
             }
@@ -108,6 +117,8 @@ public class CustomCrafting implements Listener {
         for(Recipe rec : advancedRecipes.keySet()) {
 
             if(checkRecipes(rec, event.getRecipe())) {
+                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                    plugin.getLogger().info("Found a recipe with custom data!");
                 if(advancedRecipes.get(rec).hasAdvancedData("permission-node")) {
                     if(!event.getWhoClicked().hasPermission((String) advancedRecipes.get(rec).getAdvancedData("permission-node"))) {
                         ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
