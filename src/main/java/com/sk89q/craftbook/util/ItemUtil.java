@@ -161,7 +161,7 @@ public class ItemUtil {
 
     public static boolean isStackValid(ItemStack item) {
 
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && item.getDurability() > 0;
+        return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && item.getDurability() >= 0;
     }
 
     public static boolean takeFromEntity(Item item) {
