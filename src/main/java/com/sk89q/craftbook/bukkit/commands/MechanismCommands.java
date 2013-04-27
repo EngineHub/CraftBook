@@ -22,7 +22,7 @@ public class MechanismCommands {
 
     }
 
-    @Command(aliases = {"recipe", "cb_recipe", "recipes"}, desc = "Commands to manage Craftbook Custom Recipes")
+    @Command(aliases = {"recp", "recps"}, desc = "Commands to manage Craftbook Custom Recipes")
     @NestedCommand(RecipeCommands.class)
     public void recipe(CommandContext context, CommandSender sender) {
 
