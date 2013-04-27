@@ -47,10 +47,8 @@ public class AreaCommands {
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private LocalConfiguration config = plugin.getConfiguration();
 
-    @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id>", flags = "n:",
-            min = 1)
+    @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id>", flags = "n:", min = 1)
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
-
 
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrapPlayer((Player) sender);

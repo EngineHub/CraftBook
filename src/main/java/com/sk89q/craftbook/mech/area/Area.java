@@ -198,9 +198,12 @@ public class Area extends AbstractMechanic {
             String id = sign.getLine(2).replace("-", "").toLowerCase();
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
 
-            CuboidCopy copy = CopyManager.getInstance().load(world, namespace, id);
+            CuboidCopy copy;
 
             if (isToggledOn()) {
+
+                copy = CopyManager.getInstance().load(world, namespace, id);
+
                 // if this is a save area save it before toggling off
                 if (saveOnToggle) {
                     copy.copy();
@@ -215,6 +218,9 @@ public class Area extends AbstractMechanic {
                 }
                 setToggledState(sign, false);
             } else {
+
+                copy = CopyManager.getInstance().load(world, namespace, inactiveID);
+
                 // toggle the area on
                 // if this is a save area save it before toggling off
                 if (saveOnToggle && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
@@ -248,9 +254,12 @@ public class Area extends AbstractMechanic {
             String id = sign.getLine(2).replace("-", "").toLowerCase();
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
 
-            CuboidCopy copy = CopyManager.getInstance().load(world, namespace, id);
+            CuboidCopy copy;
 
             if (toggleOn) {
+
+                copy = CopyManager.getInstance().load(world, namespace, id);
+
                 // if this is a save area save it before toggling off
                 if (save) {
                     copy.copy();
@@ -265,6 +274,9 @@ public class Area extends AbstractMechanic {
                 }
                 setToggledState(sign, false);
             } else {
+
+                copy = CopyManager.getInstance().load(world, namespace, inactiveID);
+
                 // toggle the area on
                 // if this is a save area save it before toggling off
                 if (save && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
