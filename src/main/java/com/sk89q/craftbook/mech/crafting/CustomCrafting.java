@@ -42,7 +42,7 @@ public class CustomCrafting implements Listener {
     public CustomCrafting() {
 
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml", false);
-        recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
+        recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
         int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection) {
@@ -50,7 +50,7 @@ public class CustomCrafting implements Listener {
                 if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPELESS) {
                     ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
                     for (CraftingItemStack is : r.getIngredients()) {
-                        sh.addIngredient(is.getAmount(), is.getMaterial(), is.getData());
+                        sh.addIngredient(is.getItemStack().getAmount(), is.getItemStack().getType(), is.getItemStack().getData().getData());
                     }
                     plugin.getServer().addRecipe(sh);
                     if(r.hasAdvancedData())
@@ -59,15 +59,15 @@ public class CustomCrafting implements Listener {
                     ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
                     sh.shape(r.getShape());
                     for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                        sh.setIngredient(is.getValue().charValue(), is.getKey().getMaterial(), is.getKey().getData());
+                        sh.setIngredient(is.getValue().charValue(), is.getKey().getItemStack().getType(), is.getKey().getItemStack().getData().getData());
                     }
                     plugin.getServer().addRecipe(sh);
                     if(r.hasAdvancedData())
                         advancedRecipes.put(sh, r);
                 } else if (r.getType() == RecipeManager.Recipe.RecipeType.FURNACE) {
-                    FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getMaterial());
+                    FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getItemStack().getType());
                     for (CraftingItemStack is : r.getIngredients()) {
-                        sh.setInput(is.getMaterial(), is.getData());
+                        sh.setInput(is.getItemStack().getType(), is.getItemStack().getData().getData());
                     }
                     plugin.getServer().addRecipe(sh);
                     if(r.hasAdvancedData())
@@ -80,8 +80,7 @@ public class CustomCrafting implements Listener {
                 recipes++;
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().severe("Corrupt or invalid recipe!");
-                plugin.getLogger().severe("Please either delete custom-crafting.yml, " +
-                        "" + "or fix the issues with your recipes file!");
+                plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
                 BukkitUtil.printStacktrace(e);
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load recipe!");
@@ -128,8 +127,8 @@ public class CustomCrafting implements Listener {
     }
 
     public static ItemStack craftItem(Recipe recipe) {
-        for(Recipe rec : advancedRecipes.keySet()) {
 
+        for(Recipe rec : advancedRecipes.keySet()) {
             if(checkRecipes(rec, recipe)) {
                 return applyAdvancedEffects(recipe.getResult(),rec);
             }
@@ -140,7 +139,12 @@ public class CustomCrafting implements Listener {
 
     @SuppressWarnings("unchecked")
     private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
+
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
+
+        if(recipe == null)
+            return stack;
+
         ItemStack res = stack.clone();
         if(recipe.getResult().hasAdvancedData("name")) {
             ItemMeta meta = res.getItemMeta();
@@ -158,9 +162,11 @@ public class CustomCrafting implements Listener {
     private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
 
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
-            if(rec1.getClass().getName().equalsIgnoreCase(rec2.getClass().getName())) {
+            if(rec1.getClass() == rec2.getClass()) {
                 if(rec1 instanceof ShapedRecipe) {
-                    if(((ShapedRecipe) rec1).getShape().length == ((ShapedRecipe) rec2).getShape().length) {
+                    ShapedRecipe recipe1 = (ShapedRecipe) rec1;
+                    ShapedRecipe recipe2 = (ShapedRecipe) rec2;
+                    if(recipe1.getShape().length == recipe2.getShape().length) {
                         if(VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec1).getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec2).getIngredientMap().values()).size())
                             return false;
                         List<ItemStack> test = new ArrayList<ItemStack>();
@@ -168,23 +174,24 @@ public class CustomCrafting implements Listener {
                         test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
                         if(test.size() == 0)
                             return true;
-                        if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec2).getIngredientMap().values())) && test.size() > 0)
+                        if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values())) && test.size() > 0)
                             return false;
                         if(test.size() > 0)
                             return false;
                     }
-                }
-                else if(rec1 instanceof ShapelessRecipe) {
+                } else if(rec1 instanceof ShapelessRecipe) {
 
-                    if(VerifyUtil.withoutNulls(((ShapelessRecipe) rec1).getIngredientList()).size() != VerifyUtil.withoutNulls(((ShapelessRecipe) rec2).getIngredientList()).size())
+                    ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
+                    ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
+
+                    if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size())
                         return false;
 
                     List<ItemStack> test = new ArrayList<ItemStack>();
-                    test.addAll(((ShapelessRecipe) rec1).getIngredientList());
-                    test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
+                    test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
                     if(test.size() == 0)
                         return true;
-                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(((ShapelessRecipe) rec2).getIngredientList())) && test.size() > 0)
+                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0)
                         return false;
                     if(test.size() > 0)
                         return false;

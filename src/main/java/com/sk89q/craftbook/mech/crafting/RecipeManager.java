@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -23,13 +23,11 @@ public class RecipeManager extends LocalConfiguration {
     public static RecipeManager INSTANCE;
     private Collection<Recipe> recipes;
     protected final YAMLProcessor config;
-    protected final Logger logger;
 
-    public RecipeManager(YAMLProcessor config, Logger logger) {
+    public RecipeManager(YAMLProcessor config) {
 
         INSTANCE = this;
         this.config = config;
-        this.logger = logger;
         load();
     }
 
@@ -54,7 +52,7 @@ public class RecipeManager extends LocalConfiguration {
                 try {
                     recipes.add(new Recipe(key, config));
                 } catch (InvalidCraftingException e) {
-                    logger.warning(e.getMessage());
+                    BukkitUtil.printStacktrace(e);
                 }
             }
         }
@@ -78,12 +76,12 @@ public class RecipeManager extends LocalConfiguration {
 
         public boolean hasAdvancedData() {
             for(CraftingItemStack stack : ingredients)
-                if(!stack.hasAdvancedData())
+                if(stack.hasAdvancedData())
                     return true;
             for(CraftingItemStack stack : items.keySet())
-                if(!stack.hasAdvancedData())
+                if(stack.hasAdvancedData())
                     return true;
-            if(!result.hasAdvancedData())
+            if(result.hasAdvancedData())
                 return true;
 
             return !advancedData.isEmpty();
@@ -104,7 +102,7 @@ public class RecipeManager extends LocalConfiguration {
             if (type != RecipeType.SHAPED) {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
-                items = getHashItems("crafting-recipes." + id + ".ingredients");
+                items = getShapeIngredients("crafting-recipes." + id + ".ingredients");
                 shape = config.getStringList("crafting-recipes." + id + ".shape", Arrays.asList(""));
             }
             Iterator<CraftingItemStack> iterator = getItems("crafting-recipes." + id + ".results").iterator();
@@ -125,7 +123,7 @@ public class RecipeManager extends LocalConfiguration {
                 addAdvancedData("permission-node", permNode);
         }
 
-        private HashMap<CraftingItemStack, Character> getHashItems(String path) {
+        private HashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
 
             HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
             try {
@@ -141,18 +139,18 @@ public class RecipeManager extends LocalConfiguration {
                         material = Material.getMaterial(split[0].toUpperCase());
                     }
                     if (material != null) {
-                        CraftingItemStack itemStack = new CraftingItemStack(material);
+                        ItemStack stack = new ItemStack(material);
                         if (split.length > 1) {
-                            itemStack.setData(Short.parseShort(split[1]));
+                            stack.setDurability(Short.parseShort(split[1]));
                         } else {
-                            itemStack.setData((short) 0);
+                            stack.setDurability((short) 0);
                         }
-                        itemStack.setAmount(1);
-                        items.put(itemStack, config.getString(path + "." + item, "a").charAt(0));
+                        stack.setAmount(1);
+                        items.put(new CraftingItemStack(stack), config.getString(path + "." + item, "a").charAt(0));
                     }
                 }
             } catch (Exception e) {
-                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
+                CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
                 BukkitUtil.printStacktrace(e);
             }
             return items;
@@ -175,13 +173,14 @@ public class RecipeManager extends LocalConfiguration {
                         material = Material.getMaterial(split[0].toUpperCase());
                     }
                     if (material != null) {
-                        CraftingItemStack itemStack = new CraftingItemStack(material);
+                        ItemStack stack = new ItemStack(material);
                         if (split.length > 1) {
-                            itemStack.setData(Short.parseShort(split[1]));
+                            stack.setDurability(Short.parseShort(split[1]));
                         } else {
-                            itemStack.setData((short) 0);
+                            stack.setDurability((short) 0);
                         }
-                        itemStack.setAmount(config.getInt(path + "." + item, 1));
+                        stack.setAmount(config.getInt(path + "." + item, 1));
+                        CraftingItemStack itemStack = new CraftingItemStack(stack);
                         if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 1) {
                             itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))[1]);
                         }
@@ -192,7 +191,7 @@ public class RecipeManager extends LocalConfiguration {
                     }
                 }
             } catch (Exception e) {
-                Bukkit.getLogger().severe("An error occured generating ingredients for recipe: " + id);
+                CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
                 BukkitUtil.printStacktrace(e);
             }
             return items;
