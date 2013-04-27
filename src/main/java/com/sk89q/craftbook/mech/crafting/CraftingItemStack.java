@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
 
 /**
@@ -36,13 +37,21 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     public void addAdvancedData(String key, Object data) {
-        Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
+        if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+            Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
         advancedData.put(key, data);
     }
 
     public CraftingItemStack(ItemStack item) {
 
         this.item = item;
+        if(item.hasItemMeta()) { //We have some advanced data to set.
+
+            if(item.getItemMeta().hasDisplayName())
+                addAdvancedData("name", item.getItemMeta().getDisplayName());
+            if(item.getItemMeta().hasLore())
+                addAdvancedData("lore", item.getItemMeta().getLore());
+        }
     }
 
     public ItemStack getItemStack() {

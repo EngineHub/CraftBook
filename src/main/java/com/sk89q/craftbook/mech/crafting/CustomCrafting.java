@@ -118,7 +118,7 @@ public class CustomCrafting implements Listener {
 
             if(checkRecipes(rec, event.getRecipe())) {
                 if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
-                    plugin.getLogger().info("Found a recipe with custom data!");
+                    plugin.getLogger().info("A recipe with custom data is being crafted!");
                 if(advancedRecipes.get(rec).hasAdvancedData("permission-node")) {
                     if(!event.getWhoClicked().hasPermission((String) advancedRecipes.get(rec).getAdvancedData("permission-node"))) {
                         ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
