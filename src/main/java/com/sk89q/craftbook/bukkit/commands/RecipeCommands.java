@@ -14,7 +14,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicalCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.CraftingItemStack;
-import com.sk89q.craftbook.mech.crafting.InvalidCraftingException;
 import com.sk89q.craftbook.mech.crafting.RecipeManager;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -87,10 +86,11 @@ public class RecipeCommands {
             if(results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
 
-
             try {
                 MechanicalCore.inst().getCustomCrafting().addRecipe(new RecipeManager.Recipe(name, type, ingredients, results.get(0), advancedData));
-            } catch (InvalidCraftingException e) {
+                RecipeManager.INSTANCE.save();
+                player.print("Successfully added a new " + type.name() + " recipe!");
+            } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
                 BukkitUtil.printStacktrace(e);
             }

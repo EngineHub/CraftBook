@@ -90,12 +90,16 @@ public class RecipeManager extends LocalConfiguration {
         private List<String> shape;
 
         public boolean hasAdvancedData() {
-            for(CraftingItemStack stack : ingredients)
-                if(stack.hasAdvancedData())
-                    return true;
-            for(CraftingItemStack stack : items.keySet())
-                if(stack.hasAdvancedData())
-                    return true;
+            if(ingredients != null) {
+                for(CraftingItemStack stack : ingredients)
+                    if(stack.hasAdvancedData())
+                        return true;
+            }
+            if(items != null) {
+                for(CraftingItemStack stack : items.keySet())
+                    if(stack.hasAdvancedData())
+                        return true;
+            }
             if(result.hasAdvancedData())
                 return true;
 

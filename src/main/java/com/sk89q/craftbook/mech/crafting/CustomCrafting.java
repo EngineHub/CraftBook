@@ -104,8 +104,6 @@ public class CustomCrafting implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
 
-        if(!ItemUtil.isStackValid(event.getCurrentItem()))
-            return;
         ItemStack bits = null;
         for(Recipe rec : advancedRecipes.keySet()) {
 
@@ -114,6 +112,7 @@ public class CustomCrafting implements Listener {
                     if(!event.getWhoClicked().hasPermission((String) advancedRecipes.get(rec).getAdvancedData("permission-node"))) {
                         ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
                         event.setCancelled(true);
+                        return;
                     }
                 }
                 if(advancedRecipes.get(rec).hasAdvancedData("extra-results")) {
