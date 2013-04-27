@@ -22,6 +22,12 @@ public class MechanismCommands {
 
     }
 
+    @Command(aliases = {"recipe"}, desc = "Commands to manage Craftbook Custom Recipes")
+    @NestedCommand(RecipeCommands.class)
+    public void recipe(CommandContext context, CommandSender sender) {
+
+    }
+
     @Command(aliases = {"cauldron"}, desc = "Commands to manage the Craftbook Cauldron")
     @NestedCommand(CauldronCommands.class)
     public void cauldron(CommandContext context, CommandSender sender) {

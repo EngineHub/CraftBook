@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.crafting;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -91,5 +92,25 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
             return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public String toString() {
+
+        String me = getItemStack().getType().name();
+        if(getItemStack().getDurability() > 0)
+            me = me + ":" + getItemStack().getDurability();
+
+        if(hasAdvancedData("name"))
+            me = me + "|" + getAdvancedData("name");
+
+        if(hasAdvancedData("lore")) {
+            List<String> list = (List<String>)getAdvancedData("lore");
+            for(String s : list)
+                me = me + "|" + s;
+        }
+
+        return me;
     }
 }

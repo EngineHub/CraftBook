@@ -22,12 +22,12 @@ public class RecipeManager extends LocalConfiguration {
 
     public static RecipeManager INSTANCE;
     private Collection<Recipe> recipes;
-    protected final YAMLProcessor config;
+    protected static YAMLProcessor config;
 
     public RecipeManager(YAMLProcessor config) {
 
         INSTANCE = this;
-        this.config = config;
+        RecipeManager.config = config;
         load();
     }
 
@@ -58,6 +58,22 @@ public class RecipeManager extends LocalConfiguration {
         }
     }
 
+    public void save() {
+
+        if (config == null) {
+            Bukkit.getLogger().severe("Failure saving recipes! Config is null!");
+            return; // If the config is null, it can't continue.
+        }
+
+        for(Recipe recipe : recipes) {
+            recipe.save();
+        }
+
+        config.save();
+
+        load();
+    }
+
     public Collection<Recipe> getRecipes() {
 
         return recipes;
@@ -66,7 +82,6 @@ public class RecipeManager extends LocalConfiguration {
     public static final class Recipe {
 
         private final String id;
-        private final YAMLProcessor config;
 
         private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
@@ -90,10 +105,28 @@ public class RecipeManager extends LocalConfiguration {
         private Recipe(String id, YAMLProcessor config) throws InvalidCraftingException {
 
             this.id = id;
-            this.config = config;
             ingredients = new ArrayList<CraftingItemStack>();
             items = new HashMap<CraftingItemStack, Character>();
             load();
+        }
+
+        public Recipe(String id, RecipeType type, HashMap<CraftingItemStack, Character> items, List<String> shape, CraftingItemStack result, HashMap<String, Object> advancedData) throws InvalidCraftingException {
+
+            this.id = id;
+            this.type = type;
+            this.items = items;
+            this.shape = shape;
+            this.result = result;
+            this.advancedData = advancedData;
+        }
+
+        public Recipe(String id, RecipeType type, List<CraftingItemStack> ingredients, CraftingItemStack result, HashMap<String, Object> advancedData) throws InvalidCraftingException {
+
+            this.id = id;
+            this.type = type;
+            this.ingredients = ingredients;
+            this.result = result;
+            this.advancedData = advancedData;
         }
 
         private void load() throws InvalidCraftingException {
@@ -121,6 +154,30 @@ public class RecipeManager extends LocalConfiguration {
             String permNode = config.getString("crafting-recipes." + id + ".permission-node", null);
             if (permNode != null)
                 addAdvancedData("permission-node", permNode);
+        }
+
+        @SuppressWarnings("unchecked")
+        public void save() {
+
+            config.setProperty("crafting-recipes." + id + ".type", type.name);
+            if(type != RecipeType.SHAPED) {
+                for(CraftingItemStack stack : ingredients)
+                    config.setProperty("crafting-recipes." + id + ".ingredients." + stack.toString(), stack.getItemStack().getAmount());
+            } else {
+                for(CraftingItemStack stack : items.keySet())
+                    config.setProperty("crafting-recipes." + id + ".ingredients." + stack.toString(), items.get(stack));
+                config.setProperty("crafting-recipes." + id + ".shape", shape);
+            }
+
+            config.setProperty("crafting-recipes." + id + ".results." + result.toString(), result.getItemStack().getAmount());
+            if(hasAdvancedData("extra-results")) {
+
+                ArrayList<CraftingItemStack> extraResults = (ArrayList<CraftingItemStack>) getAdvancedData("extra-results");
+                for(CraftingItemStack s : extraResults)
+                    config.setProperty("crafting-recipes." + id + ".results." + s.toString(), s.getItemStack().getAmount());
+            }
+            if(hasAdvancedData("permission-node"))
+                config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
         }
 
         private HashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
@@ -227,36 +284,6 @@ public class RecipeManager extends LocalConfiguration {
             return result;
         }
 
-        public enum RecipeType {
-            SHAPELESS("Shapeless"), FURNACE("Furnace"), SHAPED("Shaped");
-
-            private String name;
-
-            private RecipeType(String name) {
-
-                this.name = name;
-            }
-
-            public String getName() {
-
-                return name;
-            }
-
-            public static RecipeType getTypeFromName(String name) {
-
-                if(name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
-                    CraftBookPlugin.logger().warning("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
-                    return SHAPED;
-                }
-
-                for (RecipeType t : RecipeType.values()) {
-                    if (t.getName().equalsIgnoreCase(name))
-                        return t;
-                }
-                return SHAPELESS; // Default to shapeless
-            }
-        }
-
         //Advanced data
         private HashMap<String, Object> advancedData = new HashMap<String, Object>();
 
@@ -271,6 +298,36 @@ public class RecipeManager extends LocalConfiguration {
         public void addAdvancedData(String key, Object data) {
             Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
             advancedData.put(key, data);
+        }
+    }
+
+    public enum RecipeType {
+        SHAPELESS("Shapeless"), FURNACE("Furnace"), SHAPED("Shaped");
+
+        private String name;
+
+        private RecipeType(String name) {
+
+            this.name = name;
+        }
+
+        public String getName() {
+
+            return name;
+        }
+
+        public static RecipeType getTypeFromName(String name) {
+
+            if(name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
+                CraftBookPlugin.logger().warning("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
+                return SHAPED;
+            }
+
+            for (RecipeType t : RecipeType.values()) {
+                if (t.getName().equalsIgnoreCase(name))
+                    return t;
+            }
+            return SHAPELESS; // Default to shapeless
         }
     }
 }

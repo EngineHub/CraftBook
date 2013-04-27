@@ -46,48 +46,58 @@ public class CustomCrafting implements Listener {
         Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
         int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection) {
-            try {
-                if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPELESS) {
-                    ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
-                    for (CraftingItemStack is : r.getIngredients()) {
-                        sh.addIngredient(is.getItemStack().getAmount(), is.getItemStack().getType(), is.getItemStack().getData().getData());
-                    }
-                    plugin.getServer().addRecipe(sh);
-                    if(r.hasAdvancedData())
-                        advancedRecipes.put(sh, r);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.SHAPED) {
-                    ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
-                    sh.shape(r.getShape());
-                    for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
-                        sh.setIngredient(is.getValue().charValue(), is.getKey().getItemStack().getType(), is.getKey().getItemStack().getData().getData());
-                    }
-                    plugin.getServer().addRecipe(sh);
-                    if(r.hasAdvancedData())
-                        advancedRecipes.put(sh, r);
-                } else if (r.getType() == RecipeManager.Recipe.RecipeType.FURNACE) {
-                    FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getItemStack().getType());
-                    for (CraftingItemStack is : r.getIngredients()) {
-                        sh.setInput(is.getItemStack().getType(), is.getItemStack().getData().getData());
-                    }
-                    plugin.getServer().addRecipe(sh);
-                    if(r.hasAdvancedData())
-                        advancedRecipes.put(sh, r);
-                } else {
-                    continue;
-                }
-                plugin.getLogger().info("Registered a new " + r.getType().toString().toLowerCase() + " recipe!");
-
+            if(addRecipe(r))
                 recipes++;
-            } catch (IllegalArgumentException e) {
-                plugin.getLogger().severe("Corrupt or invalid recipe!");
-                plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
-                BukkitUtil.printStacktrace(e);
-            } catch (Exception e) {
-                plugin.getLogger().severe("Failed to load recipe!");
-                BukkitUtil.printStacktrace(e);
-            }
         }
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");
+    }
+
+    /**
+     * Adds a recipe to the manager.
+     */
+    public boolean addRecipe(RecipeManager.Recipe r) {
+        try {
+            if (r.getType() == RecipeManager.RecipeType.SHAPELESS) {
+                ShapelessRecipe sh = new ShapelessRecipe(r.getResult().getItemStack());
+                for (CraftingItemStack is : r.getIngredients()) {
+                    sh.addIngredient(is.getItemStack().getAmount(), is.getItemStack().getType(), is.getItemStack().getData().getData());
+                }
+                plugin.getServer().addRecipe(sh);
+                if(r.hasAdvancedData())
+                    advancedRecipes.put(sh, r);
+            } else if (r.getType() == RecipeManager.RecipeType.SHAPED) {
+                ShapedRecipe sh = new ShapedRecipe(r.getResult().getItemStack());
+                sh.shape(r.getShape());
+                for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet()) {
+                    sh.setIngredient(is.getValue().charValue(), is.getKey().getItemStack().getType(), is.getKey().getItemStack().getData().getData());
+                }
+                plugin.getServer().addRecipe(sh);
+                if(r.hasAdvancedData())
+                    advancedRecipes.put(sh, r);
+            } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
+                FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getItemStack().getType());
+                for (CraftingItemStack is : r.getIngredients()) {
+                    sh.setInput(is.getItemStack().getType(), is.getItemStack().getData().getData());
+                }
+                plugin.getServer().addRecipe(sh);
+                if(r.hasAdvancedData())
+                    advancedRecipes.put(sh, r);
+            } else {
+                return false;
+            }
+            plugin.getLogger().info("Registered a new " + r.getType().toString().toLowerCase() + " recipe!");
+
+            return true;
+        } catch (IllegalArgumentException e) {
+            plugin.getLogger().severe("Corrupt or invalid recipe!");
+            plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
+            BukkitUtil.printStacktrace(e);
+        } catch (Exception e) {
+            plugin.getLogger().severe("Failed to load recipe!");
+            BukkitUtil.printStacktrace(e);
+        }
+
+        return false;
     }
 
     @SuppressWarnings("unchecked")

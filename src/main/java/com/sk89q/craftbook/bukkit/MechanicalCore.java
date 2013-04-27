@@ -53,6 +53,7 @@ public class MechanicalCore implements LocalComponent {
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private final CopyManager copyManager = new CopyManager();
     private MechanicManager manager;
+    private CustomCrafting customCrafting;
 
     public static boolean isEnabled() {
 
@@ -92,6 +93,11 @@ public class MechanicalCore implements LocalComponent {
     public CopyManager getCopyManager() {
 
         return copyManager;
+    }
+
+    public CustomCrafting getCustomCrafting() {
+
+        return customCrafting;
     }
 
     private void registerMechanics() {
@@ -139,7 +145,7 @@ public class MechanicalCore implements LocalComponent {
         BukkitConfiguration config = plugin.getConfiguration();
 
         if (config.customCraftingEnabled) {
-            server.getPluginManager().registerEvents(new CustomCrafting(), plugin);
+            server.getPluginManager().registerEvents(customCrafting = new CustomCrafting(), plugin);
         }
         if (config.customDispensingEnabled) {
             server.getPluginManager().registerEvents(new DispenserRecipes(), plugin);
