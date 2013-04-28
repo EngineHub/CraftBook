@@ -15,7 +15,18 @@ public class CriticalBotAIMechanic extends BaseAIMechanic implements BowShotAIMe
     @Override
     public void onBowShot(EntityShootBowEvent event) {
 
-        if (CraftBookPlugin.inst().getRandom().nextInt(30) > 25)
+        int amount = 0;
+        switch(event.getEntity().getWorld().getDifficulty()) {
+            case EASY:
+                amount = 100;
+            case HARD:
+                amount = 20;
+            case NORMAL:
+                amount = 50;
+            case PEACEFUL:
+                return;
+        }
+        if (CraftBookPlugin.inst().getRandom().nextInt(amount) > 15)
             event.getProjectile().setFireTicks(5000);
     }
 }
