@@ -220,6 +220,7 @@ public class RecipeManager extends LocalConfiguration {
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
+                    item = item.replace("'", "");
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -253,6 +254,7 @@ public class RecipeManager extends LocalConfiguration {
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
+                    item = item.replace("'", "");
                     if (item == null || item.isEmpty()) continue;
                     item = RegexUtil.PIPE_PATTERN.split(item)[0];
                     String[] split = RegexUtil.COLON_PATTERN.split(item);

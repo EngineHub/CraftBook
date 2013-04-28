@@ -121,15 +121,20 @@ public class CustomCrafting implements Listener {
             if(checkRecipes(rec, event.getRecipe())) {
                 if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
                     plugin.getLogger().info("A recipe with custom data is being crafted!");
-                if(advancedRecipes.get(rec).hasAdvancedData("permission-node")) {
-                    if(!event.getWhoClicked().hasPermission((String) advancedRecipes.get(rec).getAdvancedData("permission-node"))) {
+                RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                if(recipe.hasAdvancedData("permission-node")) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("A recipe with permission nodes detected!");
+                    if(!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
                         ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
                         event.setCancelled(true);
                         return;
                     }
                 }
-                if(advancedRecipes.get(rec).hasAdvancedData("extra-results")) {
-                    ArrayList<CraftingItemStack> stacks = (ArrayList<CraftingItemStack>) advancedRecipes.get(rec).getAdvancedData("extra-results");
+                if(recipe.hasAdvancedData("extra-results")) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("A recipe with extra results detected!");
+                    ArrayList<CraftingItemStack> stacks = (ArrayList<CraftingItemStack>) recipe.getAdvancedData("extra-results");
                     for(CraftingItemStack stack : stacks) {
                         HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
                         if(!leftovers.isEmpty()) {
@@ -184,43 +189,52 @@ public class CustomCrafting implements Listener {
     private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
 
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
-            if(rec1.getClass() == rec2.getClass()) {
-                if(rec1 instanceof ShapedRecipe) {
-                    ShapedRecipe recipe1 = (ShapedRecipe) rec1;
-                    ShapedRecipe recipe2 = (ShapedRecipe) rec2;
-                    if(recipe1.getShape().length == recipe2.getShape().length) {
-                        if(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values()).size())
-                            return false;
-                        List<ItemStack> test = new ArrayList<ItemStack>();
-                        test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
-                        test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
-                        if(test.size() == 0)
-                            return true;
-                        if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values())) && test.size() > 0)
-                            return false;
-                        if(test.size() > 0)
-                            return false;
-                    }
-                } else if(rec1 instanceof ShapelessRecipe) {
-
-                    ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
-                    ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
-
-                    if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size())
+            if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                CraftBookPlugin.logger().info("Recipe passed results test!");
+            if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
+                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                    CraftBookPlugin.logger().info("Shaped recipe!");
+                ShapedRecipe recipe1 = (ShapedRecipe) rec1;
+                ShapedRecipe recipe2 = (ShapedRecipe) rec2;
+                if(recipe1.getShape().length == recipe2.getShape().length) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        CraftBookPlugin.logger().info("Same shape!");
+                    if(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values()).size())
                         return false;
-
                     List<ItemStack> test = new ArrayList<ItemStack>();
-                    test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
+                    test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
+                    test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
                     if(test.size() == 0)
                         return true;
-                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0)
+                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values())) && test.size() > 0)
                         return false;
                     if(test.size() > 0)
                         return false;
                 }
+            } else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
 
-                return true;
+                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                    CraftBookPlugin.logger().info("Shapeless recipe!");
+                ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
+                ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
+
+                if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size())
+                    return false;
+
+                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                    CraftBookPlugin.logger().info("Same size!");
+
+                List<ItemStack> test = new ArrayList<ItemStack>();
+                test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
+                if(test.size() == 0)
+                    return true;
+                if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0)
+                    return false;
+                if(test.size() > 0)
+                    return false;
             }
+
+            return true;
         }
 
         return false;
