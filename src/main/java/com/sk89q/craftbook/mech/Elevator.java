@@ -49,10 +49,6 @@ public class Elevator extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Elevator> {
 
-        public Factory() {
-
-        }
-
         /**
          * Explore around the trigger to find a functional elevator; throw if things look funny.
          *
@@ -87,7 +83,7 @@ public class Elevator extends AbstractMechanic {
          */
         @Override
         public Elevator detect(BlockWorldVector pt, LocalPlayer player,
-                               ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             Direction dir = isLift(sign);

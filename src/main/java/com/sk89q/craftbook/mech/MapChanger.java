@@ -20,10 +20,6 @@ public class MapChanger extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<MapChanger> {
 
-        public Factory() {
-
-        }
-
         /**
          * Explore around the trigger to find a functional chunk anchor sign; throw if things look funny.
          *

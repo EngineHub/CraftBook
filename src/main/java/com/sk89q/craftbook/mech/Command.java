@@ -23,10 +23,6 @@ public class Command extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Command> {
 
-        public Factory() {
-
-        }
-
         /**
          * Explore around the trigger to find a functional command sign; throw if things look funny.
          *

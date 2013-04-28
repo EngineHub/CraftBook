@@ -38,18 +38,12 @@ public class Netherrack extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Netherrack> {
 
-        public Factory() {
-
-        }
-
         @Override
         public Netherrack detect(BlockWorldVector pt) {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == BlockID.NETHERRACK) return new Netherrack(pt);
-
-            return null;
+            return type == BlockID.NETHERRACK ? new Netherrack(pt) : null;
         }
     }
 
@@ -90,17 +84,8 @@ public class Netherrack extends AbstractMechanic {
 
         if (event.getBlockFace() != BlockFace.UP || event.getClickedBlock().getRelative(event.getBlockFace()).getTypeId() != BlockID.FIRE) return;
 
-        Block block = event.getClickedBlock();
-
-        if (block.isBlockIndirectlyPowered()) {
-            event.setCancelled(true);
-            return;
-        }
-
-        block = block.getRelative(0, -1, 0);
-        if (block.isBlockIndirectlyPowered()) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
+        return;
     }
 
     private boolean canReplaceWithFire(int t) {

@@ -54,10 +54,6 @@ public class Door extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Door> {
 
-        public Factory() {
-
-        }
-
         /**
          * Detect the mechanic at a placed sign.
          *
@@ -396,7 +392,7 @@ public class Door extends AbstractMechanic {
                     } else {
                         if (player != null) {
                             player.printError("mech.not-enough-blocks");
-                        } 
+                        }
                         return false;
                     }
                 } else {

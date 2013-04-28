@@ -45,10 +45,6 @@ public class LightSwitch extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<LightSwitch> {
 
-        public Factory() {
-
-        }
-
         @Override
         public LightSwitch detect(BlockWorldVector pt) {
 
@@ -70,7 +66,7 @@ public class LightSwitch extends AbstractMechanic {
          */
         @Override
         public LightSwitch detect(BlockWorldVector pt, LocalPlayer player,
-                                  ChangedSign sign) throws InvalidMechanismException,
+                ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
             String line = sign.getLine(1);
@@ -89,8 +85,7 @@ public class LightSwitch extends AbstractMechanic {
     /**
      * Store a list of recent light toggles to prevent spamming. Someone clever can just use two signs though.
      */
-    private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector,
-            Long>(20);
+    private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector, Long>(20);
 
     /**
      * Configuration.

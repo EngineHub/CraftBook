@@ -34,10 +34,6 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class Snow implements Listener {
 
-    public Snow() {
-
-    }
-
     private HashMap<Location, Integer> tasks = new HashMap<Location, Integer>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -25,10 +24,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMechanic {
 
     public static class Factory extends AbstractMechanicFactory<ChunkAnchor> {
-
-        public Factory() {
-
-        }
 
         /**
          * Explore around the trigger to find a functional chunk anchor sign; throw if things look funny.
@@ -107,11 +102,6 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
     }
 
     private final Block trigger;
-
-    @Override
-    public void onRightClick(PlayerInteractEvent event) {
-
-    }
 
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {

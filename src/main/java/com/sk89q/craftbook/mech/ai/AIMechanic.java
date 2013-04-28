@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.ai;
 
 import java.util.HashSet;
 
@@ -10,11 +10,6 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mech.ai.BaseAIMechanic;
-import com.sk89q.craftbook.mech.ai.BowShotAIMechanic;
-import com.sk89q.craftbook.mech.ai.CriticalBotAIMechanic;
-import com.sk89q.craftbook.mech.ai.TargetAIMechanic;
-import com.sk89q.craftbook.mech.ai.VisionAIMechanic;
 import com.sk89q.craftbook.util.EntityUtil;
 
 public class AIMechanic implements Listener {

@@ -119,11 +119,6 @@ public class Ammeter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Ammeter> {
 
-
-        public Factory() {
-
-        }
-
         @Override
         public Ammeter detect(BlockWorldVector pt, LocalPlayer player) {
 

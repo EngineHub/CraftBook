@@ -33,10 +33,6 @@ public class Teleporter extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Teleporter> {
 
-        public Factory() {
-
-        }
-
         /**
          * Explore around the trigger to find a functional elevator; throw if things look funny.
          *

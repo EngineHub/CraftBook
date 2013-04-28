@@ -15,10 +15,6 @@ public class XPStorer extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<XPStorer> {
 
-        public Factory() {
-
-        }
-
         @Override
         public XPStorer detect(BlockWorldVector pt, LocalPlayer player) {
 

@@ -70,10 +70,6 @@ public class SignCopier extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<SignCopier> {
 
-        public Factory() {
-
-        }
-
         @Override
         public SignCopier detect (BlockWorldVector pt, LocalPlayer player) throws InvalidMechanismException {
 

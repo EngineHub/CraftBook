@@ -413,10 +413,6 @@ public class Gate extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Gate> {
 
-        public Factory() {
-
-        }
-
         @Override
         public Gate detect(BlockWorldVector pt) {
 

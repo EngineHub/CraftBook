@@ -164,11 +164,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void unload() {
-
-    }
-
-    @Override
     public void onRightClick(PlayerInteractEvent event) {
 
         Block block = event.getClickedBlock();

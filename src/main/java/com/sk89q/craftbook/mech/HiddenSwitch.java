@@ -23,10 +23,6 @@ public class HiddenSwitch extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<HiddenSwitch> {
 
-        public Factory() {
-
-        }
-
         @Override
         public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player,
                 ChangedSign sign) throws InvalidMechanismException {

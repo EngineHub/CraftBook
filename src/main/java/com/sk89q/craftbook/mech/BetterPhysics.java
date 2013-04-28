@@ -16,17 +16,11 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class BetterPhysics implements Listener {
 
-    public BetterPhysics() {
-
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockCreatedEntity(EntityChangeBlockEvent event) {
 
-        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots) {
-
+        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new ShatteringPots(event.getBlock(), true), 1L);
-        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -35,15 +29,11 @@ public class BetterPhysics implements Listener {
         if(!CraftBookPlugin.inst().getConfiguration().physicsEnabled)
             return;
 
-        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
-
+        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
-        }
 
-        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots) {
-
+        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new ShatteringPots(event.getBlock(), false), 1L);
-        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -52,15 +42,11 @@ public class BetterPhysics implements Listener {
         if(!CraftBookPlugin.inst().getConfiguration().physicsEnabled)
             return;
 
-        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders) {
-
+        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
-        }
 
-        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots) {
-
+        if(event.getBlock().getTypeId() == BlockID.FLOWER_POT && CraftBookPlugin.inst().getConfiguration().physicsPots)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new ShatteringPots(event.getBlock(), false), 1L);
-        }
     }
 
     public class FallingLadders implements Runnable {

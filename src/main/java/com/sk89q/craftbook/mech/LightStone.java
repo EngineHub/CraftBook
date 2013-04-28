@@ -18,7 +18,6 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -43,8 +42,6 @@ public class LightStone extends AbstractMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
         if (event.getPlayer().getItemInHand().getTypeId() == CraftBookPlugin.inst().getConfiguration().lightstoneItem) {
@@ -73,10 +70,6 @@ public class LightStone extends AbstractMechanic {
     }
 
     public static class Factory extends AbstractMechanicFactory<LightStone> {
-
-        public Factory() {
-
-        }
 
         @Override
         public LightStone detect (BlockWorldVector pt, LocalPlayer player) throws InvalidMechanismException {

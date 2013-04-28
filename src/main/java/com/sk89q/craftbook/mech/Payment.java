@@ -98,10 +98,6 @@ public class Payment extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Payment> {
 
-        public Factory() {
-
-        }
-
         @Override
         public Payment detect(BlockWorldVector pt) {
 

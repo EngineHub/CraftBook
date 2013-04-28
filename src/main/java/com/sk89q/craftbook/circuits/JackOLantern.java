@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -38,10 +38,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 public class JackOLantern extends PersistentMechanic {
 
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
-
-        public Factory() {
-
-        }
 
         @Override
         public JackOLantern detect(BlockWorldVector pt) {
@@ -104,9 +100,7 @@ public class JackOLantern extends PersistentMechanic {
     public void onWatchBlockNotification(BlockEvent evt) {
 
         if (evt instanceof BlockBreakEvent)
-            if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() ||
-                    evt.getBlock().isBlockPowered())) {
+            if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
                 ((BlockBreakEvent) evt).setCancelled(true);
-            }
     }
 }
