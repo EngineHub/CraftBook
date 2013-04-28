@@ -81,7 +81,7 @@ public class CustomCrafting implements Listener {
                         plugin.getLogger().info("Adding a new recipe with advanced data!");
                 }
             } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
-                FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getResult().getItemStack().getType());
+                FurnaceRecipe sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getIngredients().toArray(new ItemStack[r.getIngredients().size()])[0].getType());
                 for (CraftingItemStack is : r.getIngredients()) {
                     sh.setInput(is.getItemStack().getType(), is.getItemStack().getData().getData());
                 }
@@ -102,7 +102,7 @@ public class CustomCrafting implements Listener {
             plugin.getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
             BukkitUtil.printStacktrace(e);
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed to load recipe!");
+            plugin.getLogger().severe("Failed to load recipe! Is it incorrectly written?");
             BukkitUtil.printStacktrace(e);
         }
 
@@ -114,6 +114,8 @@ public class CustomCrafting implements Listener {
     public void onCraft(CraftItemEvent event) {
 
         ItemStack bits = null;
+        if(advancedRecipes.size() > 0 && CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+            plugin.getLogger().info("Crafting has been initiated!");
         for(Recipe rec : advancedRecipes.keySet()) {
 
             if(checkRecipes(rec, event.getRecipe())) {
@@ -187,7 +189,7 @@ public class CustomCrafting implements Listener {
                     ShapedRecipe recipe1 = (ShapedRecipe) rec1;
                     ShapedRecipe recipe2 = (ShapedRecipe) rec2;
                     if(recipe1.getShape().length == recipe2.getShape().length) {
-                        if(VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec1).getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(((ShapedRecipe) rec2).getIngredientMap().values()).size())
+                        if(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values()).size())
                             return false;
                         List<ItemStack> test = new ArrayList<ItemStack>();
                         test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());

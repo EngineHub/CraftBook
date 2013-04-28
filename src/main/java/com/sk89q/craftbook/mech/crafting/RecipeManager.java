@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -94,7 +95,7 @@ public class RecipeManager extends LocalConfiguration {
 
         private RecipeType type;
         private Collection<CraftingItemStack> ingredients;
-        private HashMap<CraftingItemStack, Character> items;
+        private LinkedHashMap<CraftingItemStack, Character> items;
         private CraftingItemStack result;
         private List<String> shape;
 
@@ -131,11 +132,11 @@ public class RecipeManager extends LocalConfiguration {
 
             this.id = id;
             ingredients = new ArrayList<CraftingItemStack>();
-            items = new HashMap<CraftingItemStack, Character>();
+            items = new LinkedHashMap<CraftingItemStack, Character>();
             load();
         }
 
-        public Recipe(String id, RecipeType type, HashMap<CraftingItemStack, Character> items, List<String> shape, CraftingItemStack result, HashMap<String, Object> advancedData) throws InvalidCraftingException {
+        public Recipe(String id, RecipeType type, LinkedHashMap<CraftingItemStack, Character> items, List<String> shape, CraftingItemStack result, HashMap<String, Object> advancedData) throws InvalidCraftingException {
 
             this.id = id;
             this.type = type;
@@ -187,35 +188,35 @@ public class RecipeManager extends LocalConfiguration {
             config.addNode("crafting-recipes." + id);
             config.setProperty("crafting-recipes." + id + ".type", type.name);
             if(type != RecipeType.SHAPED) {
-                HashMap<String, Integer> resz = new HashMap<String, Integer>();
+                LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
                 for(CraftingItemStack stack : ingredients)
-                    resz.put(stack.toString(), stack.getItemStack().getAmount());
+                    resz.put("'" + stack.toString() + "'", stack.getItemStack().getAmount());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
-                HashMap<String, Character> resz = new HashMap<String, Character>();
+                LinkedHashMap<String, Character> resz = new LinkedHashMap<String, Character>();
                 for(CraftingItemStack stack : items.keySet())
-                    resz.put(stack.toString(), items.get(stack));
+                    resz.put("'" + stack.toString() + "'", items.get(stack));
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }
 
-            HashMap<String, Integer> resz = new HashMap<String, Integer>();
-            resz.put(result.toString(), result.getItemStack().getAmount());
+            LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
+            resz.put("'" + result.toString() + "'", result.getItemStack().getAmount());
             if(hasAdvancedData("extra-results")) {
 
                 ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
                 extraResults.addAll((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
                 for(CraftingItemStack s : extraResults)
-                    resz.put(s.toString(), s.getItemStack().getAmount());
+                    resz.put("'" + s.toString() + "'", s.getItemStack().getAmount());
             }
             config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
                 config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
         }
 
-        private HashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
+        private LinkedHashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
 
-            HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
+            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<CraftingItemStack, Character>();
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
@@ -307,7 +308,7 @@ public class RecipeManager extends LocalConfiguration {
             return shape.toArray(new String[shape.size()]);
         }
 
-        public HashMap<CraftingItemStack, Character> getShapedIngredients() {
+        public LinkedHashMap<CraftingItemStack, Character> getShapedIngredients() {
 
             return items;
         }

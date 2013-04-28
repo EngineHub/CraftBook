@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mech.crafting;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -38,7 +37,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     public void addAdvancedData(String key, Object data) {
         if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
-            Bukkit.getLogger().info("Adding advanced data of type: " + key + " to an ItemStack!");
+            CraftBookPlugin.logger().info("Adding advanced data of type: " + key + " to an ItemStack!");
         advancedData.put(key, data);
     }
 
