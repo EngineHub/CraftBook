@@ -130,7 +130,7 @@ public class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        if(!CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock().getLocation()) || CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled()) {
+        if(CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock().getLocation()) && !(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
             switch(event.getBlock().getTypeId()) {
 
                 case BlockID.REDSTONE_TORCH_ON:
