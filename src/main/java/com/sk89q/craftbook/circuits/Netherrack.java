@@ -88,7 +88,7 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-        if (event.getBlockFace() != BlockFace.UP) return;
+        if (event.getBlockFace() != BlockFace.UP || event.getClickedBlock().getRelative(event.getBlockFace()).getTypeId() != BlockID.FIRE) return;
 
         Block block = event.getClickedBlock();
 
