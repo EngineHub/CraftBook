@@ -190,24 +190,24 @@ public class RecipeManager extends LocalConfiguration {
             if(type != RecipeType.SHAPED) {
                 LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
                 for(CraftingItemStack stack : ingredients)
-                    resz.put("'" + stack.toString() + "'", stack.getItemStack().getAmount());
+                    resz.put(stack.toString(), stack.getItemStack().getAmount());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
                 LinkedHashMap<String, Character> resz = new LinkedHashMap<String, Character>();
                 for(CraftingItemStack stack : items.keySet())
-                    resz.put("'" + stack.toString() + "'", items.get(stack));
+                    resz.put(stack.toString(), items.get(stack));
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }
 
             LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
-            resz.put("'" + result.toString() + "'", result.getItemStack().getAmount());
+            resz.put(result.toString(), result.getItemStack().getAmount());
             if(hasAdvancedData("extra-results")) {
 
                 ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
                 extraResults.addAll((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
                 for(CraftingItemStack s : extraResults)
-                    resz.put("'" + s.toString() + "'", s.getItemStack().getAmount());
+                    resz.put(s.toString(), s.getItemStack().getAmount());
             }
             config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
@@ -220,7 +220,6 @@ public class RecipeManager extends LocalConfiguration {
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
-                    item = item.replace("'", "");
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -254,7 +253,6 @@ public class RecipeManager extends LocalConfiguration {
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String item = String.valueOf(oitem);
-                    item = item.replace("'", "");
                     if (item == null || item.isEmpty()) continue;
                     item = RegexUtil.PIPE_PATTERN.split(item)[0];
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
