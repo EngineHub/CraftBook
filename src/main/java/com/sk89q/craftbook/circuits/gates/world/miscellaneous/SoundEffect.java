@@ -43,10 +43,10 @@ public class SoundEffect extends AbstractIC {
         String soundName = getSign().getLine(3).trim();
         sound = Sound.valueOf(soundName);
         if(sound == null) {
-            for(Sound sound : Sound.values()) {
+            for(Sound s : Sound.values()) {
 
-                if(soundName.trim().length() > 14 && sound.name().length() > 15 && sound.name().startsWith(soundName)) {
-                    this.sound = sound;
+                if(getSign().getLine(3).trim().length() == 15 && s.name().length() > 15 && s.name().startsWith(getSign().getLine(3).trim())) {
+                    sound = s;
                     break;
                 }
             }
@@ -112,7 +112,7 @@ public class SoundEffect extends AbstractIC {
                 if(sound == null) {
                     for(Sound s : Sound.values()) {
 
-                        if(sign.getLine(3).trim().length() > 14 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
+                        if(sign.getLine(3).trim().length() == 15 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
                             sound = s;
                             break;
                         }
