@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class FlameThrower extends AbstractIC {
@@ -31,7 +32,7 @@ public class FlameThrower extends AbstractIC {
     public void load() {
 
         try {
-            distance = Integer.parseInt(getLine(2));
+            distance = Math.min(((Factory)getFactory()).maxRange, Integer.parseInt(getLine(2)));
         } catch (Exception ignored) {
             distance = 10;
         }
@@ -106,6 +107,8 @@ public class FlameThrower extends AbstractIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
 
+        public int maxRange;
+
         public Factory(Server server) {
 
             super(server);
@@ -128,7 +131,7 @@ public class FlameThrower extends AbstractIC {
 
             try {
                 int distance = Integer.parseInt(sign.getLine(2));
-                if (distance > 20) throw new ICVerificationException("Distance too great!");
+                if (distance > maxRange) throw new ICVerificationException("Distance too great!");
 
             } catch (Exception ignored) {
                 throw new ICVerificationException("Invalid distance!");
@@ -138,8 +141,19 @@ public class FlameThrower extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"distance", "delay"};
-            return lines;
+            return new String[] {"distance", "delay"};
+        }
+
+        @Override
+        public void addConfiguration(YAMLProcessor config, String path) {
+
+            maxRange = config.getInt(path + "max-fire-range", 20);
+        }
+
+        @Override
+        public boolean needsConfiguration() {
+
+            return true;
         }
     }
 }
