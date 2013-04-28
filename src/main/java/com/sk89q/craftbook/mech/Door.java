@@ -218,7 +218,6 @@ public class Door extends AbstractMechanic {
             throw new InvalidConstructionException("mech.door.material");
 
         // Select the togglable region
-
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
         int left, right;
         try {
@@ -536,13 +535,34 @@ public class Door extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
+    public void setBlocks(Sign s, int amount) {
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return;
+        int curBlocks = amount;
+        s.setLine(0, String.valueOf(curBlocks));
+        s.update();
+    }
+
     public int getBlocks(Sign s) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return 100000;
-        int curBlocks;
+        Sign otherSign = (Sign)otherSide.getState();
+        return getBlocks(s, otherSign);
+    }
+
+    public int getBlocks(Sign s, Sign other) {
+
+        if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
+            return 0;
+        int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
-        } catch (NumberFormatException e) {
+            try {
+                curBlocks += Integer.parseInt(other.getLine(0));
+                setBlocks(s, curBlocks);
+                setBlocks(other, 0);
+            } catch (Exception ignored) {
+            }
+        } catch (Exception e) {
             curBlocks = 0;
         }
         return curBlocks;

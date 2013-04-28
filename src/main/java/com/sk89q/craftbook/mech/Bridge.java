@@ -499,13 +499,34 @@ public class Bridge extends AbstractMechanic {
         return curBlocks >= 0;
     }
 
+    public void setBlocks(ChangedSign s, int amount) {
+
+        if (s.getLine(0).equalsIgnoreCase("infinite")) return;
+        int curBlocks = amount;
+        s.setLine(0, String.valueOf(curBlocks));
+        s.update(false);
+    }
+
     public int getBlocks(ChangedSign s) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return 0;
-        int curBlocks;
+        ChangedSign otherSign = BukkitUtil.toChangedSign(farSide);
+        return getBlocks(s, otherSign);
+    }
+
+    public int getBlocks(ChangedSign s, ChangedSign other) {
+
+        if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
+            return 0;
+        int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
-        } catch (NumberFormatException e) {
+            try {
+                curBlocks += Integer.parseInt(other.getLine(0));
+                setBlocks(s, curBlocks);
+                setBlocks(other, 0);
+            } catch (Exception ignored) {
+            }
+        } catch (Exception e) {
             curBlocks = 0;
         }
         return curBlocks;
