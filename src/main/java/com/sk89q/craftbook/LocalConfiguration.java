@@ -94,6 +94,7 @@ public abstract class LocalConfiguration {
     public boolean cookingPotOres;
     public boolean cookingPotSignOpen;
     public boolean cookingPotDestroyBuckets;
+    public boolean cookingPotSuperFast;
     // Mechanics - Custom Crafting
     public boolean customCraftingEnabled;
     // Mechanics - Custom Dispensing
