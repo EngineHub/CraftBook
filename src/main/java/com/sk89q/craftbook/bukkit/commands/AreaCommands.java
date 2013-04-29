@@ -144,6 +144,9 @@ public class AreaCommands {
 
         String namespace = "~" + player.getName();
 
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+            namespace = namespace.substring(0, 15);
+
         // get the namespace from the flag (if set)
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
@@ -273,6 +276,9 @@ public class AreaCommands {
 
         String namespace = "~" + player.getName();
         String areaId = null;
+
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+            namespace = namespace.substring(0, 15);
 
         // Get the namespace
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
