@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.bukkit.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
@@ -53,10 +55,74 @@ public class RecipeCommands {
 
         if(type == RecipeType.SHAPED) {
 
-            //String[] shape = new String[3];
-            //HashMap<CraftingItemStack, Character> items = new HashMap<CraftingItemStack, Character>();
+            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<CraftingItemStack, Character>();
 
-            //TODO Too tired to work this out.
+            int furtherestX = -1;
+            int furtherestY = -1;
+
+            for (int slot = 0; slot < 3; slot++) {
+                ItemStack stack = slots[slot];
+                if(ItemUtil.isStackValid(stack)) {
+                    furtherestY = 0;
+                    furtherestX = slot;
+                }
+            }
+            for (int slot = 3; slot < 6; slot++) {
+                ItemStack stack = slots[slot];
+                if(ItemUtil.isStackValid(stack)) {
+                    furtherestY = 1;
+                    furtherestX = slot;
+                }
+            }
+            for (int slot = 6; slot < 9; slot++) {
+                ItemStack stack = slots[slot];
+                if(ItemUtil.isStackValid(stack)) {
+                    furtherestY = 2;
+                    furtherestX = slot;
+                }
+            }
+
+            String[] shape = new String[furtherestY+1];
+            Character[] characters = new Character[]{'a','b','c','d','e','f','g','h','i'};
+            int curChar = 0;
+
+            for(int y = 0; y < furtherestY+1; y++) {
+                for(int x = 0; x < furtherestX+1; x++) {
+
+                    String c = " ";
+                    CraftingItemStack stack = new CraftingItemStack(slots[x+y*3]);
+                    if(ItemUtil.isStackValid(stack.getItemStack())) {
+
+                        if(items.containsKey(stack))
+                            c = items.get(stack).toString();
+                        else {
+                            items.put(stack, characters[curChar]);
+                            c = characters[curChar++].toString();
+                        }
+                    }
+
+                    if(x == 0)
+                        shape[y] = c;
+                    else
+                        shape[y] = shape[y] + c;
+                }
+            }
+
+            List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
+            if(results.size() > 1)
+                advancedData.put("extra-results", results.subList(1, results.size()));
+
+            try {
+                RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, items, Arrays.<String>asList(shape), results.get(0), advancedData);
+                RecipeManager.INSTANCE.addRecipe(recipe);
+                MechanicalCore.inst().getCustomCrafting().addRecipe(recipe);
+                RecipeManager.INSTANCE.save();
+                player.print("Successfully added a new " + type.name() + " recipe!");
+            } catch (Exception e) {
+                player.printError("Error adding recipe! See console for more details!");
+                BukkitUtil.printStacktrace(e);
+            }
+
         } else if (type == RecipeType.SHAPELESS || type == RecipeType.FURNACE) {
 
             ArrayList<CraftingItemStack> ingredients = new ArrayList<CraftingItemStack>();
