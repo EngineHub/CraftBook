@@ -44,7 +44,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     public CraftingItemStack(ItemStack item) {
 
         this.item = item;
-        if(item.hasItemMeta()) { //We have some advanced data to set.
+        if(item != null && item.hasItemMeta()) { //We have some advanced data to set.
 
             if(item.getItemMeta().hasDisplayName())
                 addAdvancedData("name", item.getItemMeta().getDisplayName());
@@ -71,7 +71,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
         if (getItemStack().getData().getData() == -1 || stack.getItemStack().getData().getData() == -1)
             return stack.getItemStack().getTypeId() == getItemStack().getTypeId();
-        return stack.getItemStack().getTypeId() == getItemStack().getTypeId() && stack.getItemStack().getData() == getItemStack().getData();
+        return stack.getItemStack().getTypeId() == getItemStack().getTypeId() && stack.getItemStack().getData().getData() == stack.getItemStack().getData().getData();
     }
 
     @Override

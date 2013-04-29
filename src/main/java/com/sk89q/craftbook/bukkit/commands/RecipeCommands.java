@@ -64,23 +64,29 @@ public class RecipeCommands {
                 ItemStack stack = slots[slot];
                 if(ItemUtil.isStackValid(stack)) {
                     furtherestY = 0;
-                    furtherestX = slot;
+                    if(furtherestX < slot)
+                        furtherestX = slot;
                 }
             }
             for (int slot = 3; slot < 6; slot++) {
                 ItemStack stack = slots[slot];
                 if(ItemUtil.isStackValid(stack)) {
                     furtherestY = 1;
-                    furtherestX = slot;
+                    if(furtherestX < slot-3)
+                        furtherestX = slot-3;
                 }
             }
             for (int slot = 6; slot < 9; slot++) {
                 ItemStack stack = slots[slot];
                 if(ItemUtil.isStackValid(stack)) {
                     furtherestY = 2;
-                    furtherestX = slot;
+                    if(furtherestX < slot-6)
+                        furtherestX = slot-6;
                 }
             }
+
+            if(furtherestX > 2)
+                furtherestX = 2;
 
             String[] shape = new String[furtherestY+1];
             Character[] characters = new Character[]{'a','b','c','d','e','f','g','h','i'};
@@ -93,11 +99,18 @@ public class RecipeCommands {
                     CraftingItemStack stack = new CraftingItemStack(slots[x+y*3]);
                     if(ItemUtil.isStackValid(stack.getItemStack())) {
 
-                        if(items.containsKey(stack))
-                            c = items.get(stack).toString();
-                        else {
+                        boolean found = false;
+                        for(CraftingItemStack st : items.keySet()) {
+                            if(st.isSameType(stack)) {
+                                c = items.get(st).toString();
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(!found) {
                             items.put(stack, characters[curChar]);
-                            c = characters[curChar++].toString();
+                            c = characters[curChar].toString();
+                            curChar++;
                         }
                     }
 
@@ -111,6 +124,10 @@ public class RecipeCommands {
             List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
             if(results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
+            else if (results.isEmpty()) {
+                player.printError("Results are required to create a recipe!");
+                return;
+            }
 
             try {
                 RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, items, Arrays.<String>asList(shape), results.get(0), advancedData);
@@ -151,6 +168,10 @@ public class RecipeCommands {
             List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
             if(results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
+            else if (results.isEmpty()) {
+                player.printError("Results are required to create a recipe!");
+                return;
+            }
 
             try {
                 RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, ingredients, results.get(0), advancedData);
