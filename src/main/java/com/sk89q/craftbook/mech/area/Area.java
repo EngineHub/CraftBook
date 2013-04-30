@@ -45,8 +45,7 @@ public class Area extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Area detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public Area detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!plugin.getConfiguration().areaEnabled) return null;
 
@@ -225,8 +224,9 @@ public class Area extends AbstractMechanic {
                     copy = CopyManager.getInstance().load(world, namespace, inactiveID);
                     copy.copy();
                     CopyManager.getInstance().save(world, namespace, inactiveID, copy);
-                } else
-                    copy = CopyManager.getInstance().load(world, namespace, id);
+                }
+
+                copy = CopyManager.getInstance().load(world, namespace, id);
                 copy.paste();
                 setToggledState(sign, true);
             }

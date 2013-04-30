@@ -376,6 +376,8 @@ public class BetterPistons extends AbstractMechanic {
 
         public static boolean isEnabled(Types type) {
 
+            if(!CraftBookPlugin.inst().getConfiguration().pistonsEnabled)
+                return false;
             if(type == CRUSH)
                 return CraftBookPlugin.inst().getConfiguration().pistonsCrusher;
             else if(type == SUPERSTICKY)

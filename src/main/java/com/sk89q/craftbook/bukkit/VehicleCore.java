@@ -3,7 +3,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -352,8 +351,7 @@ public class VehicleCore implements LocalComponent {
                     if (!ent.isEmpty()) {
                         continue;
                     }
-                    Bukkit.getScheduler().runTaskLater(plugin, new Decay((Minecart) ent),
-                            plugin.getConfiguration().minecartDecayTime);
+                    plugin.getServer().getScheduler().runTaskLater(plugin, new Decay((Minecart) ent), plugin.getConfiguration().minecartDecayTime);
                 }
             }
         }
@@ -377,8 +375,7 @@ public class VehicleCore implements LocalComponent {
                             lineFound = sign;
                             lineNum = 1;
                             break;
-                        } else if (mech.getName().equalsIgnoreCase("messager") && lines[0].equalsIgnoreCase("[" +
-                                sign + "]")) {
+                        } else if (mech.getName().equalsIgnoreCase("messager") && lines[0].equalsIgnoreCase("[" + sign + "]")) {
                             found = true;
                             lineFound = sign;
                             lineNum = 0;
