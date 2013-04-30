@@ -255,8 +255,7 @@ public class VehicleCore implements LocalComponent {
             if (plugin.getConfiguration().minecartRemoveOnExit) {
                 vehicle.remove();
             } else if (plugin.getConfiguration().minecartDecayWhenEmpty) {
-                Bukkit.getScheduler().runTaskLater(plugin, new Decay((Minecart) vehicle),
-                        plugin.getConfiguration().minecartDecayTime);
+                plugin.getServer().getScheduler().runTaskLater(plugin, new Decay((Minecart) vehicle), plugin.getConfiguration().minecartDecayTime);
             }
         }
 
@@ -416,9 +415,8 @@ public class VehicleCore implements LocalComponent {
         @Override
         public void run() {
 
-            if (cart.isEmpty()) {
-                cart.setDamage(41);
-            }
+            if (cart.isEmpty())
+                cart.remove();
         }
 
     }
