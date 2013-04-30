@@ -1,3 +1,7 @@
+# CraftBook Custom Recipes. CraftBook Version: Demo Copy
+# For more information on setting up custom recipes, see the wiki:
+# http://wiki.sk89q.com/wiki/CraftBook/Custom_crafting
+
 crafting-recipes:
   shapelessexample:
     type: shapeless

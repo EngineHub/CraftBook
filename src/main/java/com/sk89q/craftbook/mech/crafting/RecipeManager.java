@@ -48,6 +48,13 @@ public class RecipeManager extends LocalConfiguration {
             e.printStackTrace();
         }
 
+        config.setHeader(
+                "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
+                "# For more information on setting up custom recipes, see the wiki:",
+                "# http://wiki.sk89q.com/wiki/CraftBook/Custom_crafting",
+                "",
+                "");
+
         List<String> keys = config.getKeys("crafting-recipes");
         if (keys != null) {
             for (String key : keys) {
@@ -68,6 +75,13 @@ public class RecipeManager extends LocalConfiguration {
         }
 
         config.clear();
+
+        config.setHeader(
+                "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
+                "# For more information on setting up custom recipes, see the wiki:",
+                "# http://wiki.sk89q.com/wiki/CraftBook/Custom_crafting",
+                "",
+                "");
 
         config.addNode("crafting-recipes");
         for(Recipe recipe : recipes) {
