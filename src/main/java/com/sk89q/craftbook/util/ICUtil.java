@@ -31,7 +31,9 @@ import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
+import com.sk89q.worldedit.regions.SphereRegionSelector;
 
 /**
  * IC utility functions.
@@ -135,11 +137,83 @@ public class ICUtil {
                                     z = z.replace(".0", "");
 
                                 sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
-                                //} else if (selector instanceof SphereRegionSelector) {
+                            } else if (selector instanceof SphereRegionSelector) {
 
-                                //TODO spherical reions.
+                                Vector centre = ((SphereRegionSelector)selector).getRegion().getCenter();
+
+                                Vector offset = centre.subtract(sign.getBlockVector());
+
+                                String x,y,z;
+
+                                x = Double.toString(offset.getX());
+                                if (x.endsWith(".0"))
+                                    x = x.replace(".0", "");
+
+                                y = Double.toString(offset.getY());
+                                if (y.endsWith(".0"))
+                                    y = y.replace(".0", "");
+
+                                z = Double.toString(offset.getZ());
+                                if (z.endsWith(".0"))
+                                    z = z.replace(".0", "");
+
+                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
                             } else { // Unsupported.
                                 sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                                player.printError("worldedit.ic.unsupported");
+                            }
+                        }
+                        catch(IncompleteRegionException e) {
+                            player.printError("worldedit.ic.noselection");
+                        }
+                    } else {
+                        player.printError("worldedit.ic.noselection");
+                    }
+                }
+            }
+
+            if(sign.getLine(i).contains("[rad]")) {
+
+                if(CraftBookPlugin.inst().getWorldEdit() == null) {
+                    sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
+                    player.printError("worldedit.ic.notfound");
+                } else {
+
+                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector().isDefined()) {
+
+                        RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+
+                        try {
+                            if(selector instanceof CuboidRegionSelector) {
+
+                                String x,y,z;
+
+                                x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX())/2);
+                                if (x.endsWith(".0"))
+                                    x = x.replace(".0", "");
+
+                                y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY())/2);
+                                if (y.endsWith(".0"))
+                                    y = y.replace(".0", "");
+
+                                z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ())/2);
+                                if (z.endsWith(".0"))
+                                    z = z.replace(".0", "");
+
+                                sign.setLine(i, sign.getLine(i).replace("[rad]", x + "," + y + "," + z));
+                            } else if (selector instanceof SphereRegionSelector) {
+
+                                String x;
+
+                                double amounts = ((EllipsoidRegion) selector.getRegion()).getRadius().getX();
+
+                                x = Double.toString(amounts);
+                                if (x.endsWith(".0"))
+                                    x = x.replace(".0", "");
+
+                                sign.setLine(i, sign.getLine(i).replace("[rad]", x));
+                            } else { // Unsupported.
+                                sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
                                 player.printError("worldedit.ic.unsupported");
                             }
                         }
