@@ -118,21 +118,21 @@ public class ICUtil {
 
                                 centre = centre.divide(2);
 
-                                Vector offset = sign.getBlockVector().subtract(centre);
+                                Vector offset = centre.subtract(sign.getBlockVector());
 
                                 String x,y,z;
 
-                                x = Double.toString(offset.getX() == offset.getBlockX() ? offset.getBlockX() : offset.getX());
+                                x = Double.toString(offset.getX());
                                 if (x.endsWith(".0"))
-                                    x = x.substring(x.length() - 2);
+                                    x = x.replace(".0", "");
 
-                                y = Double.toString(offset.getY() == offset.getBlockY() ? offset.getBlockY() : offset.getY());
+                                y = Double.toString(offset.getY());
                                 if (y.endsWith(".0"))
-                                    y = y.substring(y.length() - 2);
+                                    y = y.replace(".0", "");
 
-                                z = Double.toString(offset.getZ() == offset.getBlockZ() ? offset.getBlockZ() : offset.getZ());
+                                z = Double.toString(offset.getZ());
                                 if (z.endsWith(".0"))
-                                    z = z.substring(z.length() - 2);
+                                    z = z.replace(".0", "");
 
                                 sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
                                 //} else if (selector instanceof SphereRegionSelector) {
