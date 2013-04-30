@@ -69,6 +69,18 @@ public class Clock extends AbstractSelfTriggeredIC {
 
     protected void triggerClock(ChipState chip) {
 
+        tick++;
+
+        if (tick == reset) {
+            tick = 0;
+            chip.setOutput(0, !chip.getOutput(0));
+        }
+
+        getSign().setLine(3, Short.toString(tick));
+    }
+
+    @Override
+    public void load() {
         try {
             reset = Short.parseShort(getSign().getLine(2));
         } catch (NumberFormatException e) {
@@ -84,15 +96,6 @@ public class Clock extends AbstractSelfTriggeredIC {
             getSign().setLine(3, Short.toString(tick));
             getSign().update(false);
         }
-
-        tick++;
-
-        if (tick == reset) {
-            tick = 0;
-            chip.setOutput(0, !chip.getOutput(0));
-        }
-
-        getSign().setLine(3, Short.toString(tick));
     }
 
     public static class Factory extends AbstractICFactory {
