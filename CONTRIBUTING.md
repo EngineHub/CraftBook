@@ -31,6 +31,8 @@ ask that you make note of the following guidelines.
   complicated algorithms.
 * **Write IC Documentation** For IC's, make sure to write documentation in there 
   factory. Along with per-line documentation.
+* **Use and Create Util Methods** If you commonly perform a task, try to add 
+  a util method in the appropriate class. (Note: Unit Tests recommended)
 
 
 Checklist

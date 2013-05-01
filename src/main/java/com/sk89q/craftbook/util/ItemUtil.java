@@ -70,7 +70,7 @@ public class ItemUtil {
     public static boolean doesItemPassFilters(ItemStack stack, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
 
         boolean passesFilters = true;
-        if(inclusions.size() > 0) {
+        if(inclusions != null && inclusions.size() > 0) {
             for (ItemStack fil : inclusions) {
 
                 if(!ItemUtil.isStackValid(fil))
@@ -84,7 +84,7 @@ public class ItemUtil {
             if(!passesFilters)
                 return false;
         }
-        if(exclusions.size() > 0) {
+        if(exclusions != null && exclusions.size() > 0) {
             for (ItemStack fil : exclusions) {
 
                 if(!ItemUtil.isStackValid(fil))
@@ -99,16 +99,6 @@ public class ItemUtil {
         }
 
         return passesFilters;
-    }
-
-    public static ItemStack[] removeNulls(ItemStack[] array) {
-
-        List<ItemStack> list = new ArrayList<ItemStack>();
-        for(ItemStack t : array)
-            if(t != null)
-                list.add(t);
-
-        return list.toArray(new ItemStack[list.size()]).clone();
     }
 
     public static boolean areItemsSimilar(ItemStack item, int type) {
@@ -154,17 +144,18 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId() && (data.getData() == comparedData.getData() || data.getData() < 0 || comparedData.getData() < 0);
     }
 
-    public static void setItemTypeAndData(ItemStack item, int type, byte data) {
-
-        item.setData(new MaterialData(type, data));
-    }
-
     public static boolean isStackValid(ItemStack item) {
 
         return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && item.getDurability() >= 0;
     }
 
-    public static boolean takeFromEntity(Item item) {
+    /**
+     * Removes a specified amount from an item entity.
+     * 
+     * @param item
+     * @return true if success, otherwise false.
+     */
+    public static boolean takeFromEntity(Item item, int amount) {
 
         if (item == null || item.isDead()) return false;
 
@@ -173,7 +164,10 @@ public class ItemUtil {
             return false;
         }
 
-        item.getItemStack().setAmount(item.getItemStack().getAmount() - 1);
+        if(item.getItemStack().getAmount() < amount)
+            return false;
+
+        item.getItemStack().setAmount(item.getItemStack().getAmount() - amount);
 
         if (!isStackValid(item.getItemStack())) {
             item.remove();
@@ -207,7 +201,7 @@ public class ItemUtil {
 
     public static boolean isSmeltable(ItemStack item) {
 
-        return getSmeletedResult(item) != null && !item.getItemMeta().hasDisplayName();
+        return getSmeletedResult(item) != null && !item.hasItemMeta();
     }
 
     public static ItemStack getSmeletedResult(ItemStack item) {
@@ -310,13 +304,19 @@ public class ItemUtil {
 
     public static boolean containsRawFood(Inventory inv) {
 
-        for (ItemStack it : inv.getContents()) { if (it != null && isCookable(it)) return true; }
+        for (ItemStack it : inv.getContents()) {
+            if (isStackValid(it) && isCookable(it))
+                return true;
+        }
         return false;
     }
 
     public static boolean containsRawMinerals(Inventory inv) {
 
-        for (ItemStack it : inv.getContents()) { if (it != null && isSmeltable(it)) return true; }
+        for (ItemStack it : inv.getContents()) {
+            if (isStackValid(it) && isSmeltable(it))
+                return true;
+        }
         return false;
     }
 

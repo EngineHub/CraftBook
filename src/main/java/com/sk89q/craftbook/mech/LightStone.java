@@ -33,39 +33,28 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  */
 public class LightStone extends AbstractMechanic {
 
-    public LightStone() {
-
-        super();
-    }
-
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        if (event.getPlayer().getItemInHand().getTypeId() == CraftBookPlugin.inst().getConfiguration().lightstoneItem) {
-            String lightLevelLine = getLightLine(block.getLightLevel());
-            player.print(ChatColor.YELLOW + "LightStone: [" + lightLevelLine + ChatColor.YELLOW + "] " + block
-                    .getLightLevel() + " L");
-        }
+        if (event.getPlayer().getItemInHand().getTypeId() == CraftBookPlugin.inst().getConfiguration().lightstoneItem)
+            player.print(ChatColor.YELLOW + "LightStone: [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
     }
 
     private String getLightLine(int data) {
 
         StringBuilder line = new StringBuilder(25);
-        if (data >= 9) {
+        if (data >= 9)
             line.append(ChatColor.GREEN);
-        } else {
+        else
             line.append(ChatColor.DARK_RED);
-        }
-        for (int i = 0; i < data; i++) {
+        for (int i = 0; i < data; i++)
             line.append("|");
-        }
         line.append(ChatColor.BLACK);
-        for (int i = data; i < 15; i++) {
+        for (int i = data; i < 15; i++)
             line.append("|");
-        }
         return line.toString();
     }
 
