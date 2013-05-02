@@ -29,7 +29,7 @@ public class CartBooster extends CartMechanism {
         // speed up or down
         Vector newVelocity;
         if (multiplier > 1) {
-            newVelocity = cart.getVelocity().normalize().multiply(multiplier);
+            newVelocity = cart.getVelocity().multiply(multiplier);
         } else if (multiplier < 1) {
             newVelocity = cart.getVelocity().multiply(multiplier);
         } else return;

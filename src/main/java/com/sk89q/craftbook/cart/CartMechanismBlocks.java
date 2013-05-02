@@ -37,7 +37,7 @@ public class CartMechanismBlocks {
      * @param sign the block containing the sign that gives additional configuration to the mechanism,
      *             or null if not interested.
      */
-    private CartMechanismBlocks(Block rail, Block base, Block sign) {
+    public CartMechanismBlocks(Block rail, Block base, Block sign) {
 
         this.rail = rail;
         this.base = base;
@@ -83,15 +83,15 @@ public class CartMechanismBlocks {
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1).getTypeId()))
             return new CartMechanismBlocks(
                     rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                    1).getRelative(BlockFace.EAST, 1));
+                            1).getRelative(BlockFace.EAST, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1).getTypeId()))
             return new CartMechanismBlocks(
                     rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                    1).getRelative(BlockFace.WEST, 1));
+                            1).getRelative(BlockFace.WEST, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1).getTypeId()))
             return new CartMechanismBlocks(
                     rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                    1).getRelative(BlockFace.NORTH, 1));
+                            1).getRelative(BlockFace.NORTH, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1).getTypeId()))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1),
                     rail.getRelative(BlockFace.DOWN, 1).getRelative(
