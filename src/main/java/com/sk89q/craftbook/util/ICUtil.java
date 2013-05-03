@@ -42,10 +42,6 @@ import com.sk89q.worldedit.regions.SphereRegionSelector;
  */
 public class ICUtil {
 
-    public ICUtil() {
-
-    }
-
     /**
      * Set an IC's output state at a block.
      *
@@ -60,9 +56,9 @@ public class ICUtil {
 
         // return if the lever is not attached to our IC block
         Lever lever = (Lever) block.getState().getData();
-        if (!block.getRelative(lever.getAttachedFace()).equals(source)) {
+
+        if (!block.getRelative(lever.getAttachedFace()).equals(source))
             return false;
-        }
 
         // check if the lever was toggled on
         boolean wasOn = (block.getData() & 0x8) > 0;
@@ -108,8 +104,7 @@ public class ICUtil {
                     sign.setLine(i, sign.getLine(i).replace("[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
-
-                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector().isDefined()) {
+                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
 
                         RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
 
@@ -179,7 +174,7 @@ public class ICUtil {
                     player.printError("worldedit.ic.notfound");
                 } else {
 
-                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector().isDefined()) {
+                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
 
                         RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
 
