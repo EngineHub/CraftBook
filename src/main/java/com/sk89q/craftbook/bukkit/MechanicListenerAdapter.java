@@ -149,7 +149,7 @@ public class MechanicListenerAdapter implements Listener {
                     break;
                 case BlockID.WOODEN_BUTTON:
                 case BlockID.STONE_BUTTON:
-                    if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
+                    if(((org.bukkit.material.Button) event.getBlock().getState().getData()).isPowered())
                         handleRedstoneForBlock(event.getBlock(), 15, 0);
                     break;
                 case BlockID.STONE_PRESSURE_PLATE:
