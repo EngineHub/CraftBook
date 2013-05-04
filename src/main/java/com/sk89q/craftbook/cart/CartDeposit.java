@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -69,9 +70,8 @@ public class CartDeposit extends CartMechanism {
             ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
             if (!items.isEmpty()) {
                 for (ItemStack item : cartinventory.getContents()) {
-                    if (item == null) {
+                    if (!ItemUtil.isStackValid(item))
                         continue;
-                    }
                     for(ItemInfo inf : items) {
                         if (inf.getId() < 0 || inf.getId() == item.getTypeId()) {
                             if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
@@ -131,9 +131,8 @@ public class CartDeposit extends CartMechanism {
                 Inventory containerinventory = container.getInventory();
                 if (!items.isEmpty()) {
                     for (ItemStack item : containerinventory.getContents()) {
-                        if (item == null) {
+                        if (!ItemUtil.isStackValid(item))
                             continue;
-                        }
                         for(ItemInfo inf : items) {
                             if (inf.getId() < 0 || inf.getId() == item.getTypeId())
                                 if (inf.getData() < 0 || inf.getData() == item.getDurability()) {

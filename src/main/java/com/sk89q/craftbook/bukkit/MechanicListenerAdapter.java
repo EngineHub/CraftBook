@@ -35,6 +35,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
+import org.bukkit.material.PressureSensor;
 
 import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.RightClickBlockEvent;
@@ -156,7 +157,8 @@ public class MechanicListenerAdapter implements Listener {
                 case BlockID.WOODEN_PRESSURE_PLATE:
                 case BlockID.PRESSURE_PLATE_HEAVY:
                 case BlockID.PRESSURE_PLATE_LIGHT:
-                    if(((org.bukkit.material.PressurePlate) event.getBlock().getState().getData()).isPressed())
+                case BlockID.DETECTOR_RAIL:
+                    if(event.getBlock().getState().getData() instanceof PressureSensor && ((PressureSensor) event.getBlock().getState().getData()).isPressed())
                         handleRedstoneForBlock(event.getBlock(), 15, 0);
                     break;
             }
