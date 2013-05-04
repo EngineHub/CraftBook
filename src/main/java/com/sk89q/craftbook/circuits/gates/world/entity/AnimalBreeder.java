@@ -90,8 +90,10 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     @Override
     public void unload() {
-        lastEntity.clear();
-        lastEntity = null;
+        if(lastEntity != null) {
+            lastEntity.clear();
+            lastEntity = null;
+        }
     }
 
     HashMap<EntityType, Entity> lastEntity = new HashMap<EntityType, Entity>();
