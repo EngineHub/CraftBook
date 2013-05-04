@@ -19,6 +19,8 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.blocks.ItemType;
 
 public class RecipeManager extends LocalConfiguration {
 
@@ -242,6 +244,16 @@ public class RecipeManager extends LocalConfiguration {
                     } catch (NumberFormatException e) {
                         // use the name
                         material = Material.getMaterial(split[0].toUpperCase());
+                        if(material == null) {
+                            try {
+                                material = Material.getMaterial(BlockType.valueOf(split[0].toUpperCase()).getID());
+                            } catch(Exception ee){
+
+                            } finally {
+                                if(material == null)
+                                    material = Material.getMaterial(ItemType.valueOf(split[0].toUpperCase()).getID());
+                            }
+                        }
                     }
                     if (material != null) {
                         ItemStack stack = new ItemStack(material);
@@ -276,6 +288,16 @@ public class RecipeManager extends LocalConfiguration {
                     } catch (NumberFormatException e) {
                         // use the name
                         material = Material.getMaterial(split[0].toUpperCase());
+                        if(material == null) {
+                            try {
+                                material = Material.getMaterial(BlockType.valueOf(split[0].toUpperCase()).getID());
+                            } catch(Exception ee){
+
+                            } finally {
+                                if(material == null)
+                                    material = Material.getMaterial(ItemType.valueOf(split[0].toUpperCase()).getID());
+                            }
+                        }
                     }
                     if (material != null) {
                         ItemStack stack = new ItemStack(material);
