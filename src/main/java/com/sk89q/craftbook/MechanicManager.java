@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -606,11 +605,11 @@ public class MechanicManager {
         } catch (Throwable error) {
 
             BukkitUtil.printStacktrace(error);
-            Bukkit.getLogger().severe("A corruption issue has been found at chunk ("
+            CraftBookPlugin.logger().severe("A corruption issue has been found at chunk ("
                     + chunk.getX() + ", " + chunk.getZ() + ") Self-Triggering mechanics " +
                     "may not work as expected until this is resolved!");
             // TODO This probably needs formatted better
-            Bukkit.getLogger().severe("Chunk (" + chunk.getX() + ", " + chunk.getZ() + ") starts at " +
+            CraftBookPlugin.logger().severe("Chunk (" + chunk.getX() + ", " + chunk.getZ() + ") starts at " +
                     chunk.getBlock(0, 0, 0).getLocation().toString() + " and ends at " +
                     chunk.getBlock(15, 255, 15).getLocation().toString() + '.');
         }

@@ -54,7 +54,7 @@ public class Chair implements Listener {
                 }
             }
         } catch (Error e) {
-            Bukkit.getLogger().severe("Chairs do not work without ProtocolLib!");
+            CraftBookPlugin.logger().warning("Chairs do not work without ProtocolLib!");
             disabled = true;
             return;
         }

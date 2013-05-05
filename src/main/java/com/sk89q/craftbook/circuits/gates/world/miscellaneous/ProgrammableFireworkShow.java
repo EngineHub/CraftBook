@@ -136,7 +136,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
                 fyrestone = true;
                 firework = new File(CircuitCore.inst().getFireworkFolder(), show + ".fwk");
                 if (!firework.exists()) {
-                    Bukkit.getLogger().severe("Firework File Not Found! " + firework.getName());
+                    CraftBookPlugin.logger().severe("Firework File Not Found! " + firework.getName());
                     return;
                 }
             }
@@ -389,7 +389,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
-                            Bukkit.getLogger().severe("Error occured while doing: " + errorLocation + ". Whilst " +
+                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst " +
                                     "reading line " + position + " of the firework file " + show + "!");
                             BukkitUtil.printStacktrace(e);
                         }

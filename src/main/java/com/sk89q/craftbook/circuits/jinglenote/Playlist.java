@@ -72,7 +72,7 @@ public class Playlist {
         lines.clear();
         File file = new File(new File(CircuitCore.inst().getMidiFolder(), "playlists"), playlist + ".txt");
         if(!file.exists()) {
-            Bukkit.getLogger().severe("Playlist File Not Found! " + file.getName());
+            CraftBookPlugin.logger().severe("Playlist File Not Found! " + file.getName());
             return;
         }
         BufferedReader br = new BufferedReader(new FileReader(file));

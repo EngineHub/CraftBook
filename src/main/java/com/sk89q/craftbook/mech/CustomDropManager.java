@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -56,22 +55,22 @@ public final class CustomDropManager {
         try {
             loadDropDefinitions(blockDefinitions, false);
         } catch (CustomDropParseException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Custom block drop definitions failed to parse", e);
+            CraftBookPlugin.logger().log(Level.WARNING, "Custom block drop definitions failed to parse", e);
         } catch (IOException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Unknown IO error while loading custom block drop definitions", e);
+            CraftBookPlugin.logger().log(Level.SEVERE, "Unknown IO error while loading custom block drop definitions", e);
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Unknown exception while loading custom block drop definitions", e);
+            CraftBookPlugin.logger().log(Level.SEVERE, "Unknown exception while loading custom block drop definitions", e);
         }
 
         if (mobDefinitions.exists()) {
             try {
                 loadDropDefinitions(mobDefinitions, true);
             } catch (CustomDropParseException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Custom mob drop definitions failed to parse", e);
+                CraftBookPlugin.logger().log(Level.WARNING, "Custom mob drop definitions failed to parse", e);
             } catch (IOException e) {
-                Bukkit.getLogger().log(Level.SEVERE, "Unknown IO error while loading custom mob drop definitions", e);
+                CraftBookPlugin.logger().log(Level.SEVERE, "Unknown IO error while loading custom mob drop definitions", e);
             } catch (Exception e) {
-                Bukkit.getLogger().log(Level.SEVERE, "Unknown exception while loading custom mob drop definitions", e);
+                CraftBookPlugin.logger().log(Level.SEVERE, "Unknown exception while loading custom mob drop definitions", e);
             }
         }
     }

@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,7 +39,7 @@ public class RecipeManager extends LocalConfiguration {
 
         recipes = new HashSet<Recipe>();
         if (config == null) {
-            Bukkit.getLogger().severe("Failure loading recipes! Config is null!");
+            CraftBookPlugin.logger().severe("Failure loading recipes! Config is null!");
             return; // If the config is null, it can't continue.
         }
 
@@ -72,7 +71,7 @@ public class RecipeManager extends LocalConfiguration {
     public void save() {
 
         if (config == null) {
-            Bukkit.getLogger().severe("Failure saving recipes! Config is null!");
+            CraftBookPlugin.logger().severe("Failure saving recipes! Config is null!");
             return; // If the config is null, it can't continue.
         }
 
