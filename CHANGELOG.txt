@@ -1,3 +1,36 @@
+3.6.3
++ Added /cb update -c to force an update.
+* Enhanced [off] formatting.
+* Fixed an error relating to item parsing.
+* Enhanced a few CraftBook easter eggs.
+* Fix CartDeposit removing metadata. Eg, name, enchants, book text.
+* Few tweaks to Cooking Pot.
+* Heavily optimized AI Mechanics.
+* Made AutoCrafter more stable.
+* Fix IC's not having MultiWorld support.
+* Fixed redstone not updating things when broken.
++ Add tests for CraftBook. Should minimise bugs in the areas it tests.
+* Fixed SaveArea's overwriting wrong areas.
++ Added the ability to add Custom Crafting recipes ingame.
+* Few minor error fixes.
+* Small tweak to Sound Effect IC.
+* Made Netherrack mechanic only block destruction if actually lit.
++ Added option to change Flamethrower max distance.
+* Fixed Bridges/Doors having seperate inventories on both signs.
+* Made AI Mechanics scale difficulty dependent on world difficulty.
++ Added option to make Cooking Pot's super fast.
+* Fixed some area commands not supporting shortened namespaces if name is too long.
++ Added sphere support to [off]
++ Added [rad] support to IC's. Setting radius based on WE selection.
+* Fix minecart decay on mc 1.5+
+* Major optimizations to the Clock IC.
++ Added Dropper support for AutoCrafter. Recommended as Dispensers now use up a fair few items. (But with dispensers, you can have compact minecart creaters/spawners)
+* Updated to 1.5.2
+* CartDeposit now looks for a wider range of chests.
+* Fix BlockBreak error.
+* Fixed AnimalBreeder error.
++ Added support for more different item names/block names to CustomCrafting.
+
 3.6.2
 * Fixed experimental right click support.
 * Optimized advanced data support in CustomCrafting.
