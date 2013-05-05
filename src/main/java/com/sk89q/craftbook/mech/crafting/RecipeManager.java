@@ -206,24 +206,24 @@ public class RecipeManager extends LocalConfiguration {
             if(type != RecipeType.SHAPED) {
                 LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
                 for(CraftingItemStack stack : ingredients)
-                    resz.put(stack.toString(), stack.getItemStack().getAmount());
+                    resz.put(stack.toString() + " ", stack.getItemStack().getAmount());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
                 LinkedHashMap<String, Character> resz = new LinkedHashMap<String, Character>();
                 for(CraftingItemStack stack : items.keySet())
-                    resz.put(stack.toString(), items.get(stack));
+                    resz.put(stack.toString() + " ", items.get(stack));
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }
 
             LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
-            resz.put(result.toString(), result.getItemStack().getAmount());
+            resz.put(result.toString() + " ", result.getItemStack().getAmount());
             if(hasAdvancedData("extra-results")) {
 
                 ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
                 extraResults.addAll((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
                 for(CraftingItemStack s : extraResults)
-                    resz.put(s.toString(), s.getItemStack().getAmount());
+                    resz.put(s.toString() + " ", s.getItemStack().getAmount());
             }
             config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
@@ -235,7 +235,8 @@ public class RecipeManager extends LocalConfiguration {
             LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<CraftingItemStack, Character>();
             try {
                 for (Object oitem : config.getKeys(path)) {
-                    String item = String.valueOf(oitem);
+                    String okey = String.valueOf(oitem);
+                    String item = okey.trim();
                     if (item == null || item.isEmpty()) continue;
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
                     Material material;
@@ -263,7 +264,14 @@ public class RecipeManager extends LocalConfiguration {
                             stack.setDurability((short) 0);
                         }
                         stack.setAmount(1);
-                        items.put(new CraftingItemStack(stack), config.getString(path + "." + item, "a").charAt(0));
+                        CraftingItemStack itemStack = new CraftingItemStack(stack);
+                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1) {
+                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
+                        }
+                        if(RegexUtil.PIPE_PATTERN.split(item).length > 2) {
+                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(item)).subList(2, RegexUtil.PIPE_PATTERN.split(item).length));
+                        }
+                        items.put(itemStack, config.getString(path + "." + okey, "a").charAt(0));
                     }
                 }
             } catch (Exception e) {
@@ -278,7 +286,8 @@ public class RecipeManager extends LocalConfiguration {
             Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
                 for (Object oitem : config.getKeys(path)) {
-                    String item = String.valueOf(oitem);
+                    String okey = String.valueOf(oitem);
+                    String item = okey.trim();
                     if (item == null || item.isEmpty()) continue;
                     item = RegexUtil.PIPE_PATTERN.split(item)[0];
                     String[] split = RegexUtil.COLON_PATTERN.split(item);
@@ -306,13 +315,13 @@ public class RecipeManager extends LocalConfiguration {
                         } else {
                             stack.setDurability((short) 0);
                         }
-                        stack.setAmount(config.getInt(path + "." + item, 1));
+                        stack.setAmount(config.getInt(path + "." + okey, 1));
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
-                        if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 1) {
-                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))[1]);
+                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1) {
+                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
                         }
-                        if(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length > 2) {
-                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem))).subList(2, RegexUtil.PIPE_PATTERN.split(String.valueOf(oitem)).length));
+                        if(RegexUtil.PIPE_PATTERN.split(item).length > 2) {
+                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(item)).subList(2, RegexUtil.PIPE_PATTERN.split(item).length));
                         }
                         items.add(itemStack);
                     }
