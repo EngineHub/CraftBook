@@ -1,4 +1,4 @@
-3.6.3r2
+3.6.3r3
 * Fixed a CustomCrafting error with Furnace Recipes.
 * Fixed a few console messages not having [CraftBook] at the start.
 * Fixed ContentSensor being incredibly pedantic about the amount of items.
