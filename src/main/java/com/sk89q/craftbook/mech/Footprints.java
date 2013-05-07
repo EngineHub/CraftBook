@@ -33,9 +33,6 @@ public class Footprints implements Listener {
         if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW) {
             below = event.getPlayer().getLocation().getBlock();
             yOffset = 0.13D;
-        } else if (event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.WOODEN_STEP || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.STEP || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.WOODEN_STAIRS || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.STONE_BRICK_STAIRS || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SANDSTONE_STAIRS || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.BRICK_STAIRS || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.COBBLESTONE_STAIRS) {
-            below = event.getPlayer().getLocation().getBlock();
-            yOffset = 0.53D;
         }
 
         if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(below.getTypeId())) {
