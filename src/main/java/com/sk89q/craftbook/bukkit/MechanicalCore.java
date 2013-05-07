@@ -23,6 +23,7 @@ import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
+import com.sk89q.craftbook.mech.Footprints;
 import com.sk89q.craftbook.mech.Gate;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightStone;
@@ -162,6 +163,10 @@ public class MechanicalCore implements LocalComponent {
         if (config.chairEnabled) {
             if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Chair(), plugin);
             else plugin.getLogger().warning("Chairs require ProtocolLib! They will not function without it!");
+        }
+        if (config.footprintsEnabled) {
+            if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Footprints(), plugin);
+            else plugin.getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
         }
         if (config.paintingsEnabled) {
             server.getPluginManager().registerEvents(new PaintingSwitch(), plugin);

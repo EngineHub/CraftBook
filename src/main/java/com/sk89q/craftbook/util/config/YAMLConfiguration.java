@@ -156,6 +156,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         elevatorButtonEnabled = config.getBoolean("mechanics.elevator.enable-buttons", true);
         elevatorLoop = config.getBoolean("mechanics.elevator.allow-looping", false);
 
+        // Footprints Configuration Listener
+        footprintsEnabled = config.getBoolean("mechanics.footprints.enable", false);
+        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(BlockID.SAND, BlockID.SNOW, BlockID.SNOW_BLOCK, BlockID.DIRT));
+
         // Gate Configuration Listener
         gateEnabled = config.getBoolean("mechanics.gate.enable", true);
         gateAllowRedstone = config.getBoolean("mechanics.gate.allow-redstone", true);
