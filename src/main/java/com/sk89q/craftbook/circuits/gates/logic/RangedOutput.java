@@ -15,12 +15,6 @@ import com.sk89q.craftbook.util.RegexUtil;
  */
 public class RangedOutput extends AbstractSelfTriggeredIC {
 
-    int ticks = 0;
-    int maxTicks = 0;
-    boolean hasStarted = false;
-    int amountDone = 0;
-    int maxAmount = 0;
-
     public RangedOutput(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
@@ -50,12 +44,25 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
         chip.setOutput(0, shouldOutput(chip));
     }
 
+    int min,max;
+
+    int ticks = 0;
+    int maxTicks = 0;
+    boolean hasStarted = false;
+    int amountDone = 0;
+    int maxAmount = 0;
+
+    @Override
+    public void load() {
+        String[] minmax = RegexUtil.MINUS_PATTERN.split(getSign().getLine(2));
+        min = Integer.parseInt(minmax[0]);
+        max = Integer.parseInt(minmax[1]);
+    }
+
     protected boolean shouldOutput(ChipState chip) {
 
         if (chip.getInput(0)) {
-            String[] minmax = RegexUtil.MINUS_PATTERN.split(getSign().getLine(2));
-            int min = Integer.parseInt(minmax[0]);
-            int max = Integer.parseInt(minmax[1]);
+
             maxAmount = min + (int) (Math.random() * (max - min + 1));
             amountDone = 0;
             ticks = 0;
@@ -86,7 +93,6 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
 
     @Override
     public void trigger(ChipState chip) {
-        // non-self triggered only
     }
 
     public static class Factory extends AbstractICFactory {

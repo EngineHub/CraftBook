@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,46 +19,61 @@ public class Footprints implements Listener {
 
     private boolean disabled = false;
 
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public HashSet<String> footsteps = new HashSet<String>();
 
-        if(event.getFrom().distanceSquared(event.getTo()) == 0)
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerMove(final PlayerMoveEvent event) {
+
+        if(event.getFrom().getX() == event.getTo().getX() && event.getFrom().getZ() == event.getTo().getZ())
             return;
 
         if (disabled) return;
         if(!CraftBookPlugin.inst().getConfiguration().footprintsEnabled)
             return;
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
-        double yOffset = 0.03D;
+        double yOffset = 0.07D;
 
         if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW) {
             below = event.getPlayer().getLocation().getBlock();
-            yOffset = 0.13D;
-        }
+            yOffset = 0.15D;
+        } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
+            return;
 
-        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(below.getTypeId())) {
+        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(new Integer(below.getTypeId()))) {
+
+            if(footsteps.contains(event.getPlayer().getName()))
+                return;
 
             try {
-                PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(63);
-                entitymeta.getSpecificModifier(String.class).write(0, "footstep");
-                entitymeta.getSpecificModifier(float.class).write(0, (float) event.getPlayer().getLocation().getX());
-                entitymeta.getSpecificModifier(float.class).write(1, (float) ((float) event.getPlayer().getLocation().getY() + yOffset));
-                entitymeta.getSpecificModifier(float.class).write(2, (float) event.getPlayer().getLocation().getZ());
-                entitymeta.getSpecificModifier(float.class).write(3, 0F);
-                entitymeta.getSpecificModifier(float.class).write(4, 0F);
-                entitymeta.getSpecificModifier(float.class).write(5, 0F);
-                entitymeta.getSpecificModifier(float.class).write(6, 0F);
-                entitymeta.getSpecificModifier(int.class).write(0, 1);
+                PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(63);
+                packet.getStrings().write(0, "footstep");
+                packet.getFloat().write(0, (float) event.getPlayer().getLocation().getX())
+                .write(1, (float) (event.getPlayer().getLocation().getY() + yOffset))
+                .write(2, (float) event.getPlayer().getLocation().getZ())
+                .write(3, 0F)
+                .write(4, 0F)
+                .write(5, 0F)
+                .write(6, 0F);
+                packet.getIntegers().write(0, 1);
                 for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
                     if (play.getWorld().equals(event.getPlayer().getPlayer().getWorld())) {
                         try {
-                            ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
+                            ProtocolLibrary.getProtocolManager().sendServerPacket(play, packet);
                         } catch (InvocationTargetException e) {
                             BukkitUtil.printStacktrace(e);
                         }
                     }
                 }
-            } catch (Error e) {
+
+                footsteps.add(event.getPlayer().getName());
+                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                    @Override
+                    public void run () {
+                        footsteps.remove(event.getPlayer().getName());
+                    }
+                }, event.getPlayer().isSprinting() ? 7 : 10);
+            } catch (Throwable e) {
                 CraftBookPlugin.logger().warning("Footprints do not work without ProtocolLib!");
                 disabled = true;
                 return;

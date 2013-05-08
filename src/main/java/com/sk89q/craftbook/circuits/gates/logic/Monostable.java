@@ -60,7 +60,6 @@ public class Monostable extends AbstractSelfTriggeredIC {
             chip.setOutput(0, true);
             getSign().setLine(3, setting.substring(0, colon));
         }
-
     }
 
     @Override

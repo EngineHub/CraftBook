@@ -158,7 +158,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Footprints Configuration Listener
         footprintsEnabled = config.getBoolean("mechanics.footprints.enable", false);
-        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(BlockID.SAND, BlockID.SNOW, BlockID.SNOW_BLOCK, BlockID.DIRT));
+        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(12, 78, 80, 3));
 
         // Gate Configuration Listener
         gateEnabled = config.getBoolean("mechanics.gate.enable", true);
