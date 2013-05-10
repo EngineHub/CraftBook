@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.jar.JarFile;
@@ -52,6 +53,7 @@ import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.config.VariableConfiguration;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -107,6 +109,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Handles all configuration.
      */
     private BukkitConfiguration config;
+    private VariableConfiguration variableConfiguration;
 
     /**
      * Used for backwards compatability of block faces.
@@ -128,7 +131,15 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private MechanicClock mechanicClock;
 
+    /**
+     * The map used to store versions, useful for auto updaters and /cb about.
+     */
     public BiMap<String, String> versionConverter = HashBiMap.create();
+
+    /**
+     * Stores the variables used in VariableStore.
+     */
+    public HashMap<String, String> variableStore = new HashMap<String, String>();
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -159,6 +170,14 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.6.2", "2051");
         versionConverter.put("3.6.3", "2118");
         versionConverter.put("3.6.3r3", "2123");
+    }
+
+    public String parseVariables(String line) {
+
+        for(String key : variableStore.keySet())
+            line = line.replace("%" + key + "%", variableStore.get(key));
+
+        return line;
     }
 
     public void registerManager(MechanicManager manager) {
@@ -412,6 +431,11 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     public void startComponents() {
+
+        // VariableStore
+        variableConfiguration = new VariableConfiguration(new YAMLProcessor(new File(getDataFolder(), "variables.yml"), true, YAMLFormat.EXTENDED), logger());
+        variableConfiguration.load();
+
         // Mechanics
         if (config.enableMechanisms) {
             MechanicalCore mechanicalCore = new MechanicalCore();
@@ -443,8 +467,8 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
+        variableConfiguration.save();
         components.clear();
-        config.unload();
     }
 
     /**
@@ -750,7 +774,6 @@ public class CraftBookPlugin extends JavaPlugin {
         managerAdapter.clear();
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
-        config.unload();
         config.load();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
