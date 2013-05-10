@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -21,6 +20,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -92,38 +92,18 @@ public class AdvancedEntitySpawner extends AbstractIC {
                 if (ent instanceof LivingEntity) {
 
                     for (int s = 0; s < 4; s++) {
-                        try {
-                            String bit = armourSign.getLine(s);
-                            if (bit == null || bit.trim().isEmpty()) continue;
+                        String bit = armourSign.getLine(s);
 
-                            byte data = 0;
-                            String[] bitSplit = RegexUtil.SEMICOLON_PATTERN.split(bit);
-                            try {
-                                data = Byte.parseByte(RegexUtil.COLON_PATTERN.split(bitSplit[0])[1]);
-                            } catch (Exception ignored) {
-                            }
+                        ItemStack slot = ItemUtil.makeItemValid(ItemUtil.getItem(bit));
 
-                            ItemStack slot = new ItemStack(Integer.parseInt(RegexUtil.COLON_PATTERN.split
-                                    (bitSplit[0])[0]), 1, data);
-                            try {
-                                for (int e = 1; e < bitSplit.length; e++) {
-                                    String[] enchantInfo = RegexUtil.COLON_PATTERN.split(bitSplit[e]);
-                                    slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])),
-                                            Integer.parseInt(enchantInfo[1]));
-                                }
-                            } catch (Exception ignored) {
-                            }
-
-                            if (s == 0)
-                                ((LivingEntity) ent).getEquipment().setHelmet(slot);
-                            if (s == 1)
-                                ((LivingEntity) ent).getEquipment().setChestplate(slot);
-                            if (s == 2)
-                                ((LivingEntity) ent).getEquipment().setLeggings(slot);
-                            if (s == 3)
-                                ((LivingEntity) ent).getEquipment().setBoots(slot);
-                        } catch (Exception ignored) {
-                        }
+                        if (s == 0)
+                            ((LivingEntity) ent).getEquipment().setHelmet(slot);
+                        if (s == 1)
+                            ((LivingEntity) ent).getEquipment().setChestplate(slot);
+                        if (s == 2)
+                            ((LivingEntity) ent).getEquipment().setLeggings(slot);
+                        if (s == 3)
+                            ((LivingEntity) ent).getEquipment().setBoots(slot);
                     }
                 }
             }
@@ -166,23 +146,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     } else if (data[0].equalsIgnoreCase("s")) {
                         if (!(ent instanceof LivingEntity)) continue;
 
-                        byte d = 0;
-                        String[] splitBit = RegexUtil.SEMICOLON_PATTERN.split(bit);
-                        String[] splitEvenMore = RegexUtil.COLON_PATTERN.split(splitBit[0]);
-                        try {
-                            d = Byte.parseByte(splitEvenMore[2]);
-                        } catch (Exception ignored) {
-                        }
-
-                        ItemStack slot = new ItemStack(Integer.parseInt(splitEvenMore[1]), 1, d);
-                        try {
-                            for (int e = 1; e < splitBit.length; e++) {
-                                String[] enchantInfo = RegexUtil.COLON_PATTERN.split(splitBit[e]);
-                                slot.addEnchantment(Enchantment.getById(Integer.parseInt(enchantInfo[0])),
-                                        Integer.parseInt(enchantInfo[1]));
-                            }
-                        } catch (Exception ignored) {
-                        }
+                        ItemStack slot = ItemUtil.makeItemValid(ItemUtil.getItem(bit.replace("s:", "")));
                         ((LivingEntity) ent).getEquipment().setItemInHand(slot);
                     }
                 }

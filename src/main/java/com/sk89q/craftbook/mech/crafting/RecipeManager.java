@@ -10,16 +10,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
 
 public class RecipeManager extends LocalConfiguration {
 
@@ -117,7 +114,10 @@ public class RecipeManager extends LocalConfiguration {
         @Override
         public boolean equals(Object o) {
 
-            return ((Recipe) o).getId() == id;
+            if(o instanceof Recipe && o != null)
+                return ((Recipe) o).getId() == id;
+            else
+                return false;
         }
 
         @Override
@@ -236,40 +236,13 @@ public class RecipeManager extends LocalConfiguration {
                 for (Object oitem : config.getKeys(path)) {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
-                    if (item == null || item.isEmpty()) continue;
-                    String[] split = RegexUtil.COLON_PATTERN.split(item);
-                    Material material;
-                    try {
-                        material = Material.getMaterial(Integer.parseInt(split[0]));
-                    } catch (NumberFormatException e) {
-                        // use the name
-                        material = Material.getMaterial(split[0].toUpperCase());
-                        if(material == null) {
-                            try {
-                                material = Material.getMaterial(BlockType.valueOf(split[0].toUpperCase()).getID());
-                            } catch(Exception ee){
 
-                            } finally {
-                                if(material == null)
-                                    material = Material.getMaterial(ItemType.valueOf(split[0].toUpperCase()).getID());
-                            }
-                        }
-                    }
-                    if (material != null) {
-                        ItemStack stack = new ItemStack(material);
-                        if (split.length > 1) {
-                            stack.setDurability(Short.parseShort(split[1]));
-                        } else {
-                            stack.setDurability((short) 0);
-                        }
+                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(item));
+
+                    if (stack != null) {
+
                         stack.setAmount(1);
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
-                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1) {
-                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
-                        }
-                        if(RegexUtil.PIPE_PATTERN.split(item).length > 2) {
-                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(item)).subList(2, RegexUtil.PIPE_PATTERN.split(item).length));
-                        }
                         items.put(itemStack, config.getString(path + "." + okey, "a").charAt(0));
                     }
                 }
@@ -287,41 +260,13 @@ public class RecipeManager extends LocalConfiguration {
                 for (Object oitem : config.getKeys(path)) {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
-                    if (item == null || item.isEmpty()) continue;
-                    item = RegexUtil.PIPE_PATTERN.split(item)[0];
-                    String[] split = RegexUtil.COLON_PATTERN.split(item);
-                    Material material;
-                    try {
-                        material = Material.getMaterial(Integer.parseInt(split[0]));
-                    } catch (NumberFormatException e) {
-                        // use the name
-                        material = Material.getMaterial(split[0].toUpperCase());
-                        if(material == null) {
-                            try {
-                                material = Material.getMaterial(BlockType.valueOf(split[0].toUpperCase()).getID());
-                            } catch(Exception ee){
 
-                            } finally {
-                                if(material == null)
-                                    material = Material.getMaterial(ItemType.valueOf(split[0].toUpperCase()).getID());
-                            }
-                        }
-                    }
-                    if (material != null) {
-                        ItemStack stack = new ItemStack(material);
-                        if (split.length > 1) {
-                            stack.setDurability(Short.parseShort(split[1]));
-                        } else {
-                            stack.setDurability((short) 0);
-                        }
+                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(item));
+
+                    if (stack != null) {
+
                         stack.setAmount(config.getInt(path + "." + okey, 1));
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
-                        if(RegexUtil.PIPE_PATTERN.split(item).length > 1) {
-                            itemStack.addAdvancedData("name", RegexUtil.PIPE_PATTERN.split(item)[1]);
-                        }
-                        if(RegexUtil.PIPE_PATTERN.split(item).length > 2) {
-                            itemStack.addAdvancedData("lore", Arrays.asList(RegexUtil.PIPE_PATTERN.split(item)).subList(2, RegexUtil.PIPE_PATTERN.split(item).length));
-                        }
                         items.add(itemStack);
                     }
                 }

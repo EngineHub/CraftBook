@@ -114,7 +114,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
         for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
             if (entity.isValid() && entity instanceof Ageable) {
-                if(((Ageable) entity).canBreed() || !canBreed(entity))
+                if(!((Ageable) entity).canBreed() || !canBreed(entity))
                     continue;
                 // Check Radius
                 if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {

@@ -2,7 +2,10 @@ package com.sk89q.craftbook.mech.crafting;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -50,6 +53,8 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
                 addAdvancedData("name", item.getItemMeta().getDisplayName());
             if(item.getItemMeta().hasLore())
                 addAdvancedData("lore", item.getItemMeta().getLore());
+            if(item.getItemMeta().hasEnchants())
+                addAdvancedData("enchants", item.getItemMeta().getEnchants());
         }
     }
 
@@ -107,6 +112,10 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
         String me = getItemStack().getType().name();
         if(getItemStack().getDurability() > 0)
             me = me + ":" + getItemStack().getDurability();
+
+        if(hasAdvancedData("enchants"))
+            for(Entry<Enchantment,Integer> enchants : ((Map<Enchantment,Integer>)getAdvancedData("enchants")).entrySet())
+                me = me + ";" + enchants.getKey().getName() + ":" + enchants.getValue();
 
         if(hasAdvancedData("name"))
             me = me + "|" + getAdvancedData("name");

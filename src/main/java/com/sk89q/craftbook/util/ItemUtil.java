@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.worldedit.blocks.BlockID;
@@ -135,8 +137,22 @@ public class ItemUtil {
 
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
-        else
+        else {
+
+            if(item.hasItemMeta() != item2.hasItemMeta())
+                return false;
+            if(item.hasItemMeta()) {
+
+                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
+
+                    if(item.getItemMeta().hasDisplayName() && !item.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName()))
+                        return false;
+                } else
+                    return false;
+            }
+
             return areItemsIdentical(item.getData(), item2.getData());
+        }
     }
 
     public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
@@ -382,7 +398,9 @@ public class ItemUtil {
         int data = -1;
         int amount = 1;
 
-        String[] amountSplit = RegexUtil.ASTERISK_PATTERN.split(line, 2);
+        String[] nameLoreSplit = RegexUtil.PIPE_PATTERN.split(line);
+        String[] enchantSplit = RegexUtil.SEMICOLON_PATTERN.split(nameLoreSplit[0]);
+        String[] amountSplit = RegexUtil.ASTERISK_PATTERN.split(enchantSplit[0], 2);
         String[] dataSplit = RegexUtil.COLON_PATTERN.split(amountSplit[0], 2);
         try {
             id = Integer.parseInt(dataSplit[0]);
@@ -410,6 +428,56 @@ public class ItemUtil {
 
         ItemStack rVal = new ItemStack(id, amount, (short) data);
         rVal.setData(new MaterialData(id, (byte)data));
+
+        if(nameLoreSplit.length > 1) {
+
+            ItemMeta meta = rVal.getItemMeta();
+            meta.setDisplayName(nameLoreSplit[1]);
+            if(nameLoreSplit.length > 2) {
+
+                List<String> lore = new ArrayList<String>();
+                for(int i = 2; i < nameLoreSplit.length; i++)
+                    lore.add(nameLoreSplit[i]);
+
+                meta.setLore(lore);
+            }
+
+            rVal.setItemMeta(meta);
+        }
+        if(enchantSplit.length > 1) {
+
+            for(int i = 1; i < enchantSplit.length; i++) {
+
+                try {
+                    String[] sp = RegexUtil.COLON_PATTERN.split(enchantSplit[i]);
+                    Enchantment ench = Enchantment.getByName(sp[0]);
+                    if(ench == null)
+                        ench = Enchantment.getById(Integer.parseInt(sp[0]));
+                    rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
+                }
+                catch(Exception e){}
+            }
+        }
+
         return rVal;
+    }
+
+    public static ItemStack makeItemValid(ItemStack invalid) {
+
+        if(invalid == null)
+            return null;
+
+        ItemStack valid = invalid.clone();
+
+        if(valid.getDurability() < 0)
+            valid.setDurability((short) 0);
+        if(valid.getData().getData() < 0)
+            valid.getData().setData((byte) 0);
+        if(valid.getTypeId() < 1)
+            valid.setTypeId(1);
+        if(valid.getAmount() < 1)
+            valid.setAmount(1);
+
+        return valid;
     }
 }

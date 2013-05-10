@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -182,6 +184,10 @@ public class CustomCrafting implements Listener {
             ItemMeta meta = res.getItemMeta();
             meta.setLore((List<String>) recipe.getResult().getAdvancedData("lore"));
             res.setItemMeta(meta);
+        }
+        if(recipe.getResult().hasAdvancedData("enchants")) {
+            for(Entry<Enchantment,Integer> enchants : ((Map<Enchantment,Integer>)recipe.getResult().getAdvancedData("enchants")).entrySet())
+                res.addUnsafeEnchantment(enchants.getKey(), enchants.getValue());
         }
         return res;
     }
