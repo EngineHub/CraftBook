@@ -81,7 +81,7 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
         }
     }
 
-    public boolean isOn = false;
+    public boolean isOn = true;
 
     /**
      * @param trigger if you didn't already check if this is a wall sign with appropriate text,
@@ -129,10 +129,18 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
     }
 
     @Override
-    public void unloadWithEvent(ChunkUnloadEvent event) {
+    public void unloadWithEvent(final ChunkUnloadEvent event) {
 
         if (!isOn && CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
         event.setCancelled(true);
+        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+            @Override
+            public void run () {
+                event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true);
+            }
+
+        }, 2L);
     }
 
     @Override
