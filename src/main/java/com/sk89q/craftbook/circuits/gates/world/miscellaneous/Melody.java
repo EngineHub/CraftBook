@@ -8,14 +8,17 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.circuits.jinglenote.MidiJingleSequencer;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -73,7 +76,10 @@ public class Melody extends AbstractIC {
             try {
                 radius = Integer.parseInt(split[0]);
             } catch (Exception ignored) {
-                radius = -1;
+                if(split[0].trim().isEmpty())
+                    radius = -1;
+                else
+                    radius = CraftBookPlugin.inst().getConfiguration().ICMaxRange;
             }
 
             forceStart = split[1].equalsIgnoreCase("START");
@@ -139,7 +145,7 @@ public class Melody extends AbstractIC {
                 jNote.stopAll();
             }
         } catch (Throwable e) {
-            getServer().getLogger().log(Level.SEVERE, "[CraftBookCircuits]: Midi Failed To Play!");
+            getServer().getLogger().log(Level.SEVERE, "Midi Failed To Play!");
             BukkitUtil.printStacktrace(e);
         }
     }
@@ -154,15 +160,15 @@ public class Melody extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            try {
-                if (sign.getLine(0).equalsIgnoreCase("POWER SENSOR")) {
-                    sign.setLine(1, "[MC1266]");
-                    sign.update(false);
-                    return new PowerSensor(getServer(), sign, this);
-                }
-            } catch (Exception ignored) {
-            }
             return new Melody(getServer(), sign, this);
+        }
+
+        @Override
+        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+
+            if (sign.getLine(3).trim().isEmpty())
+                if (!ICMechanicFactory.hasRestrictedPermissions(player, this, "mc1270"))
+                    throw new ICVerificationException("You don't have permission to globally broadcast!");
         }
 
         @Override
