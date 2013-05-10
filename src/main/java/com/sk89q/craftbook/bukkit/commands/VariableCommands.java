@@ -2,7 +2,9 @@ package com.sk89q.craftbook.bukkit.commands;
 
 import org.bukkit.command.CommandSender;
 
+import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -32,6 +34,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
+            resetICCache();
         } else
             sender.sendMessage("Unknown Variable!");
     }
@@ -51,6 +54,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
+            resetICCache();
         } else
             sender.sendMessage("Existing Variable!");
     }
@@ -81,7 +85,15 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.remove(context.getString(0));
+            resetICCache();
         } else
             sender.sendMessage("Unknown Variable!");
+    }
+
+    public void resetICCache() {
+
+        if(CircuitCore.inst() != null)
+            if(CircuitCore.inst().getIcManager() != null) //Make sure IC's are enabled.
+                ICManager.emptyCache();
     }
 }
