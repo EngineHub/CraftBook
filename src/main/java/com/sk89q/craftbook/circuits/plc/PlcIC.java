@@ -386,6 +386,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             public boolean isAlwaysST () {
                 return false;
             }
+
+            @Override
+            public ChangedSign getSign () {
+                return self.getSign();
+            }
         };
     }
 
@@ -418,5 +423,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     @Override
     public void load() {
 
+    }
+
+    @Override
+    public ChangedSign getSign () {
+
+        return sign;
     }
 }

@@ -50,7 +50,8 @@ public abstract class AbstractIC implements IC {
         return server;
     }
 
-    protected ChangedSign getSign() {
+    @Override
+    public ChangedSign getSign() {
 
         return sign;
     }

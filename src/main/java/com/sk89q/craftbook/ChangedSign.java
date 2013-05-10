@@ -29,6 +29,8 @@ public interface ChangedSign {
 
     public void flushLines();
 
+    public boolean updateSign(ChangedSign sign);
+
     // Other
     public boolean update(boolean force);
 

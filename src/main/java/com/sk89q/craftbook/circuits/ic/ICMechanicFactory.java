@@ -109,6 +109,14 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         // check if the ic is cached and get that single instance instead of creating a new one
         if (ICManager.isCachedIC(pt)) {
             ic = ICManager.getCachedIC(pt);
+            if(ic.getSign().updateSign(sign)) {
+
+                ICManager.removeCachedIC(pt);
+                ic = registration.getFactory().create(sign);
+                ic.load();
+                // add the created ic to the cache
+                ICManager.addCachedIC(pt, ic);
+            }
         } else {
             ic = registration.getFactory().create(sign);
             ic.load();

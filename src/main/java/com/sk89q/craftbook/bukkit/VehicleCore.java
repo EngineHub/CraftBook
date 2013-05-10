@@ -128,6 +128,7 @@ public class VehicleCore implements LocalComponent {
                     if (!(event.getEntity() instanceof LivingEntity)) break enterOnImpact;
                     vehicle.setPassenger(event.getEntity());
 
+                    event.setCollisionCancelled(true);
                     return;
                 }
             }
@@ -141,6 +142,7 @@ public class VehicleCore implements LocalComponent {
                 else
                     ((Item) entity).setItemStack(leftovers.toArray(new ItemStack[1])[0]);
 
+                event.setCollisionCancelled(true);
                 return;
             }
 
