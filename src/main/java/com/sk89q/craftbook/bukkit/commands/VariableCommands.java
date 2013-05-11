@@ -9,6 +9,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 
 public class VariableCommands {
 
@@ -20,8 +21,7 @@ public class VariableCommands {
     }
 
     @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.set")
-    public void set(CommandContext context, CommandSender sender) {
+    public void set(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -29,12 +29,16 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
             resetICCache();
+            sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Unknown Variable!");
     }
@@ -55,6 +59,7 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
             resetICCache();
+            sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Existing Variable!");
     }
@@ -98,8 +103,7 @@ public class VariableCommands {
     }
 
     @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.append")
-    public void append(CommandContext context, CommandSender sender) {
+    public void append(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -107,19 +111,22 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), plugin.variableStore.get(context.getString(0)) + context.getString(1));
             resetICCache();
+            sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
     @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1)
-    @CommandPermissions("craftbook.variables.toggle")
-    public void toggle(CommandContext context, CommandSender sender) {
+    public void toggle(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -127,10 +134,9 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
-            if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
-                sender.sendMessage("Invalid Variable Value!");
-                return;
-            }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             String var = plugin.variableStore.get(context.getString(0));
             if(var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1"))
                 var = var.equalsIgnoreCase("1") ? "0" : "1";
@@ -144,13 +150,13 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), var);
             resetICCache();
+            sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
     @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.add")
-    public void add(CommandContext context, CommandSender sender) {
+    public void add(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -158,6 +164,9 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
@@ -174,13 +183,13 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), var);
             resetICCache();
+            sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
     @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.subtract")
-    public void subtract(CommandContext context, CommandSender sender) {
+    public void subtract(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -188,6 +197,9 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
@@ -204,13 +216,13 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), var);
             resetICCache();
+            sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
     @Command(aliases = "multiple", desc = "Multiply a numeric variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.multiple")
-    public void multiple(CommandContext context, CommandSender sender) {
+    public void multiple(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -218,6 +230,9 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
@@ -234,13 +249,13 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), var);
             resetICCache();
+            sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
     @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2)
-    @CommandPermissions("craftbook.variables.divide")
-    public void divide(CommandContext context, CommandSender sender) {
+    public void divide(CommandContext context, CommandSender sender) throws CommandPermissionsException {
 
         if(plugin.variableStore.containsKey(context.getString(0))) {
 
@@ -248,6 +263,9 @@ public class VariableCommands {
                 sender.sendMessage("Invalid Variable Name!");
                 return;
             }
+
+            checkModifyPermissions(sender, context.getString(0));
+
             if(!RegexUtil.VARIABLE_PATTERN.matcher(context.getString(1)).find()) {
                 sender.sendMessage("Invalid Variable Value!");
                 return;
@@ -264,7 +282,14 @@ public class VariableCommands {
             }
             plugin.variableStore.put(context.getString(0), var);
             resetICCache();
+            sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
+    }
+
+    public void checkModifyPermissions(CommandSender sender, String key) throws CommandPermissionsException {
+
+        if(!sender.hasPermission("craftbook.variables.modify") && !sender.hasPermission("craftbook.variables.modify." + key))
+            throw new CommandPermissionsException();
     }
 }
