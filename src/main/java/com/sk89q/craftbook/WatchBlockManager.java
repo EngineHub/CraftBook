@@ -154,6 +154,10 @@ class WatchBlockManager {
      */
     public Set<PersistentMechanic> get(BlockWorldVector pos) {
 
-        return watchBlocks.get(pos);
+        Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
+        if(watchBlocks.get(pos) == null)
+            return folks;
+        folks.addAll(watchBlocks.get(pos));
+        return folks;
     }
 }

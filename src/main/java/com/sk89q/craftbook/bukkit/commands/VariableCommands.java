@@ -10,7 +10,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
@@ -109,14 +108,8 @@ public class VariableCommands {
                 Iterator<Entry<BlockWorldVector, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
                 while(iterator.hasNext()) {
                     Entry<BlockWorldVector, IC> ic = iterator.next();
-                    if(ic.getValue().getSign().hasVariable(variable)) {
+                    if(ic.getValue().getSign().hasVariable(variable))
                         iterator.remove();
-                        CircuitCore.inst().getManager().unload(ic.getKey(), null);
-                        try {
-                            CircuitCore.inst().getManager().load(ic.getKey(), null);
-                        } catch (InvalidMechanismException e) {
-                        }
-                    }
                 }
             }
     }
