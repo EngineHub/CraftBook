@@ -433,8 +433,13 @@ public class CraftBookPlugin extends JavaPlugin {
     public void startComponents() {
 
         // VariableStore
-        variableConfiguration = new VariableConfiguration(new YAMLProcessor(new File(getDataFolder(), "variables.yml"), true, YAMLFormat.EXTENDED), logger());
-        variableConfiguration.load();
+        try {
+            File varFile = new File(getDataFolder(), "variables.yml");
+            if(!varFile.exists())
+                varFile.createNewFile();
+            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), logger());
+            variableConfiguration.load();
+        } catch(Exception e){}
 
         // Mechanics
         if (config.enableMechanisms) {
