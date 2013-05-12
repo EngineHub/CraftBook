@@ -274,6 +274,10 @@ public class VariableCommands {
             try {
 
                 double f = Double.parseDouble(var);
+                if(f == 0){
+                    sender.sendMessage("Can't divide by 0!");
+                    return;
+                }
                 f /= context.getDouble(1);
                 var = String.valueOf(f);
             } catch(Exception e) {
