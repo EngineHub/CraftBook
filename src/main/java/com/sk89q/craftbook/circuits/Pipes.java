@@ -29,6 +29,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockVector;
@@ -253,7 +254,7 @@ public class Pipes extends AbstractMechanic {
                     while(pExceptions.remove(null)){}
                 }
 
-                List<ItemStack> filteredItems = ItemUtil.filterItems(items, pFilters, pExceptions);
+                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;
