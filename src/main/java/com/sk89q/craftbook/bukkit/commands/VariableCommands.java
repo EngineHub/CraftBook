@@ -1,15 +1,21 @@
 package com.sk89q.craftbook.bukkit.commands;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.worldedit.BlockWorldVector;
 
 public class VariableCommands {
 
@@ -37,7 +43,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Unknown Variable!");
@@ -58,7 +64,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), context.getString(1));
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Existing Variable!");
@@ -90,16 +96,29 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.remove(context.getString(0));
-            resetICCache();
+            resetICCache(context.getString(0));
         } else
             sender.sendMessage("Unknown Variable!");
     }
 
-    public void resetICCache() {
+    public void resetICCache(String variable) {
 
         if(CircuitCore.inst() != null)
-            if(CircuitCore.inst().getIcManager() != null) //Make sure IC's are enabled.
-                ICManager.emptyCache();
+            if(CircuitCore.inst().getIcManager() != null) {//Make sure IC's are enabled.
+
+                Iterator<Entry<BlockWorldVector, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
+                while(iterator.hasNext()) {
+                    Entry<BlockWorldVector, IC> ic = iterator.next();
+                    if(ic.getValue().getSign().hasVariable(variable)) {
+                        iterator.remove();
+                        CircuitCore.inst().getManager().unload(ic.getKey(), null);
+                        try {
+                            CircuitCore.inst().getManager().load(ic.getKey(), null);
+                        } catch (InvalidMechanismException e) {
+                        }
+                    }
+                }
+            }
     }
 
     @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2)
@@ -119,7 +138,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), plugin.variableStore.get(context.getString(0)) + context.getString(1));
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + plugin.variableStore.get(context.getString(0)));
         } else
             sender.sendMessage("Unknown Variable!");
@@ -149,7 +168,7 @@ public class VariableCommands {
                 return;
             }
             plugin.variableStore.put(context.getString(0), var);
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
@@ -177,12 +196,14 @@ public class VariableCommands {
                 double f = Double.parseDouble(var);
                 f += context.getDouble(1);
                 var = String.valueOf(f);
+                if (var.endsWith(".0"))
+                    var = var.replace(".0", "");
             } catch(Exception e) {
                 sender.sendMessage("Variable not of numeric type!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), var);
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
@@ -210,12 +231,14 @@ public class VariableCommands {
                 double f = Double.parseDouble(var);
                 f -= context.getDouble(1);
                 var = String.valueOf(f);
+                if (var.endsWith(".0"))
+                    var = var.replace(".0", "");
             } catch(Exception e) {
                 sender.sendMessage("Variable not of numeric type!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), var);
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
@@ -243,12 +266,14 @@ public class VariableCommands {
                 double f = Double.parseDouble(var);
                 f *= context.getDouble(1);
                 var = String.valueOf(f);
+                if (var.endsWith(".0"))
+                    var = var.replace(".0", "");
             } catch(Exception e) {
                 sender.sendMessage("Variable not of numeric type!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), var);
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");
@@ -280,12 +305,14 @@ public class VariableCommands {
                 }
                 f /= context.getDouble(1);
                 var = String.valueOf(f);
+                if (var.endsWith(".0"))
+                    var = var.replace(".0", "");
             } catch(Exception e) {
                 sender.sendMessage("Variable not of numeric type!");
                 return;
             }
             plugin.variableStore.put(context.getString(0), var);
-            resetICCache();
+            resetICCache(context.getString(0));
             sender.sendMessage("Variable is now: " + var);
         } else
             sender.sendMessage("Unknown Variable!");

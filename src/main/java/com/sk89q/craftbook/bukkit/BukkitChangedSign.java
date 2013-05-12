@@ -198,4 +198,10 @@ public class BukkitChangedSign implements ChangedSign {
 
         return false;
     }
+
+    @Override
+    public boolean hasVariable(String var) {
+
+        return lines[0].contains("%" + var + "%") || lines[1].contains("%" + var + "%") || lines[2].contains("%" + var + "%") || lines[3].contains("%" + var + "%");
+    }
 }

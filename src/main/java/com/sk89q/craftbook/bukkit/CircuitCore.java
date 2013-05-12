@@ -602,4 +602,8 @@ public class CircuitCore implements LocalComponent {
     public ICManager getIcManager () {
         return icManager;
     }
+
+    public MechanicManager getManager () {
+        return manager;
+    }
 }

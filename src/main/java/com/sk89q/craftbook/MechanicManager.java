@@ -356,7 +356,7 @@ public class MechanicManager {
      * @throws InvalidMechanismException if it appears that the position is intended to me a mechanism,
      *                                   but the mechanism is misconfigured and inoperable.
      */
-    protected HashSet<Mechanic> load(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
+    public HashSet<Mechanic> load(BlockWorldVector pos, LocalPlayer player) throws InvalidMechanismException {
 
         HashSet<Mechanic> detectedMechanics = detect(pos);
         if(player != null)
@@ -624,6 +624,25 @@ public class MechanicManager {
         // Find mechanics that we need to unload
         Set<PersistentMechanic> applicable = triggersManager.getByChunk(chunk);
         applicable.addAll(watchBlockManager.getByChunk(chunk));
+
+        for (Mechanic m : applicable) {
+            if (event != null && event.isCancelled())
+                return;
+            unload(m, event);
+        }
+    }
+
+    /**
+     * Unloads the mechanics at the given position.
+     * 
+     * @param position
+     * @param event
+     */
+    public void unload(BlockWorldVector position, ChunkUnloadEvent event) {
+
+        Set<PersistentMechanic> applicable = new HashSet<PersistentMechanic>();
+        applicable.add(triggersManager.get(position));
+        applicable.addAll(watchBlockManager.get(position));
 
         for (Mechanic m : applicable) {
             if (event != null && event.isCancelled())

@@ -25,13 +25,9 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
 
-    private final SelfTriggeredIC selfTrigIC;
-
-    public SelfTriggeredICMechanic(String id, SelfTriggeredIC ic, ICFamily family,
-            BlockWorldVector pos) {
+    public SelfTriggeredICMechanic(String id, SelfTriggeredIC ic, ICFamily family, BlockWorldVector pos) {
 
         super(id, ic, family, pos);
-        selfTrigIC = ic;
     }
 
     @Override
@@ -42,11 +38,10 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
 
-            selfTrigIC.getSign().updateSign(BukkitUtil.toChangedSign(block));
+            ic.getSign().updateSign(BukkitUtil.toChangedSign(block));
             // Assuming that the plugin host isn't going wonky here
-            ChipState chipState = family.detectSelfTriggered(pt, BukkitUtil.toChangedSign(block));
-            selfTrigIC.think(chipState);
+            ChipState chipState = family.detectSelfTriggered(pt, ic.getSign());
+            ((SelfTriggeredIC) ic).think(chipState);
         }
     }
-
 }

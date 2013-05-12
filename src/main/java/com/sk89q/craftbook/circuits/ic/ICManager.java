@@ -189,6 +189,14 @@ public class ICManager {
         cachedICs.clear();
     }
 
+    /**
+     * Gets the IC Cache map.
+     */
+    public static Map<BlockWorldVector, IC> getCachedICs() {
+
+        return cachedICs;
+    }
+
     public boolean hasCustomPrefix(String prefix) {
 
         return customPrefix.contains(prefix.toLowerCase());
