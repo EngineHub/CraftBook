@@ -78,11 +78,15 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
                 continue;
             }
             Item item = (Item) en;
-            ItemStack stack = item.getItemStack();
-            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid())
+            if (item.isDead() || !item.isValid())
                 continue;
 
             if (EntityUtil.isEntityInBlock(en, BukkitUtil.toSign(getSign()).getBlock())) {
+
+                ItemStack stack = item.getItemStack();
+
+                if(!ItemUtil.isStackValid(stack))
+                    continue;
 
                 // Check to see if it matches either test stack, if not stop
                 if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack))
@@ -97,8 +101,8 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
                     item.remove();
                     collected = true;
                 } else {
-                    if(leftovers.get(0).getAmount() != stack.getAmount()) {
-                        item.getItemStack().setAmount(leftovers.get(0).getAmount());
+                    if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
+                        item.setItemStack(leftovers.get(0));
                         collected = true;
                     }
                 }
