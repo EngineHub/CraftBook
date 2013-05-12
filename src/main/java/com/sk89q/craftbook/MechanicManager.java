@@ -677,8 +677,7 @@ public class MechanicManager {
             }
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getCanonicalName
-                    (), t);
+            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getSimpleName());
             BukkitUtil.printStacktrace(t);
         }
 
@@ -713,8 +712,7 @@ public class MechanicManager {
                 try {
                     mechanic.think();
                 } catch (Throwable t) { // Mechanic failed to think for some reason
-                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass()
-                            .getCanonicalName(), t);
+                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getSimpleName());
                     BukkitUtil.printStacktrace(t);
                 }
             } else {

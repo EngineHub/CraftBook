@@ -60,7 +60,7 @@ public class ICMechanic extends PersistentMechanic {
     public boolean equals(Object o) {
 
         if(o instanceof ICMechanic)
-            return ((ICMechanic) o).id.equals(id) && pos.getWorld().equals(((ICMechanic) o).pos.getWorld()) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ() && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle()) && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle());
+            return ((ICMechanic) o).id.equals(id) && pos.getWorld().equals(((ICMechanic) o).pos.getWorld()) && pos.getBlockX() == ((ICMechanic) o).pos.getBlockX() && pos.getBlockY() == ((ICMechanic) o).pos.getBlockY() && pos.getBlockZ() == ((ICMechanic) o).pos.getBlockZ() && ic.getSignTitle().equalsIgnoreCase(((ICMechanic)o).ic.getSignTitle()) && ic.getTitle().equalsIgnoreCase(((ICMechanic)o).ic.getTitle());
 
         return false;
     }
@@ -134,11 +134,12 @@ public class ICMechanic extends PersistentMechanic {
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         if (block.getTypeId() == BlockID.WALL_SIGN) {
+
             ChangedSign sign = BukkitUtil.toChangedSign(block);
 
             Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
 
-            return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && ((PersistentIC) ic).isActive();
+            return matcher.matches() && matcher.group(1).equalsIgnoreCase(id) && ic instanceof PersistentIC && ((PersistentIC) ic).isActive() && (!CraftBookPlugin.inst().getConfiguration().ICCached || ICManager.isCachedIC(pt) && ICManager.getCachedIC(pt).equals(ic));
         }
 
         return false;

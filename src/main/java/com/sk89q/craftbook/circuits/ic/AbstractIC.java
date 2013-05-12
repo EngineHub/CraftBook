@@ -102,4 +102,13 @@ public abstract class AbstractIC implements IC {
     public void load() {
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if(o instanceof AbstractIC)
+            return getSignTitle().equalsIgnoreCase(((AbstractIC)o).getSignTitle()) && getTitle().equalsIgnoreCase(((AbstractIC)o).getTitle()) && sign.equals(((AbstractIC) o).sign);
+
+        return false;
+    }
 }
