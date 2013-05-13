@@ -145,6 +145,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                     if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.WHEAT, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
+                        ((Ageable) entity).setBreed(false);
                         return true;
                     }
                 }
@@ -156,6 +157,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                     if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.CARROT, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
+                        ((Ageable) entity).setBreed(false);
                         return true;
                     }
                 }
@@ -165,6 +167,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                     if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(ItemID.SEEDS, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
+                        ((Ageable) entity).setBreed(false);
                         return true;
                     }
                 }
