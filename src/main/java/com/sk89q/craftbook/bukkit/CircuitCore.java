@@ -97,6 +97,7 @@ import com.sk89q.craftbook.circuits.gates.world.items.ContainerStacker;
 import com.sk89q.craftbook.circuits.gates.world.items.Distributer;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemDispenser;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemFan;
+import com.sk89q.craftbook.circuits.gates.world.items.RangedCollector;
 import com.sk89q.craftbook.circuits.gates.world.items.Sorter;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowBarrage;
 import com.sk89q.craftbook.circuits.gates.world.miscellaneous.ArrowShooter;
@@ -321,7 +322,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1211", "set bridge", new SetBridge.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1212", "set door", new SetDoor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1213", "sound", new SoundEffect.Factory(server), familySISO, familyAISO); // Restricted
-        //TODO empty slot.
+        registerIC("MC1214", "range coll", new RangedCollector.Factory(server), familySISO, familyAISO);
         registerIC("MC1215", "set a chest", new SetBlockAboveChest.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1216", "set b chest", new SetBlockBelowChest.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1217", "pot induce", new PotionInducer.Factory(server), familySISO, familyAISO);

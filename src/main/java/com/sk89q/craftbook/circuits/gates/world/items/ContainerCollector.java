@@ -45,31 +45,31 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            chip.setOutput(0, collect());
-        }
+        if (chip.getInput(0))
+            chip.setOutput(0, scanForItems());
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, collect());
+        chip.setOutput(0, scanForItems());
     }
 
     ItemStack doWant, doNotWant;
+
+    Block chest;
 
     @Override
     public void load() {
 
         doWant = ItemUtil.getItem(getLine(2));
         doNotWant = ItemUtil.getItem(getLine(3));
+        chest = getBackBlock().getRelative(0, 1, 0);
     }
 
-    protected boolean collect() {
+    protected boolean scanForItems() {
 
-        Block b = getBackBlock().getRelative(0, 1, 0);
-
-        if(!(b.getState() instanceof InventoryHolder))
+        if(!(chest.getState() instanceof InventoryHolder))
             return false;
 
         boolean collected = false;
@@ -83,32 +83,39 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
             if (EntityUtil.isEntityInBlock(en, BukkitUtil.toSign(getSign()).getBlock())) {
 
-                ItemStack stack = item.getItemStack();
-
-                if(!ItemUtil.isStackValid(stack))
-                    continue;
-
-                // Check to see if it matches either test stack, if not stop
-                if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack))
-                    continue;
-
-                if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack))
-                    continue;
-
-                // Add the items to a container, and destroy them.
-                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)b.getState(), stack);
-                if(leftovers.isEmpty()) {
-                    item.remove();
+                if(collectItem(item))
                     collected = true;
-                } else {
-                    if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
-                        item.setItemStack(leftovers.get(0));
-                        collected = true;
-                    }
-                }
             }
         }
         return collected;
+    }
+
+    public boolean collectItem(Item item) {
+        ItemStack stack = item.getItemStack();
+
+        if(!ItemUtil.isStackValid(stack))
+            return false;
+
+        // Check to see if it matches either test stack, if not stop
+        if (doWant != null && !ItemUtil.areItemsIdentical(doWant, stack))
+            return false;
+
+        if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack))
+            return false;
+
+        // Add the items to a container, and destroy them.
+        List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
+        if(leftovers.isEmpty()) {
+            item.remove();
+            return true;
+        } else {
+            if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
+                item.setItemStack(leftovers.get(0));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static class Factory extends AbstractICFactory {
