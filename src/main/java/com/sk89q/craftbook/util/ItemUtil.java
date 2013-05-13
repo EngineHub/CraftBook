@@ -77,11 +77,12 @@ public class ItemUtil {
 
                 if(!ItemUtil.isStackValid(fil))
                     continue;
-                passesFilters = false;
+
                 if(ItemUtil.areItemsIdentical(fil, stack)) {
                     passesFilters = true;
                     break;
-                }
+                } else
+                    passesFilters = false;
             }
             if(!passesFilters)
                 return false;
@@ -123,22 +124,18 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
-    public static boolean areItemsIdentical(ItemStack item, int type, byte data) {
-
-        return areItemsIdentical(item, new MaterialData(type, data));
-    }
-
-    public static boolean areItemsIdentical(ItemStack item, MaterialData data) {
-
-        return areItemsIdentical(item.getData(), data);
-    }
-
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else {
 
+            if(item.getTypeId() != item2.getTypeId())
+                return false;
+            if(item.getDurability() != item2.getDurability() && item.getDurability() >= 0 && item2.getDurability() >= 0)
+                return false;
+            if(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0)
+                return false;
             if(item.hasItemMeta() != item2.hasItemMeta())
                 return false;
             if(item.hasItemMeta()) {
@@ -151,18 +148,13 @@ public class ItemUtil {
                     return false;
             }
 
-            return areItemsIdentical(item.getData(), item2.getData());
+            return true;
         }
-    }
-
-    public static boolean areItemsIdentical(MaterialData data, MaterialData comparedData) {
-
-        return data.getItemTypeId() == comparedData.getItemTypeId() && (data.getData() == comparedData.getData() || data.getData() < 0 || comparedData.getData() < 0);
     }
 
     public static boolean isStackValid(ItemStack item) {
 
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && item.getDurability() >= 0;
+        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
     }
 
     /**
