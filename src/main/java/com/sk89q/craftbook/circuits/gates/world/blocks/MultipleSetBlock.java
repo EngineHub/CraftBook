@@ -174,8 +174,7 @@ public class MultipleSetBlock extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"x:y:z:onid:ondata-offid:offdata", "width:height:depth"};
-            return lines;
+            return new String[] {"x:y:z:onid:ondata-offid:offdata", "width:height:depth"};
         }
     }
 }

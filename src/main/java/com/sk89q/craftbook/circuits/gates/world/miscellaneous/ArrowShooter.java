@@ -141,8 +141,7 @@ public class ArrowShooter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"speed:spread", "vertical gain"};
-            return lines;
+            return new String[] {"speed:spread", "vertical gain"};
         }
     }
 }

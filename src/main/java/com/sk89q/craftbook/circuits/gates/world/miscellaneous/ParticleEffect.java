@@ -121,8 +121,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles"};
-            return lines;
+            return new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles"};
         }
 
         @Override

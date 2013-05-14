@@ -119,8 +119,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"minimum light", "x:y:z offset"};
-            return lines;
+            return new String[] {"minimum light", "x:y:z offset"};
         }
     }
 }

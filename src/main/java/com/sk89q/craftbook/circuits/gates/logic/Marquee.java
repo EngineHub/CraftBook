@@ -119,8 +119,7 @@ public class Marquee extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"next pin to set", null};
-            return lines;
+            return new String[] {"next pin to set", null};
         }
     }
 }

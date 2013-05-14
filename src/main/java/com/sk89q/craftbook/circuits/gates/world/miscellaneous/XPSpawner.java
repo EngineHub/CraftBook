@@ -81,8 +81,7 @@ public class XPSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"amount of xp", "amount of orbs"};
-            return lines;
+            return new String[] {"amount of xp", "amount of orbs"};
         }
     }
 }

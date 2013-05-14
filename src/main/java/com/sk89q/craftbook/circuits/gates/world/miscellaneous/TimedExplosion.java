@@ -115,8 +115,7 @@ public class TimedExplosion extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"time in ticks:radius (ending with ! makes fire)", "x:y:z offset"};
-            return lines;
+            return new String[] {"time in ticks:radius (ending with ! makes fire)", "x:y:z offset"};
         }
     }
 }

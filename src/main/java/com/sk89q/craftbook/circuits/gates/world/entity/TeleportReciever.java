@@ -94,8 +94,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"frequency name", "+owelcome text"};
-            return lines;
+            return new String[] {"frequency name", "+owelcome text"};
         }
     }
 }

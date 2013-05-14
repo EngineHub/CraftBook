@@ -95,8 +95,7 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"item id:data", "x:y:z offset"};
-            return lines;
+            return new String[] {"item id:data", "x:y:z offset"};
         }
     }
 }

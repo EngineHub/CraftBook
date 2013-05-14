@@ -99,10 +99,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {
-                    "Name of firework show", null
-            };
-            return lines;
+            return new String[] {"Name of firework show", null};
         }
     }
 

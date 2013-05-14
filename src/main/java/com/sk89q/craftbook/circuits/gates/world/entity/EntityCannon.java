@@ -124,8 +124,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"velocity x:y:z", "mob type"};
-            return lines;
+            return new String[] {"velocity x:y:z", "mob type"};
         }
     }
 }

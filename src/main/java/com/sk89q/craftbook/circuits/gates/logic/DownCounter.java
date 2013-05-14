@@ -127,8 +127,7 @@ public class DownCounter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"start ticks:(Optional)INF", "current ticks"};
-            return lines;
+            return new String[] {"start ticks:(Optional)INF", "current ticks"};
         }
     }
 }

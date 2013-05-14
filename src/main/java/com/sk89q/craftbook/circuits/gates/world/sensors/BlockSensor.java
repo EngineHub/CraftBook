@@ -119,8 +119,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"x:y:z", "id:data"};
-            return lines;
+            return new String[] {"x:y:z", "id:data"};
         }
 
         @Override

@@ -190,8 +190,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"invert - to invert output sides", null};
-            return lines;
+            return new String[] {"invert - to invert output sides", null};
         }
     }
 

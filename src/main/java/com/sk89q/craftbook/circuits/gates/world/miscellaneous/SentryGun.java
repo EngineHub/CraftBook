@@ -126,8 +126,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Mob Type", "Radius"};
-            return lines;
+            return new String[] {"Mob Type", "Radius"};
         }
     }
 }

@@ -30,7 +30,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    private Set<EntityType> types; 
+    private Set<EntityType> types;
 
     private Block center;
     private Vector radius;
@@ -128,8 +128,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", "entity type"};
-            return lines;
+            return new String[] {"radius=x:y:z offset", "entity type"};
         }
     }
 }

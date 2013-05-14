@@ -160,8 +160,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Block ID{:Data}", null};
-            return lines;
+            return new String[] {"Block ID{:Data}", null};
         }
     }
 }

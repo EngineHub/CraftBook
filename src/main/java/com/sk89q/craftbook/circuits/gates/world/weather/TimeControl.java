@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -19,7 +19,6 @@ package com.sk89q.craftbook.circuits.gates.world.weather;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -55,7 +54,7 @@ public class TimeControl extends AbstractIC {
         } else {
             time = 13000L;
         }
-        BukkitUtil.toSign(getSign()).getWorld().setTime(time);
+        getBackBlock().getWorld().setTime(time);
 
         chip.setOutput(0, chip.getInput(0));
     }
@@ -77,13 +76,6 @@ public class TimeControl extends AbstractIC {
         public String getShortDescription() {
 
             return "Sets time based on input.";
-        }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {null, null};
-            return lines;
         }
     }
 }

@@ -116,8 +116,7 @@ public class Counter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"reset ticks:(Optional)INF", "current ticks"};
-            return lines;
+            return new String[] {"reset ticks:(Optional)INF", "current ticks"};
         }
     }
 }

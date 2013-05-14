@@ -62,12 +62,5 @@ public class Dispatcher extends AbstractIC {
 
             return "Send middle signal out high sides.";
         }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {null, null};
-            return lines;
-        }
     }
 }

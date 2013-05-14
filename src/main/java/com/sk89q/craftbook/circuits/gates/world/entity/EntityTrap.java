@@ -69,7 +69,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
             String[] splitLine = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
             if (splitLine.length > 2) {
                 damage = Integer.parseInt(splitLine[2]);
-            } else 
+            } else
                 damage = 2;
         } catch (Exception ignored) {
             damage = 2;
@@ -131,8 +131,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z=damage", "mob type"};
-            return lines;
+            return new String[] {"radius=x:y:z=damage", "mob type"};
         }
     }
 }

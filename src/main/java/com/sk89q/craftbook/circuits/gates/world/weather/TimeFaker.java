@@ -64,8 +64,7 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius", "time"};
-            return lines;
+            return new String[] {"radius", "time"};
         }
     }
 

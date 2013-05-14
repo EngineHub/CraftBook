@@ -109,8 +109,7 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"x:y:z Offset", null};
-            return lines;
+            return new String[] {"x:y:z Offset", null};
         }
     }
 }

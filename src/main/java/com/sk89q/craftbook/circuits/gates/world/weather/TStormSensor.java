@@ -61,12 +61,5 @@ public class TStormSensor extends AbstractSelfTriggeredIC {
 
             return "Outputs high if it is storming.";
         }
-
-        @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {null, null};
-            return lines;
-        }
     }
 }

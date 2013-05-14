@@ -100,8 +100,7 @@ public class SoundEffect extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"volume:pitch", "sound name"};
-            return lines;
+            return new String[] {"volume:pitch", "sound name"};
         }
 
         @Override

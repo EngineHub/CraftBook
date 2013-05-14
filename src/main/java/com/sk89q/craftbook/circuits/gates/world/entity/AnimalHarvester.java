@@ -222,8 +222,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oradius=x:y:z offset", null};
-            return lines;
+            return new String[] {"+oradius=x:y:z offset", null};
         }
     }
 }

@@ -99,8 +99,7 @@ public class Delayer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"seconds", "true to use ticks"};
-            return lines;
+            return new String[] {"seconds", "true to use ticks"};
         }
     }
 }

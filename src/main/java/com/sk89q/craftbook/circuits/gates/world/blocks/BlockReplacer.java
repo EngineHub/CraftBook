@@ -215,8 +215,7 @@ public class BlockReplacer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID{:onData}-offID{:offData}}", "delay{:mode:physics}"};
-            return lines;
+            return new String[] {"onID{:onData}-offID{:offData}}", "delay{:mode:physics}"};
         }
     }
 }

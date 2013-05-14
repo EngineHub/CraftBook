@@ -145,8 +145,7 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", "id:data"};
-            return lines;
+            return new String[] {"radius=x:y:z offset", "id:data"};
         }
     }
 }

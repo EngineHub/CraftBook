@@ -107,8 +107,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"item id:data", "slot (optional)"};
-            return lines;
+            return new String[] {"item id:data", "slot (optional)"};
         }
     }
 }

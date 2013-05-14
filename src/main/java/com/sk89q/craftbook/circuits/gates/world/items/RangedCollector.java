@@ -153,8 +153,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius=x:y:z offset", "{-}id:data{,id:data}"};
-            return lines;
+            return new String[] {"radius=x:y:z offset", "{-}id:data{,id:data}"};
         }
     }
 }

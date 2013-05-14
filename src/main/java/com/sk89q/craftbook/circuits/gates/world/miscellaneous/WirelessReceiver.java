@@ -107,8 +107,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"wireless band", "user"};
-            return lines;
+            return new String[] {"wireless band", "user"};
         }
 
         @Override

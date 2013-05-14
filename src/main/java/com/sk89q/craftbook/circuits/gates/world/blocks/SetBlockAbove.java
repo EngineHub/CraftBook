@@ -82,8 +82,7 @@ public class SetBlockAbove extends SetBlock {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"id{:data}", "+oFORCE if should force setting the block"};
-            return lines;
+            return new String[] {"id{:data}", "+oFORCE if should force setting the block"};
         }
     }
 }

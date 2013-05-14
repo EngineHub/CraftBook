@@ -51,7 +51,7 @@ public class LightningSummon extends AbstractIC {
             radius = ICUtil.parseRadius(getSign());
             if(getLine(2).contains("="))
                 center = ICUtil.parseBlockLocation(getSign()).getLocation();
-            else 
+            else
                 center = getBackBlock().getLocation();
         } else {
             center = getBackBlock().getLocation();
@@ -127,8 +127,7 @@ public class LightningSummon extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oradius=x:y:z block offset", "+ochance"};
-            return lines;
+            return new String[] {"+oradius=x:y:z block offset", "+ochance"};
         }
     }
 }

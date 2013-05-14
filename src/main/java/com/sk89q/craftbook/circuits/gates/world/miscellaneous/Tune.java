@@ -126,8 +126,7 @@ public class Tune extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Delay:Tune", "Radius"};
-            return lines;
+            return new String[] {"Delay:Tune", "Radius"};
         }
 
         @Override

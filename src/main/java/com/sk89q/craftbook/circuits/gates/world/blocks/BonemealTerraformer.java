@@ -333,8 +333,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oradius=x:y:z", null};
-            return lines;
+            return new String[] {"+oradius=x:y:z", null};
         }
     }
 }

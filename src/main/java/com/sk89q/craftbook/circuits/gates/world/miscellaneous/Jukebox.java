@@ -100,8 +100,7 @@ public class Jukebox extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Playlist Name", "Radius"};
-            return lines;
+            return new String[] {"Playlist Name", "Radius"};
         }
     }
 }

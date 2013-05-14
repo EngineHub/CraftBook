@@ -119,8 +119,7 @@ public class DaySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"custom day start", "custom day end"};
-            return lines;
+            return new String[] {"custom day start", "custom day end"};
         }
     }
 

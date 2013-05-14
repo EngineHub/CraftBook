@@ -91,8 +91,7 @@ public class WeatherControlAdvanced extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"rain duration", "thunder duration"};
-            return lines;
+            return new String[] {"rain duration", "thunder duration"};
         }
     }
 }

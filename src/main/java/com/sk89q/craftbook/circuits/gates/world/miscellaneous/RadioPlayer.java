@@ -105,8 +105,7 @@ public class RadioPlayer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Radio Band", "Radius"};
-            return lines;
+            return new String[] {"Radio Band", "Radius"};
         }
     }
 }

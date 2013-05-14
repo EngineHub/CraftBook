@@ -88,8 +88,7 @@ public class CombinationLock extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Combination. X = On, O = Off (XOX)", null};
-            return lines;
+            return new String[] {"Combination. X = On, O = Off (XOX)", null};
         }
     }
 }

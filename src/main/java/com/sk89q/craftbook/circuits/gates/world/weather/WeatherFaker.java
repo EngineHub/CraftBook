@@ -63,8 +63,7 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"radius", "rain (If it should rain)"};
-            return lines;
+            return new String[] {"radius", "rain (If it should rain)"};
         }
     }
 

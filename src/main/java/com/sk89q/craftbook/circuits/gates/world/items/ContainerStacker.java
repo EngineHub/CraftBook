@@ -129,13 +129,6 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public String[] getLineHelp() {
-
-            String[] lines = new String[] {null, null};
-            return lines;
-        }
-
-        @Override
         public void addConfiguration(YAMLProcessor config, String path) {
             blacklist = config.getIntList(path + "blacklist", blacklist);
         }

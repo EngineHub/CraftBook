@@ -139,8 +139,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {null, null};
-            return lines;
+            return new String[] {null, null}; //TODO allow offsets.
         }
 
         @Override

@@ -259,8 +259,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+oItem to plant id{:data}", "+oradius=x:y:z offset"};
-            return lines;
+            return new String[] {"+oItem to plant id{:data}", "+oradius=x:y:z offset"};
         }
     }
 }

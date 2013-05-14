@@ -204,8 +204,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"left quantity:right quantity", "Current distribution status"};
-            return lines;
+            return new String[] {"left quantity:right quantity", "Current distribution status"};
         }
 
         @Override

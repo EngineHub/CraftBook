@@ -119,8 +119,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+owater/lava", "+oradius=x:y:z offset"};
-            return lines;
+            return new String[] {"+owater/lava", "+oradius=x:y:z offset"};
         }
     }
 }

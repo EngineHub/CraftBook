@@ -185,8 +185,7 @@ public class SetDoor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
-            return lines;
+            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
         }
     }
 }

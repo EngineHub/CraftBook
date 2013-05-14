@@ -140,8 +140,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"included id:data", "excluded id:data"};
-            return lines;
+            return new String[] {"included id:data", "excluded id:data"};
         }
     }
 }

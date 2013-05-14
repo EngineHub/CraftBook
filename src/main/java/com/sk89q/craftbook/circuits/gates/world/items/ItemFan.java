@@ -110,13 +110,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"force (default 1)", null};
-            return lines;
+            return new String[] {"force (default 1)", null};
         }
-    }
-
-    @Override
-    public boolean isActive () {
-        return true;
     }
 }

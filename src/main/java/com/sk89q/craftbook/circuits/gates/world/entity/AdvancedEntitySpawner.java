@@ -195,8 +195,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"+ox:y:z", "entitytype{*amount}"};
-            return lines;
+            return new String[] {"+ox:y:z", "entitytype{*amount}"};
         }
 
         @Override

@@ -182,11 +182,10 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {
+            return new String[] {
                     "radius=x:y:z offset, or r:regionname for WorldGuard regions",
-                    "p:playername or g:permissiongroup or n:permissionnode"
+                    "p:playername, g:permgroup or n:permnode"
             };
-            return lines;
         }
     }
 }

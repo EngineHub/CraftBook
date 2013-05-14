@@ -180,8 +180,7 @@ public class SetBridge extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
-            return lines;
+            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
         }
 
         @Override

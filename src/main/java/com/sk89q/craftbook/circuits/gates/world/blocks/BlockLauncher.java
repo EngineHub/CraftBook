@@ -118,8 +118,7 @@ public class BlockLauncher extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"id{:data}", "+ovelocity x:y:z"};
-            return lines;
+            return new String[] {"id{:data}", "+ovelocity x:y:z"};
         }
     }
 }

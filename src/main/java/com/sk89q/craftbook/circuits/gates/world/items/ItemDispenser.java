@@ -116,8 +116,7 @@ public class ItemDispenser extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"id:data", "amount"};
-            return lines;
+            return new String[] {"id:data", "amount"};
         }
     }
 }

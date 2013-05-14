@@ -179,8 +179,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"amount to remove", null};
-            return lines;
+            return new String[] {"amount to dispense", null};
         }
     }
 }

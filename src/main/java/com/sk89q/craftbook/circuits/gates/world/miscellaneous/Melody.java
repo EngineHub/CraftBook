@@ -180,8 +180,7 @@ public class Melody extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"MIDI name", "Radius"};
-            return lines;
+            return new String[] {"MIDI name", "Radius"};
         }
     }
 }

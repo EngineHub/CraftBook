@@ -80,8 +80,7 @@ public class RadioStation extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            String[] lines = new String[] {"Playlist Name", "Radio Band"};
-            return lines;
+            return new String[] {"Playlist Name", "Radio Band"};
         }
     }
 }
