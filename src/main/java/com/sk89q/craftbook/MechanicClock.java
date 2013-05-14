@@ -16,27 +16,13 @@
 
 package com.sk89q.craftbook;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class MechanicClock implements Runnable {
-
-    private final List<MechanicManager> managers;
-
-    public MechanicClock() {
-
-        managers = new ArrayList<MechanicManager>();
-    }
-
-    public void addManager (MechanicManager manager) {
-
-        managers.add(manager);
-    }
 
     @Override
     public void run() {
 
-        for(MechanicManager manager : managers)
-            manager.think();
+        CraftBookPlugin.inst().getManager().think();
     }
 }

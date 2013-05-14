@@ -88,7 +88,7 @@ public class MechanicManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
+    public final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
 
     /**
      * Construct the manager.

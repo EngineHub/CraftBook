@@ -12,7 +12,6 @@ import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.util.LogListBlock;
 
 /**
@@ -155,10 +154,8 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        int amount = 0;
-        for(MechanicManager mech : plugin.managerAdapter.getManagers())
-            amount += mech.factories.size();
-        log.put("Factories Loaded:", "%d", amount);
+        log.put("Factories Loaded:", "%d", plugin.getManager().factories.size());
+        log.put("ST Mechanics Loaded:", "%d", plugin.getManager().thinkingMechanics.size());
 
         append(log);
         appendln();
