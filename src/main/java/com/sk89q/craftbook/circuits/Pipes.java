@@ -303,7 +303,7 @@ public class Pipes extends AbstractMechanic {
 
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
-            if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.DISPENSER) {
+            if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.TRAPPED_CHEST || fac.getTypeId() == BlockID.DROPPER || fac.getTypeId() == BlockID.DISPENSER) {
 
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
@@ -314,7 +314,7 @@ public class Pipes extends AbstractMechanic {
                         continue;
 
                     items.add(stack);
-                    ((InventoryHolder) fac.getState()).getInventory().remove(stack);
+                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
                     if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull)
                         break;
                 }
