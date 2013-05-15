@@ -130,7 +130,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             CraftBookPlugin.logger().info("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount());
         }
 
-        if(Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Dispenser) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), Arrays.asList(result)) != null)
+        if(Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), Arrays.asList(result)) != null)
             pipes = true;
 
         if (!pipes) {
@@ -219,10 +219,10 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 ItemStack stack = inv.getItem(slot);
                 try {
                     c++;
-                    if (c == 3) {
+                    if (c >= 3) {
                         c = 0;
                         in++;
-                        if (in == 3) {
+                        if (in >= 3) {
                             break;
                         }
                     }

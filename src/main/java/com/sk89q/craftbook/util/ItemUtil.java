@@ -132,8 +132,6 @@ public class ItemUtil {
 
             if(item.getTypeId() != item2.getTypeId())
                 return false;
-            if(item.getDurability() != item2.getDurability() && item.getDurability() >= 0 && item2.getDurability() >= 0)
-                return false;
             if(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0)
                 return false;
             if(item.hasItemMeta() != item2.hasItemMeta())
