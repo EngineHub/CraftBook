@@ -1,3 +1,24 @@
+3.6.4
++ Added footprint mechanic. (Adds footprints when you walk)
+* Fix CombineHarvester offset.
+* Made Melody IC require restricted perms to broadcast globally.
+* Few improvements to IC Caching systems.
+* Few improvements to Chunk Anchor.
++ Add support for names, lore, enchants in most places items are parsed from strings.
++ Add enchantment support to CustomCrafting.
++ Added Variables to CraftBook. (Vid tut: https://www.youtube.com/watch?v=Ndsx0xx-fXA)
+* Fix a pipe error with null items.
+* Fix some issues with CustomCrafting in certain circumstances.
+* Minor optimizations to ContainerCollector.
+* Fix a ParticleEffect IC Error.
+* Stop AnimalBreeder crazily breeding hundreds of mobs instantly.
++ Added MC1214, Ranged Collector. (Like MC1209, but is ranged)
++ Added PermissionNode sensing support to MC1272
+* Tweak a few IC Docs.
+* Replaced the 2 Managers with 1 Manager. Should make CraftBook more optimized and generally more stable/faster.
+* Fix a few bugs with item comparing, and shaped Auto Crafter crafting.
++ Added a flag to /cb report to print the location and text of all IC's. (/cb report -i)
+
 3.6.3r3
 * Fixed a CustomCrafting error with Furnace Recipes.
 * Fixed a few console messages not having [CraftBook] at the start.
