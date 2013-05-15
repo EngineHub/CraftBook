@@ -129,6 +129,8 @@ public abstract class LocalConfiguration {
     public boolean headDropsPlayers;
     public boolean headDropsPlayerKillOnly;
     public boolean headDropsMiningDrops;
+    public double headDropsDropRate;
+    public double headDropsLootingRateModifier;
     // Mechanics - Hidden Switch
     public boolean hiddenSwitchEnabled;
     public boolean hiddenSwitchAnyside;

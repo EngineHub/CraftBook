@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Skull;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
@@ -30,6 +31,13 @@ public class HeadDrops implements Listener {
         if(CraftBookPlugin.inst().getConfiguration().headDropsPlayerKillOnly && event.getEntity().getKiller() == null) return;
 
         if(event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
+            return;
+
+        double chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsDropRate);
+        if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
+            chance = Math.min(1, chance + CraftBookPlugin.inst().getConfiguration().headDropsLootingRateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
+
+        if(CraftBookPlugin.inst().getRandom().nextDouble() > chance)
             return;
 
         ItemStack toDrop = null;
@@ -77,7 +85,7 @@ public class HeadDrops implements Listener {
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
                 toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + EntityType.valueOf(type.name()).getName() + "Head");
+                itemMeta.setDisplayName(ChatColor.RESET + EntityType.valueOf(type.name()).getName() + " Head");
                 itemMeta.setOwner(mobName);
                 toDrop.setItemMeta(itemMeta);
                 break;
@@ -121,7 +129,7 @@ public class HeadDrops implements Listener {
             }
 
             if(type != null)
-                meta.setDisplayName(ChatColor.RESET + type.getName() + "Head");
+                meta.setDisplayName(ChatColor.RESET + type.getName() + " Head");
             else
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
 
