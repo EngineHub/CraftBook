@@ -95,12 +95,17 @@ public class TopLevelCommands {
             sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by me4502 & Dark_Arc");
         }
 
-        @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "p", max = 0)
+        @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "pi", max = 0)
         @CommandPermissions({"craftbook.report"})
         public void report(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
 
             File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
             ReportWriter report = new ReportWriter(CraftBookPlugin.inst());
+
+            if(args.hasFlag('i'))
+                report.appendFlags("i");
+
+            report.generate();
 
             try {
                 report.write(dest);
@@ -129,7 +134,6 @@ public class TopLevelCommands {
                     }
                 });
             }
-
         }
     }
 }

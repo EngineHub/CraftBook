@@ -12,6 +12,8 @@ import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.SelfTriggeringMechanic;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.util.LogListBlock;
 
 /**
@@ -26,7 +28,15 @@ public class ReportWriter {
     private Date date = new Date();
     private StringBuilder output = new StringBuilder();
 
+    private String flags = "";
+
+    CraftBookPlugin plugin;
+
     public ReportWriter(CraftBookPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void generate() {
         appendReportHeader(plugin);
         appendServerInformation(plugin.getServer());
         appendPluginInformation(plugin.getServer().getPluginManager().getPlugins());
@@ -157,6 +167,16 @@ public class ReportWriter {
         log.put("Factories Loaded:", "%d", plugin.getManager().factories.size());
         log.put("ST Mechanics Loaded:", "%d", plugin.getManager().thinkingMechanics.size());
 
+        if(flags.contains("i")) {
+            for(SelfTriggeringMechanic mech : plugin.getManager().thinkingMechanics) {
+                if(mech instanceof ICMechanic) {
+                    log.put(((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
+                            ((ICMechanic) mech).getIC().getSign().getLine(1) + "|" + ((ICMechanic) mech).getIC().getSign().getLine(2) + "|" +
+                            ((ICMechanic) mech).getIC().getSign().getLine(3));
+                }
+            }
+        }
+
         append(log);
         appendln();
     }
@@ -210,5 +230,13 @@ public class ReportWriter {
     @Override
     public String toString() {
         return output.toString();
+    }
+
+    public String getFlags () {
+        return flags;
+    }
+
+    public void appendFlags (String flags) {
+        this.flags = this.flags + flags;
     }
 }
