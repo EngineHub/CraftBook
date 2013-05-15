@@ -166,6 +166,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
         gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
 
+        // Head Drops Configuration Listener
+        headDropsEnabled = config.getBoolean("mechanics.head-drops.enable", false);
+        headDropsMobs = config.getBoolean("mechanics.head-drops.drop-mob-heads", true);
+        headDropsPlayers = config.getBoolean("mechanics.head-drops.drop-player-heads", true);
+        headDropsPlayerKillOnly = config.getBoolean("mechanics.head-drops.require-player-killed", true);
+        headDropsMiningDrops = config.getBoolean("mechanics.head-drops.drop-head-when-mined", true);
+
         // Hidden Switch Configuration Listener
         hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);
         hiddenSwitchAnyside = config.getBoolean("mechanics.hidden-switch.any-side", true);

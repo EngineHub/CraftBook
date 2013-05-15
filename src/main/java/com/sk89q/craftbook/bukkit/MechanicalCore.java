@@ -21,6 +21,7 @@ import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Footprints;
 import com.sk89q.craftbook.mech.Gate;
+import com.sk89q.craftbook.mech.HeadDrops;
 import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
@@ -163,6 +164,10 @@ public class MechanicalCore implements LocalComponent {
 
         if (config.physicsEnabled) {
             server.getPluginManager().registerEvents(new BetterPhysics(), plugin);
+        }
+
+        if (config.headDropsEnabled) {
+            server.getPluginManager().registerEvents(new HeadDrops(), plugin);
         }
         /*
          * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()

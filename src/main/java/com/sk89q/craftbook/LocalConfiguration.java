@@ -123,6 +123,12 @@ public abstract class LocalConfiguration {
     public int gateColumnLimit;
     public List<Integer> gateBlocks;
     public boolean gateEnforceType;
+    // Mechanics - Head Drops
+    public boolean headDropsEnabled;
+    public boolean headDropsMobs;
+    public boolean headDropsPlayers;
+    public boolean headDropsPlayerKillOnly;
+    public boolean headDropsMiningDrops;
     // Mechanics - Hidden Switch
     public boolean hiddenSwitchEnabled;
     public boolean hiddenSwitchAnyside;
