@@ -82,7 +82,7 @@ public abstract class AbstractICFactory implements ICFactory {
 
         if(this instanceof PersistentDataIC) {
             try {
-                ((PersistentDataIC)this).getStorageFile().mkdirs();
+                ((PersistentDataIC)this).getStorageFile().getParentFile().mkdirs();
                 if(!((PersistentDataIC)this).getStorageFile().exists())
                     ((PersistentDataIC)this).getStorageFile().createNewFile();
                 ((PersistentDataIC)this).savePersistentData(new DataOutputStream(new FileOutputStream(((PersistentDataIC)this).getStorageFile())));
