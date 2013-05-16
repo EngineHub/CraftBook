@@ -125,7 +125,7 @@ public class InventoryUtil {
      */
     public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> itemsToFind = (ArrayList<ItemStack>) Arrays.asList(stacks);
+        ArrayList<ItemStack> itemsToFind = new ArrayList<ItemStack>(Arrays.asList(stacks));
 
         if(itemsToFind.isEmpty())
             return true;
