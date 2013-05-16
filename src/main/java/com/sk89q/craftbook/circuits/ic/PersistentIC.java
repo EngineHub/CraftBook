@@ -19,9 +19,9 @@ package com.sk89q.craftbook.circuits.ic;
 public interface PersistentIC extends IC {
 
     /**
-     * Return true if this IC still is valid.
+     * Return true if this {@link IC} still is valid.
      *
-     * @return
+     * @return if this {@link IC} is valid.
      */
     public abstract boolean isActive();
 }

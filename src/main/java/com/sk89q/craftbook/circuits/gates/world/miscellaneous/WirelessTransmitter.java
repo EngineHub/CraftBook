@@ -21,6 +21,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.bukkit.Server;
 
@@ -39,7 +40,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
 
-    protected static final LinkedHashSet<String> memory = new LinkedHashSet<String>();
+    protected static final Set<String> memory = new LinkedHashSet<String>();
 
     protected String band;
 

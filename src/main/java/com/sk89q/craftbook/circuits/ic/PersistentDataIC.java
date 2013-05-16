@@ -8,21 +8,27 @@ import java.io.IOException;
 public interface PersistentDataIC {
 
     /**
-     * Called when the IC should load any persistant data required.
+     * Called when the {@link ICFactory} should load any persistant data required.
+     * 
+     * @param stream The {@link DataInputStream} for the file that is being read from.
+     * 
      * @throws IOException
      */
     public void loadPersistentData(DataInputStream stream) throws IOException;
 
     /**
-     * Called when the IC should save any persistent data required.
+     * Called when the {@link ICFactory} should save any persistent data required.
+     * 
+     * @param stream The {@link DataOutputStream} for the file that is being written to.
+     * 
      * @throws IOException
      */
     public void savePersistentData(DataOutputStream stream) throws IOException;
 
     /**
-     * Gets the file in which the data should be saved/loaded.
+     * Gets the {@link File} in which the data should be saved/loaded.
      * 
-     * @return The file to save and load from.
+     * @return The {@link File} to save and load from.
      */
     public File getStorageFile();
 }
