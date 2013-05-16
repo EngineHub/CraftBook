@@ -168,6 +168,9 @@ public class ReportWriter {
         log.put("ST Mechanics Loaded:", "%d", plugin.getManager().thinkingMechanics.size());
 
         if(flags.contains("i")) {
+
+            appendHeader("Loaded SelfTriggered IC's");
+
             for(SelfTriggeringMechanic mech : plugin.getManager().thinkingMechanics) {
                 if(mech instanceof ICMechanic) {
                     log.put(((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
