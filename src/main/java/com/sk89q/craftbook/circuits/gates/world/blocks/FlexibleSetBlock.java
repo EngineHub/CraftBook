@@ -199,5 +199,17 @@ public class FlexibleSetBlock extends AbstractIC {
                 }
             }
         }
+
+        @Override
+        public String getShortDescription() {
+
+            return "Sets a block at a specified distance on a specific axis. Can also hold a block at a place until low power.";
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            return new String[] {"axis{+/-}distance:blockTypeId{:blockData}", "H to clear on low."};
+        }
     }
 }
