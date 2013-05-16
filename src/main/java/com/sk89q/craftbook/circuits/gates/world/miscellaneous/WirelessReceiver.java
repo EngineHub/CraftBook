@@ -23,6 +23,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
@@ -83,7 +84,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         chip.setOutput(0, getOutput());
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements ConfigurableIC {
 
         public boolean requirename;
 
@@ -122,12 +123,6 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         public void addConfiguration(YAMLProcessor config, String path) {
 
             requirename = config.getBoolean(path + "per-player", false);
-        }
-
-        @Override
-        public boolean needsConfiguration() {
-
-            return true;
         }
     }
 

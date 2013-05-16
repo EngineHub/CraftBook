@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CircuitCore;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -33,8 +34,8 @@ public class YAMLICConfiguration extends LocalConfiguration {
             if (factory.getId().startsWith("MCA")) {
                 continue;
             }
-            if (factory.getFactory().needsConfiguration())
-                factory.getFactory().addConfiguration(config, "ics." + factory.getId() + ".");
+            if (factory.getFactory() instanceof ConfigurableIC)
+                ((ConfigurableIC) factory.getFactory()).addConfiguration(config, "ics." + factory.getId() + ".");
         }
 
         config.save(); //Save all the added values.

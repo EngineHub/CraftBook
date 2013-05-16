@@ -18,7 +18,6 @@ package com.sk89q.craftbook.circuits.ic;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -86,16 +85,7 @@ public interface ICFactory {
     public String[] getLineHelp();
 
     /**
-     * Adds config to the IC.
-     *
-     * @param section
+     * Unloads the IC Factory.
      */
-    public void addConfiguration(YAMLProcessor config, String path);
-
-    /**
-     * Check if IC uses configuration.
-     *
-     * @return if IC uses configuration.
-     */
-    public boolean needsConfiguration();
+    public void unload();
 }

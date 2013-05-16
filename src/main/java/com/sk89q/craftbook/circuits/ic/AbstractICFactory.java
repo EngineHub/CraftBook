@@ -16,11 +16,15 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
  * Abstract IC factory.
@@ -74,13 +78,18 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public void addConfiguration(YAMLProcessor config, String path) {
+    public void unload() {
 
-    }
-
-    @Override
-    public boolean needsConfiguration() {
-
-        return false;
+        if(this instanceof PersistentDataIC) {
+            try {
+                ((PersistentDataIC)this).getStorageFile().mkdirs();
+                if(!((PersistentDataIC)this).getStorageFile().exists())
+                    ((PersistentDataIC)this).getStorageFile().createNewFile();
+                ((PersistentDataIC)this).savePersistentData(new DataOutputStream(new FileOutputStream(((PersistentDataIC)this).getStorageFile())));
+            } catch(Exception e){
+                CraftBookPlugin.logger().severe("Failed to save persistent IC data at " + ((PersistentDataIC)this).getStorageFile().getName());
+                BukkitUtil.printStacktrace(e);
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
@@ -105,7 +106,7 @@ public class FlameThrower extends AbstractIC {
         }
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
 
         public int maxRange;
 
@@ -148,12 +149,6 @@ public class FlameThrower extends AbstractIC {
         public void addConfiguration(YAMLProcessor config, String path) {
 
             maxRange = config.getInt(path + "max-fire-range", 20);
-        }
-
-        @Override
-        public boolean needsConfiguration() {
-
-            return true;
         }
     }
 }

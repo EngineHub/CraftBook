@@ -7,6 +7,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
@@ -83,7 +84,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
         return blockID == id;
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements ConfigurableIC {
 
         boolean invert;
 
@@ -127,16 +128,5 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
 
             invert = config.getBoolean(path + "invert-output", false);
         }
-
-        @Override
-        public boolean needsConfiguration() {
-
-            return true;
-        }
-    }
-
-    @Override
-    public boolean isActive () {
-        return true;
     }
 }

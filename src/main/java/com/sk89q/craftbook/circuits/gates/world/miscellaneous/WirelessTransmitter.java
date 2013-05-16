@@ -16,22 +16,30 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
-import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.craftbook.circuits.ic.PersistentDataIC;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
 
-    protected static final HistoryHashMap<String, Boolean> memory = new HistoryHashMap<String, Boolean>(100);
+    protected static final LinkedHashSet<String> memory = new LinkedHashSet<String>();
 
     protected String band;
 
@@ -69,15 +77,18 @@ public class WirelessTransmitter extends AbstractIC {
 
     public static Boolean getValue(String band) {
 
-        return memory.get(band);
+        return memory.contains(band);
     }
 
     public static void setValue(String band, boolean val) {
 
-        memory.put(band, val);
+        if(val == false) //List preening
+            memory.remove(band);
+        else
+            memory.add(band);
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements PersistentDataIC, ConfigurableIC {
 
         public boolean requirename;
 
@@ -118,9 +129,27 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public boolean needsConfiguration() {
+        public void loadPersistentData (DataInputStream stream) throws IOException {
 
-            return true;
+            memory.clear();
+            int length = stream.readInt();
+            for(int i = 0; i < length; i++)
+                memory.add(stream.readUTF());
+            stream.close();
+        }
+
+        @Override
+        public void savePersistentData (DataOutputStream stream) throws IOException {
+            stream.writeInt(memory.size());
+            for(String band : memory) {
+                stream.writeUTF(band);
+            }
+            stream.close();
+        }
+
+        @Override
+        public File getStorageFile () {
+            return new File(CraftBookPlugin.inst().getDataFolder(), "wireless-bands.dat");
         }
     }
 }
