@@ -3,13 +3,11 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 
@@ -22,6 +20,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -72,65 +71,21 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
         boolean returnValue = false;
 
-        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            ItemStack stack = item.getItemStack();
-            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid()) {
-                continue;
-            }
-            Location location = item.getLocation();
-            int ix = location.getBlockX();
-            int iy = location.getBlockY();
-            int iz = location.getBlockZ();
-            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-
-                BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-                Block b;
-
-                if (isInAboveChest(stack) ^ inverted) {
-                    b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-                } else {
-                    b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-                }
-
-                boolean pipes = false;
-
-                if (b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-                    PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
-                    Block fac = b.getRelative(p.getFacing());
-                    if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back)
-                            .getLocation())) {
-
-                        List<ItemStack> items = new ArrayList<ItemStack>();
-                        items.add(item.getItemStack());
-                        if (CircuitCore.inst().getPipeFactory() != null)
-                            if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b),
-                                    items) != null) {
-                                item.remove();
-                                pipes = true;
-                                returnValue = true;
-                            }
-                    }
-                }
-
-                if (!pipes) item.teleport(b.getLocation().add(0.5, 0.5, 0.5));
-
+        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
+            if(sortItemStack(item.getItemStack())) {
                 returnValue = true;
+                item.remove();
             }
         }
         return returnValue;
     }
 
-    public void sortItem(ItemStack item) {
+    public boolean sortItemStack(ItemStack item) {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block b;
 
-        if (isInAboveChest(item) || inverted) {
+        if (isInAboveContainer(item) ^ inverted) {
             b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
         } else {
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
@@ -157,15 +112,15 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         if (!pipes) {
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), item);
         }
+
+        return true;
     }
 
-    public boolean isInAboveChest(ItemStack item) {
+    public boolean isInAboveContainer(ItemStack item) {
 
-        if (chestBlock.getTypeId() == BlockID.CHEST) {
-            Chest chest = (Chest) chestBlock.getState();
-            return chest.getInventory().contains(new ItemStack(item.getTypeId(), 1, item.getDurability()));
-        }
-        return false;
+        if (chestBlock.getState() instanceof InventoryHolder)
+            return InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), false, new ItemStack(item.getTypeId(), 1, item.getDurability()));
+        else return false;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -197,8 +152,13 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     @Override
     public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
 
-        for (ItemStack item : items) { if (ItemUtil.isStackValid(item)) sortItem(item); }
+        List<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        return new ArrayList<ItemStack>();
+        for (ItemStack item : items)
+            if (ItemUtil.isStackValid(item))
+                if(!sortItemStack(item))
+                    leftovers.add(item);
+
+        return leftovers;
     }
 }

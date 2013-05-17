@@ -92,6 +92,8 @@ public class Counter extends AbstractIC {
         if (curVal != oldVal) {
             getSign().setLine(3, String.valueOf(curVal));
         }
+
+        getSign().update(false);
     }
 
     public static class Factory extends AbstractICFactory {

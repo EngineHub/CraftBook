@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -147,43 +145,33 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
     public boolean collect(InventoryHolder disp) {
 
-        outer:
-            for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-                if (!(en instanceof Item)) {
-                    continue;
-                }
-                Item item = (Item) en;
-                if (!ItemUtil.isStackValid(item.getItemStack()) || item.isDead() || !item.isValid()) {
-                    continue;
-                }
-                Location loc = item.getLocation();
-                int ix = loc.getBlockX();
-                int iy = loc.getBlockY();
-                int iz = loc.getBlockZ();
-                boolean delete = true;
-                if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
-                    int newAmount = item.getItemStack().getAmount();
-                    for (int i = 0; i < item.getItemStack().getAmount(); i++) {
-                        ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(),
-                                item.getItemStack());
-                        if (it == null) continue outer;
-                        if (it.getAmount() < it.getMaxStackSize()) {
-                            it.setAmount(it.getAmount() + 1);
-                            newAmount -= 1;
-                        } else if (newAmount > 0) {
-                            delete = false;
-                            break;
-                        }
-                    }
+        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
 
-                    item.getItemStack().setAmount(newAmount);
+            boolean delete = true;
 
-                    if (newAmount > 0) delete = false;
+            ItemStack stack = item.getItemStack();
 
-                    if (delete) item.remove();
+            int newAmount = stack.getAmount();
+            for (int i = 0; i < stack.getAmount(); i++) {
+                ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), stack);
+                if (it == null) break;
+                if (it.getAmount() < it.getMaxStackSize()) {
+                    it.setAmount(it.getAmount() + 1);
+                    newAmount -= 1;
+                } else if (newAmount > 0) {
+                    delete = false;
+                    break;
                 }
             }
-    return false;
+
+            stack.setAmount(newAmount);
+            item.setItemStack(stack);
+
+            if (newAmount > 0) delete = false;
+
+            if (delete) item.remove();
+        }
+        return false;
     }
 
     /**

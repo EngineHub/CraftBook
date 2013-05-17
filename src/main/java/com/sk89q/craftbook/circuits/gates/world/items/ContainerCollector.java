@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
@@ -73,24 +71,15 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
             return false;
 
         boolean collected = false;
-        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            if (item.isDead() || !item.isValid())
-                continue;
+        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock()))
+            if(collectItem(item))
+                collected = true;
 
-            if (EntityUtil.isEntityInBlock(en, BukkitUtil.toSign(getSign()).getBlock())) {
-
-                if(collectItem(item))
-                    collected = true;
-            }
-        }
         return collected;
     }
 
     public boolean collectItem(Item item) {
+
         ItemStack stack = item.getItemStack();
 
         if(!ItemUtil.isStackValid(stack))

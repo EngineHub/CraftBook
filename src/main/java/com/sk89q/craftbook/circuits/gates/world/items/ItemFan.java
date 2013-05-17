@@ -1,11 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -64,25 +61,9 @@ public class ItemFan extends AbstractSelfTriggeredIC {
 
         Block aboveBlock = getBackBlock().getRelative(0, 1, 0);
 
-        for (Entity en : aboveBlock.getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            ItemStack stack = item.getItemStack();
-            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid()) {
-                continue;
-            }
-            Location location = item.getLocation();
-            int ix = location.getBlockX();
-            int iy = location.getBlockY();
-            int iz = location.getBlockZ();
-            if (ix == aboveBlock.getX() && iy == aboveBlock.getY() && iz == aboveBlock.getZ()) {
-
-                item.teleport(item.getLocation().add(0, force, 0));
-
-                returnValue = true;
-            }
+        for (Item item : ItemUtil.getItemsAtBlock(aboveBlock)) {
+            item.teleport(item.getLocation().add(0, force, 0));
+            returnValue = true;
         }
 
         return returnValue;

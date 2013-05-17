@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -469,5 +471,32 @@ public class ItemUtil {
             valid.setAmount(1);
 
         return valid;
+    }
+
+    /**
+     * Gets all {@link Item}s at a certain {@link Block}.
+     * 
+     * @param block The {@link Block} to check for items at.
+     * @return A {@link ArrayList} of {@link Item}s.
+     */
+    public static List<Item> getItemsAtBlock(Block block) {
+
+        List<Item> items = new ArrayList<Item>();
+
+        for (Entity en : block.getChunk().getEntities()) {
+            if (!(en instanceof Item)) {
+                continue;
+            }
+            Item item = (Item) en;
+            if (item.isDead() || !item.isValid())
+                continue;
+
+            if (EntityUtil.isEntityInBlock(en, block)) {
+
+                items.add(item);
+            }
+        }
+
+        return items;
     }
 }

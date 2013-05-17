@@ -3,11 +3,9 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
@@ -82,59 +80,17 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
         boolean returnValue = false;
 
-        for (Entity en : BukkitUtil.toSign(getSign()).getChunk().getEntities()) {
-            if (!(en instanceof Item)) {
-                continue;
-            }
-            Item item = (Item) en;
-            ItemStack stack = item.getItemStack();
-            if (!ItemUtil.isStackValid(stack) || item.isDead() || !item.isValid()) {
-                continue;
-            }
-            Location location = item.getLocation();
-            int ix = location.getBlockX();
-            int iy = location.getBlockY();
-            int iz = location.getBlockZ();
-            if (ix == getSign().getX() && iy == getSign().getY() && iz == getSign().getZ()) {
+        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
 
-                BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-                Block b;
-
-                if (goRight()) {
-                    b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-                } else {
-                    b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-                }
-
-                boolean pipes = false;
-
-                if (b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-                    PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
-                    Block fac = b.getRelative(p.getFacing());
-                    if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back)
-                            .getLocation())) {
-
-                        List<ItemStack> items = new ArrayList<ItemStack>();
-                        items.add(item.getItemStack());
-                        if (CircuitCore.inst().getPipeFactory() != null)
-                            if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b), items) != null) {
-                                item.remove();
-                                pipes = true;
-                                returnValue = true;
-                            }
-                    }
-                }
-
-                if (!pipes) item.teleport(b.getLocation().add(0.5, 0.5, 0.5));
-
+            if(distributeItemStack(item.getItemStack())) {
+                item.remove();
                 returnValue = true;
             }
         }
         return returnValue;
     }
 
-    public void distributeItem(ItemStack item) {
+    public boolean distributeItemStack(ItemStack item) {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block b;
@@ -162,9 +118,10 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
             }
         }
 
-        if (!pipes) {
+        if (!pipes)
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), item);
-        }
+
+        return true;
     }
 
     public boolean goRight() {
@@ -227,8 +184,13 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
     @Override
     public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
 
-        for (ItemStack item : items) { if (ItemUtil.isStackValid(item)) distributeItem(item); }
+        List<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        return new ArrayList<ItemStack>();
+        for (ItemStack item : items)
+            if (ItemUtil.isStackValid(item))
+                if(!distributeItemStack(item))
+                    leftovers.add(item);
+
+        return leftovers;
     }
 }
