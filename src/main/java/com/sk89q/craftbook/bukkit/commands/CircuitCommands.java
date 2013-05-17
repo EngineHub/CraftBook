@@ -13,9 +13,12 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.CommandIC;
 import com.sk89q.craftbook.circuits.ic.ICDocsParser;
+import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 
 public class CircuitCommands {
@@ -36,6 +39,36 @@ public class CircuitCommands {
 
         public ICCommands(CraftBookPlugin plugin) {
 
+        }
+
+        @Command (aliases = {"ic","circuit"}, desc = "Information for a specific IC", usage = "<ic> (Further arguments depend on IC)", min = 1)
+        public void icCmd(CommandContext args, CommandSender sender) throws CommandException {
+
+            if(args.getString(0).equalsIgnoreCase("list")) {
+
+                String list = "";
+
+                for(RegisteredICFactory factory : CircuitCore.inst().getIcManager().registered.values()) {
+                    if(factory.getFactory() instanceof CommandIC) {
+
+                        if(list.isEmpty())
+                            list = factory.getId();
+                        else
+                            list = list + ", " + factory.getId();
+                    }
+                }
+
+                sender.sendMessage(ChatColor.YELLOW + "Command IC List: " + list);
+            } else {
+
+                RegisteredICFactory factory = CircuitCore.inst().getIcManager().registered.get(args.getString(0));
+
+                if(factory != null && factory.getFactory() instanceof CommandIC) {
+                    if(((CommandIC) factory.getFactory()).getMinCommandArgs()+1 > args.argsLength())
+                        throw new CommandException();
+                    ((CommandIC) factory.getFactory()).onICCommand(args, sender);
+                }
+            }
         }
 
         @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's",

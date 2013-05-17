@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -31,11 +33,13 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.CommandIC;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.PersistentDataIC;
+import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
@@ -89,7 +93,7 @@ public class WirelessTransmitter extends AbstractIC {
             memory.add(band);
     }
 
-    public static class Factory extends AbstractICFactory implements PersistentDataIC, ConfigurableIC {
+    public static class Factory extends AbstractICFactory implements PersistentDataIC, ConfigurableIC, CommandIC {
 
         public boolean requirename;
 
@@ -151,6 +155,32 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public File getStorageFile () {
             return new File(CraftBookPlugin.inst().getDataFolder(), "wireless-bands.dat");
+        }
+
+        @Override
+        public void onICCommand (CommandContext args, CommandSender sender) {
+
+            if (args.getString(1).equalsIgnoreCase("get")) {
+
+                if(memory.contains(args.getString(1)))
+                    sender.sendMessage("Wireless-Band-State: TRUE");
+                else
+                    sender.sendMessage("Wireless-Band-State: FALSE");
+            } else if (args.getString(1).equalsIgnoreCase("set") && args.argsLength() > 3) {
+
+                if (args.getString(3).equalsIgnoreCase("true"))
+                    memory.add(args.getString(2));
+                else if (args.getString(3).equalsIgnoreCase("false"))
+                    memory.remove(args.getString(2));
+                else
+                    sender.sendMessage(ChatColor.RED + "Invalid Boolean Argument!");
+            } else
+                sender.sendMessage(ChatColor.RED + "Usage: /ic ic mc1110 <get/set> <band> <state>");
+        }
+
+        @Override
+        public int getMinCommandArgs () {
+            return 2;
         }
     }
 }
