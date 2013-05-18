@@ -176,7 +176,11 @@ public class HeadDrops implements Listener {
 
         public static MobSkullType getFromEntityType(EntityType entType) {
 
-            return MobSkullType.valueOf(entType.name());
+            try {
+                return MobSkullType.valueOf(entType.name());
+            } catch(Exception e){
+                return null;
+            }
         }
 
         public static EntityType getEntityType(String name) {
