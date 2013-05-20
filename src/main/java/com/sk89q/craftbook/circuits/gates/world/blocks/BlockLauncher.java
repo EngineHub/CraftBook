@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -14,13 +15,13 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 public class BlockLauncher extends AbstractIC {
 
     Vector velocity;
-    int id;
-    byte data;
+    ItemStack block;
 
     public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
 
@@ -50,14 +51,10 @@ public class BlockLauncher extends AbstractIC {
     @Override
     public void load() {
 
-        try {
-            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
-            id = Integer.parseInt(split[0]);
-            data = Byte.parseByte(split[1]);
-        } catch (Exception ignored) {
-            id = 12;
-            data = 0;
-        }
+        block = ItemUtil.makeItemValid(ItemUtil.getItem(getLine(2)));
+
+        if(getLine(2).isEmpty() || block == null)
+            block = new ItemStack(12,1);
 
         try {
             String[] split2 = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
@@ -90,9 +87,7 @@ public class BlockLauncher extends AbstractIC {
         if(!new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
             return;
 
-        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld()
-                .spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y,
-                        above.getZ() + 0.5D), id, data);
+        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld().spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getTypeId(), this.block.getData().getData());
         block.setVelocity(velocity);
     }
 
