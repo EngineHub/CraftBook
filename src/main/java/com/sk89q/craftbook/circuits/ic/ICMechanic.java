@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -149,7 +149,7 @@ public class ICMechanic extends PersistentMechanic {
         // this seems a little strange; you'd think you'd be watching the input blocks, right?
         // nope. redstone events get reported to blocks adjacent to the redstone,
         // so we don't have to do that for any single-block IC.
-        return new ArrayList<BlockWorldVector>();
+        return Collections.emptyList();
     }
 
     @Override
