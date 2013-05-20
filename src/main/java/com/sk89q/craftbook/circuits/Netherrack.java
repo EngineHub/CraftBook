@@ -82,10 +82,13 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public void onLeftClick(PlayerInteractEvent event) {
 
-        if (event.getBlockFace() != BlockFace.UP || event.getClickedBlock().getRelative(event.getBlockFace()).getTypeId() != BlockID.FIRE) return;
-
-        event.setCancelled(true);
-        return;
+        if (event.getBlockFace() == BlockFace.UP) {
+            Block fire = event.getClickedBlock().getRelative(event.getBlockFace());
+            if (fire.getTypeId() == BlockID.FIRE
+                    && fire.getRelative(BlockFace.DOWN).isBlockPowered()) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     private boolean canReplaceWithFire(int t) {
