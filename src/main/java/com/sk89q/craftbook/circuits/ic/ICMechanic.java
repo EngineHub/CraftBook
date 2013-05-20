@@ -102,10 +102,9 @@ public class ICMechanic extends PersistentMechanic {
                         if (cnt > 0) {
                             ic.trigger(chipState);
                         }
-                    } catch (NullPointerException ex) {
-                        // Exclude these NPEs so that we don't spam consoles because of Bukkit
-                        if (ex.getMessage().contains("Null ChangedSign found")) return;
-                        ex.printStackTrace();
+                    } catch (IllegalArgumentException ex) {
+                        // Exclude these exceptions so that we don't spam consoles because of Bukkit
+                        if (!ex.getMessage().contains("Null ChangedSign found")) throw ex;
                     }
                 }
             };
