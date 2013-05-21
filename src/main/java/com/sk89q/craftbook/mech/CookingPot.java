@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -267,9 +267,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public List<BlockWorldVector> getWatchedPositions() {
 
-        List<BlockWorldVector> bwv = new ArrayList<BlockWorldVector>();
-        bwv.add(pt);
-        return bwv;
+        return Arrays.asList(pt);
     }
 
     private enum Ingredients {
