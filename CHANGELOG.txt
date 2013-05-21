@@ -1,3 +1,17 @@
+3.6.5
++ Added HeadDrops mechanic. Adds the ability for players to drop their heads, and for animals that can't drop heads in vanilla mc to drop heads. (Blazes, Silverfish, Bats, Etc)
+* Fix an inventory related error.
+* Tweak /cb report -i
++ Added IC Docs to FlexSet IC.
++ Added persistent data IC's.
++ Added persistent data to wireless IC's.
++ Added commands to get and set wireless IC bands.
+* Optimized many IC's.
+* Fix BlockLauncher requiring data.
++ Added support for BlockLauncher to read block names.
+* Fixed an error that occurs sometimes (Thanks to Score_Under)
+* Fixed weird issues with being unable to extinguish netherrack (Thanks to Score_Under)
+
 3.6.4
 + Added footprint mechanic. (Adds footprints when you walk)
 * Fix CombineHarvester offset.
