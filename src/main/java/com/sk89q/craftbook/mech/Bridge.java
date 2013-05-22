@@ -32,6 +32,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
@@ -332,7 +333,7 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (canPassThrough(hinge.getTypeId())) {
+        if (BlockUtil.isBlockReplacable(hinge.getTypeId())) {
             return closeBridge(player);
         } else {
             return openBridge();
@@ -344,7 +345,7 @@ public class Bridge extends AbstractMechanic {
         for (BlockVector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             int oldType = b.getTypeId();
-            if (b.getTypeId() == getBridgeMaterial() || canPassThrough(b.getTypeId())) {
+            if (b.getTypeId() == getBridgeMaterial() || BlockUtil.isBlockReplacable(b.getTypeId())) {
                 b.setTypeId(BlockID.AIR);
                 if (plugin.getConfiguration().safeDestruction) {
                     ChangedSign s = BukkitUtil.toChangedSign(trigger);
@@ -362,7 +363,7 @@ public class Bridge extends AbstractMechanic {
 
         for (BlockVector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if (canPassThrough(b.getTypeId())) {
+            if (BlockUtil.isBlockReplacable(b.getTypeId())) {
                 if (plugin.getConfiguration().safeDestruction) {
                     ChangedSign s = BukkitUtil.toChangedSign(trigger);
                     if (hasEnoughBlocks(s)) {
@@ -405,28 +406,6 @@ public class Bridge extends AbstractMechanic {
             if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == mat)) return false;
         } else if (!(proximalBaseCenter.getTypeId() == mat)) return false;
         return true;
-    }
-
-    /**
-     * @return whether the bridge can pass through this BlockType (and displace it if needed).
-     */
-    private static boolean canPassThrough(int t) {
-
-        int[] passableBlocks = new int[10];
-        passableBlocks[0] = BlockID.WATER;
-        passableBlocks[1] = BlockID.STATIONARY_WATER;
-        passableBlocks[2] = BlockID.LAVA;
-        passableBlocks[3] = BlockID.STATIONARY_LAVA;
-        passableBlocks[4] = BlockID.FENCE;
-        passableBlocks[5] = BlockID.SNOW;
-        passableBlocks[6] = BlockID.LONG_GRASS;
-        passableBlocks[7] = BlockID.VINE;
-        passableBlocks[8] = BlockID.DEAD_BUSH;
-        passableBlocks[9] = BlockID.AIR;
-
-        for (int aPassableBlock : passableBlocks) { if (aPassableBlock == t) return true; }
-
-        return false;
     }
 
     /**

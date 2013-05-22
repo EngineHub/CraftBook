@@ -29,7 +29,7 @@ public class BlockUtil {
         return false;
     }
 
-    public static boolean isBlockSolid(int id) {
+    public static boolean isBlockReplacable(int id) {
 
         switch (id) {
 
@@ -38,11 +38,13 @@ public class BlockUtil {
             case BlockID.DEAD_BUSH:
             case BlockID.END_PORTAL:
             case BlockID.FIRE:
-            case BlockID.GRASS:
+            case BlockID.LONG_GRASS:
             case BlockID.LAVA:
             case BlockID.STATIONARY_LAVA:
             case BlockID.WATER:
             case BlockID.STATIONARY_WATER:
+            case BlockID.VINE:
+            case BlockID.SNOW:
                 return false;
             default:
                 return true;

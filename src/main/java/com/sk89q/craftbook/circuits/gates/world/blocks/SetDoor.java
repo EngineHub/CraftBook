@@ -153,10 +153,10 @@ public class SetDoor extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && !BlockUtil.isBlockSolid(onMaterial)) continue;
+                    if (isSource && !BlockUtil.isBlockReplacable(onMaterial)) continue;
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
                 } else {
-                    if (isSource && !BlockUtil.isBlockSolid(offMaterial)) continue;
+                    if (isSource && !BlockUtil.isBlockReplacable(offMaterial)) continue;
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }
