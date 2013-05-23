@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -22,6 +23,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 
 public class RecipeCommands {
@@ -31,7 +33,17 @@ public class RecipeCommands {
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    @Command(aliases = {"save"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
+    @Command(aliases = {"delete", "remove"}, desc = "Delete a recipe", usage = "RecipeName", min = 1, max = 1)
+    @CommandPermissions(value = "craftbook.mech.recipes.remove")
+    public void deleteRecipe(CommandContext context, CommandSender sender) throws CommandException {
+
+        if(RecipeManager.INSTANCE.removeRecipe(context.getString(0))) {
+            RecipeManager.INSTANCE.save();
+        } else
+            sender.sendMessage(ChatColor.RED + "Recipe doesn't exist!");
+    }
+
+    @Command(aliases = {"save", "add"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
     public void saveRecipe(CommandContext context, CommandSender sender) throws CommandException {
 
         if (!(sender instanceof Player)) return;

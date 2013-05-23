@@ -101,6 +101,21 @@ public class RecipeManager extends LocalConfiguration {
         recipes.add(rec);
     }
 
+    public boolean removeRecipe(String name) {
+
+        Iterator<Recipe> recs = recipes.iterator();
+        while(recs.hasNext()) {
+
+            Recipe rec = recs.next();
+            if(rec.getId().equalsIgnoreCase(name)) {
+                recs.remove();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static final class Recipe {
 
         private final String id;
