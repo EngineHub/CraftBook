@@ -39,6 +39,7 @@ public class ItemDispenser extends AbstractIC {
     }
 
     ItemStack item;
+    int times = 1;
 
     @Override
     public void load() {
@@ -56,6 +57,10 @@ public class ItemDispenser extends AbstractIC {
         }
         if (amount < 1) amount = 1;
 
+        if(amount > item.getMaxStackSize()) {
+            times = amount;
+            amount = 1;
+        }
         item.setAmount(amount);
     }
 
@@ -85,8 +90,8 @@ public class ItemDispenser extends AbstractIC {
 
                         ItemStack stack = item.clone();
 
-                        BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y,
-                                0).getLocation(), stack);
+                        for(int i = 0; i < times; i++)
+                            BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y, 0).getLocation(), stack);
                         return;
                     }
                 }

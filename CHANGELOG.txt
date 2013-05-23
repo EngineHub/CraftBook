@@ -1,3 +1,6 @@
+3.6.6
++ Added a slow mode to elevators, to smoothly move the player to the destination. (xTwisteDx from LegendaryChaos.Zapto.org insired me to do it)
+
 3.6.5
 + Added HeadDrops mechanic. Adds the ability for players to drop their heads, and for animals that can't drop heads in vanilla mc to drop heads. (Blazes, Silverfish, Bats, Etc)
 * Fix an inventory related error.
