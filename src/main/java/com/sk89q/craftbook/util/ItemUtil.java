@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -128,6 +129,45 @@ public class ItemUtil {
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
+        if(!isStackValid(item) || !isStackValid(item2)) {
+            if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                CraftBookPlugin.logger().info("An invalid item was compared!");
+            return !isStackValid(item) && !isStackValid(item2);
+        }
+        else {
+            if(!areBaseItemsIdentical(item,item2))
+                return false;
+            if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                CraftBookPlugin.logger().info("The item is basically identical!");
+            if(item.hasItemMeta() != item2.hasItemMeta())
+                return false;
+            if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                CraftBookPlugin.logger().info("Both share the same state of metadata existence!");
+            if(item.hasItemMeta()) {
+                if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                    CraftBookPlugin.logger().info("Both have metadata!");
+                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                        CraftBookPlugin.logger().info("Both share display name existance!");
+                    if(item.getItemMeta().hasDisplayName() && CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                        CraftBookPlugin.logger().info("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName());
+                    if(item.getItemMeta().hasDisplayName() && !item.getItemMeta().getDisplayName().trim().equals(item2.getItemMeta().getDisplayName().trim()))
+                        return false;
+                    if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                        CraftBookPlugin.logger().info("Items share display name!");
+                } else
+                    return false;
+            }
+
+            if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                CraftBookPlugin.logger().info("Items are identical!");
+
+            return true;
+        }
+    }
+
+    public static boolean areBaseItemsIdentical(ItemStack item, ItemStack item2) {
+
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else {
@@ -136,17 +176,6 @@ public class ItemUtil {
                 return false;
             if(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0)
                 return false;
-            if(item.hasItemMeta() != item2.hasItemMeta())
-                return false;
-            if(item.hasItemMeta()) {
-
-                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
-
-                    if(item.getItemMeta().hasDisplayName() && !item.getItemMeta().getDisplayName().equals(item2.getItemMeta().getDisplayName()))
-                        return false;
-                } else
-                    return false;
-            }
 
             return true;
         }

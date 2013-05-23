@@ -229,49 +229,40 @@ public class ICUtil {
 
         Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
         String line = sign.getLine(lPos);
-        if (line.contains("!")) {
+
+        if (line.contains("!"))
             relative = LocationCheckType.getTypeFromChar('!');
-            line = line.replace("!", "");
-        } else if (line.contains("^")) {
+        else if (line.contains("^"))
             relative = LocationCheckType.getTypeFromChar('^');
-            line = line.replace("^", "");
-        } else if (line.contains("&")) {
+        else if (line.contains("&"))
             relative = LocationCheckType.getTypeFromChar('&');
-            line = line.replace("&", "");
-        }
-        line = line.replace("!", "").replace("^", "").replace("&", ""); //in case it had multiples.
-        int offsetX = 0;
-        int offsetY = 0;
-        int offsetZ = 0;
-        if (line.contains("=")) {
-            String[] split = RegexUtil.EQUALS_PATTERN.split(line);
-            line = split[1];
-        }
+
+        line = line.replace("!", "").replace("^", "").replace("&", "");
+        int offsetX = 0, offsetY = 0, offsetZ = 0;
+
+        if (line.contains("="))
+            line = RegexUtil.EQUALS_PATTERN.split(line)[1];
         try {
             String[] split = RegexUtil.COLON_PATTERN.split(line);
             if (split.length > 1) {
                 offsetX = Integer.parseInt(split[0]);
                 offsetY = Integer.parseInt(split[1]);
                 offsetZ = Integer.parseInt(split[2]);
-            } else {
+            } else
                 offsetY = Integer.parseInt(line);
-            }
         } catch (NumberFormatException e) {
-            // do nothing and use defaults
         } catch (ArrayIndexOutOfBoundsException e) {
-            // do nothing and use defaults
         }
 
         if(offsetX == 0 && offsetY == 0 && offsetZ == 0)
             return target;
 
-        if (relative == LocationCheckType.RELATIVE) {
+        if (relative == LocationCheckType.RELATIVE)
             target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
-        } else if (relative == LocationCheckType.OFFSET){
+        else if (relative == LocationCheckType.OFFSET)
             target = LocationUtil.getOffset(target, offsetX, offsetY, offsetZ);
-        } else {
+        else
             target = new Location(target.getWorld(), offsetX, offsetY, offsetZ).getBlock();
-        }
         return target;
     }
 
@@ -304,13 +295,11 @@ public class ICUtil {
                     Integer.parseInt(rads[0]);
                     Integer.parseInt(rads[1]);
                     Integer.parseInt(rads[2]);
-                }
-                else
+                } else
                     Integer.parseInt(split[0]);
                 strings = RegexUtil.COLON_PATTERN.split(split[1], 3);
-            } else {
+            } else
                 strings = RegexUtil.COLON_PATTERN.split(line);
-            }
             if (strings.length > 1) {
                 Integer.parseInt(strings[1]);
                 Integer.parseInt(strings[2]);
@@ -333,7 +322,7 @@ public class ICUtil {
 
     public static Vector parseRadius(String line) {
 
-        Vector radius = new Vector(10,10,10); // default radius is 10.
+        Vector radius = new Vector(10,10,10);
         try {
             String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
             if(radians.length > 1) {
@@ -343,11 +332,11 @@ public class ICUtil {
                 return new Vector(x,y,z);
             }
             else {
-                int r = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+                int r = Integer.parseInt(radians[0]);
+                r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
                 return new Vector(r,r,r);
             }
         } catch (NumberFormatException e) {
-            // do nothing and use default radius
         }
         return radius;
     }

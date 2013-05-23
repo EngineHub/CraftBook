@@ -80,7 +80,7 @@ public class BlockUtilTest {
     }
 
     @Test
-    public void testIsBlockSolid() {
+    public void testIsBlockReplacable() {
 
         assertTrue(BlockUtil.isBlockReplacable(BlockID.STONE));
         assertTrue(!BlockUtil.isBlockReplacable(BlockID.WATER));

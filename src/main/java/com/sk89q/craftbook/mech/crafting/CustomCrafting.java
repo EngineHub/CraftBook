@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech.crafting;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -111,55 +114,118 @@ public class CustomCrafting implements Listener {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onCraft(CraftItemEvent event) {
+    @EventHandler
+    public void prepareCraft(PrepareItemCraftEvent event) {
 
         ItemStack bits = null;
         if(advancedRecipes.size() > 0 && CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
             plugin.getLogger().info("Crafting has been initiated!");
         for(Recipe rec : advancedRecipes.keySet()) {
 
-            if(checkRecipes(rec, event.getRecipe())) {
-                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
-                    plugin.getLogger().info("A recipe with custom data is being crafted!");
-                RecipeManager.Recipe recipe = advancedRecipes.get(rec);
-                if(recipe.hasAdvancedData("permission-node")) {
-                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
-                        plugin.getLogger().info("A recipe with permission nodes detected!");
-                    if(!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
-                        ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
-                        event.setCancelled(true);
-                        return;
-                    }
-                }
-                if(recipe.hasAdvancedData("extra-results")) {
-                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
-                        plugin.getLogger().info("A recipe with extra results detected!");
-                    ArrayList<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>((Collection<CraftingItemStack>) recipe.getAdvancedData("extra-results"));
-                    for(CraftingItemStack stack : stacks) {
-                        HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
-                        if(!leftovers.isEmpty()) {
-                            for(ItemStack istack : leftovers.values())
-                                event.getWhoClicked().getWorld().dropItemNaturally(event.getWhoClicked().getLocation(), istack);
+            try {
+                if(checkRecipes(rec, event.getRecipe())) {
+
+                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+
+                    ItemStack[] tests = ((CraftingInventory)event.getView().getTopInventory()).getMatrix();
+                    CraftingItemStack[] tests2 = recipe.getIngredients().toArray(new CraftingItemStack[recipe.getIngredients().size()]);
+
+                    ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+                    leftovers.addAll(Arrays.asList(tests));
+                    while(leftovers.remove(null)){}
+
+                    for(ItemStack it : tests) {
+
+                        if(!ItemUtil.isStackValid(it))
+                            continue;
+                        for(CraftingItemStack cit : tests2) {
+
+                            if(ItemUtil.areBaseItemsIdentical(cit.getItemStack(), it)) {
+                                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                    plugin.getLogger().info("Recipe base item is correct!");
+                                if(ItemUtil.areItemsIdentical(cit.getItemStack(), it)) {
+                                    leftovers.remove(it);
+                                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                        plugin.getLogger().info("Recipe meta data is correct or not needed!");
+                                } else {
+                                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                        plugin.getLogger().info("Recipe metadata issue!");
+                                    throw new InvalidCraftingException("Unmet Item Meta");
+                                }
+                            } else
+                                continue;
                         }
                     }
+
+                    if(!leftovers.isEmpty())
+                        continue;
+
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("A recipe with custom data is being crafted!");
+                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
+                    break;
                 }
-                bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
-                break;
+            } catch(InvalidCraftingException e){
+                ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+                return;
             }
         }
         if(bits != null && !bits.equals(event.getRecipe().getResult())) {
-            bits.setAmount(event.getCurrentItem().getAmount());
-            event.setCurrentItem(bits);
+            bits.setAmount(((CraftingInventory)event.getView().getTopInventory()).getResult().getAmount());
+            ((CraftingInventory)event.getView().getTopInventory()).setResult(bits);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onCraft(CraftItemEvent event) {
+
+        if(advancedRecipes.size() > 0 && CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+            plugin.getLogger().info("Crafting has been initiated!");
+        for(Recipe rec : advancedRecipes.keySet()) {
+
+            try {
+                if(checkRecipes(rec, event.getRecipe())) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("A recipe with custom data is being crafted!");
+                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                    if(recipe.hasAdvancedData("permission-node")) {
+                        if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                            plugin.getLogger().info("A recipe with permission nodes detected!");
+                        if(!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
+                            ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if(recipe.hasAdvancedData("extra-results")) {
+                        if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                            plugin.getLogger().info("A recipe with extra results detected!");
+                        ArrayList<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>((Collection<CraftingItemStack>) recipe.getAdvancedData("extra-results"));
+                        for(CraftingItemStack stack : stacks) {
+                            HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
+                            if(!leftovers.isEmpty()) {
+                                for(ItemStack istack : leftovers.values())
+                                    event.getWhoClicked().getWorld().dropItemNaturally(event.getWhoClicked().getLocation(), istack);
+                            }
+                        }
+                    }
+                    break;
+                }
+            } catch(InvalidCraftingException e){
+                event.setCancelled(true);
+            }
         }
     }
 
     public static ItemStack craftItem(Recipe recipe) {
 
         for(Recipe rec : advancedRecipes.keySet()) {
-            if(checkRecipes(rec, recipe)) {
-                return applyAdvancedEffects(recipe.getResult(),rec);
+            try {
+                if(checkRecipes(rec, recipe))
+                    return applyAdvancedEffects(recipe.getResult(),rec);
+            } catch (InvalidCraftingException e){
+                return null; //Invalid Recipe.
             }
         }
 
@@ -192,7 +258,7 @@ public class CustomCrafting implements Listener {
         return res;
     }
 
-    private static boolean checkRecipes(Recipe rec1, Recipe rec2) {
+    private static boolean checkRecipes(Recipe rec1, Recipe rec2) throws InvalidCraftingException {
 
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
             if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))

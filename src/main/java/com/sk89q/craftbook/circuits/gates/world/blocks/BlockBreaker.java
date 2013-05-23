@@ -7,7 +7,8 @@ import java.util.Map;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
+import org.bukkit.block.BlockState;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -18,6 +19,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -70,7 +72,9 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         try {
             String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
             id = Integer.parseInt(split[0]);
-            data = Byte.parseByte(split[1]);
+            try {
+                data = Byte.parseByte(split[1]);
+            } catch(Exception e){}
         } catch (Exception ignored) {
         }
     }
@@ -91,11 +95,10 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         }
 
         boolean hasChest = false;
-        if (chest != null && chest.getTypeId() == BlockID.CHEST) {
+        if (chest != null && chest.getState() instanceof InventoryHolder)
             hasChest = true;
-        }
-        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId()
-                == BlockID.PISTON_MOVING_PIECE)
+
+        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE)
             return false;
 
         if (id > 0 && id != broken.getTypeId()) return false;
@@ -111,8 +114,9 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
                 continue;
 
             if (hasChest) {
-                Chest c = (Chest) chest.getState();
+                InventoryHolder c = (InventoryHolder) chest.getState();
                 HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
+                ((BlockState) c).update();
                 if (overflow.isEmpty()) continue;
                 else {
                     for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
@@ -131,8 +135,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     public void dropItem(ItemStack item) {
 
-        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign())
-                .getBlock()), item);
+        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), item);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -152,6 +155,22 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            try {
+                String[] split = RegexUtil.COLON_PATTERN.split(sign.getLine(2));
+                Integer.parseInt(split[0]);
+                try {
+                    Byte.parseByte(split[1]);
+                } catch(Exception e){
+                    throw new ICVerificationException("Data must be a number!");
+                }
+            } catch (Exception ignored) {
+                throw new ICVerificationException("ID must be a number!");
+            }
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Breaks blocks above/below block sign is on.";
@@ -160,7 +179,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Block ID{:Data}", null};
+            return new String[] {"+oBlock ID:Data", null};
         }
     }
 }

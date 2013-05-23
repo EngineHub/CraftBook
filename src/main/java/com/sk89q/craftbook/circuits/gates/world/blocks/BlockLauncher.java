@@ -14,6 +14,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -56,13 +57,11 @@ public class BlockLauncher extends AbstractIC {
         if(getLine(2).isEmpty() || block == null)
             block = new ItemStack(12,1);
 
-        try {
+        if(getLine(3).isEmpty())
+            velocity = new Vector(0,0.5,0);
+        else {
             String[] split2 = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
-            velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]),
-                    Double.parseDouble(split2[2]));
-
-        } catch (Exception ignored) {
-            velocity = new Vector(0, 0.5, 0);
+            velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
         }
     }
 
@@ -102,6 +101,18 @@ public class BlockLauncher extends AbstractIC {
         public IC create(ChangedSign sign) {
 
             return new BlockLauncher(getServer(), sign, this);
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+            if(!sign.getLine(3).isEmpty()) {
+                try {
+                    String[] split2 = RegexUtil.COLON_PATTERN.split(sign.getLine(3));
+                    new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
+                } catch (Exception ignored) {
+                    throw new ICVerificationException("Velocity must be in x:y:z format!");
+                }
+            }
         }
 
         @Override

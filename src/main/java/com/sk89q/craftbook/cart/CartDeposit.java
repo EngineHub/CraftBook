@@ -2,7 +2,6 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.block.Chest;
@@ -59,7 +58,7 @@ public class CartDeposit extends CartMechanism {
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         // search for containers
-        HashSet<Chest> containers = RailUtil.getNearbyChests(blocks.base);
+        List<Chest> containers = new ArrayList<Chest>(RailUtil.getNearbyChests(blocks.base));
         containers.addAll(RailUtil.getNearbyChests(blocks.rail));
 
         // are there any containers?

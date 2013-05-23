@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -10,12 +11,12 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class RailUtil {
 
-    public static HashSet<Chest> getNearbyChests(Block body) {
+    public static List<Chest> getNearbyChests(Block body) {
 
         int x = body.getX();
         int y = body.getY();
         int z = body.getZ();
-        HashSet<Chest> containers = new HashSet<Chest>();
+        List<Chest> containers = new ArrayList<Chest>();
         if (body.getWorld().getBlockAt(x, y, z).getTypeId() == BlockID.CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z).getState());
         }
@@ -47,8 +48,7 @@ public class RailUtil {
         return containers;
     }
 
-    private static final int[] trackBlocks = new int[] { BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL, BlockID.ACTIVATOR_RAIL
-    };
+    private static final int[] trackBlocks = new int[] { BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL, BlockID.ACTIVATOR_RAIL};
 
     public static boolean isTrack(int id) {
 

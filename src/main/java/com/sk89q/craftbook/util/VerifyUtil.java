@@ -16,13 +16,7 @@ public class VerifyUtil {
      */
     public static int verifyRadius(int radius, int maxradius) {
 
-        if (radius < 0)
-            radius = 0;
-
-        if (radius > maxradius)
-            radius = maxradius;
-
-        return radius;
+        return Math.max(0, Math.min(maxradius, radius));
     }
 
     public static <T> Collection<T> withoutNulls(Collection<T> list) {
