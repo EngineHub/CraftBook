@@ -153,6 +153,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         elevatorEnabled = config.getBoolean("mechanics.elevator.enable", true);
         elevatorButtonEnabled = config.getBoolean("mechanics.elevator.enable-buttons", true);
         elevatorLoop = config.getBoolean("mechanics.elevator.allow-looping", false);
+        elevatorSlowMove = config.getBoolean("mechanics.elevator.smooth-movement", false);
+        elevatorMoveSpeed = config.getDouble("mechanics.elevator.smooth-movement-speed", 0.5);
 
         // Footprints Configuration Listener
         footprintsEnabled = config.getBoolean("mechanics.footprints.enable", false);

@@ -113,6 +113,8 @@ public abstract class LocalConfiguration {
     public boolean elevatorEnabled;
     public boolean elevatorButtonEnabled;
     public boolean elevatorLoop;
+    public boolean elevatorSlowMove;
+    public double elevatorMoveSpeed;
     // Mechanics - Footprints
     public boolean footprintsEnabled;
     public List<Integer> footprintsBlocks;

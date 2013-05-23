@@ -16,24 +16,30 @@
 
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Button;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -178,6 +184,11 @@ public class Elevator extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
+        if(task != null) {
+            event.getPlayer().sendMessage("Elevator Busy!");
+            return;
+        }
+
         if (!plugin.getConfiguration().elevatorEnabled) return;
 
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
@@ -232,17 +243,86 @@ public class Elevator extends AbstractMechanic {
             return;
         }
 
-        // Teleport!
-        Location newLocation = player.getPosition();
-        newLocation = newLocation.setPosition(player.getPosition().getPosition().setY(floor.getY() + 1));
-        if (player.isInsideVehicle()) {
-            newLocation = player.getVehicle().getLocation();
-            newLocation = newLocation.setPosition(player.getVehicle().getLocation().getPosition().setY(floor.getY() +
-                    2));
-            player.getVehicle().teleport(newLocation);
-        }
-        player.setPosition(newLocation.getPosition(), newLocation.getPitch(), newLocation.getYaw());
+        teleportPlayer(player, floor);
+    }
 
+    public void teleportPlayer(final LocalPlayer player, final Block floor) {
+
+        final Location newLocation = BukkitUtil.toLocation(player.getPosition());
+        newLocation.setY(floor.getY() + 1);
+
+        if(CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) {
+
+            final Location lastLocation = BukkitUtil.toLocation(player.getPosition());
+
+            task = CraftBookPlugin.inst().getServer().getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
+
+                @Override
+                public void run () {
+
+                    Player p = ((BukkitPlayer)player).getPlayer();
+                    p.setFlying(true);
+                    p.setAllowFlight(true);
+                    p.setFallDistance(0f);
+                    p.setNoDamageTicks(2);
+                    double speed = CraftBookPlugin.inst().getConfiguration().elevatorMoveSpeed;
+
+                    if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
+                        p.teleport(newLocation);
+                        teleportFinish(player);
+                        task.cancel();
+                        task = null;
+                        return;
+                    }
+
+                    if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
+                        p.teleport(newLocation);
+                        player.print("You have left the elevator!");
+                        teleportFinish(player);
+                        task.cancel();
+                        task = null;
+                        return;
+                    }
+
+                    if(newLocation.getY() > p.getLocation().getY()) {
+                        p.setVelocity(new Vector(0, speed,0));
+                        if(!BlockType.canPassThrough(p.getLocation().add(0, 2, 0).getBlock().getTypeId()))
+                            p.teleport(p.getLocation().add(0, speed, 0));
+                    } else if (newLocation.getY() < p.getLocation().getY()) {
+                        p.setVelocity(new Vector(0, -speed,0));
+                        if(!BlockType.canPassThrough(p.getLocation().add(0, -1, 0).getBlock().getTypeId()))
+                            p.teleport(p.getLocation().add(0, -speed, 0));
+                    } else {
+                        teleportFinish(player);
+                        task.cancel();
+                        task = null;
+                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                        p.setFlying(p.getGameMode() == GameMode.CREATIVE);
+                        return;
+                    }
+
+                    lastLocation.setY(p.getLocation().getY());
+                }
+            }, 1, 1);
+        } else {
+            // Teleport!
+            if (player.isInsideVehicle()) {
+                newLocation.setX(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getX());
+                newLocation.setY(floor.getY() + 2);
+                newLocation.setZ(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getZ());
+                newLocation.setYaw(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getYaw());
+                newLocation.setPitch(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getPitch());
+                ((BukkitVehicle)player.getVehicle()).getVehicle().teleport(newLocation);
+            }
+            player.setPosition(BukkitUtil.toLocation(newLocation).getPosition(), newLocation.getPitch(), newLocation.getYaw());
+
+            teleportFinish(player);
+        }
+    }
+
+    private BukkitTask task;
+
+    public void teleportFinish(LocalPlayer player) {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
