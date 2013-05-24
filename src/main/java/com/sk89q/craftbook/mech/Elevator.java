@@ -261,8 +261,8 @@ public class Elevator extends AbstractMechanic {
                 public void run () {
 
                     Player p = ((BukkitPlayer)player).getPlayer();
-                    p.setFlying(true);
                     p.setAllowFlight(true);
+                    p.setFlying(true);
                     p.setFallDistance(0f);
                     p.setNoDamageTicks(2);
                     double speed = CraftBookPlugin.inst().getConfiguration().elevatorMoveSpeed;
@@ -279,6 +279,8 @@ public class Elevator extends AbstractMechanic {
                         p.teleport(newLocation);
                         player.print("You have left the elevator!");
                         teleportFinish(player);
+                        p.setFlying(p.getGameMode() == GameMode.CREATIVE);
+                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
                         task = null;
                         return;
@@ -296,8 +298,8 @@ public class Elevator extends AbstractMechanic {
                         teleportFinish(player);
                         task.cancel();
                         task = null;
-                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         p.setFlying(p.getGameMode() == GameMode.CREATIVE);
+                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         return;
                     }
 
