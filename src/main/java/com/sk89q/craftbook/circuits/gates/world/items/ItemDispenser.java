@@ -46,12 +46,12 @@ public class ItemDispenser extends AbstractIC {
 
         int amount = 1;
 
-        item = ItemUtil.getItem(getLine(2));
+        item = ItemUtil.makeItemValid(ItemUtil.getItem(getLine(2)));
         if(item == null)
             item = new ItemStack(1, 1);
 
         try {
-            amount = Math.min(item.getMaxStackSize(), Math.max(1, Integer.parseInt(getSign().getLine(3))));
+            amount = Math.max(1, Integer.parseInt(getSign().getLine(3)));
         } catch (Exception ignored) {
             amount = 1;
         }
@@ -88,10 +88,8 @@ public class ItemDispenser extends AbstractIC {
                 for (int y = 1; y <= maxY; y++) {
                     if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
 
-                        ItemStack stack = item.clone();
-
                         for(int i = 0; i < times; i++)
-                            BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y, 0).getLocation(), stack);
+                            BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y, 0).getLocation(), item.clone());
                         return;
                     }
                 }
