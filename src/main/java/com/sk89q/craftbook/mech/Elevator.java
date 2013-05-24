@@ -266,6 +266,8 @@ public class Elevator extends AbstractMechanic {
                     p.setFallDistance(0f);
                     p.setNoDamageTicks(2);
                     double speed = CraftBookPlugin.inst().getConfiguration().elevatorMoveSpeed;
+                    newLocation.setPitch(p.getLocation().getPitch());
+                    newLocation.setYaw(p.getLocation().getYaw());
 
                     if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
                         p.teleport(newLocation);
