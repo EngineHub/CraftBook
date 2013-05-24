@@ -124,8 +124,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                             // Sounds like utter crap
                             // notePlayer.play(toMCPercussion(patches.get(chan)), 10);
                         } else {
-                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n),
-                                    msg.getData2()));
+                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                         }
                     }
                 }

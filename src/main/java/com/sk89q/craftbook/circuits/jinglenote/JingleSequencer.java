@@ -42,8 +42,7 @@ public interface JingleSequencer {
 
         public float getVelocity() {
 
-            if (instrument == Instrument.GUITAR) return velocity / 256;
-            return velocity / 64;
+            return velocity;
         }
     }
 }
