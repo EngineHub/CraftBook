@@ -272,6 +272,8 @@ public class Elevator extends AbstractMechanic {
                     if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
                         p.teleport(newLocation);
                         teleportFinish(player);
+                        p.setFlying(false);
+                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
                         task = null;
                         return;
@@ -281,7 +283,7 @@ public class Elevator extends AbstractMechanic {
                         p.teleport(newLocation);
                         player.print("You have left the elevator!");
                         teleportFinish(player);
-                        p.setFlying(p.getGameMode() == GameMode.CREATIVE);
+                        p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
                         task = null;
@@ -297,11 +299,11 @@ public class Elevator extends AbstractMechanic {
                         if(!BlockType.canPassThrough(p.getLocation().add(0, -1, 0).getBlock().getTypeId()))
                             p.teleport(p.getLocation().add(0, -speed, 0));
                     } else {
+                        p.setFlying(false);
+                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         teleportFinish(player);
                         task.cancel();
                         task = null;
-                        p.setFlying(p.getGameMode() == GameMode.CREATIVE);
-                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         return;
                     }
 
