@@ -55,6 +55,8 @@ public final class LocationUtil {
             for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
+                    if(e.isDead() || !e.isValid())
+                        continue;
                     if(isWithinRadius(l,e.getLocation(),radius))
                         radiusEntities.add(e);
                 }
