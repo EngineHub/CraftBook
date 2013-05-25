@@ -280,9 +280,7 @@ public class Elevator extends AbstractMechanic {
                     }
 
                     if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
-                        p.teleport(newLocation);
                         player.print("You have left the elevator!");
-                        teleportFinish(player);
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
