@@ -7,3 +7,8 @@
 #
 #creeper->46x10-20
 #You can also append to mob drops by adding a + to the end of the mobs name.
+
+#And to add names to drops..
+#creeper->1|Named Stonex2-5%1
+#And to add enchantments to drops..
+#creeper->1;DAMAGE_ALL:3|Named Stonex2-5%1

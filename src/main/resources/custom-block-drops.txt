@@ -14,3 +14,11 @@
 #And, to make wood have a 1% chance to drop stone.
 
 #5->1x2-5%1
+
+#And to add names to drops..
+
+#5->1|Named Stonex2-5%1
+
+#And to add enchantments to drops..
+
+#5->1;DAMAGE_ALL:3|Named Stonex2-5%1

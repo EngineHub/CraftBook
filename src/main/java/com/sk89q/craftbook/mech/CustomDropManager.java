@@ -25,8 +25,10 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 /**
@@ -203,10 +205,9 @@ public final class CustomDropManager {
 
         String[] split = RegexUtil.X_PATTERN.split(RegexUtil.PERCENT_PATTERN.split(s)[0]);
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
-        String[] split2 = RegexUtil.COLON_PATTERN.split(split[0].trim());
-        if (split2.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
-        int itemId = Integer.parseInt(split2[0].trim());
-        int data = split2.length == 1 ? 0 : Integer.parseInt(split2[1].trim());
+        ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(split[0]));
+        int itemId = stack.getTypeId();
+        int data = stack.getData().getData();
         if (data >= DATA_VALUE_COUNT || data < 0)
             throw new CustomDropParseException(prelude + "block data value out of range");
         String[] split3 = RegexUtil.MINUS_PATTERN.split(split[1].trim());
@@ -218,7 +219,8 @@ public final class CustomDropManager {
             chance = Integer.parseInt(RegexUtil.PERCENT_PATTERN.split(s)[1]);
         } catch (Exception ignored) {
         }
-        return new DropDefinition(itemId, (byte) data, countMin, countMax, chance, append);
+
+        return new DropDefinition(itemId, (byte) data, stack.getItemMeta(), countMin, countMax, chance, append);
     }
 
     public static class CustomDropParseException extends IOException {
@@ -258,8 +260,9 @@ public final class CustomDropManager {
         public final int countMax;
         public final boolean append;
         public final int chance;
+        public final ItemMeta meta;
 
-        public DropDefinition(int id, byte data, int countMin, int countMax, int chance, boolean append) {
+        public DropDefinition(int id, byte data, ItemMeta meta, int countMin, int countMax, int chance, boolean append) {
 
             if (countMax < countMin) {
                 int temp = countMin;
@@ -267,22 +270,22 @@ public final class CustomDropManager {
                 countMax = temp;
             }
 
-            if (chance < 0) chance = 0;
-            if (chance > 100) chance = 100;
-
-            this.chance = chance;
+            this.chance = Math.min(100, Math.max(0, chance));
 
             this.id = id;
             this.data = data;
             this.countMin = countMin;
             this.countMax = countMax;
             this.append = append;
+            this.meta = meta;
         }
 
         public ItemStack getItemStack() {
 
             if (CraftBookPlugin.inst().getRandom().nextInt(100) > chance) return null;
-            return new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data);
+            ItemStack stack = new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data);
+            stack.setItemMeta(meta);
+            return stack;
         }
 
         public ItemStack[] getItemStacks() {
