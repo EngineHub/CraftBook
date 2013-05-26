@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -152,7 +153,7 @@ public class ItemUtil {
                         CraftBookPlugin.logger().info("Both share display name existance!");
                     if(item.getItemMeta().hasDisplayName() && CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                         CraftBookPlugin.logger().info("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName());
-                    if(item.getItemMeta().hasDisplayName() && !item.getItemMeta().getDisplayName().trim().equals(item2.getItemMeta().getDisplayName().trim()))
+                    if(item.getItemMeta().hasDisplayName() && !ChatColor.stripColor(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(ChatColor.stripColor(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
                         return false;
                     if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                         CraftBookPlugin.logger().info("Items share display name!");

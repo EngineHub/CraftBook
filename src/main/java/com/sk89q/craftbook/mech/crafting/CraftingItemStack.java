@@ -100,6 +100,12 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
         if (obj instanceof CraftingItemStack) {
             CraftingItemStack stack = (CraftingItemStack) obj;
+            if(stack.advancedData.size() != advancedData.size())
+                return false;
+            if(stack.hasAdvancedData() != hasAdvancedData())
+                return false;
+            if(stack.hasAdvancedData("name") != hasAdvancedData("name"))
+                return false;
             return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
         }
         return false;

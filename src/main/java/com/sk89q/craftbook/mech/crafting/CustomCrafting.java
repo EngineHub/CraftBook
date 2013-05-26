@@ -121,11 +121,13 @@ public class CustomCrafting implements Listener {
         ItemStack bits = null;
         if(advancedRecipes.size() > 0 && CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
             plugin.getLogger().info("Crafting has been initiated!");
-        for(Recipe rec : advancedRecipes.keySet()) {
+        try {
+            boolean hasFailed = false;
+            for(Recipe rec : advancedRecipes.keySet()) {
 
-            try {
                 if(checkRecipes(rec, event.getRecipe())) {
 
+                    thisrecipe: {
                     RecipeManager.Recipe recipe = advancedRecipes.get(rec);
 
                     ItemStack[] tests = ((CraftingInventory)event.getView().getTopInventory()).getMatrix();
@@ -151,7 +153,8 @@ public class CustomCrafting implements Listener {
                                 } else {
                                     if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
                                         plugin.getLogger().info("Recipe metadata issue!");
-                                    throw new InvalidCraftingException("Unmet Item Meta");
+                                    hasFailed = true;
+                                    break thisrecipe;
                                 }
                             } else
                                 continue;
@@ -161,15 +164,20 @@ public class CustomCrafting implements Listener {
                     if(!leftovers.isEmpty())
                         continue;
 
+                    hasFailed = false;
+
                     if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
                         plugin.getLogger().info("A recipe with custom data is being crafted!");
                     bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
                     break;
                 }
-            } catch(InvalidCraftingException e){
-                ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
-                return;
+                }
             }
+            if(hasFailed)
+                throw new InvalidCraftingException("Unmet Item Meta");
+        } catch(InvalidCraftingException e){
+            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+            return;
         }
         if(bits != null && !bits.equals(event.getRecipe().getResult())) {
             bits.setAmount(((CraftingInventory)event.getView().getTopInventory()).getResult().getAmount());

@@ -129,8 +129,21 @@ public class RecipeManager extends LocalConfiguration {
         @Override
         public boolean equals(Object o) {
 
-            if(o instanceof Recipe && o != null)
-                return ((Recipe) o).getId() == id;
+            if(o instanceof Recipe && o != null) {
+                if(shape != null)
+                    if(shape.size() != ((Recipe)o).shape.size())
+                        return false;
+                if(ingredients != null)
+                    if(ingredients.size() != ((Recipe)o).ingredients.size())
+                        return false;
+                if(items != null)
+                    if(items.size() != ((Recipe)o).items.size())
+                        return false;
+                if(advancedData != null)
+                    if(advancedData.size() != ((Recipe)o).advancedData.size())
+                        return false;
+                return ((Recipe) o).getId() == id && type == ((Recipe)o).type && result.equals(((Recipe)o).result);
+            }
             else
                 return false;
         }
@@ -138,7 +151,15 @@ public class RecipeManager extends LocalConfiguration {
         @Override
         public int hashCode() {
 
-            return id.hashCode();
+            int ret = id.hashCode();
+            if(ingredients != null)
+                ret += ingredients.hashCode();
+            else if (items != null)
+                ret += items.hashCode();
+            ret += result.hashCode();
+            if(shape != null)
+                ret += shape.hashCode();
+            return ret + advancedData.hashCode();
         }
 
         public boolean hasAdvancedData() {
