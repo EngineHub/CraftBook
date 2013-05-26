@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -176,6 +177,67 @@ public class CustomCrafting implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void prepareFurnace(FurnaceSmeltEvent event) {
+
+        ItemStack bits = null;
+        if(advancedRecipes.size() > 0 && CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+            plugin.getLogger().info("Smelting has been initiated!");
+        for(Recipe rec : advancedRecipes.keySet()) {
+
+            if(!(rec instanceof FurnaceRecipe))
+                continue;
+            try {
+                if(checkFurnaceRecipes((FurnaceRecipe) rec, event.getSource(), event.getResult())) {
+
+                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+
+                    ItemStack[] tests = new ItemStack[]{event.getSource()};
+
+                    ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+                    leftovers.addAll(Arrays.asList(tests));
+                    while(leftovers.remove(null)){}
+
+                    if(!ItemUtil.isStackValid(event.getSource()))
+                        continue;
+                    for(CraftingItemStack cit : recipe.getIngredients()) {
+
+                        if(ItemUtil.areBaseItemsIdentical(cit.getItemStack(), event.getSource())) {
+                            if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                plugin.getLogger().info("Recipe base item is correct!");
+                            if(ItemUtil.areItemsIdentical(cit.getItemStack(), event.getSource())) {
+                                leftovers.remove(event.getSource());
+                                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                    plugin.getLogger().info("Recipe meta data is correct or not needed!");
+                            } else {
+                                if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                                    plugin.getLogger().info("Recipe metadata issue!");
+                                throw new InvalidCraftingException("Unmet Item Meta");
+                            }
+                        } else
+                            continue;
+                    }
+
+                    if(!leftovers.isEmpty())
+                        continue;
+
+                    if(CraftBookPlugin.isDebugFlagEnabled("advanced-data"))
+                        plugin.getLogger().info("A recipe with custom data is being crafted!");
+                    bits = applyAdvancedEffects(event.getResult(),rec);
+                    break;
+                }
+            } catch(InvalidCraftingException e){
+                event.setResult(null);
+                event.setCancelled(true);
+                return;
+            }
+        }
+        if(bits != null && !bits.equals(event.getResult())) {
+            bits.setAmount(event.getResult().getAmount());
+            event.setResult(bits);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
@@ -256,6 +318,15 @@ public class CustomCrafting implements Listener {
                 res.addUnsafeEnchantment(enchants.getKey(), enchants.getValue());
         }
         return res;
+    }
+
+    private static boolean checkFurnaceRecipes(FurnaceRecipe rec1, ItemStack source, ItemStack result) throws InvalidCraftingException {
+
+        if(ItemUtil.areItemsIdentical(rec1.getInput(), source))
+            if(ItemUtil.areItemsIdentical(rec1.getResult(), result))
+                return true;
+
+        return false;
     }
 
     private static boolean checkRecipes(Recipe rec1, Recipe rec2) throws InvalidCraftingException {
