@@ -26,6 +26,7 @@ import java.util.logging.Level;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -207,7 +208,7 @@ public final class CustomDropManager {
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(split[0]));
         int itemId = stack.getTypeId();
-        int data = stack.getData().getData();
+        byte data = stack.getData().getData();
         if (data >= DATA_VALUE_COUNT || data < 0)
             throw new CustomDropParseException(prelude + "block data value out of range");
         String[] split3 = RegexUtil.MINUS_PATTERN.split(split[1].trim());
@@ -220,7 +221,7 @@ public final class CustomDropManager {
         } catch (Exception ignored) {
         }
 
-        return new DropDefinition(itemId, (byte) data, stack.getItemMeta(), countMin, countMax, chance, append);
+        return new DropDefinition(itemId, data, stack.getItemMeta(), countMin, countMax, chance, append);
     }
 
     public static class CustomDropParseException extends IOException {
@@ -284,6 +285,7 @@ public final class CustomDropManager {
 
             if (CraftBookPlugin.inst().getRandom().nextInt(100) > chance) return null;
             ItemStack stack = new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data);
+            stack.setData(new MaterialData(id,data));
             stack.setItemMeta(meta);
             return stack;
         }
