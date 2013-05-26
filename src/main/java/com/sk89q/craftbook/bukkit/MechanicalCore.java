@@ -1,6 +1,10 @@
 package com.sk89q.craftbook.bukkit;
 import java.io.File;
+import java.util.Iterator;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.LocalComponent;
@@ -79,6 +83,17 @@ public class MechanicalCore implements LocalComponent {
     @Override
     public void disable() {
 
+        Iterator<String> it = Elevator.flyingPlayers.iterator();
+        while(it.hasNext()) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
+            if(!op.isOnline()) {
+                it.remove();
+                continue;
+            }
+            op.getPlayer().setFlying(false);
+            op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
+            it.remove();
+        }
         instance = null;
         DispenserRecipes.unload();
     }

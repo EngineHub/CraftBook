@@ -16,8 +16,11 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.util.HashSet;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -246,6 +249,8 @@ public class Elevator extends AbstractMechanic {
         teleportPlayer(player, floor);
     }
 
+    public static HashSet<String> flyingPlayers = new HashSet<String>();
+
     public void teleportPlayer(final LocalPlayer player, final Block floor) {
 
         final Location newLocation = BukkitUtil.toLocation(player.getPosition());
@@ -260,7 +265,15 @@ public class Elevator extends AbstractMechanic {
                 @Override
                 public void run () {
 
-                    Player p = ((BukkitPlayer)player).getPlayer();
+                    OfflinePlayer op = ((BukkitPlayer)player).getPlayer();
+                    if(!op.isOnline()) {
+                        task.cancel();
+                        task = null;
+                        return;
+                    }
+                    Player p = op.getPlayer();
+                    if(!flyingPlayers.contains(p.getName()))
+                        flyingPlayers.add(p.getName());
                     p.setAllowFlight(true);
                     p.setFlying(true);
                     p.setFallDistance(0f);
@@ -276,6 +289,7 @@ public class Elevator extends AbstractMechanic {
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
                         task = null;
+                        flyingPlayers.remove(p.getName());
                         return;
                     }
 
@@ -285,6 +299,7 @@ public class Elevator extends AbstractMechanic {
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
                         task = null;
+                        flyingPlayers.remove(p.getName());
                         return;
                     }
 
@@ -302,6 +317,7 @@ public class Elevator extends AbstractMechanic {
                         teleportFinish(player);
                         task.cancel();
                         task = null;
+                        flyingPlayers.remove(p.getName());
                         return;
                     }
 

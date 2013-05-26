@@ -192,10 +192,8 @@ public class CustomCrafting implements Listener {
 
                     RecipeManager.Recipe recipe = advancedRecipes.get(rec);
 
-                    ItemStack[] tests = new ItemStack[]{event.getSource()};
-
                     ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
-                    leftovers.addAll(Arrays.asList(tests));
+                    leftovers.add(event.getSource());
                     while(leftovers.remove(null)){}
 
                     if(!ItemUtil.isStackValid(event.getSource()))
