@@ -462,12 +462,12 @@ public class ItemUtil {
         if(nameLoreSplit.length > 1 && id > 0) {
 
             ItemMeta meta = rVal.getItemMeta();
-            meta.setDisplayName(nameLoreSplit[1]);
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
             if(nameLoreSplit.length > 2) {
 
                 List<String> lore = new ArrayList<String>();
                 for(int i = 2; i < nameLoreSplit.length; i++)
-                    lore.add(nameLoreSplit[i]);
+                    lore.add(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[i]));
 
                 meta.setLore(lore);
             }
