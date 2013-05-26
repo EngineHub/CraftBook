@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -428,12 +429,16 @@ public class ItemUtil {
         } catch (NumberFormatException e) {
             try {
                 id = BlockType.lookup(dataSplit[0]).getID();
-                if (id < 0) id = 0;
+                if (id < 1) id = 1;
             } catch (Exception ee) {
                 try {
                     id = ItemType.lookup(dataSplit[0]).getID();
+                    if (id < 1) id = 1;
                 }
-                catch(Exception eee){}
+                catch(Exception eee){
+                    id = Material.getMaterial(dataSplit[0]).getId();
+                    if (id < 1) id = 1;
+                }
             }
         }
         try {
@@ -447,10 +452,13 @@ public class ItemUtil {
         }
         catch(Exception e){}
 
+        if(id < 1)
+            id = 1;
+
         ItemStack rVal = new ItemStack(id, amount, (short) data);
         rVal.setData(new MaterialData(id, (byte)data));
 
-        if(nameLoreSplit.length > 1) {
+        if(nameLoreSplit.length > 1 && id > 0) {
 
             ItemMeta meta = rVal.getItemMeta();
             meta.setDisplayName(nameLoreSplit[1]);
