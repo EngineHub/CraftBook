@@ -154,10 +154,10 @@ public class SetBridge extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && !BlockUtil.isBlockReplacable(onMaterial)) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(onMaterial)) continue;
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
                 } else {
-                    if (isSource && !BlockUtil.isBlockReplacable(offMaterial)) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(offMaterial)) continue;
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }

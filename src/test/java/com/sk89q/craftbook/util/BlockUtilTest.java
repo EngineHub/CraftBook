@@ -82,9 +82,9 @@ public class BlockUtilTest {
     @Test
     public void testIsBlockReplacable() {
 
-        assertTrue(BlockUtil.isBlockReplacable(BlockID.STONE));
-        assertTrue(!BlockUtil.isBlockReplacable(BlockID.WATER));
-        assertTrue(!BlockUtil.isBlockReplacable(BlockID.LAVA));
-        assertTrue(!BlockUtil.isBlockReplacable(BlockID.AIR));
+        assertTrue(!BlockUtil.isBlockReplacable(BlockID.STONE));
+        assertTrue(BlockUtil.isBlockReplacable(BlockID.WATER));
+        assertTrue(BlockUtil.isBlockReplacable(BlockID.LAVA));
+        assertTrue(BlockUtil.isBlockReplacable(BlockID.AIR));
     }
 }
