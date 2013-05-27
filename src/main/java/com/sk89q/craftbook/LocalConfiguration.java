@@ -18,9 +18,10 @@ public abstract class LocalConfiguration {
     public boolean ICCached;
     public boolean ICShortHandEnabled;
     public int ICMaxRange;
-    public List<String> disabledICs;
+    public List<String> ICsDisabled;
     public boolean ICKeepLoaded;
     public LocationCheckType ICdefaultCoordinate;
+    public boolean ICSavePersistentData;
 
     // Circuits - Wiring
     public boolean netherrackEnabled;

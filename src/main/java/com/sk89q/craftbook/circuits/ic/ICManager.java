@@ -110,7 +110,7 @@ public class ICManager {
             longRegistered.put(toRegister, id);
         }
 
-        if(factory instanceof PersistentDataIC) {
+        if(factory instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
             try {
                 if(((PersistentDataIC) factory).getStorageFile().exists())
                     ((PersistentDataIC) factory).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) factory).getStorageFile())));

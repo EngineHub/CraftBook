@@ -80,7 +80,7 @@ public abstract class AbstractICFactory implements ICFactory {
     @Override
     public void unload() {
 
-        if(this instanceof PersistentDataIC) {
+        if(this instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
             try {
                 ((PersistentDataIC)this).getStorageFile().getParentFile().mkdirs();
                 if(!((PersistentDataIC)this).getStorageFile().exists())
