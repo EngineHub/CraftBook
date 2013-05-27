@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -131,7 +132,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     public boolean canBreed(Entity entity) {
 
-        return entity instanceof Cow || entity instanceof Sheep || entity instanceof Pig || entity instanceof Chicken;
+        return entity instanceof Cow || entity instanceof Sheep || entity instanceof Pig || entity instanceof Chicken || entity instanceof Wolf;
     }
 
     public boolean breedAnimal(InventoryHolder inv, Entity entity) {
@@ -149,8 +150,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                         return true;
                     }
                 }
-            }
-            else if (entity instanceof Pig) {
+            } else if (entity instanceof Pig) {
 
                 if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(ItemID.CARROT, 2))) {
 
@@ -169,6 +169,20 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
                         return true;
+                    }
+                }
+            } else if (entity instanceof Wolf) {
+
+                int[] validItems = new int[]{ItemID.RAW_CHICKEN, ItemID.COOKED_CHICKEN, ItemID.RAW_BEEF, ItemID.COOKED_BEEF, ItemID.RAW_PORKCHOP, ItemID.COOKED_PORKCHOP, ItemID.ROTTEN_FLESH};
+
+                for(int item : validItems) {
+                    if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(item, 2))) {
+                        if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(item, 2))) {
+                            Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
+                            animal.setBaby();
+                            ((Ageable) entity).setBreed(false);
+                            return true;
+                        }
                     }
                 }
             }
