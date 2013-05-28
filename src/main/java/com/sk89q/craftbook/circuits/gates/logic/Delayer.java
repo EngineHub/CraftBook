@@ -21,15 +21,22 @@ public class Delayer extends AbstractIC {
     private BukkitTask taskId;
     private long delay = 1;
     private boolean tickDelay;
+    private boolean stayOnLow;
 
     public Delayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
         try {
-            delay = Long.parseLong(getSign().getLine(2));
-            tickDelay = Boolean.parseBoolean(getSign().getLine(3));
         } catch (Exception ignored) {
         }
+    }
+
+    @Override
+    public void load() {
+        delay = Long.parseLong(getSign().getLine(2));
+        tickDelay = Boolean.parseBoolean(getSign().getLine(3).split(":")[0]);
+        if(getLine(3).contains(":"))
+            stayOnLow = Boolean.parseBoolean(getSign().getLine(3).split(":")[1]);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class Delayer extends AbstractIC {
                 }
             }, tdelay);
         } else {
-            if(taskId != null)
+            if(taskId != null && !stayOnLow)
                 taskId.cancel();
             chip.setOutput(0, false);
         }
@@ -99,7 +106,7 @@ public class Delayer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"seconds", "true to use ticks"};
+            return new String[] {"seconds", "true to use ticks:true to continue on low"};
         }
     }
 }
