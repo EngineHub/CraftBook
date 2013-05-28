@@ -125,8 +125,8 @@ class TriggerBlockManager {
                 continue;
             }
 
-            int curChunkX = (int) Math.floor(pos.getBlockX() >> 4);
-            int curChunkZ = (int) Math.floor(pos.getBlockZ() >> 4);
+            int curChunkX = pos.getBlockX() >> 4;
+            int curChunkZ = pos.getBlockZ() >> 4;
             // Not involved in this chunk!
             if (curChunkX != chunkX || curChunkZ != chunkZ) {
                 continue;
