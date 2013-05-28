@@ -133,12 +133,51 @@ public class RecipeManager extends LocalConfiguration {
                 if(shape != null)
                     if(shape.size() != ((Recipe)o).shape.size())
                         return false;
-                if(ingredients != null)
+                if(ingredients != null) {
                     if(ingredients.size() != ((Recipe)o).ingredients.size())
                         return false;
-                if(items != null)
+                    List<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>();
+                    stacks.addAll(ingredients);
+                    for(CraftingItemStack st : ((Recipe)o).ingredients) {
+
+                        if(stacks.size() <= 0)
+                            return false;
+                        Iterator<CraftingItemStack> it = stacks.iterator();
+                        while(it.hasNext()) {
+                            CraftingItemStack sta = it.next();
+                            if(st.equals(sta)) {
+                                it.remove();
+                                break;
+                            }
+                        }
+                    }
+
+                    if(stacks.size() > 0)
+                        return false;
+                }
+                if(items != null) {
                     if(items.size() != ((Recipe)o).items.size())
                         return false;
+
+                    List<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>();
+                    stacks.addAll(items.keySet());
+                    for(CraftingItemStack st : ((Recipe)o).items.keySet()) {
+
+                        if(stacks.size() <= 0)
+                            return false;
+                        Iterator<CraftingItemStack> it = stacks.iterator();
+                        while(it.hasNext()) {
+                            CraftingItemStack sta = it.next();
+                            if(st.equals(sta)) {
+                                it.remove();
+                                break;
+                            }
+                        }
+                    }
+
+                    if(stacks.size() > 0)
+                        return false;
+                }
                 if(advancedData != null)
                     if(advancedData.size() != ((Recipe)o).advancedData.size())
                         return false;
