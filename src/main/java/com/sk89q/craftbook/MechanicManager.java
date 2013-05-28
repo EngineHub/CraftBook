@@ -362,10 +362,9 @@ public class MechanicManager {
         if(player != null)
             detectedMechanics.addAll(detect(pos,player));
 
-        Mechanic ptMechanic = triggersManager.get(pos);
+        PersistentMechanic ptMechanic = triggersManager.get(pos);
 
-        if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic)
-                .isActive()) {
+        if (ptMechanic != null && !ptMechanic.isActive()) {
             unload(ptMechanic, null);
             ptMechanic = null;
         }
@@ -433,10 +432,9 @@ public class MechanicManager {
 
         HashSet<Mechanic> detectedMechanics = detect(pos, player, sign);
 
-        Mechanic ptMechanic = triggersManager.get(pos);
+        PersistentMechanic ptMechanic = triggersManager.get(pos);
 
-        if (ptMechanic != null && ptMechanic instanceof PersistentMechanic && !((PersistentMechanic) ptMechanic)
-                .isActive()) {
+        if (ptMechanic != null && !ptMechanic.isActive()) {
             unload(ptMechanic, null);
             ptMechanic = null;
         }
@@ -602,6 +600,8 @@ public class MechanicManager {
                     }
                 }
             }
+        } catch (NullPointerException e) {
+            // Ignore: Generally thrown by Bukkit even for valid chunks
         } catch (Throwable error) {
 
             BukkitUtil.printStacktrace(error);

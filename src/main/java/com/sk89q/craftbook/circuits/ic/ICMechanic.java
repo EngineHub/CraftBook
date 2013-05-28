@@ -135,6 +135,9 @@ public class ICMechanic extends PersistentMechanic {
         if (block.getTypeId() == BlockID.WALL_SIGN) {
 
             ChangedSign sign = BukkitUtil.toChangedSign(block);
+            if (sign == null) {
+                return false;
+            }
 
             Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
 
