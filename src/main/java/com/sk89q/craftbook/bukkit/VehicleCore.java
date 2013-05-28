@@ -233,7 +233,7 @@ public class VehicleCore implements LocalComponent {
         @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onVehicleEnter(VehicleEnterEvent event) {
 
-            if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() / 16, event.getVehicle().getLocation().getBlockZ() / 16))
+            if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
                 return;
             Vehicle vehicle = event.getVehicle();
 
