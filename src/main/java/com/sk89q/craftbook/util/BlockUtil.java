@@ -45,6 +45,7 @@ public class BlockUtil {
             case BlockID.STATIONARY_WATER:
             case BlockID.VINE:
             case BlockID.SNOW:
+            case BlockID.PISTON_MOVING_PIECE:
                 return true;
             default:
                 return false;
