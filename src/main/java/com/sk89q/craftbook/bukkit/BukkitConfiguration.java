@@ -94,7 +94,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
         obeyWorldguard = config.getBoolean("check-worldguard-flags", false);
 
-        config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection.");
+        config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.");
         advancedBlockChecks = config.getBoolean("advanced-block-checks", false);
 
         config.setComment("use-experimental-clicks", "Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.");
