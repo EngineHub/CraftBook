@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Minecart;
 
 public class EntityUtil {
 
@@ -46,6 +47,22 @@ public class EntityUtil {
 
         if(ent instanceof Damageable)
             ((Damageable) ent).damage(((Damageable) ent).getHealth());
+        else
+            ent.remove();
+    }
+
+    /**
+     * Damages an entity using the proper way for it's entity type.
+     * 
+     * @param ent The entity to damage.
+     * @param damage The amount to damage it by.
+     */
+    public static void damageEntity(Entity ent, int damage) {
+
+        if(ent instanceof Damageable)
+            ((Damageable) ent).damage(damage);
+        else if (ent instanceof Minecart)
+            ((Minecart) ent).setDamage(((Minecart) ent).getDamage() + damage);
         else
             ent.remove();
     }

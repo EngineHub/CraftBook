@@ -3,8 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -14,6 +12,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EntityType;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -63,21 +62,18 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
+        location = ICUtil.parseBlockLocation(getSign()).getLocation();
         radius = ICUtil.parseRadius(getSign());
         try {
-            String[] splitLine = RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2), 3);
-            if (splitLine.length > 2) {
-                damage = Integer.parseInt(splitLine[2]);
-            } else
-                damage = 2;
+            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[2]);
         } catch (Exception ignored) {
             damage = 2;
         }
 
-        if (!getSign().getLine(3).isEmpty()) {
+        if (!getLine(3).isEmpty())
             type = EntityType.fromString(getSign().getLine(3));
-        } else type = EntityType.MOB_HOSTILE;
+        else
+            type = EntityType.MOB_HOSTILE;
     }
 
     /**
@@ -90,19 +86,11 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         boolean hasHurt = false;
 
         for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-            if (e == null || e.isDead() || !e.isValid()) {
+
+            if (!type.is(e))
                 continue;
-            }
-            if (!type.is(e)) {
-                continue;
-            }
-            if (e instanceof LivingEntity) {
-                ((LivingEntity) e).damage(damage);
-            } else if (e instanceof Minecart) {
-                ((Minecart) e).setDamage(((Minecart) e).getDamage() + damage);
-            } else {
-                e.remove();
-            }
+
+            EntityUtil.damageEntity(e, damage);
             hasHurt = true;
         }
 
