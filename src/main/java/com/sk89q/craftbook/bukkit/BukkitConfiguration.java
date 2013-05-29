@@ -25,6 +25,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean obeyWorldguard;
     public boolean advancedBlockChecks;
     public boolean experimentalClicks;
+    public boolean pedanticBlockChecks;
 
     public boolean updateNotifier;
     public boolean easterEggs;
@@ -96,6 +97,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.");
         advancedBlockChecks = config.getBoolean("advanced-block-checks", false);
+
+        config.setComment("pedantic-block-checks", "In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.");
+        pedanticBlockChecks = config.getBoolean("pedantic-block-checks", false);
 
         config.setComment("use-experimental-clicks", "Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.");
         experimentalClicks = config.getBoolean("use-experimental-clicks", false);
