@@ -204,7 +204,7 @@ public class BetterPistons extends AbstractMechanic {
             if(trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
                 for(Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                     if(EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
-                        ent.setVelocity(vel);
+                        ent.setVelocity(ent.getVelocity().add(vel));
                     }
                 }
             } else {
