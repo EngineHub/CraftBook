@@ -203,6 +203,7 @@ public abstract class LocalConfiguration {
     public boolean minecartPickupItemsOnCollision;
     public boolean minecartPressurePlateIntersection;
     public boolean minecartStoragePlaceRails;
+    public boolean minecartBlockAnimalEntry;
     // Vehicles - Minecart Fall Modifier
     public boolean minecartFallModifierEnabled;
     public double minecartFallVerticalSpeed;

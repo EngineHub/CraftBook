@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
@@ -235,9 +236,15 @@ public class VehicleCore implements LocalComponent {
 
             if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
                 return;
+
             Vehicle vehicle = event.getVehicle();
 
             if (!(vehicle instanceof Minecart)) return;
+
+            if(plugin.getConfiguration().minecartBlockAnimalEntry && !(vehicle.getPassenger() instanceof Player)) {
+                event.setCancelled(true);
+                return;
+            }
 
             cartman.enter(event);
         }
