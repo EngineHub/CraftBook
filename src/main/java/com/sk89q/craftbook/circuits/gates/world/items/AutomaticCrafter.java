@@ -164,12 +164,14 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 }
             }
 
-            stack.setAmount(newAmount);
-            item.setItemStack(stack);
-
             if (newAmount > 0) delete = false;
 
-            if (delete) item.remove();
+            if (delete) {
+                item.remove();
+            } else {
+                stack.setAmount(newAmount);
+                item.setItemStack(stack);
+            }
         }
         return false;
     }
