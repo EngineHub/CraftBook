@@ -11,11 +11,11 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class Command extends AbstractMechanic {
 
@@ -92,7 +92,7 @@ public class Command extends AbstractMechanic {
             return;
         }
 
-        Sign s = (Sign) event.getClickedBlock().getState();
+        ChangedSign s = BukkitUtil.toChangedSign((Sign) event.getClickedBlock().getState());
 
         String command = s.getLine(2).replace("/", "") + s.getLine(3);
         command = command.replace("@p", event.getPlayer().getName());
@@ -111,7 +111,7 @@ public class Command extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger)))
             return; // wth? our manager is insane
 
-        Sign s = (Sign) event.getBlock().getState();
+        ChangedSign s = BukkitUtil.toChangedSign((Sign) event.getBlock().getState());
 
         String command = s.getLine(2).replace("/", "") + s.getLine(3);
         if (command.contains("@p")) return; // We don't work with player commands.
