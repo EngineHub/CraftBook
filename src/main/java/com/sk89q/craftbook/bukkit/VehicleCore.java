@@ -241,7 +241,7 @@ public class VehicleCore implements LocalComponent {
 
             if (!(vehicle instanceof Minecart)) return;
 
-            if(plugin.getConfiguration().minecartBlockAnimalEntry && !(vehicle.getPassenger() instanceof Player)) {
+            if(plugin.getConfiguration().minecartBlockAnimalEntry && !(event.getEntered() instanceof Player)) {
                 event.setCancelled(true);
                 return;
             }
