@@ -56,7 +56,7 @@ public class CommandItems implements Listener {
                             iterator.remove();
                     }
                 }
-            }, 1, 1);
+            }, 1, 20);
     }
 
     public void load() {
@@ -82,7 +82,7 @@ public class CommandItems implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGHEST)
     public void onPlayerInteract(final PlayerInteractEvent event) {
 
         if(event.getPlayer().getItemInHand() == null)
@@ -106,7 +106,7 @@ public class CommandItems implements Listener {
         }
 
         if(cooldownPeriods.containsKey(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name))) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name)) + " to use this again!");
+            event.getPlayer().sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name)) + " seconds to use this again!");
             return;
         }
 
