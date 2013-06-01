@@ -157,6 +157,7 @@ public class CommandItems implements Listener {
             this.stack = stack;
             this.type = type;
             this.permNode = permNode;
+            this.commands = commands;
             this.delay = delay;
             this.delayedCommands = delayedCommands;
             this.cooldown = cooldown;
