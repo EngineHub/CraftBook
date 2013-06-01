@@ -87,6 +87,8 @@ public abstract class LocalConfiguration {
     public boolean chunkAnchorEnabled;
     public boolean chunkAnchorRedstone;
     public boolean chunkAnchorCheck;
+    // Mechanics - Command Items
+    public boolean commandItemsEnabled;
     // Mechanics - Command Signs
     public boolean commandSignEnabled;
     // Mechanics - Cooking Pot

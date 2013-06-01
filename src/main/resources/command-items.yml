@@ -1,0 +1,10 @@
+command-items:
+  LightningRod:
+    stack: "BLAZE_ROD|Lightning Rod"
+    commands:
+      - "strike"
+    permission-node: "lightningrod.use"
+    run-as: PLAYER
+    delay: 0
+    delayed-commands: []
+    cooldown: 10

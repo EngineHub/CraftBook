@@ -235,8 +235,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // Setup Config and the Commands Manager
         final CraftBookPlugin plugin = this;
         createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml", false);
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true,
-                YAMLFormat.EXTENDED), this);
+        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), this);
         commands = new CommandsManager<CommandSender>() {
 
             @Override

@@ -193,6 +193,8 @@ public class BukkitChangedSign implements ChangedSign {
                 return false;
             if(((BukkitChangedSign) o).getZ() != getZ())
                 return false;
+            if(!((BukkitChangedSign) o).getLocalWorld().getName().equals(getLocalWorld().getName()))
+                return false;
             return true;
         }
 

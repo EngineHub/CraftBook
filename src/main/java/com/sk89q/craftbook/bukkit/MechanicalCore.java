@@ -19,6 +19,7 @@ import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.Command;
+import com.sk89q.craftbook.mech.CommandItems;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
@@ -150,21 +151,16 @@ public class MechanicalCore implements LocalComponent {
         Server server = plugin.getServer();
         BukkitConfiguration config = plugin.getConfiguration();
 
-        if (config.customCraftingEnabled) {
+        if (config.customCraftingEnabled)
             server.getPluginManager().registerEvents(customCrafting = new CustomCrafting(), plugin);
-        }
-        if (config.customDispensingEnabled) {
+        if (config.customDispensingEnabled)
             server.getPluginManager().registerEvents(new DispenserRecipes(), plugin);
-        }
-        if (config.snowPiling || config.snowPlace) {
+        if (config.snowPiling || config.snowPlace)
             server.getPluginManager().registerEvents(new Snow(), plugin);
-        }
-        if (config.customDropEnabled) {
+        if (config.customDropEnabled)
             server.getPluginManager().registerEvents(new CustomDrops(), plugin);
-        }
-        if (config.aiEnabled) {
+        if (config.aiEnabled)
             server.getPluginManager().registerEvents(new AIMechanic(), plugin);
-        }
         if (config.chairEnabled) {
             if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Chair(), plugin);
             else plugin.getLogger().warning("Chairs require ProtocolLib! They will not function without it!");
@@ -173,17 +169,14 @@ public class MechanicalCore implements LocalComponent {
             if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Footprints(), plugin);
             else plugin.getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
         }
-        if (config.paintingsEnabled) {
+        if (config.paintingsEnabled)
             server.getPluginManager().registerEvents(new PaintingSwitch(), plugin);
-        }
-
-        if (config.physicsEnabled) {
+        if (config.physicsEnabled)
             server.getPluginManager().registerEvents(new BetterPhysics(), plugin);
-        }
-
-        if (config.headDropsEnabled) {
+        if (config.headDropsEnabled)
             server.getPluginManager().registerEvents(new HeadDrops(), plugin);
-        }
+        if (config.commandItemsEnabled)
+            server.getPluginManager().registerEvents(new CommandItems(), plugin);
         /*
          * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()
          * .registerEvents(new
