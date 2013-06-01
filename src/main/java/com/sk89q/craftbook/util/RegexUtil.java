@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
     public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
+    public static final Pattern PERIOD_PATTERN = Pattern.compile(".", Pattern.LITERAL);
     public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
     public static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
     public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);

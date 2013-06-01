@@ -21,6 +21,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -159,7 +160,7 @@ public class CommandItems implements Listener {
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
 
-            String name = path.split(".")[1];
+            String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
             ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(config.getString(path + ".item")));
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
             String permNode = config.getString(path + ".permission-node");
