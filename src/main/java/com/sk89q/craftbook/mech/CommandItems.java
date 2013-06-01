@@ -75,8 +75,10 @@ public class CommandItems implements Listener {
                 CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
                 continue;
             }
-            definitions.add(comdef);
-            CraftBookPlugin.logger().info("Added CommandItem: " + key);
+            if(definitions.add(comdef))
+                CraftBookPlugin.logger().info("Added CommandItem: " + key);
+            else
+                CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
         }
     }
 
@@ -132,6 +134,8 @@ public class CommandItems implements Listener {
                     }
                 }
             }, comdef.delay);
+
+        event.setCancelled(true);
     }
 
     public static class CommandItemDefinition {
@@ -161,7 +165,7 @@ public class CommandItems implements Listener {
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
 
             String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
-            ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(config.getString(path + ".item")));
+            ItemStack stack = ItemUtil.getItem(config.getString(path + ".item"));
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
             String permNode = config.getString(path + ".permission-node");
             CommandType type = CommandType.valueOf(config.getString(path + ".run-as").toUpperCase());
