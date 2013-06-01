@@ -141,19 +141,15 @@ public class Bridge extends AbstractMechanic {
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
             mat = proximalBaseCenter.getTypeId();
-            if (plugin.getConfiguration().bridgeBlocks.contains(mat) && isValidBridge(proximalBaseCenter, mat,
-                    BukkitUtil.toChangedSign(trigger))) {
+            if (plugin.getConfiguration().bridgeBlocks.contains(mat))
                 break findBase; // On Top
-            }
 
             // If we've reached this point nothing was found on the top, check the bottom
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             mat = proximalBaseCenter.getTypeId();
-            if (plugin.getConfiguration().bridgeBlocks.contains(mat)) {
-                if (isValidBridge(proximalBaseCenter, mat, BukkitUtil.toChangedSign(trigger))) {
-                    break findBase; // it's below
-                } else throw new InvalidConstructionException("mech.bridge.material");
-            } else throw new UnacceptableMaterialException("mech.bridge.unusable");
+            if (plugin.getConfiguration().bridgeBlocks.contains(mat))
+                break findBase; // it's below
+            else throw new UnacceptableMaterialException("mech.bridge.unusable");
         }
 
         // Find the other side
@@ -178,54 +174,39 @@ public class Bridge extends AbstractMechanic {
 
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farSide.getRelative(trigger.getFace(proximalBaseCenter));
-        if (distalBaseCenter.getTypeId() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData()
-                || distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() != mat
-                && distalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getData() != proximalBaseCenter.getData()
-                || distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() != mat
-                && distalBaseCenter.getRelative(SignUtil.getRight(trigger)).getData() != proximalBaseCenter.getData())
+        if (distalBaseCenter.getTypeId() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
             throw new InvalidConstructionException("mech.bridge.material");
 
         // Select the togglable region
         toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
         int left, right;
         try {
-            left = Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(2));
-            if (left < 0) {
-                left = 0; // No negatives please
-            }
-        } catch (Exception ignored) {
+            left = Math.max(0, Math.min(plugin.getConfiguration().bridgeMaxWidth, Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(2))));
+        } catch (Exception e) {
             left = 1;
         }
         try {
-            right = Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(3));
-            if (right < 0) {
-                right = 0; // No negatives please
-            }
-        } catch (Exception ignored) {
+            right = Math.max(0, Math.min(plugin.getConfiguration().bridgeMaxWidth, Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(3))));
+        } catch (Exception e) {
             right = 1;
-        }
-
-        // Check Width
-        if (left > plugin.getConfiguration().bridgeMaxWidth) {
-            left = plugin.getConfiguration().bridgeMaxWidth;
-        }
-        if (right > plugin.getConfiguration().bridgeMaxWidth) {
-            right = plugin.getConfiguration().bridgeMaxWidth;
         }
 
         // Expand Left
         for (int i = 0; i < left; i++) {
+            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getData())
+                throw new InvalidConstructionException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
+            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getData())
+                throw new InvalidConstructionException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
 
         // Don't toggle the end points
-        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront
-                (trigger)));
+        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront(trigger)));
     }
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
@@ -394,18 +375,6 @@ public class Bridge extends AbstractMechanic {
     private byte getBridgeData() {
 
         return proximalBaseCenter.getData();
-    }
-
-    public boolean isValidBridge(Block baseCenter, int mat, ChangedSign s) throws InvalidMechanismException {
-
-        if (!s.getLine(2).equals("0")) {
-            if (!(proximalBaseCenter.getRelative(SignUtil.getLeft(trigger)).getTypeId() == mat)) return false;
-        } else if (!(proximalBaseCenter.getTypeId() == mat)) return false;
-
-        if (!s.getLine(3).equals("0")) {
-            if (!(proximalBaseCenter.getRelative(SignUtil.getRight(trigger)).getTypeId() == mat)) return false;
-        } else if (!(proximalBaseCenter.getTypeId() == mat)) return false;
-        return true;
     }
 
     /**
