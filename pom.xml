@@ -121,6 +121,7 @@
                     <include>books.txt</include>
                     <include>cauldron-recipes.txt</include>
                     <include>cauldron-recipes.yml</include>
+                    <include>command-items.yml</include>
                     <include>crafting-recipes.yml</include>
                     <include>custom-block-drops.txt</include>
                     <include>custom-ics.txt</include>
