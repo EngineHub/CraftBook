@@ -159,6 +159,23 @@ public class ItemUtil {
                         CraftBookPlugin.logger().info("Items share display name!");
                 } else
                     return false;
+                if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore()) {
+                    if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                        CraftBookPlugin.logger().info("Both share lore existance!");
+                    if(item.getItemMeta().hasLore()) {
+                        if(item.getItemMeta().getLore().size() != item2.getItemMeta().getLore().size())
+                            return false;
+                        for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
+                            if(item.getItemMeta().hasLore() && CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                                CraftBookPlugin.logger().info("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i));
+                            if(!ChatColor.stripColor(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(ChatColor.stripColor(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
+                                return false;
+                            if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
+                                CraftBookPlugin.logger().info("Items share lore!");
+                        }
+                    }
+                } else
+                    return false;
             }
 
             if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
