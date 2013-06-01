@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.SuperUser;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -116,6 +117,8 @@ public class CommandItems implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             else if (comdef.type == CommandType.PLAYER)
                 Bukkit.dispatchCommand(event.getPlayer(), command);
+            else  if (comdef.type == CommandType.SUPERUSER)
+                Bukkit.dispatchCommand(new SuperUser(event.getPlayer()), command);
         }
 
         if(comdef.cooldown > 0 && !event.getPlayer().hasPermission("craftbook.mech.commanditems.bypasscooldown"))
@@ -131,6 +134,8 @@ public class CommandItems implements Listener {
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                         else if (comdef.type == CommandType.PLAYER)
                             Bukkit.dispatchCommand(event.getPlayer(), command);
+                        else  if (comdef.type == CommandType.SUPERUSER)
+                            Bukkit.dispatchCommand(new SuperUser(event.getPlayer()), command);
                     }
                 }
             }, comdef.delay);
