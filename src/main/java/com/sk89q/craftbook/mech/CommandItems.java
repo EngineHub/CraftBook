@@ -69,7 +69,7 @@ public class CommandItems implements Listener {
 
         for(String key : config.getKeys("command-items")) {
 
-            CommandItemDefinition comdef = CommandItemDefinition.readDefinition(config, key);
+            CommandItemDefinition comdef = CommandItemDefinition.readDefinition(config, "command-items." + key);
             if(comdef == null) {
                 CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
                 continue;
