@@ -118,7 +118,7 @@ public class CommandItems implements Listener {
                 Bukkit.dispatchCommand(event.getPlayer(), command);
         }
 
-        if(comdef.cooldown > 0)
+        if(comdef.cooldown > 0 && !event.getPlayer().hasPermission("craftbook.mech.commanditems.bypasscooldown"))
             cooldownPeriods.put(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name), comdef.cooldown);
 
         if(comdef.delayedCommands.length > 0)
