@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -99,7 +98,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block pipe = getBackBlock().getRelative(back);
-        if(Pipes.Factory.setupPipes(pipe, getBackBlock(), Arrays.asList(drops)) != null)
+        if(Pipes.Factory.setupPipes(pipe, getBackBlock(), drops) != null)
             return;
         if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
 

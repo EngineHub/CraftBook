@@ -130,7 +130,7 @@ public class Driller extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), toDrop) != null)
+            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), toDrop.toArray(new ItemStack[toDrop.size()])) != null)
                 continue;
 
             if (!toDrop.isEmpty()) {

@@ -126,11 +126,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         for (int a = 1; a < data.length; a++) {
                             try {
                                 String[] potionBits = RegexUtil.SEMICOLON_PATTERN.split(data[a]);
-                                PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt
-                                        (potionBits[0])),
-                                        Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
+                                PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])), Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
                                 ((LivingEntity) ent).addPotionEffect(effect, true);
-                            } catch (Exception ignored) {
+                            } catch (Exception e) {
                             }
                         }
                     } else if (data[0].equalsIgnoreCase("v")) {

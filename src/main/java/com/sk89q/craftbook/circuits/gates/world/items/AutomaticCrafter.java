@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +127,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             CraftBookPlugin.logger().info("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount());
         }
 
-        if(Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), Arrays.asList(result)) != null)
+        if(Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), result) != null)
             pipes = true;
 
         if (!pipes) {

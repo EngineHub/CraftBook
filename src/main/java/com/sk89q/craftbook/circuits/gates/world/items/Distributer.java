@@ -8,11 +8,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -24,7 +23,6 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -81,7 +79,6 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         boolean returnValue = false;
 
         for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
-
             if(distributeItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
@@ -95,31 +92,17 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block b;
 
-        if (goRight()) {
+        if (goRight())
             b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-        } else {
+        else
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-        }
 
-        boolean pipes = false;
+        Pipes pipes = Pipes.Factory.setupPipes(b, getBackBlock(), item);
 
-        if (b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-            PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
-            Block fac = b.getRelative(p.getFacing());
-            if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
-
-                List<ItemStack> items = new ArrayList<ItemStack>();
-                items.add(item);
-                if (CircuitCore.inst().getPipeFactory() != null)
-                    if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b), items) != null) {
-                        pipes = true;
-                    }
-            }
-        }
-
-        if (!pipes)
+        if(pipes == null)
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), item);
+        else if(!pipes.getItems().isEmpty())
+            return false;
 
         return true;
     }
@@ -169,13 +152,9 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
             try {
                 Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[0]);
                 Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[1]);
-            }
-            catch(ArrayIndexOutOfBoundsException e) {
-
+            } catch(ArrayIndexOutOfBoundsException e) {
                 throw new ICVerificationException("You need to specify both left and right quantities!");
-            }
-            catch(NumberFormatException e) {
-
+            } catch(NumberFormatException e) {
                 throw new ICVerificationException("Invalid quantities!");
             }
         }

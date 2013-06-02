@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Pipes extends AbstractMechanic {
          * @param items The items to send to the pipe.
          * @return The pipe constructed, otherwise null.
          */
-        public static Pipes setupPipes(Block pipe, Block source, List<ItemStack> items) {
+        public static Pipes setupPipes(Block pipe, Block source, ItemStack ... items) {
 
             if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
 
@@ -58,7 +59,7 @@ public class Pipes extends AbstractMechanic {
                 Block fac = pipe.getRelative(p.getFacing());
                 if (fac.getLocation().equals(source.getLocation()))
                     if (CircuitCore.inst().getPipeFactory() != null)
-                        return CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(pipe), items);
+                        return CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(pipe), Arrays.asList(items));
             }
 
             return null;
@@ -166,6 +167,11 @@ public class Pipes extends AbstractMechanic {
 
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private List<BlockVector> visitedPipes = new ArrayList<BlockVector>();
+
+    public List<ItemStack> getItems() {
+
+        return items;
+    }
 
     public void searchNearbyPipes(Block block) {
 

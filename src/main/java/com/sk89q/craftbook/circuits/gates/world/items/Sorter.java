@@ -9,11 +9,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -24,7 +23,6 @@ import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -73,45 +71,29 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
         for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
             if(sortItemStack(item.getItemStack())) {
-                returnValue = true;
                 item.remove();
+                returnValue = true;
             }
         }
         return returnValue;
     }
 
-    public boolean sortItemStack(ItemStack item) {
+    public boolean sortItemStack(final ItemStack item) {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block b;
 
-        if (isInAboveContainer(item) ^ inverted) {
+        if (isInAboveContainer(item) ^ inverted)
             b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-        } else {
+        else
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
-        }
 
-        boolean pipes = false;
+        Pipes pipes = Pipes.Factory.setupPipes(b, getBackBlock(), item);
 
-        if (b.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-            PistonBaseMaterial p = (PistonBaseMaterial) b.getState().getData();
-            Block fac = b.getRelative(p.getFacing());
-            if (fac.getLocation().equals(BukkitUtil.toSign(getSign()).getBlock().getRelative(back).getLocation())) {
-
-                List<ItemStack> items = new ArrayList<ItemStack>();
-                items.add(item);
-                if (CircuitCore.inst().getPipeFactory() != null)
-                    if (CircuitCore.inst().getPipeFactory().detectWithItems(BukkitUtil.toWorldVector(b),
-                            items) != null) {
-                        pipes = true;
-                    }
-            }
-        }
-
-        if (!pipes) {
+        if(pipes == null)
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), item);
-        }
+        else if(!pipes.getItems().isEmpty())
+            return false;
 
         return true;
     }

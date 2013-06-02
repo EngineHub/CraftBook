@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +109,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), Arrays.asList(blockstack)) != null)
+            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), blockstack) != null)
                 continue;
 
             if (hasChest) {
