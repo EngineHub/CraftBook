@@ -121,22 +121,27 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         }
         disp.getInventory().clear();
 
-        boolean pipes = false;
-
         if(CraftBookPlugin.isDebugFlagEnabled("ic-mc1219")) {
             CraftBookPlugin.logger().info("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount());
         }
 
-        if(Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), result) != null)
-            pipes = true;
+        List<ItemStack> items = new ArrayList<ItemStack>();
+        items.add(result);
 
-        if (!pipes) {
-            if(disp.getInventory().addItem(result).isEmpty())
-                for(int i = 0; i < result.getAmount(); i++)
-                    if(disp instanceof Dispenser)
-                        ((Dispenser) disp).dispense();
-                    else if(disp instanceof Dropper)
-                        ((Dropper) disp).drop();
+        Pipes pp = Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), items.toArray(new ItemStack[items.size()]));
+
+        if (pp != null && !pp.getItems().isEmpty())
+            items.addAll(pp.getItems());
+
+        if(!items.isEmpty()) {
+            for(ItemStack stack : items) {
+                if(disp.getInventory().addItem(stack).isEmpty())
+                    for(int i = 0; i < stack.getAmount(); i++)
+                        if(disp instanceof Dispenser)
+                            ((Dispenser) disp).dispense();
+                        else if(disp instanceof Dropper)
+                            ((Dropper) disp).drop();
+            }
         }
         disp.getInventory().setContents(replace);
         return true;
