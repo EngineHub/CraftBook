@@ -45,12 +45,28 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         return "RANDOM BIT";
     }
 
+    int maxOn;
+
+    @Override
+    public void load() {
+
+        try {
+            maxOn = Integer.parseInt(getLine(2));
+        } catch(Exception e){}
+    }
+
     @Override
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
+            int on = 0;
             for (short i = 0; i < chip.getOutputCount(); i++) {
-                chip.setOutput(i, CraftBookPlugin.inst().getRandom().nextBoolean());
+                boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
+                if(on >= maxOn)
+                    state = false;
+                chip.setOutput(i, state);
+                if(state)
+                    on++;
             }
         }
     }
@@ -59,8 +75,14 @@ public class RandomBit extends AbstractSelfTriggeredIC {
     public void think(ChipState chip) {
 
         if (chip.getInput(0)) {
+            int on = 0;
             for (short i = 0; i < chip.getOutputCount(); i++) {
-                chip.setOutput(i, CraftBookPlugin.inst().getRandom().nextBoolean());
+                boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
+                if(on >= maxOn)
+                    state = false;
+                chip.setOutput(i, state);
+                if(state)
+                    on++;
             }
         }
     }
@@ -76,6 +98,12 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         public IC create(ChangedSign sign) {
 
             return new RandomBit(getServer(), sign, this);
+        }
+
+        @Override
+        public String[] getLineHelp() {
+
+            return new String[] {"Maximum On Outputs", null};
         }
     }
 
