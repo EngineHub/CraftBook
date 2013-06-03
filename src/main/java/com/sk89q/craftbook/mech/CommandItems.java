@@ -14,12 +14,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.bukkit.util.SuperUser;
+import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -89,6 +91,9 @@ public class CommandItems implements Listener {
         if(event.getPlayer().getItemInHand() == null)
             return;
 
+        if(event.getAction() == Action.PHYSICAL)
+            return;
+
         CommandItemDefinition comdeft = null;
         for(CommandItemDefinition def : definitions) {
             if(ItemUtil.areItemsIdentical(def.stack, event.getPlayer().getItemInHand())) {
@@ -100,6 +105,12 @@ public class CommandItems implements Listener {
             return;
 
         final CommandItemDefinition comdef = comdeft;
+
+        if(comdef.clickType == ClickType.RIGHT && !(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
+            return;
+
+        if(comdef.clickType == ClickType.LEFT && !(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK))
+            return;
 
         if(!event.getPlayer().hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !event.getPlayer().hasPermission(comdef.permNode)) {
             event.getPlayer().sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
@@ -154,6 +165,7 @@ public class CommandItems implements Listener {
         private ItemStack stack;
         private String permNode;
         private CommandType type;
+        private ClickType clickType;
 
         private String[] commands;
 
@@ -161,7 +173,7 @@ public class CommandItems implements Listener {
         private int delay;
         private int cooldown;
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown) {
+        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown) {
 
             this.name = name;
             this.stack = stack;
@@ -171,6 +183,7 @@ public class CommandItems implements Listener {
             this.delay = delay;
             this.delayedCommands = delayedCommands;
             this.cooldown = cooldown;
+            this.clickType = clickType;
         }
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
@@ -180,18 +193,24 @@ public class CommandItems implements Listener {
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
             String permNode = config.getString(path + ".permission-node");
             CommandType type = CommandType.valueOf(config.getString(path + ".run-as").toUpperCase());
+            ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type").toUpperCase());
             int delay = config.getInt(path + ".delay");
             List<String> delayedCommands = new ArrayList<String>();
             if(delay > 0)
                 delayedCommands = config.getStringList(path + ".delayed-commands", new ArrayList<String>());
             int cooldown = config.getInt(path + ".cooldown");
 
-            return new CommandItemDefinition(name, stack, type, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown);
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown);
         }
 
         public enum CommandType {
 
             PLAYER,CONSOLE,SUPERUSER;
+        }
+
+        public enum ClickType {
+
+            LEFT,RIGHT,BOTH;
         }
     }
 }
