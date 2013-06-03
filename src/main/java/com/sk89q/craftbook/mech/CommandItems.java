@@ -160,21 +160,25 @@ public class CommandItems implements Listener {
 
                     if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
                         return;
-                } else if (comdef.clickType == ClickType.ENTITY_RIGHT) {
+                } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_EITHER) {
 
-                    if(!(event instanceof PlayerInteractEntityEvent))
+                    if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
                         return;
-                } else if (comdef.clickType == ClickType.ENTITY_LEFT) {
 
-                    if(!(event instanceof EntityDamageByEntityEvent))
+                    if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
                         return;
-                } else if (comdef.clickType == ClickType.BLOCK_BREAK) {
 
-                    if(!(event instanceof BlockBreakEvent))
+                    if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent))
                         return;
-                } else if (comdef.clickType == ClickType.BLOCK_PLACE) {
+                } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
 
-                    if(!(event instanceof BlockPlaceEvent))
+                    if(!(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
+                        return;
+
+                    if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
+                        return;
+
+                    if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
                         return;
                 }
 
@@ -283,7 +287,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,BLOCK_BREAK,BLOCK_PLACE;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER;
         }
     }
 }
