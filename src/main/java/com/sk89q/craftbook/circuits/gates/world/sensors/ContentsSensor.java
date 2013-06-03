@@ -19,8 +19,12 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
+    boolean checkAmount;
+
     @Override
     public void load() {
+
+        checkAmount = getLine(2).contains("*");
 
         item = ItemUtil.getItem(getLine(2));
         if(getLine(3).isEmpty())
@@ -67,11 +71,11 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
             InventoryHolder inv = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
             if(slot < 0 || slot > inv.getInventory().getContents().length) {
                 for(ItemStack cont : inv.getInventory().getContents())
-                    if(ItemUtil.areItemsIdentical(cont, item))
+                    if(ItemUtil.areItemsIdentical(cont, item) && (!checkAmount || cont.getAmount() >= item.getAmount()))
                         return true;
             }
             else
-                return ItemUtil.areItemsIdentical(item, inv.getInventory().getItem(slot));
+                return ItemUtil.areItemsIdentical(item, inv.getInventory().getItem(slot)) && (!checkAmount || inv.getInventory().getItem(slot).getAmount() >= item.getAmount());
         }
 
         return false;
