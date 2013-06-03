@@ -11,10 +11,17 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -88,75 +95,141 @@ public class CommandItems implements Listener {
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onPlayerInteract(final PlayerInteractEvent event) {
 
-        if(event.getPlayer().getItemInHand() == null)
+        if(event.getItem() == null)
             return;
 
         if(event.getAction() == Action.PHYSICAL)
             return;
 
-        CommandItemDefinition comdeft = null;
+        performCommandItems(event.getItem(), event.getPlayer(), event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onPlayerHitEntity(final PlayerInteractEntityEvent event) {
+
+        if(event.getPlayer().getItemInHand() == null)
+            return;
+
+        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onEntityDamageEntity(final EntityDamageByEntityEvent event) {
+
+        if(!(event.getDamager() instanceof Player))
+            return;
+        Player p = (Player) event.getDamager();
+
+        if(p.getItemInHand() == null)
+            return;
+
+        performCommandItems(p.getItemInHand(), p, event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onBlockBreak(final BlockBreakEvent event) {
+
+        if(event.getPlayer().getItemInHand() == null)
+            return;
+
+        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onBlockPlace(final BlockPlaceEvent event) {
+
+        if(event.getPlayer().getItemInHand() == null)
+            return;
+
+        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+    }
+
+    public void performCommandItems(ItemStack item, final Player player, final Event event) {
+
         for(CommandItemDefinition def : definitions) {
-            if(ItemUtil.areItemsIdentical(def.stack, event.getPlayer().getItemInHand())) {
-                comdeft = def;
-                break;
+            if(ItemUtil.areItemsIdentical(def.stack, item)) {
+                final CommandItemDefinition comdef = def;
+
+                if(comdef.clickType == ClickType.RIGHT || comdef.clickType == ClickType.LEFT || comdef.clickType == ClickType.BOTH) {
+
+                    if(!(event instanceof PlayerInteractEvent))
+                        return;
+
+                    if(comdef.clickType == ClickType.RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
+                        return;
+
+                    if(comdef.clickType == ClickType.LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
+                        return;
+                } else if (comdef.clickType == ClickType.ENTITY_RIGHT) {
+
+                    if(!(event instanceof PlayerInteractEntityEvent))
+                        return;
+                } else if (comdef.clickType == ClickType.ENTITY_LEFT) {
+
+                    if(!(event instanceof EntityDamageByEntityEvent))
+                        return;
+                } else if (comdef.clickType == ClickType.BLOCK_BREAK) {
+
+                    if(!(event instanceof BlockBreakEvent))
+                        return;
+                } else if (comdef.clickType == ClickType.BLOCK_PLACE) {
+
+                    if(!(event instanceof BlockPlaceEvent))
+                        return;
+                }
+
+                if(!player.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !player.hasPermission(comdef.permNode)) {
+                    player.sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
+                    return;
+                }
+
+                if(cooldownPeriods.containsKey(new Tuple2<String, String>(player.getName(), comdef.name))) {
+                    player.sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(player.getName(), comdef.name)) + " seconds to use this again!");
+                    return;
+                }
+
+                for(String command : comdef.commands) {
+
+                    command = command.replace("@p", player.getName());
+                    if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
+                        command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+                    command = CraftBookPlugin.inst().parseVariables(command);
+                    if(comdef.type == CommandType.CONSOLE)
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    else if (comdef.type == CommandType.PLAYER)
+                        Bukkit.dispatchCommand(player, command);
+                    else  if (comdef.type == CommandType.SUPERUSER)
+                        Bukkit.dispatchCommand(new SuperUser(player), command);
+                }
+
+                if(comdef.cooldown > 0 && !player.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
+                    cooldownPeriods.put(new Tuple2<String, String>(player.getName(), comdef.name), comdef.cooldown);
+
+                if(comdef.delayedCommands.length > 0)
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                        @Override
+                        public void run () {
+                            for(String command : comdef.delayedCommands) {
+
+                                command = command.replace("@p", player.getName());
+                                if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
+                                    command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+                                command = CraftBookPlugin.inst().parseVariables(command);
+                                if(comdef.type == CommandType.CONSOLE)
+                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                                else if (comdef.type == CommandType.PLAYER)
+                                    Bukkit.dispatchCommand(player, command);
+                                else  if (comdef.type == CommandType.SUPERUSER)
+                                    Bukkit.dispatchCommand(new SuperUser(player), command);
+                            }
+                        }
+                    }, comdef.delay);
+
+                if(event instanceof Cancellable)
+                    ((Cancellable) event).setCancelled(true);
             }
         }
-        if(comdeft == null)
-            return;
-
-        final CommandItemDefinition comdef = comdeft;
-
-        if(comdef.clickType == ClickType.RIGHT && !(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
-            return;
-
-        if(comdef.clickType == ClickType.LEFT && !(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK))
-            return;
-
-        if(!event.getPlayer().hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !event.getPlayer().hasPermission(comdef.permNode)) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
-            return;
-        }
-
-        if(cooldownPeriods.containsKey(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name))) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name)) + " seconds to use this again!");
-            return;
-        }
-
-        for(String command : comdef.commands) {
-
-            command = command.replace("@p", event.getPlayer().getName());
-            command = CraftBookPlugin.inst().parseVariables(command);
-            if(comdef.type == CommandType.CONSOLE)
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            else if (comdef.type == CommandType.PLAYER)
-                Bukkit.dispatchCommand(event.getPlayer(), command);
-            else  if (comdef.type == CommandType.SUPERUSER)
-                Bukkit.dispatchCommand(new SuperUser(event.getPlayer()), command);
-        }
-
-        if(comdef.cooldown > 0 && !event.getPlayer().hasPermission("craftbook.mech.commanditems.bypasscooldown"))
-            cooldownPeriods.put(new Tuple2<String, String>(event.getPlayer().getName(), comdef.name), comdef.cooldown);
-
-        if(comdef.delayedCommands.length > 0)
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run () {
-                    for(String command : comdef.delayedCommands) {
-
-                        command = command.replace("@p", event.getPlayer().getName());
-                        command = CraftBookPlugin.inst().parseVariables(command);
-                        if(comdef.type == CommandType.CONSOLE)
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                        else if (comdef.type == CommandType.PLAYER)
-                            Bukkit.dispatchCommand(event.getPlayer(), command);
-                        else  if (comdef.type == CommandType.SUPERUSER)
-                            Bukkit.dispatchCommand(new SuperUser(event.getPlayer()), command);
-                    }
-                }
-            }, comdef.delay);
-
-        event.setCancelled(true);
     }
 
     public static class CommandItemDefinition {
@@ -210,7 +283,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            LEFT,RIGHT,BOTH;
+            LEFT,RIGHT,BOTH,ENTITY_RIGHT,ENTITY_LEFT,BLOCK_BREAK,BLOCK_PLACE;
         }
     }
 }
