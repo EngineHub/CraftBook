@@ -130,8 +130,10 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         Pipes pp = Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), items.toArray(new ItemStack[items.size()]));
 
-        if (pp != null && !pp.getItems().isEmpty())
+        if (pp != null && !pp.getItems().isEmpty()) {
+            items.clear();
             items.addAll(pp.getItems());
+        }
 
         if(!items.isEmpty()) {
             for(ItemStack stack : items) {
