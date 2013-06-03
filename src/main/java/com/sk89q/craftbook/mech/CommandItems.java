@@ -230,7 +230,7 @@ public class CommandItems implements Listener {
                         }
                     }, comdef.delay);
 
-                if(event instanceof Cancellable)
+                if(event instanceof Cancellable && comdef.cancelAction)
                     ((Cancellable) event).setCancelled(true);
             }
         }
@@ -249,8 +249,9 @@ public class CommandItems implements Listener {
         private String[] delayedCommands;
         private int delay;
         private int cooldown;
+        private boolean cancelAction;
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown) {
+        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction) {
 
             this.name = name;
             this.stack = stack;
@@ -261,6 +262,7 @@ public class CommandItems implements Listener {
             this.delayedCommands = delayedCommands;
             this.cooldown = cooldown;
             this.clickType = clickType;
+            this.cancelAction = cancelAction;
         }
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
@@ -268,16 +270,17 @@ public class CommandItems implements Listener {
             String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
             ItemStack stack = ItemUtil.getItem(config.getString(path + ".item"));
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
-            String permNode = config.getString(path + ".permission-node");
-            CommandType type = CommandType.valueOf(config.getString(path + ".run-as").toUpperCase());
-            ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type").toUpperCase());
-            int delay = config.getInt(path + ".delay");
+            String permNode = config.getString(path + ".permission-node", "");
+            CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase());
+            ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase());
+            int delay = config.getInt(path + ".delay", 0);
             List<String> delayedCommands = new ArrayList<String>();
             if(delay > 0)
                 delayedCommands = config.getStringList(path + ".delayed-commands", new ArrayList<String>());
-            int cooldown = config.getInt(path + ".cooldown");
+            int cooldown = config.getInt(path + ".cooldown", 0);
+            boolean cancelAction = config.getBoolean(path + ".cancel-action", true);
 
-            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown);
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction);
         }
 
         public enum CommandType {

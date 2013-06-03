@@ -9,3 +9,4 @@ command-items:
     delay: 0
     delayed-commands: []
     cooldown: 10
+    cancel-action: true
