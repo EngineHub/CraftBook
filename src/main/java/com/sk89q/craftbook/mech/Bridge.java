@@ -193,14 +193,14 @@ public class Bridge extends AbstractMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() != mat && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getData())
+            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData())
                 throw new InvalidConstructionException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() != mat && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getData())
+            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData())
                 throw new InvalidConstructionException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
