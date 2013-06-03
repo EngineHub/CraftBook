@@ -113,6 +113,8 @@ public class CommandItems implements Listener {
 
         for(String command : comdef.commands) {
 
+            command = command.replace("@p", event.getPlayer().getName());
+            command = CraftBookPlugin.inst().parseVariables(command);
             if(comdef.type == CommandType.CONSOLE)
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             else if (comdef.type == CommandType.PLAYER)
@@ -130,6 +132,9 @@ public class CommandItems implements Listener {
                 @Override
                 public void run () {
                     for(String command : comdef.delayedCommands) {
+
+                        command = command.replace("@p", event.getPlayer().getName());
+                        command = CraftBookPlugin.inst().parseVariables(command);
                         if(comdef.type == CommandType.CONSOLE)
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                         else if (comdef.type == CommandType.PLAYER)
