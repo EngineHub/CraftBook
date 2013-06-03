@@ -5,7 +5,7 @@ command-items:
       - "strike"
     permission-node: "lightningrod.use"
     run-as: PLAYER
-    click-type: RIGHT
+    click-type: CLICK_RIGHT
     delay: 0
     delayed-commands: []
     cooldown: 10

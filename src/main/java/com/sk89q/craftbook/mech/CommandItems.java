@@ -150,15 +150,15 @@ public class CommandItems implements Listener {
             if(ItemUtil.areItemsIdentical(def.stack, item)) {
                 final CommandItemDefinition comdef = def;
 
-                if(comdef.clickType == ClickType.RIGHT || comdef.clickType == ClickType.LEFT || comdef.clickType == ClickType.BOTH) {
+                if(comdef.clickType == ClickType.CLICK_RIGHT || comdef.clickType == ClickType.CLICK_LEFT || comdef.clickType == ClickType.CLICK_EITHER) {
 
                     if(!(event instanceof PlayerInteractEvent))
                         return;
 
-                    if(comdef.clickType == ClickType.RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
+                    if(comdef.clickType == ClickType.CLICK_RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
                         return;
 
-                    if(comdef.clickType == ClickType.LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
+                    if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
                         return;
                 } else if (comdef.clickType == ClickType.ENTITY_RIGHT) {
 
@@ -283,7 +283,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            LEFT,RIGHT,BOTH,ENTITY_RIGHT,ENTITY_LEFT,BLOCK_BREAK,BLOCK_PLACE;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,BLOCK_BREAK,BLOCK_PLACE;
         }
     }
 }
