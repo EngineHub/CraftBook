@@ -36,6 +36,8 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
         speed = 0.8f;
         type = EntityType.fromString(getSign().getLine(2).split(":")[0]);
+        if(type == null)
+            type = EntityType.MOB_HOSTILE;
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
         if(getLine(3).contains("="))
