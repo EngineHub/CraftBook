@@ -213,7 +213,7 @@ public final class CustomDropManager {
                 if(temp.isEmpty())
                     temp.add(split[i]);
                 else if (i < split.length - 1)
-                    temp.set(0, split[i]);
+                    temp.set(0, temp.get(0) + "x" + split[i]);
                 else
                     temp.add(split[i]);
             }
