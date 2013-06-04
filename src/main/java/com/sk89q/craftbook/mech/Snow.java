@@ -185,8 +185,7 @@ public class Snow implements Listener {
 
     public void lowerData(Block block) {
 
-        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1,
-                0).getTypeId() == BlockID.STATIONARY_WATER) {
+        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
 
@@ -215,6 +214,8 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
             if (block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1,
                     0).getTypeId() != BlockID.SNOW) {
+                if(!canLandOn(block.getRelative(0, -2, 0).getTypeId()))
+                    return false;
                 incrementData(block.getRelative(0, -1, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
@@ -223,6 +224,8 @@ public class Snow implements Listener {
 
         if (isValidBlock(block.getRelative(1, 0, 0).getTypeId()) && block.getRelative(1, 0, 0).getData() < 0x7) {
             if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,0).getTypeId() != BlockID.SNOW) {
+                if(!canLandOn(block.getRelative(1, -1, 0).getTypeId()))
+                    return false;
                 incrementData(block.getRelative(1, 0, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
@@ -232,6 +235,8 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(-1, 0, 0).getTypeId()) && block.getRelative(-1, 0, 0).getData() < 0x7) {
             if (block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0,
                     0).getTypeId() != BlockID.SNOW) {
+                if(!canLandOn(block.getRelative(-1, -1, 0).getTypeId()))
+                    return false;
                 incrementData(block.getRelative(-1, 0, 0), depth+1);
                 if (remove) lowerData(block);
                 return true;
@@ -241,6 +246,8 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, 0, 1).getTypeId()) && block.getRelative(0, 0, 1).getData() < 0x7) {
             if (block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0,
                     1).getTypeId() != BlockID.SNOW) {
+                if(!canLandOn(block.getRelative(0, -1, 1).getTypeId()))
+                    return false;
                 incrementData(block.getRelative(0, 0, 1), depth+1);
                 if (remove) lowerData(block);
                 return true;
@@ -250,6 +257,8 @@ public class Snow implements Listener {
         if (isValidBlock(block.getRelative(0, 0, -1).getTypeId()) && block.getRelative(0, 0, -1).getData() < 0x7) {
             if (block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0,
                     -1).getTypeId() != BlockID.SNOW) {
+                if(!canLandOn(block.getRelative(0, -1, -1).getTypeId()))
+                    return false;
                 incrementData(block.getRelative(0, 0, -1), depth+1);
                 if (remove) lowerData(block);
                 return true;
@@ -267,6 +276,9 @@ public class Snow implements Listener {
         if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
+
+        if(!canLandOn(block.getRelative(0, -1, 0).getTypeId()))
+            return;
 
         if (!isValidBlock(block.getTypeId()) && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
             incrementData(block.getRelative(0, 1, 0), depth+1);
@@ -330,6 +342,26 @@ public class Snow implements Listener {
         for (Player p : block.getWorld().getPlayers()) {
             if (LocationUtil.getDistanceSquared(p.getLocation(), block.getLocation()) < CraftBookPlugin.inst().getServer().getViewDistance() * 16 * CraftBookPlugin.inst().getServer().getViewDistance() * 16)
                 p.sendBlockChange(block.getLocation(), block.getTypeId(), data);
+        }
+    }
+
+    public boolean canLandOn(int id) {
+
+        switch(id) {
+
+            case BlockID.STEP:
+            case BlockID.WOODEN_STEP:
+            case BlockID.MINECART_TRACKS:
+            case BlockID.ACTIVATOR_RAIL:
+            case BlockID.CAKE_BLOCK:
+            case BlockID.DAYLIGHT_SENSOR:
+            case BlockID.REDSTONE_REPEATER_OFF:
+            case BlockID.REDSTONE_REPEATER_ON:
+            case BlockID.COMPARATOR_OFF:
+            case BlockID.COMPARATOR_ON:
+                return false;
+            default:
+                return true;
         }
     }
 
