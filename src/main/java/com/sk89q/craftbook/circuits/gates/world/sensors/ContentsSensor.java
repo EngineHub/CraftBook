@@ -69,10 +69,19 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         if (getBackBlock().getRelative(0, 1, 0).getState() instanceof InventoryHolder) {
 
             InventoryHolder inv = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
+            int amount = 0;
             if(slot < 0 || slot > inv.getInventory().getContents().length) {
                 for(ItemStack cont : inv.getInventory().getContents())
-                    if(ItemUtil.areItemsIdentical(cont, item) && (!checkAmount || cont.getAmount() >= item.getAmount()))
-                        return true;
+                    if(ItemUtil.areItemsIdentical(cont, item)) {
+                        if(checkAmount) {
+                            amount += cont.getAmount();
+                            if(amount >= item.getAmount())
+                                return true;
+                            else
+                                continue;
+                        } else
+                            return true;
+                    }
             }
             else
                 return ItemUtil.areItemsIdentical(item, inv.getInventory().getItem(slot)) && (!checkAmount || inv.getInventory().getItem(slot).getAmount() >= item.getAmount());
