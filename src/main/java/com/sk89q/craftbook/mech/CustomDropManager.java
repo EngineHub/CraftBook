@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -205,6 +207,18 @@ public final class CustomDropManager {
     private static DropDefinition readDrop(String s, String prelude, boolean append) throws IOException {
 
         String[] split = RegexUtil.X_PATTERN.split(RegexUtil.PERCENT_PATTERN.split(s)[0]);
+        if(split.length > 2) {
+            List<String> temp = new ArrayList<String>();
+            for(int i = 0; i < split.length; i++) {
+                if(temp.isEmpty())
+                    temp.add(split[i]);
+                else if (i < split.length - 1)
+                    temp.set(0, split[i]);
+                else
+                    temp.add(split[i]);
+            }
+            split = temp.toArray(new String[temp.size()]);
+        }
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
         ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(split[0]));
         int itemId = stack.getTypeId();
