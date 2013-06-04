@@ -83,8 +83,14 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
             times = 1;
         }
-        if(getLine(2).contains("="))
-            offset = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
+        if(getLine(2).contains("=")) {
+            String extra = getLine(2).split("=")[1];
+            getSign().setLine(2, getLine(2).split("=")[0]);
+            getSign().setLine(3, getLine(3) + "=" + extra);
+            getSign().update(false);
+        }
+        if(getLine(3).contains("="))
+            offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         else
             offset = getBackBlock().getLocation().add(0, 1, 0);
     }
@@ -121,7 +127,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles"};
+            return new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles=offset"};
         }
 
         @Override

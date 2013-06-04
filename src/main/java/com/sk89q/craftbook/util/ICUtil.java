@@ -225,10 +225,9 @@ public class ICUtil {
         sign.update(false);
     }
 
-    public static Block parseBlockLocation(ChangedSign sign, int lPos, LocationCheckType relative) {
+    public static Block parseBlockLocation(ChangedSign sign, String line, LocationCheckType relative) {
 
         Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
-        String line = sign.getLine(lPos);
 
         if (line.contains("!"))
             relative = LocationCheckType.getTypeFromChar('!');
@@ -264,6 +263,11 @@ public class ICUtil {
         else
             target = new Location(target.getWorld(), offsetX, offsetY, offsetZ).getBlock();
         return target;
+    }
+
+    public static Block parseBlockLocation(ChangedSign sign, int lPos, LocationCheckType relative) {
+
+        return parseBlockLocation(sign, sign.getLine(lPos), relative);
     }
 
     public static Block parseBlockLocation(ChangedSign sign, int lPos) {

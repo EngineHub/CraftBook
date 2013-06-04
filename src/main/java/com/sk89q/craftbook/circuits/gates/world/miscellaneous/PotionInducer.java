@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
@@ -86,7 +87,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         }
         line4 = line4.replace("m", "").replace("p", "");
         radius = ICUtil.parseRadius(line4);
-        offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
+        offset = ICUtil.parseBlockLocation(getSign(), line4, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate).getLocation();
     }
 
     public boolean induce() {
@@ -157,7 +158,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "id:level:time", "range (add a m to the end to only induce mobs or p for players (pm for both))"
+                    "id:level:time", "range=offset (add a m to the end to only induce mobs or p for players (pm for both))"
             };
         }
     }
