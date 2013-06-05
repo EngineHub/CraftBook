@@ -170,6 +170,7 @@ public class Pipes extends AbstractMechanic {
 
     public List<ItemStack> getItems() {
 
+        while(items.remove(null)){}
         return items;
     }
 
@@ -284,6 +285,9 @@ public class Pipes extends AbstractMechanic {
                     } catch (Exception e) {
                         BukkitUtil.printStacktrace(e);
                     }
+                } else {
+
+                    newItems.addAll(filteredItems);
                 }
 
                 items.removeAll(filteredItems);

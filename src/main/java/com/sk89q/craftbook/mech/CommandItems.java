@@ -194,9 +194,14 @@ public class CommandItems implements Listener {
 
                 for(String command : comdef.commands) {
 
+                    if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
+                        continue;
+
                     command = command.replace("@p", player.getName());
                     if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
                         command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+                    if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
+                        command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
                     command = CraftBookPlugin.inst().parseVariables(command);
                     if(comdef.type == CommandType.CONSOLE)
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
@@ -216,9 +221,14 @@ public class CommandItems implements Listener {
                         public void run () {
                             for(String command : comdef.delayedCommands) {
 
+                                if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
+                                    continue;
+
                                 command = command.replace("@p", player.getName());
                                 if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
                                     command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+                                if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
+                                    command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
                                 command = CraftBookPlugin.inst().parseVariables(command);
                                 if(comdef.type == CommandType.CONSOLE)
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
