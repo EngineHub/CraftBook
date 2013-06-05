@@ -43,6 +43,7 @@ public class RecipeCommands {
         }
 
         if(RecipeManager.INSTANCE.removeRecipe(context.getString(0))) {
+            sender.sendMessage(ChatColor.RED + "Recipe removed successfully! This will be in effect after a restart!");
             RecipeManager.INSTANCE.save();
         } else
             sender.sendMessage(ChatColor.RED + "Recipe doesn't exist!");
