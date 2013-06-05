@@ -361,7 +361,7 @@ public class Pipes extends AbstractMechanic {
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
-                if (!items.isEmpty() && !fromIC)
+                if (!items.isEmpty() && !fromIC) //IC's should handle their own leftovers.
                     for (ItemStack item : items) {
                         if (!ItemUtil.isStackValid(item)) continue;
                         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);

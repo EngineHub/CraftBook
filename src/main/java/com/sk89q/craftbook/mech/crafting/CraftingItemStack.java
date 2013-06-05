@@ -104,8 +104,9 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
                 return false;
             if(stack.hasAdvancedData() != hasAdvancedData())
                 return false;
-            if(stack.hasAdvancedData("name") != hasAdvancedData("name"))
-                return false;
+            for(String key : advancedData.keySet())
+                if(!stack.hasAdvancedData(key))
+                    return false;
             return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
         }
         return false;

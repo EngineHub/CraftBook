@@ -202,7 +202,7 @@ public class ItemUtil {
 
     public static boolean isStackValid(ItemStack item) {
 
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
+        return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && (getMaxDurability(item.getTypeId()) == 0 || item.getDurability() < getMaxDurability(item.getTypeId()));
     }
 
     /**
@@ -553,5 +553,50 @@ public class ItemUtil {
         }
 
         return items;
+    }
+
+    /**
+     * Returns the maximum durability that an item can have.
+     * 
+     * @param typeId
+     * @return
+     */
+    public static short getMaxDurability(int typeId) {
+
+        switch(typeId) {
+
+            case ItemID.DIAMOND_AXE:
+            case ItemID.DIAMOND_HOE:
+            case ItemID.DIAMOND_PICKAXE:
+            case ItemID.DIAMOND_SHOVEL:
+            case ItemID.DIAMOND_SWORD:
+                return 1562;
+            case ItemID.IRON_AXE:
+            case ItemID.IRON_HOE:
+            case ItemID.IRON_PICK:
+            case ItemID.IRON_SHOVEL:
+            case ItemID.IRON_SWORD:
+                return 251;
+            case ItemID.STONE_AXE:
+            case ItemID.STONE_HOE:
+            case ItemID.STONE_PICKAXE:
+            case ItemID.STONE_SHOVEL:
+            case ItemID.STONE_SWORD:
+                return 132;
+            case ItemID.WOOD_AXE:
+            case ItemID.WOOD_HOE:
+            case ItemID.WOOD_PICKAXE:
+            case ItemID.WOOD_SHOVEL:
+            case ItemID.WOOD_SWORD:
+                return 60;
+            case ItemID.GOLD_AXE:
+            case ItemID.GOLD_HOE:
+            case ItemID.GOLD_PICKAXE:
+            case ItemID.GOLD_SHOVEL:
+            case ItemID.GOLD_SWORD:
+                return 33;
+            default:
+                return 0;
+        }
     }
 }
