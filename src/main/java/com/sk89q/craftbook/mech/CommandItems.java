@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachment;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -207,8 +208,16 @@ public class CommandItems implements Listener {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     else if (comdef.type == CommandType.PLAYER)
                         Bukkit.dispatchCommand(player, command);
-                    else  if (comdef.type == CommandType.SUPERUSER)
-                        Bukkit.dispatchCommand(new SuperUser(player), command);
+                    else  if (comdef.type == CommandType.SUPERUSER) {
+                        //Bukkit.dispatchCommand(new SuperUser(player), command);
+                        PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
+                        att.setPermission("*", true);
+                        boolean wasOp = player.isOp();
+                        player.setOp(true);
+                        Bukkit.dispatchCommand(player, command);
+                        att.remove();
+                        player.setOp(wasOp);
+                    }
                 }
 
                 if(comdef.cooldown > 0 && !player.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
