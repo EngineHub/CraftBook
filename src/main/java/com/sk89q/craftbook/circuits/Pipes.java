@@ -139,6 +139,7 @@ public class Pipes extends AbstractMechanic {
         scanSign(sign);
 
         if(items != null && !items.isEmpty()) {
+            fromIC = true;
             this.items.addAll(items);
             startPipe(BukkitUtil.toBlock(pt));
         }
@@ -167,6 +168,8 @@ public class Pipes extends AbstractMechanic {
 
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private List<BlockVector> visitedPipes = new ArrayList<BlockVector>();
+
+    private boolean fromIC = false;
 
     public List<ItemStack> getItems() {
 
@@ -358,7 +361,7 @@ public class Pipes extends AbstractMechanic {
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
                 searchNearbyPipes(block);
-                if (!items.isEmpty())
+                if (!items.isEmpty() && !fromIC)
                     for (ItemStack item : items) {
                         if (!ItemUtil.isStackValid(item)) continue;
                         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
