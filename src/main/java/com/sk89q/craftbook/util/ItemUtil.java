@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -129,6 +130,19 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
+    public static final char COLOR_CHAR = '\u00A7';
+    private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + String.valueOf(COLOR_CHAR) + "[R]");
+
+    //TODO Move to a StringUtil.
+    public static String stripResetChar(String message) {
+
+        if (message == null) {
+            return null;
+        }
+
+        return STRIP_RESET_PATTERN.matcher(message).replaceAll("");
+    }
+
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if(!isStackValid(item) || !isStackValid(item2)) {
@@ -153,7 +167,7 @@ public class ItemUtil {
                         CraftBookPlugin.logger().info("Both share display name existance!");
                     if(item.getItemMeta().hasDisplayName() && CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                         CraftBookPlugin.logger().info("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName());
-                    if(item.getItemMeta().hasDisplayName() && !ChatColor.stripColor(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(ChatColor.stripColor(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
+                    if(item.getItemMeta().hasDisplayName() && !stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
                         return false;
                     if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                         CraftBookPlugin.logger().info("Items share display name!");
@@ -168,7 +182,7 @@ public class ItemUtil {
                         for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
                             if(item.getItemMeta().hasLore() && CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                                 CraftBookPlugin.logger().info("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i));
-                            if(!ChatColor.stripColor(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(ChatColor.stripColor(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
+                            if(!stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
                                 return false;
                             if(CraftBookPlugin.isDebugFlagEnabled("item-checks"))
                                 CraftBookPlugin.logger().info("Items share lore!");
