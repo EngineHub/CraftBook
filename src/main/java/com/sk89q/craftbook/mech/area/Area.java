@@ -142,7 +142,7 @@ public class Area extends AbstractMechanic {
         }
         if (sign == null) return;
         // toggle the area on or off
-        toggle(sign);
+        toggle(BukkitUtil.toChangedSign(sign));
 
         event.setCancelled(true);
     }
@@ -164,7 +164,7 @@ public class Area extends AbstractMechanic {
         }
         if (sign == null) return;
         // toggle the area
-        toggle(sign);
+        toggle(BukkitUtil.toChangedSign(sign));
     }
 
     /**
@@ -186,13 +186,13 @@ public class Area extends AbstractMechanic {
         return toggledOn;
     }
 
-    private boolean toggle(Sign sign) {
+    private boolean toggle(ChangedSign sign) {
 
         if (!checkSign(sign)) return false;
         checkToggleState(sign);
 
         try {
-            World world = sign.getWorld();
+            World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
             String id = sign.getLine(2).replace("-", "").toLowerCase();
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
@@ -241,7 +241,7 @@ public class Area extends AbstractMechanic {
         return false;
     }
 
-    public static boolean toggleCold(Sign sign) {
+    public static boolean toggleCold(ChangedSign sign) {
 
         if (!checkSign(sign)) return false;
 
@@ -249,7 +249,7 @@ public class Area extends AbstractMechanic {
         boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
 
         try {
-            World world = sign.getWorld();
+            World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
             String id = sign.getLine(2).replace("-", "").toLowerCase();
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
@@ -297,7 +297,7 @@ public class Area extends AbstractMechanic {
         return false;
     }
 
-    private static boolean checkSign(Sign sign) {
+    private static boolean checkSign(ChangedSign sign) {
 
         String namespace = sign.getLine(0);
         String id = sign.getLine(2).toLowerCase();
@@ -311,24 +311,24 @@ public class Area extends AbstractMechanic {
     // pattern to check where the markers for on and off state are
     private static final Pattern pattern = Pattern.compile("^\\-[A-Za-z0-9_]*?\\-$");
 
-    private void checkToggleState(Sign sign) {
+    private void checkToggleState(ChangedSign sign) {
 
         toggledOn = coldCheckToggleState(sign);
     }
 
-    private static boolean coldCheckToggleState(Sign sign) {
+    private static boolean coldCheckToggleState(ChangedSign sign) {
 
         String line3 = sign.getLine(2).toLowerCase();
         String line4 = sign.getLine(3).toLowerCase();
         return pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
-    private static void setToggledState(Sign sign, boolean state) {
+    private static void setToggledState(ChangedSign sign, boolean state) {
 
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
         sign.setLine(toToggleOff, sign.getLine(toToggleOff).replace("-", ""));
         sign.setLine(toToggleOn, "-" + sign.getLine(toToggleOn) + "-");
-        sign.update();
+        sign.update(false);
     }
 }

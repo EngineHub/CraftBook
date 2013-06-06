@@ -172,7 +172,7 @@ public class RecipeCommands {
                 if(!ItemUtil.isStackValid(slot))
                     continue;
 
-                CraftingItemStack stack = new CraftingItemStack(slot);
+                CraftingItemStack stack = new CraftingItemStack(slot.clone());
 
                 boolean used = false;
                 for(CraftingItemStack compare : ingredients) {

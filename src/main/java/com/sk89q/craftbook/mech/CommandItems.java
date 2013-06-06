@@ -28,7 +28,6 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.bukkit.util.SuperUser;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -209,7 +208,6 @@ public class CommandItems implements Listener {
                     else if (comdef.type == CommandType.PLAYER)
                         Bukkit.dispatchCommand(player, command);
                     else  if (comdef.type == CommandType.SUPERUSER) {
-                        //Bukkit.dispatchCommand(new SuperUser(player), command);
                         PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
                         att.setPermission("*", true);
                         boolean wasOp = player.isOp();
@@ -243,8 +241,15 @@ public class CommandItems implements Listener {
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                                 else if (comdef.type == CommandType.PLAYER)
                                     Bukkit.dispatchCommand(player, command);
-                                else  if (comdef.type == CommandType.SUPERUSER)
-                                    Bukkit.dispatchCommand(new SuperUser(player), command);
+                                else  if (comdef.type == CommandType.SUPERUSER) {
+                                    PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
+                                    att.setPermission("*", true);
+                                    boolean wasOp = player.isOp();
+                                    player.setOp(true);
+                                    Bukkit.dispatchCommand(player, command);
+                                    att.remove();
+                                    player.setOp(wasOp);
+                                }
                             }
                         }
                     }, comdef.delay);
