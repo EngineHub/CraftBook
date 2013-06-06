@@ -181,6 +181,7 @@ public class CraftBookPlugin extends JavaPlugin {
         versionConverter.put("3.6.4", "2153");
         versionConverter.put("3.6.5", "2167");
         versionConverter.put("3.6.6", "2203");
+        versionConverter.put("3.6.7", "2246");
     }
 
     public String parseVariables(String line) {

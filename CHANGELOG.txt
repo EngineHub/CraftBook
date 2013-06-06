@@ -1,3 +1,25 @@
+3.6.7
+* Modified the way Bounce pistons modify velocities, allowing for multiple bounce pistons with perfect timing to do diagonals.
+* Tweaked animal vehicle entry blocker.
+* Fix AutoCrafter not working for unstackable items.
+* Fix Bridges/Doors not working if less than 3 thick.
+* Fix Bridges/Doors not detecting invalid materials if more than 3 thick.
++ Added CommandItems mechanic. Allows for items to perform commands with cooldown, extra commands after a delay, and many other features.
+* Fix CustomCrafting not requiring lore to create items with lore in the ingredients.
+* Fix BlockBreaker requiring an ID.
+* Tweaked IC Pipe Integration - Now way less buggy.
++ Added the ability to limit the amount of outputs a random IC could have toggled on.
++ Added the ability for ContentsSensor to check minimum amounts.
+* Fix snow landing on blocks it shouldn't land on.
+* Fix CustomDrops with 'x' in the lore/name.
+* Fix SentryGun error with no type set.
+* Move ParticleEffect IC offset to the other line for more space.
+* Fix Cultivator IC not breaking the hoe.
++ Added a message for when you use a recipe command and recipes are disabled.
++ Added a message for /recp remove.
+* Fix creating a CustomCrafting recipe ingame modifying the inventory.
+* Fix ColourCodes not being checked in CustomCrafting.
+
 3.6.6
 + Added a slow mode to elevators, to smoothly move the player to the destination. (xTwisteDx from LegendaryChaos.Zapto.org insired me to do it)
 * Fix a few replacable block issues.
