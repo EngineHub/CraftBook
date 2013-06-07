@@ -225,23 +225,26 @@ public class ItemUtil {
      * @param item
      * @return true if success, otherwise false.
      */
-    public static boolean takeFromEntity(Item item, int amount) {
+    public static boolean takeFromItemEntity(Item item, int amount) {
 
         if (item == null || item.isDead()) return false;
 
-        if (!isStackValid(item.getItemStack())) {
+        ItemStack newStack = item.getItemStack();
+
+        if (!isStackValid(newStack)) {
             item.remove();
             return false;
         }
 
-        if(item.getItemStack().getAmount() < amount)
+        if(newStack.getAmount() < amount)
             return false;
 
-        item.getItemStack().setAmount(item.getItemStack().getAmount() - amount);
+        newStack.setAmount(newStack.getAmount() - amount);
 
-        if (!isStackValid(item.getItemStack())) {
+        if (!isStackValid(newStack))
             item.remove();
-        }
+        else
+            item.setItemStack(newStack);
 
         return true;
     }

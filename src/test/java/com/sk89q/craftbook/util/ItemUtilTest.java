@@ -101,13 +101,13 @@ public class ItemUtilTest {
 
         Item entity = mock(Item.class);
         when(entity.isDead()).thenReturn(true);
-        assertTrue(!ItemUtil.takeFromEntity(null, 1));
-        assertTrue(!ItemUtil.takeFromEntity(entity, 1));
+        assertTrue(!ItemUtil.takeFromItemEntity(null, 1));
+        assertTrue(!ItemUtil.takeFromItemEntity(entity, 1));
         when(entity.isDead()).thenReturn(false);
         when(entity.getItemStack()).thenReturn(ItemUtil.getItem("2:0*20"));
-        assertTrue(!ItemUtil.takeFromEntity(entity, 21));
-        assertTrue(ItemUtil.takeFromEntity(entity, 2));
-        assertTrue(ItemUtil.takeFromEntity(entity, 18));
+        assertTrue(!ItemUtil.takeFromItemEntity(entity, 21));
+        assertTrue(ItemUtil.takeFromItemEntity(entity, 2));
+        assertTrue(ItemUtil.takeFromItemEntity(entity, 18));
         verify(entity).remove();
     }
 

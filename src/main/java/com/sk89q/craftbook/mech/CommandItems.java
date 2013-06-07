@@ -150,36 +150,38 @@ public class CommandItems implements Listener {
             if(ItemUtil.areItemsIdentical(def.stack, item)) {
                 final CommandItemDefinition comdef = def;
 
-                if(comdef.clickType == ClickType.CLICK_RIGHT || comdef.clickType == ClickType.CLICK_LEFT || comdef.clickType == ClickType.CLICK_EITHER) {
+                if(comdef.clickType != ClickType.ANY) {
+                    if(comdef.clickType == ClickType.CLICK_RIGHT || comdef.clickType == ClickType.CLICK_LEFT || comdef.clickType == ClickType.CLICK_EITHER) {
 
-                    if(!(event instanceof PlayerInteractEvent))
-                        return;
+                        if(!(event instanceof PlayerInteractEvent))
+                            return;
 
-                    if(comdef.clickType == ClickType.CLICK_RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
-                        return;
+                        if(comdef.clickType == ClickType.CLICK_RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
+                            return;
 
-                    if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
-                        return;
-                } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_EITHER) {
+                        if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
+                            return;
+                    } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_EITHER) {
 
-                    if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
-                        return;
+                        if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
+                            return;
 
-                    if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
-                        return;
+                        if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
+                            return;
 
-                    if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent))
-                        return;
-                } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
+                        if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent))
+                            return;
+                    } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
 
-                    if(!(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
-                        return;
+                        if(!(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
+                            return;
 
-                    if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
-                        return;
+                        if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
+                            return;
 
-                    if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
-                        return;
+                        if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
+                            return;
+                    }
                 }
 
                 if(!player.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !player.hasPermission(comdef.permNode)) {
@@ -314,7 +316,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY;
         }
     }
 }
