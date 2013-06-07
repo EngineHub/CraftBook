@@ -1,6 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
 import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,6 +13,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class ContentsSensor extends AbstractSelfTriggeredIC {
@@ -36,10 +39,16 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
                 slot = -1;
             }
         }
+
+        if(getLine(3).contains("="))
+            offset = ICUtil.parseBlockLocation(getSign(), 3);
+        else
+            offset = getBackBlock().getRelative(BlockFace.UP);
     }
 
     ItemStack item;
     int slot;
+    Block offset;
 
     @Override
     public String getTitle () {
@@ -66,9 +75,9 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
 
     public boolean sense() {
 
-        if (getBackBlock().getRelative(0, 1, 0).getState() instanceof InventoryHolder) {
+        if (offset.getState() instanceof InventoryHolder) {
 
-            InventoryHolder inv = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
+            InventoryHolder inv = (InventoryHolder) offset.getState();
             int amount = 0;
             if(slot < 0 || slot > inv.getInventory().getContents().length) {
                 for(ItemStack cont : inv.getInventory().getContents())
@@ -120,7 +129,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"item id:data", "slot (optional)"};
+            return new String[] {"item id:data", "slot (optional)=offset"};
         }
     }
 }
