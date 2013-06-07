@@ -83,6 +83,7 @@ public abstract class LocalConfiguration {
     public boolean chairSneak;
     public boolean chairHealth;
     public List<Integer> chairBlocks;
+    public boolean chairFacing;
     // Mechanics - Chunk Anchor
     public boolean chunkAnchorEnabled;
     public boolean chunkAnchorRedstone;
