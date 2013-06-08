@@ -6,12 +6,15 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -22,6 +25,7 @@ import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
 public class RangedCollector extends AbstractSelfTriggeredIC {
@@ -111,6 +115,14 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                         else if(!include && ItemUtil.areItemsIdentical(filter, stack))
                             break stackCheck;
                     }
+
+                    BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+                    Block pipe = getBackBlock().getRelative(back);
+
+                    Pipes pipes = Pipes.Factory.setupPipes(pipe, getBackBlock(), stack);
+
+                    if(pipes != null && pipes.getItems().isEmpty())
+                        return true;
 
                     // Add the items to a container, and destroy them.
                     List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);

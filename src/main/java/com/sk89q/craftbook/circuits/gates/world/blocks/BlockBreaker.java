@@ -109,7 +109,9 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            if(Pipes.Factory.setupPipes(pipe, getBackBlock(), blockstack) != null)
+            Pipes pipes = Pipes.Factory.setupPipes(pipe, getBackBlock(), blockstack);
+
+            if(pipes != null && pipes.getItems().isEmpty())
                 continue;
 
             if (hasChest) {
