@@ -344,14 +344,28 @@ public class CustomCrafting implements Listener {
                 ShapedRecipe recipe2 = (ShapedRecipe) rec2;
                 if(recipe1.getShape().length == recipe2.getShape().length) {
                     CraftBookPlugin.logDebugMessage("Same size!", "advanced-data");
-                    if(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientMap().values()).size() != VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values()).size())
+                    List<ItemStack> stacks1 = new ArrayList<ItemStack>();
+
+                    for(String s : recipe1.getShape())
+                        for(char c : s.toCharArray())
+                            for(Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
+                                if(entry.getKey().charValue() == c)
+                                    stacks1.add(entry.getValue());
+                    List<ItemStack> stacks2 = new ArrayList<ItemStack>();
+
+                    for(String s : recipe2.getShape())
+                        for(char c : s.toCharArray())
+                            for(Entry<Character, ItemStack> entry : recipe2.getIngredientMap().entrySet())
+                                if(entry.getKey().charValue() == c)
+                                    stacks2.add(entry.getValue());
+
+                    if(stacks2.size() != stacks1.size())
                         return false;
                     List<ItemStack> test = new ArrayList<ItemStack>();
-                    test.addAll(((ShapedRecipe) rec1).getIngredientMap().values());
-                    test = (List<ItemStack>) VerifyUtil.<ItemStack>withoutNulls(test);
+                    test.addAll(stacks1);
                     if(test.size() == 0)
                         return true;
-                    if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientMap().values())) && test.size() > 0)
+                    if(!test.removeAll(stacks2) && test.size() > 0)
                         return false;
                     if(test.size() > 0)
                         return false;
