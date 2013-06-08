@@ -116,7 +116,9 @@ public class Pipes extends AbstractMechanic {
             sign = (Sign) block.getRelative(face).getState();
             if(sign.getBlock().getTypeId() != BlockID.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
                 continue;
-            if(!SignUtil.getBackBlock(sign.getBlock()).getLocation().equals(block.getLocation()))
+            else if (sign.getBlock().getTypeId() == BlockID.SIGN_POST && face != BlockFace.UP && face != BlockFace.DOWN)
+                continue;
+            if(sign.getBlock().getTypeId() != BlockID.SIGN_POST && !SignUtil.getBackBlock(sign.getBlock()).getLocation().equals(block.getLocation()))
                 continue;
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
                 return sign;
