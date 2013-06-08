@@ -1092,6 +1092,6 @@ public class CraftBookPlugin extends JavaPlugin {
         if(!isDebugFlagEnabled(code))
             return;
 
-        logger().info("[Debug] " + message);
+        logger().info("[Debug][" + code + "] " + message);
     }
 }

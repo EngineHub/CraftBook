@@ -117,7 +117,7 @@ public class CustomCrafting implements Listener {
     public void prepareCraft(PrepareItemCraftEvent event) {
 
         ItemStack bits = null;
-        CraftBookPlugin.logDebugMessage("Crafting has been initiated!", "advanced-data");
+        CraftBookPlugin.logDebugMessage("Pre-Crafting has been initiated!", "advanced-data");
         try {
             boolean hasFailed = false;
             for(Recipe rec : advancedRecipes.keySet()) {
@@ -129,9 +129,16 @@ public class CustomCrafting implements Listener {
 
                     ItemStack[] tests = ((CraftingInventory)event.getView().getTopInventory()).getMatrix();
                     CraftingItemStack[] tests2;
-                    if(recipe.getType() == RecipeType.SHAPED)
-                        tests2 = recipe.getShapedIngredients().keySet().toArray(new CraftingItemStack[recipe.getShapedIngredients().keySet().size()]);
-                    else
+                    if(recipe.getType() == RecipeType.SHAPED) {
+                        List<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>();
+
+                        for(String s : recipe.getShape())
+                            for(char c : s.toCharArray())
+                                for(Entry<CraftingItemStack, Character> entry : recipe.getShapedIngredients().entrySet())
+                                    if(entry.getValue().charValue() == c)
+                                        stacks.add(entry.getKey());
+                        tests2 = stacks.toArray(new CraftingItemStack[stacks.size()]);
+                    } else
                         tests2 = recipe.getIngredients().toArray(new CraftingItemStack[recipe.getIngredients().size()]);
 
                     ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
@@ -173,6 +180,10 @@ public class CustomCrafting implements Listener {
             if(hasFailed)
                 throw new InvalidCraftingException("Unmet Item Meta");
         } catch(InvalidCraftingException e){
+            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+            return;
+        } catch (Exception e) {
+            BukkitUtil.printStacktrace(e);
             ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
             return;
         }
