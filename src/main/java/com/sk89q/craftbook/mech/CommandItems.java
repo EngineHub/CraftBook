@@ -206,6 +206,17 @@ public class CommandItems implements Listener {
                     return;
                 }
 
+                for(ItemStack stack : def.consumables) {
+                    if(!player.getInventory().containsAtLeast(stack, stack.getAmount())) {
+                        player.sendMessage(ChatColor.RED + "You need " + stack.getAmount() + " of " + stack.getType().name() + " to use this command!");
+                        return;
+                    }
+                }
+                if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
+                    player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
+                    return;
+                }
+
                 for(String command : comdef.commands) {
 
                     if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
@@ -289,12 +300,14 @@ public class CommandItems implements Listener {
         private int cooldown;
         private boolean cancelAction;
 
+        private ItemStack[] consumables;
+
         public ItemStack getItem() {
 
             return stack;
         }
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction) {
+        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables) {
 
             this.name = name;
             this.stack = stack;
@@ -306,6 +319,7 @@ public class CommandItems implements Listener {
             this.cooldown = cooldown;
             this.clickType = clickType;
             this.cancelAction = cancelAction;
+            this.consumables = consumables;
         }
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
@@ -323,7 +337,14 @@ public class CommandItems implements Listener {
             int cooldown = config.getInt(path + ".cooldown", 0);
             boolean cancelAction = config.getBoolean(path + ".cancel-action", true);
 
-            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction);
+            List<ItemStack> consumables = new ArrayList<ItemStack>();
+
+            try {
+                for(String s : config.getStringList(path + ".consumed-items", new ArrayList<String>()))
+                    consumables.add(ItemUtil.makeItemValid(ItemUtil.getItem(s)));
+            } catch(Exception e){}
+
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]));
         }
 
         public enum CommandType {

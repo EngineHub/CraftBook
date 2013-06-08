@@ -10,3 +10,5 @@ command-items:
     delayed-commands: []
     cooldown: 10
     cancel-action: true
+    consumed-items:
+      - "331"
