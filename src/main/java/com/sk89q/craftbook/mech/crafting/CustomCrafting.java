@@ -359,16 +359,24 @@ public class CustomCrafting implements Listener {
                                 if(entry.getKey().charValue() == c)
                                     stacks2.add(entry.getValue());
 
-                    if(stacks2.size() != stacks1.size())
+                    if(stacks2.size() != stacks1.size()) {
+                        CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data");
                         return false;
+                    }
                     List<ItemStack> test = new ArrayList<ItemStack>();
                     test.addAll(stacks1);
-                    if(test.size() == 0)
+                    if(test.size() == 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data");
                         return true;
-                    if(!test.removeAll(stacks2) && test.size() > 0)
+                    }
+                    if(!test.removeAll(stacks2) && test.size() > 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data");
                         return false;
-                    if(test.size() > 0)
+                    }
+                    if(test.size() > 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data");
                         return false;
+                    }
                 }
             } else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
 
@@ -376,20 +384,30 @@ public class CustomCrafting implements Listener {
                 ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
                 ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
 
-                if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size())
+                if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size()) {
+                    CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data");
                     return false;
+                }
 
                 CraftBookPlugin.logDebugMessage("Same Size!", "advanced-data");
 
                 List<ItemStack> test = new ArrayList<ItemStack>();
                 test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
-                if(test.size() == 0)
+                if(test.size() == 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data");
                     return true;
-                if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0)
+                }
+                if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data");
                     return false;
-                if(test.size() > 0)
+                }
+                if(test.size() > 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data");
                     return false;
+                }
             }
+
+            CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data");
 
             return true;
         }

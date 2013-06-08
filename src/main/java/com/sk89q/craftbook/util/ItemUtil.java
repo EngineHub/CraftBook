@@ -191,10 +191,10 @@ public class ItemUtil {
                                 CraftBookPlugin.logDebugMessage("Item2 does not have enchantment: " + ench.getName(), "item-checks");
                                 return false;
                             }
-                            CraftBookPlugin.logDebugMessage("Enchant Name: " + ench.getName() + "ItemStack1 level " + item.getItemMeta().getEnchants().get(ench) + " ItemStack2 level " + item2.getItemMeta().getEnchants().get(ench), "item-checks");
+                            CraftBookPlugin.logDebugMessage("Enchant Name: " + ench.getName() + " ItemStack1 level " + item.getItemMeta().getEnchants().get(ench) + " ItemStack2 level " + item2.getItemMeta().getEnchants().get(ench), "item-checks");
                             if(item.getItemMeta().getEnchantLevel(ench) != item2.getItemMeta().getEnchantLevel(ench))
                                 return false;
-                            CraftBookPlugin.logDebugMessage("Item2 does not have enchantment: " + ench.getName(), "item-checks");
+                            CraftBookPlugin.logDebugMessage("Items share enchantment: " + ench.getName(), "item-checks");
                         }
                     }
                 } else
