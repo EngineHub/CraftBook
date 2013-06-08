@@ -121,9 +121,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         }
         disp.getInventory().clear();
 
-        if(CraftBookPlugin.isDebugFlagEnabled("ic-mc1219")) {
-            CraftBookPlugin.logger().info("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount());
-        }
+        CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
 
         List<ItemStack> items = new ArrayList<ItemStack>();
         items.add(result);

@@ -1066,12 +1066,32 @@ public class CraftBookPlugin extends JavaPlugin {
         if(!inst().getConfiguration().debugMode || inst().getConfiguration().debugFlags == null || inst().getConfiguration().debugFlags.isEmpty())
             return false;
 
-        for(String testflag : inst().getConfiguration().debugFlags) {
+        String[] flagBits = flag.toLowerCase().split(":");
 
-            if(testflag.equalsIgnoreCase(flag))
-                return true;
+        String tempFlag = "";
+
+        for(int i = 0; i < flagBits.length; i++) {
+
+            if(i == 0)
+                tempFlag = flagBits[i];
+            else
+                tempFlag = tempFlag + "." + flagBits[i];
+
+            for(String testflag : inst().getConfiguration().debugFlags) {
+
+                if(testflag.toLowerCase().equals(tempFlag))
+                    return true;
+            }
         }
 
         return false;
+    }
+
+    public static void logDebugMessage(String message, String code) {
+
+        if(!isDebugFlagEnabled(code))
+            return;
+
+        logger().info("[Debug] " + message);
     }
 }

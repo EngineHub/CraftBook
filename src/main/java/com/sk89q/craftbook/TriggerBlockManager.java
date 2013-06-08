@@ -57,8 +57,7 @@ class TriggerBlockManager {
         if(CraftBookPlugin.isDebugFlagEnabled("triggers")) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
                 if (triggers.get(p) != null)
-                    throw new CraftbookRuntimeException(new IllegalStateException(p + " has already been claimed by " +
-                            "another Mechanic"));
+                    throw new CraftbookRuntimeException(new IllegalStateException(p + " has already been claimed by " + "another Mechanic"));
             }
         }
 
