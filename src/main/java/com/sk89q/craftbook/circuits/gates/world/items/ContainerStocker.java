@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Chest;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -14,11 +15,10 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
-public class ChestStocker extends AbstractSelfTriggeredIC {
+public class ContainerStocker extends AbstractSelfTriggeredIC {
 
-    public ChestStocker(Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerStocker(Server server, ChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -39,7 +39,7 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
     @Override
     public String getTitle() {
 
-        return "Chest Stocker";
+        return "Container Stocker";
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
 
     public boolean stock() {
 
-        if (offset.getBlock().getTypeId() == BlockID.CHEST) {
+        if (offset.getBlock().getState() instanceof InventoryHolder) {
 
             Chest c = (Chest) offset.getBlock().getState();
             if (c.getInventory().addItem(item.clone()).isEmpty()) {
@@ -83,13 +83,13 @@ public class ChestStocker extends AbstractSelfTriggeredIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new ChestStocker(getServer(), sign, this);
+            return new ContainerStocker(getServer(), sign, this);
         }
 
         @Override
         public String getShortDescription() {
 
-            return "Adds item into above chest.";
+            return "Adds item into container at specified offset.";
         }
 
         @Override

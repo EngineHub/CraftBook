@@ -1,14 +1,24 @@
 command-items:
   LightningRod:
     item: "369|Lightning Rod"
+    #A blaze rod titled 'Lightning Rod'
     commands:
       - "strike"
+    #Performs the 'strike' command. (Found in many command plugins)
     permission-node: "lightningrod.use"
+    #Requires the permission node 'lightningrod.use'
     run-as: PLAYER
+    #It is ran as the player.
     click-type: CLICK_RIGHT
+    #It is performed on right click.
     delay: 0
+    #It has no delay.
     delayed-commands: []
+    #Nothing is ran after no delay.
     cooldown: 10
+    #It can not be used for another 10 seconds.
     cancel-action: true
+    #The right click does not perform anything like opening chests or pressing buttons.
     consumed-items:
       - "331"
+    #It requires 1 redstone per use.

@@ -87,7 +87,7 @@ import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrap;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportReciever;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportTransmitter;
 import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafter;
-import com.sk89q.craftbook.circuits.gates.world.items.ChestStocker;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerStocker;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollector;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenser;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerStacker;
@@ -348,7 +348,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1239", "harvester", new CombineHarvester.Factory(server), familySISO, familyAISO);
         registerIC("MC1240", "shoot arrow", new ArrowShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1241", "shoot arrows", new ArrowBarrage.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1242", "stocker", new ChestStocker.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1242", "stocker", new ContainerStocker.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1243", "distributer", new Distributer.Factory(server), familySISO, familyAISO);
         registerIC("MC1244", "animal harvest", new AnimalHarvester.Factory(server), familySISO, familyAISO);
         registerIC("MC1245", "cont stacker", new ContainerStacker.Factory(server), familySISO, familyAISO);
