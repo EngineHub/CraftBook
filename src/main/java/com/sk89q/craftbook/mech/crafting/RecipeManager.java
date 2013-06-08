@@ -398,6 +398,10 @@ public class RecipeManager extends LocalConfiguration {
                 CraftBookPlugin.logger().info("Adding advanced data of type: " + key + " to an ItemStack!");
             advancedData.put(key, data);
         }
+
+        public HashMap<String,Object> getAdvancedDataMap () {
+            return advancedData;
+        }
     }
 
     public enum RecipeType {
