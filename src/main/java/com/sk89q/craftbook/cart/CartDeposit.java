@@ -91,9 +91,9 @@ public class CartDeposit extends CartMechanism {
             // is cart non-empty?
             if (transferItems.isEmpty()) return;
 
-            CraftBookPlugin.logDebugMessage("collecting " + transferItems.size() + " item stacks", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("collecting " + transferItems.size() + " item stacks", "cart-deposit.collect");
             for (ItemStack stack: transferItems)
-                CraftBookPlugin.logDebugMessage("collecting " + stack.getAmount() + " items of type " + stack.getType().toString(), "cart-deposit");
+                CraftBookPlugin.logDebugMessage("collecting " + stack.getAmount() + " items of type " + stack.getType().toString(), "cart-deposit.collect");
 
             for (Chest container : containers) {
                 if (transferItems.isEmpty()) {
@@ -110,14 +110,14 @@ public class CartDeposit extends CartMechanism {
                 container.update();
             }
 
-            CraftBookPlugin.logDebugMessage("collected items. " + transferItems.size() + " stacks left over.", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("collected items. " + transferItems.size() + " stacks left over.", "cart-deposit.collect");
 
             leftovers.addAll(cartinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()])).values());
             transferItems.clear();
             transferItems.addAll(leftovers);
             leftovers.clear();
 
-            CraftBookPlugin.logDebugMessage("collection done. " + transferItems.size() + " stacks wouldn't fit back.", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("collection done. " + transferItems.size() + " stacks wouldn't fit back.", "cart-deposit.collect");
         } else {
             // depositing
             ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
@@ -149,16 +149,16 @@ public class CartDeposit extends CartMechanism {
             // are chests empty?
             if (transferitems.isEmpty()) return;
 
-            CraftBookPlugin.logDebugMessage("depositing " + transferitems.size() + " stacks", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("depositing " + transferitems.size() + " stacks", "cart-deposit.deposit");
             for (ItemStack stack: transferitems)
-                CraftBookPlugin.logDebugMessage("depositing " + stack.getAmount() + " items oftype " + stack.getType().toString(), "cart-deposit");
+                CraftBookPlugin.logDebugMessage("depositing " + stack.getAmount() + " items oftype " + stack.getType().toString(), "cart-deposit.deposit");
 
             leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
             transferitems.clear();
             transferitems.addAll(leftovers);
             leftovers.clear();
 
-            CraftBookPlugin.logDebugMessage("deposited, " + transferitems.size() + " items left over.", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("deposited, " + transferitems.size() + " items left over.", "cart-deposit.deposit");
 
             for (Chest container : containers) {
                 if (transferitems.isEmpty()) {
@@ -173,7 +173,7 @@ public class CartDeposit extends CartMechanism {
                 leftovers.clear();
             }
 
-            CraftBookPlugin.logDebugMessage("deposit done. " + transferitems.size() + " items wouldn't fit back.", "cart-deposit");
+            CraftBookPlugin.logDebugMessage("deposit done. " + transferitems.size() + " items wouldn't fit back.", "cart-deposit.deposit");
         }
     }
 

@@ -157,44 +157,44 @@ public class ItemUtil {
                 return false;
             CraftBookPlugin.logDebugMessage("Both share the existance of metadata", "item-checks");
             if(item.hasItemMeta()) {
-                CraftBookPlugin.logDebugMessage("Both have metadata", "item-checks");
+                CraftBookPlugin.logDebugMessage("Both have metadata", "item-checks.meta");
                 if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
-                    CraftBookPlugin.logDebugMessage("Both have names", "item-checks");
-                    CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks");
+                    CraftBookPlugin.logDebugMessage("Both have names", "item-checks.meta.names");
+                    CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks.meta.names");
                     if(!stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
                         return false;
-                    CraftBookPlugin.logDebugMessage("Items share display names", "item-checks");
+                    CraftBookPlugin.logDebugMessage("Items share display names", "item-checks.meta.names");
                 } else
                     return false;
                 if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore()) {
-                    CraftBookPlugin.logDebugMessage("Both have lore", "item-checks");
+                    CraftBookPlugin.logDebugMessage("Both have lore", "item-checks.meta.lores");
                     if(item.getItemMeta().hasLore()) {
                         if(item.getItemMeta().getLore().size() != item2.getItemMeta().getLore().size())
                             return false;
                         for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
-                            CraftBookPlugin.logDebugMessage("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i), "item-checks");
+                            CraftBookPlugin.logDebugMessage("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i), "item-checks.meta.lores");
                             if(!stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
                                 return false;
-                            CraftBookPlugin.logDebugMessage("Items share same lore", "item-checks");
+                            CraftBookPlugin.logDebugMessage("Items share same lore", "item-checks.meta.lores");
                         }
                     }
                 } else
                     return false;
                 if(item.getItemMeta().hasEnchants() == item2.getItemMeta().hasEnchants()) {
-                    CraftBookPlugin.logDebugMessage("Both share enchant existance", "item-checks");
+                    CraftBookPlugin.logDebugMessage("Both share enchant existance", "item-checks.meta.enchants");
                     if(item.getItemMeta().hasEnchants()) {
                         if(item.getItemMeta().getEnchants().size() != item2.getItemMeta().getEnchants().size())
                             return false;
                         for(Enchantment ench : item.getItemMeta().getEnchants().keySet()) {
 
                             if(!item2.getItemMeta().getEnchants().containsKey(ench)) {
-                                CraftBookPlugin.logDebugMessage("Item2 does not have enchantment: " + ench.getName(), "item-checks");
+                                CraftBookPlugin.logDebugMessage("Item2 does not have enchantment: " + ench.getName(), "item-checks.meta.enchants");
                                 return false;
                             }
-                            CraftBookPlugin.logDebugMessage("Enchant Name: " + ench.getName() + " ItemStack1 level " + item.getItemMeta().getEnchants().get(ench) + " ItemStack2 level " + item2.getItemMeta().getEnchants().get(ench), "item-checks");
+                            CraftBookPlugin.logDebugMessage("Enchant Name: " + ench.getName() + " ItemStack1 level " + item.getItemMeta().getEnchants().get(ench) + " ItemStack2 level " + item2.getItemMeta().getEnchants().get(ench), "item-checks.meta.enchants");
                             if(item.getItemMeta().getEnchantLevel(ench) != item2.getItemMeta().getEnchantLevel(ench))
                                 return false;
-                            CraftBookPlugin.logDebugMessage("Items share enchantment: " + ench.getName(), "item-checks");
+                            CraftBookPlugin.logDebugMessage("Items share enchantment: " + ench.getName(), "item-checks.meta.enchants");
                         }
                     }
                 } else

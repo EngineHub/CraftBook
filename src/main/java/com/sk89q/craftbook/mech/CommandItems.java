@@ -38,14 +38,26 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CommandItems implements Listener {
 
+    public static CommandItems INSTANCE;
+
     private YAMLProcessor config;
 
     private HashSet<CommandItemDefinition> definitions = new HashSet<CommandItemDefinition>();
 
     private HashMap<Tuple2<String, String>, Integer> cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
 
+    public CommandItemDefinition getDefinitionByName(String name) {
+
+        for(CommandItemDefinition def : definitions)
+            if(def.name.equalsIgnoreCase(name))
+                return def;
+
+        return null;
+    }
+
     public CommandItems() {
 
+        INSTANCE = this;
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml", false);
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
         load();
@@ -276,6 +288,11 @@ public class CommandItems implements Listener {
         private int delay;
         private int cooldown;
         private boolean cancelAction;
+
+        public ItemStack getItem() {
+
+            return stack;
+        }
 
         private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction) {
 

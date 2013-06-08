@@ -394,7 +394,7 @@ public class RecipeManager extends LocalConfiguration {
         }
 
         public void addAdvancedData(String key, Object data) {
-            CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack!", "advanced-data");
+            CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack!", "advanced-data.init");
             advancedData.put(key, data);
         }
 
