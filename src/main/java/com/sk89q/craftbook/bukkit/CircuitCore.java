@@ -57,6 +57,7 @@ import com.sk89q.craftbook.circuits.gates.logic.RsNorFlipFlop;
 import com.sk89q.craftbook.circuits.gates.logic.ToggleFlipFlop;
 import com.sk89q.craftbook.circuits.gates.logic.XnorGate;
 import com.sk89q.craftbook.circuits.gates.logic.XorGate;
+import com.sk89q.craftbook.circuits.gates.variables.NumericModifier;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreaker;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockReplacer;
@@ -435,6 +436,9 @@ public class CircuitCore implements LocalComponent {
         registerIC("MCX233", "weather set", new WeatherControl.Factory(server), familySISO, familyAISO);
         // 3ISOs
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
+
+        //Variable ICs
+        registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO);
     }
 
     /**
