@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -128,9 +129,16 @@ public class CommandItems implements Listener {
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onEntityDamageEntity(final EntityDamageByEntityEvent event) {
 
-        if(!(event.getDamager() instanceof Player))
-            return;
-        Player p = (Player) event.getDamager();
+        Player p = null;
+        if(event.getDamager() instanceof Projectile) {
+            if(!(((Projectile) event.getDamager()).getShooter() instanceof Player))
+                return;
+            p = (Player) ((Projectile) event.getDamager()).getShooter();
+        } else {
+            if(!(event.getDamager() instanceof Player))
+                return;
+            p = (Player) event.getDamager();
+        }
 
         if(p.getItemInHand() == null)
             return;
@@ -173,7 +181,7 @@ public class CommandItems implements Listener {
 
                         if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
                             return;
-                    } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_EITHER) {
+                    } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_ARROW || comdef.clickType == ClickType.ENTITY_EITHER) {
 
                         if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
                             return;
@@ -181,7 +189,10 @@ public class CommandItems implements Listener {
                         if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
                             return;
 
-                        if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent))
+                        if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent) && !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player))
+                            return;
+
+                        if(comdef.clickType == ClickType.ENTITY_ARROW && !(event instanceof EntityDamageByEntityEvent) && !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile))
                             return;
                     } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
 
@@ -354,7 +365,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY;
         }
     }
 }
