@@ -41,7 +41,7 @@ public class TreeLopper extends AbstractMechanic {
 
         if(broken > plugin.getConfiguration().treeLopperMaxSize)
             return;
-        if(!plugin.canBuild(event.getPlayer(), block)) {
+        if(!plugin.canBuild(event.getPlayer(), block, false)) {
             event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to build in this area!");
             return;
         }

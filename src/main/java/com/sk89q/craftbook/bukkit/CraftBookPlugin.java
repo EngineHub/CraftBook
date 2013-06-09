@@ -30,10 +30,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -974,9 +977,9 @@ public class CraftBookPlugin extends JavaPlugin {
      *
      * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
      */
-    public boolean canBuild(Player player, Location loc) {
+    public boolean canBuild(Player player, Location loc, boolean build) {
 
-        return canBuild(player,loc.getBlock());
+        return canBuild(player,loc.getBlock(), build);
     }
 
     /**
@@ -985,18 +988,23 @@ public class CraftBookPlugin extends JavaPlugin {
      *
      * @param player The player to check
      * @param block  The block to check at.
+     * @param build True for build, false for break
      *
      * @return whether {@code player} can build at {@code block}'s location
      *
      * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.block.Block)
      */
-    public boolean canBuild(Player player, Block block) {
+    public boolean canBuild(Player player, Block block, boolean build) {
 
         if (config.advancedBlockChecks) {
 
-            BlockPlaceEvent event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
+            BlockEvent event;
+            if(build)
+                event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
+            else
+                event = new BlockBreakEvent(block, player);
             getServer().getPluginManager().callEvent(event);
-            if(event.isCancelled() || !event.canBuild())
+            if(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild())
                 return false;
         }
         if (!config.obeyWorldguard) return true;

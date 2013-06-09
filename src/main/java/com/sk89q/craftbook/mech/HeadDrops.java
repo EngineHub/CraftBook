@@ -135,7 +135,7 @@ public class HeadDrops implements Listener {
 
             stack.setItemMeta(meta);
 
-            if(!CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock()))
+            if(!CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock(), false))
                 return;
 
             event.setCancelled(true);

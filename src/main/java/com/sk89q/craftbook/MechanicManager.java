@@ -201,7 +201,7 @@ public class MechanicManager {
             HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
-                if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation())) {
+                if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
                     player.printError("area.permissions");
                     return 0;
                 }
