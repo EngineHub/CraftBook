@@ -226,6 +226,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         teleporterRequireSign = config.getBoolean("mechanics.teleporter.require-sign", false);
         teleporterMaxRange = config.getInt("mechanics.teleporter.max-range", 0);
 
+        // TreeLopper Configuration Listener
+        treeLopperEnabled = config.getBoolean("mechanics.tree-lopper.enable", false);
+        treeLopperBlocks = config.getIntList("mechanics.tree-lopper.block-list", Arrays.asList(BlockID.LOG));
+        treeLopperItems = config.getIntList("mechanics.tree-lopper.tool-list", Arrays.asList(ItemID.WOOD_AXE, ItemID.STONE_AXE, ItemID.IRON_AXE, ItemID.GOLD_AXE, ItemID.DIAMOND_AXE));
+        treeLopperMaxSize = config.getInt("mechanics.tree-lopper.max-size", 30);
+
         // XPStorer Configuration Listener
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
         xpStorerBlock = config.getInt("mechanics.xp-storer.block", BlockID.MOB_SPAWNER);

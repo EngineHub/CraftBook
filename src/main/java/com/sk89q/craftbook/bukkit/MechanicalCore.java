@@ -36,6 +36,7 @@ import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.SignCopier;
 import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Teleporter;
+import com.sk89q.craftbook.mech.TreeLopper;
 import com.sk89q.craftbook.mech.XPStorer;
 import com.sk89q.craftbook.mech.ai.AIMechanic;
 import com.sk89q.craftbook.mech.area.Area;
@@ -139,6 +140,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.cauldronEnabled) plugin.registerMechanic(new ImprovedCauldron.Factory());
         if (config.xpStorerEnabled) plugin.registerMechanic(new XPStorer.Factory());
         if (config.mapChangerEnabled) plugin.registerMechanic(new MapChanger.Factory());
+        if (config.treeLopperEnabled) plugin.registerMechanic(new TreeLopper.Factory());
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
 

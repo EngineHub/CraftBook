@@ -172,6 +172,11 @@ public abstract class LocalConfiguration {
     public boolean teleporterEnabled;
     public boolean teleporterRequireSign;
     public int teleporterMaxRange;
+    // Mechanis - TreeLopper
+    public boolean treeLopperEnabled;
+    public List<Integer> treeLopperBlocks;
+    public List<Integer> treeLopperItems;
+    public int treeLopperMaxSize;
     // Mechanics - XPStorer
     public boolean xpStorerEnabled;
     public int xpStorerBlock;
