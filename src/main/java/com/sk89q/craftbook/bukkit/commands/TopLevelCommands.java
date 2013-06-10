@@ -89,8 +89,8 @@ public class TopLevelCommands {
         public void about(CommandContext context, CommandSender sender) {
 
             String ver = CraftBookPlugin.inst().getDescription().getVersion();
-            if(CraftBookPlugin.inst().versionConverter.inverse().get(ver.split("-")[0]) != null)
-                ver = CraftBookPlugin.inst().versionConverter.inverse().get(ver.split("-")[0]) + " (" + CraftBookPlugin.inst().getDescription().getVersion() + ")";
+            if(ver.split("-")[0].equalsIgnoreCase(CraftBookPlugin.getStableBuild()))
+                ver = CraftBookPlugin.getVersion();
             sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + ver);
             sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by me4502 & Dark_Arc");
         }

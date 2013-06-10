@@ -45,8 +45,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.LocalComponent;
@@ -143,11 +141,6 @@ public class CraftBookPlugin extends JavaPlugin {
     private MechanicClock mechanicClock;
 
     /**
-     * The map used to store versions, useful for auto updaters and /cb about.
-     */
-    public BiMap<String, String> versionConverter = HashBiMap.create();
-
-    /**
      * Stores the variables used in VariableStore.
      */
     public HashMap<String, String> variableStore = new HashMap<String, String>();
@@ -160,31 +153,21 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set the instance
         instance = this;
+    }
 
-        // Set the version converter contents. It really only needs the current versions stuff... but just incase you are using a release version that isn't on bukkit dev yet, this is here.
-        versionConverter.put("3.4.1", "1541");
-        versionConverter.put("3.5",   "1680");
-        versionConverter.put("3.5.1", "1718");
-        versionConverter.put("3.5.2", "1749");
-        versionConverter.put("3.5.3", "1766");
-        versionConverter.put("3.5.4", "1795");
-        versionConverter.put("3.5.5b1","1816");
-        versionConverter.put("3.5.5", "1828");
-        versionConverter.put("3.5.6", "1839");
-        versionConverter.put("3.5.7", "1853");
-        versionConverter.put("3.6b1", "1859");
-        versionConverter.put("3.6b2", "1873");
-        versionConverter.put("3.6b3", "1886");
-        versionConverter.put("3.6b4", "1921");
-        versionConverter.put("3.6",   "1955");
-        versionConverter.put("3.6.1", "1999");
-        versionConverter.put("3.6.2", "2051");
-        versionConverter.put("3.6.3", "2118");
-        versionConverter.put("3.6.3r3", "2123");
-        versionConverter.put("3.6.4", "2153");
-        versionConverter.put("3.6.5", "2167");
-        versionConverter.put("3.6.6", "2203");
-        versionConverter.put("3.6.7", "2246");
+    public static String getVersion() {
+
+        return "3.6.7";
+    }
+
+    /**
+     * Gets the build equivalent of the last stable version.
+     * 
+     * @return the build number
+     */
+    public static String getStableBuild() {
+
+        return "2246";
     }
 
     public String parseVariables(String line) {

@@ -406,13 +406,11 @@ public class Updater {
      */
     private boolean versionCheck (String title) {
         if (type != UpdateType.NO_VERSION_CHECK) {
-            String version = plugin.getDescription().getVersion().split("-")[0];
+            String version = CraftBookPlugin.getVersion();
             if (title.split(" v").length == 2) {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
                 if(remoteVersion == null)
                     remoteVersion = "Unknown";
-                if(CraftBookPlugin.inst().versionConverter.containsKey(version))
-                    version = CraftBookPlugin.inst().versionConverter.inverse().get(version);
                 int remVer = -1, curVer = 0;
                 try {
                     remVer = calVer(remoteVersion);
