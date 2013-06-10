@@ -18,7 +18,7 @@ import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.Command;
+import com.sk89q.craftbook.mech.CommandSigns;
 import com.sk89q.craftbook.mech.CommandItems;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
@@ -131,7 +131,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.elevatorEnabled) plugin.registerMechanic(new Elevator.Factory());
         if (config.teleporterEnabled) plugin.registerMechanic(new Teleporter.Factory());
         if (config.areaEnabled) plugin.registerMechanic(new Area.Factory());
-        if (config.commandSignEnabled) plugin.registerMechanic(new Command.Factory());
+        if (config.commandSignEnabled) plugin.registerMechanic(new CommandSigns.Factory());
         if (config.lightstoneEnabled) plugin.registerMechanic(new LightStone.Factory());
         if (config.lightSwitchEnabled) plugin.registerMechanic(new LightSwitch.Factory());
         if (config.hiddenSwitchEnabled) plugin.registerMechanic(new HiddenSwitch.Factory());

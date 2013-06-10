@@ -95,61 +95,14 @@ public class Gate extends AbstractMechanic {
     /**
      * Toggles the gate closest to a location.
      *
+     * @param player
      * @param pt
      * @param smallSearchSize
+     * @param close null to toggle, true to close, false to open
      *
      * @return true if a gate was found and blocks were changed; false otherwise.
      */
-    public boolean toggleGates(LocalPlayer player, WorldVector pt, boolean smallSearchSize) {
-
-        LocalWorld world = pt.getWorld();
-        int x = pt.getBlockX();
-        int y = pt.getBlockY();
-        int z = pt.getBlockZ();
-
-        boolean foundGate = false;
-
-        Set<BlockVector> visitedColumns = new HashSet<BlockVector>();
-
-        if (smallSearchSize) {
-            // Toggle nearby gates
-            for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                for (int y1 = y - 2; y1 <= y + 1; y1++) {
-                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1), visitedColumns, null)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        } else {
-            // Toggle nearby gates
-            for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
-                        if (recurseColumn(player, new WorldVector(world, x1, y1, z1), visitedColumns, null)) {
-                            foundGate = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // bag.flushChanges();
-
-        return foundGate;
-    }
-
-    /**
-     * Set gate states of gates closest to a location.
-     *
-     * @param pt
-     * @param close
-     * @param smallSearchSize
-     *
-     * @return true if a gate was found and blocks were changed; false otherwise.
-     */
-    public boolean setGateState(LocalPlayer player, WorldVector pt, boolean close, boolean smallSearchSize) {
+    public boolean toggleGates(LocalPlayer player, WorldVector pt, boolean smallSearchSize, Boolean close) {
 
         LocalWorld world = pt.getWorld();
         int x = pt.getBlockX();
@@ -242,8 +195,7 @@ public class Gate extends AbstractMechanic {
      * @param close
      * @param visitedColumns
      */
-    private boolean toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close,
-            Set<BlockVector> visitedColumns) {
+    private boolean toggleColumn(LocalPlayer player, WorldVector topPoint, boolean close, Set<BlockVector> visitedColumns) {
 
         World world = ((BukkitWorld) topPoint.getWorld()).getWorld();
         int x = topPoint.getBlockX();
@@ -380,7 +332,7 @@ public class Gate extends AbstractMechanic {
             return;
         }
 
-        if (toggleGates(player, pt, smallSearchSize)) {
+        if (toggleGates(player, pt, smallSearchSize, null)) {
             player.print("mech.gate.toggle");
         } else {
             player.printError("mech.gate.not-found");
@@ -406,7 +358,7 @@ public class Gate extends AbstractMechanic {
             @Override
             public void run() {
 
-                setGateState(null, pt, event.getNewCurrent() > 0, smallSearchSize);
+                toggleGates(null, pt, smallSearchSize, event.getNewCurrent() > 0);
             }
         }, 2);
     }
@@ -724,9 +676,7 @@ public class Gate extends AbstractMechanic {
 
     public boolean hasEnoughBlocks(Sign s, Sign other) {
 
-        return s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3)
-                .equalsIgnoreCase("infinite")
-                || getBlocks(s, other) > 0;
+        return s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
 
     // TODO Use this to clean this mech up

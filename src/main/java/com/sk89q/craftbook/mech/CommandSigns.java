@@ -17,11 +17,11 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 
-public class Command extends AbstractMechanic {
+public class CommandSigns extends AbstractMechanic {
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    public static class Factory extends AbstractMechanicFactory<Command> {
+    public static class Factory extends AbstractMechanicFactory<CommandSigns> {
 
         /**
          * Explore around the trigger to find a functional command sign; throw if things look funny.
@@ -33,13 +33,13 @@ public class Command extends AbstractMechanic {
          * @throws InvalidMechanismException if the area looked like it was intended to be an elevator, but it failed.
          */
         @Override
-        public Command detect(BlockWorldVector pt) throws InvalidMechanismException {
+        public CommandSigns detect(BlockWorldVector pt) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toBlock(pt);
 
             if (block.getState() instanceof Sign) {
                 Sign s = (Sign) block.getState();
-                if (s.getLine(1).equalsIgnoreCase("[Command]")) return new Command(block);
+                if (s.getLine(1).equalsIgnoreCase("[Command]")) return new CommandSigns(block);
             }
             return null;
         }
@@ -50,7 +50,7 @@ public class Command extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Command detect(BlockWorldVector pt, LocalPlayer player,
+        public CommandSigns detect(BlockWorldVector pt, LocalPlayer player,
                 ChangedSign sign) throws InvalidMechanismException,
                 ProcessedMechanismException {
 
@@ -70,7 +70,7 @@ public class Command extends AbstractMechanic {
      *
      * @throws InvalidMechanismException
      */
-    private Command(Block trigger) throws InvalidMechanismException {
+    private CommandSigns(Block trigger) throws InvalidMechanismException {
 
         super();
         this.trigger = trigger;

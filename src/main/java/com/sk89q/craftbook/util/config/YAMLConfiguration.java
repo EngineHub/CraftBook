@@ -45,6 +45,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         ICsDisabled = config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>());
         ICdefaultCoordinate = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
         ICSavePersistentData = config.getBoolean("circuits.ics.save-persistent-data", true);
+        ICMidiUsePercussion = config.getBoolean("circuits.ics.midi-use-percussion", false);
 
         // Circuits Configuration Listener
         netherrackEnabled = config.getBoolean("circuits.wiring.netherrack-enabled", false);

@@ -19,6 +19,7 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
@@ -50,7 +51,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     };
 
 
-    private static int[] percussion = {
+    private static final int[] percussion = {
         1, 1, 1, 2, 3, 2,
         1, 3, 1, 3, 1, 3,
         1, 1, 3, 1, 3, 3,
@@ -120,9 +121,9 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        if (chan == 9) { // Percussion
+                        if (chan == 9 && CraftBookPlugin.inst().getConfiguration().ICMidiUsePercussion) { // Percussion
                             // Sounds like utter crap
-                            // notePlayer.play(toMCPercussion(patches.get(chan)), 10);
+                            notePlayer.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
                         } else {
                             notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                         }
@@ -202,14 +203,17 @@ public class MidiJingleSequencer implements JingleSequencer {
         }
     }
 
-    protected static int toMCPercussion(int note) {
+    protected static byte toMCPercussion(Integer patch) {
 
-        int i = note - 35;
+        if(patch == null)
+            return 0;
+
+        int i = patch - 35;
         if (i < 0 || i >= percussion.length) {
             return 1;
         }
 
-        return percussion[i];
+        return (byte) percussion[i];
     }
 
 

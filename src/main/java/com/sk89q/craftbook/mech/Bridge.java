@@ -34,8 +34,11 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
+import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
+import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -50,10 +53,6 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 public class Bridge extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Bridge> {
-
-        public Factory() {
-
-        }
 
         /**
          * Explore around the trigger to find a Bridge; throw if things look funny.
@@ -91,24 +90,20 @@ public class Bridge extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" + "" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite"))
                     sign.setLine(0, "0");
-                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                else if (!sign.getLine(0).equalsIgnoreCase("infinite"))
                     sign.setLine(0, "0");
-                }
                 sign.update(false);
                 player.print("mech.bridge.create");
             } else if (sign.getLine(1).equalsIgnoreCase("[Bridge End]")) {
                 player.checkPermission("craftbook.mech.bridge");
 
                 sign.setLine(1, "[Bridge End]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge" + "" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.bridge.infinite"))
                     sign.setLine(0, "0");
-                } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
+                else if (!sign.getLine(0).equalsIgnoreCase("infinite"))
                     sign.setLine(0, "0");
-                }
                 sign.update(false);
                 player.print("mech.bridge.end-create");
             } else return null;
@@ -377,48 +372,13 @@ public class Bridge extends AbstractMechanic {
         return proximalBaseCenter.getData();
     }
 
-    /**
-     * Thrown when the sign is an invalid direction.
-     */
-    private static class InvalidDirectionException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = -8169241147023551662L;
-    }
-
-    /**
-     * Thrown when the bridge type is unacceptable.
-     */
-    private static class UnacceptableMaterialException extends InvalidMechanismException {
-
-        public UnacceptableMaterialException(String msg) {
-
-            super(msg);
-        }
-
-        private static final long serialVersionUID = -2856504362189922160L;
-    }
-
-    /**
-     * Thrown when the bridge type is not constructed correctly.
-     */
-    private static class InvalidConstructionException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = 8758644926222590049L;
-
-        public InvalidConstructionException(String msg) {
-
-            super(msg);
-        }
-    }
-
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
         ChangedSign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
+        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST)
             sign = BukkitUtil.toChangedSign(event.getBlock());
-        }
 
         if (sign == null) return;
 

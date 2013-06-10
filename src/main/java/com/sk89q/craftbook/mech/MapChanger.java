@@ -25,9 +25,9 @@ public class MapChanger extends AbstractMechanic {
          *
          * @param pt the trigger (should be a signpost)
          *
-         * @return A chunk anchor if we could make a valid one
+         * @return A map switcher if we could make a valid one
          *
-         * @throws InvalidMechanismException if it failed to find the anchor, but it was similar to one
+         * @throws InvalidMechanismException if it failed to find the map switcher, but it was similar to one
          */
         @Override
         public MapChanger detect(BlockWorldVector pt) throws InvalidMechanismException {

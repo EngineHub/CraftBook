@@ -100,8 +100,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 
                 if (!plugin.getConfiguration().cauldronUseSpoons) {
                     cook(recipe, items);
-                    player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " " +
-                            "recipe.");
+                    player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
                     block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
                     event.setCancelled(true);
                 } else { // Spoons

@@ -38,20 +38,7 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class Bookcase extends AbstractMechanic {
 
-    /**
-     * Configuration.
-     */
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
-
-    /**
-     * Construct a bookcase for a location.
-     *
-     * @param pt
-     */
-    public Bookcase(BlockWorldVector pt) {
-
-        super();
-    }
 
     /**
      * Reads a book.
@@ -67,9 +54,8 @@ public class Bookcase extends AbstractMechanic {
             if (text != null) {
                 player.print(bookReadLine);
                 player.printRaw(text);
-            } else {
+            } else
                 player.printError("Failed to fetch a line from the books file.");
-            }
         } catch (IOException e) {
             player.printError("Failed to read the books file.");
         }
@@ -94,9 +80,8 @@ public class Bookcase extends AbstractMechanic {
         int passes = 0;
         while ((line = br.readLine()) != null) {
             passes++;
-            if (passes >= toRead) {
+            if (passes >= toRead)
                 break;
-            }
         }
         br.close();
         return line;
@@ -114,22 +99,16 @@ public class Bookcase extends AbstractMechanic {
         if (event.getPlayer().isSneaking() != plugin.getConfiguration().bookcaseReadWhenSneaking) return;
 
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        if (player.getHeldItemType() == 0 || !player.isHoldingBlock()) {
+        if (player.getHeldItemType() == 0 || !player.isHoldingBlock())
             read(player, plugin.getConfiguration().bookcaseReadLine);
-        }
     }
 
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
 
-
-        public Factory() {
-
-        }
-
         @Override
         public Bookcase detect(BlockWorldVector pt, LocalPlayer player) {
 
-            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE && player.hasPermission("craftbook.mech.bookshelf.use")) return new Bookcase(pt);
+            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE && player.hasPermission("craftbook.mech.bookshelf.use")) return new Bookcase();
 
             return null;
         }

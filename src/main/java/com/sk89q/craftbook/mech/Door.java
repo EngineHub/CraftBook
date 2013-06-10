@@ -35,8 +35,11 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
+import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
+import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -418,45 +421,6 @@ public class Door extends AbstractMechanic {
     // we never poke them; just check that they're sane when we're building
     // the door. if this were a PersistentMechanic, those six blocks
     // would be considered defining blocks, though.
-
-    /**
-     * Thrown when the sign is an invalid direction.
-     */
-    private static class InvalidDirectionException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = -3183606604247616362L;
-    }
-
-    /**
-     * Thrown when the door type is unacceptable.
-     */
-    private static class UnacceptableMaterialException extends InvalidMechanismException {
-
-        public UnacceptableMaterialException(String msg) {
-
-            super(msg);
-        }
-
-        private static final long serialVersionUID = 8340723004466483212L;
-    }
-
-    /**
-     * Thrown when the door type is not constructed correctly.
-     */
-    private static class InvalidConstructionException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = 4943494589521864491L;
-
-        /**
-         * Construct the object.
-         *
-         * @param msg
-         */
-        public InvalidConstructionException(String msg) {
-
-            super(msg);
-        }
-    }
 
     @Override
     public void onBlockBreak(BlockBreakEvent event) {

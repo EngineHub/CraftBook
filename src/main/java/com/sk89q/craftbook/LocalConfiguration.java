@@ -22,6 +22,7 @@ public abstract class LocalConfiguration {
     public boolean ICKeepLoaded;
     public LocationCheckType ICdefaultCoordinate;
     public boolean ICSavePersistentData;
+    public boolean ICMidiUsePercussion;
 
     // Circuits - Wiring
     public boolean netherrackEnabled;

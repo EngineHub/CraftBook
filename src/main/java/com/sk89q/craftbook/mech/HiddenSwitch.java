@@ -24,8 +24,7 @@ public class HiddenSwitch extends AbstractMechanic {
     public static class Factory extends AbstractMechanicFactory<HiddenSwitch> {
 
         @Override
-        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException {
+        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException {
             // int myBlock = BukkitUtil.toWorld(pos).getBlockTypeIdAt(BukkitUtil.toLocation(pos));
             // FIXME In the future add a check here to test if you can actually build wall signs on this block.
             // World wrd = BukkitUtil.toWorld(pos);

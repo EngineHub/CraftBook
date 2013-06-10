@@ -12,7 +12,6 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -79,7 +78,7 @@ public class Teleporter extends AbstractMechanic {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
 
-            if (!player.hasPermission("craftbook.mech.teleporter")) throw new InsufficientPermissionsException();
+            player.checkPermission("craftbook.mech.teleporter");
 
             player.print("mech.teleport.create");
             sign.setLine(1, "[Teleporter]");

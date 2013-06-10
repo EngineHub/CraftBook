@@ -122,9 +122,8 @@ public class Snow implements Listener {
 
         if (block.getTypeId() != BlockID.SNOW_BLOCK && block.getTypeId() != BlockID.SNOW) {
             Location blockLoc = block.getLocation().subtract(0, 1, 0);
-            if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK && !CraftBookPlugin.inst()
-                    .getConfiguration().snowHighPiles
-                    || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW) return;
+            if (block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW_BLOCK && !CraftBookPlugin.inst().getConfiguration().snowHighPiles || block.getWorld().getBlockAt(blockLoc).getTypeId() == BlockID.SNOW)
+                return;
             schedule(block.getLocation());
         }
     }

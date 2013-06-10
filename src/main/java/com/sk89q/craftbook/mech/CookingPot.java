@@ -80,9 +80,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
          * @throws ProcessedMechanismException
          */
         @Override
-        public CookingPot detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        public CookingPot detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                 if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
