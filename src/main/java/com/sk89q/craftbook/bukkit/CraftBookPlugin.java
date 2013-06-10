@@ -1003,6 +1003,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
             else
                 event = new BlockBreakEvent(block, player);
+            MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
             if(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild())
                 return false;
