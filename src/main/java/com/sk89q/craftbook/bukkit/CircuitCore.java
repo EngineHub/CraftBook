@@ -87,10 +87,10 @@ import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrap;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportReciever;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportTransmitter;
 import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafter;
-import com.sk89q.craftbook.circuits.gates.world.items.ContainerStocker;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerCollector;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerDispenser;
 import com.sk89q.craftbook.circuits.gates.world.items.ContainerStacker;
+import com.sk89q.craftbook.circuits.gates.world.items.ContainerStocker;
 import com.sk89q.craftbook.circuits.gates.world.items.Distributer;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemDispenser;
 import com.sk89q.craftbook.circuits.gates.world.items.ItemFan;
@@ -232,8 +232,10 @@ public class CircuitCore implements LocalComponent {
         for(RegisteredICFactory factory : icManager.registered.values()) {
             factory.getFactory().unload();
         }
+        pipeFactory = null;
+        icConfiguration = null;
+        ICFactory = null;
         ICManager.emptyCache();
-        icManager.registered.clear();
         instance = null;
     }
 
@@ -523,16 +525,15 @@ public class CircuitCore implements LocalComponent {
                             break thisIC;
                         else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
                             break thisIC;
-                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                ("weather"))
+                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith("weather"))
                             break thisIC;
                         else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
                             break thisIC;
-                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                ("miscellaneous"))
+                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous"))
                             break thisIC;
-                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith
-                                ("sensors"))
+                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors"))
+                            break thisIC;
+                        else if (c == 'v' && !ric.getFactory().getClass().getPackage().getName().endsWith("variables"))
                             break thisIC;
 
                     }

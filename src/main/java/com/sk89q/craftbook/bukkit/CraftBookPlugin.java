@@ -836,6 +836,7 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
+        variableConfiguration.save();
         components.clear();
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
