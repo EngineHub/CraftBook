@@ -1,6 +1,9 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.HashSet;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,12 +24,15 @@ public class TreeLopper extends AbstractMechanic {
     private int blockId;
     private byte blockData;
 
+    private HashSet<Location> visitedLocations = new HashSet<Location>();
+
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
         blockId = event.getBlock().getTypeId();
         blockData = event.getBlock().getData();
         event.getBlock().breakNaturally(event.getPlayer().getItemInHand());
+        visitedLocations.add(event.getBlock().getLocation());
         broken = 1;
 
         Block block = event.getBlock();
@@ -39,6 +45,8 @@ public class TreeLopper extends AbstractMechanic {
 
     public void searchBlock(BlockBreakEvent event, Block block) {
 
+        if(visitedLocations.contains(block.getLocation()))
+            return;
         if(broken > plugin.getConfiguration().treeLopperMaxSize)
             return;
         if(!plugin.canBuild(event.getPlayer(), block, false)) {
@@ -46,6 +54,7 @@ public class TreeLopper extends AbstractMechanic {
             return;
         }
         block.breakNaturally(event.getPlayer().getItemInHand());
+        visitedLocations.add(block.getLocation());
         broken += 1;
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
             if(block.getRelative(face).getTypeId() == blockId && block.getRelative(face).getData() == blockData)
