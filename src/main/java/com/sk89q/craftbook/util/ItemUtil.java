@@ -13,8 +13,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -462,7 +468,8 @@ public class ItemUtil {
         int data = -1;
         int amount = 1;
 
-        String[] nameLoreSplit = RegexUtil.PIPE_PATTERN.split(line);
+        String[] advMetadataSplit = RegexUtil.FSLASH_PATTERN.split(line);
+        String[] nameLoreSplit = RegexUtil.PIPE_PATTERN.split(advMetadataSplit[0]);
         String[] enchantSplit = RegexUtil.SEMICOLON_PATTERN.split(nameLoreSplit[0]);
         String[] amountSplit = RegexUtil.ASTERISK_PATTERN.split(enchantSplit[0], 2);
         String[] dataSplit = RegexUtil.COLON_PATTERN.split(amountSplit[0], 2);
@@ -528,6 +535,41 @@ public class ItemUtil {
                 }
                 catch(Exception e){}
             }
+        }
+        if(advMetadataSplit.length > 1) {
+
+            ItemMeta meta = rVal.getItemMeta();
+            for(int i = 1; i < advMetadataSplit.length; i++) {
+                String section = advMetadataSplit[i];
+                String[] bits = RegexUtil.COLON_PATTERN.split(section, 2);
+                if(bits.length < 2)
+                    continue; //Invalid Bit.
+                else if(bits[0].equalsIgnoreCase("player") && meta instanceof SkullMeta)
+                    ((SkullMeta) meta).setOwner(bits[1]);
+                else if(bits[0].equalsIgnoreCase("author") && meta instanceof BookMeta)
+                    ((BookMeta) meta).setAuthor(bits[1]);
+                else if(bits[0].equalsIgnoreCase("title") && meta instanceof BookMeta)
+                    ((BookMeta) meta).setTitle(bits[1]);
+                else if(bits[0].equalsIgnoreCase("page") && meta instanceof BookMeta)
+                    ((BookMeta) meta).addPage(bits[1]);
+                else if(bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
+
+                    String[] effects = RegexUtil.SEMICOLON_PATTERN.split(bits[1]);
+                    try {
+                        PotionEffect effect = new PotionEffect(PotionEffectType.getByName(effects[0]), Integer.parseInt(effects[1]), Integer.parseInt(effects[2]));
+                        ((PotionMeta) meta).addCustomEffect(effect, true);
+                    } catch(Exception e){}
+                } else if(bits[0].equalsIgnoreCase("enchant") && meta instanceof EnchantmentStorageMeta) {
+                    try {
+                        String[] sp = RegexUtil.SEMICOLON_PATTERN.split(bits[1]);
+                        Enchantment ench = Enchantment.getByName(sp[0]);
+                        if(ench == null)
+                            ench = Enchantment.getById(Integer.parseInt(sp[0]));
+                        ((EnchantmentStorageMeta) meta).addStoredEnchant(ench, Integer.parseInt(sp[1]), true);
+                    } catch(Exception e){}
+                }
+            }
+            rVal.setItemMeta(meta);
         }
 
         return rVal;
