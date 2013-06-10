@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -552,7 +553,11 @@ public class ItemUtil {
                     ((BookMeta) meta).setTitle(bits[1]);
                 else if(bits[0].equalsIgnoreCase("page") && meta instanceof BookMeta)
                     ((BookMeta) meta).addPage(bits[1]);
-                else if(bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
+                else if(bits[0].equalsIgnoreCase("color") && meta instanceof LeatherArmorMeta) {
+
+                    String[] cols = RegexUtil.COMMA_PATTERN.split(bits[1]);
+                    ((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(Integer.parseInt(cols[0]),Integer.parseInt(cols[1]),Integer.parseInt(cols[2])));
+                } else if(bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
 
                     String[] effects = RegexUtil.SEMICOLON_PATTERN.split(bits[1]);
                     try {
