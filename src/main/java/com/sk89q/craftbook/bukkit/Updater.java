@@ -59,7 +59,7 @@ public class Updater {
     private URL url; // Connecting to RSS
     private File file; // The plugin's file
     private Thread thread; // Updater thread
-    private static final String DBOUrl = "http://dev.bukkit.org/server-mods/"; // Slugs will be appended to this to get to the project's RSS feed
+    private static final String DBOUrl = "http://dev.bukkit.org/bukkit-mods/"; // Slugs will be appended to this to get to the project's RSS feed
     private String[] noUpdateTag = { "-DEV", "-PRE" }; // If the version number contains one of these, don't update.
     private static final int BYTE_SIZE = 1024; // Used for downloading files
     private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that
@@ -70,6 +70,8 @@ public class Updater {
     private static final String TITLE = "title";
     private static final String LINK = "link";
     private static final String ITEM = "item";
+
+    private String curVer;
 
     /**
      * Gives the dev the result of the update process. Can be obtained by called getResult().
@@ -178,6 +180,14 @@ public class Updater {
     public String getLatestVersionString () {
         waitForThread();
         return versionTitle;
+    }
+
+    /**
+     * Get the version string current file avaliable online.
+     */
+    public String getCurrentVersionString () {
+        waitForThread();
+        return curVer == null ? "Unknown" : curVer;
     }
 
     /**
@@ -399,14 +409,10 @@ public class Updater {
             String version = plugin.getDescription().getVersion().split("-")[0];
             if (title.split(" v").length == 2) {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
-                //CraftBook Change
-                String rmv = CraftBookPlugin.inst().versionConverter.get(remoteVersion);
-                if(rmv != null)
-                    remoteVersion = rmv.split("-")[0];
                 if(remoteVersion == null)
                     remoteVersion = "Unknown";
                 if(CraftBookPlugin.inst().versionConverter.containsKey(version))
-                    version = CraftBookPlugin.inst().versionConverter.get(version).split("-")[0];
+                    version = CraftBookPlugin.inst().versionConverter.inverse().get(version);
                 int remVer = -1, curVer = 0;
                 try {
                     remVer = calVer(remoteVersion);
@@ -414,6 +420,7 @@ public class Updater {
                 } catch (NumberFormatException nfe) {
                     remVer = -1;
                 }
+                this.curVer = version;
                 if (hasTag(version) || version.equalsIgnoreCase(remoteVersion) || curVer >= remVer || remVer == -1) {
                     // We already have the latest version, or this build is tagged for no-update
                     result = Updater.UpdateResult.NO_UPDATE;

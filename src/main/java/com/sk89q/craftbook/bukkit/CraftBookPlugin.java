@@ -422,7 +422,7 @@ public class CraftBookPlugin extends JavaPlugin {
             final Updater updater = new Updater(this, "CraftBook", getFile(), Updater.UpdateType.NO_DOWNLOAD, false); // Start Updater but just do a version check
             updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
             latestVersion = updater.getLatestVersionString(); // Get the latest version
-            getLogger().info(latestVersion + " is the latest version available, and the updatability of it is: " + updater.getResult().name());
+            getLogger().info(latestVersion + " is the latest version available, and the updatability of it is: " + updater.getResult().name() + ". You currently have version " + updater.getCurrentVersionString() + " installed.");
             updateSize = updater.getFileSize(); // Get latest size
 
             if(updateAvailable) {
