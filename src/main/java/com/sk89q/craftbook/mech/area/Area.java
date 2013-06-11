@@ -95,7 +95,7 @@ public class Area extends AbstractMechanic {
                         // check if the namespace and area exists
                         isValidArea(sign);
                         boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
-                        return new Area(pt, save);
+                        return new Area(save);
                     }
                 }
             }
@@ -116,7 +116,6 @@ public class Area extends AbstractMechanic {
     }
 
     private static CraftBookPlugin plugin = CraftBookPlugin.inst();
-    private final BlockWorldVector pt;
     private boolean toggledOn;
     private boolean saveOnToggle = false;
 
@@ -135,14 +134,8 @@ public class Area extends AbstractMechanic {
             return;
         }
 
-        // check if the sign still exists
-        Sign sign = null;
-        if (BukkitUtil.toBlock(pt).getState() instanceof Sign) {
-            sign = (Sign) BukkitUtil.toBlock(pt).getState();
-        }
-        if (sign == null) return;
         // toggle the area on or off
-        toggle(BukkitUtil.toChangedSign(sign));
+        toggle(BukkitUtil.toChangedSign(event.getClickedBlock()));
 
         event.setCancelled(true);
     }
@@ -157,14 +150,8 @@ public class Area extends AbstractMechanic {
 
         if (!plugin.getConfiguration().areaAllowRedstone) return;
 
-        // check if the sign still exists
-        Sign sign = null;
-        if (BukkitUtil.toBlock(pt).getState() instanceof Sign) {
-            sign = (Sign) BukkitUtil.toBlock(pt).getState();
-        }
-        if (sign == null) return;
         // toggle the area
-        toggle(BukkitUtil.toChangedSign(sign));
+        toggle(BukkitUtil.toChangedSign(event.getBlock()));
     }
 
     /**
@@ -174,10 +161,9 @@ public class Area extends AbstractMechanic {
      *
      * @throws InvalidMechanismException
      */
-    private Area(BlockWorldVector pt, boolean save) throws InvalidMechanismException {
+    private Area(boolean save) throws InvalidMechanismException {
 
         super();
-        this.pt = pt;
         saveOnToggle = save;
     }
 
