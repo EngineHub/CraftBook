@@ -283,11 +283,16 @@ public class CustomCrafting implements Listener {
                     if(recipe.hasAdvancedData("commands-player") || recipe.hasAdvancedData("commands-console")) {
                         CraftBookPlugin.logDebugMessage("A recipe with commands is detected!", "advanced-data");
                         if(recipe.hasAdvancedData("commands-console")) {
-                            for(String s : (List<String>)recipe.getAdvancedData("commands-console"))
+                            for(String s : (List<String>)recipe.getAdvancedData("commands-console")) {
+                                s = s.replace("@p", p.getName());
+                                s = CraftBookPlugin.inst().parseVariables(s);
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
+                            }
                         }
                         if(recipe.hasAdvancedData("commands-player")) {
                             for(String s : (List<String>)recipe.getAdvancedData("commands-player")) {
+                                s = s.replace("@p", p.getName());
+                                s = CraftBookPlugin.inst().parseVariables(s);
                                 PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
                                 att.setPermission("*", true);
                                 boolean wasOp = p.isOp();
