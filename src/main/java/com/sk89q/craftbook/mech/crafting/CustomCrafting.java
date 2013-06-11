@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.PermissionAttachment;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -252,6 +254,7 @@ public class CustomCrafting implements Listener {
     public void onCraft(CraftItemEvent event) {
 
         CraftBookPlugin.logDebugMessage("Crafting has been initiated!", "advanced-data");
+        Player p = (Player) event.getWhoClicked();
         for(Recipe rec : advancedRecipes.keySet()) {
 
             try {
@@ -261,7 +264,7 @@ public class CustomCrafting implements Listener {
                     if(recipe.hasAdvancedData("permission-node")) {
                         CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
                         if(!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
-                            ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
+                            p.sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
                             event.setCancelled(true);
                             return;
                         }
@@ -274,6 +277,24 @@ public class CustomCrafting implements Listener {
                             if(!leftovers.isEmpty()) {
                                 for(ItemStack istack : leftovers.values())
                                     event.getWhoClicked().getWorld().dropItemNaturally(event.getWhoClicked().getLocation(), istack);
+                            }
+                        }
+                    }
+                    if(recipe.hasAdvancedData("commands-player") || recipe.hasAdvancedData("commands-console")) {
+                        CraftBookPlugin.logDebugMessage("A recipe with commands is detected!", "advanced-data");
+                        if(recipe.hasAdvancedData("commands-console")) {
+                            for(String s : (List<String>)recipe.getAdvancedData("commands-console"))
+                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
+                        }
+                        if(recipe.hasAdvancedData("commands-player")) {
+                            for(String s : (List<String>)recipe.getAdvancedData("commands-player")) {
+                                PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
+                                att.setPermission("*", true);
+                                boolean wasOp = p.isOp();
+                                p.setOp(true);
+                                Bukkit.dispatchCommand(p, s);
+                                att.remove();
+                                p.setOp(wasOp);
                             }
                         }
                     }

@@ -270,6 +270,18 @@ public class RecipeManager extends LocalConfiguration {
             String permNode = config.getString("crafting-recipes." + id + ".permission-node", null);
             if (permNode != null)
                 addAdvancedData("permission-node", permNode);
+
+            List<String> actions = config.getKeys("crafting-recipes." + id + ".craft-actions");
+
+            if(actions != null && !actions.isEmpty()) {
+
+                for(String s : actions) {
+                    if(s.equalsIgnoreCase("command-console"))
+                        addAdvancedData("commands-console", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
+                    else if(s.equalsIgnoreCase("command-player"))
+                        addAdvancedData("commands-player", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
+                }
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -302,6 +314,15 @@ public class RecipeManager extends LocalConfiguration {
             config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
                 config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
+            if(hasAdvancedData("commands-player") || hasAdvancedData("commands-console")) {
+                config.addNode("crafting-recipes." + id + ".craft-actions");
+                if(hasAdvancedData("commands-player"))
+                    for(String s : (List<String>)getAdvancedData("commands-player"))
+                        config.setProperty("crafting-recipes." + id + ".craft-actions.command-player", s);
+                if(hasAdvancedData("commands-console"))
+                    for(String s : (List<String>)getAdvancedData("commands-console"))
+                        config.setProperty("crafting-recipes." + id + ".craft-actions.command-console", s);
+            }
         }
 
         private LinkedHashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
