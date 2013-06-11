@@ -276,9 +276,9 @@ public class RecipeManager extends LocalConfiguration {
             if(actions != null && !actions.isEmpty()) {
 
                 for(String s : actions) {
-                    if(s.equalsIgnoreCase("command-console"))
+                    if(s.equalsIgnoreCase("commands-console"))
                         addAdvancedData("commands-console", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
-                    else if(s.equalsIgnoreCase("command-player"))
+                    else if(s.equalsIgnoreCase("commands-player"))
                         addAdvancedData("commands-player", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
                 }
             }
@@ -318,10 +318,10 @@ public class RecipeManager extends LocalConfiguration {
                 config.addNode("crafting-recipes." + id + ".craft-actions");
                 if(hasAdvancedData("commands-player"))
                     for(String s : (List<String>)getAdvancedData("commands-player"))
-                        config.setProperty("crafting-recipes." + id + ".craft-actions.command-player", s);
+                        config.setProperty("crafting-recipes." + id + ".craft-actions.commands-player", s);
                 if(hasAdvancedData("commands-console"))
                     for(String s : (List<String>)getAdvancedData("commands-console"))
-                        config.setProperty("crafting-recipes." + id + ".craft-actions.command-console", s);
+                        config.setProperty("crafting-recipes." + id + ".craft-actions.commands-console", s);
             }
         }
 
