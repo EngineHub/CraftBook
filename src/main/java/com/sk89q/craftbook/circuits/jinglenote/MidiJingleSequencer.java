@@ -46,21 +46,17 @@ public class MidiJingleSequencer implements JingleSequencer {
         0, 0, 0, 0, 0, 0, 0, 0, // 112
         1, 1, 1, 3, 1, 1, 1, 5, // 120
         1, 1, 1, 1, 1, 2, 4, 3, // 128
-
-        // 16
     };
 
 
     private static final int[] percussion = {
-        1, 1, 1, 2, 3, 2,
-        1, 3, 1, 3, 1, 3,
-        1, 1, 3, 1, 3, 3,
-        3, 3, 3, 0, 3, 3,
-        3, 1, 1, 1, 1, 1,
-        1, 1, 3, 3, 3, 3,
-        4, 4, 3, 3, 3, 3,
-        3, 1, 1, 3, 3, 2,
-        4, 4, 3, 1, 1,
+        3, 3, 4, 4, 3, 2, 3, 2, //8 - Electric Snare
+        2, 2, 2, 2, 2, 2, 2, 2, //16 - Hi Mid Tom
+        3, 2, 3, 3, 3, 0, 3, 3, //24 - Cowbell
+        3, 3, 3, 2, 2, 3, 3, 3, //32 - Low Conga
+        2, 2, 0, 0, 2, 2, 0, 0, //40 - Long Whistle
+        3, 3, 3, 3, 3, 3, 5, 5, //48 - Open Cuica
+        3, 3,                   //50 - Open Triangle
     };
 
 
@@ -208,7 +204,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         if(patch == null)
             return 0;
 
-        int i = patch - 35;
+        int i = patch - 33;
         if (i < 0 || i >= percussion.length) {
             return 1;
         }
