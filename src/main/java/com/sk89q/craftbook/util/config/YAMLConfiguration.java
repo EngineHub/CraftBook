@@ -233,6 +233,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         treeLopperItems = config.getIntList("mechanics.tree-lopper.tool-list", Arrays.asList(ItemID.WOOD_AXE, ItemID.STONE_AXE, ItemID.IRON_AXE, ItemID.GOLD_AXE, ItemID.DIAMOND_AXE));
         treeLopperMaxSize = config.getInt("mechanics.tree-lopper.max-size", 30);
         treeLopperAllowDiagonals = config.getBoolean("mechanics.tree-lopper.allow-diagonals", false);
+        treeLopperEnforceData = config.getBoolean("mechanics.tree-lopper.enforce-data", false);
 
         // XPStorer Configuration Listener
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);

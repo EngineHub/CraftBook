@@ -179,6 +179,7 @@ public abstract class LocalConfiguration {
     public List<Integer> treeLopperItems;
     public int treeLopperMaxSize;
     public boolean treeLopperAllowDiagonals;
+    public boolean treeLopperEnforceData;
     // Mechanics - XPStorer
     public boolean xpStorerEnabled;
     public int xpStorerBlock;
