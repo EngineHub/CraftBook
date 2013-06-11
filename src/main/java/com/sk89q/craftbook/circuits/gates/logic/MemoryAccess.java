@@ -54,7 +54,10 @@ public class MemoryAccess extends AbstractIC {
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line = br.readLine();
             for (int i = 0; i < chip.getOutputCount(); i++) {
-                chip.setOutput(i, line.charAt(i) == '1');
+                if(line.length() < i+1)
+                    chip.setOutput(i, false);
+                else
+                    chip.setOutput(i, line.charAt(i) == '1');
             }
             br.close();
         } catch (Exception e) {
