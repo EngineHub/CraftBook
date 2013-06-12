@@ -44,6 +44,9 @@ public class Footprints implements Listener {
             if(footsteps.contains(event.getPlayer().getName()))
                 return;
 
+            if(!event.getPlayer().hasPermission("craftbook.mech.footprints.use"))
+                return;
+
             try {
                 PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(63);
                 packet.getStrings().write(0, "footstep");
@@ -56,6 +59,10 @@ public class Footprints implements Listener {
                 .write(6, 0F);
                 packet.getIntegers().write(0, 1);
                 for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
+                    if(!play.canSee(event.getPlayer()))
+                        continue;
+                    if(!play.hasPermission("craftbook.mech.footprints.see"))
+                        continue;
                     if (play.getWorld().equals(event.getPlayer().getPlayer().getWorld())) {
                         try {
                             ProtocolLibrary.getProtocolManager().sendServerPacket(play, packet);
