@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
@@ -578,6 +579,35 @@ public class ItemUtil {
         }
 
         return rVal;
+    }
+
+    /**
+     * The opposite of {@link getItem()}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
+     * 
+     * @param item The {@link ItemStack} to convert into a {@link String}.
+     * @return The {@link String} that represents the {@link ItemStack}.
+     */
+    public static String getStringFromItem(ItemStack item) {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(item.getType().name());
+        if(item.getDurability() > 0)
+            builder.append(":" + item.getDurability());
+
+        if(item.hasItemMeta()) {
+            if(item.getItemMeta().hasEnchants())
+                for(Entry<Enchantment,Integer> enchants : item.getItemMeta().getEnchants().entrySet())
+                    builder.append(";" + enchants.getKey().getName() + ":" + enchants.getValue());
+            if(item.getItemMeta().hasDisplayName())
+                builder.append("|" + item.getItemMeta().getDisplayName());
+            if(item.getItemMeta().hasLore()) {
+                List<String> list = item.getItemMeta().getLore();
+                for(String s : list)
+                    builder.append("|" + s);
+            }
+        }
+
+        return builder.toString();
     }
 
     public static ItemStack makeItemValid(ItemStack invalid) {

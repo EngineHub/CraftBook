@@ -16,6 +16,7 @@ import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class RecipeManager extends LocalConfiguration {
@@ -333,12 +334,14 @@ public class RecipeManager extends LocalConfiguration {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
 
-                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(item));
+                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
 
                     if (stack != null) {
 
                         stack.setAmount(1);
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
+                        if(RegexUtil.PERCENT_PATTERN.split(item).length > 1)
+                            itemStack.addAdvancedData("chance", Double.parseDouble(RegexUtil.PERCENT_PATTERN.split(item)[1]));
                         items.put(itemStack, config.getString(path + "." + okey, "a").charAt(0));
                     }
                 }
@@ -357,12 +360,14 @@ public class RecipeManager extends LocalConfiguration {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
 
-                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(item));
+                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
 
                     if (stack != null) {
 
                         stack.setAmount(config.getInt(path + "." + okey, 1));
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
+                        if(RegexUtil.PERCENT_PATTERN.split(item).length > 1)
+                            itemStack.addAdvancedData("chance", Double.parseDouble(RegexUtil.PERCENT_PATTERN.split(item)[1]));
                         items.add(itemStack);
                     }
                 }

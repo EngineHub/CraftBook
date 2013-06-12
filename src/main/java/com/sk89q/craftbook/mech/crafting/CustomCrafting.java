@@ -273,6 +273,9 @@ public class CustomCrafting implements Listener {
                         CraftBookPlugin.logDebugMessage("A recipe with extra results is detected!", "advanced-data");
                         ArrayList<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>((Collection<CraftingItemStack>) recipe.getAdvancedData("extra-results"));
                         for(CraftingItemStack stack : stacks) {
+                            if(stack.hasAdvancedData("chance"))
+                                if(CraftBookPlugin.inst().getRandom().nextDouble() < (Double)stack.getAdvancedData("chance"))
+                                    continue;
                             HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
                             if(!leftovers.isEmpty()) {
                                 for(ItemStack istack : leftovers.values())
