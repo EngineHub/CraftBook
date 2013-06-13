@@ -124,6 +124,9 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     if(pipes != null && pipes.getItems().isEmpty())
                         return true;
 
+                    if(!(chest.getState() instanceof InventoryHolder))
+                        return false;
+
                     // Add the items to a container, and destroy them.
                     List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
                     if(leftovers.isEmpty()) {

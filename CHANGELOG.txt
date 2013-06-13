@@ -1,3 +1,31 @@
+3.6.8
++ Added offset support to ContentsSensor.
+* Tweaked Planter's Item Collection System (Less Buggy)
++ Added an option to make chairs face you the correct direction.
+* Fix [Pipe] signs that are not wall signs.
++ Added support for items to be distuinguished by enchantments.
++ Add Pipe support to ContainerCollector and RangedCollector.
++ Add CustomCrafting to /cb report.
+* Many CustomCrafting bug fixed.
+* Reworked Debug Flags.
+* Fixed a few incorrect Debug Flags & Added more.
++ Added a command to give the player the item to set off a CommandItem.
+* Tweaked Variable command error messages and success messages.
++ Added 'consumables' to CommandItems.
+* Renamed ChestStocker to ContainerStocker, and allowed it to stock any container.
++ Added ENTITY_ARROW to CommandItems. Called when an arrow hits the entity.
++ Added TreeLopper mechanic to CraftBook.
+* Fixed a few Advanced-Block-Checks bugs.
++ Added an option to use Percussion in MIDI Files.
+* Fix /ic list and /ic search not working after /cb reload.
+* Few tweaks to the AutoUpdater.
++ Added Item-Specific-Metadata to the Standard Item Syntax.
+* Fix a MemoryAccess IC Error.
+* Fix ToggleAreas not toggling properly.
++ Added the ability to perform commands when a player crafts an item. (Supports @p and variables)
++ Added permissions to footprints, and stopped vanished players showing footprints.
++ Added a 'chance' option to extra-results on CustomCrafting (Experimental)
+
 3.6.7
 * Modified the way Bounce pistons modify velocities, allowing for multiple bounce pistons with perfect timing to do diagonals.
 * Tweaked animal vehicle entry blocker.
