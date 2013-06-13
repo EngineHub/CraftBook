@@ -117,9 +117,10 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        if (chan == 9 && CraftBookPlugin.inst().getConfiguration().ICMidiUsePercussion) { // Percussion
+                        if (chan == 9) { // Percussion
                             // Sounds like utter crap
-                            notePlayer.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
+                            if(CraftBookPlugin.inst().getConfiguration().ICMidiUsePercussion)
+                                notePlayer.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
                         } else {
                             notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                         }
