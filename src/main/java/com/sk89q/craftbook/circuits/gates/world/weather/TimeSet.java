@@ -33,7 +33,11 @@ public class TimeSet extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        time = Long.parseLong(getSign().getLine(2));
+        try {
+            time = Long.parseLong(getSign().getLine(2));
+        } catch (NumberFormatException ex) {
+            time = -1;
+        }
     }
 
     /* it's been a */ long time;
@@ -42,7 +46,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         try {
-            if (chip.getInput(0)) {
+            if (chip.getInput(0) && time >= 0) {
                 BukkitUtil.toSign(getSign()).getWorld().setTime(time);
             }
         } catch (Exception ignored) {
@@ -53,8 +57,8 @@ public class TimeSet extends AbstractSelfTriggeredIC {
     public void think(ChipState chip) {
 
         try {
-            if (chip.getInput(0)) {
-                BukkitUtil.toSign(getSign()).getWorld().setTime(Long.parseLong(getSign().getLine(2)));
+            if (chip.getInput(0) && time >= 0) {
+                BukkitUtil.toSign(getSign()).getWorld().setTime(time);
             }
         } catch (Exception ignored) {
         }
@@ -87,7 +91,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 }
