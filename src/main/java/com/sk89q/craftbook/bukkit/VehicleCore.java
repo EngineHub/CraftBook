@@ -13,7 +13,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
@@ -124,8 +123,8 @@ public class VehicleCore implements LocalComponent {
             Entity entity = event.getEntity();
 
             enterOnImpact: {
-                if (plugin.getConfiguration().minecartEnterOnImpact && vehicle instanceof Minecart) {
-                    if (!vehicle.isEmpty() || vehicle instanceof StorageMinecart || vehicle instanceof PoweredMinecart) break enterOnImpact;
+                if (plugin.getConfiguration().minecartEnterOnImpact && vehicle instanceof RideableMinecart) {
+                    if (!vehicle.isEmpty()) break enterOnImpact;
                     if (!(event.getEntity() instanceof LivingEntity)) break enterOnImpact;
                     vehicle.setPassenger(event.getEntity());
 

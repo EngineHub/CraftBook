@@ -97,8 +97,10 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
         Pipes pipes = Pipes.Factory.setupPipes(pipe, getBackBlock(), stack);
 
-        if(pipes != null && pipes.getItems().isEmpty())
+        if(pipes != null && pipes.getItems().isEmpty()) {
+            item.remove();
             return true;
+        }
 
         if(!(chest.getState() instanceof InventoryHolder))
             return false;
