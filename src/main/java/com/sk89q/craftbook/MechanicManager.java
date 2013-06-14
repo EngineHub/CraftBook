@@ -362,57 +362,7 @@ public class MechanicManager {
         if(player != null)
             detectedMechanics.addAll(detect(pos,player));
 
-        PersistentMechanic ptMechanic = triggersManager.get(pos);
-
-        if (ptMechanic != null && !ptMechanic.isActive()) {
-            unload(ptMechanic, null);
-            ptMechanic = null;
-        }
-
-        for (Mechanic aMechanic : detectedMechanics) {
-            // No mechanic detected!
-            if (ptMechanic != null) {
-                break;
-            }
-            if (aMechanic == null) {
-                continue;
-            }
-
-            // Register mechanic if it's a persistent type
-            if (aMechanic instanceof PersistentMechanic) {
-                PersistentMechanic pm = (PersistentMechanic) aMechanic;
-                triggersManager.register(pm);
-                watchBlockManager.register(pm);
-
-                if (aMechanic instanceof SelfTriggeringMechanic) {
-                    synchronized (this) {
-                        thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Lets handle what happens when ptMechanic is here
-        if (ptMechanic != null) {
-
-            List<Mechanic> removedMechanics = new ArrayList<Mechanic>();
-            for (Mechanic aMechanic : detectedMechanics) {
-                if (ptMechanic.getClass().equals(aMechanic.getClass())) {
-                    removedMechanics.add(aMechanic);
-                }
-            }
-
-            for (Mechanic aMechanic : removedMechanics) {
-                if (detectedMechanics.contains(aMechanic)) {
-                    detectedMechanics.remove(aMechanic);
-                }
-            }
-
-            detectedMechanics.add(ptMechanic);
-        }
-
-        return detectedMechanics;
+        return loadDetectedMechanics(pos, detectedMechanics);
     }
 
     /**
@@ -430,8 +380,10 @@ public class MechanicManager {
     protected HashSet<Mechanic> load(BlockWorldVector pos, LocalPlayer player,
             ChangedSign sign) throws InvalidMechanismException {
 
-        HashSet<Mechanic> detectedMechanics = detect(pos, player, sign);
+        return loadDetectedMechanics(pos, detect(pos, player, sign));
+    }
 
+    private HashSet<Mechanic> loadDetectedMechanics(BlockWorldVector pos, HashSet<Mechanic> detectedMechanics) {
         PersistentMechanic ptMechanic = triggersManager.get(pos);
 
         if (ptMechanic != null && !ptMechanic.isActive()) {
@@ -439,27 +391,26 @@ public class MechanicManager {
             ptMechanic = null;
         }
 
-        for (Mechanic aMechanic : detectedMechanics) {
-            // No mechanic detected!
-            if (ptMechanic != null) {
-                break;
-            }
-            if (aMechanic == null) {
-                continue;
-            }
-
-            // Register mechanic if it's a persistent type
-            if (aMechanic instanceof PersistentMechanic) {
-                PersistentMechanic pm = (PersistentMechanic) aMechanic;
-                triggersManager.register(pm);
-                watchBlockManager.register(pm);
-
-                if (aMechanic instanceof SelfTriggeringMechanic) {
-                    synchronized (this) {
-                        thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
-                    }
+        // No mechanic detected!
+        if (ptMechanic == null) {
+            for (Mechanic aMechanic : detectedMechanics) {
+                if (aMechanic == null) {
+                    continue;
                 }
-                break;
+
+                // Register mechanic if it's a persistent type
+                if (aMechanic instanceof PersistentMechanic) {
+                    PersistentMechanic pm = (PersistentMechanic) aMechanic;
+                    triggersManager.register(pm);
+                    watchBlockManager.register(pm);
+
+                    if (aMechanic instanceof SelfTriggeringMechanic) {
+                        synchronized (this) {
+                            thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
+                        }
+                    }
+                    break;
+                }
             }
         }
 
@@ -473,12 +424,7 @@ public class MechanicManager {
                 }
             }
 
-            for (Mechanic aMechanic : removedMechanics) {
-                if (detectedMechanics.contains(aMechanic)) {
-                    detectedMechanics.remove(aMechanic);
-                }
-            }
-
+            detectedMechanics.removeAll(removedMechanics);
             detectedMechanics.add(ptMechanic);
         }
 
