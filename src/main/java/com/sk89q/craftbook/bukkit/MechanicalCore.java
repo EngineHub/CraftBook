@@ -18,8 +18,8 @@ import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
-import com.sk89q.craftbook.mech.CommandSigns;
 import com.sk89q.craftbook.mech.CommandItems;
+import com.sk89q.craftbook.mech.CommandSigns;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
 import com.sk89q.craftbook.mech.Door;
@@ -43,6 +43,7 @@ import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
+import com.sk89q.craftbook.mech.crafting.RecipeManager;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
 
@@ -96,8 +97,9 @@ public class MechanicalCore implements LocalComponent {
             op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
             it.remove();
         }
-        instance = null;
         DispenserRecipes.unload();
+        RecipeManager.INSTANCE = null;
+        instance = null;
     }
 
     public CopyManager getCopyManager() {
