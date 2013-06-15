@@ -52,38 +52,34 @@ public class RandomBit extends AbstractSelfTriggeredIC {
 
         try {
             maxOn = Integer.parseInt(getLine(2));
-        } catch(Exception e){}
+        } catch(Exception e){
+            maxOn = -1;
+        }
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            int on = 0;
-            for (short i = 0; i < chip.getOutputCount(); i++) {
-                boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
-                if(on >= maxOn)
-                    state = false;
-                chip.setOutput(i, state);
-                if(state)
-                    on++;
-            }
-        }
+        if (chip.getInput(0))
+            randomize(chip);
     }
 
     @Override
     public void think(ChipState chip) {
 
-        if (chip.getInput(0)) {
-            int on = 0;
-            for (short i = 0; i < chip.getOutputCount(); i++) {
-                boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
-                if(on >= maxOn)
-                    state = false;
-                chip.setOutput(i, state);
-                if(state)
-                    on++;
-            }
+        if (chip.getInput(0))
+            randomize(chip);
+    }
+
+    public void randomize(ChipState chip) {
+        int on = 0;
+        for (short i = 0; i < chip.getOutputCount(); i++) {
+            boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
+            if(on >= maxOn && maxOn > 0)
+                state = false;
+            chip.setOutput(i, state);
+            if(state)
+                on++;
         }
     }
 
