@@ -318,11 +318,9 @@ public class RecipeManager extends LocalConfiguration {
             if(hasAdvancedData("commands-player") || hasAdvancedData("commands-console")) {
                 config.addNode("crafting-recipes." + id + ".craft-actions");
                 if(hasAdvancedData("commands-player"))
-                    for(String s : (List<String>)getAdvancedData("commands-player"))
-                        config.setProperty("crafting-recipes." + id + ".craft-actions.commands-player", s);
+                    config.setProperty("crafting-recipes." + id + ".craft-actions.commands-player", getAdvancedData("commands-player"));
                 if(hasAdvancedData("commands-console"))
-                    for(String s : (List<String>)getAdvancedData("commands-console"))
-                        config.setProperty("crafting-recipes." + id + ".craft-actions.commands-console", s);
+                    config.setProperty("crafting-recipes." + id + ".craft-actions.commands-console", getAdvancedData("commands-console"));
             }
         }
 
