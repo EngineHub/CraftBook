@@ -41,7 +41,7 @@ public class TreeLopper extends AbstractMechanic {
         Block block = event.getBlock();
 
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(block.getRelative(face).getTypeId() == blockId && (plugin.getConfiguration().treeLopperEnforceData && block.getRelative(face).getData() == blockData))
+            if(block.getRelative(face).getTypeId() == blockId && (!plugin.getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == blockData))
                 searchBlock(event, block.getRelative(face));
         }
     }
@@ -60,7 +60,7 @@ public class TreeLopper extends AbstractMechanic {
         visitedLocations.add(block.getLocation());
         broken += 1;
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(block.getRelative(face).getTypeId() == blockId && (plugin.getConfiguration().treeLopperEnforceData && block.getRelative(face).getData() == blockData))
+            if(block.getRelative(face).getTypeId() == blockId && (!plugin.getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == blockData))
                 searchBlock(event, block.getRelative(face));
         }
     }
