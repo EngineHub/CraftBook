@@ -479,7 +479,7 @@ public class ItemUtil {
             id = Integer.parseInt(dataSplit[0]);
         } catch (NumberFormatException e) {
             try {
-                id = BlockType.lookup(dataSplit[0]).getID();
+                id = Material.getMaterial(dataSplit[0]).getId();
                 if (id < 1) id = 1;
             } catch (Exception ee) {
                 try {
@@ -487,7 +487,7 @@ public class ItemUtil {
                     if (id < 1) id = 1;
                 }
                 catch(Exception eee){
-                    id = Material.getMaterial(dataSplit[0]).getId();
+                    id = BlockType.lookup(dataSplit[0]).getID();
                     if (id < 1) id = 1;
                 }
             }
