@@ -55,6 +55,9 @@ public class RailUtil {
         if (CraftBookPlugin.inst().getConfiguration().minecartPressurePlateIntersection)
             if (id == BlockID.STONE_PRESSURE_PLATE || id == BlockID.WOODEN_PRESSURE_PLATE || id == BlockID.PRESSURE_PLATE_HEAVY || id == BlockID.PRESSURE_PLATE_LIGHT)
                 return true;
+        if (CraftBookPlugin.inst().getConfiguration().minecartVerticalRail)
+            if (id == BlockID.LADDER)
+                return true;
 
         for (int trackBlock : trackBlocks) {
             if (id == trackBlock) return true;
