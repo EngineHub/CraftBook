@@ -29,6 +29,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Attachable;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.LocalComponent;
@@ -319,7 +320,7 @@ public class VehicleCore implements LocalComponent {
 
             if (plugin.getConfiguration().minecartVerticalRail)
                 if (event.getTo().getBlock().getTypeId() == BlockID.LADDER)
-                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(0,0.5,0)));
+                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),0.5,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModY())));
 
             if (plugin.getConfiguration().minecartConstantSpeed > 0 && RailUtil.isTrack(event.getTo().getBlock()
                     .getTypeId())
