@@ -116,8 +116,6 @@ public class ItemUtilTest {
 
         ItemStack ingredient = newMockItemStack(ItemID.RAW_CHICKEN, (byte) 0, 1);
         assertTrue(ItemUtil.isCookable(ingredient));
-        when(ingredient.hasItemMeta()).thenReturn(true);
-        assertTrue(!ItemUtil.isCookable(ingredient));
     }
 
     @Test
@@ -125,8 +123,6 @@ public class ItemUtilTest {
 
         ItemStack ingredient = newMockItemStack(ItemID.CLAY_BALL, (byte) 0, 1);
         assertTrue(ItemUtil.isSmeltable(ingredient));
-        when(ingredient.hasItemMeta()).thenReturn(true);
-        assertTrue(!ItemUtil.isSmeltable(ingredient));
     }
 
     @Test

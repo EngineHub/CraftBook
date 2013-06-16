@@ -289,7 +289,7 @@ public class ItemUtil {
 
     public static boolean isSmeltable(ItemStack item) {
 
-        return getSmeletedResult(item) != null && !item.hasItemMeta();
+        return getSmeletedResult(item) != null;
     }
 
     public static ItemStack getSmeletedResult(ItemStack item) {
