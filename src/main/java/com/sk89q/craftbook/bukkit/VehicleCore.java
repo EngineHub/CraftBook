@@ -216,7 +216,7 @@ public class VehicleCore implements LocalComponent {
             if(!plugin.getConfiguration().minecartLookDirection)
                 return;
 
-            if(Math.abs(event.getFrom().getYaw() - event.getTo().getYaw()) < 10)
+            if(Math.abs(event.getFrom().getYaw() - event.getTo().getYaw()) < 3)
                 return;
 
             if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getTypeId()))
@@ -321,6 +321,10 @@ public class VehicleCore implements LocalComponent {
                 }
 
             }
+
+            if (plugin.getConfiguration().minecartVerticalRail)
+                if (event.getTo().getBlock().getTypeId() == BlockID.LADDER)
+                    event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(0,0.1,0)));
 
             if (plugin.getConfiguration().minecartConstantSpeed > 0 && RailUtil.isTrack(event.getTo().getBlock()
                     .getTypeId())

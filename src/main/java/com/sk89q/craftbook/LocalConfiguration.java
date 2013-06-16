@@ -216,6 +216,7 @@ public abstract class LocalConfiguration {
     public boolean minecartStoragePlaceRails;
     public boolean minecartBlockAnimalEntry;
     public boolean minecartLookDirection;
+    public boolean minecartVerticalRail;
     // Vehicles - Minecart Fall Modifier
     public boolean minecartFallModifierEnabled;
     public double minecartFallVerticalSpeed;

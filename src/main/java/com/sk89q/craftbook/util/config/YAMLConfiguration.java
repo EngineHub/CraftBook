@@ -273,6 +273,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartStoragePlaceRails = config.getBoolean("vehicles.minecart.storage-place-rails", false);
         minecartBlockAnimalEntry = config.getBoolean("vehicles.minecart.block-animal-entry", false);
         minecartLookDirection = config.getBoolean("vehicles.minecart.vision-based-steering", false);
+        minecartVerticalRail = config.getBoolean("vehicles.minecart.ladder-vertical-rail", false);
 
         // Vehicles Minecart Fall Speed Listener
         minecartFallModifierEnabled = config.getBoolean("vehicles.minecart.fall-speed.enable", false);
