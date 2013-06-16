@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -201,6 +202,24 @@ public class VehicleCore implements LocalComponent {
                     return;
                 }
             }
+        }
+
+        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+        public void onPlayerMove(PlayerMoveEvent event) {
+
+            if(!event.getPlayer().isInsideVehicle())
+                return;
+
+            if(!(event.getPlayer().getVehicle() instanceof Minecart))
+                return;
+
+            if(!plugin.getConfiguration().minecartLookDirection)
+                return;
+
+            Vector direction = event.getPlayer().getLocation().getDirection();
+            direction = direction.normalize();
+            direction.setY(event.getPlayer().getVehicle().getVelocity().clone().normalize().getY());
+            event.getPlayer().getVehicle().setVelocity(direction.multiply(event.getPlayer().getVehicle().getVelocity().length()));
         }
 
         /**

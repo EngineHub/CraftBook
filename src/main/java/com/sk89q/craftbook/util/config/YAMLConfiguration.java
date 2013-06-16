@@ -272,6 +272,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartPressurePlateIntersection = config.getBoolean("vehicles.minecart.pressure-plate-intersection", false);
         minecartStoragePlaceRails = config.getBoolean("vehicles.minecart.storage-place-rails", false);
         minecartBlockAnimalEntry = config.getBoolean("vehicles.minecart.block-animal-entry", false);
+        minecartLookDirection = config.getBoolean("vehicles.minecart.vision-based-steering", false);
 
         // Vehicles Minecart Fall Speed Listener
         minecartFallModifierEnabled = config.getBoolean("vehicles.minecart.fall-speed.enable", false);
