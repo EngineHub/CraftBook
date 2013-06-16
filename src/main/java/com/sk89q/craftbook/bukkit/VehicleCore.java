@@ -216,10 +216,18 @@ public class VehicleCore implements LocalComponent {
             if(!plugin.getConfiguration().minecartLookDirection)
                 return;
 
+            if(Math.abs(event.getFrom().getYaw() - event.getTo().getYaw()) < 10)
+                return;
+
+            if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getTypeId()))
+                return;
+
             Vector direction = event.getPlayer().getLocation().getDirection();
             direction = direction.normalize();
-            direction.setY(event.getPlayer().getVehicle().getVelocity().clone().normalize().getY());
-            event.getPlayer().getVehicle().setVelocity(direction.multiply(event.getPlayer().getVehicle().getVelocity().length()));
+            direction.setY(0);
+            direction = direction.multiply(event.getPlayer().getVehicle().getVelocity().length());
+            direction.setY(event.getPlayer().getVehicle().getVelocity().getY());
+            event.getPlayer().getVehicle().setVelocity(direction);
         }
 
         /**
