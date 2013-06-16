@@ -266,7 +266,7 @@ public class ItemUtil {
 
     public static boolean isCookable(ItemStack item) {
 
-        return getCookedResult(item) != null && !item.hasItemMeta();
+        return getCookedResult(item) != null;
     }
 
     public static ItemStack getCookedResult(ItemStack item) {
