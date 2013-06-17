@@ -125,6 +125,7 @@ import com.sk89q.craftbook.circuits.gates.world.sensors.ItemNotSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.ItemSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LavaSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.LightSensor;
+import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerInventorySensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PlayerSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.PowerSensor;
 import com.sk89q.craftbook.circuits.gates.world.sensors.WaterSensor;
@@ -371,6 +372,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);
         //FIXME registerIC("MC1267", "sense move", new MovementSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1268", "sense contents", new ContentsSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1269", "sense p contents", new PlayerInventorySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1270", "melody", new Melody.Factory(server), familySISO, familyAISO);
         registerIC("MC1271", "sense entity", new EntitySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1272", "sense player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted

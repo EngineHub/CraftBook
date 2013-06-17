@@ -45,9 +45,8 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
+        if (chip.getInput(0))
             chip.setOutput(0, invertOutput ? !isDetected() : isDetected());
-        }
     }
 
     @Override
