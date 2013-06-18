@@ -37,27 +37,61 @@ public class YAMLConfiguration extends LocalConfiguration {
         /* Circuits Configuration */
 
         // IC Configuration Listener.
+        config.setComment("circuits.ics.enable", "Enabled IC mechanics.");
         ICEnabled = config.getBoolean("circuits.ics.enable", true);
+
+        config.setComment("circuits.ics.cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
         ICCached = config.getBoolean("circuits.ics.cache", true);
+
+        config.setComment("circuits.ics.max-radius", "The max radius IC's with a radius setting can use.");
         ICMaxRange = config.getInt("circuits.ics.max-radius", 15);
+
+        config.setComment("circuits.ics.allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
+
+        config.setComment("circuits.ics.keep-loaded", "Keep any chunk with an ST IC in it loaded.");
         ICKeepLoaded = config.getBoolean("circuits.ics.keep-loaded", false);
+
+        config.setComment("circuits.ics.disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
         ICsDisabled = config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>());
+
+        config.setComment("circuits.ics.default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work.");
         ICdefaultCoordinate = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
+
+        config.setComment("circuits.ics.save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
         ICSavePersistentData = config.getBoolean("circuits.ics.save-persistent-data", true);
+
+        config.setComment("circuits.ics.midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
         ICMidiUsePercussion = config.getBoolean("circuits.ics.midi-use-percussion", false);
 
+
         // Circuits Configuration Listener
+        config.setComment("circuits.wiring.netherrack-enabled", "Enables the redstone netherrack mechanic, which lights netherrack when it is powered.");
         netherrackEnabled = config.getBoolean("circuits.wiring.netherrack-enabled", false);
+
+        config.setComment("circuits.wiring.pumpkins-enabled", "Enables the redstone pumpkins mechanic, which toggles pumpkins and Jack O Lanterns depending on power state.");
         pumpkinsEnabled = config.getBoolean("circuits.wiring.pumpkins-enabled", false);
+
+        config.setComment("circuits.wiring.glowstone-enabled", "Enables the redstone glowstone mechanic, which toggles glowstone and a configurable block depending on power state.");
         glowstoneEnabled = config.getBoolean("circuits.wiring.glowstone-enabled", false);
+
+        config.setComment("circuits.wiring.glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
         glowstoneOffBlock = config.getInt("circuits.wiring.glowstone-off-block", BlockID.GLASS);
 
         // Pipes Configuration Listener
+        config.setComment("circuits.pipes.enable", "Enables the pipe mechanic.");
         pipesEnabled = config.getBoolean("circuits.pipes.enable", true);
+
+        config.setComment("circuits.pipes.allow-diagonal", "Allow pipes to work diagonally.");
         pipesDiagonal = config.getBoolean("circuits.pipes.allow-diagonal", false);
+
+        config.setComment("circuits.pipes.insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
         pipeInsulator = config.getInt("circuits.pipes.insulator-block", BlockID.CLOTH);
+
+        config.setComment("circuits.pipes.stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
         pipeStackPerPull = config.getBoolean("circuits.pipes.stack-per-move", true);
+
+        config.setComment("circuits.pipes.require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean("circuits.pipes.require-sign", false);
 
         /* Mechanism Configuration */
