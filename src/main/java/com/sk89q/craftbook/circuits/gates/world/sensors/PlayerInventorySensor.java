@@ -101,17 +101,31 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
     public boolean isDetected() {
 
+        int players = 0;
+
         for (Player e : getServer().getOnlinePlayers()) {
             if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(location, e.getLocation(), radius))
                 continue;
 
-            if(slot == -1 && !inHand)
-                return e.getInventory().containsAtLeast(item, item.getAmount());
-            else if (inHand) { //Eclipse messes with indentation without these {'s
-                return e.getItemInHand() != null && ItemUtil.areItemsIdentical(e.getItemInHand(), item) && e.getItemInHand().getAmount() >= item.getAmount();
-            }
-            else if (slot > -1)
-                return e.getInventory().getItem(slot) != null && ItemUtil.areItemsIdentical(e.getInventory().getItem(slot), item) && e.getInventory().getItem(slot).getAmount() >= item.getAmount();
+            if(testPlayer(e))
+                players += 1;
+
+            if(players >= minPlayers)
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean testPlayer(Player e) {
+
+        if(slot == -1 && !inHand)
+            return e.getInventory().containsAtLeast(item, item.getAmount());
+        else if (inHand) { //Eclipse messes with indentation without these {'s
+            return e.getItemInHand() != null && ItemUtil.areItemsIdentical(e.getItemInHand(), item) && e.getItemInHand().getAmount() >= item.getAmount();
+        }
+        else if (slot > -1) {
+            return e.getInventory().getItem(slot) != null && ItemUtil.areItemsIdentical(e.getInventory().getItem(slot), item) && e.getInventory().getItem(slot).getAmount() >= item.getAmount();
         }
 
         return false;
