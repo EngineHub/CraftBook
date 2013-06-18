@@ -155,6 +155,13 @@ public class RecipeCommands {
             try {
                 RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, items, Arrays.<String>asList(shape), results.get(0), advancedData);
                 RecipeManager.INSTANCE.addRecipe(recipe);
+                if(MechanicalCore.inst() == null) {
+                    player.printError("You do not have mechanics enabled, or Java has bugged and unloaded it (Did you use /reload?)!");
+                    return;
+                } else if (MechanicalCore.inst().getCustomCrafting() == null) {
+                    player.printError("You do not have CustomCrafting enabled, or Java has bugged and unloaded it (Did you use /reload?)!");
+                    return;
+                }
                 MechanicalCore.inst().getCustomCrafting().addRecipe(recipe);
                 RecipeManager.INSTANCE.save();
                 player.print("Successfully added a new " + type.name() + " recipe!");

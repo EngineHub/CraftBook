@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         debugMode = config.getBoolean("debug-mode", false);
 
         config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
-        debugFlags = config.getStringList("debug-flags", null);
+        debugFlags = config.getStringList("debug-flags", new ArrayList<String>());
 
         config.setComment("easter-eggs", "Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)");
         easterEggs = config.getBoolean("easter-eggs", true);
