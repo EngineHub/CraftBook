@@ -657,11 +657,13 @@ public class Gate extends AbstractMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(3));
-            try {
-                curBlocks += Integer.parseInt(other.getLine(3));
-                setBlocks(s, curBlocks);
-                setBlocks(other, 0);
-            } catch (Exception ignored) {
+            if(other != null) {
+                try {
+                    curBlocks += Integer.parseInt(other.getLine(3));
+                    setBlocks(s, curBlocks);
+                    setBlocks(other, 0);
+                } catch (Exception ignored) {
+                }
             }
         } catch (Exception e) {
             curBlocks = 0;

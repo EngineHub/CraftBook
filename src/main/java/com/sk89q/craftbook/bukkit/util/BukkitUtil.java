@@ -51,9 +51,6 @@ import com.sk89q.worldedit.bukkit.entity.BukkitPainting;
 
 public class BukkitUtil {
 
-    private BukkitUtil() {
-    }
-
     public static void printStacktrace(Throwable e) {
 
         CraftBookPlugin.inst().getLogger().severe(CraftBookPlugin.getStackTrace(e));

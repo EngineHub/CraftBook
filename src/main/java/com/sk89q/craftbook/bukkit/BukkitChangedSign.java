@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.block.Sign;
 
@@ -200,6 +202,18 @@ public class BukkitChangedSign implements ChangedSign {
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return (getTypeId() * 1103515245 + 12345
+                ^ Arrays.hashCode(getLines()) * 1103515245 + 12345
+                ^ getX() * 1103515245 + 12345
+                ^ getY() * 1103515245 + 12345
+                ^ getZ() * 1103515245 + 12345
+                ^ getLocalWorld().getName().hashCode() * 1103515245 + 12345
+                ^ getRawData() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override

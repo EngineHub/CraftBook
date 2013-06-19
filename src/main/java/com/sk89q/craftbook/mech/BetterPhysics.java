@@ -28,7 +28,7 @@ public class BetterPhysics implements Listener {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
     }
 
-    public class FallingLadders implements Runnable {
+    public static class FallingLadders implements Runnable {
 
         Block ladder;
 

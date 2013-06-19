@@ -184,7 +184,7 @@ public class CartSorter extends CartMechanism {
 
         if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart) return true;
         else if (line.equalsIgnoreCase("Powered") && minecart instanceof PoweredMinecart) return true;
-        else if (line.equalsIgnoreCase("Minecart") && minecart instanceof Minecart) return true;
+        else if (line.equalsIgnoreCase("Minecart")) return true;
 
         if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null)
             return true;

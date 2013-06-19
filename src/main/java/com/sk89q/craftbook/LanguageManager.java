@@ -25,8 +25,6 @@ import com.sk89q.craftbook.util.RegexUtil;
  */
 public class LanguageManager {
 
-    final CraftBookPlugin plugin = CraftBookPlugin.inst();
-
     HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
 
     public LanguageManager() {
@@ -36,11 +34,11 @@ public class LanguageManager {
 
     public void checkForLanguages() {
 
-        List<String> languages = plugin.getConfiguration().languages;
+        List<String> languages = CraftBookPlugin.inst().getConfiguration().languages;
         for (String language : languages) {
             language = language.trim();
             HashMap<String, String> languageData = null;
-            File f = new File(plugin.getDataFolder(), language + ".txt");
+            File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".txt");
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
                 String line;
@@ -56,7 +54,7 @@ public class LanguageManager {
                 }
                 br.close();
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + plugin.getDataFolder().getName() + File.pathSeparator + language + ".txt");
+                CraftBookPlugin.inst().getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + CraftBookPlugin.inst().getDataFolder().getName() + File.pathSeparator + language + ".txt");
             }
             languageMap.put(language, languageData);
         }
@@ -64,7 +62,7 @@ public class LanguageManager {
 
     public String getString(String message) {
 
-        HashMap<String, String> languageData = languageMap.get(plugin.getConfiguration().language);
+        HashMap<String, String> languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
         if (languageData == null) return "Missing Language File!";
         String translated = languageData.get(ChatColor.stripColor(message));
         if (translated == null) return message;
@@ -74,12 +72,12 @@ public class LanguageManager {
     public String getString(String message, String language) {
 
         if(language == null)
-            language = plugin.getConfiguration().language;
+            language = CraftBookPlugin.inst().getConfiguration().language;
         HashMap<String, String> languageData = languageMap.get(language);
         if (languageData == null) return getString(message);
         String translated = languageData.get(ChatColor.stripColor(message));
         if (translated == null || translated.length() == 0) {
-            languageData = languageMap.get(plugin.getConfiguration().language);
+            languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
             if(languageData == null) return message;
             translated = languageData.get(ChatColor.stripColor(message));
             if (translated == null) return message;
@@ -95,7 +93,7 @@ public class LanguageManager {
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer) p).getHandle().getLocale());
         } catch (Throwable e) {
-            return plugin.getConfiguration().language;
+            return CraftBookPlugin.inst().getConfiguration().language;
         }
     }
 

@@ -428,11 +428,13 @@ public class Bridge extends AbstractMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
-            try {
-                curBlocks += Integer.parseInt(other.getLine(0));
-                setBlocks(s, curBlocks);
-                setBlocks(other, 0);
-            } catch (Exception ignored) {
+            if(other != null) {
+                try {
+                    curBlocks += Integer.parseInt(other.getLine(0));
+                    setBlocks(s, curBlocks);
+                    setBlocks(other, 0);
+                } catch (Exception ignored) {
+                }
             }
         } catch (Exception e) {
             curBlocks = 0;

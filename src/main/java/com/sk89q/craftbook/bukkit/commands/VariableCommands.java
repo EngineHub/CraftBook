@@ -32,11 +32,10 @@ public class VariableCommands {
     @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2)
     public void set(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find()) {
+            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            }
 
             checkModifyPermissions(sender, context.getString(0));
 
@@ -44,7 +43,7 @@ public class VariableCommands {
                 throw new FastCommandException("Invalid Variable Value!");
             plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), context.getString(1));
             resetICCache(context.getString(0));
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.variableStore.get(context.getString(0)));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), "global"));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -53,7 +52,7 @@ public class VariableCommands {
     @CommandPermissions("craftbook.variables.define")
     public void define(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(!plugin.variableStore.containsKey(context.getString(0))) {
+        if(!plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -61,7 +60,7 @@ public class VariableCommands {
                 throw new FastCommandException("Invalid Variable Value!");
             plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), context.getString(1));
             resetICCache(context.getString(0));
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.variableStore.get(context.getString(0)));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), "global"));
         } else
             throw new FastCommandException("Existing Variable!");
     }
@@ -70,11 +69,11 @@ public class VariableCommands {
     @CommandPermissions("craftbook.variables.get")
     public void get(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + plugin.variableStore.get(context.getString(0)));
+            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + plugin.getVariable(context.getString(0), "global"));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -83,11 +82,11 @@ public class VariableCommands {
     @CommandPermissions("craftbook.variables.erase")
     public void erase(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            plugin.variableStore.remove(context.getString(0));
+            plugin.removeVariable(context.getString(0), "global");
             resetICCache(context.getString(0));
             sender.sendMessage(ChatColor.YELLOW + "Removed variable: " + context.getString(0));
         } else
@@ -111,7 +110,7 @@ public class VariableCommands {
     @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2)
     public void append(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -120,9 +119,9 @@ public class VariableCommands {
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), plugin.variableStore.get(context.getString(0)) + context.getString(1));
+            plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), plugin.getVariable(context.getString(0), "global") + context.getString(1));
             resetICCache(context.getString(0));
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.variableStore.get(context.getString(0)));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), "global"));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -130,7 +129,7 @@ public class VariableCommands {
     @Command(aliases = "prepend", desc = "Prepend to a variable.", max=2, min=2)
     public void prepend(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -139,9 +138,9 @@ public class VariableCommands {
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), context.getString(1) + plugin.variableStore.get(context.getString(0)));
+            plugin.variableStore.put(new Tuple2<String, String>("global",context.getString(0)), context.getString(1) + plugin.getVariable(context.getString(0), "global"));
             resetICCache(context.getString(0));
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.variableStore.get(context.getString(0)));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), "global"));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -149,14 +148,14 @@ public class VariableCommands {
     @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1)
     public void toggle(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, context.getString(0));
 
-            String var = plugin.variableStore.get(context.getString(0));
+            String var = plugin.getVariable(context.getString(0), "global");
             if(var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1"))
                 var = var.equalsIgnoreCase("1") ? "0" : "1";
             else if(var.equalsIgnoreCase("true") || var.equalsIgnoreCase("false"))
@@ -175,7 +174,7 @@ public class VariableCommands {
     @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2)
     public void add(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -185,7 +184,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.variableStore.get(context.getString(0));
+            String var = plugin.getVariable(context.getString(0), "global");
             try {
 
                 double f = Double.parseDouble(var);
@@ -206,7 +205,7 @@ public class VariableCommands {
     @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2)
     public void subtract(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -216,7 +215,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.variableStore.get(context.getString(0));
+            String var = plugin.getVariable(context.getString(0), "global");
             try {
 
                 double f = Double.parseDouble(var);
@@ -237,7 +236,7 @@ public class VariableCommands {
     @Command(aliases = {"multiply","multiple"}, desc = "Multiply a numeric variable.", max=2, min=2)
     public void multiple(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -247,7 +246,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.variableStore.get(context.getString(0));
+            String var = plugin.getVariable(context.getString(0), "global");
             try {
 
                 double f = Double.parseDouble(var);
@@ -268,7 +267,7 @@ public class VariableCommands {
     @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2)
     public void divide(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(plugin.variableStore.containsKey(context.getString(0))) {
+        if(plugin.hasVariable(context.getString(0), "global")) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -278,7 +277,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.variableStore.get(context.getString(0));
+            String var = plugin.getVariable(context.getString(0), "global");
             try {
 
                 double f = Double.parseDouble(var);

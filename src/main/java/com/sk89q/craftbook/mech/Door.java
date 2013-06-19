@@ -210,7 +210,7 @@ public class Door extends AbstractMechanic {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
 
-        if (distalBaseCenter.getTypeId() != block && distalBaseCenter.getData() != proximalBaseCenter.getData())
+        if (distalBaseCenter == null || distalBaseCenter.getTypeId() != block && distalBaseCenter.getData() != proximalBaseCenter.getData())
             throw new InvalidConstructionException("mech.door.material");
 
         // Select the togglable region
@@ -481,11 +481,13 @@ public class Door extends AbstractMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0));
-            try {
-                curBlocks += Integer.parseInt(other.getLine(0));
-                setBlocks(s, curBlocks);
-                setBlocks(other, 0);
-            } catch (Exception ignored) {
+            if(other != null) {
+                try {
+                    curBlocks += Integer.parseInt(other.getLine(0));
+                    setBlocks(s, curBlocks);
+                    setBlocks(other, 0);
+                } catch (Exception ignored) {
+                }
             }
         } catch (Exception e) {
             curBlocks = 0;

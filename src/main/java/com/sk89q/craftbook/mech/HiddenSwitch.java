@@ -12,7 +12,6 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -74,11 +73,9 @@ public class HiddenSwitch extends AbstractMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        try {
-            player.checkPermission("craftbook.mech.hiddenswitch.use");
-        } catch (InsufficientPermissionsException e) {
+        if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
             return;
-        }
+
         if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
                 || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))

@@ -153,6 +153,7 @@ public class CauldronCookbook {
                     add(recipe);
                 }
             }
+            buff.close();
             return this;
         } finally {
             try {
@@ -246,7 +247,7 @@ public class CauldronCookbook {
          * @param groups
          */
         public Recipe(String name, List<Tuple2<Integer, Short>> ingredients, List<Tuple2<Integer, Short>> results,
-                      String[] groups) {
+                String[] groups) {
 
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);

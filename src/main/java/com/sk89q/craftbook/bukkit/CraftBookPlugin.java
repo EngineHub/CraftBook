@@ -295,6 +295,26 @@ public class CraftBookPlugin extends JavaPlugin {
         return manager;
     }
 
+    public boolean hasVariable(String variable, String namespace) {
+
+        return variableStore.containsKey(new Tuple2<String, String>(variable, namespace));
+    }
+
+    public String getVariable(String variable, String namespace) {
+
+        return variableStore.get(new Tuple2<String, String>(variable, namespace));
+    }
+
+    public String setVariable(String variable, String namespace, String value) {
+
+        return variableStore.put(new Tuple2<String, String>(variable, namespace), value);
+    }
+
+    public String removeVariable(String variable, String namespace) {
+
+        return variableStore.remove(new Tuple2<String, String>(variable, namespace));
+    }
+
     /**
      * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
      */

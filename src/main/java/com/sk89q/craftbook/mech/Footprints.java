@@ -39,7 +39,7 @@ public class Footprints implements Listener {
         } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
             return;
 
-        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(new Integer(below.getTypeId()))) {
+        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(Integer.valueOf(below.getTypeId()))) {
 
             if(footsteps.contains(event.getPlayer().getName()))
                 return;

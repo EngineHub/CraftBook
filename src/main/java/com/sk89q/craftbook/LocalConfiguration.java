@@ -55,7 +55,6 @@ public abstract class LocalConfiguration {
     // Mechanics - BetterPhysics
     public boolean physicsEnabled;
     public boolean physicsLadders;
-    public boolean physicsPots;
     // Mechanics - BetterPistons
     public int pistonMaxDistance;
     public boolean pistonsEnabled;

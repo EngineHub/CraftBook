@@ -58,7 +58,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  */
 public class MechanicListenerAdapter implements Listener {
 
-    public static ArrayList<Event> ignoredEvents = new ArrayList<Event>();
+    public static final ArrayList<Event> ignoredEvents = new ArrayList<Event>();
 
     /**
      * Constructs the adapter.
@@ -160,6 +160,8 @@ public class MechanicListenerAdapter implements Listener {
                         break;
                     if(event.getBlock().getState().getData() instanceof PressureSensor && ((PressureSensor) event.getBlock().getState().getData()).isPressed())
                         handleRedstoneForBlock(event.getBlock(), 15, 0);
+                    break;
+                default:
                     break;
             }
         }

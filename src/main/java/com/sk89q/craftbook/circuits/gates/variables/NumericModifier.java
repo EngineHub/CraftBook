@@ -115,7 +115,7 @@ public class NumericModifier extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                if(!CraftBookPlugin.inst().variableStore.containsKey(sign.getLine(2)))
+                if(!CraftBookPlugin.inst().hasVariable(sign.getLine(2), "global"))
                     throw new ICVerificationException("Unknown Variable!");
                 Function.valueOf(sign.getLine(3).split(":")[0]);
                 Double.parseDouble(sign.getLine(3).split(":")[1]);

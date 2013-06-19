@@ -249,7 +249,7 @@ public class Elevator extends AbstractMechanic {
         teleportPlayer(player, floor);
     }
 
-    public static HashSet<String> flyingPlayers = new HashSet<String>();
+    public static final HashSet<String> flyingPlayers = new HashSet<String>();
 
     public void teleportPlayer(final LocalPlayer player, final Block floor) {
 

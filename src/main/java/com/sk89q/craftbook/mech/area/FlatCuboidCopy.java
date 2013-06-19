@@ -9,7 +9,7 @@ package com.sk89q.craftbook.mech.area;
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -121,6 +121,7 @@ public class FlatCuboidCopy extends CuboidCopy {
             if (reader.read(blocks, 0, size) != size) throw new CuboidCopyException("File error: Bad size");
             data = new byte[size];
             if (reader.read(data, 0, size) != size) throw new CuboidCopyException("File error: Bad size");
+            reader.close();
         } finally {
             try {
                 in.close();

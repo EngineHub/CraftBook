@@ -130,7 +130,7 @@ public class RecipeManager extends LocalConfiguration {
         @Override
         public boolean equals(Object o) {
 
-            if(o instanceof Recipe && o != null) {
+            if(o instanceof Recipe) {
                 if(shape != null)
                     if(shape.size() != ((Recipe)o).shape.size())
                         return false;

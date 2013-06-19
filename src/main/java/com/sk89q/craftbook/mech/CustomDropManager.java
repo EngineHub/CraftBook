@@ -18,8 +18,9 @@ package com.sk89q.craftbook.mech;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 public final class CustomDropManager {
 
     public static final int BLOCK_ID_COUNT = 256;
-    public static final int DATA_VALUE_COUNT = 128;
+    public static final int DATA_VALUE_COUNT = 127;
 
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
@@ -98,7 +99,7 @@ public final class CustomDropManager {
             CustomItemDrop[] blockDropDefinitions = isMobDrop ? null : new CustomItemDrop[BLOCK_ID_COUNT];
             Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<String,
                     DropDefinition[]>() : null;
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
                     String line;
                     int currentLine = 0;
                     while ((line = reader.readLine()) != null) {

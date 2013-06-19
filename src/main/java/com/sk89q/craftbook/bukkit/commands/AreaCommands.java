@@ -83,6 +83,7 @@ public class AreaCommands {
             Selection sel = worldEdit.getSelection((Player) sender);
             if(sel == null) {
                 sender.sendMessage(ChatColor.RED + "You have not made a selection!");
+                return;
             }
             Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
             Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
