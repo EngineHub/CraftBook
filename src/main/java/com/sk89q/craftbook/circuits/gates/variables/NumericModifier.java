@@ -10,6 +10,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.Tuple2;
 
 public class NumericModifier extends AbstractIC {
@@ -51,7 +52,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         try {
-            double currentValue = Double.parseDouble(CraftBookPlugin.inst().parseGlobalVariables(variable));
+            double currentValue = Double.parseDouble(ParsingUtil.parseGlobalVariables(variable));
 
             switch(function) {
                 case ADD:

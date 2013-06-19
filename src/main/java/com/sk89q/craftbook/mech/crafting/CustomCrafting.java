@@ -32,6 +32,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -174,7 +175,7 @@ public class CustomCrafting implements Listener {
                     hasFailed = false;
 
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec);
+                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec, null);
                     break;
                 }
                 }
@@ -234,7 +235,7 @@ public class CustomCrafting implements Listener {
                         continue;
 
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being smelted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getResult(),rec);
+                    bits = applyAdvancedEffects(event.getResult(),rec, null);
                     break;
                 }
             } catch(InvalidCraftingException e){
@@ -287,15 +288,13 @@ public class CustomCrafting implements Listener {
                         CraftBookPlugin.logDebugMessage("A recipe with commands is detected!", "advanced-data");
                         if(recipe.hasAdvancedData("commands-console")) {
                             for(String s : (List<String>)recipe.getAdvancedData("commands-console")) {
-                                s = s.replace("@p", p.getName());
-                                s = CraftBookPlugin.inst().parseGlobalVariables(s);
+                                s = ParsingUtil.parseLine(s, p);
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
                             }
                         }
                         if(recipe.hasAdvancedData("commands-player")) {
                             for(String s : (List<String>)recipe.getAdvancedData("commands-player")) {
-                                s = s.replace("@p", p.getName());
-                                s = CraftBookPlugin.inst().parseGlobalVariables(s);
+                                s = ParsingUtil.parseLine(s, p);
                                 PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
                                 att.setPermission("*", true);
                                 boolean wasOp = p.isOp();
@@ -306,6 +305,8 @@ public class CustomCrafting implements Listener {
                             }
                         }
                     }
+
+                    event.setCurrentItem(applyAdvancedEffects(event.getCurrentItem(), event.getRecipe(), (Player) event.getWhoClicked()));
                     break;
                 }
             } catch(InvalidCraftingException e){
@@ -319,7 +320,7 @@ public class CustomCrafting implements Listener {
         for(Recipe rec : advancedRecipes.keySet()) {
             try {
                 if(checkRecipes(rec, recipe))
-                    return applyAdvancedEffects(recipe.getResult(),rec);
+                    return applyAdvancedEffects(recipe.getResult(),rec, null);
             } catch (InvalidCraftingException e){
                 return null; //Invalid Recipe.
             }
@@ -329,7 +330,7 @@ public class CustomCrafting implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep) {
+    private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep, Player player) {
 
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
 
@@ -339,12 +340,15 @@ public class CustomCrafting implements Listener {
         ItemStack res = stack.clone();
         if(recipe.getResult().hasAdvancedData("name")) {
             ItemMeta meta = res.getItemMeta();
-            meta.setDisplayName(ChatColor.RESET + (String) recipe.getResult().getAdvancedData("name"));
+            meta.setDisplayName(ChatColor.RESET + ParsingUtil.parseLine((String) recipe.getResult().getAdvancedData("name"), player));
             res.setItemMeta(meta);
         }
         if(recipe.getResult().hasAdvancedData("lore")) {
             ItemMeta meta = res.getItemMeta();
-            meta.setLore((List<String>) recipe.getResult().getAdvancedData("lore"));
+            List<String> lore = new ArrayList<String>();
+            for(String s : (List<String>) recipe.getResult().getAdvancedData("lore"))
+                lore.add(ParsingUtil.parseLine(s, player));
+            meta.setLore(lore);
             res.setItemMeta(meta);
         }
         if(recipe.getResult().hasAdvancedData("enchants")) {

@@ -31,5 +31,4 @@ public class CauldronCommands {
         ImprovedCauldron.Factory.INSTANCE.recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.inst().getLogger());
         sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
     }
-
 }

@@ -171,15 +171,6 @@ public class CraftBookPlugin extends JavaPlugin {
         return "2282";
     }
 
-    public String parseGlobalVariables(String line) {
-
-        for(Tuple2<String, String> key : variableStore.keySet())
-            if(key.a.equalsIgnoreCase("global"))
-                line = line.replace("%" + key.b  + "%", variableStore.get(key));
-
-        return line;
-    }
-
     /**
      * Called on plugin enable.
      */

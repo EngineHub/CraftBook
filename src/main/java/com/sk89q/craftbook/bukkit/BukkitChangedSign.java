@@ -21,6 +21,7 @@ import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 
@@ -99,7 +100,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
 
-        return CraftBookPlugin.inst().parseGlobalVariables(lines[index]);
+        return ParsingUtil.parseGlobalVariables(lines[index]);
     }
 
     @Override

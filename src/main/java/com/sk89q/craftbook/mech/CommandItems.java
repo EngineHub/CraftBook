@@ -32,6 +32,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -238,7 +239,7 @@ public class CommandItems implements Listener {
                         command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
                     if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
                         command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                    command = CraftBookPlugin.inst().parseGlobalVariables(command);
+                    command = ParsingUtil.parseLine(command, player);
                     if(comdef.type == CommandType.CONSOLE)
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     else if (comdef.type == CommandType.PLAYER)
@@ -267,12 +268,11 @@ public class CommandItems implements Listener {
                                 if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
                                     continue;
 
-                                command = command.replace("@p", player.getName());
                                 if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
                                     command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
                                 if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
                                     command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                                command = CraftBookPlugin.inst().parseGlobalVariables(command);
+                                command = ParsingUtil.parseLine(command, player);
                                 if(comdef.type == CommandType.CONSOLE)
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                                 else if (comdef.type == CommandType.PLAYER)
