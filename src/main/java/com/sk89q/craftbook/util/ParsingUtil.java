@@ -33,6 +33,8 @@ public class ParsingUtil {
 
     public static String parseGlobalVariables(String line) {
 
+        if(CraftBookPlugin.inst() == null)
+            return line;
         for(Tuple2<String, String> key : CraftBookPlugin.inst().variableStore.keySet())
             if(key.a.equalsIgnoreCase("global"))
                 line = line.replace("%" + key.b  + "%", CraftBookPlugin.inst().variableStore.get(key));
