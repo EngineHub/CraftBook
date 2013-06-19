@@ -10,6 +10,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.Tuple2;
 
 public class NumericModifier extends AbstractIC {
 
@@ -50,7 +51,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         try {
-            double currentValue = Double.parseDouble(CraftBookPlugin.inst().parseVariables(variable));
+            double currentValue = Double.parseDouble(CraftBookPlugin.inst().parseGlobalVariables(variable));
 
             switch(function) {
                 case ADD:
@@ -73,7 +74,7 @@ public class NumericModifier extends AbstractIC {
                     break;
             }
 
-            CraftBookPlugin.inst().variableStore.put(variable, String.valueOf(currentValue));
+            CraftBookPlugin.inst().variableStore.put(new Tuple2<String, String>("global",variable), String.valueOf(currentValue));
             chip.setOutput(0, true);
             return;
         } catch(Exception e){}

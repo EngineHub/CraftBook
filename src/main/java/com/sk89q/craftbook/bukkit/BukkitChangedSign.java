@@ -99,7 +99,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
 
-        return CraftBookPlugin.inst().parseVariables(lines[index]);
+        return CraftBookPlugin.inst().parseGlobalVariables(lines[index]);
     }
 
     @Override

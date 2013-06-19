@@ -238,7 +238,7 @@ public class CommandItems implements Listener {
                         command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
                     if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
                         command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                    command = CraftBookPlugin.inst().parseVariables(command);
+                    command = CraftBookPlugin.inst().parseGlobalVariables(command);
                     if(comdef.type == CommandType.CONSOLE)
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     else if (comdef.type == CommandType.PLAYER)
@@ -272,7 +272,7 @@ public class CommandItems implements Listener {
                                     command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
                                 if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
                                     command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                                command = CraftBookPlugin.inst().parseVariables(command);
+                                command = CraftBookPlugin.inst().parseGlobalVariables(command);
                                 if(comdef.type == CommandType.CONSOLE)
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                                 else if (comdef.type == CommandType.PLAYER)

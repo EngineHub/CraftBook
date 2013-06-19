@@ -57,6 +57,7 @@ import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -143,7 +144,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * Stores the variables used in VariableStore.
      */
-    public HashMap<String, String> variableStore = new HashMap<String, String>();
+    public HashMap<Tuple2<String, String>, String> variableStore = new HashMap<Tuple2<String, String>, String>();
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -170,10 +171,11 @@ public class CraftBookPlugin extends JavaPlugin {
         return "2282";
     }
 
-    public String parseVariables(String line) {
+    public String parseGlobalVariables(String line) {
 
-        for(String key : variableStore.keySet())
-            line = line.replace("%" + key + "%", variableStore.get(key));
+        for(Tuple2<String, String> key : variableStore.keySet())
+            if(key.a.equalsIgnoreCase("global"))
+                line = line.replace("%" + key.b  + "%", variableStore.get(key));
 
         return line;
     }
