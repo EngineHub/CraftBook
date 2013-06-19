@@ -16,9 +16,9 @@ public class BukkitChangedSignTest {
     @Test(expected=IllegalArgumentException.class)
     public void testBukkitChangedSign() {
 
-        BukkitChangedSign sign = new BukkitChangedSign(null, null);
+        new BukkitChangedSign(null, null);
 
-        sign = new BukkitChangedSign(mock(Sign.class), new String[]{"","","",""});
+        BukkitChangedSign sign = new BukkitChangedSign(mock(Sign.class), new String[]{"","","",""});
         assertTrue(sign.getSign() != null);
         assertTrue(sign.getLines().length == 4);
     }

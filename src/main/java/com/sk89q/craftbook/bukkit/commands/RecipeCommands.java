@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -123,9 +124,9 @@ public class RecipeCommands {
                     if(ItemUtil.isStackValid(stack.getItemStack())) {
 
                         boolean found = false;
-                        for(CraftingItemStack st : items.keySet()) {
-                            if(st.isSameType(stack)) {
-                                c = items.get(st).toString();
+                        for(Entry<CraftingItemStack, Character> st : items.entrySet()) {
+                            if(st.getKey().isSameType(stack)) {
+                                c = st.getValue().toString();
                                 found = true;
                                 break;
                             }

@@ -2,8 +2,9 @@ package com.sk89q.craftbook.bukkit;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -252,11 +253,11 @@ public class ReportWriter {
     }
 
     public void write(File file) throws IOException {
-        FileWriter writer = null;
+        OutputStreamWriter writer = null;
         BufferedWriter out;
 
         try {
-            writer = new FileWriter(file);
+            writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             out = new BufferedWriter(writer);
             out.write(output.toString());
             out.close();

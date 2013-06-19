@@ -2,8 +2,9 @@ package com.sk89q.craftbook.circuits.jinglenote;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -75,7 +76,7 @@ public class Playlist {
             CraftBookPlugin.logger().severe("Playlist File Not Found! " + file.getName());
             return;
         }
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         String line = "";
         while ((line = br.readLine()) != null) {
 

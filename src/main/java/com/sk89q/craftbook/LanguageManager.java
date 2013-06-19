@@ -39,8 +39,9 @@ public class LanguageManager {
             language = language.trim();
             HashMap<String, String> languageData = null;
             File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".txt");
+            BufferedReader br = null;
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
                 String line;
                 languageData = new HashMap<String, String>();
                 while ((line = br.readLine()) != null) {
@@ -52,9 +53,14 @@ public class LanguageManager {
                         continue;
                     languageData.put(split[0], split[1]);
                 }
-                br.close();
             } catch (IOException e) {
                 CraftBookPlugin.inst().getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + CraftBookPlugin.inst().getDataFolder().getName() + File.pathSeparator + language + ".txt");
+            } finally {
+                if(br != null)
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                    }
             }
             languageMap.put(language, languageData);
         }

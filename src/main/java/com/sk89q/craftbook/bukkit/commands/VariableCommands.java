@@ -287,6 +287,8 @@ public class VariableCommands {
                 var = String.valueOf(f);
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
+            } catch (RuntimeException e) {
+                throw e;
             } catch(Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }

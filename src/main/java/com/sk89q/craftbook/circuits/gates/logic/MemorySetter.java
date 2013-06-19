@@ -54,7 +54,7 @@ public class MemorySetter extends AbstractIC {
             if (!f.exists()) {
                 f.createNewFile();
             }
-            PrintWriter pw = new PrintWriter(f);
+            PrintWriter pw = new PrintWriter(f, "UTF-8");
             for (int i = 0; i < chip.getInputCount(); i++) { pw.print(chip.getInput(i) ? "1" : "0"); }
             pw.close();
         } catch (Exception e) {

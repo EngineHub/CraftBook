@@ -535,7 +535,8 @@ public class ItemUtil {
                         ench = Enchantment.getById(Integer.parseInt(sp[0]));
                     rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
                 }
-                catch(Exception e){}
+                catch(NumberFormatException e){}
+                catch(ArrayIndexOutOfBoundsException e){}
             }
         }
         if(advMetadataSplit.length > 1) {

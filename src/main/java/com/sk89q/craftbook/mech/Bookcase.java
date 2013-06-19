@@ -18,8 +18,9 @@ package com.sk89q.craftbook.mech;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -70,12 +71,12 @@ public class Bookcase extends AbstractMechanic {
      */
     protected String getBookLine() throws IOException {
 
-        LineNumberReader lnr = new LineNumberReader(new FileReader(new File(plugin.getDataFolder(),"books.txt")));
+        LineNumberReader lnr = new LineNumberReader(new InputStreamReader(new FileInputStream(new File(plugin.getDataFolder(),"books.txt")), "UTF-8"));
         lnr.skip(Long.MAX_VALUE);
         int lines = lnr.getLineNumber();
         lnr.close();
         int toRead = plugin.getRandom().nextInt(lines);
-        BufferedReader br = new BufferedReader(new FileReader(new File(plugin.getDataFolder(),"books.txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(plugin.getDataFolder(),"books.txt")), "UTF-8"));
         String line;
         int passes = 0;
         while ((line = br.readLine()) != null) {

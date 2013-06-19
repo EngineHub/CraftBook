@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import java.util.Locale;
+
 /**
  * @author Silthus
  */
@@ -12,7 +14,7 @@ public final class EnumUtil {
 
         if (c != null && string != null) {
             try {
-                return Enum.valueOf(c, string.trim().toUpperCase());
+                return Enum.valueOf(c, string.trim().toUpperCase(Locale.ENGLISH));
             } catch (IllegalArgumentException ignored) {
             }
         }

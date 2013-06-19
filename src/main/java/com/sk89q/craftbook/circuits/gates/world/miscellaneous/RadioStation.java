@@ -15,7 +15,7 @@ public class RadioStation extends AbstractIC {
 
     String band;
 
-    public static HistoryHashMap<String, Playlist> stations = new HistoryHashMap<String, Playlist>(100);
+    public static final HistoryHashMap<String, Playlist> stations = new HistoryHashMap<String, Playlist>(100);
 
     public RadioStation (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);

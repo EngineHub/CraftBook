@@ -50,7 +50,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public void verify(ChangedSign sign) throws ICVerificationException {
 
         new PlcIC<StateT, CodeT, Lang>(sign, lang); // Huge ugly hack!!
-        sign.setLine(2, "id:" + Math.abs(CraftBookPlugin.inst().getRandom().nextInt()));
+        sign.setLine(2, "id:" + CraftBookPlugin.inst().getRandom().nextInt());
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
             if (!RegexUtil.PLC_NAME_PATTERN.matcher(line).matches())

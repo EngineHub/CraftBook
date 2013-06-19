@@ -44,7 +44,7 @@ public class PastebinPoster {
     }
 
     private static class PasteProcessor implements Runnable {
-        private String code; 
+        private String code;
         private PasteCallback callback;
 
         public PasteProcessor(String code, PasteCallback callback) {
@@ -55,7 +55,7 @@ public class PastebinPoster {
         @Override
         public void run() {
             HttpURLConnection conn = null;
-            OutputStream out = null; 
+            OutputStream out = null;
             InputStream in = null;
 
             try {
@@ -77,13 +77,13 @@ public class PastebinPoster {
                         + "&api_paste_name=" + URLEncoder.encode("", "utf-8")
                         + "&api_paste_expire_date=" + URLEncoder.encode("1D", "utf-8")
                         + "&api_paste_format=" + URLEncoder.encode("text", "utf-8")
-                        + "&api_user_key=" + URLEncoder.encode("", "utf-8")).getBytes());
+                        + "&api_user_key=" + URLEncoder.encode("", "utf-8")).getBytes("utf-8"));
                 out.flush();
                 out.close();
 
-                if (conn.getResponseCode() == 200) {//Get Response        
+                if (conn.getResponseCode() == 200) {//Get Response
                     in = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                     String line;
                     StringBuilder response = new StringBuilder();
                     while ((line = reader.readLine()) != null) {
