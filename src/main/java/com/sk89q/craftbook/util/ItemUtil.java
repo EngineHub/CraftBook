@@ -466,8 +466,6 @@ public class ItemUtil {
         if (line == null || line.isEmpty())
             return null;
 
-        line = ParsingUtil.parseLine(line, null);
-
         int id = 0;
         int data = -1;
         int amount = 1;
