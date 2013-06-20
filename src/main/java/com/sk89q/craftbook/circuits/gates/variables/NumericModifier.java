@@ -11,7 +11,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.Tuple2;
 
 public class NumericModifier extends AbstractIC {
 
@@ -75,7 +74,11 @@ public class NumericModifier extends AbstractIC {
                     break;
             }
 
-            CraftBookPlugin.inst().variableStore.put(new Tuple2<String, String>("global",variable), String.valueOf(currentValue));
+            String var = String.valueOf(currentValue);
+            if (var.endsWith(".0"))
+                var = var.replace(".0", "");
+
+            CraftBookPlugin.inst().setVariable(variable, "global", var);
             chip.setOutput(0, true);
             return;
         } catch(Exception e){}

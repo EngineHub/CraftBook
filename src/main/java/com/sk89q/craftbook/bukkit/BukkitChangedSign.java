@@ -219,6 +219,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public boolean hasVariable(String var) {
 
-        return lines[0].contains("%" + var + "%") || lines[1].contains("%" + var + "%") || lines[2].contains("%" + var + "%") || lines[3].contains("%" + var + "%");
+        var = var.toLowerCase();
+        return lines[0].toLowerCase().contains("%" + var + "%") || lines[1].toLowerCase().contains("%" + var + "%") || lines[2].toLowerCase().contains("%" + var + "%") || lines[3].toLowerCase().contains("%" + var + "%");
     }
 }

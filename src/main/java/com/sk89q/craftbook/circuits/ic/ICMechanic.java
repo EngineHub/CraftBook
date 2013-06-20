@@ -135,7 +135,7 @@ public class ICMechanic extends PersistentMechanic {
         if (block.getTypeId() == BlockID.WALL_SIGN) {
 
             ChangedSign sign = BukkitUtil.toChangedSign(block);
-            if (sign == null) {
+            if (sign == null || !ic.getSign().equals(sign)) {
                 return false;
             }
 

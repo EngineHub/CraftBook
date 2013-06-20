@@ -144,7 +144,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * Stores the variables used in VariableStore.
      */
-    public HashMap<Tuple2<String, String>, String> variableStore = new HashMap<Tuple2<String, String>, String>();
+    protected HashMap<Tuple2<String, String>, String> variableStore = new HashMap<Tuple2<String, String>, String>();
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -313,6 +313,11 @@ public class CraftBookPlugin extends JavaPlugin {
     public String removeVariable(String variable, String namespace) {
 
         return variableStore.remove(new Tuple2<String, String>(variable, namespace));
+    }
+
+    public HashMap<Tuple2<String, String>, String> getVariableStore() {
+
+        return variableStore;
     }
 
     /**

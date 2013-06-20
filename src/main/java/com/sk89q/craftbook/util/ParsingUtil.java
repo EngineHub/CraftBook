@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import java.util.Map.Entry;
+
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -35,9 +37,10 @@ public class ParsingUtil {
 
         if(CraftBookPlugin.inst() == null)
             return line;
-        for(Tuple2<String, String> key : CraftBookPlugin.inst().variableStore.keySet())
-            if(key.a.equalsIgnoreCase("global"))
-                line = line.replace("%" + key.b  + "%", CraftBookPlugin.inst().variableStore.get(key));
+        for(Entry<Tuple2<String, String>, String> key : CraftBookPlugin.inst().getVariableStore().entrySet()) {
+            if(key.getKey().b.equalsIgnoreCase("global"))
+                line = line.replace("%" + key.getKey().a  + "%", key.getValue());
+        }
 
         return line;
     }
