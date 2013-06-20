@@ -1,3 +1,24 @@
+3.6.9
+* Fix a dupe with ContainerCollector and RangedCollector.
+* Fix a few /cb reload bugs.
+* Fix a MC1232 bug.
+* Tweaked recipe saving for the recipe commands.
+* Fix RandomBit IC's without maxOn.
+* Fix CookingPot dupe.
++ Added a directional based steering system to vehicles.
+* Fix TreeLopper if enforce data is set to false.
++ Added ladders as Vertical Minecart Rails.
+* Fix Gold & Iron Pressure Plates with Vehicle Intersections.
+* Fix a few priority based issues with CustomCrafting.
++ Added MC1269 - Player Inventory Sensor.
+* advanced-block-checks is now enabled by default.
++ Added a few error messages to CustomCrafting.
++ Added a few comments to the configuration.
++ Added @p.l flag to get a players X:Y:Z location.
++ Added Variable, @p and @p.l support to CustomCrafting.
+* Fix a metric tonne of possible bugs.
+* Tweaked the internal variable system, to make way for private variables.
+
 3.6.8
 + Added offset support to ContentsSensor.
 * Tweaked Planter's Item Collection System (Less Buggy)
