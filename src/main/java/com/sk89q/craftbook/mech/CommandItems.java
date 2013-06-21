@@ -349,7 +349,7 @@ public class CommandItems implements Listener {
             try {
                 for(String s : config.getStringList(path + ".consumed-items", new ArrayList<String>()))
                     consumables.add(ItemUtil.makeItemValid(ItemUtil.getItem(s)));
-            } catch(Exception e){}
+            } catch(Exception ignored){}
 
             return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]));
         }

@@ -39,7 +39,7 @@ public class NumericModifier extends AbstractIC {
             variable = getLine(2);
             function = Function.valueOf(getLine(3).split(":")[0]);
             amount = Double.parseDouble(getLine(3).split(":")[1]);
-        } catch(Exception e) {}
+        } catch(Exception ignored) {}
     }
 
     @Override
@@ -81,7 +81,7 @@ public class NumericModifier extends AbstractIC {
             CraftBookPlugin.inst().setVariable(variable, "global", var);
             chip.setOutput(0, true);
             return;
-        } catch(Exception e){}
+        } catch(Exception ignored){}
         chip.setOutput(0, false);
     }
 

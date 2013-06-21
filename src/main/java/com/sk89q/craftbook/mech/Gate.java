@@ -405,7 +405,6 @@ public class Gate extends AbstractMechanic {
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
                     }
-                } else {
                 }
                 sign.setLine(1, "[Gate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
@@ -427,7 +426,6 @@ public class Gate extends AbstractMechanic {
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
                     }
-                } else {
                 }
                 sign.setLine(1, "[DGate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate" + "" +

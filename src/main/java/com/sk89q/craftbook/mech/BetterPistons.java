@@ -225,7 +225,7 @@ public class BetterPistons extends AbstractMechanic {
                     if(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1)
                         amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
                 }
-                catch(Exception e){
+                catch(Exception ignored){
                 }
 
                 final boolean air = ((Sign) sign.getState()).getLine(3).equalsIgnoreCase("AIR");
@@ -274,7 +274,7 @@ public class BetterPistons extends AbstractMechanic {
                     if(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1)
                         amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
                 }
-                catch(Exception e){
+                catch(Exception ignored){
                 }
 
                 if(block > CraftBookPlugin.inst().getConfiguration().pistonMaxDistance)

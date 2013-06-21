@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A util file to verify many different things.
@@ -21,7 +22,7 @@ public class VerifyUtil {
 
     public static <T> Collection<T> withoutNulls(Collection<T> list) {
 
-        while(list.remove(null)){}
+        list.removeAll(Collections.singleton(null));
 
         return list;
     }

@@ -96,14 +96,20 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
                         ItemStack slot = ItemUtil.makeItemValid(ItemUtil.getItem(bit));
 
-                        if (s == 0)
-                            ((LivingEntity) ent).getEquipment().setHelmet(slot);
-                        if (s == 1)
-                            ((LivingEntity) ent).getEquipment().setChestplate(slot);
-                        if (s == 2)
-                            ((LivingEntity) ent).getEquipment().setLeggings(slot);
-                        if (s == 3)
-                            ((LivingEntity) ent).getEquipment().setBoots(slot);
+                        switch (s) {
+                            case 0:
+                                ((LivingEntity) ent).getEquipment().setHelmet(slot);
+                                break;
+                            case 1:
+                                ((LivingEntity) ent).getEquipment().setChestplate(slot);
+                                break;
+                            case 2:
+                                ((LivingEntity) ent).getEquipment().setLeggings(slot);
+                                break;
+                            case 3:
+                                ((LivingEntity) ent).getEquipment().setBoots(slot);
+                                break;
+                        }
                     }
                 }
             }
@@ -128,7 +134,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                                 String[] potionBits = RegexUtil.SEMICOLON_PATTERN.split(data[a]);
                                 PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])), Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
                                 ((LivingEntity) ent).addPotionEffect(effect, true);
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                             }
                         }
                     } else if (data[0].equalsIgnoreCase("v")) {

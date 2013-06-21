@@ -69,7 +69,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
             try {
                 effectID = Effect.valueOf(eff[0]).getId();
             }
-            catch(Exception ee){}
+            catch(Exception ignored){}
         }
         if (Effect.getById(effectID) == null) return;
         try {
@@ -142,7 +142,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
                     try {
                         effectID = Effect.valueOf(eff[0]).getId();
                     }
-                    catch(Exception ee){}
+                    catch(Exception ignored){}
                 }
                 if (Effect.getById(effectID) == null) throw new ICVerificationException("Invalid effect!");
                 try {

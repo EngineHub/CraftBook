@@ -266,7 +266,7 @@ public class Updater {
                 if (fout != null) {
                     fout.close();
                 }
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
         }
     }

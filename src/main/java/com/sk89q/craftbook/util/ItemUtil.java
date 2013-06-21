@@ -496,12 +496,12 @@ public class ItemUtil {
             if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
         try {
             if(amountSplit.length > 1)
                 amount = Integer.parseInt(amountSplit[1]);
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
 
         if(id < 1)
             id = 1;
@@ -535,8 +535,8 @@ public class ItemUtil {
                         ench = Enchantment.getById(Integer.parseInt(sp[0]));
                     rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
                 }
-                catch(NumberFormatException e){}
-                catch(ArrayIndexOutOfBoundsException e){}
+                catch(NumberFormatException ignored){}
+                catch(ArrayIndexOutOfBoundsException ignored){}
             }
         }
         if(advMetadataSplit.length > 1) {
@@ -565,7 +565,7 @@ public class ItemUtil {
                     try {
                         PotionEffect effect = new PotionEffect(PotionEffectType.getByName(effects[0]), Integer.parseInt(effects[1]), Integer.parseInt(effects[2]));
                         ((PotionMeta) meta).addCustomEffect(effect, true);
-                    } catch(Exception e){}
+                    } catch(Exception ignored){}
                 } else if(bits[0].equalsIgnoreCase("enchant") && meta instanceof EnchantmentStorageMeta) {
                     try {
                         String[] sp = RegexUtil.SEMICOLON_PATTERN.split(bits[1]);
@@ -573,7 +573,7 @@ public class ItemUtil {
                         if(ench == null)
                             ench = Enchantment.getById(Integer.parseInt(sp[0]));
                         ((EnchantmentStorageMeta) meta).addStoredEnchant(ench, Integer.parseInt(sp[1]), true);
-                    } catch(Exception e){}
+                    } catch(Exception ignored){}
                 }
             }
             rVal.setItemMeta(meta);
@@ -593,18 +593,18 @@ public class ItemUtil {
         StringBuilder builder = new StringBuilder();
         builder.append(item.getType().name());
         if(item.getDurability() > 0)
-            builder.append(":" + item.getDurability());
+            builder.append(":").append(item.getDurability());
 
         if(item.hasItemMeta()) {
             if(item.getItemMeta().hasEnchants())
                 for(Entry<Enchantment,Integer> enchants : item.getItemMeta().getEnchants().entrySet())
-                    builder.append(";" + enchants.getKey().getName() + ":" + enchants.getValue());
+                    builder.append(";").append(enchants.getKey().getName()).append(":").append(enchants.getValue());
             if(item.getItemMeta().hasDisplayName())
-                builder.append("|" + item.getItemMeta().getDisplayName());
+                builder.append("|").append(item.getItemMeta().getDisplayName());
             if(item.getItemMeta().hasLore()) {
                 List<String> list = item.getItemMeta().getLore();
                 for(String s : list)
-                    builder.append("|" + s);
+                    builder.append("|").append(s);
             }
         }
 

@@ -156,7 +156,7 @@ public class BukkitChangedSign implements ChangedSign {
                     break;
                 }
         }
-        catch(Exception e){}
+        catch(Exception ignored){}
         return ret;
     }
 

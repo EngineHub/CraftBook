@@ -68,10 +68,7 @@ public class BlockReplacer extends AbstractIC {
             mode = Integer.parseInt(data[1]);
         else
             mode = 0;
-        if(data.length > 2)
-            physics = data[2].equalsIgnoreCase("1");
-        else
-            physics = true;
+        physics = data.length <= 2 || data[2].equalsIgnoreCase("1");
     }
 
     public boolean replaceBlocks(final boolean on, final Block block, final List<Location> traversedBlocks) {

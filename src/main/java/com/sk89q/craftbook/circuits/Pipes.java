@@ -1,10 +1,6 @@
 package com.sk89q.craftbook.circuits;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -161,8 +157,8 @@ public class Pipes extends AbstractMechanic {
             }
         }
 
-        while(filters.remove(null)){}
-        while(exceptions.remove(null)){}
+        filters.removeAll(Collections.singleton(null));
+        exceptions.removeAll(Collections.singleton(null));
     }
 
     private HashSet<ItemStack> filters = new HashSet<ItemStack>();
@@ -175,7 +171,7 @@ public class Pipes extends AbstractMechanic {
 
     public List<ItemStack> getItems() {
 
-        while(items.remove(null)){}
+        items.removeAll(Collections.singleton(null));
         return items;
     }
 
@@ -262,8 +258,8 @@ public class Pipes extends AbstractMechanic {
                         pExceptions.add(ItemUtil.getItem(line4.trim()));
                     }
 
-                    while(pFilters.remove(null)){}
-                    while(pExceptions.remove(null)){}
+                    pFilters.removeAll(Collections.singleton(null));
+                    pExceptions.removeAll(Collections.singleton(null));
                 }
 
                 List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));

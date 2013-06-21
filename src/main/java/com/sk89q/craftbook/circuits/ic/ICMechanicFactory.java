@@ -217,7 +217,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                     return detect(pt, player, sign, shortHand);
                 }
             }
-            catch(Exception e){}
+            catch(Exception ignored){}
 
             String id = matcher.group(1);
             String suffix = "";

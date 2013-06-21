@@ -410,8 +410,7 @@ public class Bridge extends AbstractMechanic {
     public void setBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return;
-        int curBlocks = amount;
-        s.setLine(0, String.valueOf(curBlocks));
+        s.setLine(0, String.valueOf(amount));
         s.update(false);
     }
 

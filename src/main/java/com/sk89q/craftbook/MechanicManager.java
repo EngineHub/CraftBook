@@ -666,7 +666,7 @@ public class MechanicManager {
                 if(mechanic instanceof ICMechanic) {
                     try {
                         load(((ICMechanic) mechanic).getIC().getSign().getBlockVector(), null);
-                    } catch (InvalidMechanismException e) {
+                    } catch (InvalidMechanismException ignored) {
                     }
                 }
             }

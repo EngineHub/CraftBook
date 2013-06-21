@@ -1,12 +1,7 @@
 package com.sk89q.craftbook.mech.crafting;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -146,7 +141,7 @@ public class CustomCrafting implements Listener {
 
                     ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
                     leftovers.addAll(Arrays.asList(tests));
-                    while(leftovers.remove(null)){}
+                    leftovers.removeAll(Collections.singleton(null));
 
                     for(ItemStack it : tests) {
 
@@ -212,7 +207,7 @@ public class CustomCrafting implements Listener {
 
                     ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
                     leftovers.add(event.getSource());
-                    while(leftovers.remove(null)){}
+                    leftovers.removeAll(Collections.singleton(null));
 
                     if(!ItemUtil.isStackValid(event.getSource()))
                         continue;

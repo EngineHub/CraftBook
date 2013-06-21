@@ -2,6 +2,7 @@ package com.sk89q.craftbook.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.block.Chest;
@@ -85,8 +86,7 @@ public class CartDeposit extends CartMechanism {
                 cartinventory.clear();
             }
 
-            while (transferItems.remove(null)) {
-            }
+            transferItems.removeAll(Collections.singleton(null));
 
             // is cart non-empty?
             if (transferItems.isEmpty()) return;
@@ -143,8 +143,7 @@ public class CartDeposit extends CartMechanism {
                 container.update();
             }
 
-            while (transferitems.remove(null)) {
-            }
+            transferitems.removeAll(Collections.singleton(null));
 
             // are chests empty?
             if (transferitems.isEmpty()) return;

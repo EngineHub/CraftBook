@@ -83,7 +83,7 @@ public class Melody extends AbstractIC {
             }
 
             forceStart = split[1].equalsIgnoreCase("START");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         midiName = getSign().getLine(2);

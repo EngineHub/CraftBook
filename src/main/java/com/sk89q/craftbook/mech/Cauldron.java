@@ -272,7 +272,7 @@ public class Cauldron extends AbstractMechanic {
                 List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer,
                         Short>>(recipe.getIngredients());
 
-                List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
+                //List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
 
                 // Get rid of the blocks in world
                 for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
@@ -293,9 +293,11 @@ public class Cauldron extends AbstractMechanic {
                     }
                 }
 
+                /*
                 for (BlockWorldVector v : removeQueue) {
                     world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).setTypeId(BlockID.AIR);
                 }
+                */
 
                 // Give results
                 for (Tuple2<Integer, Short> id : recipe.getResults()) {

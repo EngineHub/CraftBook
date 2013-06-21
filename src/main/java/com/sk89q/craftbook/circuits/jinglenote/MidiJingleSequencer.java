@@ -138,7 +138,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                 }
             }
-            catch(Exception e){}
+            catch(Exception ignored){}
 
             while (sequencer.isRunning()) {
                 Thread.sleep(1000);

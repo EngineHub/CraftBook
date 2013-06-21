@@ -87,7 +87,7 @@ public class WirelessTransmitter extends AbstractIC {
 
     public static void setValue(String band, boolean val) {
 
-        if(val == false) //List preening
+        if(!val) //List preening
             memory.remove(band);
         else
             memory.add(band);

@@ -26,9 +26,6 @@ public class Delayer extends AbstractIC {
     public Delayer(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        try {
-        } catch (Exception ignored) {
-        }
     }
 
     @Override

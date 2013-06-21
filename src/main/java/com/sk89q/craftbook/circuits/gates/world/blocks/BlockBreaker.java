@@ -73,7 +73,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             id = Integer.parseInt(split[0]);
             try {
                 data = Byte.parseByte(split[1]);
-            } catch(Exception e){}
+            } catch(Exception ignored){}
         } catch (Exception ignored) {
         }
     }

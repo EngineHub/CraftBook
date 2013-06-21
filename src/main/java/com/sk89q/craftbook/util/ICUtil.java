@@ -249,8 +249,8 @@ public class ICUtil {
                 offsetZ = Integer.parseInt(split[2]);
             } else
                 offsetY = Integer.parseInt(line);
-        } catch (NumberFormatException e) {
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NumberFormatException ignored) {
+        } catch (ArrayIndexOutOfBoundsException ignored) {
         }
 
         if(offsetX == 0 && offsetY == 0 && offsetZ == 0)
@@ -340,7 +340,7 @@ public class ICUtil {
                 r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
                 return new Vector(r,r,r);
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return radius;
     }

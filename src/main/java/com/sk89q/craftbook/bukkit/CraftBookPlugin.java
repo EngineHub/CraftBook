@@ -460,7 +460,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 varFile.createNewFile();
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), logger());
             variableConfiguration.load();
-        } catch(Exception e){}
+        } catch(Exception ignored){}
 
         // Mechanics
         if (config.enableMechanisms) {
@@ -903,7 +903,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
                 try {
                     file.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
 
                 try {
@@ -1011,8 +1011,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 return false;
         }
         if (!config.obeyWorldguard) return true;
-        if (worldGuardPlugin == null) return true;
-        return worldGuardPlugin.canBuild(player, block);
+        return worldGuardPlugin == null || worldGuardPlugin.canBuild(player, block);
     }
 
     /**
@@ -1037,8 +1036,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 return false;
         }
         if (!config.obeyWorldguard) return true;
-        if (worldGuardPlugin == null) return true;
-        return worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
+        return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
     }
 
     /**

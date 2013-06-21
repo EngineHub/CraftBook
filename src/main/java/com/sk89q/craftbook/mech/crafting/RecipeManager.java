@@ -182,7 +182,7 @@ public class RecipeManager extends LocalConfiguration {
                 if(advancedData != null)
                     if(advancedData.size() != ((Recipe)o).advancedData.size())
                         return false;
-                return ((Recipe) o).getId() == id && type == ((Recipe)o).type && result.equals(((Recipe)o).result);
+                return ((Recipe) o).getId().equals(id) && type == ((Recipe)o).type && result.equals(((Recipe)o).result);
             }
             else
                 return false;
@@ -213,10 +213,8 @@ public class RecipeManager extends LocalConfiguration {
                     if(stack.hasAdvancedData())
                         return true;
             }
-            if(result.hasAdvancedData())
-                return true;
+            return result.hasAdvancedData() || !advancedData.isEmpty();
 
-            return !advancedData.isEmpty();
         }
 
         private Recipe(String id, YAMLProcessor config) throws InvalidCraftingException {

@@ -463,8 +463,7 @@ public class Door extends AbstractMechanic {
     public void setBlocks(Sign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return;
-        int curBlocks = amount;
-        s.setLine(0, String.valueOf(curBlocks));
+        s.setLine(0, String.valueOf(amount));
         s.update();
     }
 

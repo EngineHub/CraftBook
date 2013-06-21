@@ -59,7 +59,7 @@ public class LanguageManager {
                 if(br != null)
                     try {
                         br.close();
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
             }
             languageMap.put(language, languageData);
