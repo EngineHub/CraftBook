@@ -192,7 +192,7 @@ public class Chair implements Listener {
         public void run() {
 
             for (String pl : chairs.keySet()) {
-                Player p = Bukkit.getPlayer(pl);
+                Player p = Bukkit.getPlayerExact(pl);
                 if (p == null) {
                     chairs.remove(pl);
                     continue;

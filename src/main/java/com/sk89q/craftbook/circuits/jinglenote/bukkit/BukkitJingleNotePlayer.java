@@ -25,7 +25,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
     public void play (Note note)  {
 
         if (p == null || !p.isOnline())
-            p = Bukkit.getPlayer(player);
+            p = Bukkit.getPlayerExact(player);
 
         if (p == null || !p.isOnline() || note == null) {
             return;

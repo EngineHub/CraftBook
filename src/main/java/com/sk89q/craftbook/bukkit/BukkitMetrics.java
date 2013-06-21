@@ -434,12 +434,12 @@ public class BukkitMetrics {
         connection.setDoOutput(true);
 
         // Write the data
-        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
         writer.write(data.toString());
         writer.flush();
 
         // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         final String response = reader.readLine();
 
         // close resources

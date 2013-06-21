@@ -34,7 +34,7 @@ public class PaintingSwitch implements Listener {
 
         String player = paintings.get(paint);
         if (player != null && players.get(player) != null) {
-            Player p = plugin.getServer().getPlayer(player);
+            Player p = plugin.getServer().getPlayerExact(player);
             return p != null && !p.isDead();
         }
         return false;
