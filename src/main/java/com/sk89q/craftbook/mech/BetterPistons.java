@@ -124,7 +124,7 @@ public class BetterPistons extends AbstractMechanic {
          */
         @Override
         public BetterPistons detect(BlockWorldVector pt, LocalPlayer player,
-                                    ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             Block block = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
             Types type;
@@ -171,33 +171,35 @@ public class BetterPistons extends AbstractMechanic {
         //Make sure same type (Lazy checks)
         if (event.getBlock().getTypeId() != trigger.getTypeId()) return;
 
+        PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
+        Sign signState = (Sign) sign.getState();
+
         switch (type) {
             case CRUSH:
                 if (event.getNewCurrent() > event.getOldCurrent()) {
-                    crush();
+                    crush(piston, signState);
                 }
                 break;
             case BOUNCE:
                 if (event.getNewCurrent() > event.getOldCurrent()) {
-                    bounce();
+                    bounce(piston, signState);
                 }
                 break;
             case SUPERSTICKY:
                 if (event.getNewCurrent() < event.getOldCurrent()) {
-                    superSticky();
+                    superSticky(piston, signState);
                 }
                 break;
             case SUPERPUSH:
                 if (event.getNewCurrent() > event.getOldCurrent()) {
-                    superPush();
+                    superPush(piston, signState);
                 }
                 break;
         }
     }
 
-    public void crush() {
+    public void crush(PistonBaseMaterial piston, Sign signState) {
 
-        PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
         piston.setPowered(false);
         if (!canPistonPushBlock(trigger.getRelative(piston.getFacing())) || CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
             return;
@@ -214,14 +216,13 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void bounce() {
+    public void bounce(PistonBaseMaterial piston, Sign signState) {
 
-        PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
         if (piston.isSticky()) return;
 
         double mult;
         try {
-            mult = Double.parseDouble(((Sign) sign.getState()).getLine(2));
+            mult = Double.parseDouble(signState.getLine(2));
         } catch (Exception e) {
             mult = 1;
         }
@@ -240,9 +241,8 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void superSticky() {
+    public void superSticky(final PistonBaseMaterial piston, final Sign signState) {
 
-        final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
         if (!piston.isSticky()) return;
 
         if (trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
@@ -250,18 +250,16 @@ public class BetterPistons extends AbstractMechanic {
             int block = 10;
             int amount = 1;
             try {
-                block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[0]);
-                if (RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1) {
-                    amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
+                block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(signState.getLine(2))[0]);
+                if (RegexUtil.MINUS_PATTERN.split(signState.getLine(2)).length > 1) {
+                    amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(signState.getLine(2))[1]);
                 }
             } catch (Exception ignored) {
             }
 
-            final boolean air = ((Sign) sign.getState()).getLine(3).equalsIgnoreCase("AIR");
+            final boolean air = signState.getLine(3).equalsIgnoreCase("AIR");
 
-            if (block > CraftBookPlugin.inst().getConfiguration().pistonMaxDistance) {
-                block = CraftBookPlugin.inst().getConfiguration().pistonMaxDistance;
-            }
+            block = Math.min(CraftBookPlugin.inst().getConfiguration().pistonMaxDistance, block);
 
             final int fblock = block;
 
@@ -295,24 +293,21 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void superPush() {
+    public void superPush(final PistonBaseMaterial piston, Sign signState) {
 
-        final PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
         if (trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_MOVING_PIECE) {
 
             int block = 10;
             int amount = 1;
             try {
-                block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[0]);
-                if (RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2)).length > 1) {
-                    amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(((Sign) sign.getState()).getLine(2))[1]);
+                block = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(signState.getLine(2))[0]);
+                if (RegexUtil.MINUS_PATTERN.split(signState.getLine(2)).length > 1) {
+                    amount = Integer.parseInt(RegexUtil.MINUS_PATTERN.split(signState.getLine(2))[1]);
                 }
             } catch (Exception ignored) {
             }
 
-            if (block > CraftBookPlugin.inst().getConfiguration().pistonMaxDistance) {
-                block = CraftBookPlugin.inst().getConfiguration().pistonMaxDistance;
-            }
+            block = Math.min(CraftBookPlugin.inst().getConfiguration().pistonMaxDistance, block);
 
             final int fblock = block;
 
