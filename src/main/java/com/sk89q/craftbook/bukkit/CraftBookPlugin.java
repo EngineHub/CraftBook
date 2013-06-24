@@ -297,21 +297,29 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public boolean hasVariable(String variable, String namespace) {
 
+        if(!config.variablesEnabled)
+            return false;
         return variableStore.containsKey(new Tuple2<String, String>(variable, namespace));
     }
 
     public String getVariable(String variable, String namespace) {
 
+        if(!config.variablesEnabled)
+            return "Variables Are Disabled!";
         return variableStore.get(new Tuple2<String, String>(variable, namespace));
     }
 
     public String setVariable(String variable, String namespace, String value) {
 
+        if(!config.variablesEnabled)
+            return "Variables Are Disabled!";
         return variableStore.put(new Tuple2<String, String>(variable, namespace), value);
     }
 
     public String removeVariable(String variable, String namespace) {
 
+        if(!config.variablesEnabled)
+            return "Variables Are Disabled!";
         return variableStore.remove(new Tuple2<String, String>(variable, namespace));
     }
 
@@ -454,13 +462,15 @@ public class CraftBookPlugin extends JavaPlugin {
     public void startComponents() {
 
         // VariableStore
-        try {
-            File varFile = new File(getDataFolder(), "variables.yml");
-            if(!varFile.exists())
-                varFile.createNewFile();
-            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), logger());
-            variableConfiguration.load();
-        } catch(Exception ignored){}
+        if(config.variablesEnabled) {
+            try {
+                File varFile = new File(getDataFolder(), "variables.yml");
+                if(!varFile.exists())
+                    varFile.createNewFile();
+                variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), logger());
+                variableConfiguration.load();
+            } catch(Exception ignored){}
+        }
 
         // Mechanics
         if (config.enableMechanisms) {
@@ -493,7 +503,8 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
-        variableConfiguration.save();
+        if(config.variablesEnabled)
+            variableConfiguration.save();
         components.clear();
     }
 
@@ -837,7 +848,8 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
-        variableConfiguration.save();
+        if(config.variablesEnabled)
+            variableConfiguration.save();
         components.clear();
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());

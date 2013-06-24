@@ -12,6 +12,10 @@ import com.sk89q.craftbook.util.ItemInfo;
 public abstract class LocalConfiguration {
 
 
+    // Common
+    // Common - Variables
+    public boolean variablesEnabled;
+
     // Circuits
     // Circuits - IC
     public boolean ICEnabled;

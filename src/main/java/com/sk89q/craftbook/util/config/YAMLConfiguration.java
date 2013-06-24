@@ -34,6 +34,12 @@ public class YAMLConfiguration extends LocalConfiguration {
     @Override
     public void load() {
 
+        /* Common Configuration */
+
+        // Variable Configuration Listener
+        config.setComment("common.variables.enable", "Enables the variable system.");
+        variablesEnabled = config.getBoolean("common.variables.enable", true);
+
         /* Circuits Configuration */
 
         // IC Configuration Listener.
