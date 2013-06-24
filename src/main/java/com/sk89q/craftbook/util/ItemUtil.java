@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -458,6 +459,8 @@ public class ItemUtil {
     /**
      * Parse an item from a line of text.
      * 
+     * @author me4502
+     * 
      * @param line The line to parse it from.
      * @return The item to create.
      */
@@ -495,16 +498,13 @@ public class ItemUtil {
         try {
             if (dataSplit.length > 1)
                 data = Integer.parseInt(dataSplit[1]);
-        }
-        catch(Exception ignored){}
+        } catch(Exception ignored){}
         try {
             if(amountSplit.length > 1)
                 amount = Integer.parseInt(amountSplit[1]);
-        }
-        catch(Exception ignored){}
+        } catch(Exception ignored){}
 
-        if(id < 1)
-            id = 1;
+        id = Math.max(1, id);
 
         ItemStack rVal = new ItemStack(id, amount, (short) data);
         rVal.setData(new MaterialData(id, (byte)data));
@@ -585,6 +585,8 @@ public class ItemUtil {
     /**
      * The opposite of {@link getItem()}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
      * 
+     * @author me4502
+     * 
      * @param item The {@link ItemStack} to convert into a {@link String}.
      * @return The {@link String} that represents the {@link ItemStack}.
      */
@@ -605,6 +607,30 @@ public class ItemUtil {
                 List<String> list = item.getItemMeta().getLore();
                 for(String s : list)
                     builder.append("|").append(s);
+            }
+            ItemMeta meta = item.getItemMeta();
+            if (meta instanceof SkullMeta) {
+                if(((SkullMeta) meta).hasOwner())
+                    builder.append("/player:").append(((SkullMeta) meta).getOwner());
+            } else if (meta instanceof BookMeta) {
+                if(((BookMeta) meta).hasTitle())
+                    builder.append("/title:").append(((BookMeta) meta).getTitle());
+                if(((BookMeta) meta).hasAuthor())
+                    builder.append("/author:").append(((BookMeta) meta).getAuthor());
+                if(((BookMeta) meta).hasPages())
+                    for(String page : ((BookMeta) meta).getPages())
+                        builder.append("/page:").append(page);
+            } else if (meta instanceof LeatherArmorMeta) {
+                if(!((LeatherArmorMeta) meta).getColor().equals(Bukkit.getItemFactory().getDefaultLeatherColor()))
+                    builder.append("/color:").append(((LeatherArmorMeta) meta).getColor().getRed()).append(",").append(((LeatherArmorMeta) meta).getColor().getGreen()).append(",").append(((LeatherArmorMeta) meta).getColor().getBlue());
+            } else if (meta instanceof PotionMeta) {
+                if(!((PotionMeta) meta).hasCustomEffects())
+                    for(PotionEffect eff : ((PotionMeta) meta).getCustomEffects())
+                        builder.append("/potion:").append(eff.getType().getName()).append(";").append(eff.getDuration()).append(";").append(eff.getAmplifier());
+            } else if (meta instanceof EnchantmentStorageMeta) {
+                if(!((EnchantmentStorageMeta) meta).hasStoredEnchants())
+                    for(Entry<Enchantment, Integer> eff : ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet())
+                        builder.append("/enchant:").append(eff.getKey().getName()).append(";").append(eff.getValue());
             }
         }
 
