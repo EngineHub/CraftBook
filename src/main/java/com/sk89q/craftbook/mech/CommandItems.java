@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -237,6 +238,8 @@ public class CommandItems implements Listener {
                         command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
                     if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
                         command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
+                    if(event instanceof EntityEvent && ((EntityEvent) event).getEntity() != null)
+                        command = command.replace("@e", ((EntityEvent) event).getEntity().getType().getName());
                     command = ParsingUtil.parseLine(command, player);
                     if(comdef.type == CommandType.CONSOLE)
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
@@ -272,6 +275,9 @@ public class CommandItems implements Listener {
                                     command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
                                 if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
                                     command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
+                                if(event instanceof EntityEvent && ((EntityEvent) event).getEntity() != null)
+                                    command = command.replace("@e", ((EntityEvent) event).getEntity().getType().getName());
+
                                 command = ParsingUtil.parseLine(command, player);
                                 if(comdef.type == CommandType.CONSOLE)
                                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
