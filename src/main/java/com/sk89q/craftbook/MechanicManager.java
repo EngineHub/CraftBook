@@ -160,7 +160,7 @@ public class MechanicManager {
         Sign sign = (Sign) state;
 
         try {
-            load(pos, localPlayer, BukkitUtil.toChangedSign(sign, event.getLines()));
+            load(pos, localPlayer, BukkitUtil.toChangedSign(sign, event.getLines(), localPlayer));
         } catch (InvalidMechanismException e) {
             if (e.getMessage() != null) {
                 localPlayer.printError(e.getMessage());

@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.variables;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -11,6 +12,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class NumericModifier extends AbstractIC {
 
@@ -51,7 +53,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         try {
-            double currentValue = Double.parseDouble(ParsingUtil.parseGlobalVariables(variable));
+            double currentValue = Double.parseDouble(ParsingUtil.parseVariables(variable, null));
 
             switch(function) {
                 case ADD:
@@ -116,10 +118,27 @@ public class NumericModifier extends AbstractIC {
         }
 
         @Override
+        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+
+            String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
+            if(parts.length == 1) {
+                if(!player.hasPermission("craftbook.variables.use.global"))
+                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
+            } else
+                if(!player.hasPermission("craftbook.variables.use." + parts[0]))
+                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+        }
+
+        @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                if(!CraftBookPlugin.inst().hasVariable(sign.getLine(2), "global"))
-                    throw new ICVerificationException("Unknown Variable!");
+                String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
+                if(parts.length == 1) {
+                    if(!CraftBookPlugin.inst().hasVariable(sign.getLine(2), "global"))
+                        throw new ICVerificationException("Unknown Variable!");
+                } else
+                    if(!CraftBookPlugin.inst().hasVariable(parts[1], parts[0]))
+                        throw new ICVerificationException("Unknown Variable!");
                 Function.valueOf(sign.getLine(3).split(":")[0]);
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
             } catch(NumberFormatException e) {

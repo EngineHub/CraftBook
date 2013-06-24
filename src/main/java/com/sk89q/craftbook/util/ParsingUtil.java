@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
@@ -18,9 +20,10 @@ public class ParsingUtil {
      */
     public static String parseLine(String line, Player player) {
 
-        if(player != null)
+        if(player != null) {
             line = parsePlayerTags(line, player);
-        line = parseGlobalVariables(line);
+        }
+        line = parseVariables(line, player);
 
         return line;
     }
@@ -33,13 +36,47 @@ public class ParsingUtil {
         return line;
     }
 
-    public static String parseGlobalVariables(String line) {
+    public static List<String> getPossibleVariables(String line) {
+
+        List<String> variables = new ArrayList<String>();
+
+        for(String bit : RegexUtil.PERCENT_PATTERN.split(line))
+            variables.add(bit);
+
+        if(!variables.isEmpty())
+            variables.remove(0);
+        if(!variables.isEmpty())
+            variables.remove(variables.size() - 1);
+
+        return variables;
+    }
+
+    public static String parseVariables(String line, Player player) {
 
         if(CraftBookPlugin.inst() == null)
             return line;
-        for(Entry<Tuple2<String, String>, String> key : CraftBookPlugin.inst().getVariableStore().entrySet()) {
-            if(key.getKey().b.equalsIgnoreCase("global"))
-                line = line.replace("%" + key.getKey().a  + "%", key.getValue());
+
+        for(String var : getPossibleVariables(line)) {
+
+            String key, value;
+
+            if(var.contains("|")) {
+                String[] bits = RegexUtil.PIPE_PATTERN.split(var);
+                key = bits[0];
+                value = bits[1];
+            } else {
+                key = "global";
+                value = var;
+            }
+
+            if(player != null)
+                if(!player.hasPermission("craftbook.variables.use." + key))
+                    continue;
+
+            for(Entry<Tuple2<String, String>, String> bit : CraftBookPlugin.inst().getVariableStore().entrySet()) {
+                if(bit.getKey().b.equalsIgnoreCase(key) && bit.getKey().a.equalsIgnoreCase(value))
+                    line = line.replace("%" + var + "|" + key + "%", bit.getValue());
+            }
         }
 
         return line;

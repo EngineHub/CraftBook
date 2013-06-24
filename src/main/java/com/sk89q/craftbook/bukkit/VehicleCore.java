@@ -418,7 +418,7 @@ public class VehicleCore implements LocalComponent {
                         }
                     }
                     if (!found) continue;
-                    if (!mech.verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines), player)) {
+                    if (!mech.verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines, player), player)) {
                         block.breakNaturally();
                         event.setCancelled(true);
                         return;

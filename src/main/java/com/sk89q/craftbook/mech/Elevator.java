@@ -388,8 +388,7 @@ public class Elevator extends AbstractMechanic {
                 Button b = (Button) block.getState().getData();
                 Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                 if (sign.getState() instanceof Sign)
-                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(),
-                            ((Sign) sign.getState()).getLines()));
+                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines()));
             }
             return Direction.NONE;
         }

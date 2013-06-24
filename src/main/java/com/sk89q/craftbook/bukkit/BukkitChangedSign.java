@@ -22,8 +22,10 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 
@@ -31,6 +33,34 @@ public class BukkitChangedSign implements ChangedSign {
 
     private Sign sign;
     private String[] lines;
+
+    public BukkitChangedSign(Sign sign, String[] lines, LocalPlayer player) {
+
+        Validate.notNull(sign);
+
+        this.sign = sign;
+        this.lines = lines;
+
+        if(lines != null) {
+            for(int i = 0; i < 4; i++) {
+
+                String line = lines[i];
+                for(String var : ParsingUtil.getPossibleVariables(line)) {
+
+                    String key;
+
+                    if(var.contains("|")) {
+                        String[] bits = RegexUtil.PIPE_PATTERN.split(var);
+                        key = bits[0];
+                    } else
+                        key = "global";
+
+                    if(!player.hasPermission("craftbook.variables.use." + key))
+                        setLine(i,line.replace("%" + var + "|" + key + "%", ""));
+                }
+            }
+        }
+    }
 
     public BukkitChangedSign(Sign sign, String[] lines) {
 
@@ -102,7 +132,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
 
-        return ParsingUtil.parseGlobalVariables(lines[index]);
+        return ParsingUtil.parseVariables(lines[index], null);
     }
 
     @Override
