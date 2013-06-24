@@ -327,8 +327,8 @@ public class BetterPistons extends AbstractMechanic {
                                         ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                     }
                                 }
-                                copyData(trigger.getRelative(piston.getFacing(), i), trigger.getRelative(piston.getFacing(), i + 1));
-                                trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                if(copyData(trigger.getRelative(piston.getFacing(), i), trigger.getRelative(piston.getFacing(), i + 1)))
+                                    trigger.getRelative(piston.getFacing(), i).setTypeId(0);
                             }
                         }
                     }
@@ -343,9 +343,9 @@ public class BetterPistons extends AbstractMechanic {
      * @param from The from block.
      * @param to   The block the data is being moved to.
      */
-    public void copyData(Block from, Block to) {
+    public boolean copyData(Block from, Block to) {
 
-        if (from.getState() instanceof DoubleChest || to.getState() instanceof DoubleChest) return;
+        if (from.getState() instanceof DoubleChest || to.getState() instanceof DoubleChest) return false;
 
         int type = from.getTypeId();
         byte data = from.getData();
@@ -376,6 +376,8 @@ public class BetterPistons extends AbstractMechanic {
             state.getInventory().setContents(oldInventory);
             ((BlockState) state).update(true);
         }
+
+        return true;
     }
 
     public boolean canPistonPushBlock(Block block) {
