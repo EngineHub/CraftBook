@@ -1,5 +1,9 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Skull;
@@ -129,7 +133,7 @@ public class HeadDrops implements Listener {
             }
 
             if(type != null)
-                meta.setDisplayName(ChatColor.RESET + type.getName() + " Head");
+                meta.setDisplayName(ChatColor.RESET + type.getName().replace("_", " ") + " Head");
             else
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
 
@@ -159,22 +163,29 @@ public class HeadDrops implements Listener {
         HORSE("gavertoso"),
         PIG("XlexerX"),
         PIG_ZOMBIE("ManBearPigZombie"),
-        BAT("coolwhip101"),
+        BAT("coolwhip101", "bozzobrain"),
         SPIDER("Kelevra_V"),
         VILLAGER("Villager"),
         SHEEP("Eagle_Peak"),
         COW("VerifiedBernard");
 
-        MobSkullType(String playerName) {
+        MobSkullType(String playerName, String ... oldNames) {
 
             this.playerName = playerName;
+            this.oldNames = new ArrayList<String>(Arrays.asList(oldNames));
         }
 
         private String playerName;
+        private List<String> oldNames;
 
         public String getPlayerName() {
 
             return playerName;
+        }
+
+        public boolean isOldName(String name) {
+
+            return oldNames.contains(name);
         }
 
         public static MobSkullType getFromEntityType(EntityType entType) {
@@ -189,7 +200,7 @@ public class HeadDrops implements Listener {
         public static EntityType getEntityType(String name) {
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equals(name))
+                if(type.getPlayerName().equals(name) || type.isOldName(name))
                     return EntityType.valueOf(type.name());
 
             return null;
