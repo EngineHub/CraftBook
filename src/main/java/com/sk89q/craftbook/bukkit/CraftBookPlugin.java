@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -1101,7 +1102,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
             for(String testflag : inst().getConfiguration().debugFlags) {
 
-                if(testflag.toLowerCase().equals(tempFlag))
+                if(testflag.toLowerCase(Locale.ENGLISH).equals(tempFlag))
                     return true;
             }
         }

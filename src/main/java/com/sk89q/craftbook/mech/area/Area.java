@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.area;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -105,8 +106,8 @@ public class Area extends AbstractMechanic {
         private void isValidArea(ChangedSign sign) throws InvalidMechanismException {
 
             String namespace = sign.getLine(0).trim();
-            String areaOn = sign.getLine(2).trim().toLowerCase();
-            String areaOff = sign.getLine(3).trim().toLowerCase();
+            String areaOn = sign.getLine(2).trim().toLowerCase(Locale.ENGLISH);
+            String areaOff = sign.getLine(3).trim().toLowerCase(Locale.ENGLISH);
             if (CopyManager.isExistingArea(plugin.getDataFolder(), namespace, areaOn)) {
                 if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return;
                 if (CopyManager.isExistingArea(plugin.getDataFolder(), namespace, areaOff)) return;
@@ -180,8 +181,8 @@ public class Area extends AbstractMechanic {
         try {
             World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase();
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
+            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             CuboidCopy copy;
 
@@ -237,8 +238,8 @@ public class Area extends AbstractMechanic {
         try {
             World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase();
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase();
+            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             CuboidCopy copy;
 
@@ -286,7 +287,7 @@ public class Area extends AbstractMechanic {
     private static boolean checkSign(ChangedSign sign) {
 
         String namespace = sign.getLine(0);
-        String id = sign.getLine(2).toLowerCase();
+        String id = sign.getLine(2).toLowerCase(Locale.ENGLISH);
 
         if (id == null || id.isEmpty() || id.length() < 1) return false;
         if (namespace == null || namespace.isEmpty() || namespace.length() < 1) return false;
@@ -304,8 +305,8 @@ public class Area extends AbstractMechanic {
 
     private static boolean coldCheckToggleState(ChangedSign sign) {
 
-        String line3 = sign.getLine(2).toLowerCase();
-        String line4 = sign.getLine(3).toLowerCase();
+        String line3 = sign.getLine(2).toLowerCase(Locale.ENGLISH);
+        String line4 = sign.getLine(3).toLowerCase(Locale.ENGLISH);
         return pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 

@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
+import java.util.Locale;
+
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -72,7 +74,7 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void load() {
 
-        type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase());
+        type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
             type = EntityType.PIG;
         }
@@ -370,9 +372,9 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (EntityType.fromName(sign.getLine(2).trim().toLowerCase()) == null) {
+            if (EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH)) == null) {
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
-            } else if (!EntityType.fromName(sign.getLine(2).trim().toLowerCase()).isSpawnable()) {
+            } else if (!EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH)).isSpawnable()) {
                 throw new ICVerificationException("Entity is not spawnable!");
             }
         }

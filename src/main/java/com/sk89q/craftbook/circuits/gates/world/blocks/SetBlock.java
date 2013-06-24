@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.Locale;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -28,13 +30,13 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] splitBlockData = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase().trim(), 2);
+        String[] splitBlockData = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase(Locale.ENGLISH).trim(), 2);
         String strBlock = splitBlockData[0];
         String strMeta = "";
         if (splitBlockData.length > 1) {
             strMeta = splitBlockData[1];
         }
-        force = getSign().getLine(3).toUpperCase().trim();
+        force = getSign().getLine(3).toUpperCase(Locale.ENGLISH).trim();
 
         try {
             block = Integer.parseInt(strBlock);

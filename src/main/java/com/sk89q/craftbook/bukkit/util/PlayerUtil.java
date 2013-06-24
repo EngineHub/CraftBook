@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -47,7 +48,7 @@ public class PlayerUtil {
         Player[] players = CraftBookPlugin.inst().getServer().getOnlinePlayers();
         boolean useDisplayNames = true;
 
-        filter = filter.toLowerCase();
+        filter = filter.toLowerCase(Locale.ENGLISH);
 
         // Allow exact name matching
         if (filter.charAt(0) == '@' && filter.length() >= 2) {
@@ -70,8 +71,8 @@ public class PlayerUtil {
             List<Player> list = new ArrayList<Player>();
 
             for (Player player : players) {
-                if (player.getName().toLowerCase().contains(filter) || useDisplayNames
-                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).contains(filter)) {
+                if (player.getName().toLowerCase(Locale.ENGLISH).contains(filter) || useDisplayNames
+                        && ChatColor.stripColor(player.getDisplayName().toLowerCase(Locale.ENGLISH)).contains(filter)) {
                     list.add(player);
                 }
             }
@@ -83,8 +84,8 @@ public class PlayerUtil {
             List<Player> list = new ArrayList<Player>();
 
             for (Player player : players) {
-                if (player.getName().toLowerCase().startsWith(filter) || useDisplayNames
-                        && ChatColor.stripColor(player.getDisplayName().toLowerCase()).startsWith(filter)) {
+                if (player.getName().toLowerCase(Locale.ENGLISH).startsWith(filter) || useDisplayNames
+                        && ChatColor.stripColor(player.getDisplayName().toLowerCase(Locale.ENGLISH)).startsWith(filter)) {
                     list.add(player);
                 }
             }

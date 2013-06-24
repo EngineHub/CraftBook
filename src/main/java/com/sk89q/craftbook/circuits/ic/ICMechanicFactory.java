@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 
 import org.bukkit.block.Block;
@@ -69,25 +70,25 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         // TODO: remove after some time to stop converting existing MCA ICs
         // convert existing MCA ICs to the new [MCXXXX]A syntax
         if (prefix.equalsIgnoreCase("MCA")) {
-            sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
+            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return detect(pt);
         }
-        if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
+        if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
             if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
                 sign.setLine(1, "[MC1421]S");
             else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
                 sign.setLine(1, "[MC1422]S");
             else
-                sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
+                sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return detect(pt);
         }
 
-        if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
-            sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
+        if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
+            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return detect(pt);
@@ -149,7 +150,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
+        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
             return new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
         else
             return new ICMechanic(id, ic, family, pt);
@@ -193,25 +194,25 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 // TODO: remove after some time to stop converting existing MCA ICs
                 // convert existing MCA ICs to the new [MCXXXX]A syntax
                 if (prefix.equalsIgnoreCase("MCA")) {
-                    sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mca", "mc") + "a").toUpperCase());
+                    sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
                     sign.update(false);
 
                     return detect(pt, player, sign, shortHand);
                 }
-                if (sign.getLine(1).toLowerCase().startsWith("[mc0")) {
+                if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
                     if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
                         sign.setLine(1, "[MC1421]S");
                     else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
                         sign.setLine(1, "[MC1422]S");
                     else
-                        sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mc0", "mc1") + "s").toUpperCase());
+                        sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
                     sign.update(false);
 
                     return detect(pt, player, sign, shortHand);
                 }
 
-                if (sign.getLine(1).toLowerCase().startsWith("[mcz")) {
-                    sign.setLine(1, (sign.getLine(1).toLowerCase().replace("mcz", "mcx") + "s").toUpperCase());
+                if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
+                    sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
                     sign.update(false);
 
                     return detect(pt, player, sign, shortHand);
@@ -240,7 +241,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICFactory factory = registration.getFactory();
 
-            checkPermissions(player, factory, registration.getId().toLowerCase());
+            checkPermissions(player, factory, registration.getId().toLowerCase(Locale.ENGLISH));
 
             //WorldEdit offset/radius tools.
             ICUtil.parseSignFlags(player, sign);
@@ -270,7 +271,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
             ICMechanic mechanic;
 
-            if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase().endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
+            if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
                 mechanic = new SelfTriggeredICMechanic(id, (SelfTriggeredIC) ic, family, pt);
             } else {
                 mechanic = new ICMechanic(id, ic, family, pt);
@@ -282,13 +283,13 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         } else if (CraftBookPlugin.inst().getConfiguration().ICShortHandEnabled && sign.getLine(0).startsWith("=")) {
             String id = sign.getLine(0).substring(1);
 
-            boolean st = id.toLowerCase().endsWith(" st");
-            id = id.toLowerCase().replace(" st", "");
+            boolean st = id.toLowerCase(Locale.ENGLISH).endsWith(" st");
+            id = id.toLowerCase(Locale.ENGLISH).replace(" st", "");
 
             if (block.getTypeId() != BlockID.WALL_SIGN)
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
-            String shortId = manager.longRegistered.get(id.toLowerCase());
+            String shortId = manager.longRegistered.get(id.toLowerCase(Locale.ENGLISH));
             if (shortId == null) {
                 player.printError("Warning: Unknown IC");
                 return null;
@@ -315,11 +316,11 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
     public static void checkPermissions(LocalPlayer player, ICFactory factory, String id)
             throws ICVerificationException {
 
-        if (player.hasPermission("craftbook.ic." + id.toLowerCase())) {
+        if (player.hasPermission("craftbook.ic." + id.toLowerCase(Locale.ENGLISH))) {
             return;
         }
 
-        if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName() + '.' + id.toLowerCase())) {
+        if (player.hasPermission("craftbook.ic." + factory.getClass().getPackage().getName() + '.' + id.toLowerCase(Locale.ENGLISH))) {
             return;
         }
 
@@ -329,14 +330,14 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             return;
         }
 
-        throw new ICVerificationException("You don't have permission to use " + id.toLowerCase() + ".");
+        throw new ICVerificationException("You don't have permission to use " + id.toLowerCase(Locale.ENGLISH) + ".");
     }
 
     public static boolean hasRestrictedPermissions(LocalPlayer player, ICFactory factory, String id) {
-        return player.hasPermission("craftbook.ic.restricted." + id.toLowerCase());
+        return player.hasPermission("craftbook.ic.restricted." + id.toLowerCase(Locale.ENGLISH));
     }
 
     public static boolean hasSafePermissions(LocalPlayer player, ICFactory factory, String id) {
-        return player.hasPermission("craftbook.ic.safe." + id.toLowerCase());
+        return player.hasPermission("craftbook.ic.safe." + id.toLowerCase(Locale.ENGLISH));
     }
 }

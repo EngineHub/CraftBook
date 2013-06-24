@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
@@ -100,7 +101,7 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
                         material = Material.getMaterial(Integer.parseInt(split[0]));
                     } catch (NumberFormatException e) {
                         // use the name
-                        material = Material.getMaterial(split[0].toUpperCase());
+                        material = Material.getMaterial(split[0].toUpperCase(Locale.ENGLISH));
                     }
                     if (material != null) {
                         CauldronItemStack itemStack = new CauldronItemStack(material);

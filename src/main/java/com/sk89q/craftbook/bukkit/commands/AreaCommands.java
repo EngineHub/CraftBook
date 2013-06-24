@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -123,7 +124,7 @@ public class AreaCommands {
 
             // Save
             try {
-                CopyManager.getInstance().save(world, namespace, id.toLowerCase(), copy);
+                CopyManager.getInstance().save(world, namespace, id.toLowerCase(Locale.ENGLISH), copy);
                 player.print("Area saved as '" + id + "' under the '" + namespace + "' namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());

@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.Locale;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -50,7 +52,7 @@ public class FlexibleSetBlock extends AbstractIC {
         // axis is one of X, Y, Z
         // sign is optional or one of "+" or "-"
         // blockData is optional (along with its preceding colon
-        String line3 = getSign().getLine(2).toUpperCase();
+        String line3 = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
 
         String line4 = getSign().getLine(3);
 
@@ -97,7 +99,7 @@ public class FlexibleSetBlock extends AbstractIC {
             }
         } else data = 0;
 
-        hold = line4.toUpperCase().contains("H");
+        hold = line4.toUpperCase(Locale.ENGLISH).contains("H");
 
         body = getBackBlock();
 
@@ -158,7 +160,7 @@ public class FlexibleSetBlock extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            String line3 = sign.getLine(2).toUpperCase();
+            String line3 = sign.getLine(2).toUpperCase(Locale.ENGLISH);
 
             String[] params = RegexUtil.COLON_PATTERN.split(line3);
             if (params.length < 2) throw new ICVerificationException("Not enough parameters on second line!");

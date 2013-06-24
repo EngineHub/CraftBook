@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
+import java.util.Locale;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -52,7 +54,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
     public void load() {
 
         String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(getSign().getLine(3).trim());
-        type = EntityType.fromName(splitLine3[0].trim().toLowerCase());
+        type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
             type = EntityType.PIG;
         }
@@ -206,9 +208,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
-            if (EntityType.fromName(splitLine3[0].trim().toLowerCase()) == null) {
+            if (EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH)) == null) {
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
-            } else if (!EntityType.fromName(splitLine3[0].trim().toLowerCase()).isSpawnable()) {
+            } else if (!EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH)).isSpawnable()) {
                 throw new ICVerificationException("Entity is not spawnable!");
             }
         }

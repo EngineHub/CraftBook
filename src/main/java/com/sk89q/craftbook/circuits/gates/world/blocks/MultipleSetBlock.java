@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.Locale;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -48,7 +50,7 @@ public class MultipleSetBlock extends AbstractIC {
     @Override
     public void load() {
 
-        String line3 = getSign().getLine(2).replace("+", "").toUpperCase();
+        String line3 = getSign().getLine(2).replace("+", "").toUpperCase(Locale.ENGLISH);
         String line4 = getSign().getLine(3);
         getSign().setLine(2, line3);
         getSign().update(false);

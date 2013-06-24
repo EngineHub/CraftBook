@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.Locale;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -135,9 +137,9 @@ public class BetterPistons extends AbstractMechanic {
 
                 if (type == null || type != this.type) return null;
 
-                player.checkPermission("craftbook.mech.pistons." + type.name().toLowerCase());
+                player.checkPermission("craftbook.mech.pistons." + type.name().toLowerCase(Locale.ENGLISH));
 
-                player.print("mech.pistons." + type.name().toLowerCase() + ".created");
+                player.print("mech.pistons." + type.name().toLowerCase(Locale.ENGLISH) + ".created");
 
                 throw new ProcessedMechanismException();
             }

@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.ic;
 
+import java.util.Locale;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -12,7 +14,7 @@ public class ICDocsParser {
 
     public static void generateICDocs(Player player, String id) {
 
-        RegisteredICFactory ric = core.getIcManager().registered.get(id.toLowerCase());
+        RegisteredICFactory ric = core.getIcManager().registered.get(id.toLowerCase(Locale.ENGLISH));
         if (ric == null) {
             try {
                 ric = core.getIcManager().registered.get(core.getSearchID(player, id));
@@ -43,8 +45,7 @@ public class ICDocsParser {
             } else {
                 player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId()
-                    .toUpperCase());
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }

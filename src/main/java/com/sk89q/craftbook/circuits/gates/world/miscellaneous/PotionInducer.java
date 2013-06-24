@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.Locale;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
@@ -71,7 +73,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         } catch (Exception e) {
             effectTime = 10;
         }
-        String line4 = getSign().getLine(3).toLowerCase();
+        String line4 = getSign().getLine(3).toLowerCase(Locale.ENGLISH);
         if (line4.contains("pm")) {
             mobs = true;
             players = true;

@@ -19,6 +19,7 @@ package com.sk89q.craftbook.mech.area;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.bukkit.World;
@@ -114,9 +115,9 @@ public class CopyManager {
      * @throws CuboidCopyException
      */
     public CuboidCopy load(World world, String namespace, String id) throws IOException,
-            CuboidCopyException {
+    CuboidCopyException {
 
-        id = id.toLowerCase();
+        id = id.toLowerCase(Locale.ENGLISH);
         String cacheKey = namespace + "/" + id;
 
         HistoryHashMap<String, Long> missing = getMissing(world.getUID().toString());
@@ -159,7 +160,7 @@ public class CopyManager {
             folder.mkdirs();
         }
 
-        id = id.toLowerCase();
+        id = id.toLowerCase(Locale.ENGLISH);
 
         String cacheKey = namespace + "/" + id;
 

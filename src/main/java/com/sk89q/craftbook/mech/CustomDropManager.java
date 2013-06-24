@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -89,7 +90,7 @@ public final class CustomDropManager {
 
     public DropDefinition[] getMobDrop(String mobName) {
 
-        return mobDropDefinitions.get(mobName.toLowerCase());
+        return mobDropDefinitions.get(mobName.toLowerCase(Locale.ENGLISH));
     }
 
     public void loadDropDefinitions(File file, boolean isMobDrop) throws IOException {
@@ -174,7 +175,7 @@ public final class CustomDropManager {
                                 drop.drops[data] = drops;
                             }
                         } else {
-                            itemsSource = itemsSource.toLowerCase();
+                            itemsSource = itemsSource.toLowerCase(Locale.ENGLISH);
                             if (mobDropDefinitions.containsKey(itemsSource)) {
                                 reader.close();
                                 throw new CustomDropParseException(prelude + "double drop definition");

@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
@@ -482,8 +483,8 @@ public class CircuitCore implements LocalComponent {
             try {
                 RegisteredICFactory ric = getIcManager().registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
-                        && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
+                if (search != null && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+                        && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))) continue;
 
                 return ic;
             } catch (Exception ignored) {
@@ -515,8 +516,8 @@ public class CircuitCore implements LocalComponent {
                 {
                 RegisteredICFactory ric = getIcManager().registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                if (search != null && !tic.getTitle().toLowerCase().contains(search.toLowerCase())
-                        && !ric.getId().toLowerCase().contains(search.toLowerCase())) continue;
+                if (search != null && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+                        && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))) continue;
                 if (parameters != null) {
                     for (char c : parameters) {
                         if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
@@ -543,7 +544,7 @@ public class CircuitCore implements LocalComponent {
                 col = !col;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                if (!ICMechanicFactory.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase())) {
+                if (!ICMechanicFactory.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase(Locale.ENGLISH))) {
                     colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                 }
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"

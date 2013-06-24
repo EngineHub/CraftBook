@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.bukkit;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.block.Block;
@@ -423,7 +424,7 @@ public class VehicleCore implements LocalComponent {
                         event.setCancelled(true);
                         return;
                     }
-                    player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase());
+                    player.checkPermission("craftbook.vehicles." + mech.getName().toLowerCase(Locale.ENGLISH));
                     event.setLine(lineNum, "[" + lineFound + "]");
                     player.print(mech.getName() + " Created!");
                 }

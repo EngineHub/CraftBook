@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.cart;
 
+import java.util.Locale;
+
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
@@ -62,7 +64,7 @@ public class CartDispenser extends CartMechanism {
             if (cart == null) {
                 switch (pow) {
                     case ON:
-                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("collect"))
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                             dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -74,7 +76,7 @@ public class CartDispenser extends CartMechanism {
                         return;
                     case OFF:
                     case NA:
-                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("dispense"))
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                             collect(cart, null);
                         return;
                 }
@@ -89,7 +91,7 @@ public class CartDispenser extends CartMechanism {
                 if (cart == null) {
                     switch (pow) {
                         case ON:
-                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("collect"))
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                                 dispense(blocks, inv, type);
                             return;
                         case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -101,7 +103,7 @@ public class CartDispenser extends CartMechanism {
                             return;
                         case OFF:
                         case NA:
-                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase().contains("dispense"))
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                                 collect(cart, inv);
                             return;
                     }

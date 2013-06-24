@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import java.util.Locale;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -127,7 +129,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
 
                 if (nameLine.isEmpty()) {
                     return true;
-                } else if (type == Type.PLAYER && e.getName().toLowerCase().startsWith(nameLine.toLowerCase())) {
+                } else if (type == Type.PLAYER && e.getName().toLowerCase(Locale.ENGLISH).startsWith(nameLine.toLowerCase(Locale.ENGLISH))) {
                     return true;
                 } else if (type == Type.GROUP && CraftBookPlugin.inst().inGroup(e, nameLine)) {
                     return true;

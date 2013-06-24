@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.circuits.gates.logic;
 
+import java.util.Locale;
+
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -51,7 +53,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        String setting = getSign().getLine(2).toUpperCase();
+        String setting = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
         if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
             // Trigger condition!
             int colon = setting.indexOf(':');
@@ -103,7 +105,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             boolean lo;
 
             try {
-                String set = sign.getLine(2).toUpperCase();
+                String set = sign.getLine(2).toUpperCase(Locale.ENGLISH);
 
                 if (!set.contains(":")) throw new ICVerificationException("Invalid syntax");
 

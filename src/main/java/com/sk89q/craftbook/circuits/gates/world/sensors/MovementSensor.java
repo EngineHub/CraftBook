@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Server;
@@ -46,7 +47,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
             types.add(EntityType.ANY);
         }
 
-        getSign().setLine(3, getSign().getLine(3).toUpperCase());
+        getSign().setLine(3, getSign().getLine(3).toUpperCase(Locale.ENGLISH));
 
         // if the line contains a = the offset is given
         // the given string should look something like that:

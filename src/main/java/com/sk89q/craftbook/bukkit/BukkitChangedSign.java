@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.block.Sign;
@@ -250,7 +251,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public boolean hasVariable(String var) {
 
-        var = var.toLowerCase();
-        return lines[0].toLowerCase().contains("%" + var + "%") || lines[1].toLowerCase().contains("%" + var + "%") || lines[2].toLowerCase().contains("%" + var + "%") || lines[3].toLowerCase().contains("%" + var + "%");
+        var = var.toLowerCase(Locale.ENGLISH);
+        return lines[0].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[1].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[2].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[3].toLowerCase(Locale.ENGLISH).contains("%" + var + "%");
     }
 }

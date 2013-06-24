@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -347,8 +348,8 @@ public class CommandItems implements Listener {
             ItemStack stack = ItemUtil.getItem(config.getString(path + ".item"));
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
             String permNode = config.getString(path + ".permission-node", "");
-            CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase());
-            ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase());
+            CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase(Locale.ENGLISH));
+            ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase(Locale.ENGLISH));
             int delay = config.getInt(path + ".delay", 0);
             List<String> delayedCommands = new ArrayList<String>();
             if(delay > 0)
