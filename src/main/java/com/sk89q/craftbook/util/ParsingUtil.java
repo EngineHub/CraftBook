@@ -62,7 +62,7 @@ public class ParsingUtil {
 
             String key, value;
 
-            if(var.contains("|")) {
+            if(var.contains("|") && RegexUtil.PIPE_PATTERN.split(var).length >= 2) {
                 String[] bits = RegexUtil.PIPE_PATTERN.split(var);
                 key = bits[0];
                 value = bits[1];
