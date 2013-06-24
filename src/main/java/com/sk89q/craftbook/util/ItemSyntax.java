@@ -122,6 +122,7 @@ public class ItemSyntax {
                 id = Material.getMaterial(dataSplit[0]).getId();
                 if (id < 1) id = 1;
             } catch (Exception ee) {
+                //The next 8 lines can be removed to not require WorldEdit.
                 try {
                     id = ItemType.lookup(dataSplit[0]).getID();
                     if (id < 1) id = 1;
