@@ -23,6 +23,12 @@ import org.bukkit.potion.PotionEffectType;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemType;
 
+/**
+ * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
+ * 
+ * @author Me4502
+ *
+ */
 public class ItemSyntax {
 
     private static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
