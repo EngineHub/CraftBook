@@ -57,6 +57,7 @@ import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
 import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -1087,7 +1088,7 @@ public class CraftBookPlugin extends JavaPlugin {
         if(!inst().getConfiguration().debugMode || inst().getConfiguration().debugFlags == null || inst().getConfiguration().debugFlags.isEmpty())
             return false;
 
-        String[] flagBits = flag.toLowerCase().split(":");
+        String[] flagBits = RegexUtil.PERIOD_PATTERN.split(flag);
 
         String tempFlag = "";
 

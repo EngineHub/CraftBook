@@ -47,7 +47,7 @@ public class VariableConfiguration {
         for(Entry<Tuple2<String, String>, String> var : CraftBookPlugin.inst().getVariableStore().entrySet()) {
 
             if(RegexUtil.VARIABLE_KEY_PATTERN.matcher(var.getKey().a).find() && RegexUtil.VARIABLE_KEY_PATTERN.matcher(var.getKey().b).find() && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(var.getValue()).find())
-                config.setProperty("variables." + var.getKey().a + "|" + var.getKey().b, var.getValue());
+                config.setProperty("variables." + var.getKey().b + "|" + var.getKey().a, var.getValue());
         }
         config.save();
     }

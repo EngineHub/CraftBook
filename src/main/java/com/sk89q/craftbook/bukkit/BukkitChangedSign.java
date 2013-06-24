@@ -133,7 +133,7 @@ public class BukkitChangedSign implements ChangedSign {
     @Override
     public String getLine(int index) throws IndexOutOfBoundsException {
 
-        return ParsingUtil.parseVariables(lines[index], null);
+        return ParsingUtil.parseLine(lines[index], null);
     }
 
     @Override

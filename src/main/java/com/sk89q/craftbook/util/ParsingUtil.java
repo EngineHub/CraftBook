@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -42,22 +43,21 @@ public class ParsingUtil {
         List<String> variables = new ArrayList<String>();
 
         for(String bit : RegexUtil.PERCENT_PATTERN.split(line))
-            variables.add(bit);
-
-        if(!variables.isEmpty())
-            variables.remove(0);
-        if(!variables.isEmpty())
-            variables.remove(variables.size() - 1);
+            variables.add(bit.trim());
 
         return variables;
     }
 
-    public static String parseVariables(String line, Player player) {
+    public static String parseVariables(String line, CommandSender player) {
 
         if(CraftBookPlugin.inst() == null)
             return line;
 
+        CraftBookPlugin.logDebugMessage("Attempting to parse variables. Input line: " + line, "variables.line-parsing");
+
         for(String var : getPossibleVariables(line)) {
+
+            CraftBookPlugin.logDebugMessage("Possible variable: " + var + " detected!", "variables.line-parsing");
 
             String key, value;
 
@@ -65,18 +65,21 @@ public class ParsingUtil {
                 String[] bits = RegexUtil.PIPE_PATTERN.split(var);
                 key = bits[0];
                 value = bits[1];
+                CraftBookPlugin.logDebugMessage("Variable " + value + " at " + key + " detected!", "variables.line-parsing");
             } else {
                 key = "global";
                 value = var;
+                CraftBookPlugin.logDebugMessage("Global Variable " + value + " detected!", "variables.line-parsing");
             }
 
             if(player != null)
                 if(!VariableCommands.hasVariablePermission(player, key, value, "use"))
                     continue;
+            CraftBookPlugin.logDebugMessage(var + " permissions granted!", "variables.line-parsing");
 
             for(Entry<Tuple2<String, String>, String> bit : CraftBookPlugin.inst().getVariableStore().entrySet()) {
                 if(bit.getKey().b.equalsIgnoreCase(key) && bit.getKey().a.equalsIgnoreCase(value))
-                    line = line.replace("%" + var + "|" + key + "%", bit.getValue());
+                    line = line.replace("%" + var + "%", bit.getValue());
             }
         }
 
