@@ -23,6 +23,7 @@ import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -55,8 +56,8 @@ public class BukkitChangedSign implements ChangedSign {
                     } else
                         key = "global";
 
-                    if(!player.hasPermission("craftbook.variables.use." + key))
-                        setLine(i,line.replace("%" + var + "|" + key + "%", ""));
+                    if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), key, var, "use"))
+                        setLine(i,line.replace("%" + key + "|" + var + "%", ""));
                 }
             }
         }

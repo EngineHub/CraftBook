@@ -4,7 +4,9 @@ import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -122,10 +124,10 @@ public class NumericModifier extends AbstractIC {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
             if(parts.length == 1) {
-                if(!player.hasPermission("craftbook.variables.use.global"))
+                if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), "global", parts[0], "use"))
                     throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
             } else
-                if(!player.hasPermission("craftbook.variables.use." + parts[0]))
+                if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), parts[0], parts[1], "use"))
                     throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 

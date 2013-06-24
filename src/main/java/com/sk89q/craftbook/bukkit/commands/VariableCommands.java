@@ -15,7 +15,6 @@ import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.BlockWorldVector;
 
@@ -62,7 +61,7 @@ public class VariableCommands {
 
         if(!plugin.hasVariable(context.getString(0), key)) {
 
-            if(!sender.hasPermission("craftbook.variables.define") && !sender.hasPermission("craftbook.variables.define." + key))
+            if(!hasVariablePermission(sender, key, context.getString(0), "define"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -85,7 +84,7 @@ public class VariableCommands {
 
         if(plugin.hasVariable(context.getString(0), key)) {
 
-            if(!sender.hasPermission("craftbook.variables.get") && !sender.hasPermission("craftbook.variables.get." + key))
+            if(!hasVariablePermission(sender, key, context.getString(0), "get"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -95,7 +94,6 @@ public class VariableCommands {
     }
 
     @Command(aliases = {"erase","remove","delete","rm"}, desc = "Erase a variable.", max=1, min=1, flags="n:")
-    @CommandPermissions("craftbook.variables.erase")
     public void erase(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -105,7 +103,7 @@ public class VariableCommands {
 
         if(plugin.hasVariable(context.getString(0), key)) {
 
-            if(!sender.hasPermission("craftbook.variables.erase") && !sender.hasPermission("craftbook.variables.erase." + key))
+            if(!hasVariablePermission(sender, key, context.getString(0), "erase"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -359,7 +357,28 @@ public class VariableCommands {
 
     public void checkModifyPermissions(CommandSender sender, String key, String var) throws CommandException {
 
-        if(!sender.hasPermission("craftbook.variables.modify") && !sender.hasPermission("craftbook.variables.modify." + key) && !sender.hasPermission("craftbook.variables.modify." + key + "." + var))
+        if(!hasVariablePermission(sender, key, var, "modify"))
             throw new CommandPermissionsException();
+    }
+
+    /**
+     * Checks a players ability to interact with variables.
+     * 
+     * @param sender The one who is attempting to interact.
+     * @param key The namespace
+     * @param var The variable
+     * @param action The action
+     * @return true if allowed.
+     */
+    public static boolean hasVariablePermission(CommandSender sender, String key, String var, String action) {
+
+        if(key.equalsIgnoreCase(sender.getName()))
+            if(sender.hasPermission("craftbook.variables." + action + ".self") || sender.hasPermission("craftbook.variables." + action + ".self." + var))
+                return true;
+
+        if(!sender.hasPermission("craftbook.variables." + action + "") && !sender.hasPermission("craftbook.variables." + action + "." + key) && !sender.hasPermission("craftbook.variables." + action + "." + key + "." + var))
+            return false;
+
+        return true;
     }
 }

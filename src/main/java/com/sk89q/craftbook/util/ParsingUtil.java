@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 
 public class ParsingUtil {
 
@@ -70,7 +71,7 @@ public class ParsingUtil {
             }
 
             if(player != null)
-                if(!player.hasPermission("craftbook.variables.use." + key))
+                if(!VariableCommands.hasVariablePermission(player, key, value, "use"))
                     continue;
 
             for(Entry<Tuple2<String, String>, String> bit : CraftBookPlugin.inst().getVariableStore().entrySet()) {
