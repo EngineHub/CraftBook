@@ -166,6 +166,7 @@ public class CommandItems implements Listener {
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
         for(CommandItemDefinition def : definitions) {
+            current: {
             if(ItemUtil.areItemsIdentical(def.stack, item)) {
                 final CommandItemDefinition comdef = def;
 
@@ -173,58 +174,58 @@ public class CommandItems implements Listener {
                     if(comdef.clickType == ClickType.CLICK_RIGHT || comdef.clickType == ClickType.CLICK_LEFT || comdef.clickType == ClickType.CLICK_EITHER) {
 
                         if(!(event instanceof PlayerInteractEvent))
-                            return;
+                            break current;
 
                         if(comdef.clickType == ClickType.CLICK_RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
-                            return;
+                            break current;
 
                         if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
-                            return;
+                            break current;
                     } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_ARROW || comdef.clickType == ClickType.ENTITY_EITHER) {
 
                         if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
-                            return;
+                            break current;
 
                         if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
-                            return;
+                            break current;
 
-                        if(comdef.clickType == ClickType.ENTITY_LEFT && !(event instanceof EntityDamageByEntityEvent) && !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player))
-                            return;
+                        if(comdef.clickType == ClickType.ENTITY_LEFT && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player)))
+                            break current;
 
-                        if(comdef.clickType == ClickType.ENTITY_ARROW && !(event instanceof EntityDamageByEntityEvent) && !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile))
-                            return;
+                        if(comdef.clickType == ClickType.ENTITY_ARROW && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)))
+                            break current;
                     } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
 
                         if(!(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
-                            return;
+                            break current;
 
                         if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
-                            return;
+                            break current;
 
                         if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
-                            return;
+                            break current;
                     }
                 }
 
                 if(!player.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !player.hasPermission(comdef.permNode)) {
                     player.sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
-                    return;
+                    break current;
                 }
 
                 if(cooldownPeriods.containsKey(new Tuple2<String, String>(player.getName(), comdef.name))) {
                     player.sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(player.getName(), comdef.name)) + " seconds to use this again!");
-                    return;
+                    break current;
                 }
 
                 for(ItemStack stack : def.consumables) {
                     if(!player.getInventory().containsAtLeast(stack, stack.getAmount())) {
                         player.sendMessage(ChatColor.RED + "You need " + stack.getAmount() + " of " + stack.getType().name() + " to use this command!");
-                        return;
+                        break current;
                     }
                 }
                 if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
                     player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
-                    return;
+                    break current;
                 }
 
                 for(String command : comdef.commands) {
@@ -299,6 +300,7 @@ public class CommandItems implements Listener {
                 if(event instanceof Cancellable && comdef.cancelAction)
                     ((Cancellable) event).setCancelled(true);
             }
+        }
         }
     }
 
