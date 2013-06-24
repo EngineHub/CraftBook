@@ -43,7 +43,7 @@ public class ParsingUtil {
         List<String> variables = new ArrayList<String>();
 
         for(String bit : RegexUtil.PERCENT_PATTERN.split(line))
-            if(!bit.trim().isEmpty())
+            if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
                 variables.add(bit.trim());
 
         return variables;
