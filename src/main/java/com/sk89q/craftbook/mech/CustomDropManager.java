@@ -33,6 +33,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
@@ -222,7 +223,7 @@ public final class CustomDropManager {
             split = temp.toArray(new String[temp.size()]);
         }
         if (split.length > 2) throw new CustomDropParseException(prelude + ": too many drop item fields");
-        ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(split[0]));
+        ItemStack stack = ItemUtil.makeItemValid(ItemSyntax.getItem(split[0]));
         int itemId = stack.getTypeId();
         byte data = stack.getData().getData();
         if (data >= DATA_VALUE_COUNT || data < 0)

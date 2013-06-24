@@ -22,6 +22,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.InventoryUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -149,11 +150,11 @@ public class Pipes extends AbstractMechanic {
 
             for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
 
-                filters.add(ItemUtil.getItem(line3.trim()));
+                filters.add(ItemSyntax.getItem(line3.trim()));
             }
             for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
 
-                exceptions.add(ItemUtil.getItem(line4.trim()));
+                exceptions.add(ItemSyntax.getItem(line4.trim()));
             }
         }
 
@@ -252,10 +253,10 @@ public class Pipes extends AbstractMechanic {
                 if(sign != null) {
 
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ItemUtil.getItem(line3.trim()));
+                        pFilters.add(ItemSyntax.getItem(line3.trim()));
                     }
                     for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ItemUtil.getItem(line4.trim()));
+                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
                     }
 
                     pFilters.removeAll(Collections.singleton(null));

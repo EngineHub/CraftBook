@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 
 /**
@@ -110,7 +111,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     @Override
     public String toString() {
 
-        String it = ItemUtil.getStringFromItem(getItemStack());
+        String it = ItemSyntax.getStringFromItem(getItemStack());
 
         if(hasAdvancedData("chance"))
             it = it + "%" + getAdvancedData("chance");

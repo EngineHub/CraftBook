@@ -28,6 +28,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -46,7 +47,7 @@ public class ItemDispenser extends AbstractIC {
 
         int amount = 1;
 
-        item = ItemUtil.makeItemValid(ItemUtil.getItem(getLine(2)));
+        item = ItemUtil.makeItemValid(ItemSyntax.getItem(getLine(2)));
         if(item == null)
             item = new ItemStack(1, 1);
 

@@ -22,6 +22,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -85,7 +86,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         for(String bit : getLine(3).replace("-","").split(",")) {
 
-            filters.add(ItemUtil.getItem(bit));
+            filters.add(ItemSyntax.getItem(bit));
         }
 
         chest = getBackBlock().getRelative(0, 1, 0);

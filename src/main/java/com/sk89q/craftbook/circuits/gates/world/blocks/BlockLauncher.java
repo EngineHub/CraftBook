@@ -16,6 +16,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
@@ -52,7 +53,7 @@ public class BlockLauncher extends AbstractIC {
     @Override
     public void load() {
 
-        block = ItemUtil.makeItemValid(ItemUtil.getItem(getLine(2)));
+        block = ItemUtil.makeItemValid(ItemSyntax.getItem(getLine(2)));
 
         if(getLine(2).isEmpty() || block == null)
             block = new ItemStack(12,1);

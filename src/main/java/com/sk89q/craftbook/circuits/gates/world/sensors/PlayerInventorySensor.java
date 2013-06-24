@@ -14,6 +14,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -75,7 +76,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
         }
 
         String[] parts = RegexUtil.EQUALS_PATTERN.split(getLine(3));
-        item = ItemUtil.makeItemValid(ItemUtil.getItem(parts[0]));
+        item = ItemUtil.makeItemValid(ItemSyntax.getItem(parts[0]));
         if(parts.length > 1) {
 
             String[] data = RegexUtil.COLON_PATTERN.split(parts[1]);

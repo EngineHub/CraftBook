@@ -34,6 +34,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -345,7 +346,7 @@ public class CommandItems implements Listener {
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
 
             String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
-            ItemStack stack = ItemUtil.getItem(config.getString(path + ".item"));
+            ItemStack stack = ItemSyntax.getItem(config.getString(path + ".item"));
             List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
             String permNode = config.getString(path + ".permission-node", "");
             CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase(Locale.ENGLISH));
@@ -361,7 +362,7 @@ public class CommandItems implements Listener {
 
             try {
                 for(String s : config.getStringList(path + ".consumed-items", new ArrayList<String>()))
-                    consumables.add(ItemUtil.makeItemValid(ItemUtil.getItem(s)));
+                    consumables.add(ItemUtil.makeItemValid(ItemSyntax.getItem(s)));
             } catch(Exception ignored){}
 
             return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]));

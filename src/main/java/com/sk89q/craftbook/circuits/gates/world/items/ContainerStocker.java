@@ -14,7 +14,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 
 public class ContainerStocker extends AbstractSelfTriggeredIC {
 
@@ -33,7 +33,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
             offset = getBackBlock().getRelative(0, 1, 0).getLocation();
         else
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
-        item = ItemUtil.getItem(getLine(2));
+        item = ItemSyntax.getItem(getLine(2));
     }
 
     @Override

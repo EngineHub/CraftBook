@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -330,7 +331,7 @@ public class RecipeManager extends LocalConfiguration {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
 
-                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
+                    ItemStack stack = ItemUtil.makeItemValid(ItemSyntax.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
 
                     if (stack != null) {
 
@@ -356,7 +357,7 @@ public class RecipeManager extends LocalConfiguration {
                     String okey = String.valueOf(oitem);
                     String item = okey.trim();
 
-                    ItemStack stack = ItemUtil.makeItemValid(ItemUtil.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
+                    ItemStack stack = ItemUtil.makeItemValid(ItemSyntax.getItem(RegexUtil.PERCENT_PATTERN.split(item)[0]));
 
                     if (stack != null) {
 

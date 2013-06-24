@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.Vector;
@@ -45,7 +46,7 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        item = ItemUtil.getItem(getLine(2));
+        item = ItemSyntax.getItem(getLine(2));
 
         onBlock = getBackBlock();
 

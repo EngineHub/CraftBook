@@ -22,6 +22,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -96,7 +97,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     for (int s = 0; s < 4; s++) {
                         String bit = armourSign.getLine(s);
 
-                        ItemStack slot = ItemUtil.makeItemValid(ItemUtil.getItem(bit));
+                        ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit));
 
                         switch (s) {
                             case 0:
@@ -152,7 +153,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     } else if (data[0].equalsIgnoreCase("s")) {
                         if (!(ent instanceof LivingEntity)) continue;
 
-                        ItemStack slot = ItemUtil.makeItemValid(ItemUtil.getItem(bit.replace("s:", "")));
+                        ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit.replace("s:", "")));
                         ((LivingEntity) ent).getEquipment().setItemInHand(slot);
                     }
                 }
