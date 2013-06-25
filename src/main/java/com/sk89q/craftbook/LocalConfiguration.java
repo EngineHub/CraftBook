@@ -1,5 +1,6 @@
 package com.sk89q.craftbook;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import com.sk89q.craftbook.mech.CustomDropManager;
@@ -141,6 +142,8 @@ public abstract class LocalConfiguration {
     public boolean headDropsMiningDrops;
     public double headDropsDropRate;
     public double headDropsLootingRateModifier;
+    public HashMap<String, Double> headDropsCustomDropRate;
+    public HashMap<String, String> headDropsCustomSkins;
     // Mechanics - Hidden Switch
     public boolean hiddenSwitchEnabled;
     public boolean hiddenSwitchAnyside;

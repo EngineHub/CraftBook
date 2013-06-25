@@ -38,6 +38,9 @@ public class HeadDrops implements Listener {
             return;
 
         double chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsDropRate);
+        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(event.getEntityType().getName()))
+            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(event.getEntityType().getName()));
+
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
             chance = Math.min(1, chance + CraftBookPlugin.inst().getConfiguration().headDropsLootingRateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
 
@@ -86,6 +89,8 @@ public class HeadDrops implements Listener {
                 if(type == null)
                     break;
                 String mobName = type.getPlayerName();
+                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()))
+                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(type.name());
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
                 toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
@@ -200,7 +205,7 @@ public class HeadDrops implements Listener {
         public static EntityType getEntityType(String name) {
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equals(name) || type.isOldName(name))
+                if(type.getPlayerName().equals(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkin.get(type.name()).equals(name))
                     return EntityType.valueOf(type.name());
 
             return null;

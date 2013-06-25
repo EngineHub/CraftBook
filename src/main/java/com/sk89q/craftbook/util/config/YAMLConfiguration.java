@@ -6,6 +6,7 @@ package com.sk89q.craftbook.util.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.LocalConfiguration;
@@ -221,6 +222,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         headDropsMiningDrops = config.getBoolean("mechanics.head-drops.drop-head-when-mined", true);
         headDropsDropRate = config.getDouble("mechanics.head-drops.drop-rate", 0.05);
         headDropsLootingRateModifier = config.getDouble("mechanics.head-drops.looting-rate-modifier", 0.05);
+        headDropsCustomDropRate = new HashMap<String, Double>();
+        for(String key : config.getKeys("mechanics.head-drops.drop-rates"))
+            headDropsCustomDropRate.put(key, config.getDouble("mechanics.head-drops.drop-rates." + key));
+        headDropsCustomSkins = new HashMap<String, String>();
+        for(String key : config.getKeys("mechanics.head-drops.custom-mob-skins"))
+            headDropsCustomSkins.put(key, config.getString("mechanics.head-drops.custom-mob-skins." + key));
 
         // Hidden Switch Configuration Listener
         hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);
