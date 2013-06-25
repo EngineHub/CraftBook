@@ -199,10 +199,16 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         // Resolve ProtocolLib
-        checkPlugin = getServer().getPluginManager().getPlugin("ProtocolLib");
-        if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
-            protocolLib = (ProtocolLibrary) checkPlugin;
-        } else protocolLib = null;
+        try {
+            checkPlugin = getServer().getPluginManager().getPlugin("ProtocolLib");
+            if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
+                protocolLib = (ProtocolLibrary) checkPlugin;
+            } else protocolLib = null;
+        } catch(Exception e){
+            protocolLib = null;
+            getLogger().severe("You have a corrupt version of ProtocolLib! Please redownload it!");
+            BukkitUtil.printStacktrace(e);
+        }
 
         // Resolve WorldGuard
         checkPlugin = getServer().getPluginManager().getPlugin("WorldGuard");
