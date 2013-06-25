@@ -226,11 +226,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         headDropsDropRate = config.getDouble("mechanics.head-drops.drop-rate", 0.05);
         headDropsLootingRateModifier = config.getDouble("mechanics.head-drops.looting-rate-modifier", 0.05);
         headDropsCustomDropRate = new HashMap<String, Double>();
-        for(String key : config.getKeys("mechanics.head-drops.drop-rates"))
-            headDropsCustomDropRate.put(key, config.getDouble("mechanics.head-drops.drop-rates." + key));
+        if(config.getKeys("mechanics.head-drops.drop-rates") != null)
+            for(String key : config.getKeys("mechanics.head-drops.drop-rates"))
+                headDropsCustomDropRate.put(key, config.getDouble("mechanics.head-drops.drop-rates." + key));
         headDropsCustomSkins = new HashMap<String, String>();
-        for(String key : config.getKeys("mechanics.head-drops.custom-mob-skins"))
-            headDropsCustomSkins.put(key, config.getString("mechanics.head-drops.custom-mob-skins." + key));
+        if(config.getKeys("mechanics.head-drops.custom-mob-skins") != null)
+            for(String key : config.getKeys("mechanics.head-drops.custom-mob-skins"))
+                headDropsCustomSkins.put(key, config.getString("mechanics.head-drops.custom-mob-skins." + key));
 
         // Hidden Switch Configuration Listener
         hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);
