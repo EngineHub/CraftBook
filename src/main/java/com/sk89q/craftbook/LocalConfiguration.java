@@ -16,6 +16,7 @@ public abstract class LocalConfiguration {
     // Common
     // Common - Variables
     public boolean variablesEnabled;
+    public boolean variablesDefaultGlobal;
 
     // Circuits
     // Circuits - IC

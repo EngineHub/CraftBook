@@ -41,6 +41,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("common.variables.enable", "Enables the variable system.");
         variablesEnabled = config.getBoolean("common.variables.enable", true);
 
+        config.setComment("common.variables.default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
+        variablesDefaultGlobal = config.getBoolean("common.variables.default-to-global", true);
+
         /* Circuits Configuration */
 
         // IC Configuration Listener.

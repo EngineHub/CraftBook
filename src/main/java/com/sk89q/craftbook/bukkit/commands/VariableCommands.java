@@ -32,6 +32,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -56,6 +59,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -79,6 +85,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -97,6 +106,9 @@ public class VariableCommands {
     public void erase(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
+
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
 
         if(context.hasFlag('n'))
             key = context.getFlag('n');
@@ -133,6 +145,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -157,6 +172,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -180,6 +198,9 @@ public class VariableCommands {
     public void toggle(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
+
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
 
         if(context.hasFlag('n'))
             key = context.getFlag('n');
@@ -211,6 +232,9 @@ public class VariableCommands {
     public void add(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
+
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
 
         if(context.hasFlag('n'))
             key = context.getFlag('n');
@@ -248,6 +272,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -284,6 +311,9 @@ public class VariableCommands {
 
         String key = "global";
 
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
+
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
@@ -319,6 +349,9 @@ public class VariableCommands {
     public void divide(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
+
+        if(!plugin.getConfiguration().variablesDefaultGlobal)
+            key = sender.getName();
 
         if(context.hasFlag('n'))
             key = context.getFlag('n');
