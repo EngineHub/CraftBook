@@ -1,6 +1,5 @@
 package com.sk89q.craftbook;
 
-
 /**
  * Author: Turtle9598
  */
