@@ -205,7 +205,7 @@ public class HeadDrops implements Listener {
         public static EntityType getEntityType(String name) {
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equals(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkin.get(type.name()).equals(name))
+                if(type.getPlayerName().equals(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(type.name()).equals(name))
                     return EntityType.valueOf(type.name());
 
             return null;
