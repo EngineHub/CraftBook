@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -86,15 +87,17 @@ public class HeadDrops implements Listener {
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
                 MobSkullType type = MobSkullType.getFromEntityType(event.getEntityType());
-                if(type == null)
+                String mobName = null;
+                if(type != null)
+                    mobName = type.getPlayerName();
+                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().name()))
+                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().name());
+                if(mobName == null || mobName.isEmpty())
                     break;
-                String mobName = type.getPlayerName();
-                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()))
-                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(type.name());
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
                 toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + EntityType.valueOf(type.name()).getName() + " Head");
+                itemMeta.setDisplayName(ChatColor.RESET + EntityType.valueOf(event.getEntityType().name()).getName() + " Head");
                 itemMeta.setOwner(mobName);
                 toDrop.setItemMeta(itemMeta);
                 break;
@@ -110,6 +113,8 @@ public class HeadDrops implements Listener {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!CraftBookPlugin.inst().getConfiguration().headDropsMiningDrops) return;
+        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+            return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 
         if(event.getBlock().getTypeId() == BlockID.HEAD) {
