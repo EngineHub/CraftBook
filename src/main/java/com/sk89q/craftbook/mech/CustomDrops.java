@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class CustomDrops implements Listener {
@@ -26,6 +27,8 @@ public class CustomDrops implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
+        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+            return;
         if (plugin.getConfiguration().customDropPermissions
                 && !plugin.wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 

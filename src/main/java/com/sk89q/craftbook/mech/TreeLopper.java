@@ -13,6 +13,7 @@ import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -30,6 +31,8 @@ public class TreeLopper extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
+        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+            return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 

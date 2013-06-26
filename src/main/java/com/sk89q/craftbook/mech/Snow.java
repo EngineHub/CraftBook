@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -59,6 +60,8 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
+        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+            return;
         if(event.getBlock().getTypeId() == BlockID.SNOW && ItemUtil.isStackValid(event.getPlayer().getItemInHand())) {
 
             if(event.getPlayer().getItemInHand().getTypeId() == ItemID.WOOD_SHOVEL
