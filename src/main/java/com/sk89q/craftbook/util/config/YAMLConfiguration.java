@@ -132,11 +132,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", true);
         pistonsCrusher = config.getBoolean("mechanics.better-pistons.crushers", true);
         pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
-        pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", new ArrayList<Integer>());
+        pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
         pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
-        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>());
+        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
         pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
 
