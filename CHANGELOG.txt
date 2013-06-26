@@ -1,3 +1,24 @@
+3.7 Beta 1
+* Few optimizations for various sections of CraftBook.
++ Added an option to completely disable variables.
++ Added namespaces to variables.
+* Reworked the variable permissions.
++ Added @b to CommandItems to get the block type clicked.
++ Added @e to CommandItems to get the entity type clicked.
+* Fix multiple CommandItems definitions using the same item not working.
+* Fix many potential bugs on non-english systems.
+* Fix Item Syntax not saving item-specific metadata.
+* Fixed HeadDrops Bat heads.
++ Added conversion features to HeadDrops, so that if a head skin goes wrong.. Breaking it and replacing it should fix it.
++ Added configuration options to add custom Head Drop mobs, and set drop rate per entity.
++ Added Variable support to Payment mechanic.
++ Added an option to toggle between global as default variable namespace and individual-player namespaces.
+* Change CraftBooks behaviour when ProtocolLib fails. CraftBook will now just display a message and continue.
++ Added a BetterPistons movement blacklist, for SuperPush and SuperSticky.
+* Made Crush and Bounces blacklists default to containing Bedrock and Obsidian.
+* Fix HeadDrops spawning metric tonnes of heads.
+* Fix a few mechanics causing immense lag on block break in specific circumstances with specific settings entered.
+
 3.6.9
 * Fix a dupe with ContainerCollector and RangedCollector.
 * Fix a few /cb reload bugs.

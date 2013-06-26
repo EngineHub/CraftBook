@@ -160,7 +160,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getVersion() {
 
-        return "3.6.9";
+        return "3.7b1";
     }
 
     /**
@@ -170,7 +170,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "2310";
+        return "2340";
     }
 
     /**
