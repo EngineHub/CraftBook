@@ -386,10 +386,11 @@ public class BetterPistons extends AbstractMechanic {
 
         if (block.getState() instanceof DoubleChest) return false;
 
+        if(CraftBookPlugin.inst().getConfiguration().pistonsMovementBlacklist.contains(block.getTypeId()))
+            return false;
+
         switch (block.getTypeId()) {
 
-            case BlockID.BEDROCK:
-            case BlockID.OBSIDIAN:
             case BlockID.PISTON_MOVING_PIECE:
                 return false;
             default:

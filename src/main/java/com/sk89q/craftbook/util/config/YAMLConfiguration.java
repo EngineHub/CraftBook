@@ -32,6 +32,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         this.logger = logger;
     }
 
+    @SuppressWarnings("serial")
     @Override
     public void load() {
 
@@ -133,6 +134,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
         pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", new ArrayList<Integer>());
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
+        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
         pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>());
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
