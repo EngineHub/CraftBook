@@ -103,7 +103,7 @@ public class MechanicListenerAdapter implements Listener {
             CraftBookPlugin.inst().getManager().dispatchBlockLeftClick(event);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
 
         if (ignoredEvents.contains(event)) {
