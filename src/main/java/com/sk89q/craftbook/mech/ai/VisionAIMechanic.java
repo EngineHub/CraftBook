@@ -28,6 +28,7 @@ public class VisionAIMechanic extends BaseAIMechanic implements TargetAIMechanic
         LivingEntity enemy = (LivingEntity) event.getEntity();
         if (event.getTarget() instanceof Player && !enemy.hasLineOfSight(event.getTarget())) // the target.
             if (!((Player) event.getTarget()).isSprinting()) {
+                CraftBookPlugin.logDebugMessage("Disabling entity target - Player is not visible.", "ai-mechanics.entity-target.vision");
                 event.setCancelled(true);
                 return;
             }
@@ -35,8 +36,10 @@ public class VisionAIMechanic extends BaseAIMechanic implements TargetAIMechanic
         if (event.getTarget() instanceof Player)
             if (((Player) event.getTarget()).isSneaking()) {
                 int distance = (int) Math.floor(event.getTarget().getLocation().distanceSquared(enemy.getLocation()));
-                if (distance != 0 && CraftBookPlugin.inst().getRandom().nextInt(distance) > (diff == Difficulty.HARD ? 4 : 2))
+                if (distance != 0 && CraftBookPlugin.inst().getRandom().nextInt(distance) > (diff == Difficulty.HARD ? 4 : 2)) {
+                    CraftBookPlugin.logDebugMessage("Disabling entity target - Player is sneaking.", "ai-mechanics.entity-target.vision");
                     event.setCancelled(true);
+                }
             }
     }
 }

@@ -6,6 +6,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityTargetEvent;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+
 public class AttackPassiveAIMechanic extends BaseAIMechanic implements TargetAIMechanic {
 
     public AttackPassiveAIMechanic(EntityType ... entity) {
@@ -24,6 +26,7 @@ public class AttackPassiveAIMechanic extends BaseAIMechanic implements TargetAIM
                     ((Monster) event.getEntity()).setTarget((Animals) ent);
                 } else
                     event.setTarget(ent);
+                CraftBookPlugin.logDebugMessage("Setting target to entity: " + ent.getType().name(), "ai-mechanics.entity-target.attack-passive");
                 return;
             }
         }

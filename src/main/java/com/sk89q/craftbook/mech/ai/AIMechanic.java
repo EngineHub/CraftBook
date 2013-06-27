@@ -48,8 +48,10 @@ public class AIMechanic implements Listener {
                 }
             }
 
-            if(passes)
+            if(passes) {
+                CraftBookPlugin.logDebugMessage("AI Mechanic Running: " + mechanic.getClass().getName(), "ai-mechanics.entity-target");
                 ((TargetAIMechanic) mechanic).onEntityTarget(event);
+            }
         }
     }
 
@@ -70,8 +72,10 @@ public class AIMechanic implements Listener {
                 }
             }
 
-            if(passes)
+            if(passes) {
+                CraftBookPlugin.logDebugMessage("AI Mechanic Running: " + mechanic.getClass().getName(), "ai-mechanics.shoot-bow");
                 ((BowShotAIMechanic) mechanic).onBowShot(event);
+            }
         }
     }
 
