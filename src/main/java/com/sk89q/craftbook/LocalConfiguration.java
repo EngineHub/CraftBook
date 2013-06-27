@@ -48,6 +48,7 @@ public abstract class LocalConfiguration {
     public boolean aiEnabled;
     public List<String> aiVisionEnabled;
     public List<String> aiCritBowEnabled;
+    public List<String> aiAttackPassiveEnabled;
     // Mechanics - Ammeter
     public boolean ammeterEnabled;
     public int ammeterItem;

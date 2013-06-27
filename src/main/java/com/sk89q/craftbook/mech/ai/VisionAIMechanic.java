@@ -19,6 +19,7 @@ public class VisionAIMechanic extends BaseAIMechanic implements TargetAIMechanic
     @Override
     public void onEntityTarget(EntityTargetEvent event) {
 
+        if(event.getTarget() == null) return;
         Difficulty diff = event.getEntity().getWorld().getDifficulty();
 
         if (event.getReason() != TargetReason.CLOSEST_PLAYER && event.getReason() != TargetReason.RANDOM_TARGET)

@@ -24,12 +24,14 @@ public class AIMechanic implements Listener {
             registerAIMechanic(new VisionAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled)));
         if (CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled.size() > 0)
             registerAIMechanic(new CriticalBotAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)));
+        if (CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled.size() > 0)
+            registerAIMechanic(new AttackPassiveAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled)));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (event.getTarget() == null || event.getEntity() == null) return;
+        if (event.getEntity() == null) return;
         for (BaseAIMechanic mechanic : mechanics) {
             if (!(mechanic instanceof TargetAIMechanic))
                 continue;
@@ -72,6 +74,8 @@ public class AIMechanic implements Listener {
 
     public boolean registerAIMechanic(BaseAIMechanic mechanic) {
 
+        if(mechanic == null)
+            return false;
         return !mechanics.contains(mechanic) && mechanics.add(mechanic);
     }
 }

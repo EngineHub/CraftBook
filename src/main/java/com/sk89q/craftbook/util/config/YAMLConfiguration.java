@@ -111,6 +111,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         aiEnabled = config.getBoolean("mechanics.ai.enable", true);
         aiVisionEnabled = config.getStringList("mechanics.ai.vision-enable", Arrays.asList("Zombie","PigZombie"));
         aiCritBowEnabled = config.getStringList("mechanics.ai.crit-bow-enable", Arrays.asList("Skeleton"));
+        aiAttackPassiveEnabled = config.getStringList("mechanics.ai.attack-passive-enable", Arrays.asList("Zombie"));
 
         // Ammeter Configuration Listener
         ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", true);
