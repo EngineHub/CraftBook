@@ -8,9 +8,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class RightClickBlockEvent extends PlayerInteractEvent {
 
-    @SuppressWarnings("unused")
-    private static final long serialVersionUID = 1031838877588760298L;
-
     protected final Block clicked;
 
     PlayerInteractEvent event;
