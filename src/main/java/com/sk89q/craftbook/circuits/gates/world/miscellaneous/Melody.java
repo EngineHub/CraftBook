@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -65,13 +66,13 @@ public class Melody extends AbstractIC {
     int radius;
     File file;
     String midiName;
-    boolean forceStart;
+    boolean forceStart, loop;
 
     @Override
     public void load() {
 
         try {
-            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
+            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3),2);
 
             try {
                 radius = Integer.parseInt(split[0]);
@@ -81,8 +82,10 @@ public class Melody extends AbstractIC {
                 else
                     radius = CraftBookPlugin.inst().getConfiguration().ICMaxRange;
             }
-
-            forceStart = split[1].equalsIgnoreCase("START");
+            if(split.length > 1) {
+                forceStart = split[1].toUpperCase(Locale.ENGLISH).contains("START");
+                loop = split[1].toUpperCase(Locale.ENGLISH).contains("LOOP");
+            }
         } catch (Exception ignored) {
         }
 
@@ -126,7 +129,7 @@ public class Melody extends AbstractIC {
                     }
                     jNote.stopAll();
                 }
-                sequencer = new MidiJingleSequencer(file);
+                sequencer = new MidiJingleSequencer(file, loop);
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (player == null) {
                         continue;

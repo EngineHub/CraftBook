@@ -247,7 +247,7 @@ public class Playlist {
                     }
 
                     try {
-                        midiSequencer = new MidiJingleSequencer(file);
+                        midiSequencer = new MidiJingleSequencer(file, false);
                         if (!midiSequencer.getSequencer().isOpen()) {
                             midiSequencer.getSequencer().open();
                         }

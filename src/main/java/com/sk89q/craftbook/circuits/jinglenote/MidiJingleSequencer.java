@@ -63,7 +63,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     protected final File midiFile;
     private Sequencer sequencer = null;
 
-    public MidiJingleSequencer(File midiFile) throws MidiUnavailableException, InvalidMidiDataException, IOException {
+    public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
 
         this.midiFile = midiFile;
 
@@ -72,6 +72,8 @@ public class MidiJingleSequencer implements JingleSequencer {
             sequencer.open();
             Sequence seq = MidiSystem.getSequence(midiFile);
             sequencer.setSequence(seq);
+            if(loop)
+                sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         } catch (MidiUnavailableException e) {
             if (sequencer.isOpen()) {
                 sequencer.close();
