@@ -29,7 +29,7 @@ public class CriticalBotAIMechanic extends BaseAIMechanic implements BowShotAIMe
             case PEACEFUL:
                 return;
         }
-        if (CraftBookPlugin.inst().getRandom().nextInt(amount) > 15)
+        if (CraftBookPlugin.inst().getRandom().nextInt(amount) == 0)
             event.getProjectile().setFireTicks(5000);
     }
 }

@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mech.ai;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -14,18 +14,21 @@ import com.sk89q.craftbook.util.EntityUtil;
 
 public class AIMechanic implements Listener {
 
-    HashSet<BaseAIMechanic> mechanics = new HashSet<BaseAIMechanic>();
+    ArrayList<BaseAIMechanic> mechanics = new ArrayList<BaseAIMechanic>();
 
     public AIMechanic() {
 
         if (!CraftBookPlugin.inst().getConfiguration().aiEnabled) return;
 
         if(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled.size() > 0)
-            registerAIMechanic(new VisionAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled)));
+            if(!registerAIMechanic(new VisionAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiVisionEnabled))))
+                CraftBookPlugin.logger().severe("Failed To Register Realistic Vision AI Mechanic!");
         if (CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled.size() > 0)
-            registerAIMechanic(new CriticalBotAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)));
+            if(!registerAIMechanic(new CriticalBotAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled))))
+                CraftBookPlugin.logger().severe("Failed To Register Critical Shot AI Mechanic!");
         if (CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled.size() > 0)
-            registerAIMechanic(new AttackPassiveAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled)));
+            if(!registerAIMechanic(new AttackPassiveAIMechanic(EntityUtil.parseEntityList(CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled))))
+                CraftBookPlugin.logger().severe("Failed To Register Passive Attack AI Mechanic!");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -76,6 +79,6 @@ public class AIMechanic implements Listener {
 
         if(mechanic == null)
             return false;
-        return !mechanics.contains(mechanic) && mechanics.add(mechanic);
+        return mechanics.add(mechanic);
     }
 }
