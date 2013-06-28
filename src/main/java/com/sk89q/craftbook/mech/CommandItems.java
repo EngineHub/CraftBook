@@ -229,6 +229,12 @@ public class CommandItems implements Listener {
                     player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
                     break current;
                 }
+                if(def.consumeSelf) {
+                    if(player.getItemInHand().getAmount() > 1)
+                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                    else
+                        player.setItemInHand(null);
+                }
 
                 for(String command : comdef.commands) {
 
@@ -322,13 +328,14 @@ public class CommandItems implements Listener {
         private boolean cancelAction;
 
         private ItemStack[] consumables;
+        private boolean consumeSelf;
 
         public ItemStack getItem() {
 
             return stack;
         }
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables) {
+        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf) {
 
             this.name = name;
             this.stack = stack;
@@ -341,6 +348,7 @@ public class CommandItems implements Listener {
             this.clickType = clickType;
             this.cancelAction = cancelAction;
             this.consumables = consumables;
+            this.consumeSelf = consumeSelf;
         }
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
@@ -365,7 +373,9 @@ public class CommandItems implements Listener {
                     consumables.add(ItemUtil.makeItemValid(ItemSyntax.getItem(s)));
             } catch(Exception ignored){}
 
-            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]));
+            boolean consumeSelf = config.getBoolean(path + ".consume-self", false);
+
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf);
         }
 
         public enum CommandType {
