@@ -152,7 +152,7 @@ public class CartDispenser extends CartMechanism {
         Location location = BukkitUtil.center(blocks.rail.getLocation());
 
         if(CraftBookPlugin.inst().getConfiguration().minecartDispenserLegacy) {
-            BlockFace direction =  SignUtil.getFront(blocks.sign);
+            BlockFace direction =  SignUtil.getFront(blocks.sign).getOppositeFace();
             location = blocks.rail.getRelative(direction).getLocation();
         }
 
