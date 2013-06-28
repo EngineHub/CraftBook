@@ -207,6 +207,9 @@ public abstract class LocalConfiguration {
     public ItemInfo matLift;
     public ItemInfo matDispenser;
     public ItemInfo matMessager;
+    // Vehicles - Dispenser Options
+    public boolean minecartDispenserLegacy;
+    public boolean minecartDispenserAntiSpam;
     // Vehicles - Minecart Options
     public boolean minecartSlowWhenEmpty;
     public boolean minecartRemoveOnExit;

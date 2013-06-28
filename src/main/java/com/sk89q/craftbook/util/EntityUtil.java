@@ -38,6 +38,18 @@ public class EntityUtil {
         return false;
     }
 
+    public static boolean isEntityOfTypeInBlock(Block block, org.bukkit.entity.EntityType type) {
+
+        for(Entity ent : block.getChunk().getEntities()) {
+
+            if(ent.getType() != type) continue;
+            if(isEntityInBlock(ent, block))
+                return true;
+        }
+
+        return false;
+    }
+
     /**
      * Kills an entity using the proper way for it's entity type.
      * 

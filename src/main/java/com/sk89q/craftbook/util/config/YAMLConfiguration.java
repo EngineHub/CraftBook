@@ -374,6 +374,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         matMessager = ItemInfo.parseFromString(config.getString("vehicles.minecart.messager-block", "121:0"));
 
 
+        // Vehicles Dispenser Configuration Listener
+        minecartDispenserLegacy = config.getBoolean("vehicles.minecart.dispenser.spawn-infront", false);
+        minecartDispenserAntiSpam = config.getBoolean("vehicles.minecart.dispenser.check-for-carts", true);
+
+
         // Vehicles Minecart Configuration Listener
         minecartEnterOnImpact = config.getBoolean("vehicles.minecart.enter-on-impact", true);
         minecartSlowWhenEmpty = config.getBoolean("vehicles.minecart.slow-when-empty", true);

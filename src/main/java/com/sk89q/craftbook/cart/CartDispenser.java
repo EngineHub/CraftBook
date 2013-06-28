@@ -2,7 +2,10 @@ package com.sk89q.craftbook.cart;
 
 import java.util.Locale;
 
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
@@ -11,8 +14,11 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
@@ -143,6 +149,16 @@ public class CartDispenser extends CartMechanism {
      */
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
+        Location location = BukkitUtil.center(blocks.rail.getLocation());
+
+        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserLegacy) {
+            BlockFace direction =  SignUtil.getFront(blocks.sign);
+            location = blocks.rail.getRelative(direction).getLocation();
+        }
+
+        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
+            return;
+
         if (inv != null) {
             if (type.equals(CartType.Minecart)) {
                 if (!inv.contains(ItemType.MINECART.getID())) return;
@@ -161,7 +177,7 @@ public class CartDispenser extends CartMechanism {
                 inv.removeItem(new ItemStack(ItemType.HOPPER_MINECART.getID(), 1));
             }
         }
-        blocks.rail.getWorld().spawn(BukkitUtil.center(blocks.rail.getLocation()), type.toClass());
+        blocks.rail.getWorld().spawn(location, type.toClass());
     }
 
     public enum CartType {
