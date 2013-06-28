@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech.ai;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.EntityTargetEvent;
 
@@ -19,8 +20,9 @@ public class AttackPassiveAIMechanic extends BaseAIMechanic implements TargetAIM
     public void onEntityTarget (EntityTargetEvent event) {
 
         if(event.getTarget() != null) return;
+        if(!(event.getEntity() instanceof LivingEntity)) return;
         for(Entity ent : event.getEntity().getNearbyEntities(15D, 15D, 15D)) {
-            if(ent instanceof Animals) {
+            if(ent instanceof Animals && ((LivingEntity) event.getEntity()).hasLineOfSight(ent)) {
                 if(event.getEntity() instanceof Monster) {
                     event.setCancelled(true);
                     ((Monster) event.getEntity()).setTarget((Animals) ent);

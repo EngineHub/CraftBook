@@ -1,19 +1,80 @@
+# CraftBook Configuration for Bukkit. Generated for version: 3.7b1
+# This configuration will automatically add new configuration options for you,
+# So there is no need to regenerate this configuration unless you need to.
+# More information about these features are available at...
+# http://wiki.sk89q.com/wiki/CraftBook/Usage
+
+
+
+# If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.
 enable-circuits: true
+
+# If this is set to false, all mechanics will be disabled, and mechanism configuration will not do anything.
 enable-mechanisms: true
+
+# If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.
 enable-vehicles: true
 
-language: en_US
-no-op-permissions: false
+# WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
+st-think-ticks: 2
+
+# Enables the update notifier. This checks for updates on start, and notifies anyone with the permission when they join. They can then use /cb update to download the update.
+notify-updates: true
+
+# Causes many mechanics to require sufficient blocks to function, for example gates, bridges and doors.
 safe-destruction: true
-use-block-distance: false
-check-worldguard-flags: true
+
+# If on, OP's will not default to have access to everything.
+no-op-permissions: false
+
+# Allows redstone not directly facing a mechanism to trigger said mechanism.
 indirect-redstone: false
 
+# Rounds all distance equations to the block grid.
+use-block-distance: false
+
+# Checks to see if WorldGuard allows building/using in the area when activating mechanics.
+check-worldguard-flags: true
+
+# Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.
+advanced-block-checks: true
+
+# In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.
+pedantic-block-checks: false
+
+# Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.
+use-experimental-clicks: false
+
+# The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.
+language: en_US
+
+# A list of languages supported by craftbook, if a user requests a language not listed... They will see default.
+languages:
+- en_US
+
+# Enable a mode that will print extra debug information to the console.
+debug-mode: false
+
+# Enable certain debug types when debug mode is enabled.
+debug-flags: []
+
+# Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)
+easter-eggs: true
+common:
+    variables:
+        enable: true
+        default-to-global: true
 circuits:
     ics:
         enable: true
         cache: true
+        max-radius: 15
         allow-short-hand: true
+        keep-loaded: false
+        disallowed-ics: []
+        default-coordinate-system: RELATIVE
+        save-persistent-data: true
+        midi-use-percussion: false
     wiring:
         netherrack-enabled: false
         pumpkins-enabled: false
@@ -23,10 +84,18 @@ circuits:
         enable: true
         allow-diagonal: false
         insulator-block: 35
-
+        stack-per-move: true
+        require-sign: false
 mechanics:
     ai:
         enable: true
+        vision-enable:
+        - Zombie
+        - PigZombie
+        crit-bow-enable:
+        - Skeleton
+        attack-passive-enable:
+        - Zombie
     ammeter:
         enable: true
         item: 263
@@ -34,17 +103,43 @@ mechanics:
         enable: true
         allow-redstone: true
         use-schematics: true
+        shorten-long-names: true
         max-size: 5000
         max-per-user: 30
+    better-physics:
+        enable: false
+        falling-ladders: false
+    better-pistons:
+        enable: true
+        crushers: true
+        crushers-kill-mobs: false
+        crusher-blacklist:
+        - 49
+        - 7
+        super-sticky: true
+        movement-blacklist:
+        - 49
+        - 7
+        bounce: true
+        bounce-blacklist:
+        - 49
+        - 7
+        super-push: true
+        max-distance: 12
     bookcase:
         enable: true
+        read-when-sneaking: false
         read-line: You pick up a book...
     bridge:
         enable: true
         allow-redstone: true
         max-length: 30
         max-width: 5
-        blocks: [4, 5, 20, 43]
+        blocks:
+        - 4
+        - 5
+        - 20
+        - 43
     cauldron:
         enable: true
         spoons: true
@@ -52,8 +147,23 @@ mechanics:
         enable: true
         require-sneak: true
         regen-health: true
-        blocks: [53, 67, 108, 109, 114, 128, 134, 135, 136, 156]
+        blocks:
+        - 53
+        - 67
+        - 108
+        - 109
+        - 114
+        - 128
+        - 134
+        - 135
+        - 136
+        - 156
+        face-correct-direction: true
     chunk-anchor:
+        enable: true
+        enable-redstone: true
+        check-chunks: true
+    command-items:
         enable: true
     command-sign:
         enable: true
@@ -62,6 +172,8 @@ mechanics:
         require-fuel: true
         cook-ores: false
         sign-click-open: true
+        take-buckets: false
+        super-fast-cooking: false
     custom-crafting:
         enable: true
     dispenser-recipes:
@@ -74,17 +186,45 @@ mechanics:
         allow-redstone: true
         max-length: 30
         max-width: 5
-        blocks: [4, 5, 20, 43]
+        blocks:
+        - 4
+        - 5
+        - 20
+        - 43
     elevator:
         enable: true
         enable-buttons: true
         allow-looping: false
+        smooth-movement: false
+        smooth-movement-speed: 0.5
+    footprints:
+        enable: false
+        blocks:
+        - 12
+        - 78
+        - 80
+        - 3
     gate:
         enable: true
         allow-redstone: true
         limit-columns: true
         max-columns: 14
-        blocks: [85, 101, 102, 113]
+        blocks:
+        - 85
+        - 101
+        - 102
+        - 113
+        enforce-type: true
+    head-drops:
+        enable: false
+        drop-mob-heads: true
+        drop-player-heads: true
+        require-player-killed: true
+        drop-head-when-mined: true
+        drop-rate: 0.05
+        looting-rate-modifier: 0.05
+        drop-rates: {}
+        custom-mob-skins: {}
     hidden-switch:
         enable: true
         any-side: true
@@ -104,21 +244,46 @@ mechanics:
         enable: true
     payment:
         enable: true
+    sign-copy:
+        enable: true
+        item: 351
     snow:
         piling: false
         trample: false
         place: false
+        slowdown: false
         realistic: false
         high-piling: false
         jump-trample: false
+        replacable-blocks:
+        - 31
+        - 32
+        - 51
+        - 38
+        - 37
+        - 39
+        - 40
+        - 132
     teleporter:
         enable: true
         require-sign: false
         max-range: 0
+    tree-lopper:
+        enable: false
+        block-list:
+        - 17
+        tool-list:
+        - 271
+        - 275
+        - 258
+        - 286
+        - 279
+        max-size: 30
+        allow-diagonals: false
+        enforce-data: false
     xp-storer:
         enable: true
         block: 52
-
 vehicles:
     minecart:
         max-boost-block: '41:0'
@@ -145,6 +310,16 @@ vehicles:
         track-messages: true
         decay-time: 20
         constant-speed: 0.0
+        item-pickup-collision: false
+        pressure-plate-intersection: false
+        storage-place-rails: false
+        block-animal-entry: false
+        vision-based-steering: false
+        ladder-vertical-rail: false
+        fall-speed:
+            enable: false
+            vertical-fall-speed: 0.9
+            horizontal-fall-speed: 1.1
     boat:
         remove-entities: false
         no-crash: false
