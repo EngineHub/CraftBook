@@ -121,13 +121,13 @@ public class ItemSyntax {
             } catch (Exception ee) {
                 try {
                     try {
-                        Object itemType = Class.forName("com.sk89q.worldedit.blocks.ItemType").getMethod("lookup()", String.class).invoke(null, dataSplit[0]);
-                        id = (Integer) itemType.getClass().getMethod("getID()").invoke(itemType);
+                        Object itemType = Class.forName("com.sk89q.worldedit.blocks.ItemType").getMethod("lookup", String.class).invoke(null, dataSplit[0]);
+                        id = (Integer) itemType.getClass().getMethod("getID").invoke(itemType);
                         if (id < 1) id = 1;
                     }
                     catch(Exception eee){
-                        Object blockType = Class.forName("com.sk89q.worldedit.blocks.BlockType").getMethod("lookup()", String.class).invoke(null, dataSplit[0]);
-                        id = (Integer) blockType.getClass().getMethod("getID()").invoke(blockType);
+                        Object blockType = Class.forName("com.sk89q.worldedit.blocks.BlockType").getMethod("lookup", String.class).invoke(null, dataSplit[0]);
+                        id = (Integer) blockType.getClass().getMethod("getID").invoke(blockType);
                         if (id < 1) id = 1;
                     }
                 } catch(Throwable ignored){}
