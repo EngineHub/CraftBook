@@ -119,7 +119,7 @@ public class ItemSyntax {
             id = Integer.parseInt(dataSplit[0]);
         } catch (NumberFormatException e) {
             try {
-                id = Material.getMaterial(dataSplit[0]).getId();
+                id = Material.matchMaterial(dataSplit[0]).getId();
                 if (id < 1) id = 1;
             } catch (Exception ee) {
                 //The next 8 lines can be removed to not require WorldEdit.
