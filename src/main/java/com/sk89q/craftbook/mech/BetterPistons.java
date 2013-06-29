@@ -174,7 +174,7 @@ public class BetterPistons extends AbstractMechanic {
         if (event.getBlock().getTypeId() != trigger.getTypeId()) return;
 
         PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
-        Sign signState = (Sign) sign.getState();
+        ChangedSign signState = BukkitUtil.toChangedSign(sign);
 
         switch (type) {
             case CRUSH:
@@ -200,7 +200,7 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void crush(PistonBaseMaterial piston, Sign signState) {
+    public void crush(PistonBaseMaterial piston, ChangedSign signState) {
 
         piston.setPowered(false);
         if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
@@ -218,7 +218,7 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void bounce(PistonBaseMaterial piston, Sign signState) {
+    public void bounce(PistonBaseMaterial piston, ChangedSign signState) {
 
         if (piston.isSticky()) return;
 
@@ -243,7 +243,7 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void superSticky(final PistonBaseMaterial piston, final Sign signState) {
+    public void superSticky(final PistonBaseMaterial piston, final ChangedSign signState) {
 
         if (!piston.isSticky()) return;
 
@@ -295,7 +295,7 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void superPush(final PistonBaseMaterial piston, Sign signState) {
+    public void superPush(final PistonBaseMaterial piston, ChangedSign signState) {
 
         if (trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_MOVING_PIECE) {
 
