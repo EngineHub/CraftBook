@@ -203,7 +203,7 @@ public class BetterPistons extends AbstractMechanic {
     public void crush(PistonBaseMaterial piston, Sign signState) {
 
         piston.setPowered(false);
-        if (!canPistonPushBlock(trigger.getRelative(piston.getFacing())) || CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
+        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
             return;
         }
         trigger.getRelative(piston.getFacing()).breakNaturally();
