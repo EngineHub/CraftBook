@@ -20,9 +20,6 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
-
 /**
  * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
  * 
@@ -122,14 +119,15 @@ public class ItemSyntax {
                 id = Material.matchMaterial(dataSplit[0]).getId();
                 if (id < 1) id = 1;
             } catch (Exception ee) {
-                //The next 8 lines can be removed to not require WorldEdit (Note: Just removes code dependency, WorldEdit is never REQUIRED by the server, just optional).
                 try {
                     try {
-                        id = ItemType.lookup(dataSplit[0]).getID();
+                        Object itemType = Class.forName("com.sk89q.worldedit.blocks.ItemType").getMethod("lookup()", String.class).invoke(null, dataSplit[0]);
+                        id = (Integer) itemType.getClass().getMethod("getID()").invoke(itemType);
                         if (id < 1) id = 1;
                     }
                     catch(Exception eee){
-                        id = BlockType.lookup(dataSplit[0]).getID();
+                        Object blockType = Class.forName("com.sk89q.worldedit.blocks.BlockType").getMethod("lookup()", String.class).invoke(null, dataSplit[0]);
+                        id = (Integer) blockType.getClass().getMethod("getID()").invoke(blockType);
                         if (id < 1) id = 1;
                     }
                 } catch(Throwable ignored){}
