@@ -122,6 +122,10 @@ public class CustomCrafting implements Listener {
     public void prepareCraft(PrepareItemCraftEvent event) {
 
         ItemStack bits = null;
+        Player p = null;
+        try {
+            p = (Player) event.getViewers().get(0);
+        } catch(Exception e){}
         CraftBookPlugin.logDebugMessage("Pre-Crafting has been initiated!", "advanced-data");
         try {
             boolean hasFailed = false;
@@ -176,8 +180,17 @@ public class CustomCrafting implements Listener {
 
                     hasFailed = false;
 
+                    if(p != null && recipe.hasAdvancedData("permission-node")) {
+                        CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
+                        if(!p.hasPermission((String) recipe.getAdvancedData("permission-node"))) {
+                            p.sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
+                            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+                            return;
+                        }
+                    }
+
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec, null);
+                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec, p);
                     break;
                 }
                 }
