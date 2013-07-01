@@ -10,8 +10,6 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 
 public class VehicleCommands {
 
-    VehicleCore vc = VehicleCore.inst();
-
     public VehicleCommands(CraftBookPlugin plugin) {
 
     }
@@ -25,18 +23,16 @@ public class VehicleCommands {
         }
         Player player = (Player) sender;
         if (context.argsLength() == 0) {
-            String stationName = vc.getStation(player.getName());
+            String stationName = VehicleCore.inst().getStation(player.getName());
 
-            if (stationName == null) {
+            if (stationName == null)
                 sender.sendMessage("You have no station selected.");
-            } else {
+            else
                 sender.sendMessage("Your currently selected station is " + stationName);
-            }
         } else {
             String stationName = context.getString(0);
-            vc.setStation(player.getName(), stationName);
+            VehicleCore.inst().setStation(player.getName(), stationName);
             sender.sendMessage("Station set to: " + stationName);
         }
-
     }
 }

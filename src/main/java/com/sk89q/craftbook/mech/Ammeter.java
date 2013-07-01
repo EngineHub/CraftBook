@@ -59,17 +59,16 @@ public class Ammeter extends AbstractMechanic {
             case BlockID.LEVER:
             case BlockID.STONE_BUTTON:
             case BlockID.WOODEN_BUTTON:
+            case BlockID.POWERED_RAIL:
+            case BlockID.DETECTOR_RAIL:
+            case BlockID.TRIPWIRE_HOOK:
+            case BlockID.ACTIVATOR_RAIL:
                 if ((data & 0x8) == 0x8)
                     current = 15;
                 break;
             case BlockID.STONE_PRESSURE_PLATE:
             case BlockID.WOODEN_PRESSURE_PLATE:
                 if ((data & 0x1) == 0x1)
-                    current = 15;
-                break;
-            case BlockID.POWERED_RAIL:
-            case BlockID.DETECTOR_RAIL:
-                if (data >= 0x8)
                     current = 15;
                 break;
             case BlockID.REDSTONE_TORCH_ON:
@@ -81,7 +80,6 @@ public class Ammeter extends AbstractMechanic {
             default:
                 current = 0;
                 break;
-
         }
 
         return current;
@@ -112,11 +110,7 @@ public class Ammeter extends AbstractMechanic {
         public Ammeter detect(BlockWorldVector pt, LocalPlayer player) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) {
-                return player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().ammeterItem && player.hasPermission("craftbook.mech.ammeter.use") ? new Ammeter() : null;
-            }
-
-            return null;
+            return (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) && player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().ammeterItem && player.hasPermission("craftbook.mech.ammeter.use") ? new Ammeter() : null;
         }
     }
 }
