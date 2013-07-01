@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook.mech;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,15 +44,14 @@ public class Bookcase extends AbstractMechanic {
      * Reads a book.
      *
      * @param player
-     * @param bookReadLine message to print to the user
      */
-    public void read(LocalPlayer player, String bookReadLine) {
+    public void read(LocalPlayer player) {
 
         try {
             String text = getBookLine();
 
             if (text != null) {
-                player.print(bookReadLine);
+                player.print(plugin.getConfiguration().bookcaseReadLine);
                 player.printRaw(text);
             } else
                 player.printError("Failed to fetch a line from the books file.");
@@ -73,18 +71,9 @@ public class Bookcase extends AbstractMechanic {
 
         LineNumberReader lnr = new LineNumberReader(new InputStreamReader(new FileInputStream(new File(plugin.getDataFolder(),"books.txt")), "UTF-8"));
         lnr.skip(Long.MAX_VALUE);
-        int lines = lnr.getLineNumber();
+        lnr.setLineNumber(plugin.getRandom().nextInt(lnr.getLineNumber()));
+        String line = lnr.readLine();
         lnr.close();
-        int toRead = plugin.getRandom().nextInt(lines);
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(plugin.getDataFolder(),"books.txt")), "UTF-8"));
-        String line;
-        int passes = 0;
-        while ((line = br.readLine()) != null) {
-            passes++;
-            if (passes >= toRead)
-                break;
-        }
-        br.close();
         return line;
     }
 
@@ -100,8 +89,8 @@ public class Bookcase extends AbstractMechanic {
         if (event.getPlayer().isSneaking() != plugin.getConfiguration().bookcaseReadWhenSneaking) return;
 
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        if (player.getHeldItemType() == 0 || !player.isHoldingBlock())
-            read(player, plugin.getConfiguration().bookcaseReadLine);
+        if (!player.isHoldingBlock())
+            read(player);
     }
 
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
@@ -109,9 +98,7 @@ public class Bookcase extends AbstractMechanic {
         @Override
         public Bookcase detect(BlockWorldVector pt, LocalPlayer player) {
 
-            if (pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE && player.hasPermission("craftbook.mech.bookshelf.use")) return new Bookcase();
-
-            return null;
+            return pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE && player.hasPermission("craftbook.mech.bookshelf.use") ? new Bookcase() : null;
         }
     }
 }
