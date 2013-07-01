@@ -156,11 +156,13 @@ public class ItemUtil {
                 if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
                     CraftBookPlugin.logDebugMessage("Both have names", "item-checks.meta.names");
                     CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks.meta.names");
-                    if(!stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
+                    if(!item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
                         return false;
                     CraftBookPlugin.logDebugMessage("Items share display names", "item-checks.meta.names");
-                } else
-                    return false;
+                } else {
+                    if(!(item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")) && !(item2.getItemMeta().hasDisplayName() && item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")))
+                        return false;
+                }
                 if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore()) {
                     CraftBookPlugin.logDebugMessage("Both have lore", "item-checks.meta.lores");
                     if(item.getItemMeta().hasLore()) {
@@ -168,13 +170,16 @@ public class ItemUtil {
                             return false;
                         for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
                             CraftBookPlugin.logDebugMessage("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i), "item-checks.meta.lores");
-                            if(!stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
+                            if(!item.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
                                 return false;
                             CraftBookPlugin.logDebugMessage("Items share same lore", "item-checks.meta.lores");
                         }
                     }
-                } else
-                    return false;
+                } else {
+                    if(!(item.getItemMeta().hasLore() && item.getItemMeta().getLore().size() == 1 && item.getItemMeta().getLore().get(0).equalsIgnoreCase("$IGNORE")))
+                        if(!(item2.getItemMeta().hasLore() && item2.getItemMeta().getLore().size() == 1 && item2.getItemMeta().getLore().get(0).equalsIgnoreCase("$IGNORE")))
+                            return false;
+                }
                 if(item.getItemMeta().hasEnchants() == item2.getItemMeta().hasEnchants()) {
                     CraftBookPlugin.logDebugMessage("Both share enchant existance", "item-checks.meta.enchants");
                     if(item.getItemMeta().hasEnchants()) {

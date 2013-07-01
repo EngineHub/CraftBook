@@ -249,8 +249,11 @@ public class CraftBookPlugin extends JavaPlugin {
         try {
             config.load();
         } catch (Throwable e) {
+            getLogger().severe("Failed to load CraftBook Configuration File! Is it corrupt?");
             getLogger().severe(getStackTrace(e));
-            getServer().shutdown();
+            getLogger().severe("Disabling CraftBook due to invalid Configuration File!");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         // Resolve Vault
