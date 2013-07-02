@@ -108,7 +108,7 @@ mechanics:
         max-per-user: 30
     better-physics:
         enable: false
-        falling-ladders: false
+        falling-ladders: true
     better-pistons:
         enable: true
         crushers: true
@@ -117,6 +117,7 @@ mechanics:
         - 49
         - 7
         super-sticky: true
+        super-push: true
         movement-blacklist:
         - 49
         - 7
@@ -124,11 +125,11 @@ mechanics:
         bounce-blacklist:
         - 49
         - 7
-        super-push: true
         max-distance: 12
     bookcase:
         enable: true
         read-when-sneaking: false
+        read-when-holding-block: false
         read-line: You pick up a book...
     bridge:
         enable: true
@@ -299,6 +300,9 @@ vehicles:
         lift-block: '112:0'
         dispenser-block: '129:0'
         messager-block: '121:0'
+        dispenser:
+            spawn-infront: false
+            check-for-carts: true
         enter-on-impact: true
         slow-when-empty: true
         decay-when-empty: false
