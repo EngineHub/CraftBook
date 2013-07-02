@@ -204,7 +204,7 @@ public class CraftBookPlugin extends JavaPlugin {
             if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
                 protocolLib = (ProtocolLibrary) checkPlugin;
             } else protocolLib = null;
-        } catch(Exception e){
+        } catch(Throwable e){
             protocolLib = null;
             getLogger().severe("You have a corrupt version of ProtocolLib! Please redownload it!");
             BukkitUtil.printStacktrace(e);

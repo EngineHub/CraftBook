@@ -10,8 +10,7 @@ import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,6 +25,7 @@ import com.sk89q.craftbook.mech.area.CuboidCopy;
 import com.sk89q.craftbook.mech.area.FlatCuboidCopy;
 import com.sk89q.craftbook.mech.area.MCEditCuboidCopy;
 import com.sk89q.craftbook.util.ArrayUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -258,10 +258,10 @@ public class AreaCommands {
             throw new CommandException("Invalid location specified.");
         }
 
-        BlockState block = world.getBlockAt(xyz[0], xyz[1], xyz[2]).getState();
-        if (!(block instanceof Sign)) throw new CommandException("No sign found at the specified location.");
+        Block block = world.getBlockAt(xyz[0], xyz[1], xyz[2]);
+        if (!SignUtil.isSign(block)) throw new CommandException("No sign found at the specified location.");
 
-        if (!Area.toggleCold(BukkitUtil.toChangedSign((Sign) block))) {
+        if (!Area.toggleCold(BukkitUtil.toChangedSign(block))) {
             throw new CommandException("Failed to toggle an area at the specified location.");
         }
         // TODO Make a sender wrap for this
