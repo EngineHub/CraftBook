@@ -30,13 +30,9 @@ public class YAMLICConfiguration extends LocalConfiguration {
             e.printStackTrace();
         }
 
-        for (RegisteredICFactory factory : CircuitCore.inst().getICList()) {
-            if (factory.getId().startsWith("MCA")) {
-                continue;
-            }
+        for (RegisteredICFactory factory : CircuitCore.inst().getICList())
             if (factory.getFactory() instanceof ConfigurableIC)
                 ((ConfigurableIC) factory.getFactory()).addConfiguration(config, "ics." + factory.getId() + ".");
-        }
 
         config.save(); //Save all the added values.
     }

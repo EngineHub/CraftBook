@@ -1,3 +1,31 @@
+3.7 Beta 2
+* Fix some plugins that don't properly modify signs on place having their signs incorrectly adopted by CraftBook.
++ Added loop support to Melody IC.
+* Fix dead players respawning in chairs.
++ Added Attack Passive Mob AI Mechanic.
++ Added AMBIENT entity type.
+* Tweaked Critical Bow AI Mechanic to be less over powered.
++ Added a configuration generator utility to the code, to allow for the configuration to be easily regenerated without bukkit.
++ Added an option to CommandItems to allow items to consume themselves.
++ Added an option to CartDispenser to make it spawn carts a block infront of where it usually does.
++ Added an option to CartDispenser to check for existing carts before spawning a new one.
+* Fixed Crush piston requiring movement blacklist.
++ Added Variables support to BetterPistons.
+* Few tweaks to CustomCrafting.
+* Updated PluginMetrics. (Should lower bandwidth apparently)
++ Added an $IGNORE node to item checks. Allows for CustomCrafting, CommandItems etc item checks to ignore display names and lores, if they are set to $IGNORE.
+* Fixed an EntityTrap error that occurs with an invalid Entity Type.
+* Tweaked ammeter.
+* Heavily optimized Bookshelves mechanic.
+* Fixed Chairs for 1.6 allowing higher max health than 20.
+* Tweaked a few configuration options default values.
++ Added a permission node for refueling a cooking pot.
+* Updated the inbuilt config.yml
++ Added an option to allow bookshelves to be read whilst holding a block.
+* Updated to 1.6.1
+* Tweaked /cb report.
+* Moved Language support to YAML files instead of text files.
+
 3.7 Beta 1
 * Few optimizations for various sections of CraftBook.
 + Added an option to completely disable variables.
