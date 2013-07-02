@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -125,6 +126,7 @@ public class ReportWriter {
             try {
                 if (field.getName().equalsIgnoreCase("config")) continue;
                 if (field.getName().equalsIgnoreCase("plugin")) continue;
+                if (field.getName().equalsIgnoreCase("customDrops")) continue;
                 Object val = field.get(config);
                 configLog.put(field.getName(), val);
             } catch (IllegalArgumentException e) {
@@ -171,8 +173,8 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        log.put("Factories Loaded:", "%d", plugin.getManager().factories.size());
-        log.put("ST Mechanics Loaded:", "%d", plugin.getManager().thinkingMechanics.size());
+        log.put("Factories Loaded", "%d", plugin.getManager().factories.size());
+        log.put("ST Mechanics Loaded", "%d", plugin.getManager().thinkingMechanics.size());
 
         if(flags.contains("i")) {
 
@@ -180,7 +182,7 @@ public class ReportWriter {
 
             for(SelfTriggeringMechanic mech : plugin.getManager().thinkingMechanics) {
                 if(mech instanceof ICMechanic) {
-                    log.put(((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
+                    log.put(((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), "%s", ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
                             ((ICMechanic) mech).getIC().getSign().getLine(1) + "|" + ((ICMechanic) mech).getIC().getSign().getLine(2) + "|" +
                             ((ICMechanic) mech).getIC().getSign().getLine(3));
                 }
@@ -205,20 +207,19 @@ public class ReportWriter {
 
         for(Recipe rec : RecipeManager.INSTANCE.getRecipes()) {
 
-            log.put("Recipe ID:", "%s", rec.getId());
-            log.put("Recipe Type:", "%s", rec.getType().name());
+            log.put("Recipe ID", "%s", rec.getId());
+            log.put("Recipe Type", "%s", rec.getType().name());
             if(rec.getType() == RecipeType.SHAPED) {
-                log.put("Recipe Shape:", rec.getShape());
+                log.put("Recipe Shape", Arrays.toString(rec.getShape()));
                 for(Entry<CraftingItemStack, Character> bits : rec.getShapedIngredients().entrySet()) {
-                    log.put("Ingredient:", "%s %s", bits.getKey().toString(), bits.getValue());
+                    log.put("Ingredient", "%s %c", bits.getKey().toString(), bits.getValue());
                 }
             } else {
                 for(CraftingItemStack bits : rec.getIngredients())
-                    log.put("Ingredient:", "%s", bits.toString());
+                    log.put("Ingredient", "%s", bits.toString());
             }
-            log.put("Result:", "%s", rec.getResult().toString());
+            log.put("Result", "%s", rec.getResult().toString());
             log.put("Advanced-Data", rec.getAdvancedDataMap());
-            log.put(" ", " ");
         }
 
         append(log);

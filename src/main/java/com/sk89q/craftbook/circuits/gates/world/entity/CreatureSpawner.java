@@ -168,7 +168,7 @@ public class CreatureSpawner extends AbstractIC {
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("health")) {
             try {
-                int health = Integer.parseInt(data[1]);
+                double health = Double.parseDouble(data[1]);
                 ((LivingEntity) ent).setHealth(health);
             } catch (Exception ignored) {
             }

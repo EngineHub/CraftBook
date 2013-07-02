@@ -69,7 +69,7 @@ public class EntityUtil {
      * @param ent The entity to damage.
      * @param damage The amount to damage it by.
      */
-    public static void damageEntity(Entity ent, int damage) {
+    public static void damageEntity(Entity ent, double damage) {
 
         if(ent instanceof Damageable)
             ((Damageable) ent).damage(damage);
