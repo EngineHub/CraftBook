@@ -110,7 +110,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // AI Configuration Listener
         config.setComment("mechanics.ai.enable", "Enable AI Mechanics.");
-        aiEnabled = config.getBoolean("mechanics.ai.enable", true);
+        aiEnabled = config.getBoolean("mechanics.ai.enable", false);
 
         config.setComment("mechanics.ai.vision-enable", "The list of entities to enable vision AI mechanics for.");
         aiVisionEnabled = config.getStringList("mechanics.ai.vision-enable", Arrays.asList("Zombie","PigZombie"));
@@ -150,77 +150,141 @@ public class YAMLConfiguration extends LocalConfiguration {
         areaMaxAreaPerUser = config.getInt("mechanics.area.max-per-user", 30);
 
         // Better Physics Configuration Listener
-        config.setComment("mechanics.better-physics.enable", "Enables BetterPhysics Mechanics.");
+        config.setComment("mechanics.better-physics.enable", "Enables BetterPhysics Mechanics. (This must be enabled for any sub-mechanic to work)");
         physicsEnabled = config.getBoolean("mechanics.better-physics.enable", false);
 
         config.setComment("mechanics.better-physics.falling-ladders", "Enables BetterPhysics Falling Ladders.");
-        physicsLadders = config.getBoolean("mechanics.better-physics.falling-ladders", false);
+        physicsLadders = config.getBoolean("mechanics.better-physics.falling-ladders", true);
 
 
         // Better Pistons Configuration Listener
+        config.setComment("mechanics.better-pistons.enable", "Enables BetterPistons Mechanics. (This must be enabled for any sub-mechanic to work)");
         pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", true);
+
+        config.setComment("mechanics.better-pistons.crushers", "Enables BetterPistons Crusher Mechanic.");
         pistonsCrusher = config.getBoolean("mechanics.better-pistons.crushers", true);
+
+        config.setComment("mechanics.better-pistons.crushers-kill-mobs", "Causes crushers to kill mobs as well as break blocks. This includes players.");
         pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
+
+        config.setComment("mechanics.better-pistons.crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
         pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+
+        config.setComment("mechanics.better-pistons.super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
-        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
-        pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
-        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+
+        config.setComment("mechanics.better-pistons.super-push", "Enables BetterPistons SuperPush Mechanic.");
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
+
+        config.setComment("mechanics.better-pistons.movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
+        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+
+        config.setComment("mechanics.better-pistons.bounce", "Enables BetterPistons Bounce Mechanic.");
+        pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
+
+        config.setComment("mechanics.better-pistons.bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
+        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+
+        config.setComment("mechanics.better-pistons.max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
 
 
         // Bookcase Configuration Listener
+        config.setComment("mechanics.bookcase.enable", "Enable readable bookshelves.");
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);
+
+        config.setComment("mechanics.bookcase.read-when-sneaking", "Enable reading while sneaking.");
         bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
+
+        config.setComment("mechanics.bookcase.read-line", "The line that is displayed as you right click a bookshelf.");
         bookcaseReadLine = config.getString("mechanics.bookcase.read-line", "You pick up a book...");
 
 
         // Bridge Configuration Listener
+        config.setComment("mechanics.bridge.enable", "Enable bridges.");
         bridgeEnabled = config.getBoolean("mechanics.bridge.enable", true);
+
+        config.setComment("mechanics.bridge.allow-redstone", "Enable bridges via redstone.");
         bridgeAllowRedstone = config.getBoolean("mechanics.bridge.allow-redstone", true);
+
+        config.setComment("mechanics.bridge.max-length", "Max length of a bridge.");
         bridgeMaxLength = config.getInt("mechanics.bridge.max-length", 30);
+
+        config.setComment("mechanics.bridge.max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side.");
         bridgeMaxWidth = config.getInt("mechanics.bridge.max-width", 5);
+
+        config.setComment("mechanics.bridge.blocks", "Blocks bridges can use.");
         bridgeBlocks = config.getIntList("mechanics.bridge.blocks", Arrays.asList(4, 5, 20, 43));
 
 
         // Cauldron Configuration Listener
+        config.setComment("mechanics.cauldron.enable", "Enable the cauldron mechanic");
         cauldronEnabled = config.getBoolean("mechanics.cauldron.enable", true);
+
+        config.setComment("mechanics.cauldron.spoons", "Require spoons to cook cauldron recipes.");
         cauldronUseSpoons = config.getBoolean("mechanics.cauldron.spoons", true);
 
 
         // Chair Configuration Listener
+        config.setComment("mechanics.chair.enable", "Enable chair mechanic.");
         chairEnabled = config.getBoolean("mechanics.chair.enable", true);
+
+        config.setComment("mechanics.chair.require-sneak", "Require sneaking to activate chair mechanic.");
         chairSneak = config.getBoolean("mechanics.chair.require-sneak", true);
+
+        config.setComment("mechanics.chair.regen-health", "Regenerate health when sitting down.");
         chairHealth = config.getBoolean("mechanics.chair.regen-health", true);
+
+        config.setComment("mechanics.chair.blocks", "A list of blocks that can be sat on.");
         chairBlocks = config.getIntList("mechanics.chair.blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135, 136, 156));
+
+        config.setComment("mechanics.chair.face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean("mechanics.chair.face-correct-direction", true);
 
 
         // Chunk Anchor Configuration Listener
+        config.setComment("mechanics.chunk-anchor.enable", "Enable chunk anchors.");
         chunkAnchorEnabled = config.getBoolean("mechanics.chunk-anchor.enable", true);
+
+        config.setComment("mechanics.chunk-anchor.enable-redstone", "Enable toggling with redstone.");
         chunkAnchorRedstone = config.getBoolean("mechanics.chunk-anchor.enable-redstone", true);
+
+        config.setComment("mechanics.chunk-anchor.check-chunks", "On creation, check the chunk for already existing chunk anchors.");
         chunkAnchorCheck = config.getBoolean("mechanics.chunk-anchor.check-chunks", true);
 
 
         // Command Items Configuration Listener
+        config.setComment("mechanics.command-items.enable", "Enables the CommandItems mechanic.");
         commandItemsEnabled = config.getBoolean("mechanics.command-items.enable", true);
 
 
         // Command Sign Configuration Listener
+        config.setComment("mechanics.command-sign.enable", "Enable command signs.");
         commandSignEnabled = config.getBoolean("mechanics.command-sign.enable", true);
 
 
         // Cooking Pot Configuration Listener
+        config.setComment("mechanics.cooking-pot.enable", "Enable cooking pots.");
         cookingPotEnabled = config.getBoolean("mechanics.cooking-pot.enable", true);
+
+        config.setComment("mechanics.cooking-pot.require-fuel", "Require fuel to cook.");
         cookingPotFuel = config.getBoolean("mechanics.cooking-pot.require-fuel", true);
+
+        config.setComment("mechanics.cooking-pot.cook-ores", "Allows the cooking pot to cook ores and other smeltable items.");
         cookingPotOres = config.getBoolean("mechanics.cooking-pot.cook-ores", false);
+
+        config.setComment("mechanics.cooking-pot.sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
         cookingPotSignOpen = config.getBoolean("mechanics.cooking-pot.sign-click-open", true);
+
+        config.setComment("mechanics.cooking-pot.take-buckets", "When enabled, lava buckets being used as fuel will consume the bucket.");
         cookingPotDestroyBuckets = config.getBoolean("mechanics.cooking-pot.take-buckets", false);
+
+        config.setComment("mechanics.cooking-pot.super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
         cookingPotSuperFast = config.getBoolean("mechanics.cooking-pot.super-fast-cooking", false);
 
 
         // Custom Crafting Configuration Listener
+        config.setComment("mechanics.custom-crafting.enable", "Enable custom crafting.");
         customCraftingEnabled = config.getBoolean("mechanics.custom-crafting.enable", true);
 
 

@@ -202,7 +202,7 @@ public class Chair implements Listener {
                 else {
                     addChair(p, getChair(p)); // For any new players.
 
-                    if (plugin.getConfiguration().chairHealth && p.getHealth() < 20)
+                    if (plugin.getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(p.getHealth() + 1);
                     if (p.getExhaustion() > -20f) p.setExhaustion(p.getExhaustion() - 0.1f);
                 }

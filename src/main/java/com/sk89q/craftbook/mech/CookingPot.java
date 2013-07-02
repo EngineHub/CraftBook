@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -172,6 +173,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getTypeId() == BlockID.CHEST) {
             Player player = event.getPlayer();
+            if(!player.hasPermission("craftbook.mech.cook.refuel")) {
+                player.sendMessage(ChatColor.RED + "You do not have permission to refuel this mechanic!");
+                return;
+            }
             if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getTypeId())) {
                 int itemID = player.getItemInHand().getTypeId();
                 increaseMultiplier(sign, Ingredients.getTime(itemID));
