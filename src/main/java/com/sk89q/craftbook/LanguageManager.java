@@ -1,15 +1,11 @@
 package com.sk89q.craftbook;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import net.minecraft.server.v1_6_R1.LocaleLanguage;
 
@@ -18,18 +14,28 @@ import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author Me4502
  */
 public class LanguageManager {
 
-    HashMap<String, HashMap<String, String>> languageMap = new HashMap<String, HashMap<String, String>>();
+    HashMap<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
 
     public LanguageManager() {
+    }
 
+    public void init() {
         checkForLanguages();
+    }
+
+    public void close() {
+
+        for(YAMLProcessor proc : languageMap.values()) {
+            proc.save();
+        }
     }
 
     public void checkForLanguages() {
@@ -37,57 +43,39 @@ public class LanguageManager {
         List<String> languages = CraftBookPlugin.inst().getConfiguration().languages;
         for (String language : languages) {
             language = language.trim();
-            HashMap<String, String> languageData = null;
-            File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".txt");
-            BufferedReader br = null;
+            File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".yml");
+            YAMLProcessor lang = new YAMLProcessor(f, true, YAMLFormat.EXTENDED);
+
             try {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
-                String line;
-                languageData = new HashMap<String, String>();
-                while ((line = br.readLine()) != null) {
-                    line = line.trim();
-                    if (line.length() == 0 || line.startsWith("#"))
-                        continue;
-                    String[] split = RegexUtil.COLON_PATTERN.split(line, 2);
-                    if (split.length < 2)
-                        continue;
-                    languageData.put(split[0], split[1]);
-                }
+                lang.load();
             } catch (IOException e) {
-                CraftBookPlugin.inst().getLogger().log(Level.SEVERE, "[CraftBook] could not find file: " + CraftBookPlugin.inst().getDataFolder().getName() + File.pathSeparator + language + ".txt");
-            } finally {
-                if(br != null)
-                    try {
-                        br.close();
-                    } catch (IOException ignored) {
-                    }
+                e.printStackTrace();
             }
-            languageMap.put(language, languageData);
+
+            lang.setWriteDefaults(true);
+            languageMap.put(language, lang);
         }
-    }
-
-    public String getString(String message) {
-
-        HashMap<String, String> languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
-        if (languageData == null) return "Missing Language File!";
-        String translated = languageData.get(ChatColor.stripColor(message));
-        if (translated == null) return message;
-        return translated;
     }
 
     public String getString(String message, String language) {
 
         if(language == null)
             language = CraftBookPlugin.inst().getConfiguration().language;
-        HashMap<String, String> languageData = languageMap.get(language);
-        if (languageData == null) return getString(message);
-        String translated = languageData.get(ChatColor.stripColor(message));
+        YAMLProcessor languageData = languageMap.get(language);
+        if (languageData == null) {
+            languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
+            if (languageData == null) return "Missing Language File!";
+            String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
+            if (translated == null) return message;
+            return translated;
+        }
+        String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
         if (translated == null || translated.length() == 0) {
             languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
-            if(languageData == null) return message;
-            translated = languageData.get(ChatColor.stripColor(message));
+            if (languageData == null) return "Missing Language File!";
+            translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
             if (translated == null) return message;
-            else return translated;
+            return translated;
         }
         return translated;
     }
@@ -107,4 +95,90 @@ public class LanguageManager {
 
         return languageMap.keySet();
     }
+
+    @SuppressWarnings("serial")
+    public static HashMap<String, String> defaultMessages = new HashMap<String, String>() {{
+        put("area.permissions", "You don't have permissions to use that in this area!");
+
+
+        put("mech.use-permission", "You don't have permission to use this mechanic.");
+        put("mech.not-enough-blocks","Not enough blocks to trigger mechanic!");
+        put("mech.group","You are not in the required group!");
+        put("mech.restock","Mechanism Restocked!");
+
+        put("mech.pistons.crush.created","Piston Crush Mechanic Created!");
+        put("mech.pistons.supersticky.created","Piston Super-Sticky Mechanic Created!");
+        put("mech.pistons.bounce.created","Piston Bounce Mechanic Created!");
+        put("mech.pistons.superpush.created","Piston Super-Push Mechanic Created!");
+
+        put("mech.lift.target-sign-created","Elevator target sign created.");
+        put("mech.lift.down-sign-created","Elevator down sign created.");
+        put("mech.lift.up-sign-created","Elevator up sign created.");
+        put("mech.lift.obstruct","Your destination is obstructed!");
+        put("mech.lift.no-floor","There is no floor at your destination!");
+        put("mech.lift.floor","Floor");
+        put("mech.lift.up","You went up a floor!");
+        put("mech.lift.down","You went down a floor!");
+
+        put("mech.gate.create","Gate Created!");
+        put("mech.gate.toggle","Gate Toggled!");
+        put("mech.gate.not-found","Failed to find a gate!");
+        put("mech.dgate.create","Small Gate Created!");
+
+        put("mech.door.create","Door Created!");
+        put("mech.door.toggle","Door Toggled!");
+        put("mech.door.other-sign","Door sign required on other side (or it was too far away).");
+        put("mech.door.unusable","Material not usable for a door!");
+        put("mech.door.material","Door must be made entirely out of the same material!");
+
+        put("mech.bridge.create","Bridge Created!");
+        put("mech.bridge.toggle","Bridge Toggled!");
+        put("mech.bridge.end-create","Bridge End Created!");
+        put("mech.bridge.unusable","Material not usable for a bridge!");
+        put("mech.bridge.material","Bridge must be made entirely out of the same material!");
+        put("mech.bridge.other-sign","Bridge sign required on other side (or it was too far away).");
+
+        put("mech.pay.create","Pay Created!");
+
+        put("mech.teleport.create","Teleporter Created!");
+        put("mech.teleport.alert","You Teleported!");
+        put("mech.teleport.range","Out of Range!");
+        put("mech.teleport.sign","There is no Sign at your Destination!");
+        put("mech.teleport.arriveonly","You can only arrive at this teleporter!");
+
+        put("mech.cauldron.too-small","Cauldron is too small!");
+        put("mech.cauldron.leaky","Cauldron has a leak!");
+        put("mech.cauldron.no-lava","Cauldron lacks lava!");
+        put("mech.cauldron.stir","You stir the cauldron but nothing happens.");
+
+        put("mech.command.create","Command Sign Created!");
+
+        put("mech.cook.create","Cooking Pot Created!");
+        put("mech.cook.ouch","Ouch! That was hot!");
+
+        put("mech.hiddenswitch.key","The key did not fit!");
+
+        put("mech.anchor.create","Chunk Anchor Created!");
+
+        put("mech.lightswitch.create","Light Switch Created!");
+
+        put("mech.painting.editing","You are now editing this painting!");
+        put("mech.painting.stop","You are no longer editing this painting!");
+        put("mech.painting.used","This painting is already being edited by");
+        put("mech.painting.range","You are too far away from the painting!");
+
+        put("mech.signcopy.copy","You have copied the sign!");
+        put("mech.signcopy.paste","You have pasted the sign!");
+
+
+        put("circuits.pipes.create","Pipe created!");
+
+
+        put("vehicles.create-permission","You don't have permissions to create this vehicle mechanic!");
+
+
+        put("worldedit.ic.unsupported","WorldEdit selection type currently unsupported for IC's!");
+        put("worldedit.ic.notfound","WorldEdit not found!");
+        put("worldedit.ic.noselection","No selection was found!");
+    }};
 }

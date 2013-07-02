@@ -1,0 +1,86 @@
+area:
+    permissions: You don't have permissions to use that in this area!
+mech:
+    teleport:
+        alert: You Teleported!
+        range: Out of Range!
+        create: Teleporter Created!
+        arriveonly: You can only arrive at this teleporter!
+        sign: There is no Sign at your Destination!
+    use-permission: You don't have permission to use this mechanic.
+    gate:
+        not-found: Failed to find a gate!
+        toggle: Gate Toggled!
+        create: Gate Created!
+    lift:
+        target-sign-created: Elevator target sign created.
+        down-sign-created: Elevator down sign created.
+        floor: Floor
+        up-sign-created: Elevator up sign created.
+        obstruct: Your destination is obstructed!
+        down: You went down a floor!
+        up: You went up a floor!
+        no-floor: There is no floor at your destination!
+    door:
+        material: Door must be made entirely out of the same material!
+        other-sign: Door sign required on other side (or it was too far away).
+        toggle: Door Toggled!
+        create: Door Created!
+        unusable: Material not usable for a door!
+    anchor:
+        create: Chunk Anchor Created!
+    bridge:
+        toggle: Bridge Toggled!
+        end-create: Bridge End Created!
+        other-sign: Bridge sign required on other side (or it was too far away).
+        create: Bridge Created!
+        unusable: Material not usable for a bridge!
+        material: Bridge must be made entirely out of the same material!
+    pay:
+        create: Pay Created!
+    painting:
+        editing: You are now editing this painting!
+        used: This painting is already being edited by
+        range: You are too far away from the painting!
+        stop: You are no longer editing this painting!
+    dgate:
+        create: Small Gate Created!
+    pistons:
+        superpush:
+            created: Piston Super-Push Mechanic Created!
+        crush:
+            created: Piston Crush Mechanic Created!
+        supersticky:
+            created: Piston Super-Sticky Mechanic Created!
+        bounce:
+            created: Piston Bounce Mechanic Created!
+    signcopy:
+        paste: You have pasted the sign!
+        copy: You have copied the sign!
+    not-enough-blocks: Not enough blocks to trigger mechanic!
+    cauldron:
+        leaky: Cauldron has a leak!
+        no-lava: Cauldron lacks lava!
+        too-small: Cauldron is too small!
+        stir: You stir the cauldron but nothing happens.
+    group: You are not in the required group!
+    restock: Mechanism Restocked!
+    command:
+        create: Command Sign Created!
+    cook:
+        ouch: Ouch! That was hot!
+        create: Cooking Pot Created!
+    lightswitch:
+        create: Light Switch Created!
+    hiddenswitch:
+        key: The key did not fit!
+vehicles:
+    create-permission: You don't have permissions to create this vehicle mechanic!
+worldedit:
+    ic:
+        noselection: No selection was found!
+        notfound: WorldEdit not found!
+        unsupported: WorldEdit selection type currently unsupported for IC's!
+circuits:
+    pipes:
+        create: Pipe created!

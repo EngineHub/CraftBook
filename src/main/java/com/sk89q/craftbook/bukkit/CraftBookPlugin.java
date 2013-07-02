@@ -294,6 +294,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // Initialize the language manager.
         createDefaultConfiguration(new File(getDataFolder(), "en_US.txt"), "en_US.txt", true);
         languageManager = new LanguageManager();
+        languageManager.init();
     }
 
     /**
@@ -511,6 +512,7 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        languageManager.close();
         for (LocalComponent component : components) {
             component.disable();
         }
