@@ -32,7 +32,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         this.logger = logger;
     }
 
-    @SuppressWarnings("serial")
     @Override
     public void load() {
 
@@ -168,7 +167,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
 
         config.setComment("mechanics.better-pistons.crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
-        pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+        pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
 
         config.setComment("mechanics.better-pistons.super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
@@ -177,13 +176,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
 
         config.setComment("mechanics.better-pistons.movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
-        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
 
         config.setComment("mechanics.better-pistons.bounce", "Enables BetterPistons Bounce Mechanic.");
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
 
         config.setComment("mechanics.better-pistons.bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
-        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", new ArrayList<Integer>(){{ add(BlockID.OBSIDIAN); add(BlockID.BEDROCK);}});
+        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
 
         config.setComment("mechanics.better-pistons.max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
@@ -195,6 +194,9 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         config.setComment("mechanics.bookcase.read-when-sneaking", "Enable reading while sneaking.");
         bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
+
+        config.setComment("mechanics.bookcase.read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
+        bookcaseReadHoldingBlock = config.getBoolean("mechanics.bookcase.read-when-holding-block", false);
 
         config.setComment("mechanics.bookcase.read-line", "The line that is displayed as you right click a bookshelf.");
         bookcaseReadLine = config.getString("mechanics.bookcase.read-line", "You pick up a book...");

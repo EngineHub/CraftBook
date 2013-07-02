@@ -74,6 +74,7 @@ public abstract class LocalConfiguration {
     public List<Integer> pistonsBounceBlacklist;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
+    public boolean bookcaseReadHoldingBlock;
     public boolean bookcaseReadWhenSneaking;
     public String bookcaseReadLine;
     // Mechanics - Bridge

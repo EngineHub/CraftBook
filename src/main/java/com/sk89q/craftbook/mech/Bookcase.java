@@ -89,7 +89,7 @@ public class Bookcase extends AbstractMechanic {
         if (event.getPlayer().isSneaking() != plugin.getConfiguration().bookcaseReadWhenSneaking) return;
 
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        if (!player.isHoldingBlock())
+        if (plugin.getConfiguration().bookcaseReadHoldingBlock || !player.isHoldingBlock())
             read(player);
     }
 
