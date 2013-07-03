@@ -1,10 +1,11 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.vehicles.cart;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -75,27 +76,17 @@ public class CartMechanismBlocks {
 
         if (!BlockType.isRailBlock(rail.getTypeId()))
             throw new InvalidMechanismException("rail argument must be a rail!");
-        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId())) return new CartMechanismBlocks(rail,
-                rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 2));
+        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId())) return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 2));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3).getTypeId()))
-            return new CartMechanismBlocks(rail, rail.getRelative(
-                    BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 3));
+            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 3));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1).getTypeId()))
-            return new CartMechanismBlocks(
-                    rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                            1).getRelative(BlockFace.EAST, 1));
+            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1).getTypeId()))
-            return new CartMechanismBlocks(
-                    rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                            1).getRelative(BlockFace.WEST, 1));
+            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1).getTypeId()))
-            return new CartMechanismBlocks(
-                    rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN,
-                            1).getRelative(BlockFace.NORTH, 1));
+            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1));
         else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1).getTypeId()))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1),
-                    rail.getRelative(BlockFace.DOWN, 1).getRelative(
-                            BlockFace.SOUTH, 1));
+            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1));
         return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), null);
     }
 
@@ -111,24 +102,17 @@ public class CartMechanismBlocks {
         if (!BlockType.isRailBlock(base.getRelative(BlockFace.UP, 1).getTypeId()))
             throw new InvalidMechanismException("could not find rails.");
         if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base,
-                    base.getRelative(BlockFace.DOWN, 1));
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 1));
         else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1),
-                    base, base.getRelative(BlockFace.DOWN, 2));
-
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 2));
         else if (SignUtil.isSign(base.getRelative(BlockFace.EAST, 1).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1),
-                    base, base.getRelative(BlockFace.EAST, 1));
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.EAST, 1));
         else if (SignUtil.isSign(base.getRelative(BlockFace.WEST, 1).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1),
-                    base, base.getRelative(BlockFace.WEST, 1));
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.WEST, 1));
         else if (SignUtil.isSign(base.getRelative(BlockFace.NORTH, 1).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1),
-                    base, base.getRelative(BlockFace.NORTH, 1));
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.NORTH, 1));
         else if (SignUtil.isSign(base.getRelative(BlockFace.SOUTH, 1).getTypeId()))
-            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.SOUTH,
-                    1));
+            return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.SOUTH, 1));
         return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, null);
     }
 
@@ -143,16 +127,11 @@ public class CartMechanismBlocks {
 
         if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
         if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 2).getTypeId()))
-            return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 2),
-                    sign.getRelative(BlockFace.UP, 1), sign);
+            return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 2), sign.getRelative(BlockFace.UP, 1), sign);
         else if (BlockType.isRailBlock(sign.getRelative(BlockFace.UP, 3).getTypeId()))
-            return new CartMechanismBlocks(sign.getRelative(BlockFace.UP,
-                    3), sign.getRelative(BlockFace.UP, 2), sign);
-        else if (BlockType.isRailBlock(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP,
-                1).getTypeId()))
-            return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1),
-                    sign.getRelative(
-                            SignUtil.getBack(sign), 1), sign);
+            return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 3), sign.getRelative(BlockFace.UP, 2), sign);
+        else if (BlockType.isRailBlock(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getTypeId()))
+            return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1), sign.getRelative( SignUtil.getBack(sign), 1), sign);
         throw new InvalidMechanismException("could not find rails.");
     }
 
@@ -181,7 +160,7 @@ public class CartMechanismBlocks {
      */
     public boolean matches(String mechname) {
 
-        return sign != null && BukkitUtil.toChangedSign(sign).getLine(1).equalsIgnoreCase("[" + mechname + "]");
+        return sign != null && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
         // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
         // the mold with second line definer.
     }
@@ -191,11 +170,9 @@ public class CartMechanismBlocks {
      *
      * @return true if the base block is the same type as the given block.
      */
-    // this tends to be redundant if checked within a CartMechanism, since it's axiomatic that that CartMechanism by
-    // virtue of its configured base type.
-    public boolean matches(int mat) {
+    public boolean matches(ItemInfo mat) {
 
-        return base.getTypeId() == mat;
+        return base.getTypeId() == mat.getId() && base.getData() == mat.getData();
     }
 
     /**
@@ -206,5 +183,20 @@ public class CartMechanismBlocks {
     public ChangedSign getSign() {
 
         return sign == null ? null : BukkitUtil.toChangedSign(sign);
+    }
+
+    public boolean hasSign() {
+
+        return sign != null;
+    }
+
+    public boolean hasRail() {
+
+        return rail != null;
+    }
+
+    public boolean hasBase() {
+
+        return base != null;
     }
 }

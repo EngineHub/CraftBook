@@ -194,23 +194,6 @@ public abstract class LocalConfiguration {
     public int xpStorerBlock;
 
     // Vehicles
-    // Vehicles - Materials
-    public ItemInfo matBoostMax;
-    public ItemInfo matBoost25x ;
-    public ItemInfo matSlow50x;
-    public ItemInfo matSlow20x;
-    public ItemInfo matReverse;
-    public ItemInfo matStation;
-    public ItemInfo matSorter;
-    public ItemInfo matEjector;
-    public ItemInfo matDeposit;
-    public ItemInfo matTeleport;
-    public ItemInfo matLift;
-    public ItemInfo matDispenser;
-    public ItemInfo matMessager;
-    // Vehicles - Dispenser Options
-    public boolean minecartDispenserLegacy;
-    public boolean minecartDispenserAntiSpam;
     // Vehicles - Minecart Options
     public boolean minecartSlowWhenEmpty;
     public boolean minecartRemoveOnExit;
@@ -218,10 +201,7 @@ public abstract class LocalConfiguration {
     public boolean minecartRemoveEntitiesOtherCarts;
     public double minecartMaxSpeedModifier;
     public double minecartOffRailSpeedModifier;
-    public boolean minecartDecayWhenEmpty;
     public boolean minecartEnterOnImpact;
-    public boolean minecartMessengerEnabled = true;
-    public int minecartDecayTime;
     public double minecartConstantSpeed;
     public boolean minecartPickupItemsOnCollision;
     public boolean minecartPressurePlateIntersection;
@@ -229,6 +209,44 @@ public abstract class LocalConfiguration {
     public boolean minecartBlockAnimalEntry;
     public boolean minecartLookDirection;
     public boolean minecartVerticalRail;
+    // Vehicles - Minecart Decay Options
+    public boolean minecartDecayWhenEmpty;
+    public int minecartDecayTime;
+    // Vehicles - Minecart Station Options
+    public boolean minecartStationEnabled;
+    public ItemInfo minecartStationBlock;
+    // Vehicles - Minecart Sorter Options
+    public boolean minecartSorterEnabled;
+    public ItemInfo minecartSorterBlock;
+    // Vehicles - Minecart Ejector Options
+    public boolean minecartEjectorEnabled;
+    public ItemInfo minecartEjectorBlock;
+    // Vehicles - Minecart Deposit Options
+    public boolean minecartDepositEnabled;
+    public ItemInfo minecartDepositBlock;
+    // Vehicles - Minecart Teleport Options
+    public boolean minecartTeleportEnabled;
+    public ItemInfo minecartTeleportBlock;
+    // Vehicles - Minecart Elevator Options
+    public boolean minecartElevatorEnabled;
+    public ItemInfo minecartElevatorBlock;
+    // Vehicles - Minecart Messager Options
+    public boolean minecartMessagerEnabled;
+    public ItemInfo minecartMessagerBlock;
+    // Vehicles - Minecart Reverse Options
+    public boolean minecartReverseEnabled;
+    public ItemInfo minecartReverseBlock;
+    // Vehicles - Minecart SpeedMod Options
+    public boolean minecartSpeedModEnabled;
+    public ItemInfo minecartSpeedModMaxBoostBlock;
+    public ItemInfo minecartSpeedMod25xBoostBlock;
+    public ItemInfo minecartSpeedMod50xSlowBlock;
+    public ItemInfo minecartSpeedMod20xSlowBlock;
+    // Vehicles - Minecart Dispenser Options
+    public boolean minecartDispenserEnabled;
+    public ItemInfo minecartDispenserBlock;
+    public boolean minecartDispenserLegacy;
+    public boolean minecartDispenserAntiSpam;
     // Vehicles - Minecart Fall Modifier
     public boolean minecartFallModifierEnabled;
     public double minecartFallVerticalSpeed;

@@ -1,41 +1,46 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.vehicles.cart;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
+import org.bukkit.event.EventHandler;
 
+import com.sk89q.craftbook.CartBlockImpactEvent;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
-public class CartEjector extends CartMechanism {
+public class CartEjector extends CartBlockMechanism {
 
-    @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
-        // validate
-        if (cart == null) return;
+    public CartEjector (ItemInfo material) {
+        super(material);
+    }
+
+    @EventHandler
+    public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (cart.getPassenger() == null) return;
+        if (!event.getBlocks().matches(getMaterial())) return;
+        if (event.getMinecart().getPassenger() == null) return;
 
         // enabled?
-        if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
+        if (Power.OFF == isActive(event.getBlocks())) return;
 
         // go
         Block ejectTarget;
-        if (blocks.sign == null) {
-            ejectTarget = blocks.rail;
-        } else if (!blocks.matches("eject")) {
-            ejectTarget = blocks.rail;
+        if (!event.getBlocks().hasSign()) {
+            ejectTarget = event.getBlocks().rail;
+        } else if (!event.getBlocks().matches("eject")) {
+            ejectTarget = event.getBlocks().rail;
         } else {
-            ejectTarget = blocks.rail.getRelative(SignUtil.getFront(blocks.sign));
+            ejectTarget = event.getBlocks().rail.getRelative(SignUtil.getFront(event.getBlocks().sign));
         }
         // if you use just
         // cart.getPassenger().teleport(ejectTarget.getLocation());
         // the client tweaks as bukkit tries to teleport you, then changes its mind and leaves you in the cart.
         // the cart also comes to a dead halt at the time of writing, and i have no idea why.
-        Entity ent = cart.getPassenger();
-        cart.eject();
+        Entity ent = event.getMinecart().getPassenger();
+        event.getMinecart().eject();
         ent.teleport(BukkitUtil.center(ejectTarget.getLocation()));
 
         // notice!

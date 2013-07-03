@@ -17,6 +17,7 @@
 package com.sk89q.craftbook;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
 /**
@@ -27,12 +28,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
 
     protected final Block source;
-
-    public SourcedBlockRedstoneEvent(BlockRedstoneEvent event, Block block) {
-
-        super(block, event.getOldCurrent(), event.getNewCurrent());
-        source = event.getBlock();
-    }
+    private static final HandlerList handlers = new HandlerList();
 
     public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {
 
@@ -43,5 +39,14 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     public Block getSource() {
 
         return source;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

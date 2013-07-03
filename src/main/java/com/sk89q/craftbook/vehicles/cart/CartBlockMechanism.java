@@ -1,10 +1,11 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.vehicles.cart;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.event.Listener;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -20,33 +21,21 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
  *
  * @author hash
  */
-public abstract class CartMechanism {
-
-    /**
-     * Called by MinecartManager after either a vehicle move event or a redstone event results in CartMechanismBlocks
-     * concluding there is a base block
-     * of this CartMechanism's material type involved.
-     *
-     * @param cart   if triggered by a move event, the cart involved; if triggered by redstone,
-     *               a cart in the rail block or null if none.
-     * @param blocks
-     * @param minor  true if the triggering event is somehow 'minor' (namely, a move event from one part of the same
-     *               block to another); false otherwise
-     *               (i.e. redstone events or move events that cross block boundaries). Most CartMechanism can safely
-     *               ignore minor events; CartStation is
-     *               an example of an exception because its brake-locking functionality.
-     */
-    public abstract void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor);
+public abstract class CartBlockMechanism implements Listener {
 
     public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks) {
 
     }
 
-    protected ItemInfo material;
+    protected final ItemInfo material;
 
-    void setMaterial(ItemInfo mat) {
+    public ItemInfo getMaterial() {
 
-        material = mat;
+        return material;
+    }
+
+    public CartBlockMechanism(ItemInfo material) {
+        this.material = material;
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
@@ -57,20 +46,15 @@ public abstract class CartMechanism {
     /**
      * Determins if a cart mechanism should be enabled.
      *
-     * @param base the block on which the rails sit (the type of this block is generally what determines the
-     *             mechanism type), or null if not
-     *             interested.
-     * @param rail the block containing the rails, or null if not interested.
-     * @param sign the block containing the signpost that gives additional configuration to the mechanism,
-     *             or null if not interested.
+     * @param blocks The {@link CartMechanismBlocks} that represents the blocks that are being checked for activity on.
      *
      * @return the appropriate Power state (see the documentation for {@link RedstoneUtil.Power}'s members).
      */
-    public Power isActive(Block rail, Block base, Block sign) {
+    public Power isActive(CartMechanismBlocks blocks) {
 
         boolean isWired = false;
-        if (sign != null) {
-            switch (isActive(sign)) {
+        if (blocks.hasSign()) {
+            switch (isActive(blocks.sign)) {
                 case ON:
                     return Power.ON;
                 case NA:
@@ -79,8 +63,8 @@ public abstract class CartMechanism {
                     isWired = true;
             }
         }
-        if (base != null) {
-            switch (isActive(base)) {
+        if (blocks.hasBase()) {
+            switch (isActive(blocks.base)) {
                 case ON:
                     return Power.ON;
                 case NA:
@@ -89,8 +73,8 @@ public abstract class CartMechanism {
                     isWired = true;
             }
         }
-        if (rail != null) {
-            switch (isActive(rail)) {
+        if (blocks.hasRail()) {
+            switch (isActive(blocks.rail)) {
                 case ON:
                     return Power.ON;
                 case NA:

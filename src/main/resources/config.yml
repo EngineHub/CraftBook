@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7b1
+# CraftBook Configuration for Bukkit. Generated for version: 3.7b2
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -287,32 +287,13 @@ mechanics:
         block: 52
 vehicles:
     minecart:
-        max-boost-block: '41:0'
-        25x-boost-block: '14:0'
-        50x-slow-block: '88:0'
-        20x-slow-block: '13:0'
-        reverse-block: '35:0'
-        station-block: '49:0'
-        sort-block: '87:0'
-        eject-block: '42:0'
-        deposit-block: '15:0'
-        teleport-block: '133:0'
-        lift-block: '112:0'
-        dispenser-block: '129:0'
-        messager-block: '121:0'
-        dispenser:
-            spawn-infront: false
-            check-for-carts: true
         enter-on-impact: true
         slow-when-empty: true
-        decay-when-empty: false
         remove-on-exit: false
         remove-entities: false
         remove-entities-othercarts: false
         max-speed-modifier: 1.0
         off-rail-speed-modifier: 0.0
-        track-messages: true
-        decay-time: 20
         constant-speed: 0.0
         item-pickup-collision: false
         pressure-plate-intersection: false
@@ -320,6 +301,45 @@ vehicles:
         block-animal-entry: false
         vision-based-steering: false
         ladder-vertical-rail: false
+        decay-when-empty:
+            enable: false
+            time-in-ticks: 20
+        mechanisms:
+            station:
+                enable: true
+                block: '49:0'
+            sorter:
+                enable: true
+                block: '87:0'
+            ejector:
+                enable: true
+                block: '42:0'
+            deposit:
+                enable: true
+                block: '15:0'
+            teleport:
+                enable: true
+                block: '133:0'
+            elevator:
+                enable: true
+                block: '112:0'
+            messager:
+                enable: true
+                block: '121:0'
+            reverse:
+                enable: true
+                block: '35:0'
+            speed-modifier:
+                enable: true
+                max-boost-block: '41:0'
+                25x-boost-block: '14:0'
+                50x-slow-block: '88:0'
+                20x-slow-block: '13:0'
+            dispenser:
+                enable: true
+                block: '129:0'
+                spawn-infront: false
+                check-for-carts: true
         fall-speed:
             enable: false
             vertical-fall-speed: 0.9

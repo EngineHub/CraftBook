@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.vehicles.cart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +7,12 @@ import java.util.List;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -19,28 +20,31 @@ import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
 
-public class CartDeposit extends CartMechanism {
+public class CartDeposit extends CartBlockMechanism {
 
-    @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
-        // validate
-        if (cart == null) return;
+    public CartDeposit (ItemInfo material) {
+        super(material);
+    }
+
+    @EventHandler
+    public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (minor) return;
-        if (!(cart instanceof StorageMinecart)) return;
+        if (event.isMinor()) return;
+        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!(event.getMinecart() instanceof StorageMinecart)) return;
 
         // enabled?
-        if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
+        if (Power.OFF == isActive(event.getBlocks())) return;
 
         // collect/deposit set?
-        if (blocks.sign == null) return;
-        if (!blocks.matches("collect") && !blocks.matches("deposit")) return;
-        boolean collecting = blocks.matches("collect");
+        if (!event.getBlocks().hasSign()) return;
+        if (!event.getBlocks().matches("collect") && !event.getBlocks().matches("deposit")) return;
+        boolean collecting = event.getBlocks().matches("collect");
 
         // go
         List<ItemInfo> items = new ArrayList<ItemInfo>();
-        for(String data : RegexUtil.COMMA_PATTERN.split(((Sign) blocks.sign.getState()).getLine(2))) {
+        for(String data : RegexUtil.COMMA_PATTERN.split(((Sign) event.getBlocks().sign.getState()).getLine(2))) {
             int itemID = -1;
             byte itemData = -1;
             try {
@@ -55,12 +59,12 @@ public class CartDeposit extends CartMechanism {
             items.add(new ItemInfo(itemID, itemData));
         }
 
-        Inventory cartinventory = ((StorageMinecart) cart).getInventory();
+        Inventory cartinventory = ((StorageMinecart) event.getBlocks()).getInventory();
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         // search for containers
-        List<Chest> containers = new ArrayList<Chest>(RailUtil.getNearbyChests(blocks.base));
-        containers.addAll(RailUtil.getNearbyChests(blocks.rail));
+        List<Chest> containers = new ArrayList<Chest>(RailUtil.getNearbyChests(event.getBlocks().base));
+        containers.addAll(RailUtil.getNearbyChests(event.getBlocks().rail));
 
         // are there any containers?
         if (containers.isEmpty()) return;

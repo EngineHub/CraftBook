@@ -1,40 +1,43 @@
-package com.sk89q.craftbook.cart;
+package com.sk89q.craftbook.vehicles.cart;
 
 import java.util.ArrayList;
 
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
+import com.sk89q.craftbook.CartBlockImpactEvent;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
 
-public class CartMessenger extends CartMechanism {
+public class CartMessenger extends CartBlockMechanism {
+
+    public CartMessenger (ItemInfo material) {
+        super(material);
+    }
 
     CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    public CartMessenger() {
+    @EventHandler
+    public void onVehicleImpact(CartBlockImpactEvent event) {
 
-    }
-
-    @Override
-    public void impact(Minecart cart, CartMechanismBlocks blocks, boolean minor) {
         // validate
-        if (cart == null || minor) return;
+        if (event.isMinor()) return;
+        if (!event.getBlocks().matches(getMaterial()));
 
         // care?
-        if (cart.getPassenger() == null) return;
-        if (blocks.sign == null || !(blocks.sign.getState() instanceof Sign)) return;
-
-        if (!plugin.getConfiguration().minecartMessengerEnabled) return;
+        if (event.getMinecart().getPassenger() == null) return;
+        if (!event.getBlocks().hasSign() || SignUtil.isSign(event.getBlocks().sign)) return;
 
         // enabled?
-        if (Power.OFF == isActive(blocks.rail, blocks.base, blocks.sign)) return;
+        if (Power.OFF == isActive(event.getBlocks())) return;
 
         // go
-        if (cart.getPassenger() instanceof Player) {
-            Player p = (Player) cart.getPassenger();
-            Sign s = (Sign) blocks.sign.getState();
+        if (event.getMinecart().getPassenger() instanceof Player) {
+            Player p = (Player) event.getMinecart().getPassenger();
+            ChangedSign s = event.getBlocks().getSign();
             if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
 
             ArrayList<String> messages = new ArrayList<String>();

@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.bukkit;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
@@ -19,7 +19,6 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -35,13 +34,21 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.cart.CartMechanism;
-import com.sk89q.craftbook.cart.MinecartManager;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
+import com.sk89q.craftbook.vehicles.cart.CartBooster;
+import com.sk89q.craftbook.vehicles.cart.CartDeposit;
+import com.sk89q.craftbook.vehicles.cart.CartDispenser;
+import com.sk89q.craftbook.vehicles.cart.CartEjector;
+import com.sk89q.craftbook.vehicles.cart.CartLift;
+import com.sk89q.craftbook.vehicles.cart.CartMessenger;
+import com.sk89q.craftbook.vehicles.cart.CartReverser;
+import com.sk89q.craftbook.vehicles.cart.CartSorter;
+import com.sk89q.craftbook.vehicles.cart.CartStation;
+import com.sk89q.craftbook.vehicles.cart.CartTeleporter;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -54,8 +61,6 @@ public class VehicleCore implements LocalComponent {
     private static VehicleCore instance;
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
-
-    private MinecartManager cartman;
 
     private Map<String, String> stationSelection;
 
@@ -83,8 +88,6 @@ public class VehicleCore implements LocalComponent {
 
         stationSelection = new HashMap<String, String>();
 
-        cartman = new MinecartManager();
-
         // Register events
         registerEvents();
 
@@ -98,7 +101,41 @@ public class VehicleCore implements LocalComponent {
         instance = null;
     }
 
+    private HashSet<CartBlockMechanism> cartBlockMechanisms = new HashSet<CartBlockMechanism>();
+
     protected void registerEvents() {
+
+        if(plugin.getConfiguration().minecartSpeedModEnabled) {
+            if(plugin.getConfiguration().minecartSpeedModMaxBoostBlock.getId() > 0)
+                cartBlockMechanisms.add(new CartBooster(plugin.getConfiguration().minecartSpeedModMaxBoostBlock, 100));
+            if(plugin.getConfiguration().minecartSpeedMod25xBoostBlock.getId() > 0)
+                cartBlockMechanisms.add(new CartBooster(plugin.getConfiguration().minecartSpeedMod25xBoostBlock, 1.25));
+            if(plugin.getConfiguration().minecartSpeedMod20xSlowBlock.getId() > 0)
+                cartBlockMechanisms.add(new CartBooster(plugin.getConfiguration().minecartSpeedMod20xSlowBlock, 0.8));
+            if(plugin.getConfiguration().minecartSpeedMod50xSlowBlock.getId() > 0)
+                cartBlockMechanisms.add(new CartBooster(plugin.getConfiguration().minecartSpeedMod50xSlowBlock, 0.5));
+        }
+        if(plugin.getConfiguration().minecartReverseEnabled && plugin.getConfiguration().minecartReverseBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartReverser(plugin.getConfiguration().minecartReverseBlock));
+        if(plugin.getConfiguration().minecartSorterEnabled && plugin.getConfiguration().minecartSorterBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartSorter(plugin.getConfiguration().minecartSorterBlock));
+        if(plugin.getConfiguration().minecartStationEnabled && plugin.getConfiguration().minecartStationBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartStation(plugin.getConfiguration().minecartStationBlock));
+        if(plugin.getConfiguration().minecartEjectorEnabled && plugin.getConfiguration().minecartEjectorBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartEjector(plugin.getConfiguration().minecartEjectorBlock));
+        if(plugin.getConfiguration().minecartDepositEnabled && plugin.getConfiguration().minecartDepositBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartDeposit(plugin.getConfiguration().minecartDepositBlock));
+        if(plugin.getConfiguration().minecartTeleportEnabled && plugin.getConfiguration().minecartTeleportBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartTeleporter(plugin.getConfiguration().minecartTeleportBlock));
+        if(plugin.getConfiguration().minecartElevatorEnabled && plugin.getConfiguration().minecartElevatorBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartLift(plugin.getConfiguration().minecartElevatorBlock));
+        if(plugin.getConfiguration().minecartDispenserEnabled && plugin.getConfiguration().minecartDispenserBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartDispenser(plugin.getConfiguration().minecartDispenserBlock));
+        if(plugin.getConfiguration().minecartMessagerEnabled && plugin.getConfiguration().minecartMessagerBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartMessenger(plugin.getConfiguration().minecartMessagerBlock));
+
+        for(CartBlockMechanism mech : cartBlockMechanisms)
+            plugin.getServer().getPluginManager().registerEvents(mech, plugin);
 
         plugin.getServer().getPluginManager().registerEvents(new CraftBookVehicleListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new CraftBookVehicleBlockListener(), plugin);
@@ -247,9 +284,7 @@ public class VehicleCore implements LocalComponent {
             Minecart minecart = (Minecart) vehicle;
             minecart.setSlowWhenEmpty(plugin.getConfiguration().minecartSlowWhenEmpty);
             if (plugin.getConfiguration().minecartOffRailSpeedModifier > 0)
-                minecart.setDerailedVelocityMod(new Vector(plugin.getConfiguration().minecartOffRailSpeedModifier,
-                        plugin.getConfiguration().minecartOffRailSpeedModifier,
-                        plugin.getConfiguration().minecartOffRailSpeedModifier));
+                minecart.setDerailedVelocityMod(new Vector(plugin.getConfiguration().minecartOffRailSpeedModifier, plugin.getConfiguration().minecartOffRailSpeedModifier, plugin.getConfiguration().minecartOffRailSpeedModifier));
             minecart.setMaxSpeed(minecart.getMaxSpeed() * plugin.getConfiguration().minecartMaxSpeedModifier);
             if (plugin.getConfiguration().minecartFallModifierEnabled && minecartFallSpeed != null)
                 minecart.setFlyingVelocityMod(minecartFallSpeed);
@@ -273,8 +308,6 @@ public class VehicleCore implements LocalComponent {
                 event.setCancelled(true);
                 return;
             }
-
-            cartman.enter(event);
         }
 
         /**
@@ -330,8 +363,6 @@ public class VehicleCore implements LocalComponent {
                 event.getVehicle().setVelocity(vel.normalize().multiply(plugin.getConfiguration()
                         .minecartConstantSpeed));
             }
-
-            cartman.impact(event);
         }
 
         /**
@@ -355,23 +386,6 @@ public class VehicleCore implements LocalComponent {
     }
 
     class CraftBookVehicleBlockListener implements Listener {
-
-        public CraftBookVehicleBlockListener() {
-
-        }
-
-        @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-        public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-            // ignore events that are only changes in current strength
-            if (event.getOldCurrent() > 0 == event.getNewCurrent() > 0) return;
-
-            // remember that bukkit only gives us redstone events for wires and things that already respond to
-            // redstone, which is entirely unhelpful.
-            // So: issue four actual events per bukkit event.
-            for (BlockFace bf : CartMechanism.powerSupplyOptions) {
-                cartman.impact(new SourcedBlockRedstoneEvent(event, event.getBlock().getRelative(bf)));
-            }
-        }
 
         @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
         public void onChunkLoad(ChunkLoadEvent event) {
@@ -400,7 +414,7 @@ public class VehicleCore implements LocalComponent {
             LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
             try {
-                for (CartMechanism mech : cartman.getMechanisms().values()) {
+                for (CartBlockMechanism mech : cartBlockMechanisms) {
                     if (mech.getApplicableSigns() == null) continue;
                     boolean found = false;
                     String lineFound = null;
@@ -451,6 +465,5 @@ public class VehicleCore implements LocalComponent {
             if (cart.isEmpty())
                 cart.remove();
         }
-
     }
 }
