@@ -23,10 +23,6 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
  */
 public abstract class CartBlockMechanism implements Listener {
 
-    public void enter(Minecart cart, Entity entity, CartMechanismBlocks blocks) {
-
-    }
-
     protected final ItemInfo material;
 
     public ItemInfo getMaterial() {
