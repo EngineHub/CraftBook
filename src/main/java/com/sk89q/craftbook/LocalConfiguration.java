@@ -28,13 +28,11 @@ public abstract class LocalConfiguration {
     public LocationCheckType ICdefaultCoordinate;
     public boolean ICSavePersistentData;
     public boolean ICMidiUsePercussion;
-
     // Circuits - Wiring
     public boolean netherrackEnabled;
     public boolean pumpkinsEnabled;
     public boolean glowstoneEnabled;
     public int glowstoneOffBlock;
-
     // Circuits - Pipes
     public boolean pipesEnabled;
     public boolean pipesDiagonal;
@@ -194,23 +192,8 @@ public abstract class LocalConfiguration {
     public int xpStorerBlock;
 
     // Vehicles
-    // Vehicles - Minecart Options
-    public boolean minecartSlowWhenEmpty;
-    public boolean minecartRemoveOnExit;
-    public boolean minecartRemoveEntities;
-    public boolean minecartRemoveEntitiesOtherCarts;
-    public double minecartMaxSpeedModifier;
-    public double minecartOffRailSpeedModifier;
-    public boolean minecartEnterOnImpact;
-    public double minecartConstantSpeed;
-    public boolean minecartPickupItemsOnCollision;
-    public boolean minecartPressurePlateIntersection;
-    public boolean minecartStoragePlaceRails;
-    public boolean minecartBlockAnimalEntry;
-    public boolean minecartLookDirection;
-    public boolean minecartVerticalRail;
     // Vehicles - Minecart Decay Options
-    public boolean minecartDecayWhenEmpty;
+    public boolean minecartDecayEnabled;
     public int minecartDecayTime;
     // Vehicles - Minecart Station Options
     public boolean minecartStationEnabled;
@@ -247,15 +230,45 @@ public abstract class LocalConfiguration {
     public ItemInfo minecartDispenserBlock;
     public boolean minecartDispenserLegacy;
     public boolean minecartDispenserAntiSpam;
-    // Vehicles - Minecart Fall Modifier
+    // Vehicles - Minecart Fall Modifier Options
     public boolean minecartFallModifierEnabled;
     public double minecartFallVerticalSpeed;
     public double minecartFallHorizontalSpeed;
+    // Vehicles - Minecart More Rails Options
+    public boolean minecartMoreRailsEnabled;
+    public boolean minecartMoreRailsLadder;
+    public boolean minecartMoreRailsPressurePlate;
+    // Vehicles - Minecart Remove Entities Options
+    public boolean minecartRemoveEntitiesEnabled;
+    public boolean minecartRemoveEntitiesOtherCarts;
+    // Vehicles - Minecart Vision Steering Options
+    public boolean minecartVisionSteeringEnabled;
+    public int minecartVisionSteeringMinimumSensitivity;
+    // Vehicles - Minecart Block Mob Entry Options
+    public boolean minecartBlockMobEntryEnabled;
+    // Vehicles - Minecart Remove On Exit Options
+    public boolean minecartRemoveOnExitEnabled;
+    // Vehicles - Minecart Collision Entry Options
+    public boolean minecartCollisionEntryEnabled;
+    // Vehicles - Minecart Item Pickup Options
+    public boolean minecartItemPickupEnabled;
+    // Vehicles - Minecart Constant Speed Options
+    public boolean minecartConstantSpeedEnable;
+    public double minecartConstantSpeedSpeed;
+    // Vehicles - Minecart Rail Placer Options
+    public boolean minecartRailPlacerEnable;
+    // Vehicles - Minecart Speed Modifier Options
+    public boolean minecartSpeedModifierEnable;
+    public double minecartSpeedModifierMaxSpeed;
+    public double minecartSpeedModifierOffRail;
+    // Vehicles - Minecart Empty Slowdown Options
+    public boolean minecartEmptySlowdownEnable;
     // Vehicles - Boat Options
     public boolean boatNoCrash;
-    public boolean boatRemoveEntities;
-    public boolean boatRemoveEntitiesOtherBoats;
     public boolean boatBreakReturn;
+    // Vehicles - Boat Remove Entities Options
+    public boolean boatRemoveEntitiesEnabled;
+    public boolean boatRemoveEntitiesOtherBoats;
 
 
     /**

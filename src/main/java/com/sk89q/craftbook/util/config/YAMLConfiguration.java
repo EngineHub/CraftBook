@@ -425,26 +425,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         /* Vehicle Configuration */
 
 
-        // Vehicles Minecart Configuration Listener
-        minecartEnterOnImpact = config.getBoolean("vehicles.minecart.enter-on-impact", true);
-        minecartSlowWhenEmpty = config.getBoolean("vehicles.minecart.slow-when-empty", true);
-        minecartRemoveOnExit = config.getBoolean("vehicles.minecart.remove-on-exit", false);
-        minecartRemoveEntities = config.getBoolean("vehicles.minecart.remove-entities", false);
-        minecartRemoveEntitiesOtherCarts = config.getBoolean("vehicles.minecart.remove-entities-othercarts", false);
-        minecartMaxSpeedModifier = config.getDouble("vehicles.minecart.max-speed-modifier", 1);
-        minecartOffRailSpeedModifier = config.getDouble("vehicles.minecart.off-rail-speed-modifier", 0);
-        minecartConstantSpeed = config.getDouble("vehicles.minecart.constant-speed", 0);
-        minecartPickupItemsOnCollision = config.getBoolean("vehicles.minecart.item-pickup-collision", false);
-        minecartPressurePlateIntersection = config.getBoolean("vehicles.minecart.pressure-plate-intersection", false);
-        minecartStoragePlaceRails = config.getBoolean("vehicles.minecart.storage-place-rails", false);
-        minecartBlockAnimalEntry = config.getBoolean("vehicles.minecart.block-animal-entry", false);
-        minecartLookDirection = config.getBoolean("vehicles.minecart.vision-based-steering", false);
-        minecartVerticalRail = config.getBoolean("vehicles.minecart.ladder-vertical-rail", false);
-
-
         // Vehicles Minecart Decay Configuration Listener
-        minecartDecayWhenEmpty = config.getBoolean("vehicles.minecart.decay-when-empty.enable", false);
+        minecartDecayEnabled = config.getBoolean("vehicles.minecart.decay-when-empty.enable", false);
         minecartDecayTime = config.getInt("vehicles.minecart.decay-when-empty.time-in-ticks", 20);
+
 
         // Vehicles Minecart Station Configuration Listener
         minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", true);
@@ -507,11 +491,65 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartFallHorizontalSpeed = config.getDouble("vehicles.minecart.fall-speed.horizontal-fall-speed", 1.1D);
 
 
+        // Vehicles Minecart More Rails Listener
+        minecartMoreRailsEnabled = config.getBoolean("vehicles.minecart.more-rails.enable", false);
+        minecartMoreRailsPressurePlate = config.getBoolean("vehicles.minecart.more-rails.pressure-plate-intersection", false);
+        minecartMoreRailsLadder = config.getBoolean("vehicles.minecart.more-rails.ladder-vertical-rail", false);
+
+
+        // Vehicles Minecart Remove Entities Listener
+        minecartRemoveEntitiesEnabled = config.getBoolean("vehicles.minecart.remove-entities.enable", false);
+        minecartRemoveEntitiesOtherCarts = config.getBoolean("vehicles.minecart.remove-entities.remove-other-minecarts", false);
+
+
+        // Vehicles Minecart Vision Steering Listener
+        minecartVisionSteeringEnabled = config.getBoolean("vehicles.minecart.vision-steering.enable", false);
+        minecartVisionSteeringMinimumSensitivity = config.getInt("vehicles.minecart.vision-steering.minimum-sensitivity", 3);
+
+
+        // Vehicles Minecart Block Mob Entry Listener
+        minecartBlockMobEntryEnabled = config.getBoolean("vehicles.minecart.block-mob-entry.enable", false);
+
+
+        // Vehicles Minecart Remove On Exit Listener
+        minecartRemoveOnExitEnabled = config.getBoolean("vehicles.minecart.remove-on-exit.enable", false);
+
+
+        // Vehicles Minecart Collision Entry Listener
+        minecartCollisionEntryEnabled = config.getBoolean("vehicles.minecart.collision-entry.enable", false);
+
+
+        // Vehicles Minecart Item Pickup Listener
+        minecartItemPickupEnabled = config.getBoolean("vehicles.minecart.item-pickup.enable", false);
+
+
+        // Vehicles Minecart Constant Speed Listener
+        minecartConstantSpeedEnable = config.getBoolean("vehicles.minecart.constant-speed.enable", false);
+        minecartConstantSpeedSpeed = config.getDouble("vehicles.minecart.constant-speed.speed", 0.5);
+
+
+        // Vehicles Minecart Rail Placer Listener
+        minecartRailPlacerEnable = config.getBoolean("vehicles.minecart.rail-placer.enable", false);
+
+
+        // Vehicles Minecart Speed Modifier Listener
+        minecartSpeedModifierEnable = config.getBoolean("vehicles.minecart.speed-modifiers.enable", false);
+        minecartSpeedModifierMaxSpeed = config.getDouble("vehicles.minecart.speed-modifiers.max-speed", 1);
+        minecartSpeedModifierOffRail = config.getDouble("vehicles.minecart.speed-modifiers.off-rail-speed", 0);
+
+
+        // Vehicles Minecart Configuration Listener
+        minecartEmptySlowdownEnable = config.getBoolean("vehicles.minecart.empty-slowdown.enable", true);
+
+
         // Vehicles - Boat Options
-        boatRemoveEntities = config.getBoolean("vehicles.boat.remove-entities", false);
-        boatNoCrash = config.getBoolean("vehicles.boat.no-crash", false);
-        boatRemoveEntitiesOtherBoats = config.getBoolean("vehicles.boat.remove-entities-otherboats", false);
+        boatNoCrash = config.getBoolean("vehicles.boat.disable-crashing", false);
         boatBreakReturn = config.getBoolean("vehicles.boat.break-return-boat", false);
+
+
+        // Vehicles - Boat Remove Entities Listener
+        boatRemoveEntitiesEnabled = config.getBoolean("vehicles.boat.remove-entities.enable", false);
+        boatRemoveEntitiesOtherBoats = config.getBoolean("vehicles.boat.remove-entities.remove-other-boats", false);
 
 
         config.save(); //Save all the added values.

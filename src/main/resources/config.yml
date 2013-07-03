@@ -287,20 +287,6 @@ mechanics:
         block: 52
 vehicles:
     minecart:
-        enter-on-impact: true
-        slow-when-empty: true
-        remove-on-exit: false
-        remove-entities: false
-        remove-entities-othercarts: false
-        max-speed-modifier: 1.0
-        off-rail-speed-modifier: 0.0
-        constant-speed: 0.0
-        item-pickup-collision: false
-        pressure-plate-intersection: false
-        storage-place-rails: false
-        block-animal-entry: false
-        vision-based-steering: false
-        ladder-vertical-rail: false
         decay-when-empty:
             enable: false
             time-in-ticks: 20
@@ -344,8 +330,38 @@ vehicles:
             enable: false
             vertical-fall-speed: 0.9
             horizontal-fall-speed: 1.1
+        more-rails:
+            enable: false
+            pressure-plate-intersection: false
+            ladder-vertical-rail: false
+        remove-entities:
+            enable: false
+            remove-other-minecarts: false
+        vision-steering:
+            enable: false
+            minimum-sensitivity: 3
+        block-mob-entry:
+            enable: false
+        remove-on-exit:
+            enable: false
+        collision-entry:
+            enable: false
+        item-pickup:
+            enable: false
+        constant-speed:
+            enable: false
+            speed: 0.5
+        rail-placer:
+            enable: false
+        speed-modifiers:
+            enable: false
+            max-speed: 1.0
+            off-rail-speed: 0.0
+        empty-slowdown:
+            enable: true
     boat:
-        remove-entities: false
-        no-crash: false
-        remove-entities-otherboats: false
+        disable-crashing: false
         break-return-boat: false
+        remove-entities:
+            enable: false
+            remove-other-boats: false
