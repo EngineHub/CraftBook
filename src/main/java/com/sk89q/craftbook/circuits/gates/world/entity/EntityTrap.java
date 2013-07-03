@@ -58,6 +58,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
     int damage;
     EntityType type;
     Location location;
+    boolean erase;
 
     @Override
     public void load() {
@@ -72,7 +73,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
 
         if (!getLine(3).isEmpty()) {
             try {
-                type = EntityType.fromString(getSign().getLine(3));
+                type = EntityType.fromString(getSign().getLine(3).replace("!", ""));
             } catch(Exception e){
                 type = EntityType.ANY;
             }
@@ -81,6 +82,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
 
         if(type == null)
             type = EntityType.ANY;
+        erase = getLine(3).startsWith("!");
     }
 
     /**
@@ -97,7 +99,10 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
             if (!type.is(e))
                 continue;
 
-            EntityUtil.damageEntity(e, damage);
+            if(erase)
+                e.remove();
+            else
+                EntityUtil.damageEntity(e, damage);
             hasHurt = true;
         }
 
