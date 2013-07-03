@@ -157,6 +157,7 @@ public class LanguageManager {
         put("mech.cook.ouch","Ouch! That was hot!");
 
         put("mech.hiddenswitch.key","The key did not fit!");
+        put("mech.hiddenswitch.toggle","You hear the muffled click of a switch!");
 
         put("mech.anchor.create","Chunk Anchor Created!");
 

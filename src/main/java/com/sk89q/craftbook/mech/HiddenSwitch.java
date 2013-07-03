@@ -12,11 +12,12 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class HiddenSwitch extends AbstractMechanic {
 
@@ -80,82 +81,62 @@ public class HiddenSwitch extends AbstractMechanic {
                 || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
                 || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
             return;
-        BlockFace face = event.getBlockFace().getOppositeFace();
-        Block testBlock = switchBlock.getRelative(face);
-        boolean passed = false;
 
-        while (true) {
-            if (testBlock.getTypeId() == BlockID.WALL_SIGN) {
-                Sign s = (Sign) testBlock.getState();
-                if (s.getLine(1).equalsIgnoreCase("[X]")) {
 
-                    int itemID = -1;
+        ChangedSign s = null;
+        Block testBlock = null;
+        if(CraftBookPlugin.inst().getConfiguration().hiddenSwitchAnyside) {
 
-                    if (!s.getLine(0).trim().isEmpty()) {
-                        try {
-                            itemID = Integer.parseInt(s.getLine(0).trim());
-                        } catch (NumberFormatException ignored) {
-                        }
-                    }
-
-                    if (!s.getLine(2).trim().isEmpty())
-                        if (!CraftBookPlugin.inst().inGroup(event.getPlayer(), s.getLine(2).trim())) {
-                            player.printError("mech.group");
-                            return;
-                        }
-
-                    if (itemID == -1) {
-                        toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                    } else if (event.getPlayer().getItemInHand() != null || itemID == 0) {
-                        if (itemID == 0 && event.getPlayer().getItemInHand() == null || event.getPlayer()
-                                .getItemInHand().getTypeId() == itemID) {
-                            toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                        } else {
-                            player.printError("mech.hiddenswitch.key");
-                        }
-                    } else {
-                        player.printError("mech.hiddenswitch.key");
-                    }
-
-                    break;
-                }
-                break;
-            } else if (CraftBookPlugin.inst().getConfiguration().hiddenSwitchAnyside) {
-                if (face == event.getBlockFace().getOppositeFace() && passed) {
-                    break;
-                }
-                passed = true;
-
-                switch (face) {
-                    case WEST:
-                        face = BlockFace.NORTH;
-                        break;
-                    case NORTH:
-                        face = BlockFace.EAST;
-                        break;
-                    case EAST:
-                        face = BlockFace.SOUTH;
-                        break;
-                    case SOUTH:
-                        face = BlockFace.UP;
-                        break;
-                    case UP:
-                        face = BlockFace.DOWN;
-                        break;
-                    case DOWN:
-                        face = BlockFace.WEST;
-                        break;
-                    default:
-                        break;
-                }
-
+            for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
-            } else {
-                break;
+                if(testBlock.getTypeId() == BlockID.WALL_SIGN) {
+                    s = BukkitUtil.toChangedSign(testBlock);
+                    break;
+                }
             }
+        } else {
+            BlockFace face = event.getBlockFace().getOppositeFace();
+            testBlock = switchBlock.getRelative(face);
+            if(testBlock.getTypeId() == BlockID.WALL_SIGN)
+                s = BukkitUtil.toChangedSign(testBlock);
         }
 
-        if (!event.getPlayer().isSneaking()) event.setCancelled(true);
+        if(s == null)
+            return;
+
+        if (s.getLine(1).equalsIgnoreCase("[X]")) {
+
+            int itemID = -1;
+
+            if (!s.getLine(0).trim().isEmpty()) {
+                try {
+                    itemID = Integer.parseInt(s.getLine(0).trim());
+                } catch (NumberFormatException ignored) {
+                }
+            }
+
+            if (!s.getLine(2).trim().isEmpty())
+                if (!CraftBookPlugin.inst().inGroup(event.getPlayer(), s.getLine(2).trim())) {
+                    player.printError("mech.group");
+                    return;
+                }
+
+            if (itemID == -1) {
+                toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+            } else if (itemID == 0) {
+                if (player.getHeldItemType() == itemID)
+                    toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                else
+                    player.printError("mech.hiddenswitch.key");
+            } else
+                player.printError("mech.hiddenswitch.key");
+
+            player.print("mech.hiddenswitch.toggle");
+
+            if (!event.getPlayer().isSneaking()) event.setCancelled(true);
+        }
+
+
     }
 
     private void toggleSwitches(Block sign, BlockFace direction) {

@@ -9,6 +9,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Monster;
@@ -48,7 +49,7 @@ public enum EntityType {
             case EXPLOSIVE:
                 return entity instanceof Explosive;
             case RIDEABLE:
-                return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig;
+                return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig || entity instanceof Horse;
             case AMBIENT:
                 return entity instanceof Ambient;
             case ANY:
