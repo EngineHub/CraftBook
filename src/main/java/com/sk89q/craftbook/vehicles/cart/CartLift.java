@@ -7,9 +7,9 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartLift extends CartBlockMechanism {
 

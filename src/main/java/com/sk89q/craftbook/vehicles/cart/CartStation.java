@@ -9,10 +9,10 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.CartBlockEnterEvent;
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockEnterEvent;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartStation extends CartBlockMechanism {
 

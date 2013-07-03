@@ -13,13 +13,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.VehicleCore;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /*

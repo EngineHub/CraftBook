@@ -4,10 +4,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CartEjector extends CartBlockMechanism {

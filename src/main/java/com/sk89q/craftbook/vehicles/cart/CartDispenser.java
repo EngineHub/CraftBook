@@ -15,13 +15,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.CartBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockRedstoneEvent;
 import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 

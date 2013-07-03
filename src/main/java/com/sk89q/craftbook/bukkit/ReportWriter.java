@@ -126,7 +126,6 @@ public class ReportWriter {
             try {
                 if (field.getName().equalsIgnoreCase("config")) continue;
                 if (field.getName().equalsIgnoreCase("plugin")) continue;
-                if (field.getName().equalsIgnoreCase("customDrops")) continue;
                 Object val = field.get(config);
                 configLog.put(field.getName(), val);
             } catch (IllegalArgumentException e) {

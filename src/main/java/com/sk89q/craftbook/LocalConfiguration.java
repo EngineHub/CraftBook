@@ -2,7 +2,6 @@ package com.sk89q.craftbook;
 import java.util.HashMap;
 import java.util.List;
 
-import com.sk89q.craftbook.mech.CustomDropManager;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
 
@@ -112,7 +111,6 @@ public abstract class LocalConfiguration {
     // Mechanics - Custom Drops
     public boolean customDropEnabled;
     public boolean customDropPermissions;
-    public CustomDropManager customDrops;
     // Mechanics - Door
     public boolean doorEnabled;
     public boolean doorAllowRedstone;

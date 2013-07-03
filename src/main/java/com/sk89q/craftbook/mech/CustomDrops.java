@@ -19,9 +19,10 @@ import com.sk89q.craftbook.util.ItemUtil;
 public class CustomDrops implements Listener {
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
+    public CustomDropManager customDrops;
 
     public CustomDrops() {
-
+        customDrops = new CustomDropManager(CraftBookPlugin.inst().getDataFolder());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -38,7 +39,7 @@ public class CustomDrops implements Listener {
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
 
-        CustomDropManager.CustomItemDrop drop = plugin.getConfiguration().customDrops.getBlockDrops(id);
+        CustomDropManager.CustomItemDrop drop = customDrops.getBlockDrops(id);
 
         if (drop != null) {
             CustomDropManager.DropDefinition[] drops = drop.getDrop(data);
@@ -67,7 +68,7 @@ public class CustomDrops implements Listener {
 
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops = plugin.getConfiguration().customDrops.getMobDrop(entityType
+        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(entityType
                 .getName());
         if (drops != null) {
             if (!drops[0].append) {

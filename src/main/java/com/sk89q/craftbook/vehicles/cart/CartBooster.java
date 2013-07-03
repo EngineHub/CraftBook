@@ -3,9 +3,9 @@ package com.sk89q.craftbook.vehicles.cart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartBooster extends CartBlockMechanism {
 

@@ -5,11 +5,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartReverser extends CartBlockMechanism {
 

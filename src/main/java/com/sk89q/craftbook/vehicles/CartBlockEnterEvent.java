@@ -1,4 +1,4 @@
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.vehicles;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;

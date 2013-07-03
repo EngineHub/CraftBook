@@ -4,13 +4,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartTeleporter extends CartBlockMechanism {
 

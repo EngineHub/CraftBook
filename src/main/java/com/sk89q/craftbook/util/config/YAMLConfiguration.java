@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mech.CustomDropManager;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -297,8 +295,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Custom Drops Configuration Listener
         customDropEnabled = config.getBoolean("mechanics.custom-drops.enable", true);
         customDropPermissions = config.getBoolean("mechanics.custom-drops.require-permissions", false);
-        if(CraftBookPlugin.inst() != null)
-            customDrops = new CustomDropManager(CraftBookPlugin.inst().getDataFolder());
 
 
         // Door Configuration Listener

@@ -12,13 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartDeposit extends CartBlockMechanism {
 

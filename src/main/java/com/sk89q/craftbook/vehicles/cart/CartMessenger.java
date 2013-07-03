@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
-import com.sk89q.craftbook.CartBlockImpactEvent;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 
 public class CartMessenger extends CartBlockMechanism {
 
