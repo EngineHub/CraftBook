@@ -133,6 +133,7 @@ public abstract class LocalConfiguration {
     public int gateColumnLimit;
     public List<Integer> gateBlocks;
     public boolean gateEnforceType;
+    public int gateColumnHeight;
     // Mechanics - Head Drops
     public boolean headDropsEnabled;
     public boolean headDropsMobs;

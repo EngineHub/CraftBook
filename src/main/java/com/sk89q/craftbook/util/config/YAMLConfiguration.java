@@ -325,6 +325,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
         gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
         gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
+        gateColumnHeight = config.getInt("mechanics.gate.max-column-height", 12);
 
 
         // Head Drops Configuration Listener
