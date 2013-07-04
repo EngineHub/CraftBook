@@ -164,7 +164,7 @@ public class Gate extends AbstractMechanic {
         visitedColumns.add(column);
 
         // Find the top most fence
-        for (int y1 = y + 1; y1 <= y + 12; y1++) {
+        for (int y1 = y + 1; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateColumnHeight; y1++) {
             if (isValidGateBlock(world.getBlockAt(x, y1, z), true))
                 y = y1;
             else
