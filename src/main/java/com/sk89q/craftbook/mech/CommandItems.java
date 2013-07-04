@@ -165,6 +165,7 @@ public class CommandItems implements Listener {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
+    @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
         for(CommandItemDefinition def : definitions) {
@@ -225,9 +226,12 @@ public class CommandItems implements Listener {
                         break current;
                     }
                 }
-                if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
-                    player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
-                    break current;
+                if(def.consumables.length > 0) {
+                    if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
+                        player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
+                        break current;
+                    } else
+                        player.updateInventory();
                 }
                 if(def.consumeSelf) {
                     if(player.getItemInHand().getAmount() > 1)

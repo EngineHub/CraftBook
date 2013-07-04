@@ -22,8 +22,6 @@ import java.util.Set;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -151,8 +149,7 @@ public class Gate extends AbstractMechanic {
     private boolean recurseColumn(LocalPlayer player, WorldVector pt, Set<BlockVector> visitedColumns, Boolean close) {
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
-        if (plugin.getConfiguration().gateLimitColumns && visitedColumns.size() > plugin.getConfiguration()
-                .gateColumnLimit)
+        if (plugin.getConfiguration().gateLimitColumns && visitedColumns.size() > plugin.getConfiguration().gateColumnLimit)
             return false;
         if (visitedColumns.contains(pt.setY(0).toBlockVector())) return false;
         if (!isValidGateBlock(world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()), true)) return false;
@@ -352,15 +349,12 @@ public class Gate extends AbstractMechanic {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    Sign sign = (Sign) state;
-                    if (sign.getLine(1).equalsIgnoreCase("[Gate]") || sign.getLine(1).equalsIgnoreCase("[DGate]"))
-                        // this is a little funky because we don't actually look for the blocks that make up the movable
-                        // parts of the gate until we're running the event later... so the factory can succeed even if
-                        // the signpost doesn't actually operate any gates correctly. but it works!
-                        return new Gate(pt, sign.getLine(1).equalsIgnoreCase("[DGate]"));
-                }
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
+                if (sign.getLine(1).equalsIgnoreCase("[Gate]") || sign.getLine(1).equalsIgnoreCase("[DGate]"))
+                    // this is a little funky because we don't actually look for the blocks that make up the movable
+                    // parts of the gate until we're running the event later... so the factory can succeed even if
+                    // the signpost doesn't actually operate any gates correctly. but it works!
+                    return new Gate(pt, sign.getLine(1).equalsIgnoreCase("[DGate]"));
             }
 
             return null;
@@ -438,15 +432,9 @@ public class Gate extends AbstractMechanic {
 
         Block b = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-        Sign sign = null;
+        ChangedSign sign = BukkitUtil.toChangedSign(b);
         int type;
 
-        if (b.getTypeId() == BlockID.WALL_SIGN || b.getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = b.getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
                 int id = Integer.parseInt(sign.getLine(0));
@@ -459,12 +447,10 @@ public class Gate extends AbstractMechanic {
                 }
                 return plugin.getConfiguration().gateBlocks.contains(block);
             }
-        } else if(check && (type = getGateBlock()) != 0) {
-            if(type != 0)
-                return block == type;
-        } else
+        } else if(check && (type = getGateBlock()) != 0)
+            return block == type;
+        else
             return plugin.getConfiguration().gateBlocks.contains(block);
-        return false;
     }
 
     public boolean isValidGateItem(ItemStack block, boolean check) {
@@ -476,15 +462,9 @@ public class Gate extends AbstractMechanic {
 
         Block b = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-        Sign sign = null;
+        ChangedSign sign = BukkitUtil.toChangedSign(b);
         int type;
 
-        if (b.getTypeId() == BlockID.WALL_SIGN || b.getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = b.getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
                 int id = Integer.parseInt(sign.getLine(0));
