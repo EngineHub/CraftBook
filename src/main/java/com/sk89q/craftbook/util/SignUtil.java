@@ -21,6 +21,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -287,22 +288,23 @@ public class SignUtil {
         return sign.getRelative(getBack(sign));
     }
 
-    public static Sign getNextSign(Sign sign, String criterea, int searchRadius) {
+    public static Block getNextSign(Block sign, String criterea, int searchRadius) {
 
-        Sign otherSign = sign;
-        Block otherBlock = otherSign.getBlock();
-        BlockFace way = sign.getBlock().getFace(getBackBlock(sign.getBlock()));
+        Block otherBlock = sign;
+        BlockFace way = sign.getFace(getBackBlock(sign));
+        boolean found = false;
         for (int i = 0; i < searchRadius; i++) {
-            if (otherBlock.getRelative(way).getState() instanceof Sign) {
-                otherSign = (Sign) otherBlock.getRelative(way).getState();
-                if (otherSign.getLine(1).equalsIgnoreCase(criterea)) {
+            if (isSign(otherBlock.getRelative(way))) {
+                otherBlock = otherBlock.getRelative(way);
+                if (BukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
+                    found = true;
                     break;
                 }
-            }
-            otherBlock = otherBlock.getRelative(way);
+            } else
+                otherBlock = otherBlock.getRelative(way);
         }
-        if (otherSign.equals(sign)) return null;
-        return otherSign;
+        if (!found) return null;
+        return otherBlock;
     }
 
     /**

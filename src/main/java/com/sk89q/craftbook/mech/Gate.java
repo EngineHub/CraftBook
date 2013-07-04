@@ -34,6 +34,8 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -43,7 +45,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -69,7 +70,7 @@ public class Gate extends AbstractMechanic {
      * Indicates a DGate.
      */
     private final boolean smallSearchSize;
-    private Sign sign;
+    private ChangedSign sign;
 
     /**
      * Construct a gate for a location.
@@ -84,12 +85,8 @@ public class Gate extends AbstractMechanic {
         this.smallSearchSize = smallSearchSize;
 
         int id = BukkitUtil.toBlock(pt).getTypeId();
-        if (id == BlockID.SIGN_POST || id == BlockID.WALL_SIGN) {
-            BlockState state = BukkitUtil.toBlock(pt).getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
+        if (id == BlockID.SIGN_POST || id == BlockID.WALL_SIGN)
+            sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(pt));
     }
 
     /**
@@ -215,19 +212,11 @@ public class Gate extends AbstractMechanic {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-            Sign sign = null;
-            Sign otherSign = null;
+            ChangedSign sign = BukkitUtil.toChangedSign(block);
+            ChangedSign otherSign = null;
 
-            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    sign = (Sign) state;
-                }
-            }
-
-            if (sign != null) {
-                otherSign = SignUtil.getNextSign(sign, sign.getLine(1), 4);
-            }
+            if (sign != null)
+                otherSign = BukkitUtil.toChangedSign(SignUtil.getNextSign(block, sign.getLine(1), 4));
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
@@ -291,15 +280,8 @@ public class Gate extends AbstractMechanic {
 
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
-        Sign sign = null;
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getClickedBlock());
 
-        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() ==
-                BlockID.WALL_SIGN) {
-            BlockState state = event.getClickedBlock().getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
         if (sign == null) return;
 
         if (plugin.getConfiguration().safeDestruction && getGateBlock() == player.getHeldItemType() && isValidGateBlock(getGateBlock(), false)) {
@@ -526,14 +508,7 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        Sign sign = null;
-
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST) {
-            BlockState state = event.getBlock().getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 
         if (sign == null) return;
 
@@ -542,7 +517,7 @@ public class Gate extends AbstractMechanic {
             if(type == 0)
                 type = BlockID.FENCE;
             ItemStack toDrop = new ItemStack(type, getBlocks(sign));
-            sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
+            event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
     }
 
@@ -603,7 +578,7 @@ public class Gate extends AbstractMechanic {
 
         if(plugin.getConfiguration().gateEnforceType && gateBlock != 0) {
             sign.setLine(0, String.valueOf(gateBlock));
-            sign.update();
+            sign.update(false);
         }
 
         return gateBlock;
@@ -617,38 +592,38 @@ public class Gate extends AbstractMechanic {
         return world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
     }
 
-    public boolean removeBlocks(Sign s, int amount) {
+    public boolean removeBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
         s.setLine(3, String.valueOf(curBlocks));
-        s.update();
+        s.update(false);
         return curBlocks >= 3;
     }
 
-    public boolean addBlocks(Sign s, int amount) {
+    public boolean addBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
         s.setLine(3, String.valueOf(curBlocks));
-        s.update();
+        s.update(false);
         return curBlocks >= 0;
     }
 
-    public void setBlocks(Sign s, int amount) {
+    public void setBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite")) return;
         s.setLine(3, String.valueOf(amount));
-        s.update();
+        s.update(false);
     }
 
-    public int getBlocks(Sign s) {
+    public int getBlocks(ChangedSign s) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite")) return 0;
         return getBlocks(s, null);
     }
 
-    public int getBlocks(Sign s, Sign other) {
+    public int getBlocks(ChangedSign s, ChangedSign other) {
 
         if (s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite"))
             return 0;
@@ -669,12 +644,12 @@ public class Gate extends AbstractMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks(Sign s) {
+    public boolean hasEnoughBlocks(ChangedSign s) {
 
         return s.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s) > 0;
     }
 
-    public boolean hasEnoughBlocks(Sign s, Sign other) {
+    public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
         return s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
