@@ -43,6 +43,5 @@ public class RemoveEntities implements Listener {
         event.setCancelled(true);
         event.setPickupCancelled(true);
         event.setCollisionCancelled(true);
-        return;
     }
 }

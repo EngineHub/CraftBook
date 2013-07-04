@@ -387,6 +387,8 @@ public class MechanicListenerAdapter implements Listener {
                 cmb.setFromBlock(block); // WAI
                 CartBlockEnterEvent ev = new CartBlockEnterEvent(cart, event.getEntered(), cmb);
                 CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                if(ev.isCancelled())
+                    event.setCancelled(true);
             } catch (InvalidMechanismException ignored) {
             }
         }
