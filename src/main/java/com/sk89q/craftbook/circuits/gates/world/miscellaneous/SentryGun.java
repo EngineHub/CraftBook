@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -79,6 +80,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public void shoot() {
 
         for (Entity ent : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            if(!(ent instanceof Damageable)) continue;
             if (type.is(ent)) {
                 double yOff = 0;
                 if(ent instanceof LivingEntity)
