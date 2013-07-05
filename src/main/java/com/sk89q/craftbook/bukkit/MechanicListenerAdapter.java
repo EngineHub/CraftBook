@@ -33,8 +33,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -47,6 +49,7 @@ import com.sk89q.craftbook.RightClickBlockEvent;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.vehicles.CartBlockEnterEvent;
 import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
@@ -428,5 +431,19 @@ public class MechanicListenerAdapter implements Listener {
         int chunkZ = event.getChunk().getZ();
 
         CraftBookPlugin.inst().getManager().unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
+    }
+
+    @EventHandler
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+
+        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerCommandOverride)
+            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
+    }
+
+    @EventHandler
+    public void onConsoleCommandPreprocess(ServerCommandEvent event) {
+
+        if(CraftBookPlugin.inst().getConfiguration().variablesCommandBlockOverride)
+            event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
     }
 }

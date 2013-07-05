@@ -15,6 +15,8 @@ public abstract class LocalConfiguration {
     // Common - Variables
     public boolean variablesEnabled;
     public boolean variablesDefaultGlobal;
+    public boolean variablesCommandBlockOverride;
+    public boolean variablesPlayerCommandOverride;
 
     // Circuits
     // Circuits - IC

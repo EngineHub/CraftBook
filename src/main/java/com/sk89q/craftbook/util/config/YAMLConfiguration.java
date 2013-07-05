@@ -42,6 +42,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("common.variables.default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
         variablesDefaultGlobal = config.getBoolean("common.variables.default-to-global", true);
 
+        config.setComment("common.variables.enable-in-commandblocks", "Allows variables to work inside CommandBlocks and on the Console.");
+        variablesCommandBlockOverride = config.getBoolean("common.variables.enable-in-commandblocks", false);
+
+        config.setComment("common.variables.enable-in-commandblocks", "Allows variables to work in any command a player performs.");
+        variablesPlayerCommandOverride = config.getBoolean("common.variables.enable-in-player-commands", false);
+
         /* Circuits Configuration */
 
         // IC Configuration Listener.
