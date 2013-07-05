@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>5.5.7-SNAPSHOT</version>
+            <version>5.5.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>2.4.3</version>
+            <version>2.4.5</version>
         </dependency>
         <dependency>
 	        <groupId>org.powermock</groupId>
