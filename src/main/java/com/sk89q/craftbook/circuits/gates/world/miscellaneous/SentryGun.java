@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -24,7 +27,7 @@ import com.sk89q.worldedit.Vector;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
 
-    private EntityType type;
+    private Set<EntityType> types;
     private Block center;
     private Vector radius;
     private float speed;
@@ -39,9 +42,11 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public void load() {
 
         speed = 0.8f;
-        type = EntityType.fromString(getSign().getLine(2).split(":")[0]);
-        if(type == null)
-            type = EntityType.MOB_HOSTILE;
+        types = EntityType.getDetected(getSign().getLine(2).split(":")[0]);
+        if(types == null || types.isEmpty()) {
+            types = new HashSet<EntityType>();
+            types.add(EntityType.MOB_HOSTILE);
+        }
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
         if(getLine(3).contains("="))
@@ -79,26 +84,32 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public void shoot() {
 
         Player shooter = manned ? getShootingPlayer() : null;
-        for (Entity ent : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
-            if(!(ent instanceof LivingEntity)) continue;
-            if (type.is(ent)) {
-                double yOff = 0;
-                if(ent instanceof LivingEntity)
-                    yOff = ((LivingEntity) ent).getEyeHeight();
-                org.bukkit.util.Vector velocity = null;
-                if(shooter == null)
-                    velocity = ent.getLocation().add(0, yOff, 0).subtract(center.getLocation().add(0.5,0.5,0.5)).toVector().normalize();
-                else
-                    velocity = shooter.getLocation().getDirection().normalize();
-                Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), velocity, speed, 0);
-                if(!((LivingEntity)ent).hasLineOfSight(ar)) {
-                    ar.remove();
-                    continue;
+        if(shooter != null) {
+            Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), shooter.getLocation().getDirection().normalize(), speed, 0);
+            ar.setShooter(shooter);
+            ar.setTicksLived(2500);
+        } else {
+            for (Entity ent : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+                if(!(ent instanceof LivingEntity)) continue;
+                boolean hasFound = false;
+                for(EntityType type : types) {
+                    if(type.is(ent)) {
+                        hasFound = true;
+                        break;
+                    }
                 }
-                if(shooter != null)
-                    ar.setShooter(shooter);
-                ar.setTicksLived(2500);
-                break;
+
+                if (hasFound) {
+                    double yOff = 0;
+                    if(ent instanceof LivingEntity)
+                        yOff = ((LivingEntity) ent).getEyeHeight();
+                    Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), ent.getLocation().add(0, yOff, 0).subtract(center.getLocation().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
+                    if(!((LivingEntity)ent).hasLineOfSight(ar)) {
+                        ar.remove();
+                        continue;
+                    }
+                    break;
+                }
             }
         }
     }
