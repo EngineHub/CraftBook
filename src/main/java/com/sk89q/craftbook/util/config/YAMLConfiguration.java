@@ -584,6 +584,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartEmptySlowdownEnable = config.getBoolean("vehicles.minecart.empty-slowdown.enable", true);
 
 
+        // Vehicles Minecart No Collide Listener
+        minecartNoCollideEnable = config.getBoolean("vehicles.minecart.no-collide.enable", false);
+        minecartNoCollideEmpty = config.getBoolean("vehicles.minecart.no-collide.empty-carts", true);
+        minecartNoCollideFull = config.getBoolean("vehicles.minecart.no-collide.full-carts", false);
+
         // Vehicles - Boat Options
         boatNoCrash = config.getBoolean("vehicles.boat.disable-crashing", false);
         boatBreakReturn = config.getBoolean("vehicles.boat.break-return-boat", false);

@@ -265,6 +265,10 @@ public abstract class LocalConfiguration {
     public double minecartSpeedModifierOffRail;
     // Vehicles - Minecart Empty Slowdown Options
     public boolean minecartEmptySlowdownEnable;
+    // Vehicles - Minecart No Collide Options
+    public boolean minecartNoCollideEnable;
+    public boolean minecartNoCollideEmpty;
+    public boolean minecartNoCollideFull;
     // Vehicles - Boat Options
     public boolean boatNoCrash;
     public boolean boatBreakReturn;

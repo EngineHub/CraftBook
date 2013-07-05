@@ -9,7 +9,7 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 
 public class CollisionEntry implements Listener {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
         if (event.getVehicle() instanceof RideableMinecart) {

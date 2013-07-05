@@ -38,6 +38,7 @@ import com.sk89q.craftbook.vehicles.cart.FallModifier;
 import com.sk89q.craftbook.vehicles.cart.ItemPickup;
 import com.sk89q.craftbook.vehicles.cart.MobBlocker;
 import com.sk89q.craftbook.vehicles.cart.MoreRails;
+import com.sk89q.craftbook.vehicles.cart.NoCollide;
 import com.sk89q.craftbook.vehicles.cart.RailPlacer;
 import com.sk89q.craftbook.vehicles.cart.SpeedModifiers;
 import com.sk89q.craftbook.vehicles.cart.VisionSteering;
@@ -147,6 +148,8 @@ public class VehicleCore implements LocalComponent, Listener {
             plugin.getServer().getPluginManager().registerEvents(new SpeedModifiers(), plugin);
         if(plugin.getConfiguration().minecartEmptySlowdownEnable)
             plugin.getServer().getPluginManager().registerEvents(new EmptySlowdown(), plugin);
+        if(plugin.getConfiguration().minecartNoCollideEnable)
+            plugin.getServer().getPluginManager().registerEvents(new NoCollide(), plugin);
 
         if(plugin.getConfiguration().boatRemoveEntitiesEnabled)
             plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.RemoveEntities(), plugin);
