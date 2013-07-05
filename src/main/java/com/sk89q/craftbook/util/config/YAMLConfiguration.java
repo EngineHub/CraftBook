@@ -356,11 +356,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.gate.max-columns", "If limit-columns is enabled, the maximum number of columns that a gate can toggle.");
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
 
-        config.setComment("mechanics.gate.blocks", "The list of blocks that a ");
+        config.setComment("mechanics.gate.blocks", "The list of blocks that a gate can use.");
         gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
 
         config.setComment("mechanics.gate.enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
         gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
+
+        config.setComment("mechanics.gate.max-column-height", "The max height of a column.");
         gateColumnHeight = config.getInt("mechanics.gate.max-column-height", 12);
 
 
