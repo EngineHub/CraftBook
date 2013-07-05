@@ -294,37 +294,72 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Custom Drops Configuration Listener
+        config.setComment("mechanics.custom-drops.enable", "Enable Custom Drops.");
         customDropEnabled = config.getBoolean("mechanics.custom-drops.enable", true);
+
+        config.setComment("mechanics.custom-drops.require-permissions", "Require a permission node to get custom drops.");
         customDropPermissions = config.getBoolean("mechanics.custom-drops.require-permissions", false);
 
 
         // Door Configuration Listener
+        config.setComment("mechanics.door.enable", "Enables Doors.");
         doorEnabled = config.getBoolean("mechanics.door.enable", true);
+
+        config.setComment("mechanics.door.allow-redstone", "Allow doors to be toggled via redstone.");
         doorAllowRedstone = config.getBoolean("mechanics.door.allow-redstone", true);
+
+        config.setComment("mechanics.door.max-length", "The maximum length(height) of a door.");
         doorMaxLength = config.getInt("mechanics.door.max-length", 30);
+
+        config.setComment("mechanics.door.max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side");
         doorMaxWidth = config.getInt("mechanics.door.max-width", 5);
+
+        config.setComment("mechanics.door.blocks", "A list of blocks that a door can be made out of.");
         doorBlocks = config.getIntList("mechanics.door.blocks", Arrays.asList(4, 5, 20, 43));
 
 
         // Elevator Configuration Listener
+        config.setComment("mechanics.elevator.enable", "Enables the Elevator mechanic.");
         elevatorEnabled = config.getBoolean("mechanics.elevator.enable", true);
+
+        config.setComment("mechanics.elevator.enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
         elevatorButtonEnabled = config.getBoolean("mechanics.elevator.enable-buttons", true);
+
+        config.setComment("mechanics.elevator.allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
         elevatorLoop = config.getBoolean("mechanics.elevator.allow-looping", false);
+
+        config.setComment("mechanics.elevator.smooth-movement", "Causes the elevator to slowly move the player between floors instead of instantly.");
         elevatorSlowMove = config.getBoolean("mechanics.elevator.smooth-movement", false);
+
+        config.setComment("mechanics.elevator.smooth-movement-speed", "The speed at which players move from floor to floor when smooth movement is enabled.");
         elevatorMoveSpeed = config.getDouble("mechanics.elevator.smooth-movement-speed", 0.5);
 
 
         // Footprints Configuration Listener
+        config.setComment("mechanics.footprints.enable", "Enable the footprints mechanic.");
         footprintsEnabled = config.getBoolean("mechanics.footprints.enable", false);
-        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(12, 78, 80, 3));
+
+        config.setComment("mechanics.footprints.blocks", "The list of blocks that footprints appear on.");
+        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(3, 12, 78, 80));
 
 
         // Gate Configuration Listener
+        config.setComment("mechanics.gate.enable", "Enables the gate mechanic.");
         gateEnabled = config.getBoolean("mechanics.gate.enable", true);
+
+        config.setComment("mechanics.gate.allow-redstone", "Allows the gate mechanic to be toggled via redstone.");
         gateAllowRedstone = config.getBoolean("mechanics.gate.allow-redstone", true);
+
+        config.setComment("mechanics.gate.limit-columns", "Limit the amount of columns a gate can toggle.");
         gateLimitColumns = config.getBoolean("mechanics.gate.limit-columns", true);
+
+        config.setComment("mechanics.gate.max-columns", "If limit-columns is enabled, the maximum number of columns that a gate can toggle.");
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
+
+        config.setComment("mechanics.gate.blocks", "The list of blocks that a ");
         gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
+
+        config.setComment("mechanics.gate.enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
         gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
         gateColumnHeight = config.getInt("mechanics.gate.max-column-height", 12);
 
