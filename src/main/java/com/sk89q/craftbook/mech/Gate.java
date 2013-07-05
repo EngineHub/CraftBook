@@ -211,8 +211,11 @@ public class Gate extends AbstractMechanic {
             ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
             ChangedSign otherSign = null;
 
-            if (sign != null)
-                otherSign = BukkitUtil.toChangedSign(SignUtil.getNextSign(signBlock, sign.getLine(1), 4));
+            if (sign != null) {
+                Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
+                if(ot != null)
+                    otherSign = BukkitUtil.toChangedSign(ot);
+            }
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
