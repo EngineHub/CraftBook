@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -103,7 +102,7 @@ public class CustomCrafting implements Listener {
             } else {
                 return false;
             }
-            plugin.getLogger().info("Registered a new " + r.getType().toString().toLowerCase(Locale.ENGLISH) + " recipe!");
+            //plugin.getLogger().info("Registered a new " + r.getType().toString().toLowerCase(Locale.ENGLISH) + " recipe!");
 
             return true;
         } catch (IllegalArgumentException e) {
