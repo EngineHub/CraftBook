@@ -240,34 +240,8 @@ public class CommandItems implements Listener {
                         player.setItemInHand(null);
                 }
 
-                for(String command : comdef.commands) {
-
-                    if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
-                        continue;
-
-                    if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
-                        command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
-                    if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
-                        command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                    if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
-                        command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
-                    if(event instanceof EntityEvent && ((EntityEvent) event).getEntity() != null)
-                        command = command.replace("@e", ((EntityEvent) event).getEntity().getType().getName());
-                    command = ParsingUtil.parseLine(command, player);
-                    if(comdef.type == CommandType.CONSOLE)
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                    else if (comdef.type == CommandType.PLAYER)
-                        Bukkit.dispatchCommand(player, command);
-                    else  if (comdef.type == CommandType.SUPERUSER) {
-                        PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
-                        att.setPermission("*", true);
-                        boolean wasOp = player.isOp();
-                        player.setOp(true);
-                        Bukkit.dispatchCommand(player, command);
-                        att.remove();
-                        player.setOp(wasOp);
-                    }
-                }
+                for(String command : comdef.commands)
+                    doCommand(command, event, comdef, player);
 
                 if(comdef.cooldown > 0 && !player.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
                     cooldownPeriods.put(new Tuple2<String, String>(player.getName(), comdef.name), comdef.cooldown);
@@ -277,35 +251,8 @@ public class CommandItems implements Listener {
 
                         @Override
                         public void run () {
-                            for(String command : comdef.delayedCommands) {
-
-                                if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
-                                    continue;
-
-                                if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
-                                    command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
-                                if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
-                                    command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-                                if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
-                                    command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
-                                if(event instanceof EntityEvent && ((EntityEvent) event).getEntity() != null)
-                                    command = command.replace("@e", ((EntityEvent) event).getEntity().getType().getName());
-
-                                command = ParsingUtil.parseLine(command, player);
-                                if(comdef.type == CommandType.CONSOLE)
-                                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                                else if (comdef.type == CommandType.PLAYER)
-                                    Bukkit.dispatchCommand(player, command);
-                                else  if (comdef.type == CommandType.SUPERUSER) {
-                                    PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
-                                    att.setPermission("*", true);
-                                    boolean wasOp = player.isOp();
-                                    player.setOp(true);
-                                    Bukkit.dispatchCommand(player, command);
-                                    att.remove();
-                                    player.setOp(wasOp);
-                                }
-                            }
+                            for(String command : comdef.delayedCommands)
+                                doCommand(command, event, comdef, player);
                         }
                     }, comdef.delay);
 
@@ -313,6 +260,39 @@ public class CommandItems implements Listener {
                     ((Cancellable) event).setCancelled(true);
             }
         }
+        }
+    }
+
+    public void doCommand(String command, Event event, CommandItemDefinition comdef, Player player) {
+
+        if(command == null || command.trim().isEmpty())
+            return;
+
+        if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
+            return;
+
+        if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
+            command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+        if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
+            command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
+        if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
+            command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
+        if(event instanceof EntityEvent && ((EntityEvent) event).getEntity() != null)
+            command = command.replace("@e", ((EntityEvent) event).getEntity().getType().getName());
+
+        command = ParsingUtil.parseLine(command, player);
+        if(comdef.type == CommandType.CONSOLE)
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        else if (comdef.type == CommandType.PLAYER)
+            Bukkit.dispatchCommand(player, command);
+        else  if (comdef.type == CommandType.SUPERUSER) {
+            PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
+            att.setPermission("*", true);
+            boolean wasOp = player.isOp();
+            player.setOp(true);
+            Bukkit.dispatchCommand(player, command);
+            att.remove();
+            player.setOp(wasOp);
         }
     }
 
