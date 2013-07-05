@@ -45,7 +45,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("common.variables.enable-in-commandblocks", "Allows variables to work inside CommandBlocks and on the Console.");
         variablesCommandBlockOverride = config.getBoolean("common.variables.enable-in-commandblocks", false);
 
-        config.setComment("common.variables.enable-in-commandblocks", "Allows variables to work in any command a player performs.");
+        config.setComment("common.variables.enable-in-player-commands", "Allows variables to work in any command a player performs.");
         variablesPlayerCommandOverride = config.getBoolean("common.variables.enable-in-player-commands", false);
 
         /* Circuits Configuration */
