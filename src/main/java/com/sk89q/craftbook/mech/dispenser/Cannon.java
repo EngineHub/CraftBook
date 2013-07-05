@@ -20,11 +20,10 @@ public class Cannon extends Recipe {
     }
 
     public Cannon() {
-
         super(new int[] {
-                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE, 
-                ItemID.SULPHUR, BlockID.TNT, ItemID.SULPHUR, 
-                ItemID.FIRE_CHARGE, ItemID.SULPHUR, ItemID.FIRE_CHARGE
+                ItemID.FIRE_CHARGE,     ItemID.SULPHUR, ItemID.FIRE_CHARGE,
+                ItemID.SULPHUR,         BlockID.TNT,    ItemID.SULPHUR,
+                ItemID.FIRE_CHARGE,     ItemID.SULPHUR, ItemID.FIRE_CHARGE
         });
     }
 

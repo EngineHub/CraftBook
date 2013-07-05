@@ -298,6 +298,21 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.dispenser-recipes.enable", "Enables Dispenser Recipes.");
         customDispensingEnabled = config.getBoolean("mechanics.dispenser-recipes.enable", true);
 
+        config.setComment("mechanics.dispenser-recipes.cannon-enable", "Enables Cannon Dispenser Recipe.");
+        customDispensingCannon = config.getBoolean("mechanics.dispenser-recipes.cannon-enable", true);
+
+        config.setComment("mechanics.dispenser-recipes.fan-enable", "Enables Fan Dispenser Recipe.");
+        customDispensingFan = config.getBoolean("mechanics.dispenser-recipes.fan-enable", true);
+
+        config.setComment("mechanics.dispenser-recipes.fire-arrows-enable", "Enables Fire Arrows Dispenser Recipe.");
+        customDispensingFireArrows = config.getBoolean("mechanics.dispenser-recipes.fire-arrows-enable", true);
+
+        config.setComment("mechanics.dispenser-recipes.snow-shooter-enable", "Enables Snow Shooter Dispenser Recipe.");
+        customDispensingSnowShooter = config.getBoolean("mechanics.dispenser-recipes.snow-shooter-enable", true);
+
+        config.setComment("mechanics.dispenser-recipes.xp-shooter-enable", "Enables XP Shooter Dispenser Recipe.");
+        customDispensingXPShooter = config.getBoolean("mechanics.dispenser-recipes.xp-shooter-enable", true);
+
 
         // Custom Drops Configuration Listener
         config.setComment("mechanics.custom-drops.enable", "Enable Custom Drops.");

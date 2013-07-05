@@ -110,6 +110,11 @@ public abstract class LocalConfiguration {
     public boolean customCraftingEnabled;
     // Mechanics - Custom Dispensing
     public boolean customDispensingEnabled;
+    public boolean customDispensingCannon;
+    public boolean customDispensingFan;
+    public boolean customDispensingFireArrows;
+    public boolean customDispensingSnowShooter;
+    public boolean customDispensingXPShooter;
     // Mechanics - Custom Drops
     public boolean customDropEnabled;
     public boolean customDropPermissions;

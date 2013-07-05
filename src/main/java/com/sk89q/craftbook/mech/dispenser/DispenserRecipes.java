@@ -27,11 +27,11 @@ public class DispenserRecipes implements Listener {
     public DispenserRecipes() {
 
         instance = this;
-        addRecipe(new XPShooter());
-        addRecipe(new SnowShooter());
-        addRecipe(new FireArrows());
-        addRecipe(new Fan());
-        addRecipe(new Cannon());
+        if(CraftBookPlugin.inst().getConfiguration().customDispensingXPShooter) addRecipe(new XPShooter());
+        if(CraftBookPlugin.inst().getConfiguration().customDispensingSnowShooter) addRecipe(new SnowShooter());
+        if(CraftBookPlugin.inst().getConfiguration().customDispensingFireArrows) addRecipe(new FireArrows());
+        if(CraftBookPlugin.inst().getConfiguration().customDispensingFan) addRecipe(new Fan());
+        if(CraftBookPlugin.inst().getConfiguration().customDispensingCannon) addRecipe(new Cannon());
     }
 
     /**

@@ -12,7 +12,7 @@ public class ItemShooter extends Recipe {
     public ItemShooter(int id, int[] recipe) {
 
         super(recipe);
-        this.itemId = id;
+        itemId = id;
     }
 
     @Override

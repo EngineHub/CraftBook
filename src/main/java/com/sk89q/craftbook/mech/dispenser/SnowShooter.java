@@ -16,9 +16,9 @@ public class SnowShooter extends ItemShooter {
     public SnowShooter() {
 
         super(ItemID.SNOWBALL, new int[] {
-                BlockID.AIR, BlockID.SNOW_BLOCK, BlockID.AIR,
-                BlockID.SNOW_BLOCK, ItemID.POTION, BlockID.SNOW_BLOCK,
-                BlockID.AIR, BlockID.SNOW_BLOCK, BlockID.AIR
+                BlockID.AIR,            BlockID.SNOW_BLOCK,     BlockID.AIR,
+                BlockID.SNOW_BLOCK,     ItemID.POTION,          BlockID.SNOW_BLOCK,
+                BlockID.AIR,            BlockID.SNOW_BLOCK,     BlockID.AIR
         });
     }
 }
