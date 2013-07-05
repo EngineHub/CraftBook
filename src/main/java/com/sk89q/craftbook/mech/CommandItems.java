@@ -277,7 +277,7 @@ public class CommandItems implements Listener {
             command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
         if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
             command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
-        if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null)
+        if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e"))
             command = command.replace("@e", ((EntityEvent) event).getEntityType().getName());
 
         command = ParsingUtil.parseLine(command, player);

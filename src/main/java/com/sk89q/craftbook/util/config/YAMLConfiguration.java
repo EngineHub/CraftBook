@@ -289,6 +289,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Custom Dispensing Configuration Listener
+        config.setComment("mechanics.dispenser-recipes.enable", "Enables Dispenser Recipes.");
         customDispensingEnabled = config.getBoolean("mechanics.dispenser-recipes.enable", true);
 
 
