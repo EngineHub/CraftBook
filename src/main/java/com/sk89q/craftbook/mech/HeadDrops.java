@@ -78,10 +78,10 @@ public class HeadDrops implements Listener {
             case SKELETON:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
-                if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER)
+                if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !CraftBookPlugin.inst().getConfiguration().headDropsDropOverrideNatural)
                     return;
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short)0);
-                toDrop.setData(new MaterialData(ItemID.HEAD,(byte)0));
+                toDrop = new ItemStack(ItemID.HEAD, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
+                toDrop.setData(new MaterialData(ItemID.HEAD, (byte)(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0)));
                 break;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)

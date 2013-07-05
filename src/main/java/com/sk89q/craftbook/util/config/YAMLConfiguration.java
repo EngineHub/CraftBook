@@ -372,6 +372,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         headDropsPlayers = config.getBoolean("mechanics.head-drops.drop-player-heads", true);
         headDropsPlayerKillOnly = config.getBoolean("mechanics.head-drops.require-player-killed", true);
         headDropsMiningDrops = config.getBoolean("mechanics.head-drops.drop-head-when-mined", true);
+        headDropsDropOverrideNatural = config.getBoolean("mechanics.head-drops.override-natural-head-drops", false);
         headDropsDropRate = config.getDouble("mechanics.head-drops.drop-rate", 0.05);
         headDropsLootingRateModifier = config.getDouble("mechanics.head-drops.looting-rate-modifier", 0.05);
         headDropsCustomDropRate = new HashMap<String, Double>();

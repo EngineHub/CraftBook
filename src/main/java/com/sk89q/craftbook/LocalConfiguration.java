@@ -140,6 +140,7 @@ public abstract class LocalConfiguration {
     public boolean headDropsPlayers;
     public boolean headDropsPlayerKillOnly;
     public boolean headDropsMiningDrops;
+    public boolean headDropsDropOverrideNatural;
     public double headDropsDropRate;
     public double headDropsLootingRateModifier;
     public HashMap<String, Double> headDropsCustomDropRate;
