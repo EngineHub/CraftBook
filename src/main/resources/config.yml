@@ -64,6 +64,8 @@ common:
     variables:
         enable: true
         default-to-global: true
+        enable-in-commandblocks: false
+        enable-in-player-commands: false
 circuits:
     ics:
         enable: true
@@ -201,10 +203,10 @@ mechanics:
     footprints:
         enable: false
         blocks:
+        - 3
         - 12
         - 78
         - 80
-        - 3
     gate:
         enable: true
         allow-redstone: true
@@ -216,12 +218,14 @@ mechanics:
         - 102
         - 113
         enforce-type: true
+        max-column-height: 12
     head-drops:
         enable: false
         drop-mob-heads: true
         drop-player-heads: true
         require-player-killed: true
         drop-head-when-mined: true
+        override-natural-head-drops: false
         drop-rate: 0.05
         looting-rate-modifier: 0.05
         drop-rates: {}
@@ -359,6 +363,10 @@ vehicles:
             off-rail-speed: 0.0
         empty-slowdown:
             enable: true
+        no-collide:
+            enable: false
+            empty-carts: true
+            full-carts: false
     boat:
         disable-crashing: false
         break-return-boat: false
