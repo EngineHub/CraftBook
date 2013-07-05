@@ -512,6 +512,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartReverseBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.reverse.block", "35:0"));
 
 
+        // Vehicles Minecart MaxSpeed Configuration Listener
+        minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", true);
+        minecartMaxSpeedBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.max-speed.block", "173:0"));
+
+
         // Vehicles Minecart SpeedMod Configuration Listener
         minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", true);
         minecartSpeedModMaxBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "41:0"));

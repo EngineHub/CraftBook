@@ -24,6 +24,7 @@ import com.sk89q.craftbook.vehicles.cart.CartDeposit;
 import com.sk89q.craftbook.vehicles.cart.CartDispenser;
 import com.sk89q.craftbook.vehicles.cart.CartEjector;
 import com.sk89q.craftbook.vehicles.cart.CartLift;
+import com.sk89q.craftbook.vehicles.cart.CartMaxSpeed;
 import com.sk89q.craftbook.vehicles.cart.CartMessenger;
 import com.sk89q.craftbook.vehicles.cart.CartReverser;
 import com.sk89q.craftbook.vehicles.cart.CartSorter;
@@ -118,6 +119,8 @@ public class VehicleCore implements LocalComponent, Listener {
             cartBlockMechanisms.add(new CartDispenser(plugin.getConfiguration().minecartDispenserBlock));
         if(plugin.getConfiguration().minecartMessagerEnabled && plugin.getConfiguration().minecartMessagerBlock.getId() > 0)
             cartBlockMechanisms.add(new CartMessenger(plugin.getConfiguration().minecartMessagerBlock));
+        if(plugin.getConfiguration().minecartMaxSpeedEnabled && plugin.getConfiguration().minecartMaxSpeedBlock.getId() > 0)
+            cartBlockMechanisms.add(new CartMaxSpeed(plugin.getConfiguration().minecartMaxSpeedBlock));
 
         for(CartBlockMechanism mech : cartBlockMechanisms)
             plugin.getServer().getPluginManager().registerEvents(mech, plugin);
