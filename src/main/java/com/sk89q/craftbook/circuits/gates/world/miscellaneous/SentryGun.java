@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -79,19 +78,23 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
     public void shoot() {
 
+        Player shooter = manned ? getShootingPlayer() : null;
         for (Entity ent : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
-            if(!(ent instanceof Damageable)) continue;
+            if(!(ent instanceof LivingEntity)) continue;
             if (type.is(ent)) {
                 double yOff = 0;
                 if(ent instanceof LivingEntity)
                     yOff = ((LivingEntity) ent).getEyeHeight();
                 org.bukkit.util.Vector velocity = null;
-                Player shooter = manned ? getShootingPlayer() : null;
                 if(shooter == null)
                     velocity = ent.getLocation().add(0, yOff, 0).subtract(center.getLocation().add(0.5,0.5,0.5)).toVector().normalize();
                 else
                     velocity = shooter.getLocation().getDirection().normalize();
                 Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), velocity, speed, 0);
+                if(!((LivingEntity)ent).hasLineOfSight(ar)) {
+                    ar.remove();
+                    continue;
+                }
                 if(shooter != null)
                     ar.setShooter(shooter);
                 ar.setTicksLived(2500);
