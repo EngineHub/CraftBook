@@ -170,7 +170,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "2402";
+        return "2403";
     }
 
     /**
