@@ -16,9 +16,15 @@
 
 package com.sk89q.craftbook.mech;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -53,7 +59,7 @@ public class Bookcase extends AbstractMechanic {
                 player.printRaw(text);
             } else
                 player.printError("mech.bookcase.fail-line");
-        } catch (IOException e) {
+        } catch (Exception e) {
             player.printError("mech.bookcase.fail-file");
         }
     }
@@ -65,18 +71,9 @@ public class Bookcase extends AbstractMechanic {
      *
      * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
-    protected String getBookLine() throws IOException {
+    protected String getBookLine() throws Exception {
 
-        String result = null;
-        int n = 0;
-        for(Scanner sc = new Scanner(new File(plugin.getDataFolder(),"books.txt"), "UTF-8"); sc.hasNext(); ) {
-            ++n;
-            String line = sc.nextLine();
-            if(CraftBookPlugin.inst().getRandom().nextInt(n) == 0)
-                result = line;
-        }
-
-        return result;
+        return Factory.lines[CraftBookPlugin.inst().getRandom().nextInt(Factory.lines.length)];
     }
 
     /**
@@ -96,6 +93,35 @@ public class Bookcase extends AbstractMechanic {
     }
 
     public static class Factory extends AbstractMechanicFactory<Bookcase> {
+
+        public Factory() {
+            super();
+
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
+                Set<String> list = new LinkedHashSet<String>();
+                String l = "";
+                while((l = reader.readLine()) != null)
+                    list.add(l);
+
+                lines = list.toArray(new String[list.size()]);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(reader != null) try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public static String[] lines;
 
         @Override
         public Bookcase detect(BlockWorldVector pt, LocalPlayer player) {
