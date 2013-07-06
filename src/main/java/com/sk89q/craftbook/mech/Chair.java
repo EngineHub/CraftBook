@@ -31,13 +31,13 @@ public class Chair implements Listener {
 
     public Chair() {
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ChairChecker(), 40L, 40L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new ChairChecker(), 40L, 40L);
     }
 
-    private boolean disabled = false;
-    public ConcurrentHashMap<String, Block> chairs = new ConcurrentHashMap<String, Block>();
+    private static boolean disabled = false;
+    public static ConcurrentHashMap<String, Block> chairs = new ConcurrentHashMap<String, Block>();
 
-    public void addChair(Player player, Block block) {
+    public static void addChair(Player player, Block block) {
 
         if (disabled) return;
         try {
@@ -46,7 +46,7 @@ public class Chair implements Listener {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
             watcher.setObject(0, (byte) 4);
             entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-            for (Player play : plugin.getServer().getOnlinePlayers()) {
+            for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
                 if (play.getWorld().equals(player.getPlayer().getWorld())) {
                     try {
                         ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
@@ -61,11 +61,11 @@ public class Chair implements Listener {
             return;
         }
         if (chairs.containsKey(player.getName())) return;
-        plugin.wrapPlayer(player).print("mech.chairs.sit");
+        CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
         chairs.put(player.getName(), block);
     }
 
-    public void removeChair(Player player) {
+    public static void removeChair(Player player) {
 
         if (disabled) return;
         PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(40);
@@ -74,7 +74,7 @@ public class Chair implements Listener {
         watcher.setObject(0, (byte) 0);
         entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
 
-        for (Player play : plugin.getServer().getOnlinePlayers()) {
+        for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
             if (play.getWorld().equals(player.getPlayer().getWorld())) {
                 try {
                     ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
@@ -83,52 +83,50 @@ public class Chair implements Listener {
                 }
             }
         }
-        plugin.wrapPlayer(player).print("mech.chairs.stand");
+        CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
         chairs.remove(player.getName());
     }
 
-    public Block getChair(Player player) {
+    public static Block getChair(Player player) {
 
         if (disabled) return null;
         return chairs.get(player.getName());
     }
 
-    public boolean hasChair(Player player) {
+    public static boolean hasChair(Player player) {
 
         return !disabled && chairs.containsKey(player.getName());
     }
 
-    public boolean hasChair(Block player) {
+    public static boolean hasChair(Block player) {
 
         return !disabled && chairs.containsValue(player);
     }
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
-
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (!plugin.getConfiguration().chairEnabled) return;
+        if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (hasChair(event.getBlock())) {
             event.setCancelled(true);
-            plugin.wrapPlayer(event.getPlayer()).printError("mech.chairs.in-use");
+            CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).printError("mech.chairs.in-use");
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getConfiguration().chairEnabled) return;
+        if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getClickedBlock() == null || !plugin.getConfiguration().chairBlocks.contains(event.getClickedBlock().getTypeId()))
+        if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(event.getClickedBlock().getTypeId()))
             return;
 
-        BukkitPlayer player = new BukkitPlayer(plugin, event.getPlayer());
+        BukkitPlayer player = new BukkitPlayer(CraftBookPlugin.inst(), event.getPlayer());
 
         // Now everything looks good, continue;
         if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock()
                 || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (plugin.getConfiguration().chairSneak != player.getPlayer().isSneaking()) return;
+            if (CraftBookPlugin.inst().getConfiguration().chairSneak != player.getPlayer().isSneaking()) return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {
                 player.printError("mech.use-permission");
                 return;
@@ -149,7 +147,7 @@ public class Chair implements Listener {
 
                 Location chairLoc = event.getClickedBlock().getLocation().add(0.5,0,0.5);
 
-                if(plugin.getConfiguration().chairFacing && event.getClickedBlock().getState().getData() instanceof Directional) {
+                if(CraftBookPlugin.inst().getConfiguration().chairFacing && event.getClickedBlock().getState().getData() instanceof Directional) {
 
                     BlockFace direction = ((Directional) event.getClickedBlock().getState().getData()).getFacing();
 
@@ -184,7 +182,7 @@ public class Chair implements Listener {
         }
     }
 
-    public class ChairChecker implements Runnable {
+    public static class ChairChecker implements Runnable {
 
         @Override
         public void run() {
@@ -196,12 +194,12 @@ public class Chair implements Listener {
                     continue;
                 }
 
-                if (!plugin.getConfiguration().chairBlocks.contains(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).getLocation()) > 1.5)
+                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).getLocation()) > 1.5)
                     removeChair(p);
                 else {
                     addChair(p, getChair(p)); // For any new players.
 
-                    if (plugin.getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
+                    if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(p.getHealth() + 1);
                     if (p.getExhaustion() > -20f) p.setExhaustion(p.getExhaustion() - 0.1f);
                 }

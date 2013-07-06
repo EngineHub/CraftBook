@@ -1,3 +1,26 @@
+3.7 Beta 3
+* Fix a few /area toggle x,y,z bugs. (Like it not toggling back/setting state)
++ Added an erase mode to Entity Trap (MC1204)
+* Fix a lot of HiddenSwitch bugs.
+* RIDEABLE entity type now includes horses.
+* Major recode of vehicles section. The configuration for this section needs to be regenerated. To do so, erase the entire vehicles section of the config and restart the server.
+* Fix a few gate bugs and optimized gates.
+* Force update a players inventory with CommandItems consumables.
++ Added an option to change the max height of a gates column.
+* Fix a few CommandItems bugs.
+* Tweaked the configuration defaults.
+* Fixed XPStorer losing a small portion of XP.
++ Added an option for HeadDrops to override natural head drops. (Incl. Wither Skeleton)
++ Added options to have variables work in the console, command blocks or in commands a player enters.
++ Added a NoCollide mechanic to minecarts.
+* Removed CustomCrafting spam on load up about each individual recipe.
++ Added a manned option for the Sentry Gun IC.
+* Fixed SentryGun targetting non-killable entities, like its own arrows.
+* Fixed SentryGun targetting entities through walls.
++ Added a CartMaxSpeed mechanic.
++ Added configuration for each dispenser recipe.
++ Added a lot more strings to the translatable messages list.
+
 3.7 Beta 2
 * Fix some plugins that don't properly modify signs on place having their signs incorrectly adopted by CraftBook.
 + Added loop support to Melody IC.
