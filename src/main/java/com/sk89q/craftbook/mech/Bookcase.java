@@ -70,8 +70,11 @@ public class Bookcase extends AbstractMechanic {
     protected String getBookLine() throws IOException {
 
         LineNumberReader lnr = new LineNumberReader(new InputStreamReader(new FileInputStream(new File(plugin.getDataFolder(),"books.txt")), "UTF-8"));
-        lnr.skip(Long.MAX_VALUE);
-        lnr.setLineNumber(plugin.getRandom().nextInt(lnr.getLineNumber()));
+        lnr.mark(Integer.MAX_VALUE);
+        lnr.skip(Integer.MAX_VALUE);
+        int l = lnr.getLineNumber();
+        lnr.reset();
+        lnr.setLineNumber(plugin.getRandom().nextInt(l));
         String line = lnr.readLine();
         lnr.close();
         return line;
