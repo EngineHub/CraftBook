@@ -124,7 +124,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.signCopyEnabled) plugin.registerMechanic(new SignCopier.Factory()); // Keep SignCopy close to the start, so it can copy mechanics without triggering them.
         if (config.ammeterEnabled) plugin.registerMechanic(new Ammeter.Factory());
         if (config.bookcaseEnabled) {
-            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt", false);
+            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt");
             plugin.registerMechanic(new Bookcase.Factory());
         }
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());

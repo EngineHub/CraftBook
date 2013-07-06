@@ -208,7 +208,7 @@ public class CircuitCore implements LocalComponent {
 
         plugin.registerCommands(CircuitCommands.class);
 
-        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "ic-config.yml"), "ic-config.yml", false);
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "ic-config.yml"), "ic-config.yml");
         icConfiguration = new YAMLICConfiguration(new YAMLProcessor(new File(plugin.getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
 
         midiFolder = new File(plugin.getDataFolder(), "midi/");

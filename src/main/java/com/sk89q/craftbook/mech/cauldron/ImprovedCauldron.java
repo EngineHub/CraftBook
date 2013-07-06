@@ -44,7 +44,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         public Factory() {
 
             INSTANCE = this;
-            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml", false);
+            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
             recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
         }
 

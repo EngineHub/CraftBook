@@ -54,9 +54,9 @@ public class Bookcase extends AbstractMechanic {
                 player.print(plugin.getConfiguration().bookcaseReadLine);
                 player.printRaw(text);
             } else
-                player.printError("Failed to fetch a line from the books file.");
+                player.printError("mech.bookcase.fail-line");
         } catch (IOException e) {
-            player.printError("Failed to read the books file.");
+            player.printError("mech.bookcase.fail-file");
         }
     }
 

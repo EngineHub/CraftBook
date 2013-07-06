@@ -68,7 +68,7 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
                         Sign s = (Sign) entity;
                         if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
 
-                            throw new InvalidMechanismException("Chunk already anchored!");
+                            throw new InvalidMechanismException("mech.anchor.already-anchored");
                         }
                     }
                 }

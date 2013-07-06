@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,6 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -132,7 +132,7 @@ public class Cauldron extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return;
         if (event.getPlayer().getItemInHand().getTypeId() >= 255 || event.getPlayer().getItemInHand().getTypeId() ==
                 BlockID.AIR)
-            if (preCauldron(event.getPlayer(), event.getPlayer().getWorld(), pt)) {
+            if (preCauldron(localPlayer, event.getPlayer().getWorld(), pt)) {
                 event.setUseInteractedBlock(Result.DENY);
                 event.setUseItemInHand(Result.DENY);
                 event.setCancelled(true);
@@ -164,7 +164,7 @@ public class Cauldron extends AbstractMechanic {
      * @param player
      * @param world
      */
-    public boolean preCauldron(Player player, World world, BlockWorldVector pt) {
+    public boolean preCauldron(LocalPlayer player, World world, BlockWorldVector pt) {
 
         double x = pt.getX();
         double y = pt.getY();
@@ -211,9 +211,11 @@ public class Cauldron extends AbstractMechanic {
      * @param world
      * @param pt
      */
-    private void performCauldron(Player player, World world, BlockWorldVector pt) {
+    private void performCauldron(LocalPlayer player, World world, BlockWorldVector pt) {
         // Gotta start at a root Y then find our orientation
         int rootY = pt.getBlockY();
+
+        Player p = ((BukkitPlayer)player).getPlayer();
 
         int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 
@@ -255,19 +257,19 @@ public class Cauldron extends AbstractMechanic {
 
                     for (String group : groups) {
 
-                        if (CraftBookPlugin.inst().inGroup(player, group)) {
+                        if (CraftBookPlugin.inst().inGroup(p, group)) {
                             found = true;
                             break;
                         }
                     }
 
                     if (!found) {
-                        player.sendMessage(ChatColor.DARK_RED + "Doesn't seem as if you have the ability...");
+                        player.printError("mech.cauldron.legacy-not-in-group");
                         return;
                     }
                 }
 
-                player.sendMessage(ChatColor.GOLD + "In a poof of smoke, you've made " + recipe.getName() + ".");
+                player.print(player.translate("mech.cauldron.legacy-create") + " " + recipe.getName() + ".");
 
                 List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer,
                         Short>>(recipe.getIngredients());
@@ -297,18 +299,18 @@ public class Cauldron extends AbstractMechanic {
                 for (BlockWorldVector v : removeQueue) {
                     world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).setTypeId(BlockID.AIR);
                 }
-                */
+                 */
 
                 // Give results
                 for (Tuple2<Integer, Short> id : recipe.getResults()) {
-                    HashMap<Integer, ItemStack> map = player.getInventory().addItem(new ItemStack(id.a, 1, id.b));
+                    HashMap<Integer, ItemStack> map = p.getInventory().addItem(new ItemStack(id.a, 1, id.b));
                     for (Entry<Integer, ItemStack> i : map.entrySet()) {
-                        world.dropItem(player.getLocation(), i.getValue());
+                        world.dropItem(p.getLocation(), i.getValue());
                     }
                 }
                 // Didn't find a recipe
             } else {
-                player.sendMessage(ChatColor.RED + "Hmm, this doesn't make anything...");
+                player.printError("mech.cauldron.legacy-not-a-recipe");
             }
         } catch (NotACauldronException ignored) {
         }

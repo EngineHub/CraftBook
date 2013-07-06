@@ -52,7 +52,7 @@ public class CustomCrafting implements Listener {
 
     public CustomCrafting() {
 
-        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml", false);
+        plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml");
         recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
         int recipes = 0;

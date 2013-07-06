@@ -44,7 +44,7 @@ public class Ammeter extends AbstractMechanic {
         Block block = event.getClickedBlock();
         int data = getSpecialData(block);
         String line = getCurrentLine(data);
-        player.print("Ammeter: " + line + ChatColor.WHITE + " " + data + " A");
+        player.print(player.translate("mech.ammeter.ammeter") + ": " + line + ChatColor.WHITE + " " + data + " A");
     }
 
     private int getSpecialData(Block block) {

@@ -53,9 +53,9 @@ public final class CustomDropManager {
     public CustomDropManager(File source) {
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(),
-                "custom-block-drops.txt"), "custom-block-drops.txt", false);
+                "custom-block-drops.txt"), "custom-block-drops.txt");
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(),
-                "custom-mob-drops.txt"), "custom-mob-drops.txt", false);
+                "custom-mob-drops.txt"), "custom-mob-drops.txt");
 
         File blockDefinitions = new File(source, "custom-block-drops.txt");
         File mobDefinitions = new File(source, "custom-mob-drops.txt");

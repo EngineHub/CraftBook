@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -62,7 +61,7 @@ public class Chair implements Listener {
             return;
         }
         if (chairs.containsKey(player.getName())) return;
-        plugin.wrapPlayer(player).print(ChatColor.YELLOW + "You are now sitting.");
+        plugin.wrapPlayer(player).print("mech.chairs.sit");
         chairs.put(player.getName(), block);
     }
 
@@ -84,7 +83,7 @@ public class Chair implements Listener {
                 }
             }
         }
-        plugin.wrapPlayer(player).print(ChatColor.YELLOW + "You are no longer sitting.");
+        plugin.wrapPlayer(player).print("mech.chairs.stand");
         chairs.remove(player.getName());
     }
 
@@ -112,7 +111,7 @@ public class Chair implements Listener {
         if (!plugin.getConfiguration().chairEnabled) return;
         if (hasChair(event.getBlock())) {
             event.setCancelled(true);
-            plugin.wrapPlayer(event.getPlayer()).print("This seat is in use!");
+            plugin.wrapPlayer(event.getPlayer()).printError("mech.chairs.in-use");
         }
     }
 
@@ -139,12 +138,12 @@ public class Chair implements Listener {
                 event.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 1.5, 0.5));
             } else { // Sit
                 if (hasChair(event.getClickedBlock())) {
-                    player.print("This seat is already occupied.");
+                    player.print("mech.chairs.in-use");
                     return;
                 }
                 if(BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
 
-                    player.printError("This chair has nothing below it!");
+                    player.printError("mech.chairs.floating");
                     return;
                 }
 

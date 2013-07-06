@@ -222,7 +222,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Setup Config and the Commands Manager
         final CraftBookPlugin plugin = this;
-        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml", false);
+        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml");
         config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
         commands = new CommandsManager<CommandSender>() {
 
@@ -292,7 +292,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void setupCraftBook() {
 
         // Initialize the language manager.
-        createDefaultConfiguration(new File(getDataFolder(), "en_US.yml"), "en_US.yml", true);
+        createDefaultConfiguration(new File(getDataFolder(), "en_US.yml"), "en_US.yml");
         languageManager = new LanguageManager();
         languageManager.init();
     }
@@ -882,7 +882,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * @param defaultName The name of the file inside the jar's defaults folder
      * @param force       If it should make the file even if it already exists
      */
-    public void createDefaultConfiguration(File actual, String defaultName, boolean force) {
+    public void createDefaultConfiguration(File actual, String defaultName) {
 
         // Make parent directories
         File parent = actual.getParentFile();
@@ -890,7 +890,7 @@ public class CraftBookPlugin extends JavaPlugin {
             parent.mkdirs();
         }
 
-        if (actual.exists() && !force) {
+        if (actual.exists()) {
             return;
         }
 
@@ -919,9 +919,7 @@ public class CraftBookPlugin extends JavaPlugin {
                     output.write(buf, 0, length);
                 }
 
-                if (!force)
-                    getLogger().info("Default configuration file written: "
-                            + actual.getAbsolutePath());
+                getLogger().info("Default configuration file written: " + actual.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {

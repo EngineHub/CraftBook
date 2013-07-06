@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mech;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -165,6 +164,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         Block block = event.getClickedBlock();
         ChangedSign sign = BukkitUtil.toChangedSign(block);
+        LocalPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(sign == null)
             return;
@@ -174,7 +174,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if (cb.getTypeId() == BlockID.CHEST) {
             Player player = event.getPlayer();
             if(!player.hasPermission("craftbook.mech.cook.refuel")) {
-                player.sendMessage(ChatColor.RED + "You do not have permission to refuel this mechanic!");
+                p.printError("mech.restock-permission");
                 return;
             }
             if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getTypeId())) {
@@ -187,7 +187,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 }
                 if(itemID == ItemID.LAVA_BUCKET && !plugin.getConfiguration().cookingPotDestroyBuckets)
                     player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
-                player.sendMessage("You give the pot fuel!");
+                p.print("mech.cook.add-fuel");
             } else if (plugin.getConfiguration().cookingPotSignOpen) {
                 player.openInventory(((Chest) cb.getState()).getBlockInventory());
             }
