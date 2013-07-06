@@ -16,13 +16,12 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import java.util.Random;
-
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -87,8 +86,6 @@ public class LightningSummon extends AbstractIC {
 
         if (chip.getInput(0)) {
 
-            Random rand = new Random();
-
             for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
                 for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
                     for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
@@ -97,7 +94,7 @@ public class LightningSummon extends AbstractIC {
                         int rz = center.getBlockZ() - z;
                         Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
-                        if(b.getTypeId() != 0 && rand.nextInt(100) <= chance)
+                        if(b.getTypeId() != 0 && CraftBookPlugin.inst().getRandom().nextInt(100) <= chance)
                             b.getWorld().strikeLightning(b.getLocation());
                     }
                 }

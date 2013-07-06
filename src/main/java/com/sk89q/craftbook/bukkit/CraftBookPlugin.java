@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -108,7 +110,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * The random
      */
-    private Random random = new Random();
+    private Random random;
 
     /**
      * Manager for commands. This automatically handles nested commands,
@@ -255,6 +257,16 @@ public class CraftBookPlugin extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        if(config.realisticRandoms)
+            try {
+                random = SecureRandom.getInstance("SHA1PRNG");
+            } catch (NoSuchAlgorithmException e1) {
+                getLogger().severe(getStackTrace(e1));
+                random = new Random();
+            }
+        else
+            random = new Random();
 
         // Resolve Vault
         try {
@@ -702,6 +714,8 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public Random getRandom() {
 
+        if(random == null)
+            return new Random(); //Use a temporary random whilst CraftBooks random is being set.
         return random;
     }
 
