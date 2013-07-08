@@ -296,7 +296,7 @@ public class ItemUtil {
             case BlockID.IRON_ORE:
                 return new ItemStack(ItemID.IRON_BAR);
             case BlockID.REDSTONE_ORE:
-                return new ItemStack(ItemID.REDSTONE_DUST);
+                return new ItemStack(ItemID.REDSTONE_DUST, 4);
             case BlockID.EMERALD_ORE:
                 return new ItemStack(ItemID.EMERALD);
             case BlockID.GOLD_ORE:
@@ -326,6 +326,7 @@ public class ItemUtil {
 
         switch(item.getTypeId()) {
             case ItemID.COAL:
+            case BlockID.COAL_BLOCK:
             case BlockID.LOG:
             case BlockID.WOOD:
             case BlockID.WOODEN_STEP:

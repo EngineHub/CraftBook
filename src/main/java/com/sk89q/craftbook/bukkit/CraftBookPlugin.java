@@ -218,35 +218,21 @@ public class CraftBookPlugin extends JavaPlugin {
             worldGuardPlugin = (WorldGuardPlugin) checkPlugin;
         } else worldGuardPlugin = null;
 
-        manager = new MechanicManager();
-        managerAdapter = new MechanicListenerAdapter();
-        mechanicClock = new MechanicClock();
-
-        // Setup Config and the Commands Manager
-        final CraftBookPlugin plugin = this;
-        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml");
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
-        commands = new CommandsManager<CommandSender>() {
-
-            @Override
-            public boolean hasPermission(CommandSender player, String perm) {
-
-                return plugin.hasPermission(player, perm);
-            }
-        };
-
-        // Set the proper command injector
-        commands.setInjector(new SimpleInjector(this));
-
-        // Register command classes
-        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-        reg.register(TopLevelCommands.class);
+        // Resolve Vault
+        try {
+            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            if (economyProvider != null) economy = economyProvider.getProvider();
+            else economy = null;
+        } catch (Throwable e) {
+            economy = null;
+        }
 
         // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
 
-        PermissionsResolverManager.initialize(this);
-
+        // Setup Config and the Commands Manager
+        createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml");
+        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
         // Load the configuration
         try {
             config.load();
@@ -258,6 +244,30 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
         }
 
+        logDebugMessage("Initializing Managers!", "startup");
+        manager = new MechanicManager();
+        managerAdapter = new MechanicListenerAdapter();
+        mechanicClock = new MechanicClock();
+
+        logDebugMessage("Initializing Permission!", "startup");
+        PermissionsResolverManager.initialize(this);
+
+        // Register command classes
+        logDebugMessage("Initializing Commands!", "startup");
+        commands = new CommandsManager<CommandSender>() {
+
+            @Override
+            public boolean hasPermission(CommandSender player, String perm) {
+
+                return CraftBookPlugin.inst().hasPermission(player, perm);
+            }
+        };
+        // Set the proper command injector
+        commands.setInjector(new SimpleInjector(this));
+
+        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
+        reg.register(TopLevelCommands.class);
+
         if(config.realisticRandoms)
             try {
                 random = SecureRandom.getInstance("SHA1PRNG");
@@ -267,16 +277,6 @@ public class CraftBookPlugin extends JavaPlugin {
             }
         else
             random = new Random();
-
-        // Resolve Vault
-        try {
-            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(
-                    net.milkbowl.vault.economy.Economy.class);
-            if (economyProvider != null) economy = economyProvider.getProvider();
-            else economy = null;
-        } catch (Throwable e) {
-            economy = null;
-        }
 
         // Let's start the show
         setupCraftBook();
@@ -304,6 +304,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void setupCraftBook() {
 
         // Initialize the language manager.
+        logDebugMessage("Initializing Languages!", "startup");
         createDefaultConfiguration(new File(getDataFolder(), "en_US.yml"), "en_US.yml");
         languageManager = new LanguageManager();
         languageManager.init();
@@ -357,10 +358,12 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void registerGlobalEvents() {
 
+        logDebugMessage("Registring managers!", "startup");
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
         if(getConfiguration().updateNotifier) {
 
+            logDebugMessage("Performing update checks!", "startup");
             checkForUpdates();
         }
 
@@ -370,6 +373,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 @Override
                 public void run () {
 
+                    logDebugMessage("Checking easter eggs!", "startup");
                     Calendar date = Calendar.getInstance();
 
                     if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
@@ -387,6 +391,7 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         try {
+            logDebugMessage("Initializing Metrics!", "startup");
             BukkitMetrics metrics = new BukkitMetrics(this);
             metrics.start();
 
@@ -487,6 +492,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // VariableStore
         if(config.variablesEnabled) {
+            logDebugMessage("Initializing Variables!", "startup.variables");
             try {
                 File varFile = new File(getDataFolder(), "variables.yml");
                 if(!varFile.exists())
@@ -498,18 +504,21 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Mechanics
         if (config.enableMechanisms) {
+            logDebugMessage("Initializing Mechanisms!", "startup.mechanisms");
             MechanicalCore mechanicalCore = new MechanicalCore();
             mechanicalCore.enable();
             components.add(mechanicalCore);
         }
         // Circuits
         if (config.enableCircuits) {
+            logDebugMessage("Initializing Circuits!", "startup.circuits");
             CircuitCore circuitCore = new CircuitCore();
             circuitCore.enable();
             components.add(circuitCore);
         }
         // Vehicles
         if (config.enableVehicles) {
+            logDebugMessage("Initializing Vehicles!", "startup.vehicles");
             VehicleCore vehicleCore = new VehicleCore();
             vehicleCore.enable();
             components.add(vehicleCore);
