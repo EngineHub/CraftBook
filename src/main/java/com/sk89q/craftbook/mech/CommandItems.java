@@ -257,6 +257,7 @@ public class CommandItems implements Listener {
                         player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
                     else
                         player.setItemInHand(null);
+                    player.updateInventory();
                 }
 
                 for(String command : comdef.commands)
