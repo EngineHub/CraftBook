@@ -91,7 +91,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         glowstoneEnabled = config.getBoolean("circuits.wiring.glowstone-enabled", false);
 
         config.setComment("circuits.wiring.glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
-        glowstoneOffBlock = config.getInt("circuits.wiring.glowstone-off-block", BlockID.GLASS);
+        glowstoneOffBlock = ItemInfo.parseFromString(config.getString("circuits.wiring.glowstone-off-block", String.valueOf(BlockID.GLASS)));
 
 
         // Pipes Configuration Listener
@@ -131,7 +131,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", true);
 
         config.setComment("mechanics.ammeter.item", "Set the item that is the ammeter tool.");
-        ammeterItem = config.getInt("mechanics.ammeter.item", ItemID.COAL);
+        ammeterItem = ItemInfo.parseFromString(config.getString("mechanics.ammeter.item", String.valueOf(ItemID.COAL)));
 
 
         // Area Configuration Listener
@@ -423,7 +423,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Lightstone Configuration Listener
         lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", true);
-        lightstoneItem = config.getInt("mechanics.lightstone.item", ItemID.LIGHTSTONE_DUST);
+        lightstoneItem = ItemInfo.parseFromString(config.getString("mechanics.lightstone.item", String.valueOf(ItemID.LIGHTSTONE_DUST)));
 
 
         // Light Switch Configuration Listener
@@ -446,7 +446,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // SignCopy Configuration Listener
         signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
-        signCopyItem = config.getInt("mechanics.sign-copy.item", ItemID.INK_SACK);
+        signCopyItem = ItemInfo.parseFromString(config.getString("mechanics.sign-copy.item", String.valueOf(ItemID.INK_SACK) + ":0"));
 
 
         // Snow Configuration Listener

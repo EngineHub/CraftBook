@@ -110,7 +110,7 @@ public class Ammeter extends AbstractMechanic {
         public Ammeter detect(BlockWorldVector pt, LocalPlayer player) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            return (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) && player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().ammeterItem && player.hasPermission("craftbook.mech.ammeter.use") ? new Ammeter() : null;
+            return (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) && CraftBookPlugin.inst().getConfiguration().ammeterItem.equals(player.getHeldItemInfo()) && player.hasPermission("craftbook.mech.ammeter.use") ? new Ammeter() : null;
         }
     }
 }

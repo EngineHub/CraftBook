@@ -39,8 +39,7 @@ public class LightStone extends AbstractMechanic {
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        if (event.getPlayer().getItemInHand().getTypeId() == CraftBookPlugin.inst().getConfiguration().lightstoneItem)
-            player.print(ChatColor.YELLOW + "LightStone: [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
+        player.print(ChatColor.YELLOW + "LightStone: [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
     }
 
     private String getLightLine(int data) {
@@ -64,7 +63,7 @@ public class LightStone extends AbstractMechanic {
         public LightStone detect (BlockWorldVector pt, LocalPlayer player) throws InvalidMechanismException {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block != null && player.getHeldItemType() == CraftBookPlugin.inst().getConfiguration().lightstoneItem && player.hasPermission("craftbook.mech.lightstone.use")) return new LightStone();
+            if (block != null && CraftBookPlugin.inst().getConfiguration().lightstoneItem.equals(player.getHeldItemInfo()) && player.hasPermission("craftbook.mech.lightstone.use")) return new LightStone();
 
             return null;
         }

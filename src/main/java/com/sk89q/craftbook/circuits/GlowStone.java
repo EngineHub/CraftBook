@@ -44,7 +44,7 @@ public class GlowStone extends PersistentMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            if (type == CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock || type == BlockID.LIGHTSTONE)
+            if (CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt))) || type == BlockID.LIGHTSTONE)
                 return new GlowStone(pt);
 
             return null;
@@ -70,7 +70,7 @@ public class GlowStone extends PersistentMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        event.getBlock().setTypeIdAndData(event.getNewCurrent() > 0 ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock, event.getBlock().getData(), true);
+        event.getBlock().setTypeIdAndData(event.getNewCurrent() > 0 ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getId(), (byte) (event.getNewCurrent() > 0 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()), true);
     }
 
     /**

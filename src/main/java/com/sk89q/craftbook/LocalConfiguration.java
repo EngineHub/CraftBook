@@ -34,7 +34,7 @@ public abstract class LocalConfiguration {
     public boolean netherrackEnabled;
     public boolean pumpkinsEnabled;
     public boolean glowstoneEnabled;
-    public int glowstoneOffBlock;
+    public ItemInfo glowstoneOffBlock;
     // Circuits - Pipes
     public boolean pipesEnabled;
     public boolean pipesDiagonal;
@@ -50,7 +50,7 @@ public abstract class LocalConfiguration {
     public List<String> aiAttackPassiveEnabled;
     // Mechanics - Ammeter
     public boolean ammeterEnabled;
-    public int ammeterItem;
+    public ItemInfo ammeterItem;
     // Mechanics - Area
     public boolean areaEnabled;
     public boolean areaAllowRedstone;
@@ -161,7 +161,7 @@ public abstract class LocalConfiguration {
     public int legacyCauldronBlock;
     // Mechanics - Lightstone
     public boolean lightstoneEnabled;
-    public int lightstoneItem;
+    public ItemInfo lightstoneItem;
     // Mechanics - Light Switch
     public boolean lightSwitchEnabled;
     public int lightSwitchMaxRange;
@@ -174,7 +174,7 @@ public abstract class LocalConfiguration {
     public boolean paymentEnabled;
     // Mechanics - Lightstone
     public boolean signCopyEnabled;
-    public int signCopyItem;
+    public ItemInfo signCopyItem;
     // Mechanics - Snow
     public boolean snowPiling;
     public boolean snowTrample;

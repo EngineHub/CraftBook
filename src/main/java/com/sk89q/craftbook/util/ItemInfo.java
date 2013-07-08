@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemInfo {
 
@@ -30,6 +32,22 @@ public class ItemInfo {
     public void setData(int data) {
 
         this.data = data;
+    }
+
+    public boolean isSame(Block block) {
+
+        if(block.getTypeId() == id)
+            if(data == -1 || block.getData() == data)
+                return true;
+        return false;
+    }
+
+    public boolean isSame(ItemStack stack) {
+
+        if(stack.getTypeId() == id)
+            if(data == -1 || stack.getData().getData() == data)
+                return true;
+        return false;
     }
 
     public static ItemInfo parseFromString(String string) {
