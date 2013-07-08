@@ -309,6 +309,8 @@ public class ItemUtil {
                 return new ItemStack(ItemID.BRICK_BAR);
             case BlockID.NETHERRACK:
                 return new ItemStack(ItemID.NETHER_BRICK);
+            case BlockID.CLAY:
+                return new ItemStack(BlockID.HARDENED_CLAY);
             default:
                 return null;
         }

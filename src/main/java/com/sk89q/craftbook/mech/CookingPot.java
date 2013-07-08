@@ -259,7 +259,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     private enum Ingredients {
-        COAL(ItemID.COAL, 20), LAVA(ItemID.LAVA_BUCKET, 6000), BLAZE(ItemID.BLAZE_ROD, 500), BLAZEDUST(ItemID.BLAZE_POWDER, 250), SNOWBALL(ItemID.SNOWBALL, -40), SNOW(BlockID.SNOW_BLOCK, -100), ICE(BlockID.ICE, -1000);
+        COAL(ItemID.COAL, 40), COALBLOCK(BlockID.COAL_BLOCK, 360), LAVA(ItemID.LAVA_BUCKET, 6000), BLAZE(ItemID.BLAZE_ROD, 500), BLAZEDUST(ItemID.BLAZE_POWDER, 250), SNOWBALL(ItemID.SNOWBALL, -40), SNOW(BlockID.SNOW_BLOCK, -100), ICE(BlockID.ICE, -1000);
 
         private int id;
         private int mult;
