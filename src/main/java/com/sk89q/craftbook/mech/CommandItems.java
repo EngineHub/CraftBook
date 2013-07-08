@@ -41,6 +41,7 @@ import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -255,6 +256,11 @@ public class CommandItems implements Listener {
                     }
                 }
 
+                if(comdef.requireSneaking == TernaryState.TRUE && !player.isSneaking())
+                    break current;
+                if(comdef.requireSneaking == TernaryState.FALSE && player.isSneaking())
+                    break current;
+
                 if(!player.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !player.hasPermission(comdef.permNode)) {
                     player.sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
                     break current;
@@ -360,12 +366,14 @@ public class CommandItems implements Listener {
         private ItemStack[] consumables;
         private boolean consumeSelf;
 
+        private TernaryState requireSneaking;
+
         public ItemStack getItem() {
 
             return stack;
         }
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf) {
+        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking) {
 
             this.name = name;
             this.stack = stack;
@@ -379,6 +387,7 @@ public class CommandItems implements Listener {
             this.cancelAction = cancelAction;
             this.consumables = consumables;
             this.consumeSelf = consumeSelf;
+            this.requireSneaking = requireSneaking;
         }
 
         public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
@@ -404,8 +413,9 @@ public class CommandItems implements Listener {
             } catch(Exception ignored){}
 
             boolean consumeSelf = config.getBoolean(path + ".consume-self", false);
+            TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
 
-            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf);
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking);
         }
 
         public enum CommandType {
