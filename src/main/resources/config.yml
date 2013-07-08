@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7b2
+# CraftBook Configuration for Bukkit. Generated for version: 3.7b3
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -60,6 +60,9 @@ debug-flags: []
 
 # Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)
 easter-eggs: true
+
+# Random numbers are much more random, with a small cost to CPU usage.
+realistic-randoms: true
 common:
     variables:
         enable: true
@@ -81,7 +84,7 @@ circuits:
         netherrack-enabled: false
         pumpkins-enabled: false
         glowstone-enabled: false
-        glowstone-off-block: 20
+        glowstone-off-block: '20'
     pipes:
         enable: true
         allow-diagonal: false
@@ -100,7 +103,7 @@ mechanics:
         - Zombie
     ammeter:
         enable: true
-        item: 263
+        item: '263'
     area:
         enable: true
         allow-redstone: true
@@ -148,7 +151,7 @@ mechanics:
         spoons: true
     chair:
         enable: true
-        require-sneak: true
+        require-sneak: 'true'
         regen-health: true
         blocks:
         - 53
@@ -181,6 +184,11 @@ mechanics:
         enable: true
     dispenser-recipes:
         enable: true
+        cannon-enable: true
+        fan-enable: true
+        fire-arrows-enable: true
+        snow-shooter-enable: true
+        xp-shooter-enable: true
     custom-drops:
         enable: true
         require-permissions: false
@@ -238,7 +246,7 @@ mechanics:
         block: 1
     lightstone:
         enable: true
-        item: 348
+        item: '348'
     light-switch:
         enable: true
         max-range: 10
@@ -251,7 +259,7 @@ mechanics:
         enable: true
     sign-copy:
         enable: true
-        item: 351
+        item: '351:0'
     snow:
         piling: false
         trample: false
@@ -319,6 +327,9 @@ vehicles:
             reverse:
                 enable: true
                 block: '35:0'
+            max-speed:
+                enable: true
+                block: '173:0'
             speed-modifier:
                 enable: true
                 max-boost-block: '41:0'
