@@ -25,8 +25,10 @@ import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
@@ -180,6 +182,24 @@ public class CommandItems implements Listener {
         performCommandItems(event.getItem(), event.getPlayer(), event);
     }
 
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onItemDrop(final PlayerDropItemEvent event) {
+
+        if(event.getItemDrop() == null || !ItemUtil.isStackValid(event.getItemDrop().getItemStack()))
+            return;
+
+        performCommandItems(event.getItemDrop().getItemStack(), event.getPlayer(), event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onItemBreak(final PlayerItemBreakEvent event) {
+
+        if(event.getBrokenItem() == null)
+            return;
+
+        performCommandItems(event.getBrokenItem(), event.getPlayer(), event);
+    }
+
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
@@ -222,9 +242,15 @@ public class CommandItems implements Listener {
 
                         if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
                             break current;
-                    } else if (comdef.clickType == ClickType.ITEM_CONSUME) {
+                    } else if (comdef.clickType == ClickType.ITEM_CONSUME || comdef.clickType == ClickType.ITEM_DROP || comdef.clickType == ClickType.ITEM_BREAK) {
 
                         if(comdef.clickType == ClickType.ITEM_CONSUME && !(event instanceof PlayerItemConsumeEvent))
+                            break current;
+
+                        if(comdef.clickType == ClickType.ITEM_DROP && !(event instanceof PlayerDropItemEvent))
+                            break current;
+
+                        if(comdef.clickType == ClickType.ITEM_BREAK && !(event instanceof PlayerItemBreakEvent))
                             break current;
                     }
                 }
@@ -389,7 +415,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK;
         }
     }
 }
