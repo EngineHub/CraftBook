@@ -27,6 +27,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -170,6 +171,15 @@ public class CommandItems implements Listener {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onItemConsume(final PlayerItemConsumeEvent event) {
+
+        if(event.getItem() == null)
+            return;
+
+        performCommandItems(event.getItem(), event.getPlayer(), event);
+    }
+
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
@@ -211,6 +221,10 @@ public class CommandItems implements Listener {
                             break current;
 
                         if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
+                            break current;
+                    } else if (comdef.clickType == ClickType.ITEM_CONSUME) {
+
+                        if(comdef.clickType == ClickType.ITEM_CONSUME && !(event instanceof PlayerItemConsumeEvent))
                             break current;
                     }
                 }
@@ -374,7 +388,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME;
         }
     }
 }

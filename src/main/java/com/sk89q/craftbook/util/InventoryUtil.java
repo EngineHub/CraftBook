@@ -26,16 +26,11 @@ public class InventoryUtil {
      */
     public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
 
-        //TODO finish this (Make it call the seperate specific methods in this class.
-
         if(container instanceof Furnace) {
-
             return addItemsToFurnace((Furnace) container, stacks);
         } else if(container instanceof BrewingStand) {
-
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
-
             ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(container.getInventory().addItem(stacks).values());
             if(container instanceof BlockState)
                 ((BlockState) container).update();
@@ -60,17 +55,15 @@ public class InventoryUtil {
                 continue;
 
             if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
-                if (furnace.getInventory().getSmelting() == null) {
+                if (furnace.getInventory().getSmelting() == null)
                     furnace.getInventory().setSmelting(stack);
-                } else {
+                else
                     leftovers.add(ItemUtil.addToStack(furnace.getInventory().getSmelting(), stack));
-                }
             } else if (ItemUtil.isAFuel(stack) && fitsInSlot(stack, furnace.getInventory().getFuel())) {
-                if (furnace.getInventory().getFuel() == null) {
+                if (furnace.getInventory().getFuel() == null)
                     furnace.getInventory().setFuel(stack);
-                } else {
+                else
                     leftovers.add(ItemUtil.addToStack(furnace.getInventory().getFuel(), stack));
-                }
             } else {
                 leftovers.add(stack);
             }
