@@ -96,14 +96,19 @@ public class CommandItems implements Listener {
             return;
         }
 
+        int amount = 0;
+
         for(String key : config.getKeys("command-items")) {
 
             CommandItemDefinition comdef = CommandItemDefinition.readDefinition(config, "command-items." + key);
-            if(definitions.add(comdef))
-                CraftBookPlugin.logger().info("Added CommandItem: " + key);
-            else
+            if(definitions.add(comdef)) {
+                CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
+                amount++;
+            } else
                 CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
         }
+
+        CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
     }
 
     @EventHandler(priority=EventPriority.HIGHEST)
