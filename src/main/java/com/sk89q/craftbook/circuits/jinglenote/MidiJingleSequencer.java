@@ -75,19 +75,16 @@ public class MidiJingleSequencer implements JingleSequencer {
             if(loop)
                 sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         } catch (MidiUnavailableException e) {
-            if (sequencer.isOpen()) {
+            if (sequencer != null && sequencer.isOpen())
                 sequencer.close();
-            }
             throw e;
         } catch (InvalidMidiDataException e) {
-            if (sequencer.isOpen()) {
+            if (sequencer != null && sequencer.isOpen())
                 sequencer.close();
-            }
             throw e;
         } catch (IOException e) {
-            if (sequencer.isOpen()) {
+            if (sequencer != null && sequencer.isOpen())
                 sequencer.close();
-            }
             throw e;
         }
     }

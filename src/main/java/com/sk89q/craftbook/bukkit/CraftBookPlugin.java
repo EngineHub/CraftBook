@@ -964,7 +964,11 @@ public class CraftBookPlugin extends JavaPlugin {
                 } catch (IOException ignore) {
                 }
             }
-        }
+        } else if (file != null)
+            try {
+                file.close();
+            } catch (IOException ignored) {
+            }
     }
 
     /**

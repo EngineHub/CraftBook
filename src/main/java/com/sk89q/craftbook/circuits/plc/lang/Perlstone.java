@@ -62,6 +62,9 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                 case '\n':
                     line++;
                     col = 0;
+                    break;
+                default:
+                    break;
             }
             col++;
         }
@@ -437,6 +440,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         case 'e':
                                             mul = 0;
                                             break;
+                                        default:
+                                            break;
                                     }
 
                                     switch (code[++ip]) {
@@ -452,6 +457,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         case 'L':
                                             lshift = mul * lshift + add;
                                             break;
+                                        default:
+                                            break;
                                     }
                                 }
                                 break;
@@ -464,27 +471,31 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     switch (code[++ip]) {
                                         case 'p':
                                             shift = pshift;
+                                            break;
                                         case 'P':
                                             table = pt;
                                             break;
                                         case 't':
                                             shift = tshift;
+                                            break;
                                         case 'T':
                                             table = tt;
                                             break;
                                         case 'l':
                                             shift = lshift;
+                                            break;
                                         case 'L':
                                             table = lt;
+                                            break;
+                                        default:
                                             break;
                                     }
 
                                     int add = decodeAddress(code[++ip], shift);
-                                    if (op == 'S') {
+                                    if (op == 'S')
                                         table[add] = executionStack.pop();
-                                    } else {
+                                    else
                                         executionStack.push(table[add]);
-                                    }
                                 }
                                 break;
 
@@ -503,13 +514,14 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                                 "stack.");
                                     }
                                     break;
-                                case 'x': {
+                                case 'x':
                                     boolean x = executionStack.pop();
                                     boolean y = executionStack.pop();
                                     executionStack.push(x);
                                     executionStack.push(y);
-                                }
-                                break;
+                                    break;
+                                default:
+                                    break;
 
                                 case '!':
                                     executionStack.push(!executionStack.pop());
@@ -530,7 +542,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     executionStack.push(executionStack.pop() == executionStack.pop());
                                     break;
 
-                                case '.': {
+                                case '.':
                                     boolean ta = parseTableChar(code[++ip]);
                                     boolean tb = parseTableChar(code[++ip]);
                                     boolean tc = parseTableChar(code[++ip]);
@@ -548,11 +560,10 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     } else {
                                         executionStack.push(td);
                                     }
-                                }
-                                break;
+                                    break;
 
                                 case 'c':
-                                case 't': {
+                                case 't':
                                     int n = parseNumber(code[++ip]) * 10 + parseNumber(code[++ip]);
                                     int nArgs = parseNumber(code[++ip]);
                                     boolean[] arg = new boolean[nArgs];
@@ -576,7 +587,6 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         tailcalls++;
                                         continue outer;
                                     }
-                                }
 
                                 case '[':
                                     if (!executionStack.pop()) {

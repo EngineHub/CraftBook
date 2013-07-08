@@ -1,11 +1,15 @@
 package com.sk89q.craftbook.circuits;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Sign;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
@@ -75,12 +79,12 @@ public class Pipes extends AbstractMechanic {
             if (type == BlockID.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-                Sign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
+                ChangedSign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
 
                 if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                     return null;
 
-                return new Pipes(pt, sign == null ? null : BukkitUtil.toChangedSign(sign), items);
+                return new Pipes(pt, sign == null ? null : sign, items);
             }
 
             return null;
@@ -102,21 +106,19 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    public static Sign getSignOnPiston(PistonBaseMaterial piston, Block block) {
+    public static ChangedSign getSignOnPiston(PistonBaseMaterial piston, Block block) {
 
         for(BlockFace face : LocationUtil.getDirectFaces()) {
 
-            Sign sign = null;
-
-            if(face == piston.getFacing() || !(block.getRelative(face).getState() instanceof Sign))
+            if(face == piston.getFacing() || !SignUtil.isSign(block.getRelative(face)))
                 continue;
-            sign = (Sign) block.getRelative(face).getState();
-            if(sign.getBlock().getTypeId() != BlockID.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
+            if(block.getRelative(face).getTypeId() != BlockID.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
                 continue;
-            else if (sign.getBlock().getTypeId() == BlockID.SIGN_POST && face != BlockFace.UP && face != BlockFace.DOWN)
+            else if (block.getRelative(face).getTypeId() == BlockID.SIGN_POST && face != BlockFace.UP && face != BlockFace.DOWN)
                 continue;
-            if(sign.getBlock().getTypeId() != BlockID.SIGN_POST && !SignUtil.getBackBlock(sign.getBlock()).getLocation().equals(block.getLocation()))
+            if(block.getRelative(face).getTypeId() != BlockID.SIGN_POST && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
+            ChangedSign sign = BukkitUtil.toChangedSign(block.getRelative(face));
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
                 return sign;
         }
@@ -245,7 +247,7 @@ public class Pipes extends AbstractMechanic {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
 
-                Sign sign = getSignOnPiston(p, bl);
+                ChangedSign sign = getSignOnPiston(p, bl);
 
                 HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
                 HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();

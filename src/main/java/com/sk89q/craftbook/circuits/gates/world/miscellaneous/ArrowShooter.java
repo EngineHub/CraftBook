@@ -40,18 +40,18 @@ public class ArrowShooter extends AbstractIC {
         super(server, sign, factory);
     }
 
-    float speed;
-    float spread;
-    float vert;
+    double speed;
+    double spread;
+    double vert;
 
     @Override
     public void load() {
 
         try {
             String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
-            speed = Float.parseFloat(velocity[0]);
-            spread = Float.parseFloat(velocity[1]);
-            vert = Float.parseFloat(getSign().getLine(3).trim());
+            speed = Double.parseDouble(velocity[0]);
+            spread = Double.parseDouble(velocity[1]);
+            vert = Double.parseDouble(getSign().getLine(3).trim());
         } catch (Exception e) {
             speed = 1.6f;
             spread = 12;
@@ -104,8 +104,8 @@ public class ArrowShooter extends AbstractIC {
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
-        float x = targetDir.getX() - signBlock.getX();
-        float z = targetDir.getZ() - signBlock.getZ();
+        double x = targetDir.getX() - signBlock.getX();
+        double z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
         Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
                 targetDir.getY() + 0.5,
@@ -114,9 +114,8 @@ public class ArrowShooter extends AbstractIC {
         if(!shootLoc.getChunk().isLoaded())
             return;
 
-        for (short i = 0; i < n; i++) {
-            BukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, speed, spread);
-        }
+        for (short i = 0; i < n; i++)
+            BukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float)speed, (float)spread);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

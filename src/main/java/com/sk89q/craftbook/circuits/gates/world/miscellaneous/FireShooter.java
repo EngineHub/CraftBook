@@ -24,9 +24,9 @@ import com.sk89q.craftbook.util.SignUtil;
  */
 public class FireShooter extends AbstractIC {
 
-    private float speed;
-    private float spread;
-    private float vert;
+    private double speed;
+    private double spread;
+    private double vert;
 
     public FireShooter(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -38,9 +38,9 @@ public class FireShooter extends AbstractIC {
 
         try {
             String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
-            speed = Float.parseFloat(velocity[0]);
-            spread = Float.parseFloat(velocity[1]);
-            vert = Float.parseFloat(getSign().getLine(3).trim());
+            speed = Double.parseDouble(velocity[0]);
+            spread = Double.parseDouble(velocity[1]);
+            vert = Double.parseDouble(getSign().getLine(3).trim());
         } catch (Exception e) {
             speed = 1.6f;
             spread = 12;
@@ -93,8 +93,8 @@ public class FireShooter extends AbstractIC {
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
-        float x = targetDir.getX() - signBlock.getX();
-        float z = targetDir.getZ() - signBlock.getZ();
+        double x = targetDir.getX() - signBlock.getX();
+        double z = targetDir.getZ() - signBlock.getZ();
         Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,targetDir.getY() + 0.5,targetDir.getZ() + 0.5);
 
         if(!shootLoc.getChunk().isLoaded())
@@ -102,11 +102,11 @@ public class FireShooter extends AbstractIC {
 
         for (short i = 0; i < n; i++) {
 
-            float f2 = (float) Math.sqrt(x * x + vert * vert + z * z);
+            double f2 = Math.sqrt(x * x + vert * vert + z * z);
 
-            double nx = (double) x/f2;
-            double ny = (double) vert/f2;
-            double nz = (double) z/f2;
+            double nx = x/f2;
+            double ny = vert/f2;
+            double nz = z/f2;
             nx += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
             ny += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
             nz += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;

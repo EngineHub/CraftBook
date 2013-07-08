@@ -161,7 +161,7 @@ public class Chair implements Listener {
                         } else {
                             chairLoc.setYaw((float) (0.5 * Math.PI));
                         }
-                        chairLoc.setYaw(chairLoc.getYaw() - (float) Math.atan(dz / dx));
+                        chairLoc.setYaw((float)(chairLoc.getYaw() - Math.atan(dz / dx)));
                     } else if (dz < 0) {
                         chairLoc.setYaw((float) Math.PI);
                     }
@@ -201,7 +201,7 @@ public class Chair implements Listener {
 
                     if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(p.getHealth() + 1);
-                    if (p.getExhaustion() > -20f) p.setExhaustion(p.getExhaustion() - 0.1f);
+                    if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }
         }

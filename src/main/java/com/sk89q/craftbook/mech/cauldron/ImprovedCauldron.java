@@ -197,7 +197,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
     /**
      * @author Silthus
      */
-    public static class UnknownRecipeException extends Throwable {
+    public static class UnknownRecipeException extends Exception {
 
         /**
          *

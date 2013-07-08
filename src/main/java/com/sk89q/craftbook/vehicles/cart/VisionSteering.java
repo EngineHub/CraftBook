@@ -21,7 +21,7 @@ public class VisionSteering implements Listener {
         if(!(event.getPlayer().getVehicle() instanceof Minecart))
             return;
 
-        if(Math.abs(event.getFrom().getYaw() - event.getTo().getYaw()) < CraftBookPlugin.inst().getConfiguration().minecartVisionSteeringMinimumSensitivity)
+        if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < CraftBookPlugin.inst().getConfiguration().minecartVisionSteeringMinimumSensitivity)
             return;
 
         if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getTypeId()))
