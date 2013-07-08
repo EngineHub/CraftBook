@@ -22,6 +22,7 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -126,7 +127,8 @@ public class Chair implements Listener {
         // Now everything looks good, continue;
         if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock()
                 || player.getPlayer().getItemInHand().getTypeId() == 0) {
-            if (CraftBookPlugin.inst().getConfiguration().chairSneak != player.getPlayer().isSneaking()) return;
+            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.TRUE && !player.getPlayer().isSneaking()) return;
+            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.FALSE && player.getPlayer().isSneaking()) return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {
                 player.printError("mech.use-permission");
                 return;
