@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_6_R1.LocaleLanguage;
+import net.minecraft.server.v1_6_R2.EntityPlayer;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -83,9 +83,9 @@ public class LanguageManager {
     public String getPlayersLanguage(Player p) {
 
         try {
-            Field d = LocaleLanguage.class.getDeclaredField("e"); //TODO Verify when possible.
+            Field d = EntityPlayer.class.getDeclaredField("locale");
             d.setAccessible(true);
-            return (String) d.get(((CraftPlayer) p).getHandle().getLocalizedName());
+            return (String) d.get(((CraftPlayer) p).getHandle());
         } catch (Throwable e) {
             return CraftBookPlugin.inst().getConfiguration().language;
         }
