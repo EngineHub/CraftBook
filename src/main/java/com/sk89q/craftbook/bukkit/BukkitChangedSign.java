@@ -57,7 +57,7 @@ public class BukkitChangedSign implements ChangedSign {
                     } else
                         key = "global";
 
-                    if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), key, var, "use"))
+                    if(player != null && !VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), key, var, "use"))
                         setLine(i,line.replace("%" + key + "|" + var + "%", ""));
                 }
             }

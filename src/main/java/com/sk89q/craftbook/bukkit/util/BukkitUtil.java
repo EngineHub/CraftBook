@@ -80,7 +80,7 @@ public class BukkitUtil {
 
     public static ChangedSign toChangedSign(Sign sign, String[] lines, LocalPlayer player) {
 
-        return new BukkitChangedSign(sign, lines);
+        return new BukkitChangedSign(sign, lines, player);
     }
 
     public static Sign toSign(ChangedSign sign) {
