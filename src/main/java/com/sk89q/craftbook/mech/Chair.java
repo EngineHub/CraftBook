@@ -125,8 +125,7 @@ public class Chair implements Listener {
         BukkitPlayer player = new BukkitPlayer(CraftBookPlugin.inst(), event.getPlayer());
 
         // Now everything looks good, continue;
-        if (player.getPlayer().getItemInHand() == null || !player.getPlayer().getItemInHand().getType().isBlock()
-                || player.getPlayer().getItemInHand().getTypeId() == 0) {
+        if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !player.getPlayer().getItemInHand().getType().isBlock() || player.getHeldItemType() == 0) {
             if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.TRUE && !player.getPlayer().isSneaking()) return;
             if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.FALSE && player.getPlayer().isSneaking()) return;
             if (!player.hasPermission("craftbook.mech.chair.use")) {
@@ -180,6 +179,7 @@ public class Chair implements Listener {
                 }
                 player.getPlayer().teleport(chairLoc);
                 addChair(player.getPlayer(), event.getClickedBlock());
+                event.setCancelled(true);
             }
         }
     }

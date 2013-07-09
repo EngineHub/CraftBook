@@ -89,6 +89,7 @@ public abstract class LocalConfiguration {
     // Mechanics - Chair
     public boolean chairEnabled;
     public TernaryState chairSneak;
+    public boolean chairAllowHeldBlock;
     public boolean chairHealth;
     public List<Integer> chairBlocks;
     public boolean chairFacing;
