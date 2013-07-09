@@ -202,7 +202,7 @@ public class MechanicManager {
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
                 if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
-                    player.printError("area.permissions");
+                    player.printError("area.break-permissions");
                     return 0;
                 }
             }
@@ -246,16 +246,17 @@ public class MechanicManager {
 
         try {
             HashSet<Mechanic> mechanics = load(pos, player);
+            if(mechanics.size() > 0) {
+                if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                    player.printError("area.use-permissions");
+                    return 0;
+                }
+            }
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
                     if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
                         return returnValue;
-
-                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
 
                     aMechanic.onRightClick(event);
                     returnValue++;
@@ -290,16 +291,17 @@ public class MechanicManager {
         BlockWorldVector pos = toWorldVector(event.getClickedBlock());
         try {
             HashSet<Mechanic> mechanics = load(pos, player);
+            if(mechanics.size() > 0) {
+                if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                    //player.printError("area.permissions"); Don't show a message for this.
+                    return 0;
+                }
+            }
             for (Mechanic aMechanic : mechanics) {
                 if (aMechanic != null) {
 
                     if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
                         return returnValue;
-
-                    if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                        player.printError("area.permissions");
-                        return 0;
-                    }
 
                     aMechanic.onLeftClick(event);
                     returnValue++;

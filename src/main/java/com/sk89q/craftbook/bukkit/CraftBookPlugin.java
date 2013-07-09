@@ -1057,8 +1057,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockBreakEvent(block, player);
             MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
-            if(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild())
-                return false;
+            return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         if (!config.obeyWorldguard) return true;
         return worldGuardPlugin == null || worldGuardPlugin.canBuild(player, block);
@@ -1082,8 +1081,7 @@ public class CraftBookPlugin extends JavaPlugin {
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
-            if(event.isCancelled())
-                return false;
+            return !event.isCancelled();
         }
         if (!config.obeyWorldguard) return true;
         return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
