@@ -11,9 +11,11 @@ import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.SpawnerMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class CartUtils {
 
@@ -67,5 +69,21 @@ public class CartUtils {
         toCart.getLocation().setPitch(cart.getLocation().getPitch());
         toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
         cart.remove();
+    }
+
+    public static ItemStack getCartStack(Minecart cart) {
+
+        if(cart instanceof RideableMinecart)
+            return new ItemStack(ItemID.MINECART, 1);
+        else if(cart instanceof StorageMinecart)
+            return new ItemStack(ItemID.STORAGE_MINECART, 1);
+        else if(cart instanceof PoweredMinecart)
+            return new ItemStack(ItemID.POWERED_MINECART, 1);
+        else if(cart instanceof ExplosiveMinecart)
+            return new ItemStack(ItemID.TNT_MINECART, 1);
+        else if(cart instanceof HopperMinecart)
+            return new ItemStack(ItemID.HOPPER_MINECART, 1);
+
+        return null;
     }
 }

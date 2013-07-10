@@ -260,6 +260,7 @@ public abstract class LocalConfiguration {
     public boolean minecartBlockMobEntryEnabled;
     // Vehicles - Minecart Remove On Exit Options
     public boolean minecartRemoveOnExitEnabled;
+    public boolean minecartRemoveOnExitGiveItem;
     // Vehicles - Minecart Collision Entry Options
     public boolean minecartCollisionEntryEnabled;
     // Vehicles - Minecart Item Pickup Options

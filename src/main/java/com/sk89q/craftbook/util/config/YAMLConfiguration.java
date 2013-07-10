@@ -579,6 +579,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Remove On Exit Listener
         minecartRemoveOnExitEnabled = config.getBoolean("vehicles.minecart.remove-on-exit.enable", false);
+        minecartRemoveOnExitGiveItem = config.getBoolean("vehicles.minecart.remove-on-exit.give-item", false);
 
 
         // Vehicles Minecart Collision Entry Listener
@@ -605,7 +606,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Vehicles Minecart Configuration Listener
-        minecartEmptySlowdownStopperEnable = config.getBoolean("vehicles.minecart.empty-slowdown-stopper.enable", true);
+        minecartEmptySlowdownStopperEnable = config.getBoolean("vehicles.minecart.empty-slowdown-stopper.enable", false);
 
 
         // Vehicles Minecart No Collide Listener

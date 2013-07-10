@@ -1,23 +1,41 @@
 package com.sk89q.craftbook.vehicles.cart;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.EntityUtil;
 
 public class ExitRemover implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onVehicleExit(VehicleExitEvent event) {
+    public void onVehicleExit(final VehicleExitEvent event) {
 
-        Vehicle vehicle = event.getVehicle();
+        if (!(event.getVehicle() instanceof Minecart)) return;
 
-        if (!(vehicle instanceof Minecart)) return;
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
-        EntityUtil.killEntity(vehicle);
+            @Override
+            public void run () {
+                if(CraftBookPlugin.inst().getConfiguration().minecartRemoveOnExitGiveItem) {
+
+                    ItemStack stack = CartUtils.getCartStack((Minecart) event.getVehicle());
+
+                    if(event.getExited() instanceof Player) {
+                        if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty())
+                            event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
+                    } else if(event.getExited() != null)
+                        event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
+                }
+                EntityUtil.killEntity(event.getVehicle());
+            }
+        }, 2L);
     }
 }

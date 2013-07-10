@@ -360,6 +360,7 @@ vehicles:
             enable: false
         remove-on-exit:
             enable: false
+            give-item: false
         collision-entry:
             enable: false
         item-pickup:
@@ -374,7 +375,7 @@ vehicles:
             max-speed: 1.0
             off-rail-speed: 0.0
         empty-slowdown-stopper:
-            enable: true
+            enable: false
         no-collide:
             enable: false
             empty-carts: true
