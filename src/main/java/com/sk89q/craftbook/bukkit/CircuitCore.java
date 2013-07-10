@@ -231,8 +231,10 @@ public class CircuitCore implements LocalComponent {
     @Override
     public void disable() {
 
-        for(RegisteredICFactory factory : icManager.registered.values()) {
-            factory.getFactory().unload();
+        if(icManager != null) {
+            for(RegisteredICFactory factory : icManager.registered.values()) {
+                factory.getFactory().unload();
+            }
         }
         pipeFactory = null;
         icConfiguration = null;

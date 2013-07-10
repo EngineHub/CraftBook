@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.vehicles.cart;
 
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +14,7 @@ public class CollisionEntry implements Listener {
 
         if (event.getVehicle() instanceof RideableMinecart) {
             if (!event.getVehicle().isEmpty()) return;
-            if (!(event.getEntity() instanceof LivingEntity)) return;
+            if (!(event.getEntity() instanceof HumanEntity)) return;
             event.getVehicle().setPassenger(event.getEntity());
 
             event.setCollisionCancelled(true);

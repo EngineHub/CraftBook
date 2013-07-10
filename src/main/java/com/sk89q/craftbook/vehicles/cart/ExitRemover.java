@@ -7,6 +7,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
+import com.sk89q.craftbook.util.EntityUtil;
+
 public class ExitRemover implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -16,6 +18,6 @@ public class ExitRemover implements Listener {
 
         if (!(vehicle instanceof Minecart)) return;
 
-        vehicle.remove();
+        EntityUtil.killEntity(vehicle);
     }
 }
