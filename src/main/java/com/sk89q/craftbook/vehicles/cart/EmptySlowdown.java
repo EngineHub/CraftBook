@@ -13,6 +13,6 @@ public class EmptySlowdown implements Listener {
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 
-        ((Minecart) event.getVehicle()).setSlowWhenEmpty(true);
+        ((Minecart) event.getVehicle()).setSlowWhenEmpty(false);
     }
 }

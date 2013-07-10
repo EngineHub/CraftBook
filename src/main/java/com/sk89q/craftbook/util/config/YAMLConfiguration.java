@@ -605,7 +605,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Vehicles Minecart Configuration Listener
-        minecartEmptySlowdownEnable = config.getBoolean("vehicles.minecart.empty-slowdown.enable", true);
+        minecartEmptySlowdownStopperEnable = config.getBoolean("vehicles.minecart.empty-slowdown-stopper.enable", true);
 
 
         // Vehicles Minecart No Collide Listener

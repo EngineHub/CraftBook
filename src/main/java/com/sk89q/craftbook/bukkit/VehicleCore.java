@@ -149,7 +149,7 @@ public class VehicleCore implements LocalComponent, Listener {
             plugin.getServer().getPluginManager().registerEvents(new RailPlacer(), plugin);
         if(plugin.getConfiguration().minecartSpeedModifierEnable)
             plugin.getServer().getPluginManager().registerEvents(new SpeedModifiers(), plugin);
-        if(plugin.getConfiguration().minecartEmptySlowdownEnable)
+        if(plugin.getConfiguration().minecartEmptySlowdownStopperEnable)
             plugin.getServer().getPluginManager().registerEvents(new EmptySlowdown(), plugin);
         if(plugin.getConfiguration().minecartNoCollideEnable)
             plugin.getServer().getPluginManager().registerEvents(new NoCollide(), plugin);

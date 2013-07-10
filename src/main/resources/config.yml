@@ -152,6 +152,7 @@ mechanics:
     chair:
         enable: true
         require-sneak: 'true'
+        allow-holding-blocks: false
         regen-health: true
         blocks:
         - 53
@@ -372,7 +373,7 @@ vehicles:
             enable: false
             max-speed: 1.0
             off-rail-speed: 0.0
-        empty-slowdown:
+        empty-slowdown-stopper:
             enable: true
         no-collide:
             enable: false
