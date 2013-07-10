@@ -59,7 +59,7 @@ public class CartDeposit extends CartBlockMechanism {
             items.add(new ItemInfo(itemID, itemData));
         }
 
-        Inventory cartinventory = ((StorageMinecart) event.getBlocks()).getInventory();
+        Inventory cartinventory = ((StorageMinecart) event.getMinecart()).getInventory();
         ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
 
         // search for containers
