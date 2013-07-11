@@ -286,6 +286,9 @@ public abstract class LocalConfiguration {
     // Vehicles - Boat Remove Entities Options
     public boolean boatRemoveEntitiesEnabled;
     public boolean boatRemoveEntitiesOtherBoats;
+    // Vehicles - Boat Speed Modifier Options
+    public boolean boatSpeedModifierEnable;
+    public double boatSpeedModifierMaxSpeed;
 
 
     /**

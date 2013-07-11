@@ -624,6 +624,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         boatRemoveEntitiesOtherBoats = config.getBoolean("vehicles.boat.remove-entities.remove-other-boats", false);
 
 
+        // Vehicles Boat Speed Modifier Listener
+        boatSpeedModifierEnable = config.getBoolean("vehicles.boat.speed-modifiers.enable", false);
+        boatSpeedModifierMaxSpeed = config.getDouble("vehicles.boat.speed-modifiers.max-speed", 1);
+
+
         config.save(); //Save all the added values.
     }
 }

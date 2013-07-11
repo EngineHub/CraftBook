@@ -160,6 +160,8 @@ public class VehicleCore implements LocalComponent, Listener {
             plugin.getServer().getPluginManager().registerEvents(new Uncrashable(), plugin);
         if(plugin.getConfiguration().boatBreakReturn)
             plugin.getServer().getPluginManager().registerEvents(new BoatDrops(), plugin);
+        if(plugin.getConfiguration().boatSpeedModifierEnable)
+            plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.SpeedModifiers(), plugin);
 
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
