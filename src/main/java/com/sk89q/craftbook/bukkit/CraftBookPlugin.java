@@ -78,6 +78,9 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
+
 public class CraftBookPlugin extends JavaPlugin {
 
     /**
@@ -91,6 +94,7 @@ public class CraftBookPlugin extends JavaPlugin {
     private Economy economy;
     private ProtocolLibrary protocolLib;
     private WorldGuardPlugin worldGuardPlugin;
+    private boolean hasNoCheatPlus;
 
     /**
      * The instance for CraftBook
@@ -226,6 +230,9 @@ public class CraftBookPlugin extends JavaPlugin {
         } catch (Throwable e) {
             economy = null;
         }
+
+        // Resolve NoCheatPlus
+        hasNoCheatPlus = getServer().getPluginManager().getPlugin("NoCheatPlus") != null;
 
         // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
@@ -1050,6 +1057,13 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if (config.advancedBlockChecks) {
 
+            boolean unexempt = false;
+            if(hasNoCheatPlus) {
+                if(!NCPExemptionManager.isExempted(player, CheckType.BLOCKBREAK_NOSWING)) {
+                    NCPExemptionManager.exemptPermanently(player, CheckType.BLOCKBREAK_NOSWING);
+                    unexempt = true;
+                }
+            }
             BlockEvent event;
             if(build)
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
@@ -1057,6 +1071,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockBreakEvent(block, player);
             MechanicListenerAdapter.ignoredEvents.add(event);
             getServer().getPluginManager().callEvent(event);
+            if(unexempt)
+                NCPExemptionManager.unexempt(player, CheckType.BLOCKBREAK_NOSWING);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         if (!config.obeyWorldguard) return true;
