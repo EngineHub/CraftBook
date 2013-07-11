@@ -17,6 +17,7 @@ import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.vehicles.boat.BoatDrops;
+import com.sk89q.craftbook.vehicles.boat.LandBoats;
 import com.sk89q.craftbook.vehicles.boat.Uncrashable;
 import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
 import com.sk89q.craftbook.vehicles.cart.CartBooster;
@@ -162,6 +163,8 @@ public class VehicleCore implements LocalComponent, Listener {
             plugin.getServer().getPluginManager().registerEvents(new BoatDrops(), plugin);
         if(plugin.getConfiguration().boatSpeedModifierEnable)
             plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.SpeedModifiers(), plugin);
+        if(plugin.getConfiguration().boatLandBoatsEnable)
+            plugin.getServer().getPluginManager().registerEvents(new LandBoats(), plugin);
 
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

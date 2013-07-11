@@ -632,6 +632,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         boatSpeedModifierOccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.occupied-deceleration", 1);
 
 
+        // Vehicles Boat Land Boats Listener
+        boatLandBoatsEnable = config.getBoolean("vehicles.boat.land-boats.enable", false);
+
+
         config.save(); //Save all the added values.
     }
 }
