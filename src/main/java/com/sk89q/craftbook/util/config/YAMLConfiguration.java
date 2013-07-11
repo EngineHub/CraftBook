@@ -614,6 +614,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartNoCollideEmpty = config.getBoolean("vehicles.minecart.no-collide.empty-carts", true);
         minecartNoCollideFull = config.getBoolean("vehicles.minecart.no-collide.full-carts", false);
 
+
         // Vehicles - Boat Options
         boatNoCrash = config.getBoolean("vehicles.boat.disable-crashing", false);
         boatBreakReturn = config.getBoolean("vehicles.boat.break-return-boat", false);
@@ -627,6 +628,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Vehicles Boat Speed Modifier Listener
         boatSpeedModifierEnable = config.getBoolean("vehicles.boat.speed-modifiers.enable", false);
         boatSpeedModifierMaxSpeed = config.getDouble("vehicles.boat.speed-modifiers.max-speed", 1);
+        boatSpeedModifierUnnoccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.unnoccupied-deceleration", 1);
+        boatSpeedModifierOccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.occupied-deceleration", 1);
 
 
         config.save(); //Save all the added values.

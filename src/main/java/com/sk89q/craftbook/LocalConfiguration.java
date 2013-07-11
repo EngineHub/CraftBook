@@ -289,6 +289,8 @@ public abstract class LocalConfiguration {
     // Vehicles - Boat Speed Modifier Options
     public boolean boatSpeedModifierEnable;
     public double boatSpeedModifierMaxSpeed;
+    public double boatSpeedModifierUnnoccupiedDeceleration;
+    public double boatSpeedModifierOccupiedDeceleration;
 
 
     /**

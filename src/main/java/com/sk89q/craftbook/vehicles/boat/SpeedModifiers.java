@@ -17,5 +17,9 @@ public class SpeedModifiers implements Listener {
 
         if(CraftBookPlugin.inst().getConfiguration().boatSpeedModifierMaxSpeed > 0)
             ((Boat) event.getVehicle()).setMaxSpeed(((Boat) event.getVehicle()).getMaxSpeed() * CraftBookPlugin.inst().getConfiguration().boatSpeedModifierMaxSpeed);
+        if(CraftBookPlugin.inst().getConfiguration().boatSpeedModifierUnnoccupiedDeceleration > 0)
+            ((Boat) event.getVehicle()).setUnoccupiedDeceleration(((Boat) event.getVehicle()).getUnoccupiedDeceleration() * CraftBookPlugin.inst().getConfiguration().boatSpeedModifierUnnoccupiedDeceleration);
+        if(CraftBookPlugin.inst().getConfiguration().boatSpeedModifierOccupiedDeceleration > 0)
+            ((Boat) event.getVehicle()).setOccupiedDeceleration(((Boat) event.getVehicle()).getOccupiedDeceleration() * CraftBookPlugin.inst().getConfiguration().boatSpeedModifierOccupiedDeceleration);
     }
 }
