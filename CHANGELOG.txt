@@ -1,3 +1,30 @@
+3.7 Beta 4
++ Added an option to have much more realistic randoms with a very small cost of CPU usage.
+* Fixed bookcases failing to read a line.
+* Heavily optimized Bookcases.
++ Added 1.6 blocks to CookingPot and other item parsing systems.
++ Added debug flags for the startup process.
+* Fixed CommandItems spamming the console for each entry.
+* Fixed a few potential bugs.
++ Added ITEM_CONSUME event to CommandItems.
+* Fixed a few CommandItems bugs with inventory becoming out of sync.
++ Added ITEM_DROP event to CommandItems.
++ Added ITEM_BREAK event to CommandItems.
++ Added a sneaking requirement option to CommandItems. (Allows for not sneaking, sneaking and either)
+* Tweaked the Chairs sneaking option to also allow for 3 states, sneaking; not sneaking and either.
++ Added Data Value support to a few mechanics that didn't have data value support.
++ Added an option for chairs to allow players to sit whilst holding blocks.
+* Fixed chairs causing items that place blocks to cause the blocks to be placed.
+* Fixed some variable permission checks not occuring.
+* Tweaked block protection messages.
+* Fixed Per-Player Languages on 1.6.
+* Fix /cb reload errors if ICs are disabled.
+* Compiled with 1.6.2.
+* Fixed the CartSlowdown option.
++ Added an option for CartRemoveOnExit to give the items.
+* Fixed CartDeposit.
++ Added Horses to CreatureSpawner and AdvancedEntitySpawner.
+
 3.7 Beta 3
 * Fix a few /area toggle x,y,z bugs. (Like it not toggling back/setting state)
 + Added an erase mode to Entity Trap (MC1204)
