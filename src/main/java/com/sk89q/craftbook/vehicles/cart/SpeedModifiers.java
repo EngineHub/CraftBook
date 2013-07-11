@@ -18,7 +18,7 @@ public class SpeedModifiers implements Listener {
 
         if (CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail > 0)
             ((Minecart) event.getVehicle()).setDerailedVelocityMod(new Vector(CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail, CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail, CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail));
-        if(CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierMaxSpeed > 0)
+        if(CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierMaxSpeed != 1)
             ((Minecart) event.getVehicle()).setMaxSpeed(((Minecart) event.getVehicle()).getMaxSpeed() * CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierMaxSpeed);
     }
 }

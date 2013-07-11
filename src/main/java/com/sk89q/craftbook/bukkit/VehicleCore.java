@@ -189,7 +189,7 @@ public class VehicleCore implements LocalComponent, Listener {
 
         try {
             for (CartBlockMechanism mech : cartBlockMechanisms) {
-                if (mech.getApplicableSigns() == null) continue;
+                if (mech.getApplicableSigns() == null || mech.getApplicableSigns().length == 0) continue;
                 boolean found = false;
                 String lineFound = null;
                 int lineNum = 1;
