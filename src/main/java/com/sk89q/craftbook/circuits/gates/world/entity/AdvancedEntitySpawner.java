@@ -21,6 +21,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -126,7 +127,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
                     String[] data = RegexUtil.COLON_PATTERN.split(bit);
 
-                    if (data[0].equalsIgnoreCase("e")) CreatureSpawner.setEntityData(ent, bit.substring(2));
+                    if (data[0].equalsIgnoreCase("e")) EntityUtil.setEntityData(ent, bit.substring(2));
                     else if (data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
                         Entity rid = BukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, rider);
