@@ -464,6 +464,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
         snowJumpTrample = config.getBoolean("mechanics.snow.jump-trample", false);
         snowRealisticReplacables = config.getIntList("mechanics.snow.replacable-blocks", Arrays.asList(BlockID.LONG_GRASS, BlockID.DEAD_BUSH, BlockID.FIRE, BlockID.RED_FLOWER, BlockID.YELLOW_FLOWER, BlockID.BROWN_MUSHROOM, BlockID.RED_MUSHROOM, BlockID.TRIPWIRE));
+        snowFallAnimationSpeed = config.getInt("mechanics.snow.falldown-animation-speed", 5);
 
 
         // Teleporter Configuration Listener

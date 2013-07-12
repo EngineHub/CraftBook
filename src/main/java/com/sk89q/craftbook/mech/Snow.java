@@ -307,7 +307,7 @@ public class Snow implements Listener {
                         block.setTypeId(0, false);
                     incrementData(block.getRelative(0, -1, 0), depth+1);
                 }
-            }, 5L);
+            }, CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
             return;
         }
 
