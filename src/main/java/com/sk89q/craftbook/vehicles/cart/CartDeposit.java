@@ -46,12 +46,12 @@ public class CartDeposit extends CartBlockMechanism {
         List<ItemInfo> items = new ArrayList<ItemInfo>();
         for(String data : RegexUtil.COMMA_PATTERN.split(((Sign) event.getBlocks().sign.getState()).getLine(2))) {
             int itemID = -1;
-            byte itemData = -1;
+            short itemData = -1;
             try {
                 String[] splitLine = RegexUtil.COLON_PATTERN.split(data);
                 itemID = Integer.parseInt(splitLine[0]);
                 if(splitLine.length > 1)
-                    itemData = Byte.parseByte(splitLine[1]);
+                    itemData = Short.parseShort(splitLine[1]);
             } catch (Exception ignored) {
                 continue;
             }
