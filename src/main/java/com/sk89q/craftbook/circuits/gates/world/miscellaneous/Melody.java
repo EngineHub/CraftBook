@@ -131,12 +131,11 @@ public class Melody extends AbstractIC {
                 }
                 sequencer = new MidiJingleSequencer(file, loop);
                 for (Player player : getServer().getOnlinePlayers()) {
-                    if (player == null) {
+                    if (player == null || !player.isOnline()) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius)) {
+                    if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius))
                         continue;
-                    }
                     jNote.play(player.getName(), sequencer, getSign().getBlockVector(), radius);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
