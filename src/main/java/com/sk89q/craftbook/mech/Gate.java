@@ -121,9 +121,9 @@ public class Gate extends AbstractMechanic {
             }
         } else {
             // Toggle nearby gates
-            for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+            for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
+                for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
+                    for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
                         if (recurseColumn(player, new WorldVector(world, x1, y1, z1), visitedColumns, close)) {
                             foundGate = true;
                         }

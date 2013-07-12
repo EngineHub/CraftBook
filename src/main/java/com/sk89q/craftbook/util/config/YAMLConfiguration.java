@@ -390,6 +390,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.gate.max-column-height", "The max height of a column.");
         gateColumnHeight = config.getInt("mechanics.gate.max-column-height", 12);
 
+        config.setComment("mechanics.gate.gate-search-radius", "The radius around the sign the gate checks for fences in. Note: This is doubled upwards.");
+        gateSearchRadius = config.getInt("mechanics.gate.gate-search-radius", 3);
+
 
         // Head Drops Configuration Listener
         headDropsEnabled = config.getBoolean("mechanics.head-drops.enable", false);
