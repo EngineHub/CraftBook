@@ -202,7 +202,7 @@ public class Chair implements Listener {
                     addChair(p, getChair(p)); // For any new players.
 
                     if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
-                        p.setHealth(p.getHealth() + 1);
+                        p.setHealth(Math.min(p.getHealth() + 1, p.getMaxHealth()));
                     if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }
