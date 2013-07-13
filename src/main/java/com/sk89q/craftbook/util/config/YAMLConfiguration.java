@@ -251,6 +251,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.chair.face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean("mechanics.chair.face-correct-direction", true);
 
+        config.setComment("mechanics.chair.require-sign", "Require a sign to be attached to the chair in order to work!");
+        chairRequireSign = config.getBoolean("mechanics.chair.require-sign", false);
+
 
         // Chunk Anchor Configuration Listener
         config.setComment("mechanics.chunk-anchor.enable", "Enable chunk anchors.");

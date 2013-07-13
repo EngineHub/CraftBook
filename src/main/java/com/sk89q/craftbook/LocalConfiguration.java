@@ -93,6 +93,7 @@ public abstract class LocalConfiguration {
     public boolean chairHealth;
     public List<Integer> chairBlocks;
     public boolean chairFacing;
+    public boolean chairRequireSign;
     // Mechanics - Chunk Anchor
     public boolean chunkAnchorEnabled;
     public boolean chunkAnchorRedstone;

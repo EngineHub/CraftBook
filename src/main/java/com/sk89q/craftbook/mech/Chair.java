@@ -18,10 +18,12 @@ import org.bukkit.material.Directional;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -88,6 +90,27 @@ public class Chair implements Listener {
         chairs.remove(player.getName());
     }
 
+    public boolean hasSign(Block block) {
+
+        boolean found = false;
+
+        for (BlockFace face : LocationUtil.getDirectFaces()) {
+            Block otherBlock = block.getRelative(face);
+
+            if (found) break;
+
+            if (SignUtil.isSign(otherBlock) && SignUtil.getFront(otherBlock) == face) {
+                found = true;
+                break;
+            }
+
+            if (BlockUtil.areBlocksIdentical(block, otherBlock))
+                found = hasSign(otherBlock);
+        }
+
+        return found;
+    }
+
     public static Block getChair(Player player) {
 
         if (disabled) return null;
@@ -122,14 +145,17 @@ public class Chair implements Listener {
         if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(event.getClickedBlock().getTypeId()))
             return;
 
-        BukkitPlayer player = new BukkitPlayer(CraftBookPlugin.inst(), event.getPlayer());
+        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        Player player = event.getPlayer();
 
         // Now everything looks good, continue;
-        if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !player.getPlayer().getItemInHand().getType().isBlock() || player.getHeldItemType() == 0) {
-            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.TRUE && !player.getPlayer().isSneaking()) return;
-            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.FALSE && player.getPlayer().isSneaking()) return;
-            if (!player.hasPermission("craftbook.mech.chair.use")) {
-                player.printError("mech.use-permission");
+        if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !lplayer.isHoldingBlock() || lplayer.getHeldItemType() == 0) {
+            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.TRUE && !lplayer.isSneaking()) return;
+            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.FALSE && lplayer.isSneaking()) return;
+            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock()))
+                return;
+            if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
+                lplayer.printError("mech.use-permission");
                 return;
             }
             if (hasChair(player.getPlayer())) { // Stand
@@ -137,12 +163,12 @@ public class Chair implements Listener {
                 event.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 1.5, 0.5));
             } else { // Sit
                 if (hasChair(event.getClickedBlock())) {
-                    player.print("mech.chairs.in-use");
+                    lplayer.print("mech.chairs.in-use");
                     return;
                 }
                 if(BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
 
-                    player.printError("mech.chairs.floating");
+                    lplayer.printError("mech.chairs.floating");
                     return;
                 }
 

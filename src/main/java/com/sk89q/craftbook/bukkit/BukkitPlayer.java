@@ -145,4 +145,14 @@ public class BukkitPlayer implements LocalPlayer {
     public ItemInfo getHeldItemInfo () {
         return new ItemInfo(getHeldItemType(), getHeldItemData());
     }
+
+    @Override
+    public boolean isSneaking () {
+        return player.isSneaking();
+    }
+
+    @Override
+    public void setSneaking (boolean state) {
+        player.setSneaking(state);
+    }
 }

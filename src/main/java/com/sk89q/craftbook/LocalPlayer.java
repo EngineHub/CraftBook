@@ -46,6 +46,10 @@ public interface LocalPlayer {
 
     public void teleport(Location location);
 
+    public boolean isSneaking();
+
+    public void setSneaking(boolean state);
+
     public boolean isInsideVehicle();
 
     public Vehicle getVehicle();
