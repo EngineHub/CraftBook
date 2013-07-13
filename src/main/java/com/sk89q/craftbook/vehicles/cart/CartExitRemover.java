@@ -13,7 +13,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.EntityUtil;
 
-public class ExitRemover implements Listener {
+public class CartExitRemover implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleExit(final VehicleExitEvent event) {

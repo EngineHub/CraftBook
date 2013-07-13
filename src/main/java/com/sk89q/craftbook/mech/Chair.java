@@ -58,7 +58,7 @@ public class Chair implements Listener {
                     }
                 }
             }
-        } catch (Error e) {
+        } catch (Throwable e) {
             CraftBookPlugin.logger().warning("Chairs do not work without ProtocolLib!");
             disabled = true;
             return;
@@ -81,7 +81,7 @@ public class Chair implements Listener {
             if (play.getWorld().equals(player.getPlayer().getWorld())) {
                 try {
                     ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
-                } catch (InvocationTargetException e) {
+                } catch (Throwable e) {
                     BukkitUtil.printStacktrace(e);
                 }
             }
@@ -166,7 +166,7 @@ public class Chair implements Listener {
                     lplayer.print("mech.chairs.in-use");
                     return;
                 }
-                if(BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
+                if (BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
 
                     lplayer.printError("mech.chairs.floating");
                     return;
@@ -183,15 +183,13 @@ public class Chair implements Listener {
                     double dz = direction.getModZ();
 
                     if (dx != 0) {
-                        if (dx < 0) {
+                        if (dx < 0)
                             chairLoc.setYaw((float) (1.5 * Math.PI));
-                        } else {
+                        else
                             chairLoc.setYaw((float) (0.5 * Math.PI));
-                        }
                         chairLoc.setYaw((float)(chairLoc.getYaw() - Math.atan(dz / dx)));
-                    } else if (dz < 0) {
+                    } else if (dz < 0)
                         chairLoc.setYaw((float) Math.PI);
-                    }
 
                     double dxz = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
 

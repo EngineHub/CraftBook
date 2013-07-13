@@ -296,6 +296,9 @@ public abstract class LocalConfiguration {
     public double boatSpeedModifierOccupiedDeceleration;
     // Vehicles - Boat Land Boats Options
     public boolean boatLandBoatsEnable;
+    // Vehicles - Boat Remove On Exit Options
+    public boolean boatRemoveOnExitEnabled;
+    public boolean boatRemoveOnExitGiveItem;
 
 
     /**

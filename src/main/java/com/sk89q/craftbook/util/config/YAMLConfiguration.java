@@ -225,7 +225,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Cauldron Configuration Listener
-        config.setComment("mechanics.cauldron.enable", "Enable the cauldron mechanic");
+        config.setComment("mechanics.cauldron.enable", "Enable the cauldron mechanic.");
         cauldronEnabled = config.getBoolean("mechanics.cauldron.enable", true);
 
         config.setComment("mechanics.cauldron.spoons", "Require spoons to cook cauldron recipes.");
@@ -421,31 +421,47 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Hidden Switch Configuration Listener
+        config.setComment("mechanics.hidden-switch.enable", "Enables the Hidden Switch mechanic.");
         hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);
+
+        config.setComment("mechanics.hidden-switch.any-side", "Allows the Hidden Switch to be activated from any side of the block.");
         hiddenSwitchAnyside = config.getBoolean("mechanics.hidden-switch.any-side", true);
 
 
         // Legacy Cauldron Configuration Listener
+        config.setComment("mechanics.legacy-cauldron.enable", "Enables the Legacy Cauldron mechanic.");
         legacyCauldronEnabled = config.getBoolean("mechanics.legacy-cauldron.enable", true);
+
+        config.setComment("mechanics.legacy-cauldron.block", "The block to use as the casing for the legacy cauldron.");
         legacyCauldronBlock = config.getInt("mechanics.legacy-cauldron.block", BlockID.STONE);
 
 
         // Lightstone Configuration Listener
+        config.setComment("mechanics.lightstone.enable", "Enables the LightStone mechanic.");
         lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", true);
+
+        config.setComment("mechanics.lightstone.item", "The item that the lightstone mechanic uses.");
         lightstoneItem = ItemInfo.parseFromString(config.getString("mechanics.lightstone.item", String.valueOf(ItemID.LIGHTSTONE_DUST)));
 
 
         // Light Switch Configuration Listener
+        config.setComment("mechanics.light-switch.enable", "Enables the Light Switch mechanic.");
         lightSwitchEnabled = config.getBoolean("mechanics.light-switch.enable", true);
+
+        config.setComment("mechanics.light-switch.max-range", "The maximum range that the mechanic searches for lights in.");
         lightSwitchMaxRange = config.getInt("mechanics.light-switch.max-range", 10);
+
+        config.setComment("mechanics.light-switch.max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
         lightSwitchMaxLights = config.getInt("mechanics.light-switch.max-lights", 20);
 
 
         // Map Changer Configuration Listener
+        config.setComment("mechanics.map-changer.enable", "Enables the Map Changer mechanic.");
         mapChangerEnabled = config.getBoolean("mechanics.map-changer.enable", true);
 
 
         // Painting Switcher Configuration Listener
+        config.setComment("mechanics.paintings.enable", "Enables the Painting Switcher mechanic.");
         paintingsEnabled = config.getBoolean("mechanics.paintings.enable", true);
 
 
@@ -454,7 +470,10 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // SignCopy Configuration Listener
+        config.setComment("mechanics.sign-copy.enable", "Enables the Sign Copy mechanic.");
         signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
+
+        config.setComment("mechanics.sign-copy.item", "The item the Sign Copy mechanic uses.");
         signCopyItem = ItemInfo.parseFromString(config.getString("mechanics.sign-copy.item", String.valueOf(ItemID.INK_SACK) + ":0"));
 
 
@@ -471,8 +490,13 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Teleporter Configuration Listener
+        config.setComment("mechanics.teleporter.enable", "Enables the Teleporter mechanic.");
         teleporterEnabled = config.getBoolean("mechanics.teleporter.enable", true);
+
+        config.setComment("mechanics.teleporter.require-sign", "Require a sign to be at the destination of the teleportation.");
         teleporterRequireSign = config.getBoolean("mechanics.teleporter.require-sign", false);
+
+        config.setComment("mechanics.teleporter.max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
         teleporterMaxRange = config.getInt("mechanics.teleporter.max-range", 0);
 
 
@@ -486,7 +510,10 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // XPStorer Configuration Listener
+        config.setComment("mechanics.xp-storer.enable", "Enable the XP Storer mechanic.");
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
+
+        config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
         xpStorerBlock = config.getInt("mechanics.xp-storer.block", BlockID.MOB_SPAWNER);
 
 
@@ -641,6 +668,11 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Boat Land Boats Listener
         boatLandBoatsEnable = config.getBoolean("vehicles.boat.land-boats.enable", false);
+
+
+        // Vehicles Boat Remove On Exit Listener
+        boatRemoveOnExitEnabled = config.getBoolean("vehicles.boat.remove-on-exit.enable", false);
+        boatRemoveOnExitGiveItem = config.getBoolean("vehicles.boat.remove-on-exit.give-item", false);
 
 
         config.save(); //Save all the added values.

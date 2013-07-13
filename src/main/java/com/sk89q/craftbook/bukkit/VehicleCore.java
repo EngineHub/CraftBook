@@ -17,6 +17,7 @@ import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.vehicles.boat.BoatDrops;
+import com.sk89q.craftbook.vehicles.boat.BoatExitRemover;
 import com.sk89q.craftbook.vehicles.boat.LandBoats;
 import com.sk89q.craftbook.vehicles.boat.Uncrashable;
 import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
@@ -24,6 +25,7 @@ import com.sk89q.craftbook.vehicles.cart.CartBooster;
 import com.sk89q.craftbook.vehicles.cart.CartDeposit;
 import com.sk89q.craftbook.vehicles.cart.CartDispenser;
 import com.sk89q.craftbook.vehicles.cart.CartEjector;
+import com.sk89q.craftbook.vehicles.cart.CartExitRemover;
 import com.sk89q.craftbook.vehicles.cart.CartLift;
 import com.sk89q.craftbook.vehicles.cart.CartMaxSpeed;
 import com.sk89q.craftbook.vehicles.cart.CartMessenger;
@@ -35,7 +37,6 @@ import com.sk89q.craftbook.vehicles.cart.CollisionEntry;
 import com.sk89q.craftbook.vehicles.cart.ConstantSpeed;
 import com.sk89q.craftbook.vehicles.cart.EmptyDecay;
 import com.sk89q.craftbook.vehicles.cart.EmptySlowdown;
-import com.sk89q.craftbook.vehicles.cart.ExitRemover;
 import com.sk89q.craftbook.vehicles.cart.FallModifier;
 import com.sk89q.craftbook.vehicles.cart.ItemPickup;
 import com.sk89q.craftbook.vehicles.cart.MobBlocker;
@@ -137,7 +138,7 @@ public class VehicleCore implements LocalComponent, Listener {
         if(plugin.getConfiguration().minecartBlockMobEntryEnabled)
             plugin.getServer().getPluginManager().registerEvents(new MobBlocker(), plugin);
         if(plugin.getConfiguration().minecartRemoveOnExitEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new ExitRemover(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new CartExitRemover(), plugin);
         if(plugin.getConfiguration().minecartCollisionEntryEnabled)
             plugin.getServer().getPluginManager().registerEvents(new CollisionEntry(), plugin);
         if(plugin.getConfiguration().minecartItemPickupEnabled)
@@ -165,6 +166,8 @@ public class VehicleCore implements LocalComponent, Listener {
             plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.SpeedModifiers(), plugin);
         if(plugin.getConfiguration().boatLandBoatsEnable)
             plugin.getServer().getPluginManager().registerEvents(new LandBoats(), plugin);
+        if(plugin.getConfiguration().boatRemoveOnExitEnabled)
+            plugin.getServer().getPluginManager().registerEvents(new BoatExitRemover(), plugin);
 
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
