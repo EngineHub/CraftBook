@@ -18,8 +18,10 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.vehicles.boat.BoatDrops;
 import com.sk89q.craftbook.vehicles.boat.BoatExitRemover;
+import com.sk89q.craftbook.vehicles.boat.BoatRemoveEntities;
+import com.sk89q.craftbook.vehicles.boat.BoatSpeedModifiers;
+import com.sk89q.craftbook.vehicles.boat.BoatUncrashable;
 import com.sk89q.craftbook.vehicles.boat.LandBoats;
-import com.sk89q.craftbook.vehicles.boat.Uncrashable;
 import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
 import com.sk89q.craftbook.vehicles.cart.CartBooster;
 import com.sk89q.craftbook.vehicles.cart.CartDeposit;
@@ -29,8 +31,10 @@ import com.sk89q.craftbook.vehicles.cart.CartExitRemover;
 import com.sk89q.craftbook.vehicles.cart.CartLift;
 import com.sk89q.craftbook.vehicles.cart.CartMaxSpeed;
 import com.sk89q.craftbook.vehicles.cart.CartMessenger;
+import com.sk89q.craftbook.vehicles.cart.CartRemoveEntities;
 import com.sk89q.craftbook.vehicles.cart.CartReverser;
 import com.sk89q.craftbook.vehicles.cart.CartSorter;
+import com.sk89q.craftbook.vehicles.cart.CartSpeedModifiers;
 import com.sk89q.craftbook.vehicles.cart.CartStation;
 import com.sk89q.craftbook.vehicles.cart.CartTeleporter;
 import com.sk89q.craftbook.vehicles.cart.CollisionEntry;
@@ -43,7 +47,6 @@ import com.sk89q.craftbook.vehicles.cart.MobBlocker;
 import com.sk89q.craftbook.vehicles.cart.MoreRails;
 import com.sk89q.craftbook.vehicles.cart.NoCollide;
 import com.sk89q.craftbook.vehicles.cart.RailPlacer;
-import com.sk89q.craftbook.vehicles.cart.SpeedModifiers;
 import com.sk89q.craftbook.vehicles.cart.VisionSteering;
 
 /**
@@ -130,7 +133,7 @@ public class VehicleCore implements LocalComponent, Listener {
         if(plugin.getConfiguration().minecartMoreRailsEnabled)
             plugin.getServer().getPluginManager().registerEvents(new MoreRails(), plugin);
         if(plugin.getConfiguration().minecartRemoveEntitiesEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.cart.RemoveEntities(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new CartRemoveEntities(), plugin);
         if(plugin.getConfiguration().minecartVisionSteeringEnabled)
             plugin.getServer().getPluginManager().registerEvents(new VisionSteering(), plugin);
         if(plugin.getConfiguration().minecartDecayEnabled)
@@ -150,25 +153,24 @@ public class VehicleCore implements LocalComponent, Listener {
         if(plugin.getConfiguration().minecartRailPlacerEnable)
             plugin.getServer().getPluginManager().registerEvents(new RailPlacer(), plugin);
         if(plugin.getConfiguration().minecartSpeedModifierEnable)
-            plugin.getServer().getPluginManager().registerEvents(new SpeedModifiers(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new CartSpeedModifiers(), plugin);
         if(plugin.getConfiguration().minecartEmptySlowdownStopperEnable)
             plugin.getServer().getPluginManager().registerEvents(new EmptySlowdown(), plugin);
         if(plugin.getConfiguration().minecartNoCollideEnable)
             plugin.getServer().getPluginManager().registerEvents(new NoCollide(), plugin);
 
         if(plugin.getConfiguration().boatRemoveEntitiesEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.RemoveEntities(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new BoatRemoveEntities(), plugin);
         if(plugin.getConfiguration().boatNoCrash)
-            plugin.getServer().getPluginManager().registerEvents(new Uncrashable(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new BoatUncrashable(), plugin);
         if(plugin.getConfiguration().boatBreakReturn)
             plugin.getServer().getPluginManager().registerEvents(new BoatDrops(), plugin);
         if(plugin.getConfiguration().boatSpeedModifierEnable)
-            plugin.getServer().getPluginManager().registerEvents(new com.sk89q.craftbook.vehicles.boat.SpeedModifiers(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new BoatSpeedModifiers(), plugin);
         if(plugin.getConfiguration().boatLandBoatsEnable)
             plugin.getServer().getPluginManager().registerEvents(new LandBoats(), plugin);
         if(plugin.getConfiguration().boatRemoveOnExitEnabled)
             plugin.getServer().getPluginManager().registerEvents(new BoatExitRemover(), plugin);
-
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

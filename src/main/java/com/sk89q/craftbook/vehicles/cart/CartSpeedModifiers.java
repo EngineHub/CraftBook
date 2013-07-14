@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class SpeedModifiers implements Listener {
+public class CartSpeedModifiers implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleCreate(VehicleCreateEvent event) {

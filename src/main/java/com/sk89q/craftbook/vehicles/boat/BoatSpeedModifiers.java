@@ -8,7 +8,7 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class SpeedModifiers implements Listener {
+public class BoatSpeedModifiers implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleCreate(VehicleCreateEvent event) {

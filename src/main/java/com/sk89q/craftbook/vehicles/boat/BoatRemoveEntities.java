@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class RemoveEntities implements Listener {
+public class BoatRemoveEntities implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {

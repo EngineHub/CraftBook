@@ -22,8 +22,8 @@ public class RailPlacer implements Listener {
 
             if(event.getTo().getBlock().getTypeId() == 0 && !BlockType.canPassThrough(event.getTo().getBlock().getRelative(0, -1, 0).getTypeId()) && ((StorageMinecart)event.getVehicle()).getInventory().contains(BlockID.MINECART_TRACKS)) {
 
-                ((StorageMinecart)event.getVehicle()).getInventory().remove(new ItemStack(BlockID.MINECART_TRACKS, 1));
-                event.getTo().getBlock().setTypeId(BlockID.MINECART_TRACKS);
+                if(((StorageMinecart)event.getVehicle()).getInventory().removeItem(new ItemStack(BlockID.MINECART_TRACKS, 1)).isEmpty())
+                    event.getTo().getBlock().setTypeId(BlockID.MINECART_TRACKS);
             }
         }
     }
