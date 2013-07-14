@@ -60,6 +60,8 @@ public class Chair implements Listener {
             return;
         }
 
+        ar.setTicksLived(1);
+
         chairs.put(player.getName(), new Tuple2<Entity, Block>(ar, block));
     }
 
