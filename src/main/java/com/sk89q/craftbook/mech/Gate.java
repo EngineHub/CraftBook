@@ -286,17 +286,15 @@ public class Gate extends AbstractMechanic {
             }
 
             int amount = 1;
-            if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
-                amount = 5;
-            }
+            if (event.getPlayer().isSneaking())
+                amount = Math.min(5, event.getPlayer().getItemInHand().getAmount());
             addBlocks(sign, amount);
 
             if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
-                if (event.getPlayer().getItemInHand().getAmount() <= amount) {
-                    event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                } else {
+                if (event.getPlayer().getItemInHand().getAmount() <= amount)
+                    event.getPlayer().setItemInHand(null);
+                else
                     event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
-                }
 
             player.print("mech.restock");
             event.setCancelled(true);
@@ -308,11 +306,10 @@ public class Gate extends AbstractMechanic {
             return;
         }
 
-        if (toggleGates(player, pt, smallSearchSize, null)) {
+        if (toggleGates(player, pt, smallSearchSize, null))
             player.print("mech.gate.toggle");
-        } else {
+        else
             player.printError("mech.gate.not-found");
-        }
 
         event.setCancelled(true);
     }
@@ -327,7 +324,7 @@ public class Gate extends AbstractMechanic {
 
         if (!plugin.getConfiguration().gateAllowRedstone) return;
 
-        if (event.getNewCurrent() == event.getOldCurrent()) return;
+        if (event.isMinor()) return;
 
         plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 

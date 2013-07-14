@@ -41,6 +41,16 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
         return source;
     }
 
+    public boolean hasChanged() {
+
+        return getOldCurrent() != getNewCurrent();
+    }
+
+    public boolean isMinor() {
+
+        return !hasChanged() || getOldCurrent() > 0 == getNewCurrent() > 0;
+    }
+
     @Override
     public HandlerList getHandlers() {
         return handlers;
