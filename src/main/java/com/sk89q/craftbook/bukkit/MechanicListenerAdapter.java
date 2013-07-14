@@ -285,6 +285,9 @@ public class MechanicListenerAdapter implements Listener {
 
                 // Can be triggered from below
                 handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
+
+                // Can be triggered from above
+                handleDirectWireInput(new WorldVector(w, x, y - 1, z), block, oldLevel, newLevel);
             }
             return;
         } else if (type == BlockID.REDSTONE_REPEATER_OFF || type == BlockID.REDSTONE_REPEATER_ON || type == BlockID.COMPARATOR_OFF || type == BlockID.COMPARATOR_ON) {
