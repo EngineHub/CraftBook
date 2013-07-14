@@ -35,7 +35,11 @@ public class Footprints implements Listener {
 
         if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET) {
             below = event.getPlayer().getLocation().getBlock();
-            yOffset = below.getY() - event.getPlayer().getLocation().getY() + 0.15D;
+            yOffset = below.getY() - event.getPlayer().getLocation().getY();
+            if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW)
+                yOffset += 0.15D * event.getPlayer().getLocation().getBlock().getData();
+            else
+                yOffset += 0.15D;
         } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
             return;
 

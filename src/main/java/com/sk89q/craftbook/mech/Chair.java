@@ -47,7 +47,7 @@ public class Chair implements Listener {
             PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(40);
             entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
             WrappedDataWatcher watcher = new WrappedDataWatcher();
-            watcher.setObject(0, (byte) 4);
+            watcher.setObject(0, (byte) 0x04);
             entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
             for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
                 if (play.getWorld().equals(player.getPlayer().getWorld())) {
@@ -59,6 +59,7 @@ public class Chair implements Listener {
                 }
             }
         } catch (Throwable e) {
+            BukkitUtil.printStacktrace(e);
             CraftBookPlugin.logger().warning("Chairs do not work without ProtocolLib!");
             disabled = true;
             return;
