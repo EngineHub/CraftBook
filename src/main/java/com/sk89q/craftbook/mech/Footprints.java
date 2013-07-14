@@ -33,7 +33,7 @@ public class Footprints implements Listener {
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
-        if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET) {
+        if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SLOW_SAND) {
             below = event.getPlayer().getLocation().getBlock();
             if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW && event.getPlayer().getLocation().getBlock().getData() == 0 || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET) {
                 yOffset = below.getY() - event.getPlayer().getLocation().getY();
