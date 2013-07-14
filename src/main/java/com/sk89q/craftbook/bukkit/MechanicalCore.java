@@ -165,10 +165,8 @@ public class MechanicalCore implements LocalComponent {
             server.getPluginManager().registerEvents(new CustomDrops(), plugin);
         if (config.aiEnabled)
             server.getPluginManager().registerEvents(new AIMechanic(), plugin);
-        if (config.chairEnabled) {
-            if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Chair(), plugin);
-            else plugin.getLogger().warning("Chairs require ProtocolLib! They will not function without it!");
-        }
+        if (config.chairEnabled)
+            server.getPluginManager().registerEvents(new Chair(), plugin);
         if (config.footprintsEnabled) {
             if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Footprints(), plugin);
             else plugin.getLogger().warning("Footprints require ProtocolLib! They will not function without it!");

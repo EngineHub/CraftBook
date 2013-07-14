@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.mech;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,17 +14,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Directional;
+import org.bukkit.util.Vector;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.TernaryState;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -34,60 +32,39 @@ public class Chair implements Listener {
 
     public Chair() {
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new ChairChecker(), 40L, 40L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
     }
 
-    private static boolean disabled = false;
-    public static ConcurrentHashMap<String, Block> chairs = new ConcurrentHashMap<String, Block>();
+    public static ConcurrentHashMap<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
 
     public static void addChair(Player player, Block block) {
 
-        if (disabled) return;
-        try {
-            PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(40);
-            entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
-            WrappedDataWatcher watcher = new WrappedDataWatcher();
-            watcher.setObject(0, (byte) 0x04);
-            entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-            for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
-                if (play.getWorld().equals(player.getPlayer().getWorld())) {
-                    try {
-                        ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
-                    } catch (InvocationTargetException e) {
-                        BukkitUtil.printStacktrace(e);
-                    }
-                }
-            }
-        } catch (Throwable e) {
-            BukkitUtil.printStacktrace(e);
-            CraftBookPlugin.logger().warning("Chairs do not work without ProtocolLib!");
-            disabled = true;
+        Entity ar = null;
+        boolean isNew = false;
+
+        if(!chairs.containsKey(player.getName()) || !chairs.get(player.getName()).a.isValid() || chairs.get(player.getName()).a == null) {
+            ar = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,0,0), 0, 0);
+            isNew = true;
+        } else
+            ar = chairs.get(player.getName()).a;
+        if (!chairs.containsKey(player.getName()))
+            CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
+        // Attach the player to said arrow.
+        if(ar.isEmpty() && isNew)
+            ar.setPassenger(player);
+        else if (ar.isEmpty()) {
+            removeChair(player);
             return;
         }
-        if (chairs.containsKey(player.getName())) return;
-        CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
-        chairs.put(player.getName(), block);
+
+        chairs.put(player.getName(), new Tuple2<Entity, Block>(ar, block));
     }
 
     public static void removeChair(Player player) {
 
-        if (disabled) return;
-        PacketContainer entitymeta = ProtocolLibrary.getProtocolManager().createPacket(40);
-        entitymeta.getSpecificModifier(int.class).write(0, player.getEntityId());
-        WrappedDataWatcher watcher = new WrappedDataWatcher();
-        watcher.setObject(0, (byte) 0);
-        entitymeta.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-
-        for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
-            if (play.getWorld().equals(player.getPlayer().getWorld())) {
-                try {
-                    ProtocolLibrary.getProtocolManager().sendServerPacket(play, entitymeta);
-                } catch (Throwable e) {
-                    BukkitUtil.printStacktrace(e);
-                }
-            }
-        }
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
+        if(chairs.get(player.getName()).a != null)
+            chairs.get(player.getName()).a.remove();
         chairs.remove(player.getName());
     }
 
@@ -112,20 +89,23 @@ public class Chair implements Listener {
         return found;
     }
 
-    public static Block getChair(Player player) {
+    public static Tuple2<Entity, Block> getChair(Player player) {
 
-        if (disabled) return null;
         return chairs.get(player.getName());
     }
 
     public static boolean hasChair(Player player) {
 
-        return !disabled && chairs.containsKey(player.getName());
+        return chairs.containsKey(player.getName());
     }
 
     public static boolean hasChair(Block player) {
 
-        return !disabled && chairs.containsValue(player);
+        for(Tuple2<Entity, Block> tup : chairs.values())
+            if(player.equals(tup.b))
+                return true;
+
+        return false;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -221,10 +201,10 @@ public class Chair implements Listener {
                     continue;
                 }
 
-                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(getChair(p).getTypeId()) || !p.getWorld().equals(getChair(p).getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).getLocation()) > 1.5)
+                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(getChair(p).b.getTypeId()) || !p.getWorld().equals(getChair(p).b.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).b.getLocation()) > 1.5)
                     removeChair(p);
                 else {
-                    addChair(p, getChair(p)); // For any new players.
+                    addChair(p, getChair(p).b); // For any new players.
 
                     if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(Math.min(p.getHealth() + 1, p.getMaxHealth()));

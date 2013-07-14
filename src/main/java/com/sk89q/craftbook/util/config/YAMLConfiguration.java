@@ -237,7 +237,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         chairEnabled = config.getBoolean("mechanics.chair.enable", true);
 
         config.setComment("mechanics.chair.require-sneak", "Require sneaking to activate chair mechanic.");
-        chairSneak = TernaryState.getFromString(config.getString("mechanics.chair.require-sneak", "true"));
+        chairSneak = TernaryState.getFromString(config.getString("mechanics.chair.require-sneak", "false"));
 
         config.setComment("mechanics.chair.allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
         chairAllowHeldBlock = config.getBoolean("mechanics.chair.allow-holding-blocks", false);
