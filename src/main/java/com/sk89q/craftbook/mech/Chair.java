@@ -40,13 +40,16 @@ public class Chair implements Listener {
     public static void addChair(Player player, Block block) {
 
         Entity ar = null;
+        if(chairs.containsKey(player.getName()))
+            ar = chairs.get(player.getName()).a;
         boolean isNew = false;
 
-        if(!chairs.containsKey(player.getName()) || !chairs.get(player.getName()).a.isValid() || chairs.get(player.getName()).a == null) {
+        if(ar == null || !ar.isValid() || ar.isDead() || !ar.getLocation().getBlock().equals(block)) {
+            if(ar != null && !ar.getLocation().getBlock().equals(block))
+                ar.remove();
             ar = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,0,0), 0, 0);
             isNew = true;
-        } else
-            ar = chairs.get(player.getName()).a;
+        }
         if (!chairs.containsKey(player.getName()))
             CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
         // Attach the player to said arrow.
