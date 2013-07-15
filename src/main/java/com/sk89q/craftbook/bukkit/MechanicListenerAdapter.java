@@ -16,9 +16,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -73,12 +73,22 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  */
 public class MechanicListenerAdapter implements Listener {
 
-    public static final Set<Event> ignoredEvents = new HashSet<Event>();
+    private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 
-    /**
-     * Constructs the adapter.
-     */
-    public MechanicListenerAdapter() {
+    public static boolean shouldIgnoreEvent(Event ev) {
+
+        if(!ignoredEvents.containsKey(ev)) return false;
+
+        Long time = ignoredEvents.get(ev);
+        if(System.currentTimeMillis() - time.longValue() > 1000*5)
+            ignoredEvents.remove(ev);
+
+        return true;
+    }
+
+    public static void ignoreEvent(Event ev) {
+
+        ignoredEvents.put(ev, System.currentTimeMillis());
     }
 
     @EventHandler
@@ -100,10 +110,8 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (ignoredEvents.containsKey(event))
             return;
-        }
 
         boolean isRightClick = false;
 
@@ -121,20 +129,16 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (shouldIgnoreEvent(event))
             return;
-        }
         CraftBookPlugin.inst().getManager().dispatchSignChange(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (shouldIgnoreEvent(event))
             return;
-        }
 
         if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
             switch(event.getBlock().getTypeId()) {
@@ -187,10 +191,8 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (shouldIgnoreEvent(event))
             return;
-        }
         int oldLevel = event.getOldCurrent();
         int newLevel = event.getNewCurrent();
         Block block = event.getBlock();
@@ -407,10 +409,8 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChunkLoad(final ChunkLoadEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (shouldIgnoreEvent(event))
             return;
-        }
         CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
             @Override
@@ -427,10 +427,8 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChunkUnload(ChunkUnloadEvent event) {
 
-        if (ignoredEvents.contains(event)) {
-            ignoredEvents.remove(event);
+        if (shouldIgnoreEvent(event))
             return;
-        }
         int chunkX = event.getChunk().getX();
         int chunkZ = event.getChunk().getZ();
 

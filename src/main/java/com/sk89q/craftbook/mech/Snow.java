@@ -60,7 +60,7 @@ public class Snow implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
             return;
         if(event.getBlock().getTypeId() == BlockID.SNOW && ItemUtil.isStackValid(event.getPlayer().getItemInHand())) {
 

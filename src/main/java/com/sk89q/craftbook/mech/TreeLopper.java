@@ -31,7 +31,7 @@ public class TreeLopper extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;

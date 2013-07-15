@@ -1069,7 +1069,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
             else
                 event = new BlockBreakEvent(block, player);
-            MechanicListenerAdapter.ignoredEvents.add(event);
+            MechanicListenerAdapter.ignoreEvent(event);
             getServer().getPluginManager().callEvent(event);
             if(unexempt)
                 NCPExemptionManager.unexempt(player, CheckType.BLOCKBREAK_NOSWING);
@@ -1095,7 +1095,7 @@ public class CraftBookPlugin extends JavaPlugin {
         if (config.advancedBlockChecks) {
 
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
-            MechanicListenerAdapter.ignoredEvents.add(event);
+            MechanicListenerAdapter.ignoreEvent(event);
             getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }

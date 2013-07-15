@@ -113,7 +113,7 @@ public class HeadDrops implements Listener {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!CraftBookPlugin.inst().getConfiguration().headDropsMiningDrops) return;
-        if(MechanicListenerAdapter.ignoredEvents.contains(event))
+        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 
