@@ -63,9 +63,12 @@ public class Netherrack extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
+        if(event.isMinor())
+            return;
+
         Block above = event.getBlock().getRelative(0, 1, 0);
 
-        if (event.getNewCurrent() > 0 && canReplaceWithFire(above.getTypeId())) {
+        if (event.isOn() && canReplaceWithFire(above.getTypeId())) {
             above.setTypeId(BlockID.FIRE);
             for(Player p : Bukkit.getOnlinePlayers())
                 p.sendBlockChange(above.getLocation(), BlockID.FIRE, (byte) 0);

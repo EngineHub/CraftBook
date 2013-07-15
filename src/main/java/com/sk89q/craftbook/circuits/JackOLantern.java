@@ -69,7 +69,10 @@ public class JackOLantern extends PersistentMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        setPowered(event.getBlock(), event.getNewCurrent() > 0);
+        if(event.isMinor())
+            return;
+
+        setPowered(event.getBlock(), event.isOn());
 
         event.getBlock().setData(event.getBlock().getData(), false);
     }

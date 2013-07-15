@@ -48,7 +48,17 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
 
     public boolean isMinor() {
 
-        return !hasChanged() || getOldCurrent() > 0 == getNewCurrent() > 0;
+        return !hasChanged() || wasOn() == isOn();
+    }
+
+    public boolean isOn() {
+
+        return getNewCurrent() > 0;
+    }
+
+    public boolean wasOn() {
+
+        return getOldCurrent() > 0;
     }
 
     @Override

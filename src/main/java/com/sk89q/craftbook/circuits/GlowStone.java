@@ -70,7 +70,10 @@ public class GlowStone extends PersistentMechanic {
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        event.getBlock().setTypeIdAndData(event.getNewCurrent() > 0 ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getId(), (byte) (event.getNewCurrent() > 0 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()), true);
+        if(event.isMinor())
+            return;
+
+        event.getBlock().setTypeIdAndData(event.isOn() ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getId(), (byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()), true);
     }
 
     /**
