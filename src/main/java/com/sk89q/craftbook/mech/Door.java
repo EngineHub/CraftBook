@@ -337,7 +337,7 @@ public class Door extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden door, just weird
         // results.
-        if (BlockUtil.isBlockReplacable(hinge.getTypeId())) {
+        if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && getDoorMaterial() != hinge.getTypeId()) {
             return closeDoor(player);
         } else {
             return openDoor();

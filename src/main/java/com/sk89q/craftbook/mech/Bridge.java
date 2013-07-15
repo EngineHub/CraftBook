@@ -309,7 +309,7 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (BlockUtil.isBlockReplacable(hinge.getTypeId())) {
+        if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && getBridgeMaterial() != hinge.getTypeId()) {
             return closeBridge(player);
         } else {
             return openBridge();
