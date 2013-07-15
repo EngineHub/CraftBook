@@ -68,8 +68,14 @@ public class Chair implements Listener {
     public static void removeChair(Player player) {
 
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
-        if(chairs.get(player.getName()).a != null)
-            chairs.get(player.getName()).a.remove();
+        final Entity ent = chairs.get(player.getName()).a;
+        if(ent != null)
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                @Override
+                public void run () {
+                    ent.remove();
+                }
+            }, 10L);
         chairs.remove(player.getName());
     }
 
@@ -146,7 +152,6 @@ public class Chair implements Listener {
             }
             if (hasChair(player.getPlayer())) { // Stand
                 removeChair(player.getPlayer());
-                event.getPlayer().teleport(event.getClickedBlock().getLocation().add(0.5, 1.5, 0.5));
             } else { // Sit
                 if (hasChair(event.getClickedBlock())) {
                     lplayer.print("mech.chairs.in-use");
