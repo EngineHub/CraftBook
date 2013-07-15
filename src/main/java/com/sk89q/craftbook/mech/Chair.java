@@ -21,7 +21,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -138,12 +137,11 @@ public class Chair implements Listener {
             return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (lplayer.isSneaking()) return;
         Player player = event.getPlayer();
 
         // Now everything looks good, continue;
         if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !lplayer.isHoldingBlock() || lplayer.getHeldItemType() == 0) {
-            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.TRUE && !lplayer.isSneaking()) return;
-            if (CraftBookPlugin.inst().getConfiguration().chairSneak == TernaryState.FALSE && lplayer.isSneaking()) return;
             if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {

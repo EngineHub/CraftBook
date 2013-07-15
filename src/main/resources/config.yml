@@ -151,7 +151,6 @@ mechanics:
         spoons: true
     chair:
         enable: true
-        require-sneak: 'false'
         allow-holding-blocks: false
         regen-health: true
         blocks:

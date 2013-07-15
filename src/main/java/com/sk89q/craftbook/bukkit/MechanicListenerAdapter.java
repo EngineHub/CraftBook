@@ -16,8 +16,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -72,7 +73,7 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
  */
 public class MechanicListenerAdapter implements Listener {
 
-    public static final ArrayList<Event> ignoredEvents = new ArrayList<Event>();
+    public static final Set<Event> ignoredEvents = new HashSet<Event>();
 
     /**
      * Constructs the adapter.

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.TernaryState;
 
 /**
  * A implementation of Configuration based off of {@link com.sk89q.worldedit.LocalConfiguration} for CraftBook.
@@ -88,7 +87,6 @@ public abstract class LocalConfiguration {
     public boolean cauldronUseSpoons;
     // Mechanics - Chair
     public boolean chairEnabled;
-    public TernaryState chairSneak;
     public boolean chairAllowHeldBlock;
     public boolean chairHealth;
     public List<Integer> chairBlocks;

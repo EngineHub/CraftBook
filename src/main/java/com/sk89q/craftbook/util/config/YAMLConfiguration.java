@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -235,9 +234,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         // Chair Configuration Listener
         config.setComment("mechanics.chair.enable", "Enable chair mechanic.");
         chairEnabled = config.getBoolean("mechanics.chair.enable", true);
-
-        config.setComment("mechanics.chair.require-sneak", "Require sneaking to activate chair mechanic.");
-        chairSneak = TernaryState.getFromString(config.getString("mechanics.chair.require-sneak", "false"));
 
         config.setComment("mechanics.chair.allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
         chairAllowHeldBlock = config.getBoolean("mechanics.chair.allow-holding-blocks", false);
