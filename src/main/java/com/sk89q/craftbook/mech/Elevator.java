@@ -24,7 +24,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -41,6 +40,7 @@ import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -382,19 +382,19 @@ public class Elevator extends AbstractMechanic {
 
     private static Elevator.Direction isLift(Block block) {
 
-        BlockState state = block.getState();
-        if (!(state instanceof Sign)) {
-            if (CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled
-                    && (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON)) {
+        if (!SignUtil.isSign(block)) {
+            if (CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled && (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON)) {
                 Button b = (Button) block.getState().getData();
-                Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
-                if (sign.getState() instanceof Sign)
-                    return isLift(BukkitUtil.toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines()));
+                if(b == null || b.getAttachedFace() == null)
+                    return Direction.NONE;
+                Block sign = block.getRelative(b.getAttachedFace(), 2);
+                if (SignUtil.isSign(sign))
+                    return isLift(BukkitUtil.toChangedSign(sign));
             }
             return Direction.NONE;
         }
 
-        return isLift(BukkitUtil.toChangedSign((Sign) state, ((Sign) state).getLines()));
+        return isLift(BukkitUtil.toChangedSign(block));
     }
 
     private static Elevator.Direction isLift(ChangedSign sign) {
