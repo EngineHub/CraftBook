@@ -43,7 +43,7 @@ public class Netherrack extends AbstractMechanic {
 
             int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
 
-            return type == BlockID.NETHERRACK ? new Netherrack(pt) : null;
+            return type == BlockID.NETHERRACK ? new Netherrack() : null;
         }
     }
 
@@ -52,7 +52,7 @@ public class Netherrack extends AbstractMechanic {
      *
      * @param pt
      */
-    private Netherrack(BlockWorldVector pt) {
+    private Netherrack() {
 
         super();
     }
@@ -72,7 +72,7 @@ public class Netherrack extends AbstractMechanic {
             above.setTypeId(BlockID.FIRE);
             for(Player p : Bukkit.getOnlinePlayers())
                 p.sendBlockChange(above.getLocation(), BlockID.FIRE, (byte) 0);
-        } else if (event.getNewCurrent() < 1 && above != null && above.getTypeId() == BlockID.FIRE) {
+        } else if (!event.isOn() && above != null && above.getTypeId() == BlockID.FIRE) {
             above.setTypeId(BlockID.AIR);
             for(Player p : Bukkit.getOnlinePlayers())
                 p.sendBlockChange(above.getLocation(), BlockID.AIR, (byte) 0);

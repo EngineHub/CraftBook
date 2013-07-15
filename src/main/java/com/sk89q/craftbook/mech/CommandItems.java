@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -201,6 +202,15 @@ public class CommandItems implements Listener {
         performCommandItems(event.getBrokenItem(), event.getPlayer(), event);
     }
 
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onItemPickup(final PlayerPickupItemEvent event) {
+
+        if(event.getItem() == null)
+            return;
+
+        performCommandItems(event.getItem().getItemStack(), event.getPlayer(), event);
+    }
+
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
@@ -243,7 +253,7 @@ public class CommandItems implements Listener {
 
                         if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
                             break current;
-                    } else if (comdef.clickType == ClickType.ITEM_CONSUME || comdef.clickType == ClickType.ITEM_DROP || comdef.clickType == ClickType.ITEM_BREAK) {
+                    } else if (comdef.clickType == ClickType.ITEM_CONSUME || comdef.clickType == ClickType.ITEM_DROP || comdef.clickType == ClickType.ITEM_BREAK || comdef.clickType == ClickType.ITEM_PICKUP) {
 
                         if(comdef.clickType == ClickType.ITEM_CONSUME && !(event instanceof PlayerItemConsumeEvent))
                             break current;
@@ -252,6 +262,9 @@ public class CommandItems implements Listener {
                             break current;
 
                         if(comdef.clickType == ClickType.ITEM_BREAK && !(event instanceof PlayerItemBreakEvent))
+                            break current;
+
+                        if(comdef.clickType == ClickType.ITEM_PICKUP && !(event instanceof PlayerPickupItemEvent))
                             break current;
                     }
                 }
@@ -425,7 +438,7 @@ public class CommandItems implements Listener {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP;
         }
     }
 }
