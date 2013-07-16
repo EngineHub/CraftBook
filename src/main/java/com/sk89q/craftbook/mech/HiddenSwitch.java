@@ -123,7 +123,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
             if (itemID == -1) {
                 toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-            } else if (itemID == 0) {
+            } else if (itemID >= 0) {
                 if (player.getHeldItemType() == itemID)
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
                 else
