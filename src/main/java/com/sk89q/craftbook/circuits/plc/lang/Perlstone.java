@@ -490,6 +490,8 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                         default:
                                             break;
                                     }
+                                    if(table == null)
+                                        break;
 
                                     int add = decodeAddress(code[++ip], shift);
                                     if (op == 'S')
