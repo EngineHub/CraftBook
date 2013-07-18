@@ -471,19 +471,16 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     switch (code[++ip]) {
                                         case 'p':
                                             shift = pshift;
-                                            break;
                                         case 'P':
                                             table = pt;
                                             break;
                                         case 't':
                                             shift = tshift;
-                                            break;
                                         case 'T':
                                             table = tt;
                                             break;
                                         case 'l':
                                             shift = lshift;
-                                            break;
                                         case 'L':
                                             table = lt;
                                             break;
