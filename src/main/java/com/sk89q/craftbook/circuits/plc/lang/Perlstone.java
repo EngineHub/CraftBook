@@ -403,7 +403,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                 throw new PlcException("ran too long", "Aborted due to running too many instructions in " +
                                         "one update");
                             if (executionStack.size() > MAX_STACK_SIZE)
-                                throw new PlcException("stack too bug", "Aborted due to too many values pushed onto stack" +
+                                throw new PlcException("stack too big", "Aborted due to too many values pushed onto stack" +
                                         ".");
                             op = code[ip];
                             li = lis[ip];
