@@ -121,17 +121,22 @@ public class HiddenSwitch extends AbstractMechanic {
                     return;
                 }
 
+            boolean success = false;
+
             if (itemID == -1) {
                 toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                success = true;
             } else if (itemID >= 0) {
-                if (player.getHeldItemType() == itemID)
+                if (player.getHeldItemType() == itemID) {
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
-                else
+                    success = true;
+                } else
                     player.printError("mech.hiddenswitch.key");
             } else
                 player.printError("mech.hiddenswitch.key");
 
-            player.print("mech.hiddenswitch.toggle");
+            if(success)
+                player.print("mech.hiddenswitch.toggle");
 
             if (!event.getPlayer().isSneaking()) event.setCancelled(true);
         }
