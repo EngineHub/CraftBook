@@ -7,12 +7,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.PermissionAttachment;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -343,7 +340,6 @@ public class CustomCrafting implements Listener {
         return recipe.getResult();
     }
 
-    @SuppressWarnings("unchecked")
     private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep, Player player) {
 
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
@@ -352,23 +348,8 @@ public class CustomCrafting implements Listener {
             return stack;
 
         ItemStack res = stack.clone();
-        if(recipe.getResult().hasAdvancedData("name")) {
-            ItemMeta meta = res.getItemMeta();
-            meta.setDisplayName(ChatColor.RESET + ParsingUtil.parseLine((String) recipe.getResult().getAdvancedData("name"), player));
-            res.setItemMeta(meta);
-        }
-        if(recipe.getResult().hasAdvancedData("lore")) {
-            ItemMeta meta = res.getItemMeta();
-            List<String> lore = new ArrayList<String>();
-            for(String s : (List<String>) recipe.getResult().getAdvancedData("lore"))
-                lore.add(ParsingUtil.parseLine(s, player));
-            meta.setLore(lore);
-            res.setItemMeta(meta);
-        }
-        if(recipe.getResult().hasAdvancedData("enchants")) {
-            for(Entry<Enchantment,Integer> enchants : ((Map<Enchantment,Integer>)recipe.getResult().getAdvancedData("enchants")).entrySet())
-                res.addUnsafeEnchantment(enchants.getKey(), enchants.getValue());
-        }
+        if(recipe.getResult().hasAdvancedData("item-meta"))
+            res.setItemMeta(recipe.getResult().getItemStack().getItemMeta());
         return res;
     }
 

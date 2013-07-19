@@ -43,15 +43,8 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     public CraftingItemStack(ItemStack item) {
 
         this.item = item;
-        if(item != null && item.hasItemMeta()) { //We have some advanced data to set.
-
-            if(item.getItemMeta().hasDisplayName())
-                addAdvancedData("name", item.getItemMeta().getDisplayName());
-            if(item.getItemMeta().hasLore())
-                addAdvancedData("lore", item.getItemMeta().getLore());
-            if(item.getItemMeta().hasEnchants())
-                addAdvancedData("enchants", item.getItemMeta().getEnchants());
-        }
+        if(item != null && item.hasItemMeta()) //We have some advanced data to set.
+            addAdvancedData("item-meta", true);
     }
 
     public ItemStack getItemStack() {
