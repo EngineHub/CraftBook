@@ -175,6 +175,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             Player player = event.getPlayer();
             if(!player.hasPermission("craftbook.mech.cook.refuel")) {
                 p.printError("mech.restock-permission");
+                event.setCancelled(true);
                 return;
             }
             if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getTypeId())) {
@@ -188,8 +189,10 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 if(itemID == ItemID.LAVA_BUCKET && !plugin.getConfiguration().cookingPotDestroyBuckets)
                     player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
                 p.print("mech.cook.add-fuel");
+                event.setCancelled(true);
             } else if (plugin.getConfiguration().cookingPotSignOpen) {
                 player.openInventory(((Chest) cb.getState()).getBlockInventory());
+                event.setCancelled(true);
             }
         }
     }
