@@ -36,7 +36,7 @@ public class Chair implements Listener {
 
     public static ConcurrentHashMap<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
 
-    public static void addChair(Player player, Block block) {
+    public static void addChair(final Player player, Block block) {
 
         Entity ar = null;
         if(chairs.containsKey(player.getName()))
@@ -52,9 +52,15 @@ public class Chair implements Listener {
         if (!chairs.containsKey(player.getName()))
             CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
         // Attach the player to said arrow.
-        if(ar.isEmpty() && isNew)
-            ar.setPassenger(player);
-        else if (ar.isEmpty()) {
+        final Entity far = ar;
+        if(ar.isEmpty() && isNew) {
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
+                @Override
+                public void run () {
+                    far.setPassenger(player);
+                }
+            });
+        } else if (ar.isEmpty()) {
             removeChair(player);
             return;
         }
@@ -68,13 +74,16 @@ public class Chair implements Listener {
 
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
         final Entity ent = chairs.get(player.getName()).a;
-        if(ent != null)
+        if(ent != null) {
+            ent.eject();
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
+                    ent.eject();
                     ent.remove();
                 }
             }, 10L);
+        }
         chairs.remove(player.getName());
     }
 
