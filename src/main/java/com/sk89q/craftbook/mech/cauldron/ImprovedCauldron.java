@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +20,7 @@ import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -140,20 +140,28 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         if (temp > 1) return 1;
         double toGo = temp = 1 - temp;
         double tenth = toGo / 10;
-        int mutliplier = 0;
-        if (id == 269) {
-            mutliplier = 1;
-        } else if (id == 273) {
-            mutliplier = 2;
-        } else if (id == 256) {
-            mutliplier = 3;
-        } else if (id == 277) {
-            mutliplier = 4;
-        } else if (id == 284) {
-            mutliplier = 5;
+        int multiplier = 0;
+        switch(id) {
+            case 269:
+                multiplier = 1;
+                break;
+            case 273:
+                multiplier = 2;
+                break;
+            case 256:
+                multiplier = 3;
+                break;
+            case 277:
+                multiplier = 4;
+                break;
+            case 284:
+                multiplier = 5;
+                break;
+            default:
+                break;
         }
-        mutliplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
-        return temp + tenth * mutliplier;
+        multiplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
+        return temp + tenth * multiplier;
     }
 
     /**
@@ -165,16 +173,14 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
      */
     private void cook(ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
         // first lets destroy all items inside the cauldron
-        for (Item item : items) {
+        for (Item item : items)
             item.remove();
-        }
         // then give out the result items
         for (CauldronItemStack stack : recipe.getResults()) {
             // here we need to reset the data value to 0 or problems will occur later on
             // when trying to remove items from the inventory for example
-            if (stack.getData() < 0) {
+            if (stack.getData() < 0)
                 stack.setData((short) 0);
-            }
             block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
         }
     }
@@ -184,9 +190,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         List<Item> items = new ArrayList<Item>();
         for (Entity entity : block.getChunk().getEntities()) {
             if (entity instanceof Item) {
-                Location location = entity.getLocation();
-                if (location.getBlockX() == block.getX() && location.getBlockY() == block.getY() && location
-                        .getBlockZ() == block.getZ()) {
+                if (EntityUtil.isEntityInBlock(entity, block) || EntityUtil.isEntityInBlock(entity, block.getRelative(BlockFace.UP))) {
                     items.add((Item) entity);
                 }
             }
