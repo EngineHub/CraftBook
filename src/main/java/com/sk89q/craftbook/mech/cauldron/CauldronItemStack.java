@@ -1,137 +1,90 @@
 package com.sk89q.craftbook.mech.cauldron;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
 
 /**
  * @author Silthus
  */
 public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
-    @Override
-    public int hashCode() {
-
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + amount;
-        result = prime * result + data;
-        result = prime * result + (material == null ? 0 : material.hashCode());
-        return result;
-    }
-
     public static Collection<CauldronItemStack> convert(Collection<Item> stacks) {
 
-        Map<String, Integer> items = new HashMap<String, Integer>();
+        Set<ItemStack> items = new HashSet<ItemStack>();
         for (Item item : stacks) {
             ItemStack stack = item.getItemStack();
-            String name = stack.getType() + ":" + stack.getDurability();
-            if (items.containsKey(name)) {
-                items.put(name, items.get(name) + stack.getAmount());
-            } else {
-                items.put(name, stack.getAmount());
+
+            boolean has = false;
+            Iterator<ItemStack> stackit = items.iterator();
+            while(stackit.hasNext()) {
+                ItemStack cstack = stackit.next();
+                if(ItemUtil.areItemsIdentical(cstack, stack)) {
+                    stackit.remove();
+                    ItemUtil.addToStack(stack, cstack);
+                    items.add(stack);
+                    has = true;
+                    break;
+                }
             }
+            if(!has)
+                items.add(stack);
         }
         Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
         // merge the amounts and stacks
-        for (Map.Entry<String, Integer> stack : items.entrySet()) {
-            String[] split = RegexUtil.COLON_PATTERN.split(stack.getKey());
-            stackSet.add(new CauldronItemStack(Material.getMaterial(split[0]), Short.parseShort(split[1]),
-                    stack.getValue()));
-        }
+        for (ItemStack stack : items)
+            stackSet.add(new CauldronItemStack(stack));
         return stackSet;
     }
 
-    private Material material;
-    private short data;
-    private int amount;
+    private ItemStack item;
 
-    public CauldronItemStack(Material material, short data, int amount) {
+    public CauldronItemStack(ItemStack item) {
 
-        this.material = material;
-        this.data = data;
-        this.amount = amount;
-    }
-
-    public CauldronItemStack(Material material, int amount) {
-
-        this.material = material;
-        this.amount = amount;
-    }
-
-    public CauldronItemStack(Material material, short data) {
-
-        this(material, data, 0);
-    }
-
-    public CauldronItemStack(Material material) {
-
-        this(material, 0);
-    }
-
-    public Material getMaterial() {
-
-        return material;
-    }
-
-    public short getData() {
-
-        return data;
-    }
-
-    public int getAmount() {
-
-        return amount;
-    }
-
-    public void setMaterial(Material material) {
-
-        this.material = material;
-    }
-
-    public void setData(short data) {
-
-        this.data = data;
-    }
-
-    public void setAmount(int amount) {
-
-        this.amount = amount;
+        this.item = item;
     }
 
     public ItemStack getItemStack() {
 
-        return new ItemStack(material, amount, data);
+        return item;
     }
 
     public CauldronItemStack add(CauldronItemStack stack) {
 
-        if (stack.equals(this)) {
-            amount += stack.getAmount();
+        if (stack.isSameType(this)) {
+            ItemUtil.addToStack(item, stack.getItemStack());
         }
         return this;
     }
 
     public boolean isSameType(CauldronItemStack stack) {
 
-        if (data < 0 || stack.getData() < 0) return stack.getMaterial() == getMaterial();
-        return stack.getMaterial() == getMaterial() && stack.getData() == getData();
+        return ItemUtil.areItemsIdentical(item, stack.item);
     }
 
     @Override
     public int compareTo(CauldronItemStack stack) {
 
-        if (getAmount() > stack.getAmount()) return 1;
-        if (getAmount() == stack.getAmount()) return 0;
+        if (stack.getItemStack().getAmount() > item.getAmount()) return 1;
+        if (stack.getItemStack().getAmount() == item.getAmount()) return 0;
         return -1;
+    }
+
+    @Override
+    public int hashCode() {
+
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + item.hashCode();
+        return result;
     }
 
     @Override
@@ -139,8 +92,14 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
         if (obj instanceof CauldronItemStack) {
             CauldronItemStack stack = (CauldronItemStack) obj;
-            return isSameType(stack) && stack.getAmount() == getAmount();
+            return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+
+        return ItemSyntax.getStringFromItem(getItemStack());
     }
 }

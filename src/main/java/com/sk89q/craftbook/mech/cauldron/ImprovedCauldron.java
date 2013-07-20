@@ -108,14 +108,11 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                     if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
                         double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
                         double ran = plugin.getRandom().nextDouble();
-                        event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand()
-                                .getDurability() - (short) 1));
+                        event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short) 1));
                         if (chance <= ran) {
                             cook(recipe, items);
-                            player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor
-                                    .YELLOW + " recipe.");
-                            block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F,
-                                    false);
+                            player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+                            block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
                             event.setCancelled(true);
                         } else {
                             player.print("mech.cauldron.stir");
@@ -177,10 +174,6 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
             item.remove();
         // then give out the result items
         for (CauldronItemStack stack : recipe.getResults()) {
-            // here we need to reset the data value to 0 or problems will occur later on
-            // when trying to remove items from the inventory for example
-            if (stack.getData() < 0)
-                stack.setData((short) 0);
             block.getWorld().dropItemNaturally(block.getLocation(), stack.getItemStack());
         }
     }

@@ -4,14 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Logger;
 
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.LocalConfiguration;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron.UnknownRecipeException;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
@@ -46,11 +48,9 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
         }
 
         List<String> keys = config.getKeys("cauldron-recipes");
-        if (keys != null) {
-            for (String key : keys) {
+        if (keys != null)
+            for (String key : keys)
                 recipes.add(new Recipe(key, config));
-            }
-        }
     }
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
@@ -94,28 +94,21 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
             Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
             try {
                 for (Object oitem : config.getKeys(path)) {
-                    String item = String.valueOf(oitem);
-                    String[] split = RegexUtil.COLON_PATTERN.split(item);
-                    Material material;
-                    try {
-                        material = Material.getMaterial(Integer.parseInt(split[0]));
-                    } catch (NumberFormatException e) {
-                        // use the name
-                        material = Material.getMaterial(split[0].toUpperCase(Locale.ENGLISH));
-                    }
-                    if (material != null) {
-                        CauldronItemStack itemStack = new CauldronItemStack(material);
-                        if (split.length > 1) {
-                            itemStack.setData(Short.parseShort(split[1]));
-                        } else {
-                            itemStack.setData((short) -1);
-                        }
-                        itemStack.setAmount(config.getInt(path + "." + item, 1));
+                    String okey = String.valueOf(oitem);
+                    String item = okey.trim();
+
+                    ItemStack stack = ItemUtil.makeItemValid(ItemSyntax.getItem(item));
+
+                    if (stack != null) {
+
+                        stack.setAmount(config.getInt(path + "." + okey, 1));
+                        CauldronItemStack itemStack = new CauldronItemStack(stack);
                         items.add(itemStack);
                     }
                 }
-            } catch (Exception ignored) {
-
+            } catch (Exception e) {
+                CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for cauldron recipe: " + id);
+                BukkitUtil.printStacktrace(e);
             }
             return items;
         }
