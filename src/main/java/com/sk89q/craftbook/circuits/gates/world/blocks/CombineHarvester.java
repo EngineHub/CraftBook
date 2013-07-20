@@ -136,6 +136,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(block.getTypeId() == BlockID.NETHER_WART && block.getData() >= 0x3)
             return true;
 
+        if(block.getTypeId() == BlockID.MELON_BLOCK || block.getTypeId() == BlockID.PUMPKIN)
+            return true;
+
         return false;
     }
 
@@ -163,6 +166,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         } else if (b.getTypeId() == BlockID.REED) {
 
             drops.add(new ItemStack(ItemID.SUGAR_CANE_ITEM, 1));
+        } else if (b.getTypeId() == BlockID.MELON_BLOCK) {
+
+            drops.add(new ItemStack(ItemID.MELON, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
         } else {
             drops.addAll(b.getDrops());
         }
