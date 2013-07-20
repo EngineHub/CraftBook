@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7b3
+# CraftBook Configuration for Bukkit. Generated for version: 3.7b5
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -165,6 +165,7 @@ mechanics:
         - 136
         - 156
         face-correct-direction: true
+        require-sign: false
     chunk-anchor:
         enable: true
         enable-redstone: true
@@ -227,6 +228,7 @@ mechanics:
         - 113
         enforce-type: true
         max-column-height: 12
+        gate-search-radius: 3
     head-drops:
         enable: false
         drop-mob-heads: true
@@ -277,6 +279,7 @@ mechanics:
         - 39
         - 40
         - 132
+        falldown-animation-speed: 5
     teleporter:
         enable: true
         require-sign: false
@@ -385,3 +388,13 @@ vehicles:
         remove-entities:
             enable: false
             remove-other-boats: false
+        speed-modifiers:
+            enable: false
+            max-speed: 1.0
+            unnoccupied-deceleration: 1.0
+            occupied-deceleration: 1.0
+        land-boats:
+            enable: false
+        remove-on-exit:
+            enable: false
+            give-item: false

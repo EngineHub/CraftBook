@@ -91,8 +91,8 @@ mech:
         create: Light Switch Created!
 area:
     permissions: You don't have permissions to do that in this area!
-    use-permissions: You don't have permissions to use that in this area!
     break-permissions: You don't have permissions to break that in this area!
+    use-permissions: You don't have permissions to use that in this area!
 vehicles:
     create-permission: You don't have permissions to create this vehicle mechanic!
 worldedit:

@@ -1,3 +1,33 @@
+3.7b5
++ Added boat max speed modifier.
++ Added boat deceleration modifiers.
++ Added LandBoats mechanic.
+* Fixed a few NoCheatPlus compatability issues.
+* Fixed CartDeposit not allowing high data values.
+* Fixed a bug where playlists would not work with radius.
+* Small potential bug fixes.
++ Added an option to change gate search radius.
++ Added an option to change the rate at which Realistic Snow falls.
++ Added an option to require signs on chairs.
+* Fixed an error with chair health regen.
++ Added a Boat Exit Remover mechanic.
+* Tweak footprints.
+* Fixed RailPlacer taking too many rails.
+* Fixed Station not propelling carts on redstone power.
+* Recoded chairs. They now no longer require ProtocolLib and work on 1.6. We are aware of any possible issues and are working for a fix.
+* Fixed a bug that occurs when indirect-redstone is not enabled.
+* Few tweaks to elevators.
+* Removed the require-sneak option for chairs. (This was necessary, sorry)
+* Fixed many bugs that could occur with event ignoring across multiple mechanics.
++ Added an ITEM_PICKUP event to CommandItems.
+* Tweaked Doors and Bridges to allow them to be made of 'replacable blocks'.
+* Fixed a Typographical Error in HiddenSwitches that caused keys not to function.
+* Fixed a Perlstone error.
+* Fixed HiddenSwitches saying it successfully toggled when it didn't.
+* Fixex a Coal related cooking pot dupe.
+* Tweaked CustomCrafting to be more future-proof with item-metadata.
++ Added melons and pumpkins to CombineHarvester.
+
 3.7 Beta 4
 + Added an option to have much more realistic randoms with a very small cost of CPU usage.
 * Fixed bookcases failing to read a line.
