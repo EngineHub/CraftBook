@@ -18,6 +18,7 @@ package com.sk89q.craftbook.bukkit;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
 import org.bukkit.GameMode;
@@ -86,9 +87,27 @@ public class MechanicListenerAdapter implements Listener {
         return true;
     }
 
+    private static int lastGarbageCollect = 0;
+
     public static void ignoreEvent(Event ev) {
 
+        if(++lastGarbageCollect > 100)
+            garbageCollectEvents();
         ignoredEvents.put(ev, System.currentTimeMillis());
+    }
+
+    public static void garbageCollectEvents() {
+
+        lastGarbageCollect = 0;
+        Iterator<Entry<Event, Long>> iter = ignoredEvents.entrySet().iterator();
+
+        while(iter.hasNext()) {
+
+            Entry<Event, Long> bit = iter.next();
+
+            if(System.currentTimeMillis() - bit.getValue().longValue() > 1000*5)
+                iter.remove();
+        }
     }
 
     @EventHandler
