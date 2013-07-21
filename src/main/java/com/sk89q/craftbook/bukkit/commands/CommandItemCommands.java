@@ -84,7 +84,7 @@ public class CommandItemCommands {
         Conversation convo = conversationFactory.buildConversation((Conversable) sender);
         convo.getContext().setSessionData("item", ((HumanEntity) sender).getInventory().getItemInHand());
         List<ItemStack> consumables = new ArrayList<ItemStack>();
-        for(int i = 36; i <= 44; i++) {
+        for(int i = 0; i <= 8; i++) {
             if(i == ((HumanEntity) sender).getInventory().getHeldItemSlot())
                 continue;
             ItemStack stack = ((HumanEntity) sender).getInventory().getItem(i);
