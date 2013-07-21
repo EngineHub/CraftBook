@@ -129,7 +129,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if (ignoredEvents.containsKey(event))
+        if (shouldIgnoreEvent(event))
             return;
 
         boolean isRightClick = false;

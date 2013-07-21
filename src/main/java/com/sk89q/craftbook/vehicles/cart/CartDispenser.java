@@ -21,6 +21,7 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
 import com.sk89q.craftbook.vehicles.CartBlockRedstoneEvent;
 import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -58,26 +59,37 @@ public class CartDispenser extends CartBlockMechanism {
     }
 
     @EventHandler
+    public void onCartImpact(CartBlockImpactEvent event) {
+
+        performMechanic(event.getMinecart(), event.getBlocks());
+    }
+
+    @EventHandler
     public void onRedstoneImpact(CartBlockRedstoneEvent event) {
 
+        performMechanic(event.getMinecart(), event.getBlocks());
+    }
+
+    public void performMechanic(Minecart cart, CartMechanismBlocks blocks) {
+
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (!event.getBlocks().matches("dispenser")) return;
+        if (!blocks.matches(getMaterial())) return;
+        if (!blocks.matches("dispenser")) return;
 
         // detect intentions
-        Power pow = isActive(event.getBlocks());
-        boolean inf = "inf".equalsIgnoreCase(event.getBlocks().getSign().getLine(2));
+        Power pow = isActive(blocks);
+        boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
 
         if(inf) {
 
-            CartType type = CartType.fromString(event.getBlocks().getSign().getLine(0));
+            CartType type = CartType.fromString(blocks.getSign().getLine(0));
 
             // go
-            if (event.getMinecart() == null) {
+            if (cart == null) {
                 switch (pow) {
                     case ON:
-                        if(!((org.bukkit.block.Sign) event.getBlocks().sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
-                            dispense(event.getBlocks(), null, type);
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                            dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
                     case NA:
@@ -88,23 +100,23 @@ public class CartDispenser extends CartBlockMechanism {
                         return;
                     case OFF:
                     case NA:
-                        if(!((org.bukkit.block.Sign) event.getBlocks().sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
-                            collect(event.getMinecart(), null);
+                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                            collect(cart, null);
                         return;
                 }
             }
         } else {
-            for (Chest c : RailUtil.getNearbyChests(event.getBlocks().base)) {
+            for (Chest c : RailUtil.getNearbyChests(blocks.base)) {
                 Inventory inv = c.getInventory();
 
-                CartType type = CartType.fromString(event.getBlocks().getSign().getLine(0));
+                CartType type = CartType.fromString(blocks.getSign().getLine(0));
 
                 // go
-                if (event.getMinecart() == null) {
+                if (cart == null) {
                     switch (pow) {
                         case ON:
-                            if(!((org.bukkit.block.Sign) event.getBlocks().sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
-                                dispense(event.getBlocks(), inv, type);
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                                dispense(blocks, inv, type);
                             return;
                         case OFF: // power going off doesn't eat a cart unless the cart moves.
                         case NA:
@@ -115,8 +127,8 @@ public class CartDispenser extends CartBlockMechanism {
                             return;
                         case OFF:
                         case NA:
-                            if(!((org.bukkit.block.Sign) event.getBlocks().sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
-                                collect(event.getMinecart(), inv);
+                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                                collect(cart, inv);
                             return;
                     }
                 }
