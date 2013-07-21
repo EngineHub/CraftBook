@@ -83,6 +83,8 @@ public class CommandItemCommands {
         convo.getContext().setSessionData("item", ((HumanEntity) sender).getInventory().getItemInHand());
         List<ItemStack> consumables = new ArrayList<ItemStack>();
         for(int i = 36; i <= 44; i++) {
+            if(i == ((HumanEntity) sender).getInventory().getHeldItemSlot())
+                continue;
             ItemStack stack = ((HumanEntity) sender).getInventory().getItem(i);
             if(!ItemUtil.isStackValid(stack))
                 continue;
