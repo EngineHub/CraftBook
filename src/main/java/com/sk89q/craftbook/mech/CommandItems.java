@@ -105,15 +105,34 @@ public class CommandItems implements Listener {
 
         for(String key : config.getKeys("command-items")) {
 
-            CommandItemDefinition comdef = CommandItemDefinition.readDefinition(config, "command-items." + key);
-            if(definitions.add(comdef)) {
+            CommandItemDefinition comdef = CommandItemDefinition.load(config, "command-items." + key);
+            if(addDefinition(comdef)) {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
             } else
                 CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
         }
 
+        config.save();
+
         CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
+    }
+
+    public boolean addDefinition(CommandItemDefinition def) {
+
+        return definitions.add(def);
+    }
+
+    public void save() {
+
+        config.addNode("command-items");
+
+        for(CommandItemDefinition def : definitions) {
+            config.addNode("command-items." + def.name);
+            def.save(config, "command-items." + def.name);
+        }
+
+        config.save();
     }
 
     @EventHandler(priority=EventPriority.HIGHEST)
@@ -386,7 +405,7 @@ public class CommandItems implements Listener {
             return stack;
         }
 
-        private CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking) {
+        public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking) {
 
             this.name = name;
             this.stack = stack;
@@ -403,7 +422,7 @@ public class CommandItems implements Listener {
             this.requireSneaking = requireSneaking;
         }
 
-        public static CommandItemDefinition readDefinition(YAMLProcessor config, String path) {
+        public static CommandItemDefinition load(YAMLProcessor config, String path) {
 
             String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
             ItemStack stack = ItemSyntax.getItem(config.getString(path + ".item"));
@@ -429,6 +448,27 @@ public class CommandItems implements Listener {
             TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
 
             return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking);
+        }
+
+        public void save(YAMLProcessor config, String path) {
+
+            config.setProperty(path + ".item", ItemSyntax.getStringFromItem(getItem()));
+            config.setProperty(path + ".commands", commands);
+            config.setProperty(path + ".permission-node", permNode);
+            config.setProperty(path + ".run-as", type.name());
+            config.setProperty(path + ".click-type", clickType.name());
+            config.setProperty(path + ".delay", delay);
+            if(delay > 0)
+                config.setProperty(path + ".delayed-commands", delayedCommands);
+            config.setProperty(path + ".cooldown", cooldown);
+            config.setProperty(path + ".cancel-action", cancelAction);
+
+            List<String> consumables = new ArrayList<String>();
+            for(ItemStack s : this.consumables)
+                consumables.add(ItemSyntax.getStringFromItem(s));
+            config.setProperty(path + ".consumed-items", consumables);
+            config.setProperty(path + ".consume-self", consumeSelf);
+            config.setProperty(path + ".require-sneaking-state", requireSneaking.name());
         }
 
         public enum CommandType {

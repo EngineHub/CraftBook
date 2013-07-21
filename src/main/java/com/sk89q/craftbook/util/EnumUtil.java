@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -33,5 +35,13 @@ public final class EnumUtil {
             }
         }
         return null;
+    }
+
+    public static String[] getStringArrayFromEnum(Class<? extends Enum<?>> c) {
+
+        List<String> bits = new ArrayList<String>();
+        for(Enum<? extends Enum<?>> s : c.getEnumConstants())
+            bits.add(s.name());
+        return bits.toArray(new String[bits.size()]);
     }
 }
