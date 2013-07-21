@@ -94,6 +94,8 @@ public class CommandItems implements Listener {
 
     public void load() {
 
+        definitions.clear();
+
         try {
             config.load();
         } catch (IOException e) {
@@ -133,6 +135,8 @@ public class CommandItems implements Listener {
         }
 
         config.save();
+
+        load();
     }
 
     @EventHandler(priority=EventPriority.HIGHEST)

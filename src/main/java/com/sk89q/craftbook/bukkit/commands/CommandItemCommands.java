@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
@@ -101,7 +102,7 @@ public class CommandItemCommands {
         conversationFactory = new ConversationFactory(plugin).withModality(true).withEscapeSequence("cancel").withPrefix(new NullConversationPrefix()).withFirstPrompt(new StringPrompt() {
             @Override
             public String getPromptText (ConversationContext context) {
-                return "Please enter a unique ID for this CommandItem. (Used in /comitems give) (Type 'cancel' to quit)";
+                return ChatColor.YELLOW + "Please enter a unique ID for this CommandItem. (Used in /comitems give) (Type 'cancel' to quit)";
             }
 
             @Override
@@ -119,14 +120,14 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "Please enter the commands you wish for this CommandItem to perform (Without the /). Please enter one per message. (Leave blank to stop entering commands)";
+            return ChatColor.YELLOW + "Please enter the commands you wish for this CommandItem to perform (Without the /). Please enter one per message. (Type 'done' to stop entering commands)";
         }
 
         @SuppressWarnings({ "serial", "unchecked" })
         @Override
         public Prompt acceptInput (ConversationContext context, final String input) {
 
-            if(input.trim().length() == 0)
+            if(input.trim().length() == 0 || input.trim().equalsIgnoreCase("done"))
                 return new RunAsPrompt();
 
             if(context.getSessionData("commands") == null)
@@ -148,7 +149,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Please enter what you would like the CommandItem to run as.";
+            return ChatColor.YELLOW + "Please enter what you would like the CommandItem to run as.";
         }
 
         @Override
@@ -167,7 +168,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Please enter what event you want the CommandItem to be triggered by.";
+            return ChatColor.YELLOW + "Please enter what event you want the CommandItem to be triggered by.";
         }
 
         @Override
@@ -182,7 +183,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Please enter the permission node you wish users to require to use the CommandItem. (Blank for none)";
+            return ChatColor.YELLOW + "Please enter the permission node you wish users to require to use the CommandItem. (Type 'none' for none.)";
         }
 
         @Override
@@ -190,8 +191,10 @@ public class CommandItemCommands {
 
             input = input.trim();
 
-            if(input.length() > 0)
+            if(input.length() > 0 && !input.equalsIgnoreCase("none"))
                 context.setSessionData("permission-node", input);
+            else
+                context.setSessionData("permission-node", "");
 
             return new CooldownPromp();
         }
@@ -201,15 +204,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Please enter the cooldown for using this CommandItem. (Blank for none)";
-        }
-
-        @Override
-        protected boolean isInputValid(ConversationContext context, String input) {
-
-            if(input.length() == 0)
-                return true;
-            return super.isInputValid(context, input);
+            return ChatColor.YELLOW + "Please enter the cooldown for using this CommandItem. (Type '0' for none)";
         }
 
         @Override
@@ -225,7 +220,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Do you wish the action that is being performed to not occur when the CommandItem is used? (Eg, damaging entities)";
+            return ChatColor.YELLOW + "Do you wish the action that is being performed to not occur when the CommandItem is used? (Eg, damaging entities)";
         }
 
         @Override
@@ -241,7 +236,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Do you wish the CommandItem to be consumed when used?";
+            return ChatColor.YELLOW + "Do you wish the CommandItem to be consumed when used?";
         }
 
         @Override
@@ -261,7 +256,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "What sneaking state do you want players to require?";
+            return ChatColor.YELLOW + "What sneaking state do you want players to require?";
         }
 
         @Override
@@ -276,15 +271,7 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText (ConversationContext context) {
-            return "Please enter a delay after which an extra set of Commands will be performed. (Useful for turning off CommandItems after a delay). (Blank for none)";
-        }
-
-        @Override
-        protected boolean isInputValid(ConversationContext context, String input) {
-
-            if(input.length() == 0)
-                return true;
-            return super.isInputValid(context, input);
+            return ChatColor.YELLOW + "Please enter a delay after which an extra set of Commands will be performed. (Useful for turning off CommandItems after a delay). (Type '0' for none)";
         }
 
         @Override
@@ -303,14 +290,14 @@ public class CommandItemCommands {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "Please enter the commands you wish for this CommandItem to perform after the delay (Without the /). Please enter one per message. (Leave blank to stop entering commands)";
+            return ChatColor.YELLOW + "Please enter the commands you wish for this CommandItem to perform after the delay (Without the /). Please enter one per message. (Type 'done' to stop entering commands)";
         }
 
         @SuppressWarnings({ "serial", "unchecked" })
         @Override
         public Prompt acceptInput (ConversationContext context, final String input) {
 
-            if(input.trim().length() == 0)
+            if(input.trim().length() == 0 || input.trim().equalsIgnoreCase("done"))
                 return new CreateItemPrompt();
 
             if(context.getSessionData("delayed-commands") == null)
@@ -340,22 +327,18 @@ public class CommandItemCommands {
                 CommandType type = (CommandType) context.getSessionData("run-as");
                 ClickType clickType = (ClickType) context.getSessionData("click-type");
                 int delay = (Integer) context.getSessionData("delay");
-                List<String> delayedCommands = new ArrayList<String>();
-                if(delay > 0)
-                    delayedCommands = (List<String>) context.getSessionData("delatyed-commands");
+                List<String> delayedCommands = (List<String>) context.getSessionData("delayed-commands");
                 int cooldown = (Integer) context.getSessionData("cooldown");
                 boolean cancelAction = (Boolean) context.getSessionData("cancel-action");
                 boolean consumeSelf = (Boolean) context.getSessionData("consume-self");
                 TernaryState requireSneaking = (TernaryState) context.getSessionData("require-sneaking");
-
                 CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking);
-
                 CommandItems.INSTANCE.addDefinition(def);
                 CommandItems.INSTANCE.save();
-                return "Successfully added CommandItem: " + name;
+                return ChatColor.YELLOW + "Successfully added CommandItem: " + name;
             } catch(Exception e) {
                 BukkitUtil.printStacktrace(e);
-                return "Failed to add CommandItem! See Console for more details!";
+                return ChatColor.RED + "Failed to add CommandItem! See Console for more details!";
             }
         }
 
