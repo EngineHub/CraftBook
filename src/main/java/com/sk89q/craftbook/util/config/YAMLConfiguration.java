@@ -405,13 +405,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         headDropsCustomDropRate = new HashMap<String, Double>();
         if(config.getKeys("mechanics.head-drops.drop-rates") != null) {
             for(String key : config.getKeys("mechanics.head-drops.drop-rates"))
-                headDropsCustomDropRate.put(key, config.getDouble("mechanics.head-drops.drop-rates." + key));
+                headDropsCustomDropRate.put(key.toUpperCase(), config.getDouble("mechanics.head-drops.drop-rates." + key));
         } else
             config.addNode("mechanics.head-drops.drop-rates");
         headDropsCustomSkins = new HashMap<String, String>();
         if(config.getKeys("mechanics.head-drops.custom-mob-skins") != null) {
             for(String key : config.getKeys("mechanics.head-drops.custom-mob-skins"))
-                headDropsCustomSkins.put(key, config.getString("mechanics.head-drops.custom-mob-skins." + key));
+                headDropsCustomSkins.put(key.toUpperCase(), config.getString("mechanics.head-drops.custom-mob-skins." + key));
         } else
             config.addNode("mechanics.head-drops.custom-mob-skins");
 

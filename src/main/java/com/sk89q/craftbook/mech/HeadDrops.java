@@ -39,8 +39,8 @@ public class HeadDrops implements Listener {
             return;
 
         double chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsDropRate);
-        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(event.getEntityType().getName()))
-            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(event.getEntityType().getName()));
+        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(event.getEntityType().getName().toUpperCase()))
+            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(event.getEntityType().getName().toUpperCase()));
 
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
             chance = Math.min(1, chance + CraftBookPlugin.inst().getConfiguration().headDropsLootingRateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
@@ -90,8 +90,8 @@ public class HeadDrops implements Listener {
                 String mobName = null;
                 if(type != null)
                     mobName = type.getPlayerName();
-                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().name()))
-                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().name());
+                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().name().toUpperCase()))
+                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().name().toUpperCase());
                 if(mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
