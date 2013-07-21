@@ -32,6 +32,7 @@ import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 
 public class CommandItemCommands {
@@ -73,6 +74,7 @@ public class CommandItemCommands {
     private ConversationFactory conversationFactory;
 
     @Command(aliases = {"add", "create"}, desc = "Create a new CommandItem.")
+    @CommandPermissions("craftbook.mech.commanditems.create")
     public void addCommandItem(CommandContext context, CommandSender sender) throws CommandException {
 
         if(!(sender instanceof Player))
