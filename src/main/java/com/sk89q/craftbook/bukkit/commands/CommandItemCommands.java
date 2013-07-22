@@ -44,7 +44,7 @@ public class CommandItemCommands {
 
     //private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:", usage = "CommandItem Name [-p player]", min = 1, max = 1)
+    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:", usage = "[-p player] <CommandItem Name>", min = 1)
     public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
 
         Player player = null;
