@@ -34,6 +34,7 @@ public class HeadDrops implements Listener {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(CraftBookPlugin.inst().getConfiguration().headDropsPlayerKillOnly && event.getEntity().getKiller() == null) return;
+        if(event.getEntityType() == null) return;
 
         if(event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
             return;
@@ -90,14 +91,14 @@ public class HeadDrops implements Listener {
                 String mobName = null;
                 if(type != null)
                     mobName = type.getPlayerName();
-                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().name().toUpperCase()))
-                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().name().toUpperCase());
+                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().getName().toUpperCase()))
+                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().getName().toUpperCase());
                 if(mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
                 toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + EntityType.valueOf(event.getEntityType().name()).getName() + " Head");
+                itemMeta.setDisplayName(ChatColor.RESET + event.getEntityType().getName() + " Head");
                 itemMeta.setOwner(mobName);
                 toDrop.setItemMeta(itemMeta);
                 break;
@@ -210,7 +211,7 @@ public class HeadDrops implements Listener {
         public static EntityType getEntityType(String name) {
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equals(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(type.name()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(type.name()).equals(name))
+                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(EntityType.valueOf(type.name()).getName().toUpperCase()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase()).equalsIgnoreCase(name))
                     return EntityType.valueOf(type.name());
 
             return null;

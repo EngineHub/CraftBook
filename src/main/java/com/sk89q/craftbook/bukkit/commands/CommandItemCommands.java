@@ -327,7 +327,9 @@ public class CommandItemCommands {
                 CommandType type = (CommandType) context.getSessionData("run-as");
                 ClickType clickType = (ClickType) context.getSessionData("click-type");
                 int delay = (Integer) context.getSessionData("delay");
-                List<String> delayedCommands = (List<String>) context.getSessionData("delayed-commands");
+                List<String> delayedCommands = new ArrayList<String>();
+                if(delay > 0)
+                    delayedCommands = (List<String>) context.getSessionData("delayed-commands");
                 int cooldown = (Integer) context.getSessionData("cooldown");
                 boolean cancelAction = (Boolean) context.getSessionData("cancel-action");
                 boolean consumeSelf = (Boolean) context.getSessionData("consume-self");
