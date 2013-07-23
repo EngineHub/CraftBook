@@ -2,7 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.block.Chest;
+import org.bukkit.block.BlockState;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -64,9 +64,10 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
 
         if (offset.getBlock().getState() instanceof InventoryHolder) {
 
-            Chest c = (Chest) offset.getBlock().getState();
+            InventoryHolder c = (InventoryHolder) offset.getBlock().getState();
             if (c.getInventory().addItem(item.clone()).isEmpty()) {
-                c.update();
+                if(c instanceof BlockState)
+                    ((BlockState) c).update();
                 return true;
             }
         }
