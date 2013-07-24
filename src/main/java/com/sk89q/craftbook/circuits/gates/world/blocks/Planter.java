@@ -8,7 +8,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -109,15 +108,16 @@ public class Planter extends AbstractSelfTriggeredIC {
                 if (!(ent instanceof Item)) continue;
 
                 Item itemEnt = (Item) ent;
+                ItemStack stack = itemEnt.getItemStack();
 
-                if (!ItemUtil.isStackValid(itemEnt.getItemStack())) continue;
+                if (!ItemUtil.isStackValid(stack)) continue;
 
-                if (item == null || ItemUtil.areItemsIdentical(item, itemEnt.getItemStack())) {
+                if (item == null || ItemUtil.areItemsIdentical(item, stack)) {
 
                     Block b = null;
-                    if ((b = searchBlocks(itemEnt.getItemStack())) != null) {
+                    if ((b = searchBlocks(stack)) != null) {
                         if (ItemUtil.takeFromItemEntity(itemEnt, 1)) {
-                            b.setTypeIdAndData(getBlockByItem(itemEnt.getItemStack().getTypeId()), (byte) itemEnt.getItemStack().getDurability(), true);
+                            b.setTypeIdAndData(getBlockByItem(stack.getTypeId()), stack.getData().getData(), true);
                             return true;
                         }
                     }
@@ -136,7 +136,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                     int rx = target.getX() - x;
                     int ry = target.getY() - y;
                     int rz = target.getZ() - z;
-                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                    Block b = onBlock.getWorld().getBlockAt(rx, ry, rz);
 
                     if (b.getTypeId() != 0) continue;
 

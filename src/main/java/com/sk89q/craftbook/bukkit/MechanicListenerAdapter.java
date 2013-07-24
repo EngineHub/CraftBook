@@ -65,7 +65,6 @@ import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -150,6 +149,7 @@ public class MechanicListenerAdapter implements Listener {
 
         if (shouldIgnoreEvent(event))
             return;
+
         CraftBookPlugin.inst().getManager().dispatchSignChange(event);
     }
 
@@ -212,11 +212,8 @@ public class MechanicListenerAdapter implements Listener {
 
         if (shouldIgnoreEvent(event))
             return;
-        int oldLevel = event.getOldCurrent();
-        int newLevel = event.getNewCurrent();
-        Block block = event.getBlock();
 
-        handleRedstoneForBlock(block, oldLevel, newLevel);
+        handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent());
     }
 
     public void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
@@ -346,6 +343,9 @@ public class MechanicListenerAdapter implements Listener {
 
         // Can be triggered from below
         handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
+
+        // Can be triggered from above
+        handleDirectWireInput(new WorldVector(w, x, y - 1, z), block, oldLevel, newLevel);
     }
 
     /**
@@ -358,7 +358,7 @@ public class MechanicListenerAdapter implements Listener {
      */
     protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
-        Block block = ((BukkitWorld) pt.getWorld()).getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+        Block block = sourceBlock.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
         if(block.getLocation().equals(sourceBlock.getLocation())) //The same block, don't run.
             return;
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
