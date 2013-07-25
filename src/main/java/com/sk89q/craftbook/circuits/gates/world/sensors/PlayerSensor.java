@@ -82,8 +82,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
             if (locInfo.startsWith("r:") && CraftBookPlugin.inst().getWorldGuard() != null) {
 
                 locInfo = locInfo.replace("r:", "");
-                reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld
-                        ()).getRegion(locInfo);
+                reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(locInfo);
                 if (reg != null) return;
             }
             radius = ICUtil.parseRadius(getSign());
@@ -110,9 +109,17 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         if (reg != null) {
 
             for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(),
-                        p.getLocation().getBlockZ())) {
-                    return true;
+                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) {
+
+                    if (nameLine.isEmpty()) {
+                        return true;
+                    } else if (type == Type.PLAYER && p.getName().toLowerCase(Locale.ENGLISH).startsWith(nameLine.toLowerCase(Locale.ENGLISH))) {
+                        return true;
+                    } else if (type == Type.GROUP && CraftBookPlugin.inst().inGroup(p, nameLine)) {
+                        return true;
+                    } else if (type == Type.PERMISSION_NODE && p.hasPermission(nameLine)) {
+                        return true;
+                    }
                 }
             }
         }
