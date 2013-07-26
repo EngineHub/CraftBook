@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.sensors;
 import java.util.Locale;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -16,11 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Me4502
@@ -57,10 +52,8 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         state.setOutput(0, isDetected());
     }
 
-    Vector radius;
+    SearchArea area;
 
-    Location location;
-    ProtectedRegion reg;
     Type type;
     String nameLine;
     boolean invertOutput = false;
@@ -77,73 +70,29 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
 
         nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("n:", "").replace("!", "").trim();
 
-        try {
-            String locInfo = getLine(2);
-            if (locInfo.startsWith("r:") && CraftBookPlugin.inst().getWorldGuard() != null) {
-
-                locInfo = locInfo.replace("r:", "");
-                reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(BukkitUtil.toSign(getSign()).getWorld()).getRegion(locInfo);
-                if (reg != null) return;
-            }
-            radius = ICUtil.parseRadius(getSign());
-            String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-            if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-                radiusString = String.valueOf(radius.getBlockX());
-            if (locInfo.contains("=")) {
-                getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-                location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
-            } else {
-                getSign().setLine(2, radiusString);
-                location = getBackBlock().getLocation();
-            }
-        } catch (Exception e) {
-            location = getBackBlock().getLocation();
-            BukkitUtil.printStacktrace(e);
-        }
-        if(reg == null && location == null)
-            location = getBackBlock().getLocation();
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
     }
 
     protected boolean isDetected() {
 
-        if (reg != null) {
-
-            for (Player p : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-                if (reg.contains(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ())) {
-
-                    if (nameLine.isEmpty()) {
-                        return true;
-                    } else if (type == Type.PLAYER && p.getName().toLowerCase(Locale.ENGLISH).startsWith(nameLine.toLowerCase(Locale.ENGLISH))) {
-                        return true;
-                    } else if (type == Type.GROUP && CraftBookPlugin.inst().inGroup(p, nameLine)) {
-                        return true;
-                    } else if (type == Type.PERMISSION_NODE && p.hasPermission(nameLine)) {
-                        return true;
-                    }
-                }
-            }
+        if (!nameLine.isEmpty() && type == Type.PLAYER) {
+            Player p = Bukkit.getPlayer(nameLine);
+            if (p != null && area.isWithinArea(p.getLocation())) return true;
         }
 
-        if (location != null) {
-            if (!nameLine.isEmpty() && type == Type.PLAYER) {
-                Player p = Bukkit.getPlayer(nameLine);
-                if (p != null && LocationUtil.isWithinRadius(location, p.getLocation(), radius)) return true;
-            }
-            for (Player e : getServer().getOnlinePlayers()) {
-                if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(location, e.getLocation(), radius)) {
-                    continue;
-                }
+        for (Player p : area.getPlayersInArea()) {
 
-                if (nameLine.isEmpty()) {
-                    return true;
-                } else if (type == Type.PLAYER && e.getName().toLowerCase(Locale.ENGLISH).startsWith(nameLine.toLowerCase(Locale.ENGLISH))) {
-                    return true;
-                } else if (type == Type.GROUP && CraftBookPlugin.inst().inGroup(e, nameLine)) {
-                    return true;
-                } else if (type == Type.PERMISSION_NODE && e.hasPermission(nameLine)) {
-                    return true;
-                }
-            }
+            if (p == null || !p.isValid())
+                continue;
+
+            if (nameLine.isEmpty())
+                return true;
+            else if (type == Type.PLAYER && p.getName().toLowerCase(Locale.ENGLISH).startsWith(nameLine.toLowerCase(Locale.ENGLISH)))
+                return true;
+            else if (type == Type.GROUP && CraftBookPlugin.inst().inGroup(p, nameLine))
+                return true;
+            else if (type == Type.PERMISSION_NODE && p.hasPermission(nameLine))
+                return true;
         }
 
         return false;
