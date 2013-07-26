@@ -39,9 +39,15 @@ public class HeadDrops implements Listener {
         if(event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
             return;
 
+        String typeName = event.getEntityType().getName();
+        if(typeName == null && event.getEntityType() == EntityType.PLAYER)
+            typeName = "PLAYER";
+        else
+            typeName = typeName.toUpperCase();
+
         double chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsDropRate);
-        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(event.getEntityType().getName().toUpperCase()))
-            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(event.getEntityType().getName().toUpperCase()));
+        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(typeName))
+            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(typeName));
 
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
             chance = Math.min(1, chance + CraftBookPlugin.inst().getConfiguration().headDropsLootingRateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
@@ -91,14 +97,14 @@ public class HeadDrops implements Listener {
                 String mobName = null;
                 if(type != null)
                     mobName = type.getPlayerName();
-                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(event.getEntityType().getName().toUpperCase()))
-                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(event.getEntityType().getName().toUpperCase());
+                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(typeName))
+                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(typeName);
                 if(mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
                 toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + event.getEntityType().getName() + " Head");
+                itemMeta.setDisplayName(ChatColor.RESET + typeName + " Head");
                 itemMeta.setOwner(mobName);
                 toDrop.setItemMeta(itemMeta);
                 break;
