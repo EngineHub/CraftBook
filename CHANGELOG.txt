@@ -1,3 +1,21 @@
+3.7b6
++ Allowed for Cauldrons to look for items above the Cauldron block. Meaning you can still use them even though items bounce.
++ Added ItemMeta support to Cauldrons.
+* Fixed a few dupe bugs.
+* Fixed a few event ignoring bugs.
+* Fixed CartDispenser not working when a cart runs over it.
++ Added commands to create CommandItems ingame. Supports everything the config can do.
++ Added a -p flag to the CommandItems give command. Allowing you to give to players.
+* Fixed HeadDrops CustomSkin/Rates being case sensitive.
+* Fixed ContainerStacker only working with chests.
+* Heavily optimized Planter IC.
+* Fixed PlayerSensor not obeying flags in a region.
+* Fix a HeadDrops error.
+* Fix an EntityCannon error when an invalid EntityType is entered.
+* Fixed PotionInducer not using the Beacon particles for potions.
++ Added a new system for IC search areas, that is not implemented fully yet.
++ Added WorldGuard region support to Teleporter IC's.
+
 3.7b5
 + Added boat max speed modifier.
 + Added boat deceleration modifiers.
