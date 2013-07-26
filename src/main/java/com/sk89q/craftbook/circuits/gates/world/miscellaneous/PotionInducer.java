@@ -23,6 +23,7 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 
 /**
@@ -89,7 +90,10 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         }
         line4 = line4.replace("m", "").replace("p", "");
         radius = ICUtil.parseRadius(line4);
-        offset = ICUtil.parseBlockLocation(getSign(), line4, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate).getLocation();
+        if(line4.contains("="))
+            offset = ICUtil.parseBlockLocation(getSign(), line4, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate).getLocation();
+        else
+            offset = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
     }
 
     public boolean induce() {
@@ -101,10 +105,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
                 LivingEntity liv = (LivingEntity) entity;
                 if (!mobs && !(liv instanceof Player)) continue;
                 if (!players && liv instanceof Player) continue;
-                if(!LocationUtil.isWithinRadius(liv.getLocation(), BukkitUtil.toSign(getSign()).getLocation(), radius))
-                    continue;
-                liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20,
-                        effectAmount - 1), true);
+                liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1, true), true);
                 value = true;
             }
         }
