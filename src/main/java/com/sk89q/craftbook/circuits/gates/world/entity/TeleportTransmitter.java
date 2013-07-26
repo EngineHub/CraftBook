@@ -6,16 +6,17 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SearchArea;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.worldedit.Vector;
 
 public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
@@ -40,15 +41,13 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         return "TELEPORT OUT";
     }
 
-    Vector radius;
-    Location offset;
+    SearchArea area;
 
     @Override
     public void load() {
 
         band = getLine(2);
-        offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
-        radius = ICUtil.parseRadius(getSign(), 3);
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(3));
     }
 
     @Override
@@ -66,17 +65,26 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     }
 
     public void sendPlayer() {
+
         Player closest = null;
 
-        for (Player e : offset.getWorld().getPlayers()) {
-            if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(offset, e.getLocation(), radius) || e.isDead())
+        for (Player e : area.getPlayersInArea()) {
+            if (e == null || !e.isValid() || e.isDead())
                 continue;
 
             if (closest == null) closest = e;
-            else if (LocationUtil.getDistanceSquared(closest.getLocation(), offset) > LocationUtil.getDistanceSquared(e.getLocation(), offset)) closest = e;
+            else if (LocationUtil.getDistanceSquared(closest.getLocation(), getCentre()) > LocationUtil.getDistanceSquared(e.getLocation(), getCentre())) closest = e;
         }
         if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
             closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
+    }
+
+    private Location getCentre() {
+
+        if(area.hasRadiusAndCenter())
+            return area.getCenter();
+        else
+            return SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
     }
 
     public static Tuple2<Long, String> getValue(String band) {

@@ -98,7 +98,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    private enum Type {
+    private static enum Type {
 
         PLAYER('p'), GROUP('g'), PERMISSION_NODE('n');
 
