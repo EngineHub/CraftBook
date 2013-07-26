@@ -58,11 +58,12 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
     public void load() {
 
         location = BukkitUtil.toSign(getSign()).getLocation();
-        type = EntityType.MOB_HOSTILE;
 
-        if (!getSign().getLine(3).isEmpty()) {
+        if (!getSign().getLine(3).isEmpty())
             type = EntityType.fromString(getSign().getLine(3));
-        }
+
+        if(type == null)
+            type = EntityType.MOB_HOSTILE;
 
         try {
             String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
