@@ -411,8 +411,32 @@ public class Updater {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
                 if(remoteVersion == null)
                     remoteVersion = "Unknown";
-                curVer = version;
-                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion)) {
+                int remVer = -1, curVer = 0;
+                try {
+                    remVer = calVer(remoteVersion);
+                    curVer = calVer(version);
+                } catch (NumberFormatException nfe) {
+                    remVer = -1;
+                }
+                this.curVer = version;
+                boolean dontUpdate = false;
+                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion)) dontUpdate = true;
+                if (!dontUpdate && curVer >= remVer || remVer == -1) {
+
+                    dontUpdate = true;
+                    if(remoteVersion.contains("b")) {
+                        String mainVer = remoteVersion.split("b")[0];
+                        if(version.contains("b")) {
+                            String curMainVer = version.split("b")[0];
+                            if(mainVer.equalsIgnoreCase(curMainVer)) {
+                                dontUpdate = calVer(version.split("b")[1]) >= calVer(remoteVersion.split("b")[1]);
+                            } else
+                                dontUpdate = calVer(curMainVer) >= calVer(mainVer);
+                        } else
+                            dontUpdate = version.startsWith(mainVer);
+                    }
+                }
+                if (dontUpdate) {
                     // We already have the latest version, or this build is tagged for no-update
                     result = Updater.UpdateResult.NO_UPDATE;
                     return false;
@@ -434,13 +458,12 @@ public class Updater {
     /**
      * Used to calculate the version string as an Integer
      */
-    @SuppressWarnings("unused")
     private Integer calVer (String s) throws NumberFormatException {
         if (s.contains(".")) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.length(); i++) {
                 Character c = s.charAt(i);
-                if (Character.isLetterOrDigit(c)) {
+                if (Character.isDigit(c)) {
                     sb.append(c);
                 }
             }
