@@ -158,12 +158,13 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!sign.getLine(2).isEmpty()) {
+            if(!sign.getLine(2).trim().isEmpty()) {
                 try {
                     String[] split = RegexUtil.COLON_PATTERN.split(sign.getLine(2));
                     Integer.parseInt(split[0]);
                     try {
-                        Byte.parseByte(split[1]);
+                        if(split.length > 1)
+                            Byte.parseByte(split[1]);
                     } catch(Exception e){
                         throw new ICVerificationException("Data must be a number!");
                     }
