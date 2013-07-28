@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -87,12 +89,15 @@ public class Chair implements Listener {
         chairs.remove(player.getName());
     }
 
-    public boolean hasSign(Block block) {
+    public boolean hasSign(Block block, List<Location> searched) {
 
         boolean found = false;
 
         for (BlockFace face : LocationUtil.getDirectFaces()) {
             Block otherBlock = block.getRelative(face);
+
+            if(searched.contains(otherBlock.getLocation())) continue;
+            searched.add(otherBlock.getLocation());
 
             if (found) break;
 
@@ -102,7 +107,7 @@ public class Chair implements Listener {
             }
 
             if (BlockUtil.areBlocksIdentical(block, otherBlock))
-                found = hasSign(otherBlock);
+                found = hasSign(otherBlock, searched);
         }
 
         return found;
@@ -151,7 +156,7 @@ public class Chair implements Listener {
 
         // Now everything looks good, continue;
         if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !lplayer.isHoldingBlock() || lplayer.getHeldItemType() == 0) {
-            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock()))
+            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
                 lplayer.printError("mech.use-permission");
