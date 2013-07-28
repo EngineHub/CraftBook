@@ -60,7 +60,7 @@ public class Updater {
     private File file; // The plugin's file
     private Thread thread; // Updater thread
     private static final String DBOUrl = "http://dev.bukkit.org/bukkit-mods/"; // Slugs will be appended to this to get to the project's RSS feed
-    private String[] noUpdateTag = { "-DEV", "-PRE" }; // If the version number contains one of these, don't update.
+    private String[] noUpdateTag = {}; // If the version number contains one of these, don't update.
     private static final int BYTE_SIZE = 1024; // Used for downloading files
     private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that
     // downloads will
@@ -411,15 +411,8 @@ public class Updater {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
                 if(remoteVersion == null)
                     remoteVersion = "Unknown";
-                int remVer = -1, curVer = 0;
-                try {
-                    remVer = calVer(remoteVersion);
-                    curVer = calVer(version);
-                } catch (NumberFormatException nfe) {
-                    remVer = -1;
-                }
-                this.curVer = version;
-                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion) || curVer >= remVer || remVer == -1) {
+                curVer = version;
+                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion)) {
                     // We already have the latest version, or this build is tagged for no-update
                     result = Updater.UpdateResult.NO_UPDATE;
                     return false;
@@ -441,6 +434,7 @@ public class Updater {
     /**
      * Used to calculate the version string as an Integer
      */
+    @SuppressWarnings("unused")
     private Integer calVer (String s) throws NumberFormatException {
         if (s.contains(".")) {
             StringBuilder sb = new StringBuilder();

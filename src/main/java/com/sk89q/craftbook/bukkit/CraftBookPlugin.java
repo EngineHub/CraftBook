@@ -170,16 +170,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Gets the build equivalent of the last stable version.
-     * 
-     * @return the build number
-     */
-    public static String getStableBuild() {
-
-        return "2501";
-    }
-
-    /**
      * Called on plugin enable.
      */
     @Override
