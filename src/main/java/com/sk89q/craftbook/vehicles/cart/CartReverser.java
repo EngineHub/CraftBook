@@ -9,7 +9,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartReverser extends CartBlockMechanism {
 

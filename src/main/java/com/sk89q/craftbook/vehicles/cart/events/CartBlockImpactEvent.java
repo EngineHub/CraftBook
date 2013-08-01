@@ -1,23 +1,24 @@
-package com.sk89q.craftbook.vehicles;
+package com.sk89q.craftbook.vehicles.cart.events;
 
-import org.bukkit.entity.Entity;
+import org.bukkit.Location;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 import com.sk89q.craftbook.vehicles.cart.CartMechanismBlocks;
 
-public class CartBlockEnterEvent extends VehicleEnterEvent {
+public class CartBlockImpactEvent extends VehicleMoveEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
     protected final CartMechanismBlocks blocks;
+    protected final boolean minor;
 
-    public CartBlockEnterEvent (Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
-        super(vehicle, entered);
+    public CartBlockImpactEvent(Minecart minecart, Location from, Location to, CartMechanismBlocks blocks, boolean minor) {
+        super(minecart, from, to);
 
         this.blocks = blocks;
+        this.minor = minor;
     }
 
     @Override
@@ -32,6 +33,11 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
     public CartMechanismBlocks getBlocks() {
 
         return blocks;
+    }
+
+    public boolean isMinor() {
+
+        return minor;
     }
 
     public Minecart getMinecart() {

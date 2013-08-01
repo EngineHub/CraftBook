@@ -10,7 +10,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartTeleporter extends CartBlockMechanism {
 

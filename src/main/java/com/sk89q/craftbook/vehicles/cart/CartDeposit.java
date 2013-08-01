@@ -18,7 +18,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartDeposit extends CartBlockMechanism {
 

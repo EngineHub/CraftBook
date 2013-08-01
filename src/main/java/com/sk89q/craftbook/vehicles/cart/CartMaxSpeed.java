@@ -7,7 +7,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartMaxSpeed extends CartBlockMechanism {
 

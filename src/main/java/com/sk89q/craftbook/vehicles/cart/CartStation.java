@@ -15,9 +15,9 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.vehicles.CartBlockEnterEvent;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
-import com.sk89q.craftbook.vehicles.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockEnterEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockRedstoneEvent;
 
 public class CartStation extends CartBlockMechanism {
 

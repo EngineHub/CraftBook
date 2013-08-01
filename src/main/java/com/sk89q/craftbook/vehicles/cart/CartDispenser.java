@@ -21,8 +21,8 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
-import com.sk89q.craftbook.vehicles.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockRedstoneEvent;
 import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 

@@ -19,7 +19,7 @@ import com.sk89q.craftbook.bukkit.VehicleCore;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
+import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /*

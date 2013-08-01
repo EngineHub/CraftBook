@@ -1,24 +1,23 @@
-package com.sk89q.craftbook.vehicles;
+package com.sk89q.craftbook.vehicles.cart.events;
 
-import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.vehicles.cart.CartMechanismBlocks;
 
-public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
+public class CartBlockEnterEvent extends VehicleEnterEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
     protected final CartMechanismBlocks blocks;
-    protected final Minecart cart;
 
-    public CartBlockRedstoneEvent (Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart cart) {
-        super(source, block, old, n);
+    public CartBlockEnterEvent (Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
+        super(vehicle, entered);
 
         this.blocks = blocks;
-        this.cart = cart;
     }
 
     @Override
@@ -35,13 +34,8 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
         return blocks;
     }
 
-    /**
-     * The minecart at this mechanic (If there is one)
-     * 
-     * @return the minecart (Can be null)
-     */
     public Minecart getMinecart() {
 
-        return cart;
+        return (Minecart) getVehicle();
     }
 }
