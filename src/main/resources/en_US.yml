@@ -5,6 +5,25 @@ mech:
         create: Teleporter Created!
         arriveonly: You can only arrive at this teleporter!
         sign: There is no Sign at your Destination!
+    command-items:
+        wait-seconds: seconds to use this again!
+        need-use: to use this command!
+        wait: You have to wait
+        out-of-sync: Inventory became out of sync during usage of command-items!
+        need: You need
+    lift:
+        no-destination: This lift has no destination.
+        target-sign-created: Elevator target sign created.
+        down-sign-created: Elevator down sign created.
+        no-depart: Cannot depart from this lift (can only arrive).
+        busy: Elevator Busy!
+        floor: Floor
+        up-sign-created: Elevator up sign created.
+        obstruct: Your destination is obstructed!
+        down: You went down a floor!
+        up: You went up a floor!
+        leave: You have left the elevator!
+        no-floor: There is no floor at your destination!
     use-permission: You don't have permission to use this mechanic.
     bookcase:
         fail-line: Failed to fetch a line from the books file.
@@ -13,15 +32,6 @@ mech:
         not-found: Failed to find a gate!
         toggle: Gate Toggled!
         create: Gate Created!
-    lift:
-        target-sign-created: Elevator target sign created.
-        down-sign-created: Elevator down sign created.
-        floor: Floor
-        up-sign-created: Elevator up sign created.
-        obstruct: Your destination is obstructed!
-        down: You went down a floor!
-        up: You went up a floor!
-        no-floor: There is no floor at your destination!
     door:
         material: Door must be made entirely out of the same material!
         other-sign: Door sign required on other side (or it was too far away).

@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7b5
+# CraftBook Configuration for Bukkit. Generated for version: 3.7b6
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -352,6 +352,7 @@ vehicles:
             enable: false
             pressure-plate-intersection: false
             ladder-vertical-rail: false
+            ladder-vertical-rail-velocity: 0.5
         remove-entities:
             enable: false
             remove-other-minecarts: false

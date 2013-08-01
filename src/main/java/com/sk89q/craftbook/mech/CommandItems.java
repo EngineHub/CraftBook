@@ -11,7 +11,6 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
@@ -34,6 +33,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
@@ -237,6 +237,8 @@ public class CommandItems implements Listener {
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
+        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
+
         for(CommandItemDefinition def : definitions) {
             current: {
             if(ItemUtil.areItemsIdentical(def.stack, item)) {
@@ -292,30 +294,30 @@ public class CommandItems implements Listener {
                     }
                 }
 
-                if(comdef.requireSneaking == TernaryState.TRUE && !player.isSneaking())
+                if(comdef.requireSneaking == TernaryState.TRUE && !lplayer.isSneaking())
                     break current;
-                if(comdef.requireSneaking == TernaryState.FALSE && player.isSneaking())
+                if(comdef.requireSneaking == TernaryState.FALSE && lplayer.isSneaking())
                     break current;
 
-                if(!player.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !player.hasPermission(comdef.permNode)) {
-                    player.sendMessage(ChatColor.RED + "You don't have permissions to use this mechanic!");
+                if(!lplayer.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !lplayer.hasPermission(comdef.permNode)) {
+                    lplayer.printError("mech.use-permission");
                     break current;
                 }
 
-                if(cooldownPeriods.containsKey(new Tuple2<String, String>(player.getName(), comdef.name))) {
-                    player.sendMessage(ChatColor.RED + "You have to wait " + cooldownPeriods.get(new Tuple2<String, String>(player.getName(), comdef.name)) + " seconds to use this again!");
+                if(cooldownPeriods.containsKey(new Tuple2<String, String>(lplayer.getName(), comdef.name))) {
+                    lplayer.printError(lplayer.translate("mech.command-items.wait") + " " + cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)) + " " + lplayer.translate("mech.command-items.wait-seconds"));
                     break current;
                 }
 
                 for(ItemStack stack : def.consumables) {
                     if(!player.getInventory().containsAtLeast(stack, stack.getAmount())) {
-                        player.sendMessage(ChatColor.RED + "You need " + stack.getAmount() + " of " + stack.getType().name() + " to use this command!");
+                        lplayer.printError(lplayer.translate("mech.command-items.need") + " " + stack.getAmount() + " " + stack.getType().name() + " " + lplayer.translate("mech.command-items.need-use"));
                         break current;
                     }
                 }
                 if(def.consumables.length > 0) {
                     if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
-                        player.sendMessage(ChatColor.RED + "Inventory became out of sync during usage of command-items!");
+                        lplayer.printError("mech.command-items.out-of-sync");
                         break current;
                     } else
                         player.updateInventory();
@@ -331,8 +333,8 @@ public class CommandItems implements Listener {
                 for(String command : comdef.commands)
                     doCommand(command, event, comdef, player);
 
-                if(comdef.cooldown > 0 && !player.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
-                    cooldownPeriods.put(new Tuple2<String, String>(player.getName(), comdef.name), comdef.cooldown);
+                if(comdef.cooldown > 0 && !lplayer.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
+                    cooldownPeriods.put(new Tuple2<String, String>(lplayer.getName(), comdef.name), comdef.cooldown);
 
                 if(comdef.delayedCommands.length > 0)
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {

@@ -250,6 +250,7 @@ public abstract class LocalConfiguration {
     // Vehicles - Minecart More Rails Options
     public boolean minecartMoreRailsEnabled;
     public boolean minecartMoreRailsLadder;
+    public double minecartMoreRailsLadderVelocity;
     public boolean minecartMoreRailsPressurePlate;
     // Vehicles - Minecart Remove Entities Options
     public boolean minecartRemoveEntitiesEnabled;

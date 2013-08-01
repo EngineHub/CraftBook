@@ -92,9 +92,7 @@ public class Elevator extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Elevator detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        public Elevator detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             Direction dir = isLift(sign);
             switch (dir) {
@@ -145,10 +143,9 @@ public class Elevator extends AbstractMechanic {
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger),
-                    BukkitUtil.toChangedSign(destination))) {
+            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger), BukkitUtil.toChangedSign(destination)))
                 break; // found it!
-            }
+
             if (destination.getY() == trigger.getY()) throw new InvalidConstructionException();
             if (plugin.getConfiguration().elevatorLoop && !loopd) {
                 if (destination.getY() == trigger.getWorld().getMaxHeight()) { // hit the top of the world
@@ -165,7 +162,7 @@ public class Elevator extends AbstractMechanic {
             } else {
                 if (destination.getY() == trigger.getWorld().getMaxHeight()) // hit the top of the world
                     throw new InvalidConstructionException();
-                if (destination.getY() == 0) // hit the bottom of the world
+                else if (destination.getY() == 0) // hit the bottom of the world
                     throw new InvalidConstructionException();
             }
         }
@@ -188,17 +185,17 @@ public class Elevator extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(task != null) {
-            event.getPlayer().sendMessage("Elevator Busy!");
-            return;
-        }
-
         if (!plugin.getConfiguration().elevatorEnabled) return;
 
         if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
             return; // wth? our manager is insane
 
         LocalPlayer localPlayer = plugin.wrapPlayer(event.getPlayer());
+
+        if(task != null) {
+            localPlayer.printError("mech.lift.busy");
+            return;
+        }
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             event.setCancelled(true);
@@ -214,9 +211,7 @@ public class Elevator extends AbstractMechanic {
     private void makeItSo(LocalPlayer player) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()),
-                destination.getY() + 1,
-                (int) Math.floor(player.getPosition().getPosition().getZ()));
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (!occupiable(floor)) {
             floor = floor.getRelative(BlockFace.DOWN);
@@ -295,7 +290,7 @@ public class Elevator extends AbstractMechanic {
                     }
 
                     if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
-                        player.print("You have left the elevator!");
+                        player.print("mech.lift.leave");
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
@@ -419,7 +414,7 @@ public class Elevator extends AbstractMechanic {
 
         public NoDepartureException() {
 
-            super("Cannot depart from this lift (can only arrive).");
+            super("mech.lift.no-depart");
         }
     }
 
@@ -429,7 +424,7 @@ public class Elevator extends AbstractMechanic {
 
         public InvalidConstructionException() {
 
-            super("This lift has no destination.");
+            super("mech.lift.no-destination");
         }
     }
 }

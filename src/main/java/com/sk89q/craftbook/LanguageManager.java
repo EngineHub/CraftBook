@@ -139,6 +139,12 @@ public class LanguageManager {
 
         put("mech.command.create","Command Sign Created!");
 
+        put("mech.command-items.out-of-sync", "Inventory became out of sync during usage of command-items!");
+        put("mech.command-items.wait", "You have to wait");
+        put("mech.command-items.wait-seconds", "seconds to use this again!");
+        put("mech.command-items.need", "You need");
+        put("mech.command-items.need-use", "to use this command!");
+
         put("mech.cook.create","Cooking Pot Created!");
         put("mech.cook.ouch","Ouch! That was hot!");
         put("mech.cook.add-fuel","You put fuel into the cooking pot, and watch as the fire roars!");
@@ -165,6 +171,10 @@ public class LanguageManager {
         put("mech.lift.floor","Floor");
         put("mech.lift.up","You went up a floor!");
         put("mech.lift.down","You went down a floor!");
+        put("mech.lift.leave", "You have left the elevator!");
+        put("mech.lift.no-destination", "This lift has no destination.");
+        put("mech.lift.no-depart", "Cannot depart from this lift (can only arrive).");
+        put("mech.lift.busy", "Elevator Busy!");
 
         put("mech.lightswitch.create","Light Switch Created!");
 

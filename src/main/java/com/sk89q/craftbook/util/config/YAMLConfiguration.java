@@ -591,6 +591,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartMoreRailsEnabled = config.getBoolean("vehicles.minecart.more-rails.enable", false);
         minecartMoreRailsPressurePlate = config.getBoolean("vehicles.minecart.more-rails.pressure-plate-intersection", false);
         minecartMoreRailsLadder = config.getBoolean("vehicles.minecart.more-rails.ladder-vertical-rail", false);
+        minecartMoreRailsLadderVelocity = config.getDouble("vehicles.minecart.more-rails.ladder-vertical-rail-velocity", 0.5D);
 
 
         // Vehicles Minecart Remove Entities Listener

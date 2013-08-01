@@ -24,6 +24,6 @@ public class MoreRails implements Listener {
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
             if (event.getTo().getBlock().getTypeId() == BlockID.LADDER || event.getTo().getBlock().getTypeId() == BlockID.VINE)
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),0.5,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModY())));
+                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModY())));
     }
 }

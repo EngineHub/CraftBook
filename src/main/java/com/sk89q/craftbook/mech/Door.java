@@ -287,8 +287,7 @@ public class Door extends AbstractMechanic {
                         if (event.getPlayer().getItemInHand().getAmount() <= amount) {
                             event.getPlayer().setItemInHand(new ItemStack(0, 0));
                         } else {
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - amount);
+                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
                         }
 
                     player.print("mech.restock");
