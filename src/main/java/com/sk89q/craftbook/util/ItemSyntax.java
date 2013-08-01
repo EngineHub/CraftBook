@@ -57,6 +57,8 @@ public class ItemSyntax {
             if(item.getItemMeta().hasDisplayName())
                 builder.append("|").append(item.getItemMeta().getDisplayName());
             if(item.getItemMeta().hasLore()) {
+                if(!item.getItemMeta().hasDisplayName())
+                    builder.append("|$IGNORE");
                 List<String> list = item.getItemMeta().getLore();
                 for(String s : list)
                     builder.append("|").append(s);
@@ -150,7 +152,8 @@ public class ItemSyntax {
         if(nameLoreSplit.length > 1 && id > 0) {
 
             ItemMeta meta = rVal.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
+            if(!nameLoreSplit[1].equalsIgnoreCase("$IGNORE"))
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
             if(nameLoreSplit.length > 2) {
 
                 List<String> lore = new ArrayList<String>();
