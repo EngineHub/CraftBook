@@ -6,10 +6,14 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.CartBlockEnterEvent;
 import com.sk89q.craftbook.vehicles.CartBlockImpactEvent;
@@ -81,6 +85,13 @@ public class CartStation extends CartBlockMechanism {
         if (!event.getBlocks().matches("station")) return;
 
         if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART")) return;
+
+        if(!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
+
+            ItemStack testItem = ItemSyntax.getItem(event.getBlocks().getSign().getLine(3));
+            if(!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
+                return;
+        }
 
         // go
         switch (isActive(event.getBlocks())) {
