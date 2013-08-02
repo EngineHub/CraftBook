@@ -1,3 +1,11 @@
+3.7
+* Fixed an error with chairs and 'RequireSigns'.
+* Fixed BlockBreaker requiring data on the sign if the ID is supplied.
+* Tweaked the AutoUpdater. It should now work with Beta's.
+* Fixed $IGNORE not ignoring names in ItemSyntax.
++ Added an option to change the velocity of MoreRails Ladders.
++ Added a 'ticket' system to Stations.
+
 3.7b6
 + Allowed for Cauldrons to look for items above the Cauldron block. Meaning you can still use them even though items bounce.
 + Added ItemMeta support to Cauldrons.
