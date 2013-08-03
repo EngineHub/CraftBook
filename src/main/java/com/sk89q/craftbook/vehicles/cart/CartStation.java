@@ -43,6 +43,9 @@ public class CartStation extends CartBlockMechanism {
         if (!blocks.matches(getMaterial())) return;
         if (!blocks.matches("station")) return;
 
+        if(cart == null)
+            return;
+
         // go
         switch (isActive(blocks)) {
             case ON:
