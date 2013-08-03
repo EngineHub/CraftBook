@@ -65,6 +65,8 @@ public class BetterPistons extends AbstractMechanic {
                         if (face == piston.getFacing())
                             continue;
                         sign = block.getRelative(face);
+                        if(!SignUtil.getBackBlock(sign).getLocation().equals(block.getLocation()))
+                            continue;
                         type = checkSign(sign);
                         if (type == this.type) {
                             break signCheck;
