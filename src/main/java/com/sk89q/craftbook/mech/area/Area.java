@@ -131,7 +131,8 @@ public class Area extends AbstractMechanic {
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.area.use")) {
-            player.print("mech.use-permission");
+            if(plugin.getConfiguration().showPermissionMessages)
+                player.print("mech.use-permission");
             return;
         }
 

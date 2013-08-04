@@ -16,13 +16,15 @@
 
 package com.sk89q.craftbook.util.exceptions;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+
 public class InsufficientPermissionsException extends InvalidMechanismException {
 
     private static final long serialVersionUID = -3592509047211745619L;
 
     public InsufficientPermissionsException() {
 
-        super("You don't have permission for this.");
+        super(CraftBookPlugin.inst().getConfiguration().showPermissionMessages ? "You don't have permission for this." : null);
     }
 
     public InsufficientPermissionsException(String message, Throwable cause) {

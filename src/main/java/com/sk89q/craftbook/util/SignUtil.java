@@ -51,9 +51,9 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class SignUtil {
 
-    public static boolean isSign(Block keith) {
+    public static boolean isSign(Block block) {
 
-        return isSign(keith.getTypeId());
+        return isSign(block.getTypeId());
     }
 
     public static boolean isSign(int typeid) {

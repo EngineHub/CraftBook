@@ -300,7 +300,8 @@ public class CommandItems implements Listener {
                     break current;
 
                 if(!lplayer.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !lplayer.hasPermission(comdef.permNode)) {
-                    lplayer.printError("mech.use-permission");
+                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        lplayer.printError("mech.use-permission");
                     break current;
                 }
 

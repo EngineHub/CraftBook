@@ -88,7 +88,8 @@ public class CommandSigns extends AbstractMechanic {
         LocalPlayer localPlayer = plugin.wrapPlayer(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
-            localPlayer.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("mech.use-permission");
             return;
         }
 

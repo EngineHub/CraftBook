@@ -27,6 +27,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean advancedBlockChecks;
     public boolean experimentalClicks;
     public boolean pedanticBlockChecks;
+    public boolean showPermissionMessages;
 
     public boolean updateNotifier;
     public boolean easterEggs;
@@ -120,6 +121,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("realistic-randoms", "Random numbers are much more random, with a small cost to CPU usage.");
         realisticRandoms = config.getBoolean("realistic-randoms", true);
+
+        config.setComment("show-permission-messages", "Show messages when a player does not have permission to do something.");
+        showPermissionMessages = config.getBoolean("show-permission-messages", false);
 
         super.load();
     }

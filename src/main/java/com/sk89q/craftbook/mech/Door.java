@@ -254,7 +254,8 @@ public class Door extends AbstractMechanic {
 
         LocalPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if (!player.hasPermission("craftbook.mech.door.use")) {
-            player.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
             return;
         }
 
@@ -262,7 +263,8 @@ public class Door extends AbstractMechanic {
             if (getDoorMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
                 if (!player.hasPermission("craftbook.mech.door.restock")) {
-                    player.printError("mech.restock-permission");
+                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        player.printError("mech.restock-permission");
                     return;
                 }
 

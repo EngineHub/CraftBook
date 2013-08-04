@@ -281,7 +281,8 @@ public class Gate extends AbstractMechanic {
         if (plugin.getConfiguration().safeDestruction && getGateBlock() == player.getHeldItemType() && isValidGateBlock(getGateBlock(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
-                player.printError("mech.restock-permission");
+                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    player.printError("mech.restock-permission");
                 return;
             }
 
@@ -302,7 +303,8 @@ public class Gate extends AbstractMechanic {
         }
 
         if (!player.hasPermission("craftbook.mech.gate.use")) {
-            player.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
             return;
         }
 

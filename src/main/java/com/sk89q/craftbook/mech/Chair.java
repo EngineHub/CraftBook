@@ -159,7 +159,8 @@ public class Chair implements Listener {
             if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
-                lplayer.printError("mech.use-permission");
+                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    lplayer.printError("mech.use-permission");
                 return;
             }
             if (hasChair(player.getPlayer())) { // Stand

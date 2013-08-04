@@ -2,8 +2,6 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -38,7 +36,8 @@ public class Payment extends AbstractMechanic {
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.pay.use")) {
-            player.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
             return;
         }
 
@@ -86,11 +85,8 @@ public class Payment extends AbstractMechanic {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
             if (block.getTypeId() == BlockID.WALL_SIGN) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    Sign sign = (Sign) state;
-                    if (sign.getLine(1).equalsIgnoreCase("[Pay]")) return new Payment();
-                }
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
+                if (sign.getLine(1).equalsIgnoreCase("[Pay]")) return new Payment();
             }
 
             return null;
@@ -108,6 +104,7 @@ public class Payment extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.pay")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[Pay]");
+                sign.update(false);
                 player.print("mech.pay.create");
             } else return null;
 

@@ -84,7 +84,8 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         if (block.equals(event.getClickedBlock())) {
             if (!player.hasPermission("craftbook.mech.cauldron.use")) {
-                player.printError("mech.use-permission");
+                if(plugin.getConfiguration().showPermissionMessages)
+                    player.printError("mech.use-permission");
                 return;
             }
             try {

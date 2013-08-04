@@ -11,7 +11,9 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -19,7 +21,6 @@ import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -47,19 +48,19 @@ public class Teleporter extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
 
-            if (block.getState() instanceof Sign) {
-                Sign s = (Sign) block.getState();
+            if (SignUtil.isSign(block)) {
+                ChangedSign s = BukkitUtil.toChangedSign(block);
                 if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                 String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                 if (pos.length > 2) return new Teleporter(block);
             } else if (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
                 Button b = (Button) block.getState().getData();
                 Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
-                if (sign.getState() instanceof Sign) {
-                    Sign s = (Sign) sign.getState();
+                if (SignUtil.isSign(sign)) {
+                    ChangedSign s = BukkitUtil.toChangedSign(sign);
                     if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                     String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-                    if (pos.length > 2) return new Teleporter(s.getBlock());
+                    if (pos.length > 2) return new Teleporter(sign);
                 }
             }
 
@@ -110,14 +111,14 @@ public class Teleporter extends AbstractMechanic {
 
         if (!CraftBookPlugin.inst().getConfiguration().teleporterEnabled) return;
 
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)) && !(event
-                .getClickedBlock().getState().getData() instanceof Button))
+        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)) && !(event.getClickedBlock().getState().getData() instanceof Button))
             return; // wth? our manager is insane.
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-            localPlayer.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("mech.use-permission");
             return;
         }
 

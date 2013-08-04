@@ -202,7 +202,8 @@ public class MechanicManager {
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
                 if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
-                    player.printError("area.break-permissions");
+                    if(plugin.getConfiguration().showPermissionMessages)
+                        player.printError("area.break-permissions");
                     return 0;
                 }
             }
@@ -248,7 +249,8 @@ public class MechanicManager {
             HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
                 if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                    player.printError("area.use-permissions");
+                    if(plugin.getConfiguration().showPermissionMessages)
+                        player.printError("area.use-permissions");
                     return 0;
                 }
             }

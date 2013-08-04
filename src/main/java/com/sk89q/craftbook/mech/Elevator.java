@@ -199,7 +199,8 @@ public class Elevator extends AbstractMechanic {
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             event.setCancelled(true);
-            localPlayer.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("mech.use-permission");
             return;
         }
 

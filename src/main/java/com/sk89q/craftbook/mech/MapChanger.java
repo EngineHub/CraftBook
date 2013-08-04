@@ -9,12 +9,13 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.ItemID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class MapChanger extends AbstractMechanic {
 
@@ -34,9 +35,9 @@ public class MapChanger extends AbstractMechanic {
 
             Block block = BukkitUtil.toBlock(pt);
 
-            if (block.getState() instanceof Sign) {
-                Sign s = (Sign) block.getState();
-                if (s.getLine(1).equalsIgnoreCase("[Map]")) return new MapChanger(block);
+            if (SignUtil.isSign(block)) {
+                ChangedSign s = BukkitUtil.toChangedSign(block);
+                if (s.getLine(1).equalsIgnoreCase("[Map]")) return new MapChanger();
             }
             return null;
         }
@@ -47,15 +48,14 @@ public class MapChanger extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public MapChanger detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        public MapChanger detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Map]")) return null;
             if (!player.hasPermission("craftbook.mech.map")) throw new InsufficientPermissionsException();
 
             player.print("mech.map.create");
             sign.setLine(1, "[Map]");
+            sign.update(false);
 
             throw new ProcessedMechanismException();
         }
@@ -68,7 +68,7 @@ public class MapChanger extends AbstractMechanic {
      *
      * @throws InvalidMechanismException
      */
-    private MapChanger(Block trigger) throws InvalidMechanismException {
+    private MapChanger() throws InvalidMechanismException {
 
         super();
     }
@@ -80,9 +80,11 @@ public class MapChanger extends AbstractMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.map.use")) {
-            player.printError("mech.use-permission");
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
             return;
-        }        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getTypeId() == ItemID.MAP)
+        }
+        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getTypeId() == ItemID.MAP) {
             if (block.getState() instanceof Sign) {
                 Sign sign = (Sign) block.getState();
                 byte id;
@@ -91,10 +93,10 @@ public class MapChanger extends AbstractMechanic {
                 } catch (Exception e) {
                     id = -1;
                 }
-                if (id == -1) {
+                if (id == -1)
                     event.getPlayer().sendMessage("Invalid Map!");
-                }
                 event.getPlayer().getItemInHand().setDurability(id);
             }
+        }
     }
 }

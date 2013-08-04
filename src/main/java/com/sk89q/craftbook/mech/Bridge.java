@@ -237,7 +237,8 @@ public class Bridge extends AbstractMechanic {
 
         LocalPlayer player = new BukkitPlayer(plugin, event.getPlayer());
         if (!player.hasPermission("craftbook.mech.bridge.use")) {
-            player.printError("mech.use-permission");
+            if(plugin.getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
             return;
         }
 
@@ -253,7 +254,8 @@ public class Bridge extends AbstractMechanic {
                 if (getBridgeMaterial() == event.getPlayer().getItemInHand().getTypeId()) {
 
                     if (!player.hasPermission("craftbook.mech.bridge.restock")) {
-                        player.printError("mech.restock-permission");
+                        if(plugin.getConfiguration().showPermissionMessages)
+                            player.printError("mech.restock-permission");
                         return;
                     }
 
