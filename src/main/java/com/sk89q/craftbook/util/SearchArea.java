@@ -20,6 +20,12 @@ public class SearchArea {
     private ProtectedRegion region = null;
 
     /**
+     * Creates an invalid SearchArea that can not be used to search.
+     */
+    private SearchArea() {
+    }
+
+    /**
      * Creates a standard SearchArea using a radius and a center point.
      * 
      * @param center
@@ -50,11 +56,11 @@ public class SearchArea {
         if(line.startsWith("r:")) {
 
             if(CraftBookPlugin.inst().getWorldGuard() == null)
-                return null;
+                return new SearchArea();
 
             ProtectedRegion reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
             if(reg == null)
-                return null;
+                return new SearchArea();
 
             return new SearchArea(reg);
         } else {
@@ -152,5 +158,15 @@ public class SearchArea {
     public ProtectedRegion getRegion() {
 
         return region;
+    }
+
+    /**
+     * Checks whether this SearchArea has a valid search type.
+     * 
+     * @return if the area has a valid search type.
+     */
+    public boolean isValid() {
+
+        return hasRadiusAndCenter() || hasRegion();
     }
 }

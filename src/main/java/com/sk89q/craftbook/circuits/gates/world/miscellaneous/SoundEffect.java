@@ -41,16 +41,20 @@ public class SoundEffect extends AbstractIC {
         }
 
         String soundName = getSign().getLine(3).trim();
-        sound = Sound.valueOf(soundName);
-        if(sound == null) {
+        try {
+            sound = Sound.valueOf(soundName);
+        } catch(Exception e){}
+        if(sound == null && getSign().getLine(3).trim().length() == 15) {
             for(Sound s : Sound.values()) {
 
-                if(getSign().getLine(3).trim().length() == 15 && s.name().length() > 15 && s.name().startsWith(getSign().getLine(3).trim())) {
+                if(s.name().length() > 15 && s.name().startsWith(getSign().getLine(3))) {
                     sound = s;
                     break;
                 }
             }
         }
+        if(sound == null)
+            sound = Sound.COW_IDLE;
     }
 
     @Override
@@ -106,23 +110,22 @@ public class SoundEffect extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
+            Sound sound = null;
             try {
-                Sound sound = Sound.valueOf(sign.getLine(3).trim());
-                if(sound == null) {
-                    for(Sound s : Sound.values()) {
+                sound = Sound.valueOf(sign.getLine(3).trim());
+            } catch(Exception e) {
+            }
+            if(sound == null && sign.getLine(3).trim().length() == 15) {
+                for(Sound s : Sound.values()) {
 
-                        if(sign.getLine(3).trim().length() == 15 && s.name().length() > 15 && s.name().startsWith(sign.getLine(3).trim())) {
-                            sound = s;
-                            break;
-                        }
+                    if(s.name().length() > 15 && s.name().startsWith(sign.getLine(3))) {
+                        sound = s;
+                        break;
                     }
                 }
-                if(sound == null)
-                    throw new ICVerificationException("Unknown Sound!");
             }
-            catch(Exception e) {
+            if(sound == null)
                 throw new ICVerificationException("Unknown Sound!");
-            }
         }
     }
 }
