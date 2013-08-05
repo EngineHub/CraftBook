@@ -78,6 +78,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("circuits.ics.midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
         ICMidiUsePercussion = config.getBoolean("circuits.ics.midi-use-percussion", false);
 
+        config.setComment("circuits.ics.break-on-error", "Break the IC sign when an error occurs from that specific IC.");
+        ICBreakOnError = config.getBoolean("circuits.ics.break-on-error", false);
+
 
         // Circuits Configuration Listener
         config.setComment("circuits.wiring.netherrack-enabled", "Enables the redstone netherrack mechanic, which lights netherrack when it is powered.");

@@ -664,6 +664,8 @@ public class MechanicManager {
                 } catch (Throwable t) { // Mechanic failed to think for some reason
                     logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getSimpleName());
                     BukkitUtil.printStacktrace(t);
+                    if(mechanic instanceof ICMechanic && CraftBookPlugin.inst().getConfiguration().ICBreakOnError)
+                        BukkitUtil.toSign(((ICMechanic)mechanic).getIC().getSign()).getBlock().breakNaturally();
                 }
             } else {
                 unload(mechanic, null);
