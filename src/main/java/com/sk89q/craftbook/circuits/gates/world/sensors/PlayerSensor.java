@@ -14,6 +14,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SearchArea;
 
@@ -128,6 +129,13 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         public IC create(ChangedSign sign) {
 
             return new PlayerSensor(getServer(), sign, this);
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+
+            if(!SearchArea.createArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+                throw new ICVerificationException("Invalid SearchArea on line 3!");
         }
 
         @Override

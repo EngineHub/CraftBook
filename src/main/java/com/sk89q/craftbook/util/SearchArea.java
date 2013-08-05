@@ -1,11 +1,17 @@
 package com.sk89q.craftbook.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -17,7 +23,9 @@ public class SearchArea {
 
     private Location center = null;
     private Vector radius = null;
+
     private ProtectedRegion region = null;
+    private World world = null;
 
     /**
      * Creates an invalid SearchArea that can not be used to search.
@@ -41,8 +49,9 @@ public class SearchArea {
      * 
      * @param region
      */
-    private SearchArea(ProtectedRegion region) {
+    private SearchArea(ProtectedRegion region, World world) {
         this.region = region;
+        this.world = world;
     }
 
     /**
@@ -62,7 +71,7 @@ public class SearchArea {
             if(reg == null)
                 return new SearchArea();
 
-            return new SearchArea(reg);
+            return new SearchArea(reg, block.getWorld());
         } else {
 
             String[] locationParts = RegexUtil.EQUALS_PATTERN.split(line);
@@ -92,6 +101,41 @@ public class SearchArea {
     }
 
     /**
+     * Gets a list of entities in the area that are of specific types.
+     * 
+     * @param types The list of types.
+     * @return The entities.
+     */
+    public List<Entity> getEntitiesInArea(Collection<EntityType> types) {
+
+        List<Entity> entities = new ArrayList<Entity>();
+
+        for(Chunk chunk : getChunksInArea())
+            for(Entity ent : chunk.getEntities()) {
+                if(!ent.isValid() || !isWithinArea(ent.getLocation())) continue;
+
+                boolean isType = false;
+                for(EntityType type : types) {
+                    if(type.is(ent)) {
+                        isType = true;
+                        break;
+                    }
+                }
+                if(!isType) continue;
+
+                entities.add(ent);
+            }
+
+        return entities;
+    }
+
+    @SuppressWarnings("serial")
+    public List<Entity> getEntitiesInArea() {
+
+        return getEntitiesInArea(new ArrayList<EntityType>(){{add(EntityType.ANY);}});
+    }
+
+    /**
      * Check if a certain location is within the bounds of this SearchArea.
      * 
      * @param location The location to check.
@@ -100,7 +144,7 @@ public class SearchArea {
     public boolean isWithinArea(Location location) {
 
         if(hasRegion()) {
-            if(getRegion().contains(BukkitUtil.toVector(location)))
+            if(getRegion().contains(BukkitUtil.toVector(location)) && location.getWorld().equals(world))
                 return true;
         } else if(hasRadiusAndCenter()) {
             if(LocationUtil.isWithinRadius(location, getCenter(), getRadius()))
@@ -111,13 +155,48 @@ public class SearchArea {
     }
 
     /**
+     * Get a set of chunks inside this SearchArea.
+     * 
+     * @return the set of chunks.
+     */
+    public Set<Chunk> getChunksInArea() {
+
+        Set<Chunk> chunks = new HashSet<Chunk>();
+
+        if(hasRegion()) {
+
+            Chunk c1 = getWorld().getChunkAt(getRegion().getMinimumPoint().getBlockX(), getRegion().getMinimumPoint().getBlockZ());
+            Chunk c2 = getWorld().getChunkAt(getRegion().getMaximumPoint().getBlockX(), getRegion().getMaximumPoint().getBlockZ());
+            int xMin = Math.min(c1.getX(), c2.getX());
+            int xMax = Math.max(c1.getX(), c2.getX());
+            int zMin = Math.min(c1.getZ(), c2.getZ());
+            int zMax = Math.max(c1.getZ(), c2.getZ());
+
+            for(int x = xMin; x <= xMax; x++)
+                for(int z = zMin; z <= zMax; z++)
+                    chunks.add(getWorld().getChunkAt(x,z));
+        } else if (hasRadiusAndCenter()) {
+
+            int chunkRadiusX = getRadius().getBlockX() < 16 ? 1 : getRadius().getBlockX() / 16;
+            int chunkRadiusZ = getRadius().getBlockZ() < 16 ? 1 : getRadius().getBlockZ() / 16;
+            for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
+                for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
+                    chunks.add(new Location(getCenter().getWorld(), getCenter().getBlockX() + chX * 16, getCenter().getBlockY(), getCenter().getBlockZ() + chZ * 16).getChunk());
+                }
+            }
+        }
+
+        return chunks;
+    }
+
+    /**
      * Checks if this SearchArea is a Region type, compared to other types.
      * 
      * @return If it is a Region type.
      */
     public boolean hasRegion() {
 
-        return region != null;
+        return region != null && world != null;
     }
 
     /**
@@ -158,6 +237,16 @@ public class SearchArea {
     public ProtectedRegion getRegion() {
 
         return region;
+    }
+
+    /**
+     * Get the world the WorldGuard region exists in.
+     * 
+     * @return the world
+     */
+    public World getWorld() {
+
+        return world;
     }
 
     /**

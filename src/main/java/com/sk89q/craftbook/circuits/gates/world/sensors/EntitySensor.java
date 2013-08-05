@@ -4,10 +4,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Server;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -15,10 +15,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.EntityType;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Silthus
@@ -27,8 +24,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
     private Set<EntityType> types;
 
-    private Block center;
-    private Vector radius;
+    private SearchArea area;
 
     private short minimum;
 
@@ -75,21 +71,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
             minimum = 1;
         }
 
-        // if the line contains a = the offset is given
-        // the given string should look something like that:
-        // radius=x:y:z or radius, e.g. 1=-2:5:11
-        radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-        if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-            radiusString = String.valueOf(radius.getBlockX());
-        if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-            center = ICUtil.parseBlockLocation(getSign());
-        } else {
-            getSign().setLine(2, radiusString);
-            center = getBackBlock();
-        }
-        getSign().update(false);
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
     }
 
     @Override
@@ -122,16 +104,11 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
         short cur = 0;
 
-        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
-            if (entity.isValid()) {
-                for (EntityType type : types) { // Check Type
-                    if (type.is(entity)) { // Check Radius
-                        if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                            cur++;
-                    }
-                }
-            }
-        }
+        for (Entity entity : area.getEntitiesInArea(types))
+            if (entity.isValid())
+                for (EntityType type : types) // Check Type
+                    if (type.is(entity)) // Check Radius
+                        cur++;
 
         if(minMode == 0 && cur >= minimum)
             return true;
@@ -163,7 +140,8 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            ICUtil.verifySignSyntax(sign);
+            if(!SearchArea.createArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+                throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
 
         @Override
