@@ -40,8 +40,10 @@ public class HeadDrops implements Listener {
             return;
 
         String typeName = event.getEntityType().getName();
-        if(typeName == null && event.getEntityType() == EntityType.PLAYER)
+        if (typeName == null && event.getEntityType() == EntityType.PLAYER)
             typeName = "PLAYER";
+        else if (typeName == null)
+            return; //Invalid type.
         else
             typeName = typeName.toUpperCase();
 
