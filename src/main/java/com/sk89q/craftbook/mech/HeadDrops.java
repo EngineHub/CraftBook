@@ -9,6 +9,7 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -33,6 +34,7 @@ public class HeadDrops implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
+        if(!(event.getEntity() instanceof LivingEntity)) return;
         if(CraftBookPlugin.inst().getConfiguration().headDropsPlayerKillOnly && event.getEntity().getKiller() == null) return;
         if(event.getEntityType() == null) return;
 

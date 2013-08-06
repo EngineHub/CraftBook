@@ -10,6 +10,7 @@ import org.bukkit.Server;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.Ammeter;
+import com.sk89q.craftbook.mech.BetterLeads;
 import com.sk89q.craftbook.mech.BetterPhysics;
 import com.sk89q.craftbook.mech.BetterPistons;
 import com.sk89q.craftbook.mech.BetterPistons.Types;
@@ -179,6 +180,8 @@ public class MechanicalCore implements LocalComponent {
             server.getPluginManager().registerEvents(new HeadDrops(), plugin);
         if (config.commandItemsEnabled)
             server.getPluginManager().registerEvents(new CommandItems(), plugin);
+        if (config.leadsEnabled)
+            server.getPluginManager().registerEvents(new BetterLeads(), plugin);
         /*
          * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()
          * .registerEvents(new

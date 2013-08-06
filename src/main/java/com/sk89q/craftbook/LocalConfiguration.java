@@ -58,6 +58,9 @@ public abstract class LocalConfiguration {
     public boolean areaShortenNames;
     public int areaMaxAreaSize;
     public int areaMaxAreaPerUser;
+    // Mechanics - BetterLeads
+    public boolean leadsEnabled;
+    public List<String> leadsAllowedMobs;
     // Mechanics - BetterPhysics
     public boolean physicsEnabled;
     public boolean physicsLadders;
