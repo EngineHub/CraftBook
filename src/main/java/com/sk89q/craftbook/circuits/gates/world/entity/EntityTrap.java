@@ -1,10 +1,14 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
-import org.bukkit.Location;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -13,10 +17,8 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Me4502
@@ -54,17 +56,17 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         chip.setOutput(0, hurt());
     }
 
-    Vector radius;
+    SearchArea area;
+
     int damage;
-    EntityType type;
-    Location location;
+    List<EntityType> types;
     boolean erase;
 
     @Override
     public void load() {
 
-        location = ICUtil.parseBlockLocation(getSign()).getLocation();
-        radius = ICUtil.parseRadius(getSign());
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+
         try {
             damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[2]);
         } catch (Exception ignored) {
@@ -72,16 +74,12 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         }
 
         if (!getLine(3).isEmpty()) {
-            try {
-                type = EntityType.fromString(getSign().getLine(3).replace("!", ""));
-            } catch(Exception e){
-                type = EntityType.ANY;
-            }
+            types = new ArrayList<EntityType>(EntityType.getDetected(getLine(3)));
         } else
-            type = EntityType.MOB_HOSTILE;
+            types = Arrays.asList(EntityType.MOB_HOSTILE);
 
-        if(type == null)
-            type = EntityType.ANY;
+        if(types.isEmpty())
+            types.add(EntityType.ANY);
         erase = getLine(3).startsWith("!");
     }
 
@@ -94,10 +92,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
 
         boolean hasHurt = false;
 
-        for (Entity e : LocationUtil.getNearbyEntities(location, radius)) {
-
-            if (!type.is(e))
-                continue;
+        for (Entity e : area.getEntitiesInArea(types)) {
 
             if(erase)
                 e.remove();

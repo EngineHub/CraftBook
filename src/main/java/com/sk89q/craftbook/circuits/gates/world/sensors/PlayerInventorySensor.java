@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,12 +12,10 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
@@ -48,8 +45,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
             chip.setOutput(0, isDetected());
     }
 
-    Vector radius;
-    Location location;
+    SearchArea area;
     ItemStack item;
     int minPlayers;
     int slot;
@@ -58,22 +54,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        try {
-            radius = ICUtil.parseRadius(getSign());
-            String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-            if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-                radiusString = String.valueOf(radius.getBlockX());
-            if (getSign().getLine(2).contains("=")) {
-                getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-                location = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
-            } else {
-                getSign().setLine(2, radiusString);
-                location = getBackBlock().getLocation();
-            }
-        } catch (Exception e) {
-            location = getBackBlock().getLocation();
-            BukkitUtil.printStacktrace(e);
-        }
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
 
         String[] parts = RegexUtil.EQUALS_PATTERN.split(getLine(3));
         item = ItemUtil.makeItemValid(ItemSyntax.getItem(parts[0]));
@@ -104,8 +85,8 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
         int players = 0;
 
-        for (Player e : getServer().getOnlinePlayers()) {
-            if (e == null || !e.isValid() || !LocationUtil.isWithinRadius(location, e.getLocation(), radius))
+        for (Player e : area.getPlayersInArea()) {
+            if (e == null || !e.isValid())
                 continue;
 
             if(testPlayer(e))

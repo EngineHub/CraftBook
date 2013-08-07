@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
+import java.util.Arrays;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,15 +13,14 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.EntityType;
+import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -29,8 +30,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    private Block center;
-    private Vector radius;
+    private SearchArea area;
     private Block chest;
 
     @Override
@@ -39,17 +39,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
-        radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-        if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-            radiusString = String.valueOf(radius.getBlockX());
-        if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
-            center = ICUtil.parseBlockLocation(getSign());
-        } else {
-            getSign().setLine(2, radiusString);
-            center = getBackBlock();
-        }
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
 
         chest = getBackBlock().getRelative(BlockFace.UP);
     }
@@ -85,15 +75,12 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
     public boolean harvest() {
 
-        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+        for (Entity entity : area.getEntitiesInArea(Arrays.asList(EntityType.MOB_PEACEFUL))) {
             if (entity.isValid() && (entity instanceof Cow || entity instanceof Sheep)) {
                 if(!((Animals) entity).isAdult())
                     continue;
-                // Check Radius
-                if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                    if(canHarvest(entity))
-                        return harvestAnimal(entity);
-                }
+                if(canHarvest(entity))
+                    return harvestAnimal(entity);
             }
         }
 
