@@ -1,17 +1,16 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
@@ -20,11 +19,9 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Me4502
@@ -48,16 +45,17 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         return "POTION INDUCER";
     }
 
-    Vector radius;
-    Location offset;
-    int effectID, effectAmount, effectTime;
-    boolean mobs;
-    boolean players;
+    SearchArea area;
+    Set<EntityType> types;
+    PotionEffect effect;
 
     @Override
     public void load() {
 
         String[] effectInfo = RegexUtil.COLON_PATTERN.split(getLine(2), 3);
+
+        int effectID, effectAmount, effectTime;
+
         try {
             effectID = Integer.parseInt(effectInfo[0]);
         }
@@ -74,38 +72,35 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         } catch (Exception e) {
             effectTime = 10;
         }
+        effect = new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1, true);
         String line4 = getSign().getLine(3).toLowerCase(Locale.ENGLISH);
-        if (line4.contains("pm")) {
-            mobs = true;
-            players = true;
-        } else if (line4.contains("m")) {
-            mobs = true;
-            players = false;
-        } else if (line4.contains("p")) {
-            players = true;
-            mobs = false;
-        } else {
-            players = true;
-            mobs = false;
+        types = new HashSet<EntityType>();
+        if (line4.startsWith("m")) {
+            types.add(EntityType.MOB_ANY);
+            line4 = line4.substring(1);
         }
+        if (line4.contains("p")) {
+            types.add(EntityType.PLAYER);
+            line4 = line4.substring(1);
+        }
+        if (line4.startsWith("m") && !types.contains(EntityType.MOB_ANY)) {
+            types.add(EntityType.MOB_ANY);
+            line4 = line4.substring(1);
+        }
+
         line4 = line4.replace("m", "").replace("p", "");
-        radius = ICUtil.parseRadius(line4);
-        if(line4.contains("="))
-            offset = ICUtil.parseBlockLocation(getSign(), line4, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate).getLocation();
-        else
-            offset = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), line4);
     }
 
     public boolean induce() {
 
         boolean value = false;
-        // chunks
-        for (Entity entity : LocationUtil.getNearbyEntities(offset, radius)) {
+
+        for (Entity entity : area.getEntitiesInArea(types)) {
             if (entity.isValid() && entity instanceof LivingEntity) {
                 LivingEntity liv = (LivingEntity) entity;
-                if (!mobs && !(liv instanceof Player)) continue;
-                if (!players && liv instanceof Player) continue;
-                liv.addPotionEffect(new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1, true), true);
+                liv.addPotionEffect(effect, true);
                 value = true;
             }
         }
