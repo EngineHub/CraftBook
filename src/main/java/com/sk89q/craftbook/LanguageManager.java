@@ -1,7 +1,6 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +47,10 @@ public class LanguageManager {
 
             try {
                 lang.load();
-            } catch (IOException e) {
+            } catch (Throwable e) {
+                CraftBookPlugin.inst().getLogger().severe("An error occured loading the languages file for: " + language + "! This language MAY NOT WORK UNTIL FIXED!");
                 e.printStackTrace();
+                continue;
             }
 
             lang.setWriteDefaults(true);
