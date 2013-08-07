@@ -104,6 +104,10 @@ public class Payment extends AbstractMechanic {
                 if (!player.hasPermission("craftbook.mech.pay")) throw new InsufficientPermissionsException();
 
                 sign.setLine(1, "[Pay]");
+                if(sign.getLine(2).isEmpty())
+                    sign.setLine(2, String.valueOf(5));
+                if(sign.getLine(3).isEmpty())
+                    sign.setLine(3, player.getName());
                 sign.update(false);
                 player.print("mech.pay.create");
             } else return null;
