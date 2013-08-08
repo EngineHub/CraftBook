@@ -61,18 +61,6 @@ public class MapChanger extends AbstractMechanic {
         }
     }
 
-    /**
-     * @param trigger if you didn't already check if this is a wall sign with appropriate text,
-     *                you're going on Santa's naughty list.
-     * @param plugin  the direction (UP or DOWN) in which we're looking for a destination
-     *
-     * @throws InvalidMechanismException
-     */
-    private MapChanger() throws InvalidMechanismException {
-
-        super();
-    }
-
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
@@ -93,7 +81,7 @@ public class MapChanger extends AbstractMechanic {
                 } catch (Exception e) {
                     id = -1;
                 }
-                if (id == -1)
+                if (id <= -1)
                     event.getPlayer().sendMessage("Invalid Map!");
                 event.getPlayer().getItemInHand().setDurability(id);
             }

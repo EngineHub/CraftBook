@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -35,7 +36,7 @@ import com.sk89q.worldedit.blocks.ItemID;
  */
 public class Snow implements Listener {
 
-    private HashMap<Location, Integer> tasks = new HashMap<Location, Integer>();
+    private HashMap<Location, BukkitTask> tasks = new HashMap<Location, BukkitTask>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSnowballHit(ProjectileHitEvent event) {
@@ -148,10 +149,8 @@ public class Snow implements Listener {
 
         if (tasks.containsKey(loc)) return;
         long delay = CraftBookPlugin.inst().getRandom().nextInt(60) + 40; // 100 is max possible
-        int taskID = CraftBookPlugin.inst().getServer().getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst
-                (), new MakeSnow(loc),
-                delay * 20L, delay * 20L);
-        if (taskID == -1)
+        BukkitTask taskID = CraftBookPlugin.inst().getServer().getScheduler().runTaskTimer(CraftBookPlugin.inst(), new MakeSnow(loc), delay * 20L, delay * 20L);
+        if (taskID.getTaskId() == -1)
             CraftBookPlugin.logger().log(Level.SEVERE, "Snow Mechanic failed to schedule!");
         else tasks.put(loc, taskID);
     }
@@ -177,9 +176,9 @@ public class Snow implements Listener {
                 if (!(event.getBlock().getTypeId() == 78) && !(event.getBlock().getTypeId() == 80)) return;
                 incrementData(event.getBlock(), 0);
             } else {
-                Integer taskID = tasks.get(event);
+                BukkitTask taskID = tasks.get(event);
                 if (taskID == null) return;
-                Bukkit.getScheduler().cancelTask(taskID);
+                taskID.cancel();
                 tasks.remove(event);
             }
         }
@@ -200,9 +199,8 @@ public class Snow implements Listener {
             block.setTypeId(BlockID.SNOW, false);
             newData = (byte) 7;
         }
-        if (newData > (byte) 7) {
-            newData = (byte) 0;
-        }
+        newData = (byte) Math.min(newData, 7);
+
         setBlockDataWithNotify(block, newData);
     }
 
@@ -275,9 +273,8 @@ public class Snow implements Listener {
         if(block.getLocation().getY() == 0)
             return;
 
-        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER) {
+        if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER)
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
-        }
 
         if(!canLandOn(block.getRelative(0, -1, 0).getTypeId()))
             return;
@@ -296,9 +293,8 @@ public class Snow implements Listener {
             if(block.getTypeId() != BlockID.SNOW && canPassThrough(block.getTypeId())) {
                 block.setTypeId(BlockID.SNOW, false);
                 remove = true;
-            } else {
+            } else
                 remove = false;
-            }
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override

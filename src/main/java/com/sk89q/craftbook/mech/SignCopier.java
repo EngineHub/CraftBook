@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -20,12 +20,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class SignCopier extends AbstractMechanic {
 
-    public static final HashMap<String, String[]> signs = new HashMap<String, String[]>();
-
-    public SignCopier() {
-
-        super();
-    }
+    public static final WeakHashMap<String, String[]> signs = new WeakHashMap<String, String[]>();
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
@@ -57,9 +52,8 @@ public class SignCopier extends AbstractMechanic {
             Bukkit.getPluginManager().callEvent(sev);
 
             if(!sev.isCancelled()) {
-                for(int i = 0; i < signs.get(player.getName()).length; i++) {
+                for(int i = 0; i < signs.get(player.getName()).length; i++)
                     s.setLine(i, signs.get(player.getName())[i]);
-                }
 
                 s.update();
             }

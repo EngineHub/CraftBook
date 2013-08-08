@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.HashMap;
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
@@ -23,16 +24,12 @@ import com.sk89q.craftbook.util.LocationUtil;
 public class PaintingSwitch implements Listener {
 
     CraftBookPlugin plugin = CraftBookPlugin.inst();
-    HashMap<Painting, String> paintings = new HashMap<Painting, String>();
-    HashMap<String, Painting> players = new HashMap<String, Painting>();
-
-    public PaintingSwitch() {
-
-    }
+    WeakHashMap<Painting, WeakReference<String>> paintings = new WeakHashMap<Painting, WeakReference<String>>();
+    WeakHashMap<String, WeakReference<Painting>> players = new WeakHashMap<String, WeakReference<Painting>>();
 
     public boolean isBeingEdited(Painting paint) {
 
-        String player = paintings.get(paint);
+        String player = paintings.get(paint).get();
         if (player != null && players.get(player) != null) {
             Player p = plugin.getServer().getPlayerExact(player);
             return p != null && !p.isDead();
@@ -50,10 +47,10 @@ public class PaintingSwitch implements Listener {
             if (!plugin.canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
-                    paintings.put(paint, player.getName());
-                    players.put(player.getName(), paint);
+                    paintings.put(paint, new WeakReference<String>(player.getName()));
+                    players.put(player.getName(), new WeakReference<Painting>(paint));
                     player.print("mech.painting.editing");
-                } else if (paintings.get(paint).equalsIgnoreCase(player.getName())) {
+                } else if (paintings.get(paint).get().equalsIgnoreCase(player.getName())) {
                     paintings.remove(paint);
                     players.remove(player.getName());
                     player.print("mech.painting.stop");
@@ -73,8 +70,7 @@ public class PaintingSwitch implements Listener {
         if (!plugin.getConfiguration().paintingsEnabled) return;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null || players.get(player.getName()).isDead() || !players.get(player
-                .getName()).isValid())
+        if (players.get(player.getName()) == null || players.get(player.getName()).get().isDead() || !players.get(player.getName()).get().isValid())
             return;
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
@@ -88,9 +84,9 @@ public class PaintingSwitch implements Listener {
             isForwards = true;
         }
         Art[] art = Art.values().clone();
-        Painting paint = players.get(player.getName());
+        Painting paint = players.get(player.getName()).get();
         if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
-            Painting p = players.remove(event.getPlayer().getName());
+            Painting p = players.remove(event.getPlayer().getName()).get();
             if (p != null) {
                 player.printError("mech.painting.range");
                 paintings.remove(p);
@@ -113,14 +109,14 @@ public class PaintingSwitch implements Listener {
                 break;
             }
         }
-        paintings.put(paint, player.getName());
-        players.put(player.getName(), paint);
+        paintings.put(paint, new WeakReference<String>(player.getName()));
+        players.put(player.getName(), new WeakReference<Painting>(paint));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
-        Painting p = players.remove(event.getPlayer().getName());
+        Painting p = players.remove(event.getPlayer().getName()).get();
         if (p != null) {
             paintings.remove(p);
         }
