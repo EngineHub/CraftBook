@@ -39,7 +39,7 @@ public class BetterLeads implements Listener {
         if(!found)
             return;
 
-        if(!player.hasPermission("craftbook.mech.leads")) {
+        if(!player.hasPermission("craftbook.mech.leads") || !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
