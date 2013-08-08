@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -56,6 +58,18 @@ public class BetterLeads implements Listener {
         CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
         if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer()))
             CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
+        else {
+            if(((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
+                ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
+            event.setCancelled(true);
+            if(event.getPlayer().getItemInHand().getAmount() == 1)
+                event.getPlayer().setItemInHand(null);
+            else {
+                ItemStack newStack = event.getPlayer().getItemInHand();
+                newStack.setAmount(newStack.getAmount() - 1);
+                event.getPlayer().setItemInHand(newStack);
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
