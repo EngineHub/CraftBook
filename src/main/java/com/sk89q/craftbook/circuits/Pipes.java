@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
@@ -34,7 +36,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -168,7 +169,7 @@ public class Pipes extends AbstractMechanic {
     private HashSet<ItemStack> exceptions = new HashSet<ItemStack>();
 
     private List<ItemStack> items = new ArrayList<ItemStack>();
-    private List<BlockVector> visitedPipes = new ArrayList<BlockVector>();
+    private Set<Location> visitedPipes = new HashSet<Location>();
 
     private boolean fromIC = false;
 
@@ -226,10 +227,9 @@ public class Pipes extends AbstractMechanic {
 
                     if (!isValidPipeBlock(off.getTypeId())) continue;
 
-                    BlockVector bv = BukkitUtil.toVector(off);
-                    if (visitedPipes.contains(bv)) continue;
+                    if (visitedPipes.contains(off.getLocation())) continue;
 
-                    visitedPipes.add(bv);
+                    visitedPipes.add(off.getLocation());
 
                     if(off.getTypeId() == BlockID.GLASS)
                         searchQueue.add(off);
@@ -332,7 +332,7 @@ public class Pipes extends AbstractMechanic {
                     if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull)
                         break;
                 }
-                visitedPipes.add(BukkitUtil.toVector(fac));
+                visitedPipes.add(fac.getLocation());
                 searchNearbyPipes(block);
 
                 if (!items.isEmpty()) {
@@ -348,7 +348,7 @@ public class Pipes extends AbstractMechanic {
                     return;
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
-                visitedPipes.add(BukkitUtil.toVector(fac));
+                visitedPipes.add(fac.getLocation());
                 searchNearbyPipes(block);
 
                 if (!items.isEmpty()) {

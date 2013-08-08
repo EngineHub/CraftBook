@@ -38,9 +38,9 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
@@ -201,7 +201,7 @@ public class Gate extends AbstractMechanic {
         }
 
         CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + ID + ":" + data, "gates.search");
-        for (BlockVector bl : column.getRegion()) {
+        for (Vector bl : column.getRegion()) {
 
             Block block = BukkitUtil.toBlock(new BlockWorldVector(pt.getWorld(), bl));
 
@@ -667,7 +667,7 @@ public class Gate extends AbstractMechanic {
 
             int minY = Math.max(0, bwv.getBlockY() - CraftBookPlugin.inst().getConfiguration().gateColumnHeight);
             for (int y = bwv.getBlockY(); y >= minY; y--)
-                if (!canPassThrough(bwv.getWorld().getBlockType(new BlockVector(bwv.getX(), y, bwv.getZ())))) return y + 1;
+                if (!canPassThrough(bwv.getWorld().getBlockType(new Vector(bwv.getX(), y, bwv.getZ())))) return y + 1;
             return 0;
         }
 

@@ -50,11 +50,10 @@ import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.blocks.ItemID;
 
 /**
- * A MechanicManager tracks the BlockVector where loaded Mechanic instances have registered triggerability,
+ * A MechanicManager tracks the Vector where loaded Mechanic instances have registered triggerability,
  * and dispatches incoming events by checking
  * for Mechanic instance that might be triggered by the event and by considering instantiation of a new Mechanic
- * instance for unregistered
- * BlockVector.
+ * instance for unregistered Vector.
  *
  * @author sk89q
  * @author hash

@@ -21,7 +21,6 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
@@ -105,14 +104,14 @@ public class BukkitUtil {
         return lw;
     }
 
-    public static BlockVector toVector(Block block) {
+    public static Vector toVector(Block block) {
 
-        return new BlockVector(block.getX(), block.getY(), block.getZ());
+        return new Vector(block.getX(), block.getY(), block.getZ());
     }
 
-    public static BlockVector toVector(BlockFace face) {
+    public static Vector toVector(BlockFace face) {
 
-        return new BlockVector(face.getModX(), face.getModY(), face.getModZ());
+        return new Vector(face.getModX(), face.getModY(), face.getModZ());
     }
 
     public static BlockWorldVector toWorldVector(Block block) {

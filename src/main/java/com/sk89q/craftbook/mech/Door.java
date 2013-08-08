@@ -40,7 +40,6 @@ import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -347,7 +346,7 @@ public class Door extends AbstractMechanic {
 
     public boolean openDoor() {
 
-        for (BlockVector bv : toggle) {
+        for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             int oldType = b.getTypeId();
             if (b.getTypeId() == getDoorMaterial() || BlockUtil.isBlockReplacable(b.getTypeId())) {
@@ -366,7 +365,7 @@ public class Door extends AbstractMechanic {
 
     public boolean closeDoor(LocalPlayer player) {
 
-        for (BlockVector bv : toggle) {
+        for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getTypeId())) {
                 if (plugin.getConfiguration().safeDestruction) {

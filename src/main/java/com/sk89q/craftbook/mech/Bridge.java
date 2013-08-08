@@ -39,7 +39,6 @@ import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -320,7 +319,7 @@ public class Bridge extends AbstractMechanic {
 
     public boolean openBridge() {
 
-        for (BlockVector bv : toggle) {
+        for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             int oldType = b.getTypeId();
             if (b.getTypeId() == getBridgeMaterial() || BlockUtil.isBlockReplacable(b.getTypeId())) {
@@ -339,7 +338,7 @@ public class Bridge extends AbstractMechanic {
 
     public boolean closeBridge(LocalPlayer player) {
 
-        for (BlockVector bv : toggle) {
+        for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getTypeId())) {
                 if (plugin.getConfiguration().safeDestruction) {

@@ -221,7 +221,7 @@ public class MechanicListenerAdapter implements Listener {
         World world = block.getWorld();
         BlockWorldVector v = BukkitUtil.toWorldVector(block);
 
-        // Give the method a BlockVector instead of a Block
+        // Give the method a BlockWorldVector instead of a Block
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
         boolean wasChange = wasOn != isOn;
