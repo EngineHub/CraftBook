@@ -155,15 +155,17 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.area.max-per-user", "Sets the max amount of ToggleAreas that can be within one namespace.");
         areaMaxAreaPerUser = config.getInt("mechanics.area.max-per-user", 30);
 
+
         // Better Leads Configuration Listener
         config.setComment("mechanics.better-leads.enable", "Enables BetterLeads Mechanics.");
         leadsEnabled = config.getBoolean("mechanics.better-leads.enable", false);
 
-        config.setComment("mechanics.better-leads.stop-mob-target", "Stop hostile mobs targetting you if you are holding them on a leash.");
+        config.setComment("mechanics.better-leads.stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
         leadsStopTarget = config.getBoolean("mechanics.better-leads.stop-mob-target", false);
 
         config.setComment("mechanics.better-leads.allowed-mobs", "The list of mobs that can be tethered with a lead.");
         leadsAllowedMobs = config.getStringList("mechanics.better-leads.allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
+
 
         // Better Physics Configuration Listener
         config.setComment("mechanics.better-physics.enable", "Enables BetterPhysics Mechanics. (This must be enabled for any sub-mechanic to work)");

@@ -55,6 +55,7 @@ public class BetterLeads implements Listener {
     public void onEntityTarget(EntityTargetEvent event) {
 
         if(!(event.getEntity() instanceof Monster)) return;
+        if(!((LivingEntity) event.getEntity()).isLeashed()) return;
         if(!(event.getTarget() instanceof Player)) return;
         if(!CraftBookPlugin.inst().getConfiguration().leadsStopTarget) return;
 

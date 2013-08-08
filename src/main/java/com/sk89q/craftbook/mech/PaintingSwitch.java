@@ -116,9 +116,9 @@ public class PaintingSwitch implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
-        Painting p = players.remove(event.getPlayer().getName()).get();
+        WeakReference<Painting> p = players.remove(event.getPlayer().getName());
         if (p != null) {
-            paintings.remove(p);
+            paintings.remove(p.get());
         }
     }
 }
