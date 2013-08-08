@@ -19,7 +19,6 @@ package com.sk89q.craftbook;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -122,7 +121,7 @@ class WatchBlockManager {
      */
     public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
 
-        Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
+        Set<PersistentMechanic> folks = Collections.newSetFromMap(new WeakHashMap<PersistentMechanic, Boolean>());
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();
         for (Entry<BlockWorldVector, Set<PersistentMechanic>> entry : watchBlocks.entrySet()) {
