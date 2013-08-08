@@ -24,12 +24,15 @@ public class BetterLeads implements Listener {
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(player.getHeldItemType() != ItemID.LEAD) return;
+        CraftBookPlugin.logDebugMessage("A player has right clicked an entity with a lead!", "betterleads.allowed-mobs");
 
         String typeName = event.getRightClicked().getType().getName();
         if (typeName == null && event.getRightClicked().getType() == EntityType.PLAYER)
             typeName = "PLAYER";
         else if (typeName == null)
             return; //Invalid type.
+
+        CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
         boolean found = false;
         for(String type : CraftBookPlugin.inst().getConfiguration().leadsAllowedMobs) {
@@ -42,13 +45,17 @@ public class BetterLeads implements Listener {
         if(!found)
             return;
 
+        CraftBookPlugin.logDebugMessage(typeName + " is allowed in the configuration.", "betterleads.allowed-mobs");
+
         if(!player.hasPermission("craftbook.mech.leads") || !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        ((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer());
+        CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
+        if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer()))
+            CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
