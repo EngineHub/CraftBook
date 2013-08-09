@@ -1,6 +1,8 @@
 package com.sk89q.craftbook.mech;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.bukkit.Art;
@@ -24,19 +26,12 @@ import com.sk89q.craftbook.util.LocationUtil;
 public class PaintingSwitch implements Listener {
 
     CraftBookPlugin plugin = CraftBookPlugin.inst();
-    WeakHashMap<Painting, WeakReference<String>> paintings = new WeakHashMap<Painting, WeakReference<String>>();
-    WeakHashMap<String, WeakReference<Painting>> players = new WeakHashMap<String, WeakReference<Painting>>();
+    Map<Painting, String> paintings = new WeakHashMap<Painting, String>();
+    Map<String, WeakReference<Painting>> players = new HashMap<String, WeakReference<Painting>>();
 
     public boolean isBeingEdited(Painting paint) {
 
-        WeakReference<String> ref = paintings.get(paint);
-        if(ref == null) return false;
-        else if(ref.get() == null) {
-
-            paintings.remove(paint);
-            return false;
-        }
-        String player = ref.get();
+        String player = paintings.get(paint);
         if (player != null && players.get(player) != null) {
             Player p = plugin.getServer().getPlayerExact(player);
             return p != null && !p.isDead();
@@ -54,10 +49,10 @@ public class PaintingSwitch implements Listener {
             if (!plugin.canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
-                    paintings.put(paint, new WeakReference<String>(player.getName()));
+                    paintings.put(paint, player.getName());
                     players.put(player.getName(), new WeakReference<Painting>(paint));
                     player.print("mech.painting.editing");
-                } else if (paintings.get(paint).get().equalsIgnoreCase(player.getName())) {
+                } else if (paintings.get(paint).equalsIgnoreCase(player.getName())) {
                     paintings.remove(paint);
                     players.remove(player.getName());
                     player.print("mech.painting.stop");
@@ -116,7 +111,7 @@ public class PaintingSwitch implements Listener {
                 break;
             }
         }
-        paintings.put(paint, new WeakReference<String>(player.getName()));
+        paintings.put(paint, player.getName());
         players.put(player.getName(), new WeakReference<Painting>(paint));
     }
 
