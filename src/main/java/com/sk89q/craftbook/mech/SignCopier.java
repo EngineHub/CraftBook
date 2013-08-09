@@ -5,6 +5,7 @@ import java.util.WeakHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -20,7 +21,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class SignCopier extends AbstractMechanic {
 
-    public static final WeakHashMap<String, String[]> signs = new WeakHashMap<String, String[]>();
+    public static final WeakHashMap<Player, String[]> signs = new WeakHashMap<Player, String[]>();
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
@@ -31,7 +32,7 @@ public class SignCopier extends AbstractMechanic {
 
         if(event.getClickedBlock().getState() instanceof Sign) {
 
-            signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
+            signs.put(event.getPlayer(), ((Sign) event.getClickedBlock().getState()).getLines());
             player.print("mech.signcopy.copy");
             event.setCancelled(true);
         }
@@ -44,16 +45,17 @@ public class SignCopier extends AbstractMechanic {
 
         if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
-        if(event.getClickedBlock().getState() instanceof Sign && signs.containsKey(player.getName())) {
+        if(event.getClickedBlock().getState() instanceof Sign && signs.containsKey(event.getPlayer())) {
 
             Sign s = (Sign) event.getClickedBlock().getState();
+            String[] newLines = signs.get(event.getPlayer());
 
-            SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), signs.get(player.getName()));
+            SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), newLines);
             Bukkit.getPluginManager().callEvent(sev);
 
             if(!sev.isCancelled()) {
-                for(int i = 0; i < signs.get(player.getName()).length; i++)
-                    s.setLine(i, signs.get(player.getName())[i]);
+                for(int i = 0; i < newLines.length; i++)
+                    s.setLine(i, newLines[i]);
 
                 s.update();
             }
