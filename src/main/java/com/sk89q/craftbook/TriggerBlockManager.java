@@ -16,13 +16,11 @@
 
 package com.sk89q.craftbook;
 
-import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.CraftbookRuntimeException;
@@ -39,14 +37,14 @@ class TriggerBlockManager {
     /**
      * Holds the list of triggers.
      */
-    private final Map<BlockWorldVector, WeakReference<PersistentMechanic>> triggers;
+    private final Map<BlockWorldVector, PersistentMechanic> triggers;
 
     /**
      * Construct the manager.
      */
     public TriggerBlockManager() {
 
-        triggers = new LinkedHashMap<BlockWorldVector, WeakReference<PersistentMechanic>>();
+        triggers = new HashMap<BlockWorldVector, PersistentMechanic>();
     }
 
     /**
@@ -64,7 +62,7 @@ class TriggerBlockManager {
         }
 
         for (BlockWorldVector p : m.getTriggerPositions())
-            triggers.put(p, new WeakReference<PersistentMechanic>(m));
+            triggers.put(p, m);
     }
 
     /**
@@ -76,7 +74,7 @@ class TriggerBlockManager {
         // Debugging code
         if(CraftBookPlugin.isDebugFlagEnabled("triggers")) {
             for (BlockWorldVector p : m.getTriggerPositions()) {
-                if (triggers.get(p).get() != m)
+                if (triggers.get(p) != m)
                     throw new CraftbookRuntimeException(new IllegalStateException(p + " was occupied by another Mechanic"));
             }
         }
@@ -96,8 +94,7 @@ class TriggerBlockManager {
      */
     public PersistentMechanic get(BlockWorldVector p) {
 
-        WeakReference<PersistentMechanic> mech = triggers.get(p);
-        return mech == null ? null : mech.get();
+        return triggers.get(p);
     }
 
     /**
@@ -113,10 +110,10 @@ class TriggerBlockManager {
      */
     public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
 
-        Set<PersistentMechanic> folks = Collections.newSetFromMap(new WeakHashMap<PersistentMechanic, Boolean>());
+        Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();
-        for (Entry<BlockWorldVector, WeakReference<PersistentMechanic>> entry : triggers.entrySet()) {
+        for (Entry<BlockWorldVector, PersistentMechanic> entry : triggers.entrySet()) {
             BlockWorldVector pos = entry.getKey();
 
             // Different world! Abort
@@ -130,7 +127,7 @@ class TriggerBlockManager {
             if (curChunkX != chunkX || curChunkZ != chunkZ)
                 continue;
 
-            PersistentMechanic pMechanic = entry.getValue().get();
+            PersistentMechanic pMechanic = entry.getValue();
 
             if (pMechanic != null)
                 folks.add(pMechanic);

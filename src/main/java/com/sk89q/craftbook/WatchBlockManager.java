@@ -17,12 +17,11 @@
 package com.sk89q.craftbook;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import org.bukkit.event.block.BlockEvent;
 
@@ -60,7 +59,7 @@ class WatchBlockManager {
         for (BlockWorldVector p : m.getWatchedPositions()) {
             Set<PersistentMechanic> set = watchBlocks.get(p);
             if (set == null) {
-                set = Collections.newSetFromMap(new WeakHashMap<PersistentMechanic, Boolean>(4));
+                set = new HashSet<PersistentMechanic>();
                 watchBlocks.put(p, set);
             }
             set.add(m);
@@ -121,7 +120,7 @@ class WatchBlockManager {
      */
     public Set<PersistentMechanic> getByChunk(BlockWorldVector2D chunk) {
 
-        Set<PersistentMechanic> folks = Collections.newSetFromMap(new WeakHashMap<PersistentMechanic, Boolean>());
+        Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
         int chunkX = chunk.getBlockX();
         int chunkZ = chunk.getBlockZ();
         for (Entry<BlockWorldVector, Set<PersistentMechanic>> entry : watchBlocks.entrySet()) {
@@ -152,7 +151,7 @@ class WatchBlockManager {
      */
     public Set<PersistentMechanic> get(BlockWorldVector pos) {
 
-        Set<PersistentMechanic> folks = Collections.newSetFromMap(new WeakHashMap<PersistentMechanic, Boolean>());
+        Set<PersistentMechanic> folks = new HashSet<PersistentMechanic>();
         if(watchBlocks.get(pos) == null)
             return folks;
         folks.addAll(watchBlocks.get(pos));
