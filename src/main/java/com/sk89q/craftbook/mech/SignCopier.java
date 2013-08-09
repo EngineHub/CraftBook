@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.WeakHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,7 +21,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class SignCopier extends AbstractMechanic {
 
-    public static final WeakHashMap<Player, String[]> signs = new WeakHashMap<Player, String[]>();
+    public static final Map<String, String[]> signs = new HashMap<String, String[]>();
 
     @Override
     public void onRightClick(PlayerInteractEvent event) {
@@ -32,7 +32,7 @@ public class SignCopier extends AbstractMechanic {
 
         if(event.getClickedBlock().getState() instanceof Sign) {
 
-            signs.put(event.getPlayer(), ((Sign) event.getClickedBlock().getState()).getLines());
+            signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
             player.print("mech.signcopy.copy");
             event.setCancelled(true);
         }
@@ -45,17 +45,17 @@ public class SignCopier extends AbstractMechanic {
 
         if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
-        if(event.getClickedBlock().getState() instanceof Sign && signs.containsKey(event.getPlayer())) {
+        if(event.getClickedBlock().getState() instanceof Sign && signs.containsKey(player.getName())) {
 
             Sign s = (Sign) event.getClickedBlock().getState();
-            String[] newLines = signs.get(event.getPlayer());
+            String[] lines = signs.get(player.getName());
 
-            SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), newLines);
+            SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
             Bukkit.getPluginManager().callEvent(sev);
 
             if(!sev.isCancelled()) {
-                for(int i = 0; i < newLines.length; i++)
-                    s.setLine(i, newLines[i]);
+                for(int i = 0; i < lines.length; i++)
+                    s.setLine(i, lines[i]);
 
                 s.update();
             }
