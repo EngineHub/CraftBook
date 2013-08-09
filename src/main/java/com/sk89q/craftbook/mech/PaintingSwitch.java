@@ -29,7 +29,14 @@ public class PaintingSwitch implements Listener {
 
     public boolean isBeingEdited(Painting paint) {
 
-        String player = paintings.get(paint).get();
+        WeakReference<String> ref = paintings.get(paint);
+        if(ref == null) return false;
+        else if(ref.get() == null) {
+
+            paintings.remove(paint);
+            return false;
+        }
+        String player = ref.get();
         if (player != null && players.get(player) != null) {
             Player p = plugin.getServer().getPlayerExact(player);
             return p != null && !p.isDead();
