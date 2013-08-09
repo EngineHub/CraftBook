@@ -488,11 +488,12 @@ public class Gate extends AbstractMechanic {
 
         if (sign == null) return;
 
-        if (hasEnoughBlocks(sign)) {
+        int amount = getBlocks(sign);
+        if (amount > 0) {
             int type = getGateBlock();
-            if(type == 0)
+            if(type <= 0)
                 type = BlockID.FENCE;
-            ItemStack toDrop = new ItemStack(type, getBlocks(sign));
+            ItemStack toDrop = new ItemStack(type, amount);
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
     }
@@ -541,9 +542,9 @@ public class Gate extends AbstractMechanic {
                 }
             }
         } else {
-            for (int x1 = x - 3; x1 <= x + 3; x1++) {
-                for (int y1 = y - 3; y1 <= y + 6; y1++) {
-                    for (int z1 = z - 3; z1 <= z + 3; z1++) {
+            for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
+                for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
+                    for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
                         if (getFirstBlock(new WorldVector(world, x1, y1, z1)) != 0) {
                             gateBlock = getFirstBlock(new WorldVector(world, x1, y1, z1));
                         }
