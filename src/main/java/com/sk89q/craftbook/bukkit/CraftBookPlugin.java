@@ -589,6 +589,14 @@ public class CraftBookPlugin extends JavaPlugin {
         return instance;
     }
 
+    public static void setInstance(CraftBookPlugin instance) throws IllegalArgumentException {
+
+        if(CraftBookPlugin.instance != null)
+            throw new IllegalArgumentException("Instance already set!");
+
+        CraftBookPlugin.instance = instance;
+    }
+
     /**
      * This retrieves the CraftBookPlugin logger.
      *

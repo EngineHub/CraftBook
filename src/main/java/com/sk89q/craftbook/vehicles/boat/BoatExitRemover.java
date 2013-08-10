@@ -16,26 +16,36 @@ import com.sk89q.worldedit.blocks.ItemID;
 public class BoatExitRemover implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onVehicleExit(final VehicleExitEvent event) {
+    public void onVehicleExit(VehicleExitEvent event) {
 
         if (!(event.getVehicle() instanceof Boat)) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new BoatRemover(event), 2L);
+    }
 
-            @Override
-            public void run () {
-                if(CraftBookPlugin.inst().getConfiguration().boatRemoveOnExitGiveItem) {
+    public class BoatRemover implements Runnable {
 
-                    ItemStack stack = new ItemStack(ItemID.WOOD_BOAT, 1);
+        VehicleExitEvent event;
 
-                    if(event.getExited() instanceof Player) {
-                        if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty())
-                            event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
-                    } else if(event.getExited() != null)
-                        event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
-                }
-                EntityUtil.killEntity(event.getVehicle());
+        public BoatRemover(VehicleExitEvent event) {
+            this.event = event;
+        }
+
+        @Override
+        public void run () {
+            if(CraftBookPlugin.inst().getConfiguration().boatRemoveOnExitGiveItem) {
+
+                ItemStack stack = new ItemStack(ItemID.WOOD_BOAT, 1);
+
+                if(event.getExited() instanceof Player) {
+                    if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty())
+                        event.getExited().getLocation().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
+                } else if(event.getExited() != null)
+                    event.getExited().getLocation().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
+                else
+                    event.getVehicle().getLocation().getWorld().dropItemNaturally(event.getVehicle().getLocation(), stack);
             }
-        }, 2L);
+            EntityUtil.killEntity(event.getVehicle());
+        }
     }
 }
