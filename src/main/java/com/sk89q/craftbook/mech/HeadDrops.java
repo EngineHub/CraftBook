@@ -177,18 +177,21 @@ public class HeadDrops implements Listener {
         MUSHROOM_COW("Mooshroom_Stew"),
         SQUID("squidette8"),
         SILVERFISH("AlexVMiner"),
-        ENDER_DRAGON("KingEndermen"),
+        ENDER_DRAGON("KingEndermen", "KingEnderman"),
         SLIME("HappyHappyMan"),
-        SNOWMAN("Koebasti"),
+        SNOWMAN("scraftbrothers2", "Koebasti"),
         IRON_GOLEM("zippie007"),
         HORSE("gavertoso"),
         PIG("XlexerX"),
-        PIG_ZOMBIE("ManBearPigZombie"),
+        PIG_ZOMBIE("ManBearPigZombie", "scraftbrothers5"),
         BAT("coolwhip101", "bozzobrain"),
         SPIDER("Kelevra_V"),
-        VILLAGER("Villager"),
-        SHEEP("Eagle_Peak"),
-        COW("VerifiedBernard");
+        VILLAGER("Villager", "Kuvase", "scraftbrothers9"),
+        SHEEP("SGT_KICYORASS", "Eagle_Peak"),
+        COW("VerifiedBernard", "CarlosTheCow"),
+        CHICKEN("scraftbrothers1"),
+        OCELOT("scraftbrothers3"),
+        WITCH("scrafbrothers4");
 
         MobSkullType(String playerName, String ... oldNames) {
 
