@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7b6
+# CraftBook Configuration for Bukkit. Generated for version: 3.7
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -63,6 +63,9 @@ easter-eggs: true
 
 # Random numbers are much more random, with a small cost to CPU usage.
 realistic-randoms: true
+
+# Show messages when a player does not have permission to do something.
+show-permission-messages: false
 common:
     variables:
         enable: true
@@ -73,13 +76,14 @@ circuits:
     ics:
         enable: true
         cache: true
-        max-radius: 15
+        max-radius: 10
         allow-short-hand: true
         keep-loaded: false
         disallowed-ics: []
         default-coordinate-system: RELATIVE
         save-persistent-data: true
         midi-use-percussion: false
+        break-on-error: false
     wiring:
         netherrack-enabled: false
         pumpkins-enabled: false
@@ -111,6 +115,12 @@ mechanics:
         shorten-long-names: true
         max-size: 5000
         max-per-user: 30
+    better-leads:
+        enable: false
+        stop-mob-target: false
+        allowed-mobs:
+        - ZOMBIE
+        - SPIDER
     better-physics:
         enable: false
         falling-ladders: true

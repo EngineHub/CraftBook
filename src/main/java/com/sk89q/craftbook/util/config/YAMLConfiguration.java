@@ -57,8 +57,8 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("circuits.ics.cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
         ICCached = config.getBoolean("circuits.ics.cache", true);
 
-        config.setComment("circuits.ics.max-radius", "The max radius IC's with a radius setting can use.");
-        ICMaxRange = config.getInt("circuits.ics.max-radius", 15);
+        config.setComment("circuits.ics.max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
+        ICMaxRange = config.getInt("circuits.ics.max-radius", 10);
 
         config.setComment("circuits.ics.allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
         ICShortHandEnabled = config.getBoolean("circuits.ics.allow-short-hand", true);
