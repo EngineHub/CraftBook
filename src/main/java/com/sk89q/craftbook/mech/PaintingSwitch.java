@@ -72,7 +72,7 @@ public class PaintingSwitch implements Listener {
         if (!plugin.getConfiguration().paintingsEnabled) return;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null || players.get(player.getName()).get().isDead() || !players.get(player.getName()).get().isValid())
+        if (players.get(player.getName()) == null || players.get(player.getName()).get() == null|| players.get(player.getName()).get().isDead() || !players.get(player.getName()).get().isValid())
             return;
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
