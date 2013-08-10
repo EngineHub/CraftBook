@@ -1,3 +1,23 @@
+3.7.1
+* Fixed BetterPistons detecting signs that it shouldn't detect.
+* Fixed a Station error that occurs if bukkit sends an invalid cart to the plugin.
++ Added an option to not show permission error messages.
+* Fixed IC's using SearchArea erroring if a WG region isn't available or not installed.
++ Added SearchArea support to: EntitySensor, PotionInducer, AnimalBreeder, AnimalHarvester, EntityTrap and PlayerInventorySensor.
++ Added an option to break IC's if an error occurs from them.
+* Fixed an error with HeadDrops when breaking entities with no names. (Eg, leash hooks)
+* Improved the README file to more closely resemble that of WorldEdit.
++ Added a BetterLeads mechanic, that allows for extra mobs to be leashed, and hostile mobs not to target their leash-holder.
+* Fixed CraftBook failing to start if it encounters an invalid language file.
+* Fixed invalid Payment sign mechanics.
+* Replaced BlockVector with Vector, to provide compatability to a potential upcoming breaking change in WorldEdit.
+* Heavily optimized many portions of the plugin.
+* Fixed the gate search radius option not working for block type detection.
+* Fixed a potential error in MaxSpeed Cart Mechanic.
+* Tweaked default IC max range. It is now 10 from 15.
+* Fixed Sheep heads having the wrong skin and added a few more conversion skins.
++ Added Chicken, Ocelot and Witch heads.
+
 3.7
 * Fixed an error with chairs and 'RequireSigns'.
 * Fixed BlockBreaker requiring data on the sign if the ID is supplied.
