@@ -82,7 +82,7 @@ public abstract class Action {
      * @return
      */
     public boolean equals(Object obj) {
-
+ 
         if (!(obj instanceof Action)) {
             return false;
         }

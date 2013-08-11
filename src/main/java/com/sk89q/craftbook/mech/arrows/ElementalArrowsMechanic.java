@@ -7,8 +7,8 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 // TODO finish
@@ -40,9 +40,9 @@ public class ElementalArrowsMechanic implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onArrowShot(ProjectileLaunchEvent event) {
+    public void onArrowShot(EntityShootBowEvent event) {
 
-        if (event.getEntity() instanceof Arrow) {
+        if (event.getProjectile() instanceof Arrow) {
             for (ElementalArrow e : arrows) {
                 if (e.onShoot(event)) return;
             }

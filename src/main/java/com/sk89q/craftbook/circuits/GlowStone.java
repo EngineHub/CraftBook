@@ -16,14 +16,10 @@
 
 package com.sk89q.craftbook.circuits;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -35,7 +31,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  *
  * @author sk89q
  */
-public class GlowStone extends PersistentMechanic {
+public class GlowStone extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<GlowStone> {
 
@@ -73,16 +69,10 @@ public class GlowStone extends PersistentMechanic {
         if(event.isMinor())
             return;
 
+        if(event.isOn() == (event.getBlock().getTypeId() == BlockID.LIGHTSTONE))
+            return;
+
         event.getBlock().setTypeIdAndData(event.isOn() ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getId(), (byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()), true);
-    }
-
-    /**
-     * Check if this mechanic is still active.
-     */
-    @Override
-    public boolean isActive() {
-
-        return BukkitUtil.toBlock(pt).getTypeId() == BlockID.LIGHTSTONE;
     }
 
     @Override
@@ -90,19 +80,5 @@ public class GlowStone extends PersistentMechanic {
 
         if (event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-
-        return Arrays.asList(pt);
-    }
-
-    @Override
-    public void onWatchBlockNotification(BlockEvent evt) {
-
-        if (evt instanceof BlockBreakEvent)
-            if (evt.getBlock().getTypeId() == BlockID.LIGHTSTONE && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
-                ((BlockBreakEvent) evt).setCancelled(true);
     }
 }

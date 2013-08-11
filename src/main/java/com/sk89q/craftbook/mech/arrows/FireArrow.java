@@ -2,8 +2,8 @@ package com.sk89q.craftbook.mech.arrows;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -34,7 +34,7 @@ public class FireArrow extends AbstractArrow {
     }
 
     @Override
-    public boolean onShoot(ProjectileLaunchEvent event) {
+    public boolean onShoot(EntityShootBowEvent event) {
 
         return false;
     }

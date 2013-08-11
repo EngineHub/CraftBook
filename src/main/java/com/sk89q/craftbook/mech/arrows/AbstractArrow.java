@@ -3,8 +3,8 @@ package com.sk89q.craftbook.mech.arrows;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.Recipe;
 
@@ -26,7 +26,7 @@ public abstract class AbstractArrow implements ElementalArrow {
     public abstract void addRecipe();
 
     @Override
-    public boolean onShoot(ProjectileLaunchEvent event) {
+    public boolean onShoot(EntityShootBowEvent event) {
         // TODO work out if its a CraftBook arrow.
         return false;
     }

@@ -16,15 +16,11 @@
 
 package com.sk89q.craftbook.circuits;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 
+import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
-import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -35,7 +31,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  *
  * @author sk89q
  */
-public class JackOLantern extends PersistentMechanic {
+public class JackOLantern extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<JackOLantern> {
 
@@ -72,6 +68,9 @@ public class JackOLantern extends PersistentMechanic {
         if(event.isMinor())
             return;
 
+        if(event.isOn() == (event.getBlock().getTypeId() == BlockID.JACKOLANTERN))
+            return;
+
         setPowered(event.getBlock(), event.isOn());
 
         event.getBlock().setData(event.getBlock().getData(), false);
@@ -84,26 +83,9 @@ public class JackOLantern extends PersistentMechanic {
         block.setData(data);
     }
 
-    /**
-     * Check if this mechanic is still active.
-     */
     @Override
-    public boolean isActive() {
-
-        return BukkitUtil.toBlock(pt).getTypeId() == BlockID.JACKOLANTERN;
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-
-        return Arrays.asList(pt);
-    }
-
-    @Override
-    public void onWatchBlockNotification(BlockEvent evt) {
-
-        if (evt instanceof BlockBreakEvent)
-            if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
-                ((BlockBreakEvent) evt).setCancelled(true);
+    public void onBlockBreak(BlockBreakEvent evt) {
+        if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
+            evt.setCancelled(true);
     }
 }
