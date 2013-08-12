@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -96,6 +97,30 @@ public class BetterLeads implements Listener {
 
         if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget()))
             event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onHitchBreakRandomly(final HangingBreakEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists) return;
+        if(!(event.getEntity() instanceof LeashHitch)) return;
+
+        int amountConnected = 0;
+
+        for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
+            if(!(ent instanceof LivingEntity)) continue;
+            if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
+            amountConnected++;
+        }
+
+        if(amountConnected == 0) {
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
+                @Override
+                public void run () {
+                    event.getEntity().remove(); //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
+                }
+            });
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
