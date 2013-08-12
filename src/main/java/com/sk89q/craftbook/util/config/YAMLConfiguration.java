@@ -163,6 +163,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.better-leads.stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
         leadsStopTarget = config.getBoolean("mechanics.better-leads.stop-mob-target", false);
 
+        config.setComment("mechanics.better-leads.owner-unleash-only", "Only allow the owner of tameable entities to unleash them from a leash hitch.");
+        leadsOwnerBreakOnly = config.getBoolean("mechanics.better-leads.owner-unleash-only", false);
+
+        config.setComment("mechanics.better-leads.hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
+        leadsHitchPersists = config.getBoolean("mechanics.better-leads.hitch-persists", false);
+
         config.setComment("mechanics.better-leads.allowed-mobs", "The list of mobs that can be tethered with a lead.");
         leadsAllowedMobs = config.getStringList("mechanics.better-leads.allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
 

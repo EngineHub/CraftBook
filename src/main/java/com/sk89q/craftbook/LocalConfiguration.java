@@ -61,6 +61,8 @@ public abstract class LocalConfiguration {
     // Mechanics - BetterLeads
     public boolean leadsEnabled;
     public boolean leadsStopTarget;
+    public boolean leadsOwnerBreakOnly;
+    public boolean leadsHitchPersists;
     public List<String> leadsAllowedMobs;
     // Mechanics - BetterPhysics
     public boolean physicsEnabled;

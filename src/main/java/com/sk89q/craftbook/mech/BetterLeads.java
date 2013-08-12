@@ -1,15 +1,21 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LeashHitch;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.LocalPlayer;
@@ -49,7 +55,7 @@ public class BetterLeads implements Listener {
 
         CraftBookPlugin.logDebugMessage(typeName + " is allowed in the configuration.", "betterleads.allowed-mobs");
 
-        if(!player.hasPermission("craftbook.mech.leads") || !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
+        if(!player.hasPermission("craftbook.mech.leads") && !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
@@ -82,10 +88,52 @@ public class BetterLeads implements Listener {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if(!player.hasPermission("craftbook.mech.leads") || !player.hasPermission("craftbook.mech.leads.ignore-target"))
+        if(!player.hasPermission("craftbook.mech.leads.ignore-target"))
             return;
 
         if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onHitchBreak(final HangingBreakByEntityEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
+        if(!(event.getEntity() instanceof LeashHitch)) return;
+        if(!(event.getRemover() instanceof Player)) return;
+
+        event.setCancelled(true);
+
+        int amountConnected = 0;
+
+        for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
+            if(!(ent instanceof LivingEntity)) continue;
+            if(!((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
+            if(!(ent instanceof Tameable) || !((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()) || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+                ((LivingEntity) ent).setLeashHolder(null);
+                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(ItemID.LEAD, 1));
+                continue;
+            } else
+                amountConnected++;
+        }
+
+        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && amountConnected == 0) {
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
+                @Override
+                public void run () {
+                    event.getEntity().remove(); //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
+                }
+            });
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onUnleash(PlayerUnleashEntityEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
+        if(!(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
+        if(!(event.getEntity() instanceof Tameable) || !((Tameable) event.getEntity()).isTamed()) return;
+        if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
     }
 }
