@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -68,6 +69,8 @@ public class BetterLeads implements Listener {
             if(((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
                 ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
             event.setCancelled(true);
+            if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
+                return;
             if(event.getPlayer().getItemInHand().getAmount() == 1)
                 event.getPlayer().setItemInHand(null);
             else {
