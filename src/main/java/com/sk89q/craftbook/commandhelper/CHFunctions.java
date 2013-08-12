@@ -15,7 +15,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 public class CHFunctions {
 
     @api
-    public static class getVariable extends AbstractFunction {
+    public static class GetVariable extends AbstractFunction {
 
         @Override
         public Construct exec (Target arg0, Environment arg1, Construct... arg2) throws ConfigRuntimeException {
@@ -66,7 +66,7 @@ public class CHFunctions {
 
         @Override
         public Version since () {
-            return CHVersion.V3_3_1;
+            return CHVersion.V3_0_1;
         }
     }
 }
