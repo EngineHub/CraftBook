@@ -108,7 +108,7 @@ public class BetterLeads implements Listener {
 
         for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
             if(!(ent instanceof LivingEntity)) continue;
-            if(!((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
+            if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
             if(!(ent instanceof Tameable) || !((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()) || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(ItemID.LEAD, 1));
@@ -131,7 +131,8 @@ public class BetterLeads implements Listener {
     public void onUnleash(PlayerUnleashEntityEvent event) {
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
-        if(!(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
+        if(!(event.getEntity() instanceof LivingEntity)) return;
+        if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
         if(!(event.getEntity() instanceof Tameable) || !((Tameable) event.getEntity()).isTamed()) return;
         if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
