@@ -169,6 +169,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         } else if (b.getTypeId() == BlockID.MELON_BLOCK) {
 
             drops.add(new ItemStack(ItemID.MELON, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
+        } else if (b.getTypeId() == BlockID.COCOA_PLANT) {
+
+            drops.add(new ItemStack(ItemID.INK_SACK, 3, (short) 3));
         } else {
             drops.addAll(b.getDrops());
         }
