@@ -55,7 +55,9 @@ public class Teleporter extends AbstractMechanic {
                 if (pos.length > 2) return new Teleporter(block);
             } else if (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
                 Button b = (Button) block.getState().getData();
-                Block sign = block.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                if(b == null || b.getAttachedFace() == null)
+                    return null;
+                Block sign = block.getRelative(b.getAttachedFace(), 2);
                 if (SignUtil.isSign(sign)) {
                     ChangedSign s = BukkitUtil.toChangedSign(sign);
                     if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;

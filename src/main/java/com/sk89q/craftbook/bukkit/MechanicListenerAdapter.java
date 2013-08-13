@@ -326,8 +326,11 @@ public class MechanicListenerAdapter implements Listener {
         } else if (type == BlockID.STONE_BUTTON || type == BlockID.WOODEN_BUTTON || type == BlockID.LEVER) {
 
             Attachable button = (Attachable) block.getState().getData();
-            BlockFace f = button.getAttachedFace();
-            handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
+            if(button != null) {
+                BlockFace f = button.getAttachedFace();
+                if(f != null)
+                    handleDirectWireInput(new WorldVector(w, x + f.getModX()*2, y, z + f.getModZ()*2), block, oldLevel, newLevel);
+            }
         }
         // For redstone wires and repeaters, the code already exited this method
         // Non-wire blocks proceed
