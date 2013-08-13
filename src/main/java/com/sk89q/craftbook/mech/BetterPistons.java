@@ -205,11 +205,6 @@ public class BetterPistons extends AbstractMechanic {
     public void crush(PistonBaseMaterial piston, ChangedSign signState) {
 
         piston.setPowered(false);
-        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
-            return;
-        }
-        trigger.getRelative(piston.getFacing()).breakNaturally();
-        trigger.getRelative(piston.getFacing()).setTypeId(0, false);
 
         if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherInstaKill) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
@@ -218,6 +213,12 @@ public class BetterPistons extends AbstractMechanic {
                 }
             }
         }
+
+        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
+            return;
+        }
+        trigger.getRelative(piston.getFacing()).breakNaturally();
+        trigger.getRelative(piston.getFacing()).setTypeId(0, false);
     }
 
     public void bounce(PistonBaseMaterial piston, ChangedSign signState) {
