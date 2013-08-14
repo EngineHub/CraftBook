@@ -11,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Pig;
@@ -22,7 +23,7 @@ import org.bukkit.entity.minecart.StorageMinecart;
 
 public enum EntityType {
     PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'), RIDEABLE('R'),
-    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), EXPLOSIVE('T'), AMBIENT('N');
+    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), EXPLOSIVE('T'), AMBIENT('N'), NON_LIVING('D'), LIVING('L');
 
 
     public boolean is(Entity entity) {
@@ -52,6 +53,10 @@ public enum EntityType {
                 return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig || entity instanceof Horse;
             case AMBIENT:
                 return entity instanceof Ambient;
+            case NON_LIVING:
+                return !(entity instanceof LivingEntity);
+            case LIVING:
+                return entity instanceof LivingEntity;
             case ANY:
                 return true;
             default:

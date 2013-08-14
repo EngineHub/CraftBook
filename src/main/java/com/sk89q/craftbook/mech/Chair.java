@@ -33,7 +33,7 @@ public class Chair implements Listener {
 
     public Chair() {
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
     }
 
     public static ConcurrentHashMap<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
