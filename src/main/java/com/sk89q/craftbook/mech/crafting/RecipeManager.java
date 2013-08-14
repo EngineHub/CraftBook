@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +24,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 public class RecipeManager extends LocalConfiguration {
 
     public static RecipeManager INSTANCE;
-    private HashSet<Recipe> recipes;
+    private Set<Recipe> recipes;
     protected static YAMLProcessor config;
 
     public RecipeManager(YAMLProcessor config) {
@@ -36,7 +37,7 @@ public class RecipeManager extends LocalConfiguration {
     @Override
     public void load() {
 
-        recipes = new HashSet<Recipe>();
+        recipes = new LinkedHashSet<Recipe>();
         if (config == null) {
             CraftBookPlugin.logger().severe("Failure loading recipes! Config is null!");
             return; // If the config is null, it can't continue.
@@ -84,9 +85,8 @@ public class RecipeManager extends LocalConfiguration {
                 "");
 
         config.addNode("crafting-recipes");
-        for(Recipe recipe : recipes) {
+        for(Recipe recipe : recipes)
             recipe.save();
-        }
 
         config.save();
 
@@ -101,6 +101,7 @@ public class RecipeManager extends LocalConfiguration {
     public void addRecipe(Recipe rec) {
 
         recipes.add(rec);
+        save();
     }
 
     public boolean removeRecipe(String name) {
@@ -111,6 +112,7 @@ public class RecipeManager extends LocalConfiguration {
             Recipe rec = recs.next();
             if(rec.getId().equalsIgnoreCase(name)) {
                 recs.remove();
+                save();
                 return true;
             }
         }
@@ -123,7 +125,7 @@ public class RecipeManager extends LocalConfiguration {
         private final String id;
 
         private RecipeType type;
-        private Collection<CraftingItemStack> ingredients;
+        private List<CraftingItemStack> ingredients;
         private LinkedHashMap<CraftingItemStack, Character> items;
         private CraftingItemStack result;
         private List<String> shape;
@@ -349,9 +351,9 @@ public class RecipeManager extends LocalConfiguration {
             return items;
         }
 
-        private Collection<CraftingItemStack> getItems(String path) {
+        private List<CraftingItemStack> getItems(String path) {
 
-            Collection<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
+            List<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String okey = String.valueOf(oitem);
@@ -385,7 +387,7 @@ public class RecipeManager extends LocalConfiguration {
             return type;
         }
 
-        public Collection<CraftingItemStack> getIngredients() {
+        public List<CraftingItemStack> getIngredients() {
 
             return ingredients;
         }

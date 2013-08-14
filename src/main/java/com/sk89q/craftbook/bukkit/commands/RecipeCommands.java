@@ -164,7 +164,6 @@ public class RecipeCommands {
                     return;
                 }
                 MechanicalCore.inst().getCustomCrafting().addRecipe(recipe);
-                RecipeManager.INSTANCE.save();
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
@@ -208,7 +207,6 @@ public class RecipeCommands {
                 RecipeManager.Recipe recipe = new RecipeManager.Recipe(name, type, ingredients, results.get(0), advancedData);
                 RecipeManager.INSTANCE.addRecipe(recipe);
                 MechanicalCore.inst().getCustomCrafting().addRecipe(recipe);
-                RecipeManager.INSTANCE.save();
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");

@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.bukkit.block.Block;
@@ -11,6 +12,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -136,6 +140,87 @@ public class ItemUtil {
         }
 
         return STRIP_RESET_PATTERN.matcher(message).replaceAll("");
+    }
+
+    public static boolean areRecipesIdentical(Recipe rec1, Recipe rec2) {
+
+        if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
+            CraftBookPlugin.logDebugMessage("Recipes have same results!", "advanced-data.compare-recipes");
+            if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
+                CraftBookPlugin.logDebugMessage("Shaped recipe!", "advanced-data.compare-recipes.shaped");
+                ShapedRecipe recipe1 = (ShapedRecipe) rec1;
+                ShapedRecipe recipe2 = (ShapedRecipe) rec2;
+                if(recipe1.getShape().length == recipe2.getShape().length) {
+                    CraftBookPlugin.logDebugMessage("Same size!", "advanced-data.compare-recipes.shaped");
+                    List<ItemStack> stacks1 = new ArrayList<ItemStack>();
+
+                    for(String s : recipe1.getShape())
+                        for(char c : s.toCharArray())
+                            for(Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
+                                if(entry.getKey().charValue() == c)
+                                    stacks1.add(entry.getValue());
+                    List<ItemStack> stacks2 = new ArrayList<ItemStack>();
+
+                    for(String s : recipe2.getShape())
+                        for(char c : s.toCharArray())
+                            for(Entry<Character, ItemStack> entry : recipe2.getIngredientMap().entrySet())
+                                if(entry.getKey().charValue() == c)
+                                    stacks2.add(entry.getValue());
+
+                    if(stacks2.size() != stacks1.size()) {
+                        CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shaped");
+                        return false;
+                    }
+                    List<ItemStack> test = new ArrayList<ItemStack>();
+                    test.addAll(stacks1);
+                    if(test.size() == 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shaped");
+                        return true;
+                    }
+                    if(!test.removeAll(stacks2) && test.size() > 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shaped");
+                        return false;
+                    }
+                    if(test.size() > 0) {
+                        CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shaped");
+                        return false;
+                    }
+                }
+            } else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
+
+                CraftBookPlugin.logDebugMessage("Shapeless Recipe!", "advanced-data.compare-recipes.shapeless");
+                ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
+                ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
+
+                if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size()) {
+                    CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shapeless");
+                    return false;
+                }
+
+                CraftBookPlugin.logDebugMessage("Same Size!", "advanced-data.compare-recipes.shapeless");
+
+                List<ItemStack> test = new ArrayList<ItemStack>();
+                test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
+                if(test.size() == 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shapeless");
+                    return true;
+                }
+                if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shapeless");
+                    return false;
+                }
+                if(test.size() > 0) {
+                    CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shapeless");
+                    return false;
+                }
+            }
+
+            CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes");
+
+            return true;
+        }
+
+        return false;
     }
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
