@@ -1,3 +1,16 @@
+3.7.2
+* Tweaked Glowstone and Jack O Lantern mechanics. This should lower memory load by a little, and should have no side effects.
++ Added persistent hitch BetterLead mechanic.
++ Added remove owner only BetterLead mechanic. (Only removes owned animals owned by the player breaking the leash hitch)
+* Fixed leashes being removed even in creative mode.
++ Added a CommandHelper function, cb_var(varname) and cb_var(varname, namespace). These require CraftBook in the CommandHelper extensions folder FOR NOW. More will be added soon.
+* Fixed Crusher piston breaking the item that is dropped by the block.
+* Fixed CombineHarvester not harvesting cocoa beans.
+* Fixed a few rare errors.
++ Added LIVING and NON_LIVING entity types.
+* Tweaked Custom Crafting. Furnace recipes may allow restrictive metadata.
+* Fixed a MoreRails option.
+
 3.7.1
 * Fixed BetterPistons detecting signs that it shouldn't detect.
 * Fixed a Station error that occurs if bukkit sends an invalid cart to the plugin.
