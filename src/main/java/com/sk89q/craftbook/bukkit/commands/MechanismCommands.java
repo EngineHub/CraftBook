@@ -38,4 +38,9 @@ public class MechanismCommands {
     public void cauldron(CommandContext context, CommandSender sender) {
 
     }
+
+    @Command(aliases = {"sign", "signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
+    @NestedCommand(SignEditCommands.class)
+    public void signedit(CommandContext context, CommandSender sender) {
+    }
 }
