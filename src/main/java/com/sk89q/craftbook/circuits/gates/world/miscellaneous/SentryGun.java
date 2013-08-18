@@ -141,13 +141,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            try {
-                String line = sign.getLine(3);
-                if (!line.isEmpty())
-                    Integer.parseInt(line);
-            } catch (Exception e) {
-                throw new ICVerificationException("The radius is invalid!");
-            }
+            ICUtil.verifySignLocationSyntax(sign, 3);
         }
 
         @Override
