@@ -1,12 +1,14 @@
 package com.sk89q.craftbook.bukkit;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.mech.Ammeter;
@@ -44,7 +46,6 @@ import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
-import com.sk89q.craftbook.mech.crafting.RecipeManager;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mech.dispenser.Recipe;
 
@@ -59,6 +60,8 @@ public class MechanicalCore implements LocalComponent {
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
     private final CopyManager copyManager = new CopyManager();
     private CustomCrafting customCrafting;
+
+    private List<CraftBookMechanic> mechanics;
 
     public static boolean isEnabled() {
 
@@ -79,14 +82,15 @@ public class MechanicalCore implements LocalComponent {
     public void enable() {
 
         plugin.registerCommands(MechanismCommands.class);
+        mechanics = new ArrayList<CraftBookMechanic>();
 
         registerMechanics();
-        registerEvents();
     }
 
     @Override
     public void disable() {
 
+        customCrafting = null;
         Iterator<String> it = Elevator.flyingPlayers.iterator();
         while(it.hasNext()) {
             OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
@@ -98,8 +102,9 @@ public class MechanicalCore implements LocalComponent {
             op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
             it.remove();
         }
-        DispenserRecipes.unload();
-        RecipeManager.INSTANCE = null;
+        for(CraftBookMechanic mech : mechanics)
+            mech.disable();
+        mechanics = null;
         instance = null;
     }
 
@@ -149,44 +154,30 @@ public class MechanicalCore implements LocalComponent {
 
         // Special mechanics.
         if (plugin.getEconomy() != null && config.paymentEnabled) plugin.registerMechanic(new Payment.Factory());
-    }
 
-    protected void registerEvents() {
+        // New System Mechanics
+        if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());
+        if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
+        if (config.snowPiling || config.snowPlace) mechanics.add(new Snow());
+        if (config.customDropEnabled) mechanics.add(new CustomDrops());
+        if (config.aiEnabled) mechanics.add(new AIMechanic());
+        if (config.chairEnabled) mechanics.add(new Chair());
+        if (config.footprintsEnabled) mechanics.add(new Footprints());
+        if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
+        if (config.physicsEnabled) mechanics.add(new BetterPhysics());
+        if (config.headDropsEnabled) mechanics.add(new HeadDrops());
+        if (config.commandItemsEnabled) mechanics.add(new CommandItems());
+        if (config.leadsEnabled) mechanics.add(new BetterLeads());
 
-        Server server = plugin.getServer();
-        BukkitConfiguration config = plugin.getConfiguration();
-
-        if (config.customCraftingEnabled)
-            server.getPluginManager().registerEvents(customCrafting = new CustomCrafting(), plugin);
-        if (config.customDispensingEnabled)
-            server.getPluginManager().registerEvents(new DispenserRecipes(), plugin);
-        if (config.snowPiling || config.snowPlace)
-            server.getPluginManager().registerEvents(new Snow(), plugin);
-        if (config.customDropEnabled)
-            server.getPluginManager().registerEvents(new CustomDrops(), plugin);
-        if (config.aiEnabled)
-            server.getPluginManager().registerEvents(new AIMechanic(), plugin);
-        if (config.chairEnabled)
-            server.getPluginManager().registerEvents(new Chair(), plugin);
-        if (config.footprintsEnabled) {
-            if (plugin.hasProtocolLib()) server.getPluginManager().registerEvents(new Footprints(), plugin);
-            else plugin.getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
+        Iterator<CraftBookMechanic> iter = mechanics.iterator();
+        while(iter.hasNext()) {
+            CraftBookMechanic mech = iter.next();
+            if(!mech.enable()) {
+                iter.remove();
+                break;
+            }
+            plugin.getServer().getPluginManager().registerEvents(mech, plugin);
         }
-        if (config.paintingsEnabled)
-            server.getPluginManager().registerEvents(new PaintingSwitch(), plugin);
-        if (config.physicsEnabled)
-            server.getPluginManager().registerEvents(new BetterPhysics(), plugin);
-        if (config.headDropsEnabled)
-            server.getPluginManager().registerEvents(new HeadDrops(), plugin);
-        if (config.commandItemsEnabled)
-            server.getPluginManager().registerEvents(new CommandItems(), plugin);
-        if (config.leadsEnabled)
-            server.getPluginManager().registerEvents(new BetterLeads(), plugin);
-        /*
-         * TODO if (getLocalConfiguration().elementalArrowSettings.enable) { getServer().getPluginManager()
-         * .registerEvents(new
-         * ElementalArrowsMechanic(this), this); }
-         */
     }
 
     /**
@@ -195,7 +186,9 @@ public class MechanicalCore implements LocalComponent {
      * @param recipe
      *
      * @return if successfully added.
+     * @deprecated Use DispenserRecipes.inst().addRecipe(recipe);
      */
+    @Deprecated
     public boolean registerDispenserRecipe(Recipe recipe) {
 
         return plugin.getConfiguration().customDispensingEnabled && DispenserRecipes.inst().addRecipe(recipe);

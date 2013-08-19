@@ -15,20 +15,20 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 
-public class HeadDrops implements Listener {
+public class HeadDrops implements CraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
@@ -229,5 +229,14 @@ public class HeadDrops implements Listener {
 
             return null;
         }
+    }
+
+    @Override
+    public boolean enable () {
+        return true;
+    }
+
+    @Override
+    public void disable () {
     }
 }

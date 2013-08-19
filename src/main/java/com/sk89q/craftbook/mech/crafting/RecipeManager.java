@@ -25,12 +25,12 @@ public class RecipeManager extends LocalConfiguration {
 
     public static RecipeManager INSTANCE;
     private Set<Recipe> recipes;
-    protected static YAMLProcessor config;
+    protected YAMLProcessor config;
 
     public RecipeManager(YAMLProcessor config) {
 
         INSTANCE = this;
-        RecipeManager.config = config;
+        this.config = config;
         load();
     }
 
@@ -120,7 +120,7 @@ public class RecipeManager extends LocalConfiguration {
         return false;
     }
 
-    public static final class Recipe {
+    public final class Recipe {
 
         private final String id;
 

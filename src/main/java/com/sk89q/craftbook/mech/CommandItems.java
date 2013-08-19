@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +19,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
@@ -33,6 +34,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -47,15 +49,15 @@ import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class CommandItems implements Listener {
+public class CommandItems implements CraftBookMechanic {
 
     public static CommandItems INSTANCE;
 
     private YAMLProcessor config;
 
-    private HashSet<CommandItemDefinition> definitions = new HashSet<CommandItemDefinition>();
+    private Set<CommandItemDefinition> definitions = new HashSet<CommandItemDefinition>();
 
-    private HashMap<Tuple2<String, String>, Integer> cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
+    private Map<Tuple2<String, String>, Integer> cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
 
     public CommandItemDefinition getDefinitionByName(String name) {
 
@@ -66,12 +68,49 @@ public class CommandItems implements Listener {
         return null;
     }
 
-    public CommandItems() {
+
+    @Override
+    public void disable () {
+        definitions.clear();
+        cooldownPeriods.clear();
+        config = null;
+        INSTANCE = null;
+    }
+
+    @Override
+    public boolean enable() {
 
         INSTANCE = this;
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
-        load();
+
+        definitions.clear();
+
+        try {
+            config.load();
+        } catch (IOException e) {
+            BukkitUtil.printStacktrace(e);
+            return false;
+        }
+
+        int amount = 0;
+
+        for(String key : config.getKeys("command-items")) {
+
+            CommandItemDefinition comdef = CommandItemDefinition.load(config, "command-items." + key);
+            if(addDefinition(comdef)) {
+                CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
+                amount++;
+            } else
+                CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
+        }
+
+        if(amount == 0) return false;
+
+        config.save();
+
+        CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
+
         if(definitions.size() > 0)
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
 
@@ -90,34 +129,8 @@ public class CommandItems implements Listener {
                     }
                 }
             }, 1, 20);
-    }
 
-    public void load() {
-
-        definitions.clear();
-
-        try {
-            config.load();
-        } catch (IOException e) {
-            BukkitUtil.printStacktrace(e);
-            return;
-        }
-
-        int amount = 0;
-
-        for(String key : config.getKeys("command-items")) {
-
-            CommandItemDefinition comdef = CommandItemDefinition.load(config, "command-items." + key);
-            if(addDefinition(comdef)) {
-                CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
-                amount++;
-            } else
-                CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
-        }
-
-        config.save();
-
-        CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
+        return true;
     }
 
     public boolean addDefinition(CommandItemDefinition def) {
@@ -136,7 +149,8 @@ public class CommandItems implements Listener {
 
         config.save();
 
-        load();
+        disable();
+        enable();
     }
 
     @EventHandler(priority=EventPriority.HIGHEST)

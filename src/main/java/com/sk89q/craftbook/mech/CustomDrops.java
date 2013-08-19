@@ -7,31 +7,25 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 
-public class CustomDrops implements Listener {
+public class CustomDrops implements CraftBookMechanic {
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
     public CustomDropManager customDrops;
-
-    public CustomDrops() {
-        customDrops = new CustomDropManager(CraftBookPlugin.inst().getDataFolder());
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if(MechanicListenerAdapter.shouldIgnoreEvent(event))
             return;
-        if (plugin.getConfiguration().customDropPermissions
-                && !plugin.wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
+        if (CraftBookPlugin.inst().getConfiguration().customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
             return;
@@ -49,9 +43,8 @@ public class CustomDrops implements Listener {
                 // Add the custom drops
                 for (CustomDropManager.DropDefinition dropDefinition : drops) {
                     ItemStack stack = dropDefinition.getItemStack();
-                    if (ItemUtil.isStackValid(stack)) {
+                    if (ItemUtil.isStackValid(stack))
                         w.dropItemNaturally(l, stack);
-                    }
                 }
 
                 if (!drops[0].append) {
@@ -66,10 +59,11 @@ public class CustomDrops implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
+        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
+            return;
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(entityType
-                .getName());
+        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(entityType.getName());
         if (drops != null) {
             if (!drops[0].append) {
                 event.getDrops().clear();
@@ -78,10 +72,20 @@ public class CustomDrops implements Listener {
             // Add the custom drops
             for (CustomDropManager.DropDefinition dropDefinition : drops) {
                 ItemStack stack = dropDefinition.getItemStack();
-                if (ItemUtil.isStackValid(stack)) {
+                if (ItemUtil.isStackValid(stack))
                     event.getDrops().add(stack);
-                }
             }
         }
+    }
+
+    @Override
+    public boolean enable () {
+        customDrops = new CustomDropManager(CraftBookPlugin.inst().getDataFolder());
+        return true;
+    }
+
+    @Override
+    public void disable () {
+        customDrops = null;
     }
 }

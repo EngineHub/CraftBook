@@ -2,25 +2,26 @@ package com.sk89q.craftbook.mech;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class Footprints implements Listener {
+public class Footprints implements CraftBookMechanic {
 
-    private boolean disabled = false;
+    private static boolean disabled = false;
 
-    public HashSet<String> footsteps = new HashSet<String>();
+    public Set<String> footsteps = new HashSet<String>();
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerMove(final PlayerMoveEvent event) {
@@ -29,8 +30,6 @@ public class Footprints implements Listener {
             return;
 
         if (disabled) return;
-        if(!CraftBookPlugin.inst().getConfiguration().footprintsEnabled)
-            return;
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
@@ -91,5 +90,18 @@ public class Footprints implements Listener {
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean enable () {
+
+        if (CraftBookPlugin.inst().hasProtocolLib()) return true;
+        else CraftBookPlugin.inst().getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
+        return false;
+    }
+
+    @Override
+    public void disable () {
+        footsteps.clear();
     }
 }

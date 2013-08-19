@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -10,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -21,6 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
@@ -34,9 +35,9 @@ import com.sk89q.worldedit.blocks.ItemID;
  *
  * @author Me4502
  */
-public class Snow implements Listener {
+public class Snow implements CraftBookMechanic {
 
-    private HashMap<Location, BukkitTask> tasks = new HashMap<Location, BukkitTask>();
+    private Map<Location, BukkitTask> tasks = new HashMap<Location, BukkitTask>();
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSnowballHit(ProjectileHitEvent event) {
@@ -376,5 +377,17 @@ public class Snow implements Listener {
     public boolean isValidBlock(int id) {
 
         return canPassThrough(id) || isSnowBlock(id);
+    }
+
+    @Override
+    public boolean enable () {
+        return true;
+    }
+
+    @Override
+    public void disable () {
+        for(BukkitTask task : tasks.values())
+            task.cancel();
+        tasks.clear();
     }
 }

@@ -5,14 +5,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class BetterPhysics implements Listener {
+public class BetterPhysics implements CraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -43,5 +43,14 @@ public class BetterPhysics implements Listener {
                 return;
             ladder.getWorld().spawn(ladder.getLocation(), FallingBlock.class);
         }
+    }
+
+    @Override
+    public boolean enable () {
+        return true;
+    }
+
+    @Override
+    public void disable () {
     }
 }

@@ -175,9 +175,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>CraftBook/WorldEdit.jar lib/WorldEdit.jar ../lib/WorldEdit.jar
-                                ../WorldEdit.jar
-                            </Class-Path>
+                            <Class-Path>CraftBook/WorldEdit.jar lib/WorldEdit.jar ../lib/WorldEdit.jar ../WorldEdit.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>

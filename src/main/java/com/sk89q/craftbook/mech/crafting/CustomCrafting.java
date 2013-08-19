@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryAction;
@@ -30,6 +29,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.PermissionAttachment;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
@@ -43,23 +43,32 @@ import com.sk89q.util.yaml.YAMLProcessor;
  *
  * @author Me4502
  */
-public class CustomCrafting implements Listener {
+public class CustomCrafting implements CraftBookMechanic {
 
-    protected final RecipeManager recipes;
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
     public static final Map<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<Recipe, RecipeManager.Recipe>();
 
-    public CustomCrafting() {
+    @Override
+    public boolean enable() {
 
         plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml");
-        recipes = new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
-        Collection<RecipeManager.Recipe> recipeCollection = recipes.getRecipes();
+        new RecipeManager(new YAMLProcessor(new File(plugin.getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
+        Collection<RecipeManager.Recipe> recipeCollection = RecipeManager.INSTANCE.getRecipes();
         int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection)
             if(addRecipe(r))
                 recipes++;
         plugin.getLogger().info("Registered " + recipes + " custom recipes!");
+
+        return true;
+    }
+
+    @Override
+    public void disable () {
+
+        advancedRecipes.clear();
+        RecipeManager.INSTANCE = null;
     }
 
     /**

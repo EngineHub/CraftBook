@@ -10,12 +10,12 @@ import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -23,9 +23,8 @@ import com.sk89q.craftbook.util.LocationUtil;
 /**
  * @author Me4502
  */
-public class PaintingSwitch implements Listener {
+public class PaintingSwitch implements CraftBookMechanic {
 
-    CraftBookPlugin plugin = CraftBookPlugin.inst();
     Map<Painting, String> paintings = new WeakHashMap<Painting, String>();
     Map<String, WeakReference<Painting>> players = new HashMap<String, WeakReference<Painting>>();
 
@@ -33,7 +32,7 @@ public class PaintingSwitch implements Listener {
 
         String player = paintings.get(paint);
         if (player != null && players.get(player) != null) {
-            Player p = plugin.getServer().getPlayerExact(player);
+            Player p = CraftBookPlugin.inst().getServer().getPlayerExact(player);
             return p != null && !p.isDead();
         }
         return false;
@@ -43,10 +42,10 @@ public class PaintingSwitch implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
         if (event.getRightClicked() instanceof Painting) {
-            LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-            if (!plugin.getConfiguration().paintingsEnabled) return;
+            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            if (!CraftBookPlugin.inst().getConfiguration().paintingsEnabled) return;
             Painting paint = (Painting) event.getRightClicked();
-            if (!plugin.canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
+            if (!CraftBookPlugin.inst().canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
                     paintings.put(paint, player.getName());
@@ -69,8 +68,7 @@ public class PaintingSwitch implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
 
-        if (!plugin.getConfiguration().paintingsEnabled) return;
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
         if (players.get(player.getName()) == null || players.get(player.getName()).get() == null|| players.get(player.getName()).get().isDead() || !players.get(player.getName()).get().isValid())
             return;
@@ -122,5 +120,16 @@ public class PaintingSwitch implements Listener {
         if (p != null) {
             paintings.remove(p.get());
         }
+    }
+
+    @Override
+    public boolean enable () {
+        return true;
+    }
+
+    @Override
+    public void disable () {
+        paintings.clear();
+        players.clear();
     }
 }

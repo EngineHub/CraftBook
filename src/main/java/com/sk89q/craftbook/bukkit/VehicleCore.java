@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -89,10 +90,11 @@ public class VehicleCore implements LocalComponent, Listener {
     @Override
     public void disable() {
 
+        stationSelection = null;
         instance = null;
     }
 
-    private HashSet<CartBlockMechanism> cartBlockMechanisms = new HashSet<CartBlockMechanism>();
+    private Set<CartBlockMechanism> cartBlockMechanisms = new HashSet<CartBlockMechanism>();
 
     protected void registerEvents() {
 

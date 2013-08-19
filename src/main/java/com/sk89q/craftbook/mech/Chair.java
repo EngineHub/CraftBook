@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
@@ -11,13 +12,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
@@ -29,16 +30,11 @@ import com.sk89q.worldedit.blocks.BlockType;
 /**
  * @author Me4502
  */
-public class Chair implements Listener {
+public class Chair implements CraftBookMechanic {
 
-    public Chair() {
+    public Map<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
 
-        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
-    }
-
-    public static ConcurrentHashMap<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
-
-    public static void addChair(final Player player, Block block) {
+    public void addChair(final Player player, Block block) {
 
         Entity ar = null;
         if(chairs.containsKey(player.getName()))
@@ -72,7 +68,7 @@ public class Chair implements Listener {
         chairs.put(player.getName(), new Tuple2<Entity, Block>(ar, block));
     }
 
-    public static void removeChair(Player player) {
+    public void removeChair(Player player) {
 
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
         final Entity ent = chairs.get(player.getName()).a;
@@ -113,17 +109,17 @@ public class Chair implements Listener {
         return found;
     }
 
-    public static Tuple2<Entity, Block> getChair(Player player) {
+    public Tuple2<Entity, Block> getChair(Player player) {
 
         return chairs.get(player.getName());
     }
 
-    public static boolean hasChair(Player player) {
+    public boolean hasChair(Player player) {
 
         return chairs.containsKey(player.getName());
     }
 
-    public static boolean hasChair(Block player) {
+    public boolean hasChair(Block player) {
 
         for(Tuple2<Entity, Block> tup : chairs.values())
             if(player.equals(tup.b))
@@ -212,7 +208,7 @@ public class Chair implements Listener {
         }
     }
 
-    public static class ChairChecker implements Runnable {
+    public class ChairChecker implements Runnable {
 
         @Override
         public void run() {
@@ -235,5 +231,17 @@ public class Chair implements Listener {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean enable () {
+
+        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+        return true;
+    }
+
+    @Override
+    public void disable () {
+        chairs.clear();
     }
 }

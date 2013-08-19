@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -20,12 +19,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.ItemID;
 
-public class BetterLeads implements Listener {
+public class BetterLeads implements CraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEntityEvent event) {
@@ -164,5 +164,14 @@ public class BetterLeads implements Listener {
         if(!(event.getEntity() instanceof Tameable) || !((Tameable) event.getEntity()).isTamed()) return;
         if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
+    }
+
+    @Override
+    public boolean enable () {
+        return true;
+    }
+
+    @Override
+    public void disable () {
     }
 }
