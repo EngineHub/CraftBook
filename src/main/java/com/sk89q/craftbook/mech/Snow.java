@@ -21,7 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
@@ -35,7 +35,7 @@ import com.sk89q.worldedit.blocks.ItemID;
  *
  * @author Me4502
  */
-public class Snow implements CraftBookMechanic {
+public class Snow extends AbstractCraftBookMechanic {
 
     private Map<Location, BukkitTask> tasks = new HashMap<Location, BukkitTask>();
 
@@ -377,11 +377,6 @@ public class Snow implements CraftBookMechanic {
     public boolean isValidBlock(int id) {
 
         return canPassThrough(id) || isSnowBlock(id);
-    }
-
-    @Override
-    public boolean enable () {
-        return true;
     }
 
     @Override

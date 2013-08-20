@@ -11,12 +11,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
 
-public class CustomDrops implements CraftBookMechanic {
+public class CustomDrops extends AbstractCraftBookMechanic {
 
     public CustomDropManager customDrops;
 

@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -23,7 +23,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 /**
  * @author Me4502
  */
-public class PaintingSwitch implements CraftBookMechanic {
+public class PaintingSwitch extends AbstractCraftBookMechanic {
 
     Map<Painting, String> paintings = new WeakHashMap<Painting, String>();
     Map<String, WeakReference<Painting>> players = new HashMap<String, WeakReference<Painting>>();
@@ -120,11 +120,6 @@ public class PaintingSwitch implements CraftBookMechanic {
         if (p != null) {
             paintings.remove(p.get());
         }
-    }
-
-    @Override
-    public boolean enable () {
-        return true;
     }
 
     @Override

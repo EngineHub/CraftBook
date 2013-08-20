@@ -29,7 +29,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.PermissionAttachment;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
@@ -43,7 +43,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
  *
  * @author Me4502
  */
-public class CustomCrafting implements CraftBookMechanic {
+public class CustomCrafting extends AbstractCraftBookMechanic {
 
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
 

@@ -19,13 +19,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.blocks.ItemID;
 
-public class BetterLeads implements CraftBookMechanic {
+public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEntityEvent event) {
@@ -164,14 +164,5 @@ public class BetterLeads implements CraftBookMechanic {
         if(!(event.getEntity() instanceof Tameable) || !((Tameable) event.getEntity()).isTamed()) return;
         if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
-    }
-
-    @Override
-    public boolean enable () {
-        return true;
-    }
-
-    @Override
-    public void disable () {
     }
 }

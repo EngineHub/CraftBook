@@ -90,6 +90,9 @@ public class MechanicalCore implements LocalComponent {
     @Override
     public void disable() {
 
+        for(CraftBookMechanic mech : mechanics)
+            mech.disable();
+        mechanics = null;
         customCrafting = null;
         Iterator<String> it = Elevator.flyingPlayers.iterator();
         while(it.hasNext()) {
@@ -102,9 +105,6 @@ public class MechanicalCore implements LocalComponent {
             op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
             it.remove();
         }
-        for(CraftBookMechanic mech : mechanics)
-            mech.disable();
-        mechanics = null;
         instance = null;
     }
 
@@ -173,6 +173,7 @@ public class MechanicalCore implements LocalComponent {
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
             if(!mech.enable()) {
+                mech.disable();
                 iter.remove();
                 break;
             }

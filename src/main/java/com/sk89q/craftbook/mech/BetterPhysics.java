@@ -8,11 +8,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class BetterPhysics implements CraftBookMechanic {
+public class BetterPhysics extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -43,14 +43,5 @@ public class BetterPhysics implements CraftBookMechanic {
                 return;
             ladder.getWorld().spawn(ladder.getLocation(), FallingBlock.class);
         }
-    }
-
-    @Override
-    public boolean enable () {
-        return true;
-    }
-
-    @Override
-    public void disable () {
     }
 }

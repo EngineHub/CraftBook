@@ -41,6 +41,8 @@ public abstract class LocalConfiguration {
     public int pipeInsulator;
     public boolean pipeStackPerPull;
     public boolean pipeRequireSign;
+    // Circuits - Redstone Jukebox
+    public boolean jukeboxEnabled;
 
     // Mechanics
     // Mechanics - AI

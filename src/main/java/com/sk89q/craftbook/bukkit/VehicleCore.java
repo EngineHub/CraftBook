@@ -1,6 +1,9 @@
 package com.sk89q.craftbook.bukkit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
@@ -61,6 +65,8 @@ public class VehicleCore implements LocalComponent, Listener {
 
     private Map<String, String> stationSelection;
 
+    private List<CraftBookMechanic> mechanics;
+
     public static boolean isEnabled() {
 
         return instance != null;
@@ -80,23 +86,27 @@ public class VehicleCore implements LocalComponent, Listener {
     public void enable() {
 
         plugin.registerCommands(VehicleCommands.class);
+        mechanics = new ArrayList<CraftBookMechanic>();
 
         stationSelection = new HashMap<String, String>();
 
         // Register events
-        registerEvents();
+        registerMechanics();
     }
 
     @Override
     public void disable() {
 
+        for(CraftBookMechanic mech : mechanics)
+            mech.disable();
+        mechanics = null;
         stationSelection = null;
         instance = null;
     }
 
     private Set<CartBlockMechanism> cartBlockMechanisms = new HashSet<CartBlockMechanism>();
 
-    protected void registerEvents() {
+    protected void registerMechanics() {
 
         if(plugin.getConfiguration().minecartSpeedModEnabled) {
             if(plugin.getConfiguration().minecartSpeedModMaxBoostBlock.getId() > 0)
@@ -129,50 +139,40 @@ public class VehicleCore implements LocalComponent, Listener {
         if(plugin.getConfiguration().minecartMaxSpeedEnabled && plugin.getConfiguration().minecartMaxSpeedBlock.getId() > 0)
             cartBlockMechanisms.add(new CartMaxSpeed(plugin.getConfiguration().minecartMaxSpeedBlock));
 
-        for(CartBlockMechanism mech : cartBlockMechanisms)
+        for(CartBlockMechanism mech : cartBlockMechanisms) mechanics.add(mech);
+
+        if(plugin.getConfiguration().minecartMoreRailsEnabled) mechanics.add(new MoreRails());
+        if(plugin.getConfiguration().minecartRemoveEntitiesEnabled) mechanics.add(new CartRemoveEntities());
+        if(plugin.getConfiguration().minecartVisionSteeringEnabled) mechanics.add(new VisionSteering());
+        if(plugin.getConfiguration().minecartDecayEnabled) mechanics.add(new EmptyDecay());
+        if(plugin.getConfiguration().minecartBlockMobEntryEnabled) mechanics.add(new MobBlocker());
+        if(plugin.getConfiguration().minecartRemoveOnExitEnabled) mechanics.add(new CartExitRemover());
+        if(plugin.getConfiguration().minecartCollisionEntryEnabled) mechanics.add(new CollisionEntry());
+        if(plugin.getConfiguration().minecartItemPickupEnabled) mechanics.add(new ItemPickup());
+        if(plugin.getConfiguration().minecartFallModifierEnabled) mechanics.add(new FallModifier());
+        if(plugin.getConfiguration().minecartConstantSpeedEnable) mechanics.add(new ConstantSpeed());
+        if(plugin.getConfiguration().minecartRailPlacerEnable) mechanics.add(new RailPlacer());
+        if(plugin.getConfiguration().minecartSpeedModifierEnable) mechanics.add(new CartSpeedModifiers());
+        if(plugin.getConfiguration().minecartEmptySlowdownStopperEnable) mechanics.add(new EmptySlowdown());
+        if(plugin.getConfiguration().minecartNoCollideEnable) mechanics.add(new NoCollide());
+
+        if(plugin.getConfiguration().boatRemoveEntitiesEnabled) mechanics.add(new BoatRemoveEntities());
+        if(plugin.getConfiguration().boatNoCrash) mechanics.add(new BoatUncrashable());
+        if(plugin.getConfiguration().boatBreakReturn) mechanics.add(new BoatDrops());
+        if(plugin.getConfiguration().boatSpeedModifierEnable) mechanics.add(new BoatSpeedModifiers());
+        if(plugin.getConfiguration().boatLandBoatsEnable) mechanics.add(new LandBoats());
+        if(plugin.getConfiguration().boatRemoveOnExitEnabled) mechanics.add(new BoatExitRemover());
+
+        Iterator<CraftBookMechanic> iter = mechanics.iterator();
+        while(iter.hasNext()) {
+            CraftBookMechanic mech = iter.next();
+            if(!mech.enable()) {
+                mech.disable();
+                iter.remove();
+                break;
+            }
             plugin.getServer().getPluginManager().registerEvents(mech, plugin);
-
-        if(plugin.getConfiguration().minecartMoreRailsEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new MoreRails(), plugin);
-        if(plugin.getConfiguration().minecartRemoveEntitiesEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new CartRemoveEntities(), plugin);
-        if(plugin.getConfiguration().minecartVisionSteeringEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new VisionSteering(), plugin);
-        if(plugin.getConfiguration().minecartDecayEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new EmptyDecay(), plugin);
-        if(plugin.getConfiguration().minecartBlockMobEntryEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new MobBlocker(), plugin);
-        if(plugin.getConfiguration().minecartRemoveOnExitEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new CartExitRemover(), plugin);
-        if(plugin.getConfiguration().minecartCollisionEntryEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new CollisionEntry(), plugin);
-        if(plugin.getConfiguration().minecartItemPickupEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new ItemPickup(), plugin);
-        if(plugin.getConfiguration().minecartFallModifierEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new FallModifier(), plugin);
-        if(plugin.getConfiguration().minecartConstantSpeedEnable)
-            plugin.getServer().getPluginManager().registerEvents(new ConstantSpeed(), plugin);
-        if(plugin.getConfiguration().minecartRailPlacerEnable)
-            plugin.getServer().getPluginManager().registerEvents(new RailPlacer(), plugin);
-        if(plugin.getConfiguration().minecartSpeedModifierEnable)
-            plugin.getServer().getPluginManager().registerEvents(new CartSpeedModifiers(), plugin);
-        if(plugin.getConfiguration().minecartEmptySlowdownStopperEnable)
-            plugin.getServer().getPluginManager().registerEvents(new EmptySlowdown(), plugin);
-        if(plugin.getConfiguration().minecartNoCollideEnable)
-            plugin.getServer().getPluginManager().registerEvents(new NoCollide(), plugin);
-
-        if(plugin.getConfiguration().boatRemoveEntitiesEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new BoatRemoveEntities(), plugin);
-        if(plugin.getConfiguration().boatNoCrash)
-            plugin.getServer().getPluginManager().registerEvents(new BoatUncrashable(), plugin);
-        if(plugin.getConfiguration().boatBreakReturn)
-            plugin.getServer().getPluginManager().registerEvents(new BoatDrops(), plugin);
-        if(plugin.getConfiguration().boatSpeedModifierEnable)
-            plugin.getServer().getPluginManager().registerEvents(new BoatSpeedModifiers(), plugin);
-        if(plugin.getConfiguration().boatLandBoatsEnable)
-            plugin.getServer().getPluginManager().registerEvents(new LandBoats(), plugin);
-        if(plugin.getConfiguration().boatRemoveOnExitEnabled)
-            plugin.getServer().getPluginManager().registerEvents(new BoatExitRemover(), plugin);
+        }
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

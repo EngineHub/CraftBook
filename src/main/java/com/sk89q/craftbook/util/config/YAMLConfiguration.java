@@ -112,6 +112,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("circuits.pipes.require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean("circuits.pipes.require-sign", false);
 
+        // Redstone Jukebox Configuration Listener
+        config.setComment("circuits.jukebox.enable", "Enables the redstone jukebox mechanic.");
+        jukeboxEnabled = config.getBoolean("circuits.jukebox.enable", true);
+
         /* Mechanism Configuration */
 
         // AI Configuration Listener

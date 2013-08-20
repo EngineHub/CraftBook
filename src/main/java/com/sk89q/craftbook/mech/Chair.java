@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
@@ -30,7 +30,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 /**
  * @author Me4502
  */
-public class Chair implements CraftBookMechanic {
+public class Chair extends AbstractCraftBookMechanic {
 
     public Map<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
 

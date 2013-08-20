@@ -4,8 +4,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
-import org.bukkit.event.Listener;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.util.EntityUtil;
@@ -21,7 +21,7 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
  *
  * @author hash
  */
-public abstract class CartBlockMechanism implements Listener {
+public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
     protected final ItemInfo material;
 

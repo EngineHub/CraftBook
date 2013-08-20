@@ -6,11 +6,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemPickup implements Listener {
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+
+public class ItemPickup extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {

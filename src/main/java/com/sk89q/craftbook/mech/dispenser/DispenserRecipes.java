@@ -10,14 +10,14 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
 
 /**
  * @author Me4502
  */
-public class DispenserRecipes implements CraftBookMechanic {
+public class DispenserRecipes extends AbstractCraftBookMechanic {
 
     private final Set<Recipe> recipes = new HashSet<Recipe>();
 

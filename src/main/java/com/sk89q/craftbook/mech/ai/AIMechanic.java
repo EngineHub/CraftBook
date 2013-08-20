@@ -9,11 +9,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
 
-public class AIMechanic implements CraftBookMechanic {
+public class AIMechanic extends AbstractCraftBookMechanic {
 
     private List<BaseAIMechanic> mechanics = new ArrayList<BaseAIMechanic>();
 

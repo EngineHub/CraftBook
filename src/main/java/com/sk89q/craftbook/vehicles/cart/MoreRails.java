@@ -4,17 +4,17 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.Vine;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class MoreRails implements Listener {
+public class MoreRails extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleMove(VehicleMoveEvent event) {

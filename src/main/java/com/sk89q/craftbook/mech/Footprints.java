@@ -12,12 +12,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
-public class Footprints implements CraftBookMechanic {
+public class Footprints extends AbstractCraftBookMechanic {
 
     private static boolean disabled = false;
 
