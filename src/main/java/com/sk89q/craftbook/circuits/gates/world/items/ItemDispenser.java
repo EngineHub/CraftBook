@@ -82,11 +82,10 @@ public class ItemDispenser extends AbstractIC {
 
         if (chip.getInput(0)) {
             if (item.getTypeId() != 36) {
-                Location loc = getBackBlock().getRelative(0, 1,
-                        0).getLocation().add(0.5, 0.5, 0.5);
+                Location loc = getBackBlock().getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
                 int maxY = 10;
 
-                for (int y = 1; y <= maxY; y++) {
+                for (int y = 0; y <= maxY; y++) {
                     if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
 
                         for(int i = 0; i < times; i++)
