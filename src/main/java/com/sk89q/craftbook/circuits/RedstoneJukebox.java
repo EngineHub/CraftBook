@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits;
 
-import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 
@@ -17,10 +16,11 @@ public class RedstoneJukebox extends AbstractCraftBookMechanic {
         if(event.getBlock().getTypeId() != BlockID.JUKEBOX) return; //Only listen for Jukeboxes.
         Jukebox juke = (org.bukkit.block.Jukebox) event.getBlock().getState();
         if(!event.isOn()) {
-            byte data = juke.getRawData();
-            juke.setPlaying(null);
-            event.getBlock().setTypeIdAndData(BlockID.JUKEBOX, data, false);
+            //FIXME byte data = juke.getRawData();
+            //juke.setPlaying(null);
+            //event.getBlock().setTypeIdAndData(BlockID.JUKEBOX, data, false);
         } else
-            juke.setPlaying(Material.getMaterial(2255 + juke.getRawData()));
+            juke.setPlaying(juke.getPlaying());
+        juke.update();
     }
 }
