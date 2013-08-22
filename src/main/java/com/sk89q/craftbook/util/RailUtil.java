@@ -17,30 +17,30 @@ public class RailUtil {
         int y = body.getY();
         int z = body.getZ();
         List<Chest> containers = new ArrayList<Chest>();
-        if (body.getWorld().getBlockAt(x, y, z).getTypeId() == BlockID.CHEST) {
+        if (body.getWorld().getBlockAt(x, y, z).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x, y, z).getTypeId() == BlockID.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z).getState());
         }
-        if (body.getWorld().getBlockAt(x - 1, y, z).getTypeId() == BlockID.CHEST) {
+        if (body.getWorld().getBlockAt(x - 1, y, z).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x - 1, y, z).getTypeId() == BlockID.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x - 1, y, z).getState());
-            if (body.getWorld().getBlockAt(x - 2, y, z).getTypeId() == BlockID.CHEST) {
+            if (body.getWorld().getBlockAt(x - 2, y, z).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x - 2, y, z).getTypeId() == BlockID.TRAPPED_CHEST) {
                 containers.add((Chest) body.getWorld().getBlockAt(x - 2, y, z).getState());
             }
         }
-        if (body.getWorld().getBlockAt(x + 1, y, z).getTypeId() == BlockID.CHEST) {
+        if (body.getWorld().getBlockAt(x + 1, y, z).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x + 1, y, z).getTypeId() == BlockID.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x + 1, y, z).getState());
-            if (body.getWorld().getBlockAt(x + 2, y, z).getTypeId() == BlockID.CHEST) {
+            if (body.getWorld().getBlockAt(x + 2, y, z).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x + 2, y, z).getTypeId() == BlockID.TRAPPED_CHEST) {
                 containers.add((Chest) body.getWorld().getBlockAt(x + 2, y, z).getState());
             }
         }
-        if (body.getWorld().getBlockAt(x, y, z - 1).getTypeId() == BlockID.CHEST) {
+        if (body.getWorld().getBlockAt(x, y, z - 1).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x, y, z - 1).getTypeId() == BlockID.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z - 1).getState());
-            if (body.getWorld().getBlockAt(x, y, z - 2).getTypeId() == BlockID.CHEST) {
+            if (body.getWorld().getBlockAt(x, y, z - 2).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x, y, z - 2).getTypeId() == BlockID.TRAPPED_CHEST) {
                 containers.add((Chest) body.getWorld().getBlockAt(x, y, z - 2).getState());
             }
         }
-        if (body.getWorld().getBlockAt(x, y, z + 1).getTypeId() == BlockID.CHEST) {
+        if (body.getWorld().getBlockAt(x, y, z + 1).getTypeId() == BlockID.CHEST  || body.getWorld().getBlockAt(x, y, z + 1).getTypeId() == BlockID.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 1).getState());
-            if (body.getWorld().getBlockAt(x, y, z + 2).getTypeId() == BlockID.CHEST) {
+            if (body.getWorld().getBlockAt(x, y, z + 2).getTypeId() == BlockID.CHEST || body.getWorld().getBlockAt(x, y, z + 2).getTypeId() == BlockID.TRAPPED_CHEST) {
                 containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 2).getState());
             }
         }
