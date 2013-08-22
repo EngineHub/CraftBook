@@ -123,7 +123,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         realisticRandoms = config.getBoolean("realistic-randoms", true);
 
         config.setComment("show-permission-messages", "Show messages when a player does not have permission to do something.");
-        showPermissionMessages = config.getBoolean("show-permission-messages", false);
+        showPermissionMessages = config.getBoolean("show-permission-messages", true);
 
         super.load();
     }

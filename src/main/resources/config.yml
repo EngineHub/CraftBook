@@ -65,7 +65,7 @@ easter-eggs: true
 realistic-randoms: true
 
 # Show messages when a player does not have permission to do something.
-show-permission-messages: false
+show-permission-messages: true
 common:
     variables:
         enable: true
