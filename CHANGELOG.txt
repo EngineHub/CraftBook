@@ -1,3 +1,12 @@
+3.7.3
++ Added a Sign Editor functionality to SignCopier. (Edit the copied sign)
+* Fix SentryGun not allowing offset.
+* Reworked internal systems of most newer mechanics.  /cb reload should be much more stable.
+* Fix ItemDispenser offset being off by 1.
++ Add Redstone Jukebox mechanic. Can currently only turn on due to bukkit limitations.
++ Added Trapped Chest support to all rail mechanics.
+* Show the permission error messages by default.
+
 3.7.2
 * Tweaked Glowstone and Jack O Lantern mechanics. This should lower memory load by a little, and should have no side effects.
 + Added persistent hitch BetterLead mechanic.
