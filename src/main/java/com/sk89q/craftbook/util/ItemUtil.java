@@ -238,7 +238,7 @@ public class ItemUtil {
             CraftBookPlugin.logDebugMessage("Both share the existance of metadata", "item-checks");
             if(item.hasItemMeta()) {
                 CraftBookPlugin.logDebugMessage("Both have metadata", "item-checks.meta");
-                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
+                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName() && item.getItemMeta().hasDisplayName()) {
                     CraftBookPlugin.logDebugMessage("Both have names", "item-checks.meta.names");
                     CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks.meta.names");
                     if(!item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
@@ -248,7 +248,7 @@ public class ItemUtil {
                     if(!(item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")) && !(item2.getItemMeta().hasDisplayName() && item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")))
                         return false;
                 }
-                if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore()) {
+                if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore() && item.getItemMeta().hasLore()) {
                     CraftBookPlugin.logDebugMessage("Both have lore", "item-checks.meta.lores");
                     if(item.getItemMeta().hasLore()) {
                         if(item.getItemMeta().getLore().size() != item2.getItemMeta().getLore().size())
@@ -265,7 +265,7 @@ public class ItemUtil {
                         if(!(item2.getItemMeta().hasLore() && item2.getItemMeta().getLore().size() == 1 && item2.getItemMeta().getLore().get(0).equalsIgnoreCase("$IGNORE")))
                             return false;
                 }
-                if(item.getItemMeta().hasEnchants() == item2.getItemMeta().hasEnchants()) {
+                if(item.getItemMeta().hasEnchants() == item2.getItemMeta().hasEnchants() && item.getItemMeta().hasEnchants()) {
                     CraftBookPlugin.logDebugMessage("Both share enchant existance", "item-checks.meta.enchants");
                     if(item.getItemMeta().hasEnchants()) {
                         if(item.getItemMeta().getEnchants().size() != item2.getItemMeta().getEnchants().size())
