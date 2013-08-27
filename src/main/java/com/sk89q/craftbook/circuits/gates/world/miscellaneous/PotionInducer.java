@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Server;
@@ -52,7 +51,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] effectInfo = RegexUtil.COLON_PATTERN.split(getLine(2), 3);
+        String[] effectInfo = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getLine(2),2)[0], 3);
 
         int effectID, effectAmount, effectTime;
 
@@ -73,24 +72,13 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
             effectTime = 10;
         }
         effect = new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1, true);
-        String line4 = getSign().getLine(3).toLowerCase(Locale.ENGLISH);
-        types = new HashSet<EntityType>();
-        if (line4.startsWith("m")) {
-            types.add(EntityType.MOB_ANY);
-            line4 = line4.substring(1);
-        }
-        if (line4.contains("p")) {
+        try {
+            types = EntityType.getDetected(RegexUtil.EQUALS_PATTERN.split(getLine(2),2)[1]);
+        } catch(Exception e) {
+            types = new HashSet<EntityType>();
             types.add(EntityType.PLAYER);
-            line4 = line4.substring(1);
         }
-        if (line4.startsWith("m") && !types.contains(EntityType.MOB_ANY)) {
-            types.add(EntityType.MOB_ANY);
-            line4 = line4.substring(1);
-        }
-
-        line4 = line4.replace("m", "").replace("p", "");
-
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), line4);
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(3));
     }
 
     public boolean induce() {
@@ -156,7 +144,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "id:level:time", "range=offset (add a m to the end to only induce mobs or p for players (pm for both))"
+                    "id:level:time=entitytypes", "range=offset"
             };
         }
     }
