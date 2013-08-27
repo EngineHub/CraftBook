@@ -48,6 +48,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("common.variables.enable-in-player-commands", "Allows variables to work in any command a player performs.");
         variablesPlayerCommandOverride = config.getBoolean("common.variables.enable-in-player-commands", false);
 
+        config.setComment("common.variables.enable-in-player-chat", "Allow variables to work in player chat.");
+        variablesPlayerChatOverride = config.getBoolean("common.variables.enable-in-player-chat", false);
+
         /* Circuits Configuration */
 
         // IC Configuration Listener.

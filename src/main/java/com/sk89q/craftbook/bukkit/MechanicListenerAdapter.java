@@ -35,6 +35,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -458,9 +459,16 @@ public class MechanicListenerAdapter implements Listener {
     }
 
     @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+
+        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
+            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
+    }
+
+    @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 
-        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerCommandOverride)
+        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
             event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
     }
 
