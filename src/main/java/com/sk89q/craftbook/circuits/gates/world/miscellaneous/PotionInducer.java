@@ -78,6 +78,27 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
             types = new HashSet<EntityType>();
             types.add(EntityType.PLAYER);
         }
+
+        //Converter.
+        boolean converting = false;
+        if(getLine(3).toLowerCase().endsWith("p") && (!getLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=p" : "p"));
+            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+            converting = true;
+        }
+        if(getLine(3).toLowerCase().endsWith("m") && (!getLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=m" : "m"));
+            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+            converting = true;
+        }
+        if(getLine(3).toLowerCase().endsWith("p") && (!getLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=p" : "p"));
+            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+            converting = true;
+        }
+        if(converting)
+            getSign().update(false);
+
         area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(3));
     }
 
