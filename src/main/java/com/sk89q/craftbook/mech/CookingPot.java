@@ -189,6 +189,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 event.setCancelled(true);
             }
         }
+
+        if(sign.hasChanged())
+            sign.update(false);
     }
 
     @Override
@@ -214,6 +217,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         if (event.getNewCurrent() > event.getOldCurrent())
             increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
+
+        if(sign.hasChanged())
+            sign.update(false);
     }
 
     public void setMultiplier(ChangedSign sign, int amount) {
@@ -221,8 +227,6 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         if(!plugin.getConfiguration().cookingPotFuel)
             amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
-        if(sign.hasChanged())
-            sign.update(false);
     }
 
     public void increaseMultiplier(ChangedSign sign, int amount) {
