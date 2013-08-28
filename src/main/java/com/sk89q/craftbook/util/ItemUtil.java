@@ -488,6 +488,15 @@ public class ItemUtil {
         return false;
     }
 
+    public static boolean containsRawMaterials(Inventory inv) {
+
+        for (ItemStack it : inv.getContents()) {
+            if (isStackValid(it) && isFurnacable(it))
+                return true;
+        }
+        return false;
+    }
+
     public static boolean isFurnacable(ItemStack item) {
 
         return isCookable(item) || isSmeltable(item);

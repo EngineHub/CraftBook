@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -62,12 +60,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
             Block block = BukkitUtil.toLocation(pt).getBlock();
             if (block.getTypeId() == BlockID.WALL_SIGN) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
-                    if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                        return new CookingPot(pt);
-                    }
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
+                if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
+                    return new CookingPot(pt);
                 }
             }
 
@@ -118,21 +113,20 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getTypeId() == BlockID.CHEST) {
-            if (ItemUtil.containsRawFood(((Chest) cb.getState()).getInventory()) || ItemUtil.containsRawMinerals(((Chest) cb.getState()).getInventory()) && plugin.getConfiguration().cookingPotOres) {
-                if(lastTick < 500) {
-                    lastTick = Math.min(500, CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick *= getMultiplier(sign) : lastTick + getMultiplier(sign));
-                    if(getMultiplier(sign) > 0)
-                        decreaseMultiplier(sign, 1);
+            Block fire = b.getRelative(0, 1, 0);
+            if (fire.getTypeId() == BlockID.FIRE) {
+                Chest chest = (Chest) cb.getState();
+                if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && plugin.getConfiguration().cookingPotOres) {
+                    if(lastTick < 500) {
+                        lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick * getMultiplier(sign) : lastTick + getMultiplier(sign);
+                        if(getMultiplier(sign) > 0)
+                            decreaseMultiplier(sign, 1);
+                    }
                 }
-            }
-            if (lastTick >= 50) {
-                Block fire = b.getRelative(0, 1, 0);
-                if (fire.getTypeId() == BlockID.FIRE) {
-                    Chest chest = (Chest) cb.getState();
+                if (lastTick >= 50) {
                     for (ItemStack i : chest.getInventory().getContents()) {
-                        if (i == null) {
-                            continue;
-                        }
+
+                        if (!ItemUtil.isStackValid(i)) continue;
                         ItemStack cooked = ItemUtil.getCookedResult(i);
                         if (cooked == null) {
                             if (plugin.getConfiguration().cookingPotOres)
@@ -148,9 +142,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             break;
                         }
                     }
-                } else
-                    lastTick = 0;
-            }
+                }
+            } else
+                lastTick = 0;
         }
 
         if(oldTick != lastTick) {
@@ -213,8 +207,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-        ChangedSign sign = BukkitUtil.toChangedSign(block);
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 
         if(sign == null)
             return;
