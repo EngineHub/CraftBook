@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -73,8 +72,8 @@ public class MapChanger extends AbstractMechanic {
             return;
         }
         if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getTypeId() == ItemID.MAP) {
-            if (block.getState() instanceof Sign) {
-                Sign sign = (Sign) block.getState();
+            if (SignUtil.isSign(block)) {
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
                 byte id;
                 try {
                     id = Byte.parseByte(sign.getLine(2));

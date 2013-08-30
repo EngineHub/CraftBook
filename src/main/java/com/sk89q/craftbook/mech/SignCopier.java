@@ -30,7 +30,7 @@ public class SignCopier extends AbstractMechanic {
 
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
-        if(event.getClickedBlock().getState() instanceof Sign) {
+        if(SignUtil.isSign(event.getClickedBlock())) {
 
             signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
             player.print("mech.signcopy.copy");
@@ -45,7 +45,7 @@ public class SignCopier extends AbstractMechanic {
 
         if (!event.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
-        if(event.getClickedBlock().getState() instanceof Sign && signs.containsKey(player.getName())) {
+        if(SignUtil.isSign(event.getClickedBlock()) && signs.containsKey(player.getName())) {
 
             Sign s = (Sign) event.getClickedBlock().getState();
             String[] lines = signs.get(player.getName());

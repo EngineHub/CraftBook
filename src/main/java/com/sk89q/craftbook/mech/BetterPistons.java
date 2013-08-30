@@ -350,17 +350,19 @@ public class BetterPistons extends AbstractMechanic {
      */
     public boolean copyData(Block from, Block to) {
 
-        if (from.getState() instanceof DoubleChest || to.getState() instanceof DoubleChest) return false;
+        BlockState toState = to.getState();
+        BlockState fromState = from.getState();
+
+        if (fromState instanceof DoubleChest || toState instanceof DoubleChest) return false;
 
         int type = from.getTypeId();
         byte data = from.getData();
 
         ItemStack[] oldInventory = null;
-        if (from.getState() instanceof InventoryHolder) {
-            oldInventory = ((InventoryHolder) from.getState()).getInventory().getContents().clone();
-            InventoryHolder fromState = (InventoryHolder) from.getState();
-            fromState.getInventory().clear();
-            ((BlockState) fromState).update();
+        if (fromState instanceof InventoryHolder) {
+            oldInventory = ((InventoryHolder) fromState).getInventory().getContents().clone();
+            ((InventoryHolder) fromState).getInventory().clear();
+            fromState.update();
             from.setTypeId(0);
         }
         to.setTypeIdAndData(type, data, true);
@@ -370,16 +372,14 @@ public class BetterPistons extends AbstractMechanic {
             }
         }
 
-        if (to.getState() instanceof Sign) {
-            Sign state = (Sign) to.getState();
+        if (toState instanceof Sign) {
             for (int i = 0; i < 4; i++) {
-                state.setLine(i, ((Sign) from.getState()).getLine(i));
+                ((Sign) toState).setLine(i, ((Sign) fromState).getLine(i));
             }
-            state.update();
-        } else if (to.getState() instanceof InventoryHolder) {
-            InventoryHolder state = (InventoryHolder) to.getState();
-            state.getInventory().setContents(oldInventory);
-            ((BlockState) state).update(true);
+            toState.update();
+        } else if (toState instanceof InventoryHolder) {
+            ((InventoryHolder) toState).getInventory().setContents(oldInventory);
+            toState.update(true);
         }
 
         return true;

@@ -24,7 +24,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Button;
@@ -343,18 +342,18 @@ public class Elevator extends AbstractMechanic {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
-        Sign info = null;
-        if (!(destination.getState() instanceof Sign)) {
-            if (destination.getState().getData() instanceof Button) {
+        ChangedSign info = null;
+        if (!SignUtil.isSign(destination)) {
+            if (destination.getTypeId() == BlockID.STONE_BUTTON || destination.getTypeId() == BlockID.WOODEN_BUTTON) {
 
                 Button button = (Button) destination.getState().getData();
-                if (destination.getRelative(button.getAttachedFace(), 2).getState() instanceof Sign)
-                    info = (Sign) destination.getRelative(button.getAttachedFace(), 2).getState();
+                if (SignUtil.isSign(destination.getRelative(button.getAttachedFace(), 2)))
+                    info = BukkitUtil.toChangedSign(destination.getRelative(button.getAttachedFace(), 2));
             }
             if (info == null)
                 return;
         } else
-            info = (Sign) destination.getState();
+            info = BukkitUtil.toChangedSign(destination);
         String title = info.getLines()[0];
         if (!title.isEmpty()) {
             player.print(player.translate("mech.lift.floor") + ": " + title);

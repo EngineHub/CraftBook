@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -14,6 +13,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
@@ -42,8 +42,8 @@ public class HiddenSwitch extends AbstractMechanic {
 
             // Must be Wall Sign
             if (b == null || b.getTypeId() != BlockID.WALL_SIGN) return false;
-            if (b.getState() == null || !(b.getState() instanceof Sign)) return false;
-            Sign s = (Sign) b.getState();
+            if (b.getState() == null || !SignUtil.isSign(b)) return false;
+            ChangedSign s = BukkitUtil.toChangedSign(b);
 
             return s.getLine(1).equalsIgnoreCase("[X]");
         }

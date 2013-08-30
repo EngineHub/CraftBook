@@ -3,12 +3,14 @@ package com.sk89q.craftbook.vehicles.cart;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.CartUtils;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartLift extends CartBlockMechanism {
@@ -45,9 +47,9 @@ public class CartLift extends CartBlockMechanism {
 
             destination = destination.getRelative(face);
 
-            if (destination.getState() instanceof Sign && event.getBlocks().base.getTypeId() == destination.getRelative(BlockFace.UP, 1).getTypeId()) {
+            if (SignUtil.isSign(destination) && event.getBlocks().base.getTypeId() == destination.getRelative(BlockFace.UP, 1).getTypeId()) {
 
-                Sign state = (Sign) destination.getState();
+                ChangedSign state = BukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);
 
                 if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {

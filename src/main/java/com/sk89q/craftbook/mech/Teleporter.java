@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Button;
 
@@ -138,8 +137,8 @@ public class Teleporter extends AbstractMechanic {
         double toY = 0;
         double toZ = 0;
 
-        if (trigger.getState() instanceof Sign) {
-            Sign s = (Sign) trigger.getState();
+        if (SignUtil.isSign(trigger)) {
+            ChangedSign s = BukkitUtil.toChangedSign(trigger);
             String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
             if (pos.length > 2) {
                 try {
@@ -162,8 +161,8 @@ public class Teleporter extends AbstractMechanic {
                 if (location.getTypeId() == BlockID.STONE_BUTTON || location.getTypeId() == BlockID.WOODEN_BUTTON) {
                     Button b = (Button) location.getState().getData();
                     Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
-                    if (sign.getState() instanceof Sign) {
-                        Sign s = (Sign) sign.getState();
+                    if (SignUtil.isSign(sign)) {
+                        ChangedSign s = BukkitUtil.toChangedSign(sign);
                         if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) {
                             player.printError("mech.teleport.sign");
                             return;

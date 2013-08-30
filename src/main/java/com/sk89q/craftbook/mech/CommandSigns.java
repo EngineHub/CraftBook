@@ -12,6 +12,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
@@ -37,8 +38,8 @@ public class CommandSigns extends AbstractMechanic {
 
             Block block = BukkitUtil.toBlock(pt);
 
-            if (block.getState() instanceof Sign) {
-                Sign s = (Sign) block.getState();
+            if (SignUtil.isSign(block)) {
+                ChangedSign s = BukkitUtil.toChangedSign(block);
                 if (s.getLine(1).equalsIgnoreCase("[Command]")) return new CommandSigns(block);
             }
             return null;
@@ -50,9 +51,7 @@ public class CommandSigns extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public CommandSigns detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        public CommandSigns detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Command]")) return null;
             if (!player.hasPermission("craftbook.mech.command")) throw new InsufficientPermissionsException();
@@ -93,7 +92,7 @@ public class CommandSigns extends AbstractMechanic {
             return;
         }
 
-        ChangedSign s = BukkitUtil.toChangedSign((Sign) event.getClickedBlock().getState());
+        ChangedSign s = BukkitUtil.toChangedSign(event.getClickedBlock());
 
         String command = s.getLine(2).replace("/", "") + s.getLine(3);
         command = command.replace("@p", event.getPlayer().getName());

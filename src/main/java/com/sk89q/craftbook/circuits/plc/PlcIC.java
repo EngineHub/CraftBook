@@ -35,7 +35,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -51,6 +50,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
@@ -269,18 +269,18 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         int z = l.getBlockZ();
 
         for (int y = 0; y < w.getMaxHeight(); y++) {
-            if (y != l.getBlockY()) if (w.getBlockAt(x, y, z).getState() instanceof Sign) {
-                Sign s = (Sign) w.getBlockAt(x, y, z).getState();
+            if (y != l.getBlockY()) if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
+                ChangedSign s = BukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
                 if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
                     y--;
-                    BlockState b = w.getBlockAt(x, y, z).getState();
+                    Block b = w.getBlockAt(x, y, z);
                     StringBuilder code = new StringBuilder();
-                    while (b instanceof Sign) {
-                        s = (Sign) b;
+                    while (SignUtil.isSign(b)) {
+                        s = BukkitUtil.toChangedSign(b);
                         for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
                             code.append(s.getLine(li)).append("\n");
                         }
-                        b = w.getBlockAt(x, --y, z).getState();
+                        b = w.getBlockAt(x, --y, z);
                     }
                     return code.toString();
                 }

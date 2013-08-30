@@ -15,11 +15,12 @@ import com.sk89q.craftbook.PersistentMechanic;
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -39,8 +40,8 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
 
             Block block = BukkitUtil.toBlock(pt);
 
-            if (block.getState() instanceof Sign) {
-                Sign s = (Sign) block.getState();
+            if (SignUtil.isSign(block)) {
+                ChangedSign s = BukkitUtil.toChangedSign(block);
                 if (s.getLine(1).equalsIgnoreCase("[Chunk]")) return new ChunkAnchor(block);
             }
             return null;
@@ -95,8 +96,8 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
         super();
         this.trigger = trigger;
 
-        if (trigger.getState() instanceof Sign) {
-            Sign sign = (Sign) trigger.getState();
+        if (SignUtil.isSign(trigger)) {
+            ChangedSign sign = BukkitUtil.toChangedSign(trigger);
             isOn = !sign.getLine(3).equalsIgnoreCase("off");
         }
     }
@@ -108,11 +109,11 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
 
         if(!CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
         Block block = event.getBlock();
-        if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
+        if (SignUtil.isSign(block)) {
+            ChangedSign sign = BukkitUtil.toChangedSign(block);
             sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
             isOn = !sign.getLine(3).equalsIgnoreCase("off");
-            sign.update();
+            sign.update(false);
         }
     }
 
