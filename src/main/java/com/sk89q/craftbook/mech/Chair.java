@@ -44,7 +44,7 @@ public class Chair extends AbstractCraftBookMechanic {
         if(ar == null || !ar.isValid() || ar.isDead() || !ar.getLocation().getBlock().equals(block)) {
             if(ar != null && !ar.getLocation().getBlock().equals(block))
                 ar.remove();
-            ar = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,0.01,0), 0.01f, 0.01f);
+            ar = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
             isNew = true;
         }
         if (!chairs.containsKey(player.getName()))

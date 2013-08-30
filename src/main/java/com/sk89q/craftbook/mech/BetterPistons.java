@@ -96,24 +96,24 @@ public class BetterPistons extends AbstractMechanic {
 
             Types type = null;
 
-            if (sign.getState() instanceof Sign) {
+            if (SignUtil.isSign(sign)) {
 
-                Sign s = (Sign) sign.getState();
+                ChangedSign s = BukkitUtil.toChangedSign(sign);
                 if (s.getLine(1).equalsIgnoreCase("[Crush]") && Types.isEnabled(Types.CRUSH)) {
                     s.setLine(1, "[Crush]");
-                    s.update(true);
+                    s.update(false);
                     type = Types.CRUSH;
                 } else if (s.getLine(1).equalsIgnoreCase("[SuperSticky]") && Types.isEnabled(Types.SUPERSTICKY)) {
                     s.setLine(1, "[SuperSticky]");
-                    s.update(true);
+                    s.update(false);
                     type = Types.SUPERSTICKY;
                 } else if (s.getLine(1).equalsIgnoreCase("[Bounce]") && Types.isEnabled(Types.BOUNCE)) {
                     s.setLine(1, "[Bounce]");
-                    s.update(true);
+                    s.update(false);
                     type = Types.BOUNCE;
                 } else if (s.getLine(1).equalsIgnoreCase("[SuperPush]") && Types.isEnabled(Types.SUPERPUSH)) {
                     s.setLine(1, "[SuperPush]");
-                    s.update(true);
+                    s.update(false);
                     type = Types.SUPERPUSH;
                 }
             }
@@ -204,7 +204,7 @@ public class BetterPistons extends AbstractMechanic {
 
     public void crush(PistonBaseMaterial piston, ChangedSign signState) {
 
-        piston.setPowered(false);
+        //piston.setPowered(false);
 
         if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherInstaKill) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
