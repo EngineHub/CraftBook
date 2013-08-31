@@ -29,7 +29,7 @@ public class CartMessenger extends CartBlockMechanism {
 
         // care?
         if (event.getMinecart().getPassenger() == null) return;
-        if (!event.getBlocks().hasSign() || SignUtil.isSign(event.getBlocks().sign)) return;
+        if (!event.getBlocks().hasSign() || !SignUtil.isSign(event.getBlocks().sign)) return;
 
         // enabled?
         if (Power.OFF == isActive(event.getBlocks())) return;
