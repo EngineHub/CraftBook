@@ -1,3 +1,14 @@
+3.7.4
+* Fixed multiple errors related to the parsing of items.
++ Added EntityType options to the potion inducer IC. Old IC's will be converted.
++ Added an option to parse CraftBook variables in chat.
++ Added permission nodes to have variables parsed in commands/chat.
+* Heavily optimized cooking pots.
+* Fixed /comitems give -p [player].
+* Optimized BetterPistons.
+* Major optimizations to almost all mechanics.
++ Added variable support to a lot of mechanics that didn't support them before. Like PLC [Code Block] signs.
+
 3.7.3
 + Added a Sign Editor functionality to SignCopier. (Edit the copied sign)
 * Fix SentryGun not allowing offset.

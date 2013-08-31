@@ -166,7 +166,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getVersion() {
 
-        return "3.7.3";
+        return "3.7.4";
     }
 
     /**
@@ -176,7 +176,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "3201";
+        return "3210";
     }
 
     /**
