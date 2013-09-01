@@ -160,7 +160,7 @@ public class CartMechanismBlocks {
      */
     public boolean matches(String mechname) {
 
-        return sign != null && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
+        return hasSign() && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
         // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
         // the mold with second line definer.
     }
@@ -182,12 +182,12 @@ public class CartMechanismBlocks {
      */
     public ChangedSign getSign() {
 
-        return sign == null ? null : BukkitUtil.toChangedSign(sign);
+        return !hasSign() ? null : BukkitUtil.toChangedSign(sign);
     }
 
     public boolean hasSign() {
 
-        return sign != null;
+        return sign != null && SignUtil.isSign(sign);
     }
 
     public boolean hasRail() {

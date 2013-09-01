@@ -201,19 +201,20 @@ public class Gate extends AbstractMechanic {
         }
 
         CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + ID + ":" + data, "gates.search");
+
+        Block signBlock = BukkitUtil.toBlock(pt);
+        ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
+        ChangedSign otherSign = null;
+
+        if (sign != null) {
+            Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
+            if(ot != null)
+                otherSign = BukkitUtil.toChangedSign(ot);
+        }
+
         for (Vector bl : column.getRegion()) {
 
             Block block = BukkitUtil.toBlock(new BlockWorldVector(pt.getWorld(), bl));
-
-            Block signBlock = BukkitUtil.toBlock(pt);
-            ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
-            ChangedSign otherSign = null;
-
-            if (sign != null) {
-                Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
-                if(ot != null)
-                    otherSign = BukkitUtil.toChangedSign(ot);
-            }
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
@@ -371,9 +372,8 @@ public class Gate extends AbstractMechanic {
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.isEmpty()) {
                     try {
-                        if (!isValidGateBlock(Integer.parseInt(line0))) {
+                        if (!isValidGateBlock(Integer.parseInt(line0)))
                             throw new NumberFormatException();
-                        }
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
                     }
@@ -392,20 +392,17 @@ public class Gate extends AbstractMechanic {
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.isEmpty()) {
                     try {
-                        if (!isValidGateBlock(Integer.parseInt(line0))) {
+                        if (!isValidGateBlock(Integer.parseInt(line0)))
                             throw new NumberFormatException();
-                        }
                     } catch (NumberFormatException e) {
                         throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
                     }
                 }
                 sign.setLine(1, "[DGate]");
-                if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate" + "" +
-                        ".infinite")) {
+                if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
                     sign.setLine(3, "0");
-                } else if (!sign.getLine(3).equalsIgnoreCase("infinite")) {
+                else if (!sign.getLine(3).equalsIgnoreCase("infinite"))
                     sign.setLine(3, "0");
-                }
                 sign.update(false);
                 player.print("mech.dgate.create");
             } else return null;

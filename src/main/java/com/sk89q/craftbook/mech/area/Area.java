@@ -7,8 +7,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -87,17 +85,14 @@ public class Area extends AbstractMechanic {
             if (!plugin.getConfiguration().areaAllowRedstone) return null;
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (SignUtil.isSign(block.getTypeId())) {
-                BlockState state = block.getState();
-                if (state instanceof Sign) {
-                    ChangedSign sign = BukkitUtil.toChangedSign((Sign) state);
-                    if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-                        sign.update(false);
-                        // check if the namespace and area exists
-                        isValidArea(sign);
-                        boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
-                        return new Area(save);
-                    }
+            if (SignUtil.isSign(block)) {
+                ChangedSign sign = BukkitUtil.toChangedSign(block);
+                if (sign.getLine(1).equalsIgnoreCase("[Area]") || sign.getLine(1).equalsIgnoreCase("[SaveArea]")) {
+                    sign.update(false);
+                    // check if the namespace and area exists
+                    isValidArea(sign);
+                    boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
+                    return new Area(save);
                 }
             }
             return null;

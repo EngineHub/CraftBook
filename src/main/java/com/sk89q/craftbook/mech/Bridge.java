@@ -243,10 +243,8 @@ public class Bridge extends AbstractMechanic {
 
         ChangedSign sign = null;
 
-        if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId() ==
-                BlockID.WALL_SIGN) {
+        if (SignUtil.isSign(event.getClickedBlock()))
             sign = BukkitUtil.toChangedSign(event.getClickedBlock());
-        }
 
         if (plugin.getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
             if (event.getPlayer().getItemInHand() != null)
@@ -265,12 +263,10 @@ public class Bridge extends AbstractMechanic {
                     addBlocks(sign, amount);
 
                     if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
-                        if (event.getPlayer().getItemInHand().getAmount() <= amount) {
+                        if (event.getPlayer().getItemInHand().getAmount() <= amount)
                             event.getPlayer().setItemInHand(new ItemStack(0, 0));
-                        } else {
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount()
-                                    - amount);
-                        }
+                        else
+                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
 
                     player.print("mech.restock");
                     event.setCancelled(true);
@@ -310,22 +306,21 @@ public class Bridge extends AbstractMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && getBridgeMaterial() != hinge.getTypeId()) {
+        if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && getBridgeMaterial() != hinge.getTypeId())
             return closeBridge(player);
-        } else {
+        else
             return openBridge();
-        }
     }
 
     public boolean openBridge() {
 
+        ChangedSign s = BukkitUtil.toChangedSign(trigger);
         for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             int oldType = b.getTypeId();
             if (b.getTypeId() == getBridgeMaterial() || BlockUtil.isBlockReplacable(b.getTypeId())) {
                 b.setTypeId(BlockID.AIR);
                 if (plugin.getConfiguration().safeDestruction) {
-                    ChangedSign s = BukkitUtil.toChangedSign(trigger);
                     if (oldType == getBridgeMaterial()) {
                         addBlocks(s, 1);
                     }
@@ -338,11 +333,11 @@ public class Bridge extends AbstractMechanic {
 
     public boolean closeBridge(LocalPlayer player) {
 
+        ChangedSign s = BukkitUtil.toChangedSign(trigger);
         for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getTypeId())) {
                 if (plugin.getConfiguration().safeDestruction) {
-                    ChangedSign s = BukkitUtil.toChangedSign(trigger);
                     if (hasEnoughBlocks(s)) {
                         b.setTypeId(getBridgeMaterial());
                         b.setData(getBridgeData());
@@ -378,15 +373,14 @@ public class Bridge extends AbstractMechanic {
 
         ChangedSign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN || event.getBlock().getTypeId() == BlockID.SIGN_POST)
+        if (SignUtil.isSign(event.getBlock()))
             sign = BukkitUtil.toChangedSign(event.getBlock());
 
         if (sign == null) return;
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getBridgeMaterial(), getBlocks(sign), getBridgeData());
-            BukkitUtil.toWorld(sign.getLocalWorld()).dropItemNaturally(BukkitUtil.toLocation(sign.getBlockVector()),
-                    toDrop);
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
         }
     }
 

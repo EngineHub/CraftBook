@@ -161,9 +161,8 @@ public class MechanicManager {
         try {
             load(pos, localPlayer, BukkitUtil.toChangedSign(sign, event.getLines(), localPlayer));
         } catch (InvalidMechanismException e) {
-            if (e.getMessage() != null) {
+            if (e.getMessage() != null)
                 localPlayer.printError(e.getMessage());
-            }
 
             event.setCancelled(true);
             block.getWorld().dropItem(block.getLocation(), new ItemStack(ItemID.SIGN, 1));

@@ -18,7 +18,6 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -26,13 +25,13 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
@@ -51,7 +50,7 @@ public class LightSwitch extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-            String line = ((Sign) block.getState()).getLine(1);
+            String line = BukkitUtil.toChangedSign(block).getLine(1);
             if (!line.equals("[|]") && !line.equalsIgnoreCase("[I]")) return null;
 
             // okay, now we can start doing exploration of surrounding blocks
@@ -130,12 +129,13 @@ public class LightSwitch extends AbstractMechanic {
         if (block.getTypeId() != BlockID.WALL_SIGN) return false;
         int radius = 10;
         int maximum = 20;
+        ChangedSign sign = BukkitUtil.toChangedSign(block);
         try {
-            radius = Integer.parseInt(((Sign) block.getState()).getLine(2));
+            radius = Integer.parseInt(sign.getLine(2));
         } catch (Exception ignored) {
         }
         try {
-            maximum = Integer.parseInt(((Sign) block.getState()).getLine(3));
+            maximum = Integer.parseInt(sign.getLine(3));
         } catch (Exception ignored) {
         }
         if (radius > CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange) {

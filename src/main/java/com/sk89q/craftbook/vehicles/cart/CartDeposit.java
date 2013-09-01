@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
@@ -44,7 +43,7 @@ public class CartDeposit extends CartBlockMechanism {
 
         // go
         List<ItemInfo> items = new ArrayList<ItemInfo>();
-        for(String data : RegexUtil.COMMA_PATTERN.split(((Sign) event.getBlocks().sign.getState()).getLine(2))) {
+        for(String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
             int itemID = -1;
             short itemData = -1;
             try {

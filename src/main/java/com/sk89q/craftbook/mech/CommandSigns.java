@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractMechanic;
@@ -111,7 +110,7 @@ public class CommandSigns extends AbstractMechanic {
         if (!BukkitUtil.toWorldVector(event.getBlock()).equals(BukkitUtil.toWorldVector(trigger)))
             return; // wth? our manager is insane
 
-        ChangedSign s = BukkitUtil.toChangedSign((Sign) event.getBlock().getState());
+        ChangedSign s = BukkitUtil.toChangedSign(event.getBlock());
 
         String command = s.getLine(2).replace("/", "") + s.getLine(3);
         if (command.contains("@p")) return; // We don't work with player commands.

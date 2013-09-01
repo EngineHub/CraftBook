@@ -53,9 +53,7 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
          * @throws ProcessedMechanismException
          */
         @Override
-        public ChunkAnchor detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
+        public ChunkAnchor detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (!sign.getLine(1).equalsIgnoreCase("[Chunk]")) return null;
             if (!player.hasPermission("craftbook.mech.chunk")) throw new InsufficientPermissionsException();
@@ -63,12 +61,9 @@ public class ChunkAnchor extends PersistentMechanic implements SelfTriggeringMec
             if(CraftBookPlugin.inst().getConfiguration().chunkAnchorCheck) {
 
                 for(BlockState entity : BukkitUtil.toBlock(pt).getChunk().getTileEntities()) {
-
                     if(entity instanceof Sign) {
-
                         Sign s = (Sign) entity;
                         if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
-
                             throw new InvalidMechanismException("mech.anchor.already-anchored");
                         }
                     }

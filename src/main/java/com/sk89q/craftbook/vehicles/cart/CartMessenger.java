@@ -9,7 +9,6 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartMessenger extends CartBlockMechanism {
@@ -29,7 +28,7 @@ public class CartMessenger extends CartBlockMechanism {
 
         // care?
         if (event.getMinecart().getPassenger() == null) return;
-        if (!event.getBlocks().hasSign() || !SignUtil.isSign(event.getBlocks().sign)) return;
+        if (!event.getBlocks().hasSign()) return;
 
         // enabled?
         if (Power.OFF == isActive(event.getBlocks())) return;

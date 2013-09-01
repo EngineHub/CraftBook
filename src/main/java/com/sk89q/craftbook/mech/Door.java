@@ -20,8 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +31,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
@@ -43,7 +42,6 @@ import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
 /**
@@ -122,8 +120,8 @@ public class Door extends AbstractMechanic {
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
             if (block.getTypeId() != BlockID.SIGN_POST) return null;
-            if (!((Sign) block.getState()).getLine(1).contains("Door") || ((Sign) block.getState()).getLine(1)
-                    .equalsIgnoreCase("[Door]"))
+            ChangedSign s = BukkitUtil.toChangedSign(block);
+            if (!s.getLine(1).contains("Door") || s.getLine(1).equalsIgnoreCase("[Door]"))
                 return null;
 
             // okay, now we can start doing exploration of surrounding blocks
@@ -149,7 +147,7 @@ public class Door extends AbstractMechanic {
 
         if (trigger == null) return;
 
-        Sign s = (Sign) trigger.getState();
+        ChangedSign s = BukkitUtil.toChangedSign(trigger);
 
         int block;
         findBase:
@@ -167,9 +165,9 @@ public class Door extends AbstractMechanic {
             else throw new UnacceptableMaterialException("mech.door.unusable");
         }
         // Find the other side
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+        if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
             otherSide = trigger.getRelative(BlockFace.UP);
-        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+        } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
             otherSide = trigger.getRelative(BlockFace.DOWN);
         }
         for (int i = 0; i <= plugin.getConfiguration().doorMaxLength; i++) {
@@ -180,21 +178,18 @@ public class Door extends AbstractMechanic {
             // allowed to find the distal signpost
 
             if (otherSide.getTypeId() == BlockID.SIGN_POST) {
-                String otherSignText = ((Sign) otherSide.getState()).getLines()[1];
-                if ("[Door Down]".equalsIgnoreCase(otherSignText)) {
+                String otherSignText = BukkitUtil.toChangedSign(otherSide).getLines()[1];
+                if ("[Door Down]".equalsIgnoreCase(otherSignText))
                     break;
-                }
-                if ("[Door Up]".equalsIgnoreCase(otherSignText)) {
+                if ("[Door Up]".equalsIgnoreCase(otherSignText))
                     break;
-                }
-                if ("[Door]".equalsIgnoreCase(otherSignText)) {
+                if ("[Door]".equalsIgnoreCase(otherSignText))
                     break;
-                }
             }
 
-            if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+            if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
                 otherSide = otherSide.getRelative(BlockFace.UP);
-            } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+            } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
                 otherSide = otherSide.getRelative(BlockFace.DOWN);
             }
         }
@@ -203,9 +198,9 @@ public class Door extends AbstractMechanic {
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
 
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+        if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
             distalBaseCenter = otherSide.getRelative(BlockFace.DOWN);
-        } else if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Down]")) {
+        } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
 
@@ -267,21 +262,15 @@ public class Door extends AbstractMechanic {
                     return;
                 }
 
-                Sign sign = null;
+                ChangedSign sign = null;
 
-                if (event.getClickedBlock().getTypeId() == BlockID.SIGN_POST || event.getClickedBlock().getTypeId()
-                        == BlockID.WALL_SIGN) {
-                    BlockState state = event.getClickedBlock().getState();
-                    if (state instanceof Sign) {
-                        sign = (Sign) state;
-                    }
-                }
+                if (SignUtil.isSign(event.getClickedBlock()))
+                    sign = BukkitUtil.toChangedSign(event.getClickedBlock());
 
                 if (sign != null) {
                     int amount = 1;
-                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                    if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5)
                         amount = 5;
-                    }
                     addBlocks(sign, amount);
 
                     if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
@@ -326,7 +315,7 @@ public class Door extends AbstractMechanic {
         // efficiency choice :/
         Block hinge;
 
-        if (((Sign) trigger.getState()).getLine(1).equalsIgnoreCase("[Door Up]")) {
+        if (BukkitUtil.toChangedSign(trigger).getLine(1).equalsIgnoreCase("[Door Up]")) {
             hinge = proximalBaseCenter.getRelative(BlockFace.UP);
         } else {
             hinge = proximalBaseCenter.getRelative(BlockFace.DOWN);
@@ -346,13 +335,13 @@ public class Door extends AbstractMechanic {
 
     public boolean openDoor() {
 
+        ChangedSign s = BukkitUtil.toChangedSign(trigger);
         for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             int oldType = b.getTypeId();
             if (b.getTypeId() == getDoorMaterial() || BlockUtil.isBlockReplacable(b.getTypeId())) {
                 b.setTypeId(BlockID.AIR);
                 if (plugin.getConfiguration().safeDestruction) {
-                    Sign s = (Sign) trigger.getState();
                     if (oldType != 0) {
                         addBlocks(s, 1);
                     }
@@ -365,19 +354,18 @@ public class Door extends AbstractMechanic {
 
     public boolean closeDoor(LocalPlayer player) {
 
+        ChangedSign s = BukkitUtil.toChangedSign(trigger);
         for (Vector bv : toggle) {
             Block b = trigger.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getTypeId())) {
                 if (plugin.getConfiguration().safeDestruction) {
-                    Sign s = (Sign) trigger.getState();
                     if (hasEnoughBlocks(s)) {
                         b.setTypeId(getDoorMaterial());
                         b.setData(getDoorData());
                         removeBlocks(s, 1);
                     } else {
-                        if (player != null) {
+                        if (player != null)
                             player.printError("mech.not-enough-blocks");
-                        }
                         return false;
                     }
                 } else {
@@ -425,55 +413,49 @@ public class Door extends AbstractMechanic {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
 
-        Sign sign = null;
+        ChangedSign sign = null;
 
-        if (event.getBlock().getTypeId() == BlockID.WALL_SIGN) {
-            BlockState state = event.getBlock().getState();
-            if (state instanceof Sign) {
-                sign = (Sign) state;
-            }
-        }
+        if (SignUtil.isSign(event.getBlock()))
+            sign = BukkitUtil.toChangedSign(event.getBlock());
 
         if (hasEnoughBlocks(sign)) {
             ItemStack toDrop = new ItemStack(getDoorMaterial(), getBlocks(sign), getDoorData());
-            if (sign != null) {
-                sign.getWorld().dropItemNaturally(sign.getLocation(), toDrop);
-            }
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
         }
     }
 
-    public boolean removeBlocks(Sign s, int amount) {
+    public boolean removeBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) - amount;
         s.setLine(0, String.valueOf(curBlocks));
-        s.update();
+        s.update(false);
         return curBlocks >= 0;
     }
 
-    public boolean addBlocks(Sign s, int amount) {
+    public boolean addBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s) + amount;
         s.setLine(0, String.valueOf(curBlocks));
-        s.update();
+        s.update(false);
         return curBlocks >= 0;
     }
 
-    public void setBlocks(Sign s, int amount) {
+    public void setBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return;
         s.setLine(0, String.valueOf(amount));
-        s.update();
+        s.update(false);
     }
 
-    public int getBlocks(Sign s) {
+    public int getBlocks(ChangedSign s) {
 
-        Sign otherSign = (Sign)otherSide.getState();
+        ChangedSign otherSign = BukkitUtil.toChangedSign(otherSide);
         return getBlocks(s, otherSign);
     }
 
-    public int getBlocks(Sign s, Sign other) {
+    public int getBlocks(ChangedSign s, ChangedSign other) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
             return 0;
@@ -494,7 +476,7 @@ public class Door extends AbstractMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks(Sign s) {
+    public boolean hasEnoughBlocks(ChangedSign s) {
 
         return !(s == null || s.getLine(0) == null) && (s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s) > 0);
     }
