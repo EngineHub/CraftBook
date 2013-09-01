@@ -18,7 +18,6 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -587,16 +586,5 @@ public class SignUtil {
             default:
                 return BlockFace.SELF;
         }
-    }
-
-    /**
-     * @param sign    to change
-     * @param line    to change
-     * @param content to change line to
-     */
-    public static void setLine(Sign sign, int line, String content) {
-
-        sign.setLine(line, content);
-        sign.update();
     }
 }

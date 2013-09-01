@@ -88,7 +88,7 @@ public class CartDispenser extends CartBlockMechanism {
             if (cart == null) {
                 switch (pow) {
                     case ON:
-                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                        if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                             dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -100,7 +100,7 @@ public class CartDispenser extends CartBlockMechanism {
                         return;
                     case OFF:
                     case NA:
-                        if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                        if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                             collect(cart, null);
                         return;
                 }
@@ -115,7 +115,7 @@ public class CartDispenser extends CartBlockMechanism {
                 if (cart == null) {
                     switch (pow) {
                         case ON:
-                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                            if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                                 dispense(blocks, inv, type);
                             return;
                         case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -127,7 +127,7 @@ public class CartDispenser extends CartBlockMechanism {
                             return;
                         case OFF:
                         case NA:
-                            if(!((org.bukkit.block.Sign) blocks.sign.getState()).getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                            if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                                 collect(cart, inv);
                             return;
                     }

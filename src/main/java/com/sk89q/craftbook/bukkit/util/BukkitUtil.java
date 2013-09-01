@@ -21,12 +21,12 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.entity.BukkitEntity;
 import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
@@ -63,13 +63,14 @@ public class BukkitUtil {
 
     public static ChangedSign toChangedSign(Block sign) {
 
-        if (sign.getTypeId() != BlockID.WALL_SIGN && sign.getTypeId() != BlockID.SIGN_POST) return null;
+        if (!SignUtil.isSign(sign)) return null;
+        Sign state = null;
         try {
-            sign.getState();
-        } catch (NullPointerException ex) {
+            state = (Sign) sign.getState();
+        } catch (Exception ex) {
             return null;
         }
-        return toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines());
+        return toChangedSign(state, state.getLines());
     }
 
     public static ChangedSign toChangedSign(Sign sign, String[] lines) {
