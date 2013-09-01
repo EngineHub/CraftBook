@@ -176,6 +176,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.better-leads.hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
         leadsHitchPersists = config.getBoolean("mechanics.better-leads.hitch-persists", false);
 
+        config.setComment("mechanics.better-leads.mob-repel", "If you have a mob tethered to you, mobs of that type will not target you.");
+        leadsMobRepellant = config.getBoolean("mechanics.better-leads.mob-repel", false);
+
         config.setComment("mechanics.better-leads.allowed-mobs", "The list of mobs that can be tethered with a lead.");
         leadsAllowedMobs = config.getStringList("mechanics.better-leads.allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
 

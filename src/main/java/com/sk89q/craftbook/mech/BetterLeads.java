@@ -92,11 +92,24 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if(!player.hasPermission("craftbook.mech.leads.ignore-target"))
-            return;
+        if(player.hasPermission("craftbook.mech.leads.ignore-target")) {
+            if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
+                event.setTarget(null);
+                event.setCancelled(true);
+            }
+        }
 
-        if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget()))
-            event.setCancelled(true);
+        if(player.hasPermission("craftbook.mech.leads.mob-repel")) {
+            for(Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
+                if(ent.getType() != event.getEntity().getType())
+                    continue;
+                if(((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
+                    event.setTarget(null);
+                    event.setCancelled(true);
+                    break;
+                }
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

@@ -68,7 +68,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
         return null;
     }
 
-
     @Override
     public void disable () {
         definitions.clear();
