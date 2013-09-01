@@ -62,7 +62,7 @@ public class CommandItemCommands {
         if(CommandItems.INSTANCE == null)
             throw new CommandException("CommandItems are not enabled!");
 
-        if(!player.hasPermission("craftbook.mech.commanditems.give." + context.getString(0)))
+        if(!sender.hasPermission("craftbook.mech.commanditems.give" + (context.hasFlag('p') ? ".others" : "") + "." + context.getString(0)))
             throw new CommandPermissionsException();
 
         CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(context.getString(0));
