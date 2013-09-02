@@ -280,5 +280,6 @@ public class Chair extends AbstractCraftBookMechanic {
     @Override
     public void disable () {
         chairs.clear();
+        ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
     }
 }

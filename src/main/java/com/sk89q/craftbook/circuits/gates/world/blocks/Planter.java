@@ -85,12 +85,13 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         if (item != null && !plantableItem(item.getTypeId())) return false;
 
-        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST || onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.TRAPPED_CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             for (ItemStack it : c.getInventory().getContents()) {
 
                 if (!ItemUtil.isStackValid(it)) continue;
+                if (!plantableItem(it.getTypeId())) continue;
 
                 if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
 
@@ -100,7 +101,8 @@ public class Planter extends AbstractSelfTriggeredIC {
                     if (c.getInventory().removeItem(new ItemStack(it.getTypeId(), 1, it.getDurability())).isEmpty()) {
                         b.setTypeIdAndData(getBlockByItem(it.getTypeId()), (byte) it.getDurability(), true);
                         return true;
-                    }
+                    } else
+                        continue;
                 }
             }
         } else {
