@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -836,8 +837,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // Invoke the permissions resolver
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            return PermissionsResolverManager.getInstance().hasPermission(player.getWorld().getName(),
-                    player.getName(), perm);
+            return PermissionsResolverManager.getInstance().hasPermission(player.getWorld().getName(), player.getName(), perm);
         }
 
         return false;
@@ -1007,6 +1007,16 @@ public class CraftBookPlugin extends JavaPlugin {
     public boolean hasProtocolLib() {
 
         return protocolLib != null;
+    }
+
+    /**
+     * Gets a copy of {@link ProtocolLibrary}.
+     *
+     * @return The {@link ProtocolLibrary} instance
+     */
+    public ProtocolLibrary getProtocolLib() {
+
+        return protocolLib;
     }
 
     /**

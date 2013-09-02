@@ -70,12 +70,12 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>1.2.22</version>
+            <version>1.2.16</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>2.4.5</version>
+            <version>2.7.0</version>
         </dependency>
         <dependency>
 	        <groupId>org.powermock</groupId>
@@ -246,6 +246,15 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
+            
+            <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-eclipse-plugin</artifactId>
+			    <configuration>
+				    <downloadSources>true</downloadSources>
+				    <downloadJavadocs>true</downloadJavadocs>
+			    </configuration>
+		    </plugin>
         </plugins>
     </build>
 </project>

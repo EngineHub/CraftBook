@@ -18,6 +18,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerOptions;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -26,6 +31,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.blocks.BlockType;
+
 
 /**
  * @author Me4502
@@ -68,19 +74,21 @@ public class Chair extends AbstractCraftBookMechanic {
         chairs.put(player.getName(), new Tuple2<Entity, Block>(ar, block));
     }
 
-    public void removeChair(Player player) {
+    public void removeChair(final Player player) {
 
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
         final Entity ent = chairs.get(player.getName()).a;
+        final Block block = chairs.get(player.getName()).b;
         if(ent != null) {
-            ent.eject();
+            player.eject();
+            player.teleport(block.getLocation().add(0, 1, 0));
+            ent.remove();
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
-                    ent.eject();
-                    ent.remove();
+                    player.teleport(block.getLocation().add(0, 1, 0));
                 }
-            }, 10L);
+            }, 1L);
         }
         chairs.remove(player.getName());
     }
@@ -237,6 +245,35 @@ public class Chair extends AbstractCraftBookMechanic {
     public boolean enable () {
 
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+
+        try {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), new Integer[] { Integer.valueOf(27) }).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+                @Override
+                public void onPacketReceiving(PacketEvent e) {
+                    if (!e.isCancelled()) {
+                        Player player = e.getPlayer();
+                        if (e.getPacket().getBooleans().getValues().get(1).booleanValue())
+                            if(hasChair(player))
+                                removeChair(player);
+                    }
+                }
+            }).syncStart();
+
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), new Integer[] { Integer.valueOf(19) }).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+                @Override
+                public void onPacketReceiving(PacketEvent e) {
+                    if (!e.isCancelled()) {
+                        Player player = e.getPlayer();
+                        if(hasChair(player))
+                            removeChair(player);
+                    }
+                }
+            }).syncStart();
+        } catch(Exception e) {
+            CraftBookPlugin.inst().getLogger().warning("ProtocolLib is required for chairs! Disabling chairs!");
+            return false;
+        }
+
         return true;
     }
 
