@@ -203,18 +203,19 @@ public class Gate extends AbstractMechanic {
         CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + ID + ":" + data, "gates.search");
 
         Block signBlock = BukkitUtil.toBlock(pt);
-        ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
-        ChangedSign otherSign = null;
-
-        if (sign != null) {
-            Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
-            if(ot != null)
-                otherSign = BukkitUtil.toChangedSign(ot);
-        }
 
         for (Vector bl : column.getRegion()) {
 
             Block block = BukkitUtil.toBlock(new BlockWorldVector(pt.getWorld(), bl));
+
+            ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
+            ChangedSign otherSign = null;
+
+            if (sign != null) {
+                Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
+                if(ot != null)
+                    otherSign = BukkitUtil.toChangedSign(ot);
+            }
 
             if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
@@ -232,8 +233,6 @@ public class Gate extends AbstractMechanic {
                     else if (close && canPassThrough(block.getTypeId()) && isValidGateItem(new ItemStack(ID, 1), true))
                         removeBlocks(sign, 1);
                     block.setTypeIdAndData(ID, data, true);
-
-                    setBlocks(sign, getBlocks(sign, otherSign));
                 } else if (close && !hasEnoughBlocks(sign, otherSign) && isValidGateItem(new ItemStack(ID, 1), true))
                     if (player != null) {
                         player.printError("mech.not-enough-blocks");
@@ -566,22 +565,16 @@ public class Gate extends AbstractMechanic {
         return world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getTypeId();
     }
 
-    public boolean removeBlocks(ChangedSign s, int amount) {
+    public void removeBlocks(ChangedSign s, int amount) {
 
-        if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
-        int curBlocks = getBlocks(s) - amount;
-        s.setLine(3, String.valueOf(curBlocks));
-        s.update(false);
-        return curBlocks >= 3;
+        if (s.getLine(3).equalsIgnoreCase("infinite")) return;
+        setBlocks(s, getBlocks(s) - amount);
     }
 
-    public boolean addBlocks(ChangedSign s, int amount) {
+    public void addBlocks(ChangedSign s, int amount) {
 
-        if (s.getLine(3).equalsIgnoreCase("infinite")) return true;
-        int curBlocks = getBlocks(s) + amount;
-        s.setLine(3, String.valueOf(curBlocks));
-        s.update(false);
-        return curBlocks >= 0;
+        if (s.getLine(3).equalsIgnoreCase("infinite")) return;
+        setBlocks(s, getBlocks(s) + amount);
     }
 
     public void setBlocks(ChangedSign s, int amount) {
@@ -625,7 +618,13 @@ public class Gate extends AbstractMechanic {
 
     public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
-        return s != null && s.getLine(3).equalsIgnoreCase("infinite") || other != null && other.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
+        if(other != null) {
+
+            addBlocks(s, getBlocks(other));
+            setBlocks(other, 0);
+            return hasEnoughBlocks(s);
+        } else
+            return hasEnoughBlocks(s);
     }
 
     protected class GateColumn {
@@ -688,7 +687,7 @@ public class Gate extends AbstractMechanic {
         public boolean equals(Object o) {
 
             if(!(o instanceof GateColumn)) return false;
-            return ((GateColumn) o).getX() == getX() && ((GateColumn) o).getZ() == getZ();
+            return ((GateColumn) o).getX() == getX() && ((GateColumn) o).getZ() == getZ() && bwv.getWorld().getName().equals(((GateColumn) o).bwv.getWorld().getName());
         }
 
         @Override

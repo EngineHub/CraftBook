@@ -64,13 +64,7 @@ public class BukkitUtil {
     public static ChangedSign toChangedSign(Block sign) {
 
         if (!SignUtil.isSign(sign)) return null;
-        Sign state = null;
-        try {
-            state = (Sign) sign.getState();
-        } catch (Exception ex) {
-            return null;
-        }
-        return toChangedSign(state, state.getLines());
+        return toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines());
     }
 
     public static ChangedSign toChangedSign(Sign sign, String[] lines) {
