@@ -1,6 +1,7 @@
 package com.sk89q.craftbook;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,12 @@ public class LanguageManager {
         for (String language : languages) {
             language = language.trim();
             File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".yml");
+            if(!f.exists())
+                try {
+                    f.createNewFile();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             YAMLProcessor lang = new YAMLProcessor(f, true, YAMLFormat.EXTENDED);
 
             try {

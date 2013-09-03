@@ -129,7 +129,6 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
-                    <include>en_US.yml</include>
                     <include>config.yml</include>
                     <include>books.txt</include>
                     <include>cauldron-recipes.txt</include>
