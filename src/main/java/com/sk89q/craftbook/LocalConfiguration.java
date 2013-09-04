@@ -163,6 +163,7 @@ public abstract class LocalConfiguration {
     public boolean headDropsDropOverrideNatural;
     public double headDropsDropRate;
     public double headDropsLootingRateModifier;
+    public boolean headDropsShowNameClick;
     public HashMap<String, Double> headDropsCustomDropRate;
     public HashMap<String, String> headDropsCustomSkins;
     // Mechanics - Hidden Switch

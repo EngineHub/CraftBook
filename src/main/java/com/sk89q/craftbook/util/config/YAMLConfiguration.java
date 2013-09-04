@@ -433,6 +433,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         headDropsDropOverrideNatural = config.getBoolean("mechanics.head-drops.override-natural-head-drops", false);
         headDropsDropRate = config.getDouble("mechanics.head-drops.drop-rate", 0.05);
         headDropsLootingRateModifier = config.getDouble("mechanics.head-drops.looting-rate-modifier", 0.05);
+        headDropsShowNameClick = config.getBoolean("mechanics.head-drops.show-name-right-click", true);
         headDropsCustomDropRate = new HashMap<String, Double>();
         if(config.getKeys("mechanics.head-drops.drop-rates") != null) {
             for(String key : config.getKeys("mechanics.head-drops.drop-rates"))

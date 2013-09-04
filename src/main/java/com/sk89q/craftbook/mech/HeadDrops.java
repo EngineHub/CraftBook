@@ -15,8 +15,10 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -116,6 +118,26 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         if(ItemUtil.isStackValid(toDrop)) {
             event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), toDrop);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        if(event.getClickedBlock().getTypeId() == BlockID.HEAD) {
+
+            Skull skull = (Skull)event.getClickedBlock().getState();
+            if(skull == null || !skull.hasOwner())
+                return;
+
+            if(CraftBookPlugin.inst().getConfiguration().headDropsShowNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "This is the dismembered head of.. " + skull.getOwner());
+            } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
+                skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
+                skull.update();
+            }
         }
     }
 
