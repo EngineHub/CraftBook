@@ -57,8 +57,8 @@ import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
-import com.sk89q.craftbook.bukkit.BukkitMetrics.Graph;
-import com.sk89q.craftbook.bukkit.BukkitMetrics.Plotter;
+import com.sk89q.craftbook.bukkit.Metrics.Graph;
+import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -400,7 +400,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         try {
             logDebugMessage("Initializing Metrics!", "startup");
-            BukkitMetrics metrics = new BukkitMetrics(this);
+            Metrics metrics = new Metrics(this);
             metrics.start();
 
             Graph g = metrics.createGraph("Language");

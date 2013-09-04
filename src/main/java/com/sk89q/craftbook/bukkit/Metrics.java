@@ -54,7 +54,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-public class BukkitMetrics {
+public class Metrics {
 
     /**
      * The current revision number
@@ -116,7 +116,7 @@ public class BukkitMetrics {
      */
     private volatile BukkitTask task = null;
 
-    public BukkitMetrics(final Plugin plugin) throws IOException {
+    public Metrics(final Plugin plugin) throws IOException {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
