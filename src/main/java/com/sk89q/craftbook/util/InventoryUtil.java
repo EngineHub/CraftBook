@@ -68,6 +68,7 @@ public class InventoryUtil {
                 leftovers.add(stack);
             }
         }
+        while(leftovers.remove(null)){}
 
         furnace.update();
 

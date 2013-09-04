@@ -73,8 +73,9 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
         boolean collected = false;
         for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock()))
-            if(collectItem(item))
-                collected = true;
+            if(item.isValid() && !item.isDead())
+                if(collectItem(item))
+                    collected = true;
 
         return collected;
     }
@@ -113,7 +114,10 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
             return true;
         } else {
             if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
-                item.setItemStack(leftovers.get(0));
+                if(!ItemUtil.isStackValid(leftovers.get(0)))
+                    item.remove();
+                else
+                    item.setItemStack(leftovers.get(0));
                 return true;
             }
         }
