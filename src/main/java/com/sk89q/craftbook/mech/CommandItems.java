@@ -55,9 +55,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     private YAMLProcessor config;
 
-    private Set<CommandItemDefinition> definitions = new HashSet<CommandItemDefinition>();
+    private Set<CommandItemDefinition> definitions;
 
-    private Map<Tuple2<String, String>, Integer> cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
+    private Map<Tuple2<String, String>, Integer> cooldownPeriods;
 
     public CommandItemDefinition getDefinitionByName(String name) {
 
@@ -70,8 +70,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     @Override
     public void disable () {
-        definitions.clear();
-        cooldownPeriods.clear();
+        definitions = null;
+        cooldownPeriods = null;
         config = null;
         INSTANCE = null;
     }
@@ -80,10 +80,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         INSTANCE = this;
+
+        definitions = new HashSet<CommandItemDefinition>();
+        cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
+
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
-
-        definitions.clear();
 
         try {
             config.load();
