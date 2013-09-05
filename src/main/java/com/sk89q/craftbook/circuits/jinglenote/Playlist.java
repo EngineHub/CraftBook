@@ -187,6 +187,12 @@ public class Playlist {
                     }
                     stringSequencer = null;
                 }
+
+                if(position >= lines.size()) {
+                    CraftBookPlugin.inst().getLogger().warning("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
+                    break; //He's dead, Jim
+                }
+
                 String line = lines.get(position);
                 position++;
                 if (line.trim().startsWith("#") || line.trim().isEmpty())
@@ -223,6 +229,11 @@ public class Playlist {
                             file = f;
                             break;
                         }
+                    }
+
+                    if(file == null) {
+                        CraftBookPlugin.inst().getLogger().warning("Failed to find midi file: " + midiName + " for playlist file: " + playlist + ". Skipping midi!");
+                        continue;
                     }
 
                     try {
