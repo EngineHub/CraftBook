@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7
+# CraftBook Configuration for Bukkit. Generated for version: 3.7.5
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -72,6 +72,7 @@ common:
         default-to-global: true
         enable-in-commandblocks: false
         enable-in-player-commands: false
+        enable-in-player-chat: false
 circuits:
     ics:
         enable: true
@@ -95,6 +96,8 @@ circuits:
         insulator-block: 35
         stack-per-move: true
         require-sign: false
+    jukebox:
+        enable: true
 mechanics:
     ai:
         enable: false
@@ -118,6 +121,9 @@ mechanics:
     better-leads:
         enable: false
         stop-mob-target: false
+        owner-unleash-only: false
+        hitch-persists: false
+        mob-repel: false
         allowed-mobs:
         - ZOMBIE
         - SPIDER
@@ -248,6 +254,7 @@ mechanics:
         override-natural-head-drops: false
         drop-rate: 0.05
         looting-rate-modifier: 0.05
+        show-name-right-click: true
         drop-rates: {}
         custom-mob-skins: {}
     hidden-switch:

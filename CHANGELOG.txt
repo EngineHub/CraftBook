@@ -1,3 +1,16 @@
+3.7.5
+* Fixed CartMessenger
++ Added .others permission for /comitems give
++ Added MobRepel mode to BetterLeads
+* Many optimizations to plugin
+* Fixed Chairs. (ProtocolLib required again!)
+* Language files auto-generate instead of being included. Fixes issues with different encodings.
+* Fixed gates at the same spot across multiple worlds
++ Added an option to show player head names on right click. Also convert skins on right click too if the skin is old (Mob Heads).
+* Fixed ContainerCollector dupe bug.
+* Fixed a few Playlist errors, it will now print a warning to the console and just skip the line if it is invalid.
+* Fixed a major bug prohibitting many mechanics from working.
+
 3.7.4
 * Fixed multiple errors related to the parsing of items.
 + Added EntityType options to the potion inducer IC. Old IC's will be converted.
