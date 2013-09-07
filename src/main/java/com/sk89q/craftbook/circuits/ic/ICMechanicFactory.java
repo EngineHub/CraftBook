@@ -286,14 +286,14 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
             boolean st = id.toLowerCase(Locale.ENGLISH).endsWith(" st");
             id = id.toLowerCase(Locale.ENGLISH).replace(" st", "");
 
-            if (block.getTypeId() != BlockID.WALL_SIGN)
-                throw new InvalidMechanismException("Only wall signs are used for ICs.");
-
             String shortId = manager.longRegistered.get(id.toLowerCase(Locale.ENGLISH));
             if (shortId == null) {
                 player.printError("Warning: Unknown IC");
                 return null;
             }
+
+            if (block.getTypeId() != BlockID.WALL_SIGN)
+                throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             sign.setLine(1, "[" + shortId + "]" + (st ? "S" : ""));
             sign.update(false);

@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
+import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -248,7 +249,7 @@ public class Chair extends AbstractCraftBookMechanic {
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 
         try {
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), new Integer[] { Integer.valueOf(27) }).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), Packets.Client.PLAYER_INPUT).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
@@ -260,7 +261,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 }
             }).syncStart();
 
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), new Integer[] { Integer.valueOf(19) }).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), Packets.Client.ENTITY_ACTION).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
