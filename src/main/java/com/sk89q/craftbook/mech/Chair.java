@@ -87,6 +87,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 @Override
                 public void run () {
                     player.teleport(block.getLocation().add(0, 1, 0));
+                    player.setSneaking(false);
                 }
             }, 1L);
         }
