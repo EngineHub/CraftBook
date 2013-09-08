@@ -35,10 +35,12 @@ public abstract class JingleNotePlayer implements Runnable {
     @Override
     public void run() {
 
+        if(sequencer == null)
+            return;
         try {
             try {
                 sequencer.run(this);
-            } catch (Throwable t) { 
+            } catch (Throwable t) {
                 BukkitUtil.printStacktrace(t);
             }
 

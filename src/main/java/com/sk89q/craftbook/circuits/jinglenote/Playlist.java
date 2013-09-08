@@ -40,6 +40,8 @@ public class Playlist {
     volatile MidiJingleSequencer midiSequencer;
     volatile StringJingleSequencer stringSequencer;
 
+    boolean stopping = false;
+
     public Playlist(String name) {
 
         players = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();
@@ -89,6 +91,7 @@ public class Playlist {
         position = 0;
         if (task != null)
             task.cancel();
+        stopping = true;
     }
 
     @SuppressWarnings("unchecked")
@@ -119,7 +122,7 @@ public class Playlist {
         @Override
         public void run () {
 
-            while (position < lines.size()) {
+            while (position < lines.size() && !stopping) {
 
                 if(midiSequencer != null) {
 
@@ -200,8 +203,10 @@ public class Playlist {
 
                 if (line.startsWith("wait ")) {
 
-                    PlaylistInterpreter show = new PlaylistInterpreter();
-                    task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
+                    if(!stopping) {
+                        PlaylistInterpreter show = new PlaylistInterpreter();
+                        task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
+                    }
                     return;
                 } else if (line.startsWith("midi ")) {
 
