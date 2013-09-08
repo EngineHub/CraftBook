@@ -535,6 +535,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         treeLopperMaxSize = config.getInt("mechanics.tree-lopper.max-size", 30);
         treeLopperAllowDiagonals = config.getBoolean("mechanics.tree-lopper.allow-diagonals", false);
         treeLopperEnforceData = config.getBoolean("mechanics.tree-lopper.enforce-data", false);
+        treeLopperPlaceSapling = config.getBoolean("mechanics.tree-lopper.place-saplings", false);
 
 
         // XPStorer Configuration Listener
