@@ -159,6 +159,7 @@ public class ICMechanic extends PersistentMechanic {
     public void onBlockBreak(BlockBreakEvent event) {
         // remove the ic from cache
         ICManager.removeCachedIC(pos);
+        ic.onICBreak(event);
     }
 
     public IC getIC() {
