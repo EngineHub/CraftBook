@@ -36,7 +36,9 @@ public class Jukebox extends AbstractIC {
     @Override
     public void onICBreak(BlockBreakEvent event) {
         super.onICBreak(event);
-        playlists.remove(getSign().getBlockVector());
+        if(playlists.containsKey(getSign().getBlockVector())) {
+            playlists.remove(getSign().getBlockVector()).stopPlaylist();
+        }
     }
 
     @Override
