@@ -38,6 +38,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -391,6 +392,10 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             public ChangedSign getSign () {
                 return self.getSign();
             }
+
+            @Override
+            public void onICBreak (BlockBreakEvent event) {
+            }
         };
     }
 
@@ -429,5 +434,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     public ChangedSign getSign () {
 
         return sign;
+    }
+
+    @Override
+    public void onICBreak (BlockBreakEvent event) {
     }
 }

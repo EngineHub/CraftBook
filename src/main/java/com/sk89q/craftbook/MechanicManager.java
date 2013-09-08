@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -59,11 +58,6 @@ import com.sk89q.worldedit.blocks.ItemID;
  * @author hash
  */
 public class MechanicManager {
-
-    /**
-     * Logger for errors. The Minecraft namespace is required so that messages are part of Minecraft's root logger.
-     */
-    protected final Logger logger = Logger.getLogger("Minecraft.CraftBook");
 
     /**
      * List of factories that will be used to detect mechanisms at a location.
@@ -607,7 +601,7 @@ public class MechanicManager {
     protected void unload(Mechanic mechanic, ChunkUnloadEvent event) {
 
         if (mechanic == null) {
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
+            CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to unload(Mechanic) - null.");
             return;
         }
 
@@ -625,7 +619,7 @@ public class MechanicManager {
             }
             mechanic.unload();
         } catch (Throwable t) { // Mechanic failed to unload for some reason
-            logger.log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getSimpleName());
+            CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to unload " + mechanic.getClass().getSimpleName());
             BukkitUtil.printStacktrace(t);
         }
 
@@ -660,7 +654,7 @@ public class MechanicManager {
                 try {
                     mechanic.think();
                 } catch (Throwable t) { // Mechanic failed to think for some reason
-                    logger.log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getSimpleName());
+                    CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getSimpleName());
                     BukkitUtil.printStacktrace(t);
                     if(mechanic instanceof ICMechanic && CraftBookPlugin.inst().getConfiguration().ICBreakOnError)
                         BukkitUtil.toSign(((ICMechanic)mechanic).getIC().getSign()).getBlock().breakNaturally();

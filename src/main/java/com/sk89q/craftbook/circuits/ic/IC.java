@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.circuits.ic;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 
@@ -41,6 +42,13 @@ public interface IC {
      * Called when the sign is right clicked.
      */
     public void onRightClick(Player p);
+
+    /**
+     * Called when the sign is broken.
+     * 
+     * @param event The BlockBreakEvent.
+     */
+    public void onICBreak(BlockBreakEvent event);
 
     /**
      * Recieve a new state to process on.

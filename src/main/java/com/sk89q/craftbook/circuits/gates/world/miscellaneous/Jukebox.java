@@ -1,11 +1,14 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -17,15 +20,23 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 
 public class Jukebox extends AbstractIC {
 
-    Playlist playlist;
+    public static Map<BlockWorldVector, Playlist> playlists = new HashMap<BlockWorldVector, Playlist>();
+
     int radius;
 
     public Jukebox (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
+    }
+
+    @Override
+    public void onICBreak(BlockBreakEvent event) {
+        super.onICBreak(event);
+        playlists.remove(getSign().getBlockVector());
     }
 
     @Override
@@ -39,7 +50,8 @@ public class Jukebox extends AbstractIC {
             radius = -1;
         }
 
-        playlist = new Playlist(plist);
+        if(!playlists.containsKey(getSign().getBlockVector()))
+            playlists.put(getSign().getBlockVector(), new Playlist(plist));
     }
 
     @Override
@@ -54,6 +66,10 @@ public class Jukebox extends AbstractIC {
 
     @Override
     public void trigger (ChipState chip) {
+
+        Playlist playlist = playlists.get(getSign().getBlockVector());
+
+        if(playlist == null) return; //Heh?
 
         if(radius < 0) {
             HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>> players = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();

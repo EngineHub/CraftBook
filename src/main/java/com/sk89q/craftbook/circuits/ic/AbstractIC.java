@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -85,10 +86,13 @@ public abstract class AbstractIC implements IC {
     public void onRightClick(Player p) {
 
         if (p.isSneaking()) {
-            ICDocsParser.generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil
-                    .LEFT_BRACKET_PATTERN.split(getSign
-                            ().getLine(1))[1])[0]);
+            ICDocsParser.generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
         }
+    }
+
+    @Override
+    public void onICBreak(BlockBreakEvent event) {
+        ICManager.removeCachedIC(BukkitUtil.toWorldVector(event.getBlock()));
     }
 
     @Override

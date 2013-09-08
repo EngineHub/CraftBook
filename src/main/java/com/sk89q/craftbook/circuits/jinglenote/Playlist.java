@@ -76,6 +76,7 @@ public class Playlist {
 
     public void startPlaylist() {
 
+        stopping = false;
         position = 0;
         if (task != null)
             task.cancel();
