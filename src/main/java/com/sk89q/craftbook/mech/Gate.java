@@ -68,7 +68,6 @@ public class Gate extends AbstractMechanic {
      * Indicates a DGate.
      */
     private final boolean smallSearchSize;
-    private ChangedSign sign;
 
     /**
      * Construct a gate for a location.
@@ -81,10 +80,6 @@ public class Gate extends AbstractMechanic {
         super();
         this.pt = pt;
         this.smallSearchSize = smallSearchSize;
-
-        int id = BukkitUtil.toBlock(pt).getTypeId();
-        if (id == BlockID.SIGN_POST || id == BlockID.WALL_SIGN)
-            sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(pt));
     }
 
     /**
@@ -202,22 +197,24 @@ public class Gate extends AbstractMechanic {
 
         CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + ID + ":" + data, "gates.search");
 
-        Block signBlock = BukkitUtil.toBlock(pt);
-
         for (Vector bl : column.getRegion()) {
 
             Block block = BukkitUtil.toBlock(new BlockWorldVector(pt.getWorld(), bl));
 
-            ChangedSign sign = BukkitUtil.toChangedSign(signBlock);
-            ChangedSign otherSign = null;
+            ChangedSign sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(pt));
 
-            if (sign != null) {
-                Block ot = SignUtil.getNextSign(signBlock, sign.getLine(1), 4);
-                if(ot != null)
-                    otherSign = BukkitUtil.toChangedSign(ot);
+            if(sign == null) {
+                CraftBookPlugin.logDebugMessage("Invalid Sign!", "gates.search");
+                return false;
             }
 
-            if (sign != null && sign.getLine(2).equalsIgnoreCase("NoReplace")) {
+            ChangedSign otherSign = null;
+
+            Block ot = SignUtil.getNextSign(BukkitUtil.toBlock(pt), sign.getLine(1), 4);
+            if(ot != null)
+                otherSign = BukkitUtil.toChangedSign(ot);
+
+            if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
                 if (block.getTypeId() != 0 && !isValidGateBlock(block.getTypeId(), true))
                     break;
@@ -343,8 +340,8 @@ public class Gate extends AbstractMechanic {
         @Override
         public Gate detect(BlockWorldVector pt) {
 
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.WALL_SIGN || block.getTypeId() == BlockID.SIGN_POST) {
+            Block block = BukkitUtil.toBlock(pt);
+            if (SignUtil.isSign(block)) {
                 ChangedSign sign = BukkitUtil.toChangedSign(block);
                 if (sign.getLine(1).equalsIgnoreCase("[Gate]") || sign.getLine(1).equalsIgnoreCase("[DGate]"))
                     // this is a little funky because we don't actually look for the blocks that make up the movable
@@ -515,6 +512,8 @@ public class Gate extends AbstractMechanic {
     public int getGateBlock() {
 
         int gateBlock = 0;
+
+        ChangedSign sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(pt));
 
         if (!sign.getLine(0).isEmpty()) {
             try {
