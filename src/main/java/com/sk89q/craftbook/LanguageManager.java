@@ -67,7 +67,8 @@ public class LanguageManager {
         YAMLProcessor languageData = languageMap.get(language);
         if (languageData == null) {
             languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
-            if (languageData == null) return "Missing Language File!";
+            if (languageData == null)
+                return defaultMessages.get(ChatColor.stripColor(message));
             String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
             if (translated == null) return message;
             return translated;
@@ -75,7 +76,8 @@ public class LanguageManager {
         String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
         if (translated == null || translated.length() == 0) {
             languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
-            if (languageData == null) return "Missing Language File!";
+            if (languageData == null)
+                return defaultMessages.get(ChatColor.stripColor(message));
             translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
             if (translated == null) return message;
             return translated;
@@ -100,7 +102,7 @@ public class LanguageManager {
     }
 
     @SuppressWarnings("serial")
-    public static final HashMap<String, String> defaultMessages = new HashMap<String, String>() {{
+    public static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
         put("area.permissions", "You don't have permissions to do that in this area!");
         put("area.use-permissions", "You don't have permissions to use that in this area!");
         put("area.break-permissions", "You don't have permissions to break that in this area!");
