@@ -193,25 +193,30 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
     private enum MobSkullType {
 
-        BLAZE("Blaze_Head"),
-        ENDERMAN("Violit"),
-        GHAST("_QuBra_"),
-        MUSHROOM_COW("Mooshroom_Stew"),
+        //Official
+        BLAZE("MHF_Blaze", "Blaze_Head"),
+        CAVE_SPIDER("MHF_CaveSpider"),
+        CHICKEN("MHF_Chicken", "scraftbrothers1"),
+        COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
+        ENDERMAN("MHF_Enderman", "Violit"),
+        GHAST("MHF_Ghast", "_QuBra_"),
+        MAGMA_CUBE("MHF_LavaSlime"),
+        MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
+        PIG("MHF_Pig", "XlexerX"),
+        PIG_ZOMBIE("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
+        SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
+        SLIME("MHF_Slime", "HappyHappyMan"),
+        SPIDER("MHF_Spider", "Kelevra_V"),
+        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9"),
+        IRON_GOLEM("MHF_Golem", "zippie007"),
+
+        //Unofficial/Community
+        BAT("coolwhip101", "bozzobrain"),
+        ENDER_DRAGON("KingEndermen", "KingEnderman"),
         SQUID("squidette8"),
         SILVERFISH("AlexVMiner"),
-        ENDER_DRAGON("KingEndermen", "KingEnderman"),
-        SLIME("HappyHappyMan"),
         SNOWMAN("scraftbrothers2", "Koebasti"),
-        IRON_GOLEM("zippie007"),
         HORSE("gavertoso"),
-        PIG("XlexerX"),
-        PIG_ZOMBIE("ManBearPigZombie", "scraftbrothers5"),
-        BAT("coolwhip101", "bozzobrain"),
-        SPIDER("Kelevra_V"),
-        VILLAGER("Villager", "Kuvase", "scraftbrothers9"),
-        SHEEP("SGT_KICYORASS", "Eagle_Peak"),
-        COW("VerifiedBernard", "CarlosTheCow"),
-        CHICKEN("scraftbrothers1"),
         OCELOT("scraftbrothers3"),
         WITCH("scrafbrothers4");
 
