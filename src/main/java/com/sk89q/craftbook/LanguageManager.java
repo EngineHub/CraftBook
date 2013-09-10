@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_6_R2.EntityPlayer;
-
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -23,9 +21,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 public class LanguageManager {
 
     HashMap<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
-
-    public LanguageManager() {
-    }
 
     public void init() {
         checkForLanguages();
@@ -91,7 +86,7 @@ public class LanguageManager {
     public String getPlayersLanguage(Player p) {
 
         try {
-            Field d = EntityPlayer.class.getDeclaredField("locale");
+            Field d = Class.forName("net.minecraft.server.v1_6_R2.EntityPlayer").getDeclaredField("locale");
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer) p).getHandle());
         } catch (Throwable e) {
