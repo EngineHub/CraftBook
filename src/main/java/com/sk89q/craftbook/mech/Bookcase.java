@@ -55,7 +55,7 @@ public class Bookcase extends AbstractMechanic {
             String text = getBookLine();
 
             if (text != null) {
-                player.print(plugin.getConfiguration().bookcaseReadLine);
+                player.print("mech.bookcase.read-line");
                 player.printRaw(text);
             } else
                 player.printError("mech.bookcase.fail-line");

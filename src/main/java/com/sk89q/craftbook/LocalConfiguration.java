@@ -86,7 +86,6 @@ public abstract class LocalConfiguration {
     public boolean bookcaseEnabled;
     public boolean bookcaseReadHoldingBlock;
     public boolean bookcaseReadWhenSneaking;
-    public String bookcaseReadLine;
     // Mechanics - Bridge
     public boolean bridgeEnabled;
     public boolean bridgeAllowRedstone;

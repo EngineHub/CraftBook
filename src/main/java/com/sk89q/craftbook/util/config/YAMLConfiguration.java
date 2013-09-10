@@ -233,9 +233,6 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.bookcase.read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
         bookcaseReadHoldingBlock = config.getBoolean("mechanics.bookcase.read-when-holding-block", false);
 
-        config.setComment("mechanics.bookcase.read-line", "The line that is displayed as you right click a bookshelf.");
-        bookcaseReadLine = config.getString("mechanics.bookcase.read-line", "You pick up a book...");
-
 
         // Bridge Configuration Listener
         config.setComment("mechanics.bridge.enable", "Enable bridges.");

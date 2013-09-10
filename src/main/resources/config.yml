@@ -151,7 +151,6 @@ mechanics:
         enable: true
         read-when-sneaking: false
         read-when-holding-block: false
-        read-line: You pick up a book...
     bridge:
         enable: true
         allow-redstone: true

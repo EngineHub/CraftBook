@@ -65,20 +65,32 @@ public class LanguageManager {
         if(language == null)
             language = CraftBookPlugin.inst().getConfiguration().language;
         YAMLProcessor languageData = languageMap.get(language);
+        String def = defaultMessages.get(ChatColor.stripColor(message));
         if (languageData == null) {
             languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
             if (languageData == null)
-                return defaultMessages.get(ChatColor.stripColor(message));
-            String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
+                return def;
+            String translated = null;
+            if(def == null)
+                translated = languageData.getString(ChatColor.stripColor(message));
+            else
+                translated = languageData.getString(ChatColor.stripColor(message), def);
             if (translated == null) return message;
             return translated;
         }
-        String translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
+        String translated;
+        if(def == null)
+            translated = languageData.getString(ChatColor.stripColor(message));
+        else
+            translated = languageData.getString(ChatColor.stripColor(message), def);
         if (translated == null || translated.length() == 0) {
             languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
             if (languageData == null)
-                return defaultMessages.get(ChatColor.stripColor(message));
-            translated = languageData.getString(ChatColor.stripColor(message), defaultMessages.get(ChatColor.stripColor(message)));
+                return def;
+            if(def == null)
+                translated = languageData.getString(ChatColor.stripColor(message));
+            else
+                translated = languageData.getString(ChatColor.stripColor(message), def);
             if (translated == null) return message;
             return translated;
         }
@@ -102,7 +114,7 @@ public class LanguageManager {
     }
 
     @SuppressWarnings("serial")
-    public static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
+    private static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
         put("area.permissions", "You don't have permissions to do that in this area!");
         put("area.use-permissions", "You don't have permissions to use that in this area!");
         put("area.break-permissions", "You don't have permissions to break that in this area!");
@@ -121,6 +133,7 @@ public class LanguageManager {
 
         put("mech.bookcase.fail-line", "Failed to fetch a line from the books file.");
         put("mech.bookcase.fail-file", "Failed to read the books file.");
+        put("mech.bookcase.read-line", "You pick up a book...");
 
         put("mech.bridge.create","Bridge Created!");
         put("mech.bridge.toggle","Bridge Toggled!");
