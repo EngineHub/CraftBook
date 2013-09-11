@@ -249,6 +249,7 @@ public class Chair extends AbstractCraftBookMechanic {
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 
         try {
+            Class.forName("com.comphenix.protocol.events.PacketListener");
             ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), Packets.Client.PLAYER_INPUT).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {

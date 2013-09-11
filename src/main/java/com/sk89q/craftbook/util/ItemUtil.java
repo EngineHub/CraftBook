@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -129,15 +130,13 @@ public class ItemUtil {
         return data.getItemTypeId() == comparedData.getItemTypeId();
     }
 
-    public static final char COLOR_CHAR = '\u00A7';
-    private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + String.valueOf(COLOR_CHAR) + "[Rr]");
+    private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + String.valueOf('\u00A7') + "[Rr]");
 
     //TODO Move to a StringUtil.
     public static String stripResetChar(String message) {
 
-        if (message == null) {
+        if (message == null)
             return null;
-        }
 
         return STRIP_RESET_PATTERN.matcher(message).replaceAll("");
     }
@@ -242,7 +241,7 @@ public class ItemUtil {
                     CraftBookPlugin.logDebugMessage("Both have names", "item-checks.meta.names");
                     if(item.getItemMeta().hasDisplayName()) {
                         CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks.meta.names");
-                        if(!item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", ""))))
+                        if(!item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !ChatColor.translateAlternateColorCodes('&', stripResetChar(item.getItemMeta().getDisplayName().trim().replace("'", ""))).equals(ChatColor.translateAlternateColorCodes('&', stripResetChar(item2.getItemMeta().getDisplayName().trim().replace("'", "")))))
                             return false;
                         CraftBookPlugin.logDebugMessage("Items share display names", "item-checks.meta.names");
                     }
@@ -257,7 +256,7 @@ public class ItemUtil {
                             return false;
                         for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
                             CraftBookPlugin.logDebugMessage("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i), "item-checks.meta.lores");
-                            if(!item.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", "")).equals(stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", ""))))
+                            if(!item.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !ChatColor.translateAlternateColorCodes('&', stripResetChar(item.getItemMeta().getLore().get(i).trim().replace("'", ""))).equals(ChatColor.translateAlternateColorCodes('&', stripResetChar(item2.getItemMeta().getLore().get(i).trim().replace("'", "")))))
                                 return false;
                             CraftBookPlugin.logDebugMessage("Items share same lore", "item-checks.meta.lores");
                         }
