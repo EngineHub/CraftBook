@@ -20,6 +20,7 @@ import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -113,12 +114,11 @@ public class Driller extends AbstractSelfTriggeredIC {
                 if (brokenType != BlockID.AIR && !BlockType.isNaturalTerrainBlock(brokenType)) return false;
         }
 
-        List<ItemStack> drops = new ArrayList<ItemStack>(blockToBreak.getDrops());
-        if(hasChest && chest.getInventory().getItem(0) != null) {
-            drops = new ArrayList<ItemStack>(blockToBreak.getDrops(chest.getInventory().getItem(0)));
-        }
+        ItemStack tool = null;
+        if(hasChest && chest.getInventory().getItem(0) != null)
+            tool = chest.getInventory().getItem(0);
 
-        for (ItemStack stack : drops) {
+        for (ItemStack stack : BlockUtil.getBlockDrops(blockToBreak, tool)) {
 
             List<ItemStack> toDrop = new ArrayList<ItemStack>();
             toDrop.add(stack);

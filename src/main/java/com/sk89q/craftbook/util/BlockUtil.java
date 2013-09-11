@@ -1,9 +1,15 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
 
 public class BlockUtil {
 
@@ -55,5 +61,58 @@ public class BlockUtil {
     public static Location getBlockCentre(Block block) {
 
         return block.getLocation().add(0.5, 0.5, 0.5);
+    }
+
+    /**
+     * Gets a list of all drops for a particular block.
+     * 
+     * @param block The block to check drops for.
+     * @param tool The tool. If null, it'll allow for all drops.
+     * @return The list of drops
+     */
+    public static ItemStack[] getBlockDrops(Block block, ItemStack tool) {
+
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+
+        switch(block.getTypeId()) {
+            case BlockID.SNOW:
+                if(tool == null || tool.getTypeId() == ItemID.WOOD_SHOVEL || tool.getTypeId() == ItemID.STONE_SHOVEL || tool.getTypeId() == ItemID.IRON_SHOVEL || tool.getTypeId() == ItemID.GOLD_SHOVEL || tool.getTypeId() == ItemID.DIAMOND_SHOVEL)
+                    drops.add(new ItemStack(ItemID.SNOWBALL));
+                break;
+            case BlockID.CROPS:
+                drops.add(new ItemStack(ItemID.WHEAT, 1));
+                int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
+                if(amount > 0)
+                    drops.add(new ItemStack(ItemID.SEEDS, amount));
+                break;
+            case BlockID.CARROTS:
+                drops.add(new ItemStack(ItemID.CARROT, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+                break;
+            case BlockID.POTATOES:
+                drops.add(new ItemStack(ItemID.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+                if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
+                    drops.add(new ItemStack(ItemID.POISONOUS_POTATO, 1));
+                break;
+            case BlockID.NETHER_WART:
+                drops.add(new ItemStack(ItemID.NETHER_WART_SEED, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
+                break;
+            case BlockID.REED:
+                drops.add(new ItemStack(ItemID.SUGAR_CANE_ITEM, 1));
+                break;
+            case BlockID.MELON_BLOCK:
+                drops.add(new ItemStack(ItemID.MELON, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
+                break;
+            case BlockID.COCOA_PLANT:
+                drops.add(new ItemStack(ItemID.INK_SACK, 3, (short) 3));
+                break;
+            default:
+                if(tool == null)
+                    drops.addAll(block.getDrops());
+                else
+                    drops.addAll(block.getDrops(tool));
+                break;
+        }
+
+        return drops.toArray(new ItemStack[drops.size()]);
     }
 }

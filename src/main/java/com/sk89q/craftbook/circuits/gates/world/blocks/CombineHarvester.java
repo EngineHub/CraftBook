@@ -1,8 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -11,7 +9,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -19,11 +16,11 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -84,7 +81,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
                     if (harvestable(b)) {
 
-                        collectDrops(getDrops(b));
+                        collectDrops(BlockUtil.getBlockDrops(b, null));
                         b.setTypeId(0);
                         return true;
                     }
@@ -140,43 +137,6 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
             return true;
 
         return false;
-    }
-
-    public ItemStack[] getDrops(Block b) {
-
-        List<ItemStack> drops = new ArrayList<ItemStack>();
-
-        if (b.getTypeId() == BlockID.CROPS) {
-
-            drops.add(new ItemStack(ItemID.WHEAT, 1));
-            int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
-            if(amount > 0)
-                drops.add(new ItemStack(ItemID.SEEDS, amount));
-        } else if (b.getTypeId() == BlockID.CARROTS) {
-
-            drops.add(new ItemStack(ItemID.CARROT, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
-        } else if (b.getTypeId() == BlockID.POTATOES) {
-
-            drops.add(new ItemStack(ItemID.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
-            if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
-                drops.add(new ItemStack(ItemID.POISONOUS_POTATO, 1));
-        } else if (b.getTypeId() == BlockID.NETHER_WART) {
-
-            drops.add(new ItemStack(ItemID.NETHER_WART_SEED, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
-        } else if (b.getTypeId() == BlockID.REED) {
-
-            drops.add(new ItemStack(ItemID.SUGAR_CANE_ITEM, 1));
-        } else if (b.getTypeId() == BlockID.MELON_BLOCK) {
-
-            drops.add(new ItemStack(ItemID.MELON, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
-        } else if (b.getTypeId() == BlockID.COCOA_PLANT) {
-
-            drops.add(new ItemStack(ItemID.INK_SACK, 3, (short) 3));
-        } else {
-            drops.addAll(b.getDrops());
-        }
-
-        return drops.toArray(new ItemStack[drops.size()]);
     }
 
     public static class Factory extends AbstractICFactory {
