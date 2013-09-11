@@ -114,7 +114,7 @@ public class LanguageManager {
     }
 
     @SuppressWarnings("serial")
-    private static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
+    public static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
         put("area.permissions", "You don't have permissions to do that in this area!");
         put("area.use-permissions", "You don't have permissions to use that in this area!");
         put("area.break-permissions", "You don't have permissions to break that in this area!");

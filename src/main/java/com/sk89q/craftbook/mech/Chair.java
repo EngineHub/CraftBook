@@ -271,7 +271,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     }
                 }
             }).syncStart();
-        } catch(Exception e) {
+        } catch(Throwable e) {
             CraftBookPlugin.inst().getLogger().warning("ProtocolLib is required for chairs! Disabling chairs!");
             return false;
         }
