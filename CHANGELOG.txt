@@ -1,3 +1,21 @@
+3.7.6
+* Fixed a visual oddity revolving sneaking and chairs upon dismount.
+* Fixed sign posts breaking due to IC shorthand.
+* Fixed many playlist related errors and issues.
+* Fixed oddities revolving jukeboxes.
+* Allowed IC's to be informed of when they are broken - allows for better cleanups. (Jukebox IC stops playing on break, for example)
++ Added the ability to damage tools the correct amount for TreeLopper.
++ Added an option to allow TreeLopper to plant saplings automagically.
+* Fixed a gate related error.
++ Added a few new mob heads to HeadDrops, and used the Mojang names for existing ones.
+* Fixed an invalid character existing inside books.txt
+* Replaced the missing language file text with the default message.
+* Moved the bookcase read text to the languages file from the configuration.
+* Fixed Chairs still throwing errors although they were supposed to be caught.
+* Fixed colour codes tripping the item identical checks.
+* Fixed chairs being enabled by default, when they required dependencies.
++ Added overrides for any mechanic that breaks blocks with drops, so that they can get more realistic drops. If a drop is wrong, make an issue and I'll fix it.
+
 3.7.5
 * Fixed CartMessenger
 + Added .others permission for /comitems give
