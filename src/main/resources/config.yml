@@ -165,7 +165,7 @@ mechanics:
         enable: true
         spoons: true
     chair:
-        enable: true
+        enable: false
         allow-holding-blocks: false
         regen-health: true
         blocks:

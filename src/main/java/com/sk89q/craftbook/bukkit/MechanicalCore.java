@@ -161,8 +161,8 @@ public class MechanicalCore implements LocalComponent {
         if (config.snowPiling || config.snowPlace) mechanics.add(new Snow());
         if (config.customDropEnabled) mechanics.add(new CustomDrops());
         if (config.aiEnabled) mechanics.add(new AIMechanic());
-        if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: " + "Chairs. Make sure you have ProtocolLib!");}
-        if (config.footprintsEnabled) mechanics.add(new Footprints());
+        if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
+        if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
         if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
         if (config.physicsEnabled) mechanics.add(new BetterPhysics());
         if (config.headDropsEnabled) mechanics.add(new HeadDrops());

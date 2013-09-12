@@ -51,6 +51,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("common.variables.enable-in-player-chat", "Allow variables to work in player chat.");
         variablesPlayerChatOverride = config.getBoolean("common.variables.enable-in-player-chat", false);
 
+
         /* Circuits Configuration */
 
         // IC Configuration Listener.
@@ -261,7 +262,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Chair Configuration Listener
         config.setComment("mechanics.chair.enable", "Enable chair mechanic.");
-        chairEnabled = config.getBoolean("mechanics.chair.enable", true);
+        chairEnabled = config.getBoolean("mechanics.chair.enable", false);
 
         config.setComment("mechanics.chair.allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
         chairAllowHeldBlock = config.getBoolean("mechanics.chair.allow-holding-blocks", false);
