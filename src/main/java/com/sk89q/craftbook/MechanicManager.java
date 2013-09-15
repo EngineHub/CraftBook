@@ -37,7 +37,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -46,7 +45,6 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.BlockWorldVector2D;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A MechanicManager tracks the Vector where loaded Mechanic instances have registered triggerability,
@@ -159,8 +157,7 @@ public class MechanicManager {
                 localPlayer.printError(e.getMessage());
 
             event.setCancelled(true);
-            block.getWorld().dropItem(block.getLocation(), new ItemStack(ItemID.SIGN, 1));
-            block.setTypeId(0);
+            block.breakNaturally();
         }
 
         return false;
