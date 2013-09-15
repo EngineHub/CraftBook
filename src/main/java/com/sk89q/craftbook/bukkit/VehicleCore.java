@@ -230,4 +230,9 @@ public class VehicleCore implements LocalComponent, Listener {
             event.setCancelled(true);
         }
     }
+
+    @Override
+    public List<CraftBookMechanic> getMechanics () {
+        return mechanics;
+    }
 }

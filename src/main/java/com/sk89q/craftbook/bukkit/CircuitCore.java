@@ -589,4 +589,9 @@ public class CircuitCore implements LocalComponent {
     public ICManager getIcManager () {
         return icManager;
     }
+
+    @Override
+    public List<CraftBookMechanic> getMechanics () {
+        return mechanics;
+    }
 }

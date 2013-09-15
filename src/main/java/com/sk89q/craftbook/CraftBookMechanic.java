@@ -14,5 +14,8 @@ public interface CraftBookMechanic extends Listener {
      */
     public boolean enable();
 
+    /**
+     * Called when the mechanic should be disabled. This should make sure all memory is released.
+     */
     public void disable();
 }

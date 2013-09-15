@@ -195,4 +195,9 @@ public class MechanicalCore implements LocalComponent {
 
         return plugin.getConfiguration().customDispensingEnabled && DispenserRecipes.inst().addRecipe(recipe);
     }
+
+    @Override
+    public List<CraftBookMechanic> getMechanics () {
+        return mechanics;
+    }
 }

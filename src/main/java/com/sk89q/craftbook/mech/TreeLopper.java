@@ -49,6 +49,16 @@ public class TreeLopper extends AbstractMechanic {
 
         Block block = event.getBlock();
 
+        TreeSpecies species = null;
+        if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (block.getRelative(0, -1, 0).getTypeId() == BlockID.DIRT || block.getRelative(0, -1, 0).getTypeId() == BlockID.GRASS || block.getRelative(0, -1, 0).getTypeId() == BlockID.MYCELIUM) && !hasPlanted)
+            species = ((Tree) block.getState().getData()).getSpecies();
+        block.breakNaturally(event.getPlayer().getItemInHand());
+        if(species != null) {
+            block.getRelative(0,-1,0).setTypeId(BlockID.SAPLING);
+            ((Tree) block.getRelative(0,-1,0).getState().getData()).setSpecies(species);
+            hasPlanted = true;
+        }
+
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
             if(block.getRelative(face).getTypeId() == blockId && (!plugin.getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == blockData))
                 if(searchBlock(event, block.getRelative(face))) {
