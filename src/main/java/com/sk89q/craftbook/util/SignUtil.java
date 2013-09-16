@@ -19,7 +19,6 @@ package com.sk89q.craftbook.util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -83,7 +82,7 @@ public class SignUtil {
      */
     public static BlockFace getFront(Block sign) {
 
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -191,7 +190,7 @@ public class SignUtil {
      */
     public static BlockFace getBack(Block sign) {
 
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -317,7 +316,7 @@ public class SignUtil {
      */
     public static BlockFace getRight(Block sign) {
 
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
@@ -424,7 +423,7 @@ public class SignUtil {
      */
     public static BlockFace getLeft(Block sign) {
 
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
             if (sign.getTypeId() == BlockID.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:

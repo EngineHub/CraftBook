@@ -14,8 +14,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.VehicleCore;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -57,7 +57,7 @@ public class CartSorter extends CartBlockMechanism {
         // this is required since there's not a north track and a south track; just a north-south track type.
         byte trackData;
         BlockFace next = SignUtil.getFacing(event.getBlocks().sign);
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
 
             switch (next) {
                 case WEST:

@@ -64,6 +64,8 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
+import com.sk89q.craftbook.util.persistent.PersistentStorage;
+import com.sk89q.craftbook.util.persistent.YAMLPersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -131,11 +133,6 @@ public class CraftBookPlugin extends JavaPlugin {
     private VariableConfiguration variableConfiguration;
 
     /**
-     * Used for backwards compatability of block faces.
-     */
-    private Boolean useOldBlockFace;
-
-    /**
      * The currently enabled LocalComponents
      */
     private List<LocalComponent> components = new ArrayList<LocalComponent>();
@@ -154,6 +151,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * Stores the variables used in VariableStore.
      */
     protected HashMap<Tuple2<String, String>, String> variableStore = new HashMap<Tuple2<String, String>, String>();
+
+    /**
+     * The persistent storage database of CraftBook.
+     */
+    protected PersistentStorage persistentStorage;
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -250,6 +252,14 @@ public class CraftBookPlugin extends JavaPlugin {
             getLogger().severe("Disabling CraftBook due to invalid Configuration File!");
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+
+        if(config.persistentStorage) {
+            if(config.persistentStorageType.equalsIgnoreCase("yaml"))
+                persistentStorage = new YAMLPersistentStorage();
+
+            if(persistentStorage != null)
+                persistentStorage.open();
         }
 
         logDebugMessage("Initializing Managers!", "startup");
@@ -548,6 +558,9 @@ public class CraftBookPlugin extends JavaPlugin {
         if(config.variablesEnabled)
             variableConfiguration.save();
         components.clear();
+
+        if(hasPersistentStorage())
+            getPersistentStorage().close();
     }
 
     /**
@@ -1121,21 +1134,6 @@ public class CraftBookPlugin extends JavaPlugin {
         return worldGuardPlugin == null || worldGuardPlugin.getGlobalRegionManager().allows(DefaultFlag.USE, loc, worldGuardPlugin.wrapPlayer(player));
     }
 
-    /**
-     * Check to see if it should use the old block face methods.
-     *
-     * @return whether it should use the old BlockFace methods.
-     */
-    public boolean useOldBlockFace() {
-
-        if (useOldBlockFace == null) {
-            Location loc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
-            useOldBlockFace = loc.getBlock().getRelative(BlockFace.WEST).getX() == 0;
-        }
-
-        return useOldBlockFace;
-    }
-
     @Override
     public File getFile() {
 
@@ -1184,5 +1182,15 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
 
         logger().info("[Debug][" + code + "] " + message);
+    }
+
+    public boolean hasPersistentStorage() {
+
+        return persistentStorage != null && persistentStorage.isValid();
+    }
+
+    public PersistentStorage getPersistentStorage() {
+
+        return persistentStorage;
     }
 }

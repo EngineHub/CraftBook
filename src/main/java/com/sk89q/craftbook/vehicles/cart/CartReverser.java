@@ -5,7 +5,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
@@ -36,7 +36,7 @@ public class CartReverser extends CartBlockMechanism {
 
         Vector normalVelocity = event.getMinecart().getVelocity().normalize();
 
-        if (CraftBookPlugin.inst().useOldBlockFace()) {
+        if (BlockUtil.shouldUseOldFaces()) {
             switch (dir) {
                 case NORTH:
                     if (normalVelocity.getBlockX() != -1) {
