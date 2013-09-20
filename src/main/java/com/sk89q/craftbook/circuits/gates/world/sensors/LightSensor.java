@@ -63,7 +63,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        centre = ICUtil.parseBlockLocation(getSign()).getLocation();
+        centre = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
 
         try {
             min = Byte.parseByte(getSign().getLine(2));
