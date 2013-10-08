@@ -26,6 +26,7 @@ import com.sk89q.craftbook.vehicles.boat.BoatExitRemover;
 import com.sk89q.craftbook.vehicles.boat.BoatRemoveEntities;
 import com.sk89q.craftbook.vehicles.boat.BoatSpeedModifiers;
 import com.sk89q.craftbook.vehicles.boat.BoatUncrashable;
+import com.sk89q.craftbook.vehicles.boat.BoatWaterPlaceOnly;
 import com.sk89q.craftbook.vehicles.boat.LandBoats;
 import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
 import com.sk89q.craftbook.vehicles.cart.CartBooster;
@@ -162,6 +163,7 @@ public class VehicleCore implements LocalComponent, Listener {
         if(plugin.getConfiguration().boatSpeedModifierEnable) mechanics.add(new BoatSpeedModifiers());
         if(plugin.getConfiguration().boatLandBoatsEnable) mechanics.add(new LandBoats());
         if(plugin.getConfiguration().boatRemoveOnExitEnabled) mechanics.add(new BoatExitRemover());
+        if(plugin.getConfiguration().boatWaterPlaceOnly) mechanics.add(new BoatWaterPlaceOnly());
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

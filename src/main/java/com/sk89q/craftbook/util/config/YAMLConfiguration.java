@@ -703,6 +703,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         boatRemoveOnExitGiveItem = config.getBoolean("vehicles.boat.remove-on-exit.give-item", false);
 
 
+        // Vehicles Boat Water Place Only Listener
+        boatWaterPlaceOnly = config.getBoolean("vehicles.boat.water-place-only.enable", false);
+
+
         config.save(); //Save all the added values.
     }
 }

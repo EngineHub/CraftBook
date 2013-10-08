@@ -310,6 +310,8 @@ public abstract class LocalConfiguration {
     // Vehicles - Boat Remove On Exit Options
     public boolean boatRemoveOnExitEnabled;
     public boolean boatRemoveOnExitGiveItem;
+    // Vehicles - Boat Water Place Only Options
+    public boolean boatWaterPlaceOnly;
 
 
     /**
