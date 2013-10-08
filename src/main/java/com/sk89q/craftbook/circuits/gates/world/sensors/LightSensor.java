@@ -20,12 +20,14 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractSelfTriggeredIC {
 
@@ -50,20 +52,23 @@ public class LightSensor extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, getTargetLighted());
+            chip.setOutput(0, hasLight());
         }
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, getTargetLighted());
+        chip.setOutput(0, hasLight());
     }
 
     @Override
     public void load() {
 
-        centre = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
+        if(!getLine(3).isEmpty())
+            centre = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
+        else
+            centre = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0, 1, 0);
 
         try {
             min = Byte.parseByte(getSign().getLine(2));
@@ -80,21 +85,16 @@ public class LightSensor extends AbstractSelfTriggeredIC {
     Location centre;
     byte min;
 
-    protected boolean getTargetLighted() {
-
-        return hasLight(min);
-    }
-
     /**
      * Returns true if the sign has a light level above the specified.
      *
      * @return
      */
-    private boolean hasLight(byte specifiedLevel) {
+    private boolean hasLight() {
 
         byte lightLevel = centre.getBlock().getLightLevel();
 
-        return lightLevel >= specifiedLevel;
+        return lightLevel >= min;
     }
 
     public static class Factory extends AbstractICFactory {
