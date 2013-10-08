@@ -28,6 +28,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
@@ -153,7 +154,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(event.getClickedBlock().getTypeId()))
+        if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
             return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -230,7 +231,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(getChair(p).b.getTypeId()) || !p.getWorld().equals(getChair(p).b.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).b.getLocation()) > 1.5)
+                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(getChair(p).b)) || !p.getWorld().equals(getChair(p).b.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).b.getLocation()) > 1.5)
                     removeChair(p);
                 else {
                     addChair(p, getChair(p).b); // For any new players.

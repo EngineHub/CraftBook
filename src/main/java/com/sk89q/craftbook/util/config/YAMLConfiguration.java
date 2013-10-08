@@ -271,7 +271,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         chairHealth = config.getBoolean("mechanics.chair.regen-health", true);
 
         config.setComment("mechanics.chair.blocks", "A list of blocks that can be sat on.");
-        chairBlocks = config.getIntList("mechanics.chair.blocks", Arrays.asList(53, 67, 108, 109, 114, 128, 134, 135, 136, 156));
+        chairBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.chair.blocks", Arrays.asList("53", "67", "108", "109", "114", "128", "134", "135", "136", "156")));
 
         config.setComment("mechanics.chair.face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean("mechanics.chair.face-correct-direction", true);

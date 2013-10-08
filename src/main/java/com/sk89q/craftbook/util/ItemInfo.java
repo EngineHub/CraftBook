@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,6 +15,12 @@ public class ItemInfo {
 
         this.id = id;
         this.data = data;
+    }
+
+    public ItemInfo(Block block) {
+
+        id = block.getTypeId();
+        data = block.getData();
     }
 
     public int getId() {
@@ -62,6 +71,26 @@ public class ItemInfo {
         }
 
         return new ItemInfo(id, data);
+    }
+
+    public static List<ItemInfo> parseListFromString(List<String> strings) {
+
+        List<ItemInfo> infos = new ArrayList<ItemInfo>();
+
+        for(String string: strings) {
+            int id = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
+            int data = -1;
+
+            try {
+                data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[1]);
+            } catch (Exception e) {
+                data = -1;
+            }
+
+            infos.add(new ItemInfo(id, data));
+        }
+
+        return infos;
     }
 
     @Override

@@ -99,7 +99,7 @@ public abstract class LocalConfiguration {
     public boolean chairEnabled;
     public boolean chairAllowHeldBlock;
     public boolean chairHealth;
-    public List<Integer> chairBlocks;
+    public List<ItemInfo> chairBlocks;
     public boolean chairFacing;
     public boolean chairRequireSign;
     // Mechanics - Chunk Anchor
