@@ -32,6 +32,18 @@ public class YAMLPersistentStorage extends PersistentStorage {
             BukkitUtil.printStacktrace(e);
             CraftBookPlugin.logger().warning("Persistant Data Corrupt! Data will be reset!");
         }
+
+        if(getVersion() != getCurrentVersion()) { //Convert.
+            CraftBookPlugin.logger().info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
+            convertVersion(getCurrentVersion());
+            processor.clear();
+            try {
+                processor.load();
+            } catch (IOException e) {
+                BukkitUtil.printStacktrace(e);
+                CraftBookPlugin.logger().warning("Persistant Data Corrupt! Data will be reset!");
+            }
+        }
     }
 
     @Override
@@ -56,5 +68,30 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public boolean isValid () {
         return processor != null;
+    }
+
+    @Override
+    public String getType () {
+        return "YAML";
+    }
+
+    @Override
+    public int getVersion () {
+        return processor.getInt("version", getCurrentVersion());
+    }
+
+    @Override
+    public void convertVersion (int version) {
+        //Not yet needed.
+    }
+
+    @Override
+    public void convertType (String type) {
+        //No other types to convert to.
+    }
+
+    @Override
+    public int getCurrentVersion () {
+        return 1;
     }
 }

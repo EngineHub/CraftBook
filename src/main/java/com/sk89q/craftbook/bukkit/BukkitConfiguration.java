@@ -129,7 +129,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         showPermissionMessages = config.getBoolean("show-permission-messages", true);
 
         config.setComment("persistent-storage", "Use a persistent storage medium to store data that is accesible across restarts.");
-        persistentStorage = config.getBoolean("persistent-storage", true);
+        persistentStorage = config.getBoolean("persistent-storage", false);
 
         config.setComment("persistent-storage-type", "Method of PersistentStorage storage. Can currently be any of the following: YAML");
         persistentStorageType = config.getString("persistent-storage-type", "YAML");

@@ -1,3 +1,12 @@
+3.7.7
+* Fixed TreeLopper not planting saplings if configured to, and the bottom block was the one broken.
++ Added an experimental persistent storage system. This currently does absolutely nothing, but will do lots in the future.
+* Fixed LightSensor offset being on the same line as the light level.
+* Fixed LightSensor default offset being the block the sign is connected to, which is usually 0 light.
++ Added block data support to chairs.
+* Fixed AutoUpdater exemption system with new build system.
++ Added an option to only allow boat placement in water.
+
 3.7.6
 * Fixed a visual oddity revolving sneaking and chairs upon dismount.
 * Fixed sign posts breaking due to IC shorthand.

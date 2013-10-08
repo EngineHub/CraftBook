@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.vehicles.boat;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ public class BoatWaterPlaceOnly extends AbstractCraftBookMechanic {
             if ((!isWater(above) || event.getClickedBlock().getY() == event.getClickedBlock().getWorld().getMaxHeight() - 1) && !isWater(event.getClickedBlock())) {
                 event.setCancelled(true);
                 event.setUseItemInHand(Result.DENY);
+                event.getPlayer().sendMessage(ChatColor.RED + "You can't place that boat on land!");
             }
         }
     }
