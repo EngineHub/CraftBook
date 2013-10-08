@@ -466,7 +466,7 @@ public class CraftBookPlugin extends JavaPlugin {
         boolean exempt = false;
 
         try {
-            int ver = Integer.parseInt(getDescription().getVersion().split("-")[0]);
+            int ver = Integer.parseInt(getDescription().getVersion().split(":")[1].split("-")[0]);
             if (ver < 1541) //Not valid prior to this version.
                 exempt = true;
         }
