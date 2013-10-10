@@ -48,7 +48,6 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
-import com.sk89q.craftbook.RightClickBlockEvent;
 import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -132,14 +131,8 @@ public class MechanicListenerAdapter implements Listener {
         if (shouldIgnoreEvent(event))
             return;
 
-        boolean isRightClick = false;
-
-        if(CraftBookPlugin.inst().getConfiguration().experimentalClicks && event.getAction() == Action.RIGHT_CLICK_AIR) {
-            isRightClick = event.getPlayer().getTargetBlock(null, 5).getTypeId() != 0;
-        }
-
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || isRightClick)
-            CraftBookPlugin.inst().getManager().dispatchBlockRightClick(isRightClick ? new RightClickBlockEvent(event, event.getPlayer().getTargetBlock(null, 5)) : event);
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+            CraftBookPlugin.inst().getManager().dispatchBlockRightClick(event);
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK)
             CraftBookPlugin.inst().getManager().dispatchBlockLeftClick(event);

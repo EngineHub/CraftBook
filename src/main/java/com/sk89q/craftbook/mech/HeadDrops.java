@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -27,8 +28,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
@@ -69,8 +68,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsPlayers)
                     return;
                 String playerName = ((Player) event.getEntity()).getName();
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
-                toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
+                toDrop = new ItemStack(Material.SKULL, 1, (short)3);
+                toDrop.setData(new MaterialData(Material.SKULL,(byte)3));
                 SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
                 meta.setOwner(playerName);
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
@@ -79,22 +78,22 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             case ZOMBIE:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short)2);
-                toDrop.setData(new MaterialData(ItemID.HEAD,(byte)2));
+                toDrop = new ItemStack(Material.SKULL, 1, (short)2);
+                toDrop.setData(new MaterialData(Material.SKULL,(byte)2));
                 break;
             case CREEPER:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short)4);
-                toDrop.setData(new MaterialData(ItemID.HEAD,(byte)4));
+                toDrop = new ItemStack(Material.SKULL, 1, (short)4);
+                toDrop.setData(new MaterialData(Material.SKULL,(byte)4));
                 break;
             case SKELETON:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
                 if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !CraftBookPlugin.inst().getConfiguration().headDropsDropOverrideNatural)
                     return;
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
-                toDrop.setData(new MaterialData(ItemID.HEAD, (byte)(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0)));
+                toDrop = new ItemStack(Material.SKULL, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
+                toDrop.setData(new MaterialData(Material.SKULL, (byte)(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0)));
                 break;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
@@ -107,8 +106,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(typeName);
                 if(mobName == null || mobName.isEmpty())
                     break;
-                toDrop = new ItemStack(ItemID.HEAD, 1, (short)3);
-                toDrop.setData(new MaterialData(ItemID.HEAD,(byte)3));
+                toDrop = new ItemStack(Material.SKULL, 1, (short)3);
+                toDrop.setData(new MaterialData(Material.SKULL,(byte)3));
                 SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.RESET + typeName + " Head");
                 itemMeta.setOwner(mobName);
@@ -126,7 +125,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        if(event.getClickedBlock().getTypeId() == BlockID.HEAD) {
+        if(event.getClickedBlock().getType() == Material.SKULL) {
 
             Skull skull = (Skull)event.getClickedBlock().getState();
             if(skull == null || !skull.hasOwner())
@@ -150,7 +149,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 
-        if(event.getBlock().getTypeId() == BlockID.HEAD) {
+        if(event.getBlock().getType() == Material.SKULL) {
 
             Skull skull = (Skull)event.getBlock().getState();
             if(!skull.hasOwner())
@@ -159,8 +158,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             EntityType type = MobSkullType.getEntityType(playerName);
 
-            ItemStack stack = new ItemStack(ItemID.HEAD, 1, (short)3);
-            stack.setData(new MaterialData(ItemID.HEAD, (byte)3));
+            ItemStack stack = new ItemStack(Material.SKULL, 1, (short)3);
+            stack.setData(new MaterialData(Material.SKULL, (byte)3));
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setOwner(playerName);
 

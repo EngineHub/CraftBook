@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.bukkit;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.LocalPlayer;
@@ -143,7 +144,7 @@ public class BukkitPlayer implements LocalPlayer {
 
     @Override
     public ItemInfo getHeldItemInfo () {
-        return new ItemInfo(getHeldItemType(), getHeldItemData());
+        return new ItemInfo(Material.getMaterial(getHeldItemType()), getHeldItemData());
     }
 
     @Override

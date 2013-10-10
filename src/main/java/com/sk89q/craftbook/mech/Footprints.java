@@ -15,6 +15,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class Footprints extends AbstractCraftBookMechanic {
@@ -43,7 +44,7 @@ public class Footprints extends AbstractCraftBookMechanic {
         } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
             return;
 
-        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(Integer.valueOf(below.getTypeId()))) {
+        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(new ItemInfo(below))) {
 
             if(footsteps.contains(event.getPlayer().getName()))
                 return;

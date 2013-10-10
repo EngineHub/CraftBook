@@ -3,34 +3,54 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemInfo {
 
-    public int id;
+    public Material id;
     public int data;
 
-    public ItemInfo(int id, int data) {
+    public ItemInfo(Material id, int data) {
 
         this.id = id;
         this.data = data;
     }
 
+    @Deprecated
+    public ItemInfo(int id, int data) {
+
+        this.id = Material.getMaterial(id);
+        this.data = data;
+    }
+
     public ItemInfo(Block block) {
 
-        id = block.getTypeId();
+        id = block.getType();
         data = block.getData();
     }
 
+    public ItemInfo(String string) {
+
+        ItemStack stack = ItemSyntax.getItem(string);
+        id = stack.getType();
+        data = stack.getData().getData();
+    }
+
     public int getId() {
+
+        return id.getId();
+    }
+
+    public Material getType() {
 
         return id;
     }
 
     public void setId(int id) {
 
-        this.id = id;
+        this.id = Material.getMaterial(id);
     }
 
     public int getData() {
@@ -45,7 +65,7 @@ public class ItemInfo {
 
     public boolean isSame(Block block) {
 
-        if(block.getTypeId() == id)
+        if(block.getType() == id)
             if(data == -1 || block.getData() == data)
                 return true;
         return false;
@@ -53,7 +73,7 @@ public class ItemInfo {
 
     public boolean isSame(ItemStack stack) {
 
-        if(stack.getTypeId() == id)
+        if(stack.getType() == id)
             if(data == -1 || stack.getData().getData() == data)
                 return true;
         return false;
@@ -61,7 +81,9 @@ public class ItemInfo {
 
     public static ItemInfo parseFromString(String string) {
 
-        int id = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
+        Material id = Material.getMaterial(RegexUtil.COLON_PATTERN.split(string)[0]);
+        if(id == null)
+            id = Material.getMaterial(Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]));
         int data = -1;
 
         try {
@@ -77,18 +99,8 @@ public class ItemInfo {
 
         List<ItemInfo> infos = new ArrayList<ItemInfo>();
 
-        for(String string: strings) {
-            int id = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]);
-            int data = -1;
-
-            try {
-                data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[1]);
-            } catch (Exception e) {
-                data = -1;
-            }
-
-            infos.add(new ItemInfo(id, data));
-        }
+        for(String string: strings)
+            infos.add(parseFromString(string));
 
         return infos;
     }
@@ -102,7 +114,7 @@ public class ItemInfo {
     @Override
     public int hashCode() {
 
-        return (id * 1103515245 + 12345 ^ (data == -1 ? 0 : data) * 1103515245 + 12345) * 1103515245 + 12345;
+        return (id.hashCode() * 1103515245 + 12345 ^ (data == -1 ? 0 : data) * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override

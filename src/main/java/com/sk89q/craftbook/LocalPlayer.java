@@ -54,8 +54,10 @@ public interface LocalPlayer {
 
     public Vehicle getVehicle();
 
+    @Deprecated
     public int getHeldItemType();
 
+    @Deprecated
     public short getHeldItemData();
 
     public ItemInfo getHeldItemInfo();

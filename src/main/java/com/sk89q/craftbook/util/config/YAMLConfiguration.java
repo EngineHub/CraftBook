@@ -14,7 +14,6 @@ import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * A implementation of YAML based off of {@link com.sk89q.worldedit.util.YAMLConfiguration} for CraftBook.
@@ -97,7 +96,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         glowstoneEnabled = config.getBoolean("circuits.wiring.glowstone-enabled", false);
 
         config.setComment("circuits.wiring.glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
-        glowstoneOffBlock = ItemInfo.parseFromString(config.getString("circuits.wiring.glowstone-off-block", String.valueOf(BlockID.GLASS)));
+        glowstoneOffBlock = ItemInfo.parseFromString(config.getString("circuits.wiring.glowstone-off-block", "GLASS"));
 
 
         // Pipes Configuration Listener
@@ -141,7 +140,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", true);
 
         config.setComment("mechanics.ammeter.item", "Set the item that is the ammeter tool.");
-        ammeterItem = ItemInfo.parseFromString(config.getString("mechanics.ammeter.item", String.valueOf(ItemID.COAL)));
+        ammeterItem = ItemInfo.parseFromString(config.getString("mechanics.ammeter.item", "COAL"));
 
 
         // Area Configuration Listener
@@ -203,7 +202,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsCrusherInstaKill = config.getBoolean("mechanics.better-pistons.crushers-kill-mobs", false);
 
         config.setComment("mechanics.better-pistons.crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
-        pistonsCrusherBlacklist = config.getIntList("mechanics.better-pistons.crusher-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
+        pistonsCrusherBlacklist = ItemInfo.parseListFromString(config.getStringList("mechanics.better-pistons.crusher-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
 
         config.setComment("mechanics.better-pistons.super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
         pistonsSuperSticky = config.getBoolean("mechanics.better-pistons.super-sticky", true);
@@ -212,13 +211,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonsSuperPush = config.getBoolean("mechanics.better-pistons.super-push", true);
 
         config.setComment("mechanics.better-pistons.movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
-        pistonsMovementBlacklist = config.getIntList("mechanics.better-pistons.movement-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
+        pistonsMovementBlacklist = ItemInfo.parseListFromString(config.getStringList("mechanics.better-pistons.movement-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
 
         config.setComment("mechanics.better-pistons.bounce", "Enables BetterPistons Bounce Mechanic.");
         pistonsBounce = config.getBoolean("mechanics.better-pistons.bounce", true);
 
         config.setComment("mechanics.better-pistons.bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
-        pistonsBounceBlacklist = config.getIntList("mechanics.better-pistons.bounce-blacklist", Arrays.asList(BlockID.OBSIDIAN, BlockID.BEDROCK));
+        pistonsBounceBlacklist = ItemInfo.parseListFromString(config.getStringList("mechanics.better-pistons.bounce-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
 
         config.setComment("mechanics.better-pistons.max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
@@ -249,7 +248,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         bridgeMaxWidth = config.getInt("mechanics.bridge.max-width", 5);
 
         config.setComment("mechanics.bridge.blocks", "Blocks bridges can use.");
-        bridgeBlocks = config.getIntList("mechanics.bridge.blocks", Arrays.asList(4, 5, 20, 43));
+        bridgeBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.bridge.blocks", Arrays.asList("COBBLESTONE", "WOOD", "GLASS", "DOUBLE_STEP", "WOOD_DOUBLE_STEP")));
 
 
         // Cauldron Configuration Listener
@@ -271,7 +270,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         chairHealth = config.getBoolean("mechanics.chair.regen-health", true);
 
         config.setComment("mechanics.chair.blocks", "A list of blocks that can be sat on.");
-        chairBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.chair.blocks", Arrays.asList("53", "67", "108", "109", "114", "128", "134", "135", "136", "156")));
+        chairBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.chair.blocks", Arrays.asList("WOOD_STAIRS", "COBBLESTONE_STAIRS", "BRICK_STAIRS", "SMOOTH_STAIRS", "NETHER_BRICK_STAIRS", "SANDSTONE_STAIRS", "SPRUCE_WOOD_STAIRS", "BIRCH_WOOD_STAIRS", "JUNGLE_WOOD_STAIRS", "QUARTZ_STAIRS")));
 
         config.setComment("mechanics.chair.face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean("mechanics.chair.face-correct-direction", true);
@@ -368,7 +367,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         doorMaxWidth = config.getInt("mechanics.door.max-width", 5);
 
         config.setComment("mechanics.door.blocks", "A list of blocks that a door can be made out of.");
-        doorBlocks = config.getIntList("mechanics.door.blocks", Arrays.asList(4, 5, 20, 43));
+        doorBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.door.blocks", Arrays.asList("COBBLESTONE", "WOOD", "GLASS", "DOUBLE_STEP", "WOOD_DOUBLE_STEP")));
 
 
         // Elevator Configuration Listener
@@ -393,7 +392,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         footprintsEnabled = config.getBoolean("mechanics.footprints.enable", false);
 
         config.setComment("mechanics.footprints.blocks", "The list of blocks that footprints appear on.");
-        footprintsBlocks = config.getIntList("mechanics.footprints.blocks", Arrays.asList(3, 12, 78, 80));
+        footprintsBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.footprints.blocks", Arrays.asList("DIRT", "SAND", "SNOW", "SNOW_BLOCK", "ICE")));
 
 
         // Gate Configuration Listener
@@ -410,7 +409,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         gateColumnLimit = config.getInt("mechanics.gate.max-columns", 14);
 
         config.setComment("mechanics.gate.blocks", "The list of blocks that a gate can use.");
-        gateBlocks = config.getIntList("mechanics.gate.blocks", Arrays.asList(85, 101, 102, 113));
+        gateBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.gate.blocks", Arrays.asList("FENCE", "IRON_FENCE", "THIN_GLASS", "NETHER_FENCE")));
 
         config.setComment("mechanics.gate.enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
         gateEnforceType = config.getBoolean("mechanics.gate.enforce-type", true);
@@ -467,7 +466,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", true);
 
         config.setComment("mechanics.lightstone.item", "The item that the lightstone mechanic uses.");
-        lightstoneItem = ItemInfo.parseFromString(config.getString("mechanics.lightstone.item", String.valueOf(ItemID.LIGHTSTONE_DUST)));
+        lightstoneItem = ItemInfo.parseFromString(config.getString("mechanics.lightstone.item", "GLOWSTONE_DUST"));
 
 
         // Light Switch Configuration Listener
@@ -500,7 +499,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
 
         config.setComment("mechanics.sign-copy.item", "The item the Sign Copy mechanic uses.");
-        signCopyItem = ItemInfo.parseFromString(config.getString("mechanics.sign-copy.item", String.valueOf(ItemID.INK_SACK) + ":0"));
+        signCopyItem = ItemInfo.parseFromString(config.getString("mechanics.sign-copy.item", "INK_SACK:0"));
 
 
         // Snow Configuration Listener
@@ -511,7 +510,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         snowRealistic = config.getBoolean("mechanics.snow.realistic", false);
         snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
         snowJumpTrample = config.getBoolean("mechanics.snow.jump-trample", false);
-        snowRealisticReplacables = config.getIntList("mechanics.snow.replacable-blocks", Arrays.asList(BlockID.LONG_GRASS, BlockID.DEAD_BUSH, BlockID.FIRE, BlockID.RED_FLOWER, BlockID.YELLOW_FLOWER, BlockID.BROWN_MUSHROOM, BlockID.RED_MUSHROOM, BlockID.TRIPWIRE));
+        snowRealisticReplacables = ItemInfo.parseListFromString(config.getStringList("mechanics.snow.replacable-blocks", Arrays.asList("DEAD_BUSH", "LONG_GRASS", "YELLOW_FLOWER", "RED_ROSE", "BROWN_MUSHROOM", "RED_MUSHROOM", "FIRE")));
         snowFallAnimationSpeed = config.getInt("mechanics.snow.falldown-animation-speed", 5);
 
 
@@ -528,8 +527,8 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // TreeLopper Configuration Listener
         treeLopperEnabled = config.getBoolean("mechanics.tree-lopper.enable", false);
-        treeLopperBlocks = config.getIntList("mechanics.tree-lopper.block-list", Arrays.asList(BlockID.LOG));
-        treeLopperItems = config.getIntList("mechanics.tree-lopper.tool-list", Arrays.asList(ItemID.WOOD_AXE, ItemID.STONE_AXE, ItemID.IRON_AXE, ItemID.GOLD_AXE, ItemID.DIAMOND_AXE));
+        treeLopperBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.tree-lopper.block-list", Arrays.asList("LOG")));
+        treeLopperItems = ItemInfo.parseListFromString(config.getStringList("mechanics.tree-lopper.tool-list", Arrays.asList("IRON_AXE", "WOOD_AXE", "STONE_AXE", "DIAMOND_AXE", "GOLD_AXE")));
         treeLopperMaxSize = config.getInt("mechanics.tree-lopper.max-size", 30);
         treeLopperAllowDiagonals = config.getBoolean("mechanics.tree-lopper.allow-diagonals", false);
         treeLopperEnforceData = config.getBoolean("mechanics.tree-lopper.enforce-data", false);
@@ -554,60 +553,60 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Station Configuration Listener
         minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", true);
-        minecartStationBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.station.block", "49:0"));
+        minecartStationBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.station.block", "OBSIDIAN:0"));
 
 
         // Vehicles Minecart Sorter Configuration Listener
         minecartSorterEnabled = config.getBoolean("vehicles.minecart.mechanisms.sorter.enable", true);
-        minecartSorterBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.sorter.block", "87:0"));
+        minecartSorterBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.sorter.block", "NETHERRACK:0"));
 
 
         // Vehicles Minecart Ejector Configuration Listener
         minecartEjectorEnabled = config.getBoolean("vehicles.minecart.mechanisms.ejector.enable", true);
-        minecartEjectorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.ejector.block", "42:0"));
+        minecartEjectorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.ejector.block", "IRON_BLOCK:0"));
 
 
         // Vehicles Minecart Deposit Configuration Listener
         minecartDepositEnabled = config.getBoolean("vehicles.minecart.mechanisms.deposit.enable", true);
-        minecartDepositBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.deposit.block", "15:0"));
+        minecartDepositBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.deposit.block", "IRON_ORE:0"));
 
 
         // Vehicles Minecart Teleport Configuration Listener
         minecartTeleportEnabled = config.getBoolean("vehicles.minecart.mechanisms.teleport.enable", true);
-        minecartTeleportBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.teleport.block", "133:0"));
+        minecartTeleportBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.teleport.block", "EMERALD_BLOCK:0"));
 
 
         // Vehicles Minecart Lift Configuration Listener
         minecartElevatorEnabled = config.getBoolean("vehicles.minecart.mechanisms.elevator.enable", true);
-        minecartElevatorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.elevator.block", "112:0"));
+        minecartElevatorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.elevator.block", "NETHER_BRICK:0"));
 
 
         // Vehicles Minecart Messager Configuration Listener
         minecartMessagerEnabled = config.getBoolean("vehicles.minecart.mechanisms.messager.enable", true);
-        minecartMessagerBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.messager.block", "121:0"));
+        minecartMessagerBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.messager.block", "ENDER_STONE:0"));
 
 
         // Vehicles Minecart Reverse Configuration Listener
         minecartReverseEnabled = config.getBoolean("vehicles.minecart.mechanisms.reverse.enable", true);
-        minecartReverseBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.reverse.block", "35:0"));
+        minecartReverseBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.reverse.block", "WOOL:0"));
 
 
         // Vehicles Minecart MaxSpeed Configuration Listener
         minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", true);
-        minecartMaxSpeedBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.max-speed.block", "173:0"));
+        minecartMaxSpeedBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.max-speed.block", "COAL_BLOCK:0"));
 
 
         // Vehicles Minecart SpeedMod Configuration Listener
         minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", true);
-        minecartSpeedModMaxBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "41:0"));
-        minecartSpeedMod25xBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "14:0"));
-        minecartSpeedMod50xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "88:0"));
-        minecartSpeedMod20xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "13:0"));
+        minecartSpeedModMaxBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "GOLD_BLOCK:0"));
+        minecartSpeedMod25xBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "GOLD_ORE:0"));
+        minecartSpeedMod50xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "SOUL_SAND:0"));
+        minecartSpeedMod20xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "GRAVEL:0"));
 
 
         // Vehicles Minecart Dispenser Configuration Listener
         minecartDispenserEnabled = config.getBoolean("vehicles.minecart.mechanisms.dispenser.enable", true);
-        minecartDispenserBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.dispenser.block", "129:0"));
+        minecartDispenserBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));
         minecartDispenserLegacy = config.getBoolean("vehicles.minecart.mechanisms.dispenser.spawn-infront", false);
         minecartDispenserAntiSpam = config.getBoolean("vehicles.minecart.mechanisms.dispenser.check-for-carts", true);
 

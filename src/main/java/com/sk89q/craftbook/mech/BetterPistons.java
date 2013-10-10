@@ -23,6 +23,7 @@ import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -214,7 +215,7 @@ public class BetterPistons extends AbstractMechanic {
             }
         }
 
-        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
+        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
             return;
         }
         trigger.getRelative(piston.getFacing()).breakNaturally();
@@ -233,7 +234,7 @@ public class BetterPistons extends AbstractMechanic {
         }
 
         Vector vel = new Vector(piston.getFacing().getModX(), piston.getFacing().getModY(), piston.getFacing().getModZ()).multiply(mult);
-        if (trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(trigger.getRelative(piston.getFacing()).getTypeId())) {
+        if (trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                 if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                     ent.setVelocity(ent.getVelocity().add(vel));
@@ -389,7 +390,7 @@ public class BetterPistons extends AbstractMechanic {
 
         if (block.getState() instanceof DoubleChest) return false;
 
-        if(CraftBookPlugin.inst().getConfiguration().pistonsMovementBlacklist.contains(block.getTypeId()))
+        if(CraftBookPlugin.inst().getConfiguration().pistonsMovementBlacklist.contains(new ItemInfo(block)))
             return false;
 
         switch (block.getTypeId()) {

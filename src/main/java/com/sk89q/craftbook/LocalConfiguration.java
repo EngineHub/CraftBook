@@ -76,12 +76,12 @@ public abstract class LocalConfiguration {
     public boolean pistonsEnabled;
     public boolean pistonsCrusher;
     public boolean pistonsCrusherInstaKill;
-    public List<Integer> pistonsCrusherBlacklist;
+    public List<ItemInfo> pistonsCrusherBlacklist;
     public boolean pistonsSuperPush;
     public boolean pistonsSuperSticky;
-    public List<Integer> pistonsMovementBlacklist;
+    public List<ItemInfo> pistonsMovementBlacklist;
     public boolean pistonsBounce;
-    public List<Integer> pistonsBounceBlacklist;
+    public List<ItemInfo> pistonsBounceBlacklist;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadHoldingBlock;
@@ -91,7 +91,7 @@ public abstract class LocalConfiguration {
     public boolean bridgeAllowRedstone;
     public int bridgeMaxLength;
     public int bridgeMaxWidth;
-    public List<Integer> bridgeBlocks;
+    public List<ItemInfo> bridgeBlocks;
     // Mechanics - Cauldron
     public boolean cauldronEnabled;
     public boolean cauldronUseSpoons;
@@ -134,7 +134,7 @@ public abstract class LocalConfiguration {
     public boolean doorAllowRedstone;
     public int doorMaxLength;
     public int doorMaxWidth;
-    public List<Integer> doorBlocks;
+    public List<ItemInfo> doorBlocks;
     // Mechanics - Elevator
     public boolean elevatorEnabled;
     public boolean elevatorButtonEnabled;
@@ -143,13 +143,13 @@ public abstract class LocalConfiguration {
     public double elevatorMoveSpeed;
     // Mechanics - Footprints
     public boolean footprintsEnabled;
-    public List<Integer> footprintsBlocks;
+    public List<ItemInfo> footprintsBlocks;
     // Mechanics - Gate
     public boolean gateEnabled;
     public boolean gateAllowRedstone;
     public boolean gateLimitColumns;
     public int gateColumnLimit;
-    public List<Integer> gateBlocks;
+    public List<ItemInfo> gateBlocks;
     public boolean gateEnforceType;
     public int gateColumnHeight;
     public int gateSearchRadius;
@@ -195,7 +195,7 @@ public abstract class LocalConfiguration {
     public boolean snowRealistic;
     public boolean snowHighPiles;
     public boolean snowJumpTrample;
-    public List<Integer> snowRealisticReplacables;
+    public List<ItemInfo> snowRealisticReplacables;
     public int snowFallAnimationSpeed;
     // Mechanics - Teleporter
     public boolean teleporterEnabled;
@@ -203,8 +203,8 @@ public abstract class LocalConfiguration {
     public int teleporterMaxRange;
     // Mechanis - TreeLopper
     public boolean treeLopperEnabled;
-    public List<Integer> treeLopperBlocks;
-    public List<Integer> treeLopperItems;
+    public List<ItemInfo> treeLopperBlocks;
+    public List<ItemInfo> treeLopperItems;
     public int treeLopperMaxSize;
     public boolean treeLopperAllowDiagonals;
     public boolean treeLopperEnforceData;

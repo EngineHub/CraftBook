@@ -25,6 +25,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -212,10 +213,10 @@ public class Snow extends AbstractCraftBookMechanic {
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
         }
 
-        if (isValidBlock(block.getRelative(0, -1, 0).getTypeId()) && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if (isValidBlock(block.getRelative(0, -1, 0)) && block.getRelative(0, -1, 0).getData() < 0x7) {
             if (block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1,
                     0).getTypeId() != BlockID.SNOW) {
-                if(!canLandOn(block.getRelative(0, -2, 0).getTypeId()))
+                if(!canLandOn(block.getRelative(0, -2, 0)))
                     return false;
                 incrementData(block.getRelative(0, -1, 0), depth+1);
                 if (remove) lowerData(block);
@@ -223,9 +224,9 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
-        if (isValidBlock(block.getRelative(1, 0, 0).getTypeId()) && block.getRelative(1, 0, 0).getData() < 0x7) {
+        if (isValidBlock(block.getRelative(1, 0, 0)) && block.getRelative(1, 0, 0).getData() < 0x7) {
             if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,0).getTypeId() != BlockID.SNOW) {
-                if(!canLandOn(block.getRelative(1, -1, 0).getTypeId()))
+                if(!canLandOn(block.getRelative(1, -1, 0)))
                     return false;
                 incrementData(block.getRelative(1, 0, 0), depth+1);
                 if (remove) lowerData(block);
@@ -233,10 +234,10 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
-        if (isValidBlock(block.getRelative(-1, 0, 0).getTypeId()) && block.getRelative(-1, 0, 0).getData() < 0x7) {
+        if (isValidBlock(block.getRelative(-1, 0, 0)) && block.getRelative(-1, 0, 0).getData() < 0x7) {
             if (block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0,
                     0).getTypeId() != BlockID.SNOW) {
-                if(!canLandOn(block.getRelative(-1, -1, 0).getTypeId()))
+                if(!canLandOn(block.getRelative(-1, -1, 0)))
                     return false;
                 incrementData(block.getRelative(-1, 0, 0), depth+1);
                 if (remove) lowerData(block);
@@ -244,10 +245,10 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
-        if (isValidBlock(block.getRelative(0, 0, 1).getTypeId()) && block.getRelative(0, 0, 1).getData() < 0x7) {
+        if (isValidBlock(block.getRelative(0, 0, 1)) && block.getRelative(0, 0, 1).getData() < 0x7) {
             if (block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0,
                     1).getTypeId() != BlockID.SNOW) {
-                if(!canLandOn(block.getRelative(0, -1, 1).getTypeId()))
+                if(!canLandOn(block.getRelative(0, -1, 1)))
                     return false;
                 incrementData(block.getRelative(0, 0, 1), depth+1);
                 if (remove) lowerData(block);
@@ -255,10 +256,10 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
-        if (isValidBlock(block.getRelative(0, 0, -1).getTypeId()) && block.getRelative(0, 0, -1).getData() < 0x7) {
+        if (isValidBlock(block.getRelative(0, 0, -1)) && block.getRelative(0, 0, -1).getData() < 0x7) {
             if (block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0,
                     -1).getTypeId() != BlockID.SNOW) {
-                if(!canLandOn(block.getRelative(0, -1, -1).getTypeId()))
+                if(!canLandOn(block.getRelative(0, -1, -1)))
                     return false;
                 incrementData(block.getRelative(0, 0, -1), depth+1);
                 if (remove) lowerData(block);
@@ -277,21 +278,21 @@ public class Snow extends AbstractCraftBookMechanic {
         if (block.getRelative(0, -1, 0).getTypeId() == BlockID.WATER || block.getRelative(0, -1, 0).getTypeId() == BlockID.STATIONARY_WATER)
             block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
 
-        if(!canLandOn(block.getRelative(0, -1, 0).getTypeId()))
+        if(!canLandOn(block.getRelative(0, -1, 0)))
             return;
 
-        if (!isValidBlock(block.getTypeId()) && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
+        if (!isValidBlock(block) && isValidBlock(block.getRelative(0, 1, 0))) {
             incrementData(block.getRelative(0, 1, 0), depth+1);
             return;
-        } else if (!isValidBlock(block.getTypeId())) return;
+        } else if (!isValidBlock(block)) return;
 
-        if (depth < 1 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+        if (depth < 1 && canPassThrough(block) && canPassThrough(block.getRelative(0, -1, 0))) {
             incrementData(block.getRelative(0, -1, 0), depth+1);
             return;
-        } else if (depth >= 1 && canPassThrough(block.getTypeId()) && canPassThrough(block.getRelative(0, -1, 0).getTypeId())) {
+        } else if (depth >= 1 && canPassThrough(block) && canPassThrough(block.getRelative(0, -1, 0))) {
 
             final boolean remove;
-            if(block.getTypeId() != BlockID.SNOW && canPassThrough(block.getTypeId())) {
+            if(block.getTypeId() != BlockID.SNOW && canPassThrough(block)) {
                 block.setTypeId(BlockID.SNOW, false);
                 remove = true;
             } else
@@ -308,12 +309,12 @@ public class Snow extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (canPassThrough(block.getTypeId()) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7) {
+        if (canPassThrough(block) && block.getRelative(0, -1, 0).getTypeId() == BlockID.SNOW && block.getRelative(0, -1, 0).getData() < 0x7) {
             incrementData(block.getRelative(0, -1, 0), depth+1);
             return;
         }
 
-        if (block.getTypeId() == BlockID.SNOW_BLOCK && isValidBlock(block.getRelative(0, 1, 0).getTypeId())) {
+        if (block.getTypeId() == BlockID.SNOW_BLOCK && isValidBlock(block.getRelative(0, 1, 0))) {
             incrementData(block.getRelative(0, 1, 0), depth+1);
             return;
         }
@@ -323,7 +324,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         byte newData = 0;
-        if (block.getTypeId() != BlockID.SNOW && canPassThrough(block.getTypeId()))
+        if (block.getTypeId() != BlockID.SNOW && canPassThrough(block))
             block.setTypeId(BlockID.SNOW, false);
         else newData = (byte) (block.getData() + 1);
         if (newData > (byte) 7 && CraftBookPlugin.inst().getConfiguration().snowHighPiles) {
@@ -344,9 +345,9 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean canLandOn(int id) {
+    public boolean canLandOn(Block id) {
 
-        switch(id) {
+        switch(id.getTypeId()) {
 
             case BlockID.STEP:
             case BlockID.WOODEN_STEP:
@@ -364,17 +365,17 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean canPassThrough(int id) {
+    public boolean canPassThrough(Block id) {
 
-        return id == BlockID.AIR || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(id);
+        return id.getTypeId() == BlockID.AIR || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(id));
     }
 
-    public boolean isSnowBlock(int id) {
+    public boolean isSnowBlock(Block id) {
 
-        return id == BlockID.SNOW;// || id == BlockID.SNOW_BLOCK;
+        return id.getTypeId() == BlockID.SNOW;// || id == BlockID.SNOW_BLOCK;
     }
 
-    public boolean isValidBlock(int id) {
+    public boolean isValidBlock(Block id) {
 
         return canPassThrough(id) || isSnowBlock(id);
     }

@@ -33,6 +33,7 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
 import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
@@ -149,7 +150,6 @@ public class Door extends AbstractMechanic {
 
         ChangedSign s = BukkitUtil.toChangedSign(trigger);
 
-        int block;
         findBase:
         {
             if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
@@ -158,9 +158,7 @@ public class Door extends AbstractMechanic {
                 proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
             } else throw new InvalidConstructionException("Sign is incorrectly made.");
 
-            block = proximalBaseCenter.getTypeId();
-
-            if (plugin.getConfiguration().doorBlocks.contains(block))
+            if (plugin.getConfiguration().doorBlocks.contains(new ItemInfo(proximalBaseCenter)))
                 break findBase;
             else throw new UnacceptableMaterialException("mech.door.unusable");
         }
@@ -204,7 +202,7 @@ public class Door extends AbstractMechanic {
             distalBaseCenter = otherSide.getRelative(BlockFace.UP);
         }
 
-        if (distalBaseCenter == null || distalBaseCenter.getTypeId() != block && distalBaseCenter.getData() != proximalBaseCenter.getData())
+        if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
             throw new InvalidConstructionException("mech.door.material");
 
         // Select the togglable region

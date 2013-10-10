@@ -17,12 +17,12 @@ public class BlockUtil {
 
     public static boolean areBlocksSimilar(Block block, Block block2) {
 
-        return block.getTypeId() == block2.getTypeId();
+        return block.getType() == block2.getType();
     }
 
     public static boolean areBlocksIdentical(Block block, Block block2) {
 
-        if (block.getTypeId() == block2.getTypeId()) if (block.getData() == block2.getData()) return true;
+        if (block.getType() == block2.getType()) if (block.getData() == block2.getData()) return true;
         return false;
     }
 

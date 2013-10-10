@@ -25,7 +25,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public int stThinkRate;
     public boolean obeyWorldguard;
     public boolean advancedBlockChecks;
-    public boolean experimentalClicks;
     public boolean pedanticBlockChecks;
     public boolean showPermissionMessages;
 
@@ -103,9 +102,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("pedantic-block-checks", "In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.");
         pedanticBlockChecks = config.getBoolean("pedantic-block-checks", false);
-
-        config.setComment("use-experimental-clicks", "Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.");
-        experimentalClicks = config.getBoolean("use-experimental-clicks", false);
 
         config.setComment("language", "The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.");
         language = config.getString("language", "en_US");

@@ -33,6 +33,7 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
 import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
@@ -134,14 +135,12 @@ public class Bridge extends AbstractMechanic {
         findBase:
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-            mat = proximalBaseCenter.getTypeId();
-            if (plugin.getConfiguration().bridgeBlocks.contains(mat))
+            if (plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
                 break findBase; // On Top
 
             // If we've reached this point nothing was found on the top, check the bottom
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-            mat = proximalBaseCenter.getTypeId();
-            if (plugin.getConfiguration().bridgeBlocks.contains(mat))
+            if (plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
                 break findBase; // it's below
             else throw new UnacceptableMaterialException("mech.bridge.unusable");
         }
@@ -168,7 +167,7 @@ public class Bridge extends AbstractMechanic {
 
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = farSide.getRelative(trigger.getFace(proximalBaseCenter));
-        if (distalBaseCenter.getTypeId() != mat && distalBaseCenter.getData() != proximalBaseCenter.getData())
+        if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
             throw new InvalidConstructionException("mech.bridge.material");
 
         // Select the togglable region
