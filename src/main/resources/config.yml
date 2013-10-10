@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7.5
+# CraftBook Configuration for Bukkit. Generated for version: 3.7.7
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -42,9 +42,6 @@ advanced-block-checks: true
 # In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.
 pedantic-block-checks: false
 
-# Use experimental methods for right clicking a block to always work even if the client doesn't tell the server the block was right clicked. This may assume the wrong block, so be warned.
-use-experimental-clicks: false
-
 # The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.
 language: en_US
 
@@ -66,6 +63,12 @@ realistic-randoms: true
 
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
+
+# Use a persistent storage medium to store data that is accesible across restarts.
+persistent-storage: false
+
+# Method of PersistentStorage storage. Can currently be any of the following: YAML
+persistent-storage-type: YAML
 common:
     variables:
         enable: true
@@ -89,7 +92,7 @@ circuits:
         netherrack-enabled: false
         pumpkins-enabled: false
         glowstone-enabled: false
-        glowstone-off-block: '20'
+        glowstone-off-block: GLASS
     pipes:
         enable: true
         allow-diagonal: false
@@ -110,7 +113,7 @@ mechanics:
         - Zombie
     ammeter:
         enable: true
-        item: '263'
+        item: COAL
     area:
         enable: true
         allow-redstone: true
@@ -135,17 +138,17 @@ mechanics:
         crushers: true
         crushers-kill-mobs: false
         crusher-blacklist:
-        - 49
-        - 7
+        - OBSIDIAN
+        - BEDROCK
         super-sticky: true
         super-push: true
         movement-blacklist:
-        - 49
-        - 7
+        - OBSIDIAN
+        - BEDROCK
         bounce: true
         bounce-blacklist:
-        - 49
-        - 7
+        - OBSIDIAN
+        - BEDROCK
         max-distance: 12
     bookcase:
         enable: true
@@ -157,10 +160,11 @@ mechanics:
         max-length: 30
         max-width: 5
         blocks:
-        - 4
-        - 5
-        - 20
-        - 43
+        - COBBLESTONE
+        - WOOD
+        - GLASS
+        - DOUBLE_STEP
+        - WOOD_DOUBLE_STEP
     cauldron:
         enable: true
         spoons: true
@@ -169,16 +173,16 @@ mechanics:
         allow-holding-blocks: false
         regen-health: true
         blocks:
-        - 53
-        - 67
-        - 108
-        - 109
-        - 114
-        - 128
-        - 134
-        - 135
-        - 136
-        - 156
+        - WOOD_STAIRS
+        - COBBLESTONE_STAIRS
+        - BRICK_STAIRS
+        - SMOOTH_STAIRS
+        - NETHER_BRICK_STAIRS
+        - SANDSTONE_STAIRS
+        - SPRUCE_WOOD_STAIRS
+        - BIRCH_WOOD_STAIRS
+        - JUNGLE_WOOD_STAIRS
+        - QUARTZ_STAIRS
         face-correct-direction: true
         require-sign: false
     chunk-anchor:
@@ -214,10 +218,11 @@ mechanics:
         max-length: 30
         max-width: 5
         blocks:
-        - 4
-        - 5
-        - 20
-        - 43
+        - COBBLESTONE
+        - WOOD
+        - GLASS
+        - DOUBLE_STEP
+        - WOOD_DOUBLE_STEP
     elevator:
         enable: true
         enable-buttons: true
@@ -227,20 +232,21 @@ mechanics:
     footprints:
         enable: false
         blocks:
-        - 3
-        - 12
-        - 78
-        - 80
+        - DIRT
+        - SAND
+        - SNOW
+        - SNOW_BLOCK
+        - ICE
     gate:
         enable: true
         allow-redstone: true
         limit-columns: true
         max-columns: 14
         blocks:
-        - 85
-        - 101
-        - 102
-        - 113
+        - FENCE
+        - IRON_FENCE
+        - THIN_GLASS
+        - NETHER_FENCE
         enforce-type: true
         max-column-height: 12
         gate-search-radius: 3
@@ -264,7 +270,7 @@ mechanics:
         block: 1
     lightstone:
         enable: true
-        item: '348'
+        item: GLOWSTONE_DUST
     light-switch:
         enable: true
         max-range: 10
@@ -277,7 +283,7 @@ mechanics:
         enable: true
     sign-copy:
         enable: true
-        item: '351:0'
+        item: INK_SACK:0
     snow:
         piling: false
         trample: false
@@ -287,14 +293,13 @@ mechanics:
         high-piling: false
         jump-trample: false
         replacable-blocks:
-        - 31
-        - 32
-        - 51
-        - 38
-        - 37
-        - 39
-        - 40
-        - 132
+        - DEAD_BUSH
+        - LONG_GRASS
+        - YELLOW_FLOWER
+        - RED_ROSE
+        - BROWN_MUSHROOM
+        - RED_MUSHROOM
+        - FIRE
         falldown-animation-speed: 5
     teleporter:
         enable: true
@@ -303,16 +308,17 @@ mechanics:
     tree-lopper:
         enable: false
         block-list:
-        - 17
+        - LOG
         tool-list:
-        - 271
-        - 275
-        - 258
-        - 286
-        - 279
+        - IRON_AXE
+        - WOOD_AXE
+        - STONE_AXE
+        - DIAMOND_AXE
+        - GOLD_AXE
         max-size: 30
         allow-diagonals: false
         enforce-data: false
+        place-saplings: false
     xp-storer:
         enable: true
         block: 52
@@ -324,40 +330,40 @@ vehicles:
         mechanisms:
             station:
                 enable: true
-                block: '49:0'
+                block: OBSIDIAN:0
             sorter:
                 enable: true
-                block: '87:0'
+                block: NETHERRACK:0
             ejector:
                 enable: true
-                block: '42:0'
+                block: IRON_BLOCK:0
             deposit:
                 enable: true
-                block: '15:0'
+                block: IRON_ORE:0
             teleport:
                 enable: true
-                block: '133:0'
+                block: EMERALD_BLOCK:0
             elevator:
                 enable: true
-                block: '112:0'
+                block: NETHER_BRICK:0
             messager:
                 enable: true
-                block: '121:0'
+                block: ENDER_STONE:0
             reverse:
                 enable: true
-                block: '35:0'
+                block: WOOL:0
             max-speed:
                 enable: true
-                block: '173:0'
+                block: COAL_BLOCK:0
             speed-modifier:
                 enable: true
-                max-boost-block: '41:0'
-                25x-boost-block: '14:0'
-                50x-slow-block: '88:0'
-                20x-slow-block: '13:0'
+                max-boost-block: GOLD_BLOCK:0
+                25x-boost-block: GOLD_ORE:0
+                50x-slow-block: SOUL_SAND:0
+                20x-slow-block: GRAVEL:0
             dispenser:
                 enable: true
-                block: '129:0'
+                block: EMERALD_ORE:0
                 spawn-infront: false
                 check-for-carts: true
         fall-speed:
@@ -415,3 +421,5 @@ vehicles:
         remove-on-exit:
             enable: false
             give-item: false
+        water-place-only:
+            enable: false
