@@ -57,7 +57,7 @@ public class CauldronCookbook {
         try {
             CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
             if (recipes.size() != 0) {
-                log.info(recipes.size() + " cauldron recipe(s) loaded");
+                log.info("[CraftBook] " + recipes.size() + " cauldron recipe(s) loaded");
             } else {
                 log.warning("cauldron-recipes.txt had no recipes");
             }
