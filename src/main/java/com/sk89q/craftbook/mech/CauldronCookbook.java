@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -57,19 +56,19 @@ public class CauldronCookbook {
         try {
             CauldronCookbook recipes = readCauldronRecipes("cauldron-recipes.txt");
             if (recipes.size() != 0) {
-                log.info(recipes.size() + " cauldron recipe(s) loaded");
+                CraftBookPlugin.logger().info(recipes.size() + " cauldron recipe(s) loaded");
             } else {
-                log.warning("cauldron-recipes.txt had no recipes");
+                CraftBookPlugin.logger().warning("cauldron-recipes.txt had no recipes");
             }
         } catch (FileNotFoundException e) {
-            log.info("cauldron-recipes.txt not found: " + e.getMessage());
+            CraftBookPlugin.logger().info("cauldron-recipes.txt not found: " + e.getMessage());
             try {
-                log.info("Looked in: " + CraftBookPlugin.inst().getDataFolder().getCanonicalPath());
+                CraftBookPlugin.logger().info("Looked in: " + CraftBookPlugin.inst().getDataFolder().getCanonicalPath());
             } catch (IOException ioe) {
                 // Eat error
             }
         } catch (IOException e) {
-            log.warning("cauldron-recipes.txt not loaded: " + e.getMessage());
+            CraftBookPlugin.logger().warning("cauldron-recipes.txt not loaded: " + e.getMessage());
         }
     }
 
@@ -77,11 +76,6 @@ public class CauldronCookbook {
      * For fast recipe lookup.
      */
     private final List<Recipe> recipes = new ArrayList<Recipe>();
-
-    /**
-     * For logging purposes.
-     */
-    static final Logger log = Logger.getLogger("Minecraft");
 
     /**
      * Adds a recipe.
@@ -140,7 +134,7 @@ public class CauldronCookbook {
                 }
                 String[] parts = RegexUtil.COLON_PATTERN.split(line);
                 if (parts.length < 3) {
-                    log.log(Level.WARNING, "Invalid cauldron recipe line in " + file.getName() + ": '" + line + "'");
+                    CraftBookPlugin.logger().log(Level.WARNING, "Invalid cauldron recipe line in " + file.getName() + ": '" + line + "'");
                 } else {
                     String name = parts[0];
                     List<Tuple2<Integer, Short>> ingredients = parseCauldronItems(parts[1]);
@@ -201,11 +195,11 @@ public class CauldronCookbook {
                      * 
                      * if (item > 0) { for (int i = 0; i < multiplier; i++) { out.add(item); } } else {
                      */
-                    log.log(Level.WARNING, "Cauldron: Unknown item " + part);
+                    CraftBookPlugin.logger().log(Level.WARNING, "Cauldron: Unknown item " + part);
                     // }
                 }
             } catch (NumberFormatException e) { // Bad multiplier
-                log.log(Level.WARNING, "Cauldron: Bad multiplier in '" + part + "'");
+                CraftBookPlugin.logger().log(Level.WARNING, "Cauldron: Bad multiplier in '" + part + "'");
             }
         }
         return out;
