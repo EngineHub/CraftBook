@@ -260,7 +260,7 @@ public class ICUtil {
             target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
         else if (relative == LocationCheckType.OFFSET)
             target = LocationUtil.getOffset(target, offsetX, offsetY, offsetZ);
-        else if (relative == LocationCheckType.RELATIVE)
+        else if (relative == LocationCheckType.ABSOLUTE)
             target = new Location(target.getWorld(), offsetX, offsetY, offsetZ).getBlock();
         return target;
     }
