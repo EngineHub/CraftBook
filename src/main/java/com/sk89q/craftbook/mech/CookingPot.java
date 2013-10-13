@@ -103,13 +103,12 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             return;
 
         try {
-            lastTick = Integer.parseInt(sign.getLine(2).trim());
+            lastTick = Math.max(0, Integer.parseInt(sign.getLine(2).trim()));
         } catch (Exception e) {
-            sign.setLine(2, "0");
+            sign.setLine(2, String.valueOf(0));
             sign.update(false);
         }
         oldTick = lastTick;
-        lastTick = Math.max(lastTick, 0);
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getTypeId() == BlockID.CHEST) {
@@ -122,24 +121,24 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                         if(getMultiplier(sign) > 0)
                             decreaseMultiplier(sign, 1);
                     }
-                }
-                if (lastTick >= 50) {
-                    for (ItemStack i : chest.getInventory().getContents()) {
+                    if (lastTick >= 50) {
+                        for (ItemStack i : chest.getInventory().getContents()) {
 
-                        if (!ItemUtil.isStackValid(i)) continue;
-                        ItemStack cooked = ItemUtil.getCookedResult(i);
-                        if (cooked == null) {
-                            if (plugin.getConfiguration().cookingPotOres)
-                                cooked = ItemUtil.getSmeletedResult(i);
-                            if (cooked == null) continue;
-                        }
-                        if (chest.getInventory().addItem(cooked).isEmpty()) {
-                            ItemStack toRemove = i.clone();
-                            toRemove.setAmount(1);
-                            chest.getInventory().removeItem(toRemove);
-                            chest.update();
-                            lastTick -= 50;
-                            break;
+                            if (!ItemUtil.isStackValid(i)) continue;
+                            ItemStack cooked = ItemUtil.getCookedResult(i);
+                            if (cooked == null) {
+                                if (plugin.getConfiguration().cookingPotOres)
+                                    cooked = ItemUtil.getSmeletedResult(i);
+                                if (cooked == null) continue;
+                            }
+                            if (chest.getInventory().addItem(cooked).isEmpty()) {
+                                ItemStack toRemove = i.clone();
+                                toRemove.setAmount(1);
+                                chest.getInventory().removeItem(toRemove);
+                                chest.update();
+                                lastTick -= 50;
+                                break;
+                            }
                         }
                     }
                 }
