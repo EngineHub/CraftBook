@@ -52,8 +52,8 @@ public class TreeLopper extends AbstractMechanic {
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
         usedBlock.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
-            usedBlock.getRelative(0,-1,0).setTypeId(BlockID.SAPLING);
-            ((Tree) usedBlock.getRelative(0,-1,0).getState().getData()).setSpecies(species);
+            usedBlock.setTypeId(BlockID.SAPLING);
+            ((Tree) usedBlock.getState().getData()).setSpecies(species);
             hasPlanted = true;
         }
 
@@ -90,8 +90,8 @@ public class TreeLopper extends AbstractMechanic {
             species = ((Tree) block.getState().getData()).getSpecies();
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
-            block.getRelative(0,-1,0).setTypeId(BlockID.SAPLING);
-            ((Tree) block.getRelative(0,-1,0).getState().getData()).setSpecies(species);
+            block.setTypeId(BlockID.SAPLING);
+            ((Tree) block.getState().getData()).setSpecies(species);
             hasPlanted = true;
         }
         visitedLocations.add(block.getLocation());
