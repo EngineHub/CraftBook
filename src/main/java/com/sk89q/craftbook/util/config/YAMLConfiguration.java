@@ -292,7 +292,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Command Items Configuration Listener
         config.setComment("mechanics.command-items.enable", "Enables the CommandItems mechanic.");
-        commandItemsEnabled = config.getBoolean("mechanics.command-items.enable", true);
+        commandItemsEnabled = config.getBoolean("mechanics.command-items.enable", false);
 
 
         // Command Sign Configuration Listener
@@ -322,7 +322,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Custom Crafting Configuration Listener
         config.setComment("mechanics.custom-crafting.enable", "Enable custom crafting.");
-        customCraftingEnabled = config.getBoolean("mechanics.custom-crafting.enable", true);
+        customCraftingEnabled = config.getBoolean("mechanics.custom-crafting.enable", false);
 
 
         // Custom Dispensing Configuration Listener
@@ -347,7 +347,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Custom Drops Configuration Listener
         config.setComment("mechanics.custom-drops.enable", "Enable Custom Drops.");
-        customDropEnabled = config.getBoolean("mechanics.custom-drops.enable", true);
+        customDropEnabled = config.getBoolean("mechanics.custom-drops.enable", false);
 
         config.setComment("mechanics.custom-drops.require-permissions", "Require a permission node to get custom drops.");
         customDropPermissions = config.getBoolean("mechanics.custom-drops.require-permissions", false);
