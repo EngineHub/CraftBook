@@ -61,9 +61,11 @@ import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.CompatabilityUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
+import com.sk89q.craftbook.util.persistent.DummyPersistentStorage;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.craftbook.util.persistent.YAMLPersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -81,9 +83,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 
-import fr.neatmonster.nocheatplus.checks.CheckType;
-import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-
 public class CraftBookPlugin extends JavaPlugin {
 
     /**
@@ -97,7 +96,6 @@ public class CraftBookPlugin extends JavaPlugin {
     private Economy economy;
     private ProtocolLibrary protocolLib;
     private WorldGuardPlugin worldGuardPlugin;
-    private boolean hasNoCheatPlus;
 
     /**
      * The instance for CraftBook
@@ -234,9 +232,6 @@ public class CraftBookPlugin extends JavaPlugin {
             economy = null;
         }
 
-        // Resolve NoCheatPlus
-        hasNoCheatPlus = getServer().getPluginManager().getPlugin("NoCheatPlus") != null;
-
         // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
 
@@ -257,6 +252,8 @@ public class CraftBookPlugin extends JavaPlugin {
         if(config.persistentStorage) {
             if(config.persistentStorageType.equalsIgnoreCase("yaml"))
                 persistentStorage = new YAMLPersistentStorage();
+            else if(config.persistentStorageType.equalsIgnoreCase("dummy"))
+                persistentStorage = new DummyPersistentStorage();
 
             if(persistentStorage != null)
                 persistentStorage.open();
@@ -326,6 +323,14 @@ public class CraftBookPlugin extends JavaPlugin {
         createDefaultConfiguration(new File(getDataFolder(), "en_US.yml"), "en_US.yml");
         languageManager = new LanguageManager();
         languageManager.init();
+
+        getServer().getScheduler().runTask(this, new Runnable() {
+
+            @Override
+            public void run () {
+                CompatabilityUtil.init();
+            }
+        });
     }
 
     /**
@@ -1088,13 +1093,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if (config.advancedBlockChecks) {
 
-            boolean unexempt = false;
-            if(hasNoCheatPlus) {
-                if(!NCPExemptionManager.isExempted(player, CheckType.BLOCKBREAK_NOSWING)) {
-                    NCPExemptionManager.exemptPermanently(player, CheckType.BLOCKBREAK_NOSWING);
-                    unexempt = true;
-                }
-            }
+            CompatabilityUtil.disableInterferences(player);
             BlockEvent event;
             if(build)
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
@@ -1102,8 +1101,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockBreakEvent(block, player);
             MechanicListenerAdapter.ignoreEvent(event);
             getServer().getPluginManager().callEvent(event);
-            if(unexempt)
-                NCPExemptionManager.unexempt(player, CheckType.BLOCKBREAK_NOSWING);
+            CompatabilityUtil.enableInterferences(player);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         if (!config.obeyWorldguard) return true;

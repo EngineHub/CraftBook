@@ -64,10 +64,10 @@ realistic-randoms: true
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
 
-# Use a persistent storage medium to store data that is accesible across restarts.
-persistent-storage: false
+# Use a persistent storage medium to store data that is accesible across restarts. This is recommended to be always on, as issues may occur with some mechanics if this is disabled.
+persistent-storage: true
 
-# Method of PersistentStorage storage. Can currently be any of the following: YAML
+# Method of PersistentStorage storage. Can currently be any of the following: YAML, DUMMY
 persistent-storage-type: YAML
 common:
     variables:
