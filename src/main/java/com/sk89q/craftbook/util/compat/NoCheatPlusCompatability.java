@@ -12,7 +12,7 @@ import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 public class NoCheatPlusCompatability extends CraftBookCompatability {
 
     Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
-    CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK_NOSWING};
+    CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK,CheckType.BLOCKINTERACT,CheckType.COMBINED,CheckType.MOVING};
 
     @Override
     public void enable (Player player) {
