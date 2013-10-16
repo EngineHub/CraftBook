@@ -1,3 +1,20 @@
+3.7.8
++ Added data value support for all mechanics, allowed usage of names instead of item ids. (Item ID usage may be removed in the future - eg 1.7)
+- Removed Experimental Right Click option - it didn't work too well, and only created complexity.
+* Fixed Command-Items.yml not being created sometimes.
+* Fixed some logged messages not being prefixed.
+* Fixed absolute coordinates on ICs not working.
+* Slightly optimized cooking pots.
+* Fixed cooking pots always being in super fast mode.
+* Fixed BoatWaterPlaceOnly being super-pedantic.
+* Fixed TreeLopper planting saplings underground.
+* Disabled CustomDrops, CustomCrafting and CommandItems by default.
+* Enabled PersistentStorage by default.
++ Added 'dummy' persistent storage type. Stores it in the plugin with no external data - THIS IS NOT PERISTENT AND IS SIMILAR TO DISABLING, BUT WITH MORE FUNCTIONALITY
+* Replaced NoCheatPlus detection with a better plugin compatability system.
+* Tweak a few yml files containing item ids.
+* Slightly tweaked BetterPhysics.
+
 3.7.7
 * Fixed TreeLopper not planting saplings if configured to, and the bottom block was the one broken.
 + Added an experimental persistent storage system. This currently does absolutely nothing, but will do lots in the future.
