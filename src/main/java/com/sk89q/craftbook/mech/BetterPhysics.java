@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -10,22 +10,21 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class BetterPhysics extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
+        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPhysics(BlockPhysicsEvent event) {
 
-        if(event.getBlock().getTypeId() == BlockID.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()), 1L);
+        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
     public static class FallingLadders implements Runnable {
@@ -39,9 +38,9 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
 
         @Override
         public void run () {
-            if(ladder.getRelative(0, -1, 0).getTypeId() != 0)
+            if(ladder.getRelative(0, -1, 0).getType() != Material.AIR)
                 return;
-            ladder.getWorld().spawn(ladder.getLocation(), FallingBlock.class);
+            ladder.getWorld().spawnFallingBlock(ladder.getLocation(), ladder.getType(), ladder.getData());
         }
     }
 }
