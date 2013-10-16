@@ -1,6 +1,6 @@
 command-items:
   LightningRod:
-    item: "369|Lightning Rod"
+    item: "blaze_rod|Lightning Rod"
     #A blaze rod titled 'Lightning Rod'
     commands:
       - "strike"

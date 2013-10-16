@@ -6,6 +6,6 @@ cauldron-recipes:
       # 10 light wooden planks
       'wood:2': 10
       # 5 brown wool
-      '35:12': 5
+      'wool:12': 5
     results:
-      1: 12
+      'stone': 12

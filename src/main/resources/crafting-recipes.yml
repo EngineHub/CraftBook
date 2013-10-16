@@ -7,9 +7,9 @@ crafting-recipes:
     type: shapeless
     ingredients: #mc only supports amount of 1 currently as ingredients.
       # light wooden plank
-      'wood:2': 2
+      'wood:2': 3
       # brown wool
-      '35:12': 2
+      'wool:12': 2
     results:
       #64 Endstone.
       '121': 64
@@ -19,7 +19,7 @@ crafting-recipes:
       # light wooden plank
       'wood:2': 'a'
       # brown wool
-      '35:12': 'b'
+      'wool:12': 'b'
     shape: #two of a on top, 2 of b on bottom.
       - 'aa'
       - 'bb'
@@ -33,4 +33,4 @@ crafting-recipes:
       'wood:2': 1
     results:
       #1 Stone.
-      '1': 1
+      'stone': 1
