@@ -79,7 +79,7 @@ public class TopLevelCommands {
                     sender.sendMessage("No updates are available!");
                     return;
                 }
-                Updater updater = new Updater(CraftBookPlugin.inst(), "CraftBook", CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
+                Updater updater = new Updater(CraftBookPlugin.inst(), CraftBookPlugin.getUpdaterID(), CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
                 if(updater.getResult() == UpdateResult.NO_UPDATE)
                     sender.sendMessage("No updates are available!");
             }

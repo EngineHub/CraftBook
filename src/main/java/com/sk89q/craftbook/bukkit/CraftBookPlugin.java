@@ -180,6 +180,11 @@ public class CraftBookPlugin extends JavaPlugin {
         return "3268";
     }
 
+    public static int getUpdaterID() {
+
+        return 31055;
+    }
+
     /**
      * Called on plugin enable.
      */
@@ -480,7 +485,7 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         if(!exempt) {
-            final Updater updater = new Updater(this, 31055, getFile(), Updater.UpdateType.NO_DOWNLOAD, true); // Start Updater but just do a version check
+            final Updater updater = new Updater(this, getUpdaterID(), getFile(), Updater.UpdateType.NO_DOWNLOAD, true); // Start Updater but just do a version check
             updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
             latestVersion = updater.getLatestName();
             getLogger().info(latestVersion + " is the latest version available, and the updatability of it is: " + updater.getResult().name() + ". You currently have version " + getLatestVersion() + " installed.");
