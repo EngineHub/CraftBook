@@ -135,12 +135,12 @@ public class Bridge extends AbstractMechanic {
         findBase:
         {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-            if (plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
+            if (trigger.getY() < trigger.getWorld().getMaxHeight()-1 && plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
                 break findBase; // On Top
 
             // If we've reached this point nothing was found on the top, check the bottom
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-            if (plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
+            if (trigger.getY() > 0 && plugin.getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
                 break findBase; // it's below
             else throw new UnacceptableMaterialException("mech.bridge.unusable");
         }

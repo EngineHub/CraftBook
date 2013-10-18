@@ -40,11 +40,13 @@ public class ItemInfo {
 
     public int getId() {
 
+        if(id == null) id = Material.AIR;
         return id.getId();
     }
 
     public Material getType() {
 
+        if(id == null) id = Material.AIR;
         return id;
     }
 
@@ -108,7 +110,7 @@ public class ItemInfo {
     @Override
     public String toString() {
 
-        return id + ":" + data;
+        return id.name() + ":" + data;
     }
 
     @Override
