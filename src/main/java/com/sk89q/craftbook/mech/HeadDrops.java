@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
@@ -108,10 +109,14 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     break;
                 toDrop = new ItemStack(Material.SKULL, 1, (short)3);
                 toDrop.setData(new MaterialData(Material.SKULL,(byte)3));
-                SkullMeta itemMeta = (SkullMeta) toDrop.getItemMeta();
-                itemMeta.setDisplayName(ChatColor.RESET + typeName + " Head");
-                itemMeta.setOwner(mobName);
-                toDrop.setItemMeta(itemMeta);
+                ItemMeta metaD = toDrop.getItemMeta();
+                if(metaD instanceof SkullMeta) {
+                    SkullMeta itemMeta = (SkullMeta) metaD;
+                    itemMeta.setDisplayName(ChatColor.RESET + typeName + " Head");
+                    itemMeta.setOwner(mobName);
+                    toDrop.setItemMeta(itemMeta);
+                } else
+                    CraftBookPlugin.logger().warning("Bukkit has failed to set a HeadDrop item to a head!");
                 break;
         }
 
