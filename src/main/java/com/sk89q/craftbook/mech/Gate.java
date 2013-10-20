@@ -513,6 +513,9 @@ public class Gate extends AbstractMechanic {
             }
         }
 
+        if(gateBlock == null)
+            gateBlock = new ItemInfo(0, 0);
+
         if(plugin.getConfiguration().gateEnforceType && gateBlock.getId() != 0) {
             sign.setLine(0, gateBlock.toString());
             sign.update(false);
