@@ -14,6 +14,7 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
@@ -195,7 +196,12 @@ public class CartDispenser extends CartBlockMechanism {
                 inv.removeItem(new ItemStack(ItemType.HOPPER_MINECART.getID(), 1));
             }
         }
-        blocks.rail.getWorld().spawn(location, type.toClass());
+        Minecart cart = blocks.rail.getWorld().spawn(location, type.toClass());
+        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserPropel) {
+            BlockFace dir = SignUtil.getBack(blocks.sign);
+            Vector vel = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
+            cart.setVelocity(vel.normalize());
+        }
     }
 
     public enum CartType {

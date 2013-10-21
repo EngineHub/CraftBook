@@ -609,6 +609,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartDispenserBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));
         minecartDispenserLegacy = config.getBoolean("vehicles.minecart.mechanisms.dispenser.spawn-infront", false);
         minecartDispenserAntiSpam = config.getBoolean("vehicles.minecart.mechanisms.dispenser.check-for-carts", true);
+        minecartDispenserPropel = config.getBoolean("vehicles.minecart.mechanisms.dispenser.propel-cart", false);
 
 
         // Vehicles Minecart Fall Speed Listener

@@ -252,6 +252,7 @@ public abstract class LocalConfiguration {
     public ItemInfo minecartDispenserBlock;
     public boolean minecartDispenserLegacy;
     public boolean minecartDispenserAntiSpam;
+    public boolean minecartDispenserPropel;
     // Vehicles - Minecart MaxSpeed Options
     public boolean minecartMaxSpeedEnabled;
     public ItemInfo minecartMaxSpeedBlock;
