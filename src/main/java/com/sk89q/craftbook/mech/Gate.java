@@ -480,7 +480,7 @@ public class Gate extends AbstractMechanic {
 
         ChangedSign sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(pt));
 
-        if (!sign.getLine(0).isEmpty()) {
+        if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
                 return new ItemInfo(sign.getLine(0));
             } catch (Exception ignored) {
@@ -516,7 +516,7 @@ public class Gate extends AbstractMechanic {
         if(gateBlock == null)
             gateBlock = new ItemInfo(0, 0);
 
-        if(plugin.getConfiguration().gateEnforceType && gateBlock.getId() != 0) {
+        if(plugin.getConfiguration().gateEnforceType && gateBlock.getId() != 0 && sign != null) {
             sign.setLine(0, gateBlock.toString());
             sign.update(false);
         }
