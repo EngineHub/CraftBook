@@ -1,3 +1,12 @@
+3.7.9
+* Updated AutoUpdater to comply with bukkit standards.
+* Fixed potential bridge errors.
+* Fixed Auto Updater connection errors.
+* Fixed a HeadDrops error.
+* Fixed multiple gate errors.
+* Fixed /area save with long usernames and shorten enable.
++ Added an option to propel minecarts with the cart dispenser.
+
 3.7.8
 + Added data value support for all mechanics, allowed usage of names instead of item ids. (Item ID usage may be removed in the future - eg 1.7)
 - Removed Experimental Right Click option - it didn't work too well, and only created complexity.

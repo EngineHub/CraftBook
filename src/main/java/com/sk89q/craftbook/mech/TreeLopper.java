@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -52,7 +53,7 @@ public class TreeLopper extends AbstractMechanic {
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
         usedBlock.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
-            usedBlock.setTypeId(BlockID.SAPLING);
+            usedBlock.setType(Material.SAPLING);
             ((Tree) usedBlock.getState().getData()).setSpecies(species);
             hasPlanted = true;
         }
@@ -90,7 +91,7 @@ public class TreeLopper extends AbstractMechanic {
             species = ((Tree) block.getState().getData()).getSpecies();
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
-            block.setTypeId(BlockID.SAPLING);
+            block.setType(Material.SAPLING);
             ((Tree) block.getState().getData()).setSpecies(species);
             hasPlanted = true;
         }
