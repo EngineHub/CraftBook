@@ -95,7 +95,6 @@ public class Teleporter extends AbstractMechanic {
     /**
      * @param trigger if you didn't already check if this is a wall sign with appropriate text,
      *                you're going on Santa's naughty list.
-     * @param plugin  the direction (UP or DOWN) in which we're looking for a destination
      *
      * @throws InvalidMechanismException
      */
@@ -157,21 +156,19 @@ public class Teleporter extends AbstractMechanic {
 
         if (CraftBookPlugin.inst().getConfiguration().teleporterRequireSign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
-            if (location.getType() != Material.WALL_SIGN && location.getType() != Material.SIGN_POST) {
-                if (location.getType() == Material.STONE_BUTTON || location.getType() == Material.WOOD_BUTTON) {
-                    Button b = (Button) location.getState().getData();
-                    Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
-                    if (SignUtil.isSign(sign)) {
-                        ChangedSign s = BukkitUtil.toChangedSign(sign);
-                        if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) {
-                            player.printError("mech.teleport.sign");
-                            return;
-                        }
-                    }
-                } else {
-                    player.printError("mech.teleport.sign");
+            if (location.getType() == Material.WALL_SIGN || location.getType() == Material.SIGN_POST) {
+                if (!checkTeleportSign(player, location)) {
                     return;
                 }
+            } else if (location.getType() == Material.STONE_BUTTON || location.getType() == Material.WOOD_BUTTON) {
+                Button b = (Button) location.getState().getData();
+                Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                if (!checkTeleportSign(player, sign)) {
+                    return;
+                }
+            } else {
+                player.printError("mech.teleport.sign");
+                return;
             }
         }
 
@@ -214,5 +211,21 @@ public class Teleporter extends AbstractMechanic {
         player.teleport(subspaceRift);
 
         player.print("mech.teleport.alert");
+    }
+
+    private boolean checkTeleportSign(LocalPlayer player, Block sign) {
+
+        if (!SignUtil.isSign(sign)) {
+            player.printError("mech.teleport.sign");
+            return false;
+        }
+
+        ChangedSign s = BukkitUtil.toChangedSign(sign);
+        if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) {
+            player.printError("mech.teleport.sign");
+            return false;
+        }
+
+        return true;
     }
 }
