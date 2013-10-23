@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -23,7 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -70,7 +69,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 String playerName = ((Player) event.getEntity()).getName();
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-                toDrop.setData(new MaterialData(Material.SKULL_ITEM,(byte)3));
                 SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
                 meta.setOwner(playerName);
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
@@ -80,13 +78,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)2);
-                toDrop.setData(new MaterialData(Material.SKULL_ITEM,(byte)2));
                 break;
             case CREEPER:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)4);
-                toDrop.setData(new MaterialData(Material.SKULL_ITEM,(byte)4));
                 break;
             case SKELETON:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
@@ -94,7 +90,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !CraftBookPlugin.inst().getConfiguration().headDropsDropOverrideNatural)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
-                toDrop.setData(new MaterialData(Material.SKULL_ITEM, (byte)(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0)));
                 break;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
@@ -108,7 +103,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if(mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-                toDrop.setData(new MaterialData(Material.SKULL_ITEM,(byte)3));
                 ItemMeta metaD = toDrop.getItemMeta();
                 if(metaD instanceof SkullMeta) {
                     SkullMeta itemMeta = (SkullMeta) metaD;
@@ -164,7 +158,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             EntityType type = MobSkullType.getEntityType(playerName);
 
             ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-            stack.setData(new MaterialData(Material.SKULL_ITEM, (byte)3));
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setOwner(playerName);
 
@@ -190,7 +183,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 return;
 
             event.setCancelled(true);
-            event.getBlock().setTypeId(0);
+            event.getBlock().setType(Material.AIR);
             event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
         }
     }
@@ -227,11 +220,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         MobSkullType(String playerName, String ... oldNames) {
 
             this.playerName = playerName;
-            this.oldNames = new ArrayList<String>(Arrays.asList(oldNames));
+            this.oldNames = new HashSet<String>(Arrays.asList(oldNames));
         }
 
         private String playerName;
-        private List<String> oldNames;
+        private Set<String> oldNames;
 
         public String getPlayerName() {
 
@@ -254,8 +247,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         public static EntityType getEntityType(String name) {
 
+            if (name == null)
+                return null;
+
             for(MobSkullType type : values())
-                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(EntityType.valueOf(type.name()).getName().toUpperCase()) && CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase()).equalsIgnoreCase(name))
+                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
                     return EntityType.valueOf(type.name());
 
             return null;
