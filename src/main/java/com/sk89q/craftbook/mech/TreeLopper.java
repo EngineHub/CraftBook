@@ -29,9 +29,10 @@ public class TreeLopper extends AbstractMechanic {
     protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
     private int broken;
-    Block usedBlock;
 
     private boolean hasPlanted = false;
+
+    ItemInfo originalBlock;
 
     private HashSet<Location> visitedLocations = new HashSet<Location>();
 
@@ -46,7 +47,9 @@ public class TreeLopper extends AbstractMechanic {
         visitedLocations.add(event.getBlock().getLocation());
         broken = 1;
 
-        usedBlock = event.getBlock();
+        Block usedBlock = event.getBlock();
+
+        originalBlock = new ItemInfo(usedBlock);
 
         TreeSpecies species = null;
         if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (usedBlock.getRelative(0, -1, 0).getTypeId() == BlockID.DIRT || usedBlock.getRelative(0, -1, 0).getTypeId() == BlockID.GRASS || usedBlock.getRelative(0, -1, 0).getTypeId() == BlockID.MYCELIUM) && !hasPlanted)
@@ -59,7 +62,7 @@ public class TreeLopper extends AbstractMechanic {
         }
 
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(event.getBlock().getRelative(face).getTypeId() == usedBlock.getTypeId() && (!plugin.getConfiguration().treeLopperEnforceData || event.getBlock().getRelative(face).getData() == usedBlock.getData()))
+            if(event.getBlock().getRelative(face).getTypeId() == originalBlock.getId() && (!plugin.getConfiguration().treeLopperEnforceData || event.getBlock().getRelative(face).getData() == originalBlock.getData()))
                 if(searchBlock(event, usedBlock.getRelative(face))) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
                     if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
@@ -98,7 +101,7 @@ public class TreeLopper extends AbstractMechanic {
         visitedLocations.add(block.getLocation());
         broken += 1;
         for(BlockFace face : plugin.getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(block.getRelative(face).getTypeId() == usedBlock.getTypeId() && (!plugin.getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == usedBlock.getData()))
+            if(block.getRelative(face).getTypeId() == originalBlock.getId() && (!plugin.getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == originalBlock.getData()))
                 if(searchBlock(event, block.getRelative(face))) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
                     if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
