@@ -117,7 +117,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                 Chest chest = (Chest) cb.getState();
                 if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && plugin.getConfiguration().cookingPotOres) {
                     if(lastTick < 500) {
-                        lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick * getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
+                        lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
                         if(getMultiplier(sign) > 0)
                             decreaseMultiplier(sign, 1);
                     }
