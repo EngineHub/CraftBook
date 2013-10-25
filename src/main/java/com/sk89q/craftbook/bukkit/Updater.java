@@ -415,7 +415,7 @@ public class Updater {
      */
     private boolean versionCheck(String title) {
         if (type != UpdateType.NO_VERSION_CHECK) {
-            final String version = plugin.getLatestVersion();
+            final String version = CraftBookPlugin.getVersion();
             if (title.split(" v").length == 2) {
                 final String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
 
