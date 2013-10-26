@@ -9,6 +9,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
@@ -47,7 +48,15 @@ public class Marquee extends AbstractCraftBookMechanic {
             return;
         }
 
-        String var = CraftBookPlugin.inst().getVariable(event.getLine(2), event.getLine(3).isEmpty() ? "global" : event.getLine(3));
+        String namespace = event.getLine(3).isEmpty() ? "global" : event.getLine(3);
+        String variable = event.getLine(2);
+
+        if(!VariableCommands.hasVariablePermission(event.getPlayer(), namespace, variable, "get")) {
+            lplayer.printError("You don't have permission to use that variable!");
+            SignUtil.cancelSign(event);
+        }
+
+        String var = CraftBookPlugin.inst().getVariable(variable, namespace);
         if(var == null || var.isEmpty()) {
             lplayer.printError("Missing Variable!");
             SignUtil.cancelSign(event);
