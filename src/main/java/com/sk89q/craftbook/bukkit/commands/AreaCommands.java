@@ -56,8 +56,8 @@ public class AreaCommands {
 
         String id;
         String namespace = player.getName();
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
-            namespace = namespace.substring(0, 15);
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
         boolean personal = true;
 
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
@@ -146,8 +146,8 @@ public class AreaCommands {
 
         String namespace = "~" + player.getName();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
-            namespace = namespace.substring(0, 15);
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
 
         // get the namespace from the flag (if set)
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
@@ -279,8 +279,8 @@ public class AreaCommands {
         String namespace = "~" + player.getName();
         String areaId = null;
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
-            namespace = namespace.substring(0, 15);
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
 
         // Get the namespace
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
