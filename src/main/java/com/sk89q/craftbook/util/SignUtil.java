@@ -18,6 +18,7 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.SignChangeEvent;
 
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -585,5 +586,15 @@ public class SignUtil {
             default:
                 return BlockFace.SELF;
         }
+    }
+
+    /**
+     * Cancels a sign change event, and destroys the sign in the process.
+     * 
+     * @param event The event that is to be cancelled.
+     */
+    public static void cancelSign(SignChangeEvent event) {
+        event.setCancelled(true);
+        event.getBlock().breakNaturally();
     }
 }
