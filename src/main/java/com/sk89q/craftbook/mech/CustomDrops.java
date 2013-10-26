@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class CustomDrops extends AbstractCraftBookMechanic {
@@ -23,7 +23,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
-        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         if (CraftBookPlugin.inst().getConfiguration().customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
@@ -59,7 +59,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
-        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;

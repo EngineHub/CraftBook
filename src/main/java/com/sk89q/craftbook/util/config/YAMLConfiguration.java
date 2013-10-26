@@ -485,6 +485,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         mapChangerEnabled = config.getBoolean("mechanics.map-changer.enable", true);
 
 
+        // Marquee Configuration Listener
+        config.setComment("mechanics.marquee.enable", "Enables the Marquee mechanic.");
+        marqueeEnabled = config.getBoolean("mechanics.marquee.enable", true);
+
+
         // Painting Switcher Configuration Listener
         config.setComment("mechanics.paintings.enable", "Enables the Painting Switcher mechanic.");
         paintingsEnabled = config.getBoolean("mechanics.paintings.enable", true);

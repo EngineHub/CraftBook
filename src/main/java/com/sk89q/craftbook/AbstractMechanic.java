@@ -20,6 +20,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+
 public abstract class AbstractMechanic implements Mechanic {
 
     @Override

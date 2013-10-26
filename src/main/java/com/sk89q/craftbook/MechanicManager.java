@@ -28,11 +28,8 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Chunk;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -41,6 +38,9 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
@@ -137,18 +137,15 @@ public class MechanicManager {
      */
     public boolean dispatchSignChange(SignChangeEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event)) return false;
+        if (!EventUtil.passesFilter(event)) return false;
 
         // See if this event could be occurring on any mechanism's triggering blocks
-        Block block = event.getBlock();
-        BlockWorldVector pos = toWorldVector(block);
+        BlockWorldVector pos = toWorldVector(event.getBlock());
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        BlockState state = event.getBlock().getState();
+        if (!SignUtil.isSign(event.getBlock())) return false;
 
-        if (!(state instanceof Sign)) return false;
-
-        Sign sign = (Sign) state;
+        Sign sign = (Sign) event.getBlock().getState();
 
         try {
             load(pos, localPlayer, BukkitUtil.toChangedSign(sign, event.getLines(), localPlayer));
@@ -157,7 +154,7 @@ public class MechanicManager {
                 localPlayer.printError(e.getMessage());
 
             event.setCancelled(true);
-            block.breakNaturally();
+            event.getBlock().breakNaturally();
         }
 
         return false;
@@ -175,7 +172,7 @@ public class MechanicManager {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
         // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event)) return 0;
+        if (!EventUtil.passesFilter(event)) return 0;
 
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
@@ -226,7 +223,7 @@ public class MechanicManager {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
         // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event)) return 0;
+        if (!EventUtil.passesFilter(event)) return 0;
 
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
@@ -273,7 +270,7 @@ public class MechanicManager {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
         // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event)) return 0;
+        if (!EventUtil.passesFilter(event)) return 0;
 
         short returnValue = 0;
         LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
@@ -316,7 +313,7 @@ public class MechanicManager {
      */
     public short dispatchBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
         // We don't need to handle events that no mechanic we use makes use of
-        if (!passesFilter(event)) return 0;
+        if (!EventUtil.passesFilter(event)) return 0;
 
         short returnValue = 0;
         // See if this event could be occurring on any mechanism's triggering blocks
@@ -502,22 +499,6 @@ public class MechanicManager {
             }
         }
         return mechanics;
-    }
-
-    /**
-     * Used to filter events for processing. This allows for short circuiting code so that code isn't checked
-     * unnecessarily.
-     *
-     * @param event
-     *
-     * @return true if the event should be processed by this manager; false otherwise.
-     */
-    protected boolean passesFilter(Event event) {
-
-        if(event instanceof Cancellable && ((Cancellable) event).isCancelled() && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks)
-            return false;
-
-        return true;
     }
 
     /**

@@ -34,6 +34,7 @@ import com.sk89q.craftbook.mech.HiddenSwitch;
 import com.sk89q.craftbook.mech.LightStone;
 import com.sk89q.craftbook.mech.LightSwitch;
 import com.sk89q.craftbook.mech.MapChanger;
+import com.sk89q.craftbook.mech.Marquee;
 import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.SignCopier;
@@ -168,6 +169,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.headDropsEnabled) mechanics.add(new HeadDrops());
         if (config.commandItemsEnabled) mechanics.add(new CommandItems());
         if (config.leadsEnabled) mechanics.add(new BetterLeads());
+        if (config.marqueeEnabled) mechanics.add(new Marquee());
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

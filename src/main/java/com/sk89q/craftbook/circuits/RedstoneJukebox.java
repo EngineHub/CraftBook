@@ -4,7 +4,7 @@ import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class RedstoneJukebox extends AbstractCraftBookMechanic {

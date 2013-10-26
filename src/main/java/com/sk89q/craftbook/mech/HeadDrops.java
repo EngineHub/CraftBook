@@ -26,7 +26,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.MechanicListenerAdapter;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
@@ -144,7 +144,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!CraftBookPlugin.inst().getConfiguration().headDropsMiningDrops) return;
-        if(MechanicListenerAdapter.shouldIgnoreEvent(event))
+        if(EventUtil.shouldIgnoreEvent(event))
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 

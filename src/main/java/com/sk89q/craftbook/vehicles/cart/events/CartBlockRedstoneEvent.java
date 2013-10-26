@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
 
-import com.sk89q.craftbook.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.vehicles.cart.CartMechanismBlocks;
 
 public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {

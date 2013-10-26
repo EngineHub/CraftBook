@@ -20,6 +20,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+
 /**
  * A Mechanic is a an object that manages a set of Vectors to enhance those positions with CraftBook functionality.
  * <p>

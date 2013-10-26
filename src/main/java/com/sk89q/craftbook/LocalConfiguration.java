@@ -180,6 +180,8 @@ public abstract class LocalConfiguration {
     public int lightSwitchMaxLights;
     // Mechanics - Map Changer
     public boolean mapChangerEnabled;
+    // Mechanics - Marquee
+    public boolean marqueeEnabled;
     // Mechanics - Paintings
     public boolean paintingsEnabled;
     // Mechanics - Payment

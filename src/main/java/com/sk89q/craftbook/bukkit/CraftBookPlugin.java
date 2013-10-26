@@ -62,6 +62,7 @@ import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.CompatabilityUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
@@ -1103,7 +1104,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
             else
                 event = new BlockBreakEvent(block, player);
-            MechanicListenerAdapter.ignoreEvent(event);
+            EventUtil.ignoreEvent(event);
             getServer().getPluginManager().callEvent(event);
             CompatabilityUtil.enableInterferences(player);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
@@ -1128,7 +1129,7 @@ public class CraftBookPlugin extends JavaPlugin {
         if (config.advancedBlockChecks) {
 
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
-            MechanicListenerAdapter.ignoreEvent(event);
+            EventUtil.ignoreEvent(event);
             getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }
