@@ -243,21 +243,21 @@ public class Gate extends AbstractMechanic {
             CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ":" + bl.getY() + ":" + bl.getZ() + " to " + ID + ":" + data, "gates.search");
 
             WorldVector pt = new BlockWorldVector(column.getStartingPoint(), bl.getBlockX(), bl.getBlockY(), bl.getBlockZ());
-            if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(1, 0, 0)), visitedColumns, close)) continue;
-            if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(-1, 0, 0)), visitedColumns, close)) continue;
-            if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(0, 0, 1)), visitedColumns, close)) continue;
-            if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(0, 0, -1)), visitedColumns, close)) continue;
+            recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(1, 0, 0)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(-1, 0, 0)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(0, 0, 1)), visitedColumns, close);
+            recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(0, 0, -1)), visitedColumns, close);
         }
 
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(1, 0, 0)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(-1, 0, 0)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 0, 1)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 0, -1)), visitedColumns, close)) return false;
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(1, 0, 0)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(-1, 0, 0)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 0, 1)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 0, -1)), visitedColumns, close);
 
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(1, 1, 0)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(-1, 1, 0)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 1, 1)), visitedColumns, close)) return false;
-        if(!recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 1, -1)), visitedColumns, close)) return false;
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(1, 1, 0)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(-1, 1, 0)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 1, 1)), visitedColumns, close);
+        recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), column.getStartingPoint().add(0, 1, -1)), visitedColumns, close);
         return true;
     }
 
