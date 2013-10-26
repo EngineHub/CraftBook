@@ -20,6 +20,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -85,7 +86,7 @@ public class TreeLopper extends AbstractMechanic {
             return false;
         if(!CraftBookPlugin.inst().getConfiguration().treeLopperItems.contains(player.getHeldItemInfo()))
             return false;
-        if(!plugin.canBuild(event.getPlayer(), block, false)) {
+        if(!ProtectionUtil.canBuild(event.getPlayer(), block, false)) {
             player.printError("area.break-permissions");
             return false;
         }

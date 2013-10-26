@@ -28,6 +28,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
@@ -179,7 +180,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             stack.setItemMeta(meta);
 
-            if(!CraftBookPlugin.inst().canBuild(event.getPlayer(), event.getBlock(), false))
+            if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock(), false))
                 return;
 
             event.setCancelled(true);

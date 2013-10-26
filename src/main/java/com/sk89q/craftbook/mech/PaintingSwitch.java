@@ -19,6 +19,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 
 /**
  * @author Me4502
@@ -45,7 +46,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             if (!CraftBookPlugin.inst().getConfiguration().paintingsEnabled) return;
             Painting paint = (Painting) event.getRightClicked();
-            if (!CraftBookPlugin.inst().canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
+            if (!ProtectionUtil.canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) return;
             if (player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if (!isBeingEdited(paint)) {
                     paintings.put(paint, player.getName());

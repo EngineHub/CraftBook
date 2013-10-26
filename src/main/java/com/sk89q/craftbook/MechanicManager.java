@@ -39,6 +39,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -187,7 +188,7 @@ public class MechanicManager {
             HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
                 // A mechanic has been found, check if we can actually build here.
-                if (!plugin.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
+                if (!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
                     if(plugin.getConfiguration().showPermissionMessages)
                         player.printError("area.break-permissions");
                     return 0;
@@ -234,7 +235,7 @@ public class MechanicManager {
         try {
             HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
-                if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
                     if(plugin.getConfiguration().showPermissionMessages)
                         player.printError("area.use-permissions");
                     return 0;
@@ -280,7 +281,7 @@ public class MechanicManager {
         try {
             HashSet<Mechanic> mechanics = load(pos, player);
             if(mechanics.size() > 0) {
-                if (!plugin.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
                     //player.printError("area.permissions"); Don't show a message for this.
                     return 0;
                 }
