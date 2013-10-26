@@ -1,5 +1,9 @@
 package com.sk89q.craftbook.util.persistent;
 
+import java.util.Map;
+
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+
 /**
  * The base of the CraftBook persistant storage system. Used by mechanics to store data that is needed persistently.
  */
@@ -71,5 +75,41 @@ public abstract class PersistentStorage {
      * 
      * @param type The database type to convert to.
      */
-    public abstract void convertType(String type);
+    public void convertType(String type) {
+
+        Map<String, Object> data = exportData();
+        PersistentStorage stor = createFromType(type);
+        stor.importData(data, true);
+        CraftBookPlugin.inst().setPersistentStorage(stor);
+    }
+
+    /**
+     * Imports a {@link Map} of data into the {@link PersistentStorage} system.
+     * 
+     * @param data The data to import.
+     */
+    public abstract void importData(Map<String, Object> data, boolean replace);
+
+    /**
+     * Export the data into a {@link Map}.
+     * 
+     * @return The data in {@link Map} form.
+     */
+    public abstract Map<String, Object> exportData();
+
+    /**
+     * Generates a new PersistentStorage method from the type specified.
+     * 
+     * @param type The type to create.
+     * @return The new PersistentStorage.
+     */
+    public static PersistentStorage createFromType(String type) {
+
+        if(type.equalsIgnoreCase("YAML"))
+            return new YAMLPersistentStorage();
+        if(type.equalsIgnoreCase("DUMMY"))
+            return new DummyPersistentStorage();
+        else
+            return null;
+    }
 }

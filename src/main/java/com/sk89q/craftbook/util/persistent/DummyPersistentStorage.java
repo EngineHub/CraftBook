@@ -53,7 +53,15 @@ public class DummyPersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public void convertType (String type) {
+    public void importData (Map<String, Object> data, boolean replace) {
+        if(replace)
+            map = data;
+        else
+            map.putAll(data);
+    }
 
+    @Override
+    public Map<String, Object> exportData () {
+        return map;
     }
 }

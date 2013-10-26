@@ -2,6 +2,8 @@ package com.sk89q.craftbook.util.persistent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -86,12 +88,20 @@ public class YAMLPersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public void convertType (String type) {
-        //No other types to convert to.
+    public int getCurrentVersion () {
+        return 1;
     }
 
     @Override
-    public int getCurrentVersion () {
-        return 1;
+    public void importData (Map<String, Object> data, boolean replace) {
+        if(replace)
+            processor.clear();
+        for(Entry<String, Object> dat : data.entrySet())
+            processor.setProperty(dat.getKey(), dat.getValue());
+    }
+
+    @Override
+    public Map<String, Object> exportData () {
+        return processor.getMap();
     }
 }

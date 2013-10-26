@@ -39,7 +39,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         variablesEnabled = config.getBoolean("common.variables.enable", true);
 
         config.setComment("common.variables.default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
-        variablesDefaultGlobal = config.getBoolean("common.variables.default-to-global", true);
+        variablesDefaultGlobal = config.getBoolean("common.variables.default-to-global", false);
 
         config.setComment("common.variables.enable-in-commandblocks", "Allows variables to work inside CommandBlocks and on the Console.");
         variablesCommandBlockOverride = config.getBoolean("common.variables.enable-in-commandblocks", false);

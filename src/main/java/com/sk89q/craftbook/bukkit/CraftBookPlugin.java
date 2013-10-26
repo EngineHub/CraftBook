@@ -66,9 +66,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
-import com.sk89q.craftbook.util.persistent.DummyPersistentStorage;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
-import com.sk89q.craftbook.util.persistent.YAMLPersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -255,15 +253,10 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
         }
 
-        if(config.persistentStorage) {
-            if(config.persistentStorageType.equalsIgnoreCase("yaml"))
-                persistentStorage = new YAMLPersistentStorage();
-            else if(config.persistentStorageType.equalsIgnoreCase("dummy"))
-                persistentStorage = new DummyPersistentStorage();
+        persistentStorage = PersistentStorage.createFromType(getConfiguration().persistentStorageType);
 
-            if(persistentStorage != null)
-                persistentStorage.open();
-        }
+        if(persistentStorage != null)
+            persistentStorage.open();
 
         logDebugMessage("Initializing Managers!", "startup");
         manager = new MechanicManager();
@@ -1195,5 +1188,13 @@ public class CraftBookPlugin extends JavaPlugin {
     public PersistentStorage getPersistentStorage() {
 
         return persistentStorage;
+    }
+
+    public void setPersistentStorage(PersistentStorage storage) {
+
+        persistentStorage = storage;
+        getConfiguration().persistentStorageType = storage.getType();
+        getConfiguration().config.setProperty("persistent-storage-type", storage.getType());
+        getConfiguration().config.save();
     }
 }
