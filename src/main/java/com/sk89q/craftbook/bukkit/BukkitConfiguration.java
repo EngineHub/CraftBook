@@ -34,6 +34,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
     public String language;
     public List<String> languages;
+    public boolean languageScanText;
 
     public boolean debugMode;
     public List<String> debugFlags;
@@ -108,6 +109,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
         languages = config.getStringList("languages", Arrays.asList("en_US"));
+
+        config.setComment("scan-text-for-localization", "If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.");
+        languageScanText = config.getBoolean("scan-text-for-localization", false);
 
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
         debugMode = config.getBoolean("debug-mode", false);
