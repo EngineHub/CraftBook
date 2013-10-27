@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7.7
+# CraftBook Configuration for Bukkit. Generated for version: 3.7.9
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -49,6 +49,9 @@ language: en_US
 languages:
 - en_US
 
+# If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.
+scan-text-for-localization: false
+
 # Enable a mode that will print extra debug information to the console.
 debug-mode: false
 
@@ -64,15 +67,12 @@ realistic-randoms: true
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
 
-# Use a persistent storage medium to store data that is accesible across restarts. This is recommended to be always on, as issues may occur with some mechanics if this is disabled.
-persistent-storage: true
-
-# Method of PersistentStorage storage. Can currently be any of the following: YAML, DUMMY
+# PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY
 persistent-storage-type: YAML
 common:
     variables:
         enable: true
-        default-to-global: true
+        default-to-global: false
         enable-in-commandblocks: false
         enable-in-player-commands: false
         enable-in-player-chat: false
@@ -277,6 +277,8 @@ mechanics:
         max-lights: 20
     map-changer:
         enable: true
+    marquee:
+        enable: true
     paintings:
         enable: true
     payment:
@@ -366,6 +368,7 @@ vehicles:
                 block: EMERALD_ORE:0
                 spawn-infront: false
                 check-for-carts: true
+                propel-cart: false
         fall-speed:
             enable: false
             vertical-fall-speed: 0.9
