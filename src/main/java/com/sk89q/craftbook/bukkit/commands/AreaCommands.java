@@ -56,14 +56,15 @@ public class AreaCommands {
 
         String id;
         String namespace = player.getName();
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
-            namespace = namespace.substring(0, 14);
         boolean personal = true;
 
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
             personal = false;
         } else if (!player.hasPermission("craftbook.mech.area.save.self")) throw new CommandPermissionsException();
+
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
 
         if (!CopyManager.isValidNamespace(namespace))
             throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
@@ -146,15 +147,15 @@ public class AreaCommands {
 
         String namespace = "~" + player.getName();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
-            namespace = namespace.substring(0, 14);
-
         // get the namespace from the flag (if set)
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.list." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
         } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
             namespace = "";
         } else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
+
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
 
         int page = 1;
         try {
@@ -279,13 +280,14 @@ public class AreaCommands {
         String namespace = "~" + player.getName();
         String areaId = null;
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
-            namespace = namespace.substring(0, 14);
 
         // Get the namespace
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
         } else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
+
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+            namespace = namespace.substring(0, 14);
 
         boolean deleteAll = false;
         if (context.argsLength() > 0 && !context.hasFlag('a')) {

@@ -1,3 +1,14 @@
+3.7.10
+* Fixed and tweaked HeadDrops.
+* Fixed a few TreeLopper errors.
+* Fixed an AutoUpdater connection error being displayed in the console.
+* Fixed CookingPot super fast cooking using very odd logic.
+* Tweaked Area namespace shortening.
++ Added a 'Marquee' mechanic. Prints variables to the player when right clicked.
++ Added an option to completely scan messages for localizable text, instead of just checking if the entire message is localizable.
+* Reworked Persistent Storage system. It now can not be disabled, but instead an option to have it store its data completely in memory without saving it to file is available. (Practically the same as off, but without breaking every mechanic.)
+* Fixed Snow not obeying WorldGuard/Protection plugin protections.
+
 3.7.9
 * Updated AutoUpdater to comply with bukkit standards.
 * Fixed potential bridge errors.
