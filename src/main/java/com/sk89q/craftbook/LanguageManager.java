@@ -100,7 +100,9 @@ public class LanguageManager {
             } else {
                 String trans = message;
                 for(String tran : languageData.getMap().keySet()) {
-                    trans = trans.replace(tran, languageData.getString(tran));
+                    String trand = languageData.getString(tran);
+                    if(tran == null || trand == null) continue;
+                    trans = trans.replace(tran, trand);
                 }
                 return trans;
             }
