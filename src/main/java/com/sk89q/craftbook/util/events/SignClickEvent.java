@@ -8,6 +8,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+
 public class SignClickEvent extends PlayerInteractEvent {
 
     private static final HandlerList handlers = new HandlerList();
@@ -23,5 +26,9 @@ public class SignClickEvent extends PlayerInteractEvent {
 
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public ChangedSign getSign() {
+        return BukkitUtil.toChangedSign(getClickedBlock());
     }
 }
