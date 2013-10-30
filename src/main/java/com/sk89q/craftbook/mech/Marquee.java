@@ -10,7 +10,6 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 
@@ -20,7 +19,7 @@ public class Marquee extends AbstractCraftBookMechanic {
     public void onSignClick(SignClickEvent event) {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getClickedBlock());
+        ChangedSign sign = event.getSign();
         if(!sign.getLine(1).equals("[Marquee]")) return;
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.marquee.use")) {

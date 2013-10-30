@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -34,6 +35,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onSignClick(SignClickEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ChangedSign sign = event.getSign();
         if(!sign.getLine(1).equalsIgnoreCase("[map]")) return;
 
