@@ -59,7 +59,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (!event.isOn() || event.isMinor() || !CraftBookPlugin.inst().getConfiguration().commandSignAllowRedstone)
+        if (!event.isOn() || event.isMinor() || !CraftBookPlugin.inst().getConfiguration().commandSignAllowRedstone && SignUtil.isSign(event.getBlock()))
             return;
 
         ChangedSign s = BukkitUtil.toChangedSign(event.getBlock());
