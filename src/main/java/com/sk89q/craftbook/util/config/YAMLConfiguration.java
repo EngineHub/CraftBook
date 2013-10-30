@@ -299,6 +299,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.command-sign.enable", "Enable command signs.");
         commandSignEnabled = config.getBoolean("mechanics.command-sign.enable", true);
 
+        config.setComment("mechanics.command-sign.allow-redstone", "Enable CommandSigns via redstone.");
+        commandSignAllowRedstone = config.getBoolean("mechanics.command-sign.allow-redstone", true);
+
 
         // Cooking Pot Configuration Listener
         config.setComment("mechanics.cooking-pot.enable", "Enable cooking pots.");

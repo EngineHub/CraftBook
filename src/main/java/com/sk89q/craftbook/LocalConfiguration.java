@@ -110,6 +110,7 @@ public abstract class LocalConfiguration {
     public boolean commandItemsEnabled;
     // Mechanics - Command Signs
     public boolean commandSignEnabled;
+    public boolean commandSignAllowRedstone;
     // Mechanics - Cooking Pot
     public boolean cookingPotEnabled;
     public boolean cookingPotFuel;
