@@ -18,28 +18,35 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
-public class Ammeter extends AbstractMechanic {
+public class Ammeter extends AbstractCraftBookMechanic {
 
-    protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
-
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(!BlockType.canTransferRedstone(event.getClickedBlock().getTypeId()) && !BlockType.isRedstoneSource(event.getClickedBlock().getTypeId())) return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if(!CraftBookPlugin.inst().getConfiguration().ammeterItem.equals(player.getHeldItemInfo())) return;
+        if(!player.hasPermission("craftbook.mech.ammeter.use")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
+            return;
+        }
 
         Block block = event.getClickedBlock();
         int data = getSpecialData(block);
@@ -102,15 +109,5 @@ public class Ammeter extends AbstractMechanic {
             line.append("|");
         line.append(ChatColor.YELLOW).append("]");
         return line.toString();
-    }
-
-    public static class Factory extends AbstractMechanicFactory<Ammeter> {
-
-        @Override
-        public Ammeter detect(BlockWorldVector pt, LocalPlayer player) {
-
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            return (BlockType.canTransferRedstone(block.getTypeId()) || BlockType.isRedstoneSource(block.getTypeId())) && CraftBookPlugin.inst().getConfiguration().ammeterItem.equals(player.getHeldItemInfo()) && player.hasPermission("craftbook.mech.ammeter.use") ? new Ammeter() : null;
-        }
     }
 }

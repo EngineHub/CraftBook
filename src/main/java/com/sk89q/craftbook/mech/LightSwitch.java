@@ -16,21 +16,21 @@
 
 package com.sk89q.craftbook.mech;
 
-import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -40,144 +40,103 @@ import com.sk89q.worldedit.blocks.BlockID;
  *
  * @author fullwall
  */
-public class LightSwitch extends AbstractMechanic {
-
-    public static class Factory extends AbstractMechanicFactory<LightSwitch> {
-
-        @Override
-        public LightSwitch detect(BlockWorldVector pt) {
-
-            Block block = BukkitUtil.toBlock(pt);
-            // check if this looks at all like something we're interested in first
-            if (block.getTypeId() != BlockID.WALL_SIGN) return null;
-            String line = BukkitUtil.toChangedSign(block).getLine(1);
-            if (!line.equals("[|]") && !line.equalsIgnoreCase("[I]")) return null;
-
-            // okay, now we can start doing exploration of surrounding blocks
-            // and if something goes wrong in here then we throw fits.
-            return new LightSwitch(pt);
-        }
-
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public LightSwitch detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
-
-            String line = sign.getLine(1);
-
-            if (line.equals("[|]") || line.equalsIgnoreCase("[I]")) {
-                if (!player.hasPermission("craftbook.mech.light-switch")) throw new InsufficientPermissionsException();
-
-                sign.setLine(1, "[I]");
-                player.print("mech.lightswitch.create");
-            } else return null;
-
-            throw new ProcessedMechanismException();
-        }
-    }
+public class LightSwitch extends AbstractCraftBookMechanic {
 
     /**
      * Store a list of recent light toggles to prevent spamming. Someone clever can just use two signs though.
      */
-    private final HistoryHashMap<BlockWorldVector, Long> recentLightToggles = new HistoryHashMap<BlockWorldVector, Long>(20);
+    private static final HistoryHashMap<Location, Long> recentLightToggles = new HistoryHashMap<Location, Long>(20);
 
-    /**
-     * Configuration.
-     */
-    private final BlockWorldVector pt;
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
 
-    /**
-     * Construct a LightSwitch for a location.
-     *
-     * @param pt
-     * @param plugin
-     */
-    private LightSwitch(BlockWorldVector pt) {
+        if(!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]")) return;
+        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if(!lplayer.hasPermission("craftbook.mech.light-switch")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                lplayer.printError("You don't have permission for this.");
+            SignUtil.cancelSign(event);
+            return;
+        }
 
-        super();
-        this.pt = pt;
+        event.setLine(1, "[I]");
+        lplayer.print("mech.lightswitch.create");
     }
 
-    @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onRightClick(SignClickEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().lightSwitchEnabled) return;
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(pt)) return; // wth? our manager is insane
-        toggleLights(pt);
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        ChangedSign sign = event.getSign();
+        if(!sign.getLine(1).equalsIgnoreCase("[I]") && sign.getLine(1).equalsIgnoreCase("[|]")) return;
+        LocalPlayer player = event.getWrappedPlayer();
+        if (!player.hasPermission("craftbook.mech.light-switch.use")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
+            return;
+        }
+
+        toggleLights(event.getClickedBlock(), player);
         event.setCancelled(true);
     }
 
     /**
      * Toggle lights in the immediate area.
      *
-     * @param pt
+     * @param block
      *
      * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were
      *         actually toggled.
      */
-    private boolean toggleLights(BlockWorldVector pt) {
+    private boolean toggleLights(Block block, LocalPlayer player) {
 
-        World world = BukkitUtil.toWorld(pt);
-
-        Block block = BukkitUtil.toBlock(pt);
         // check if this looks at all like something we're interested in first
         if (block.getTypeId() != BlockID.WALL_SIGN) return false;
-        int radius = 10;
-        int maximum = 20;
+        int radius = Math.min(10, CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange);
+        int maximum = Math.min(CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights, 20);
         ChangedSign sign = BukkitUtil.toChangedSign(block);
         try {
-            radius = Integer.parseInt(sign.getLine(2));
+            radius = Math.min(Integer.parseInt(sign.getLine(2)), CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange);
         } catch (Exception ignored) {
         }
         try {
-            maximum = Integer.parseInt(sign.getLine(3));
+            maximum = Math.min(Integer.parseInt(sign.getLine(3)), CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights);
         } catch (Exception ignored) {
         }
-        if (radius > CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange) {
-            radius = CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange;
-        }
-        if (maximum > CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights) {
-            maximum = CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights;
-        }
 
-        int wx = pt.getBlockX();
-        int wy = pt.getBlockY();
-        int wz = pt.getBlockZ();
-        int aboveID = world.getBlockTypeIdAt(wx, wy + 1, wz);
+        int wx = block.getX();
+        int wy = block.getY();
+        int wz = block.getZ();
+        int aboveID = block.getRelative(0, 1, 0).getTypeId();
 
         if (aboveID == BlockID.TORCH || aboveID == BlockID.REDSTONE_TORCH_OFF || aboveID == BlockID.REDSTONE_TORCH_ON) {
             // Check if block above is a redstone torch.
             // Used to get what to change torches to.
             boolean on = aboveID != BlockID.TORCH;
             // Prevent spam
-            Long lastUse = recentLightToggles.remove(pt);
+            Long lastUse = recentLightToggles.remove(block.getLocation());
             long currTime = System.currentTimeMillis();
 
             if (lastUse != null && currTime - lastUse < 500) {
-                recentLightToggles.put(pt, lastUse);
+                recentLightToggles.put(block.getLocation(), lastUse);
                 return true;
             }
 
-            recentLightToggles.put(pt, currTime);
+            recentLightToggles.put(block.getLocation(), currTime);
             int changed = 0;
             for (int x = -radius + wx; x <= radius + wx; x++) {
                 for (int y = -radius + wy; y <= radius + wy; y++) {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
-                        int id = world.getBlockTypeIdAt(x, y, z);
-                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF || id == BlockID
-                                .REDSTONE_TORCH_ON) {
+                        int id = block.getWorld().getBlockTypeIdAt(x, y, z);
+                        if (id == BlockID.TORCH || id == BlockID.REDSTONE_TORCH_OFF || id == BlockID.REDSTONE_TORCH_ON) {
                             // Limit the maximum number of changed lights
                             if (changed >= maximum) return true;
 
                             if (on) {
-                                world.getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
+                                block.getWorld().getBlockAt(x, y, z).setTypeId(BlockID.TORCH);
                             } else {
-                                world.getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
+                                block.getWorld().getBlockAt(x, y, z).setTypeId(BlockID.REDSTONE_TORCH_ON);
                             }
                             changed++;
                         }

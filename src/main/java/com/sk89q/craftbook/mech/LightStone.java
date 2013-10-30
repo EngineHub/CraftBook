@@ -18,25 +18,32 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This allows users to Right-click to check the light level.
  */
-public class LightStone extends AbstractMechanic {
+public class LightStone extends AbstractCraftBookMechanic {
 
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(!CraftBookPlugin.inst().getConfiguration().lightstoneItem.equals(player.getHeldItemInfo())) return;
+        if(!player.hasPermission("craftbook.mech.lightstone.use")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
+            return;
+        }
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
         player.print(ChatColor.YELLOW + "LightStone: [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
@@ -55,17 +62,5 @@ public class LightStone extends AbstractMechanic {
         for (int i = data; i < 15; i++)
             line.append("|");
         return line.toString();
-    }
-
-    public static class Factory extends AbstractMechanicFactory<LightStone> {
-
-        @Override
-        public LightStone detect (BlockWorldVector pt, LocalPlayer player) throws InvalidMechanismException {
-
-            Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block != null && CraftBookPlugin.inst().getConfiguration().lightstoneItem.equals(player.getHeldItemInfo()) && player.hasPermission("craftbook.mech.lightstone.use")) return new LightStone();
-
-            return null;
-        }
     }
 }

@@ -213,7 +213,7 @@ public abstract class LocalConfiguration {
     public boolean treeLopperPlaceSapling;
     // Mechanics - XPStorer
     public boolean xpStorerEnabled;
-    public int xpStorerBlock;
+    public ItemInfo xpStorerBlock;
 
     // Vehicles
     // Vehicles - Minecart Decay Options

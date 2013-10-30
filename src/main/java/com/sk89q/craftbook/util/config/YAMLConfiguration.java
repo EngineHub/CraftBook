@@ -545,7 +545,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
 
         config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
-        xpStorerBlock = config.getInt("mechanics.xp-storer.block", BlockID.MOB_SPAWNER);
+        xpStorerBlock = ItemInfo.parseFromString(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
 
 
         /* Vehicle Configuration */

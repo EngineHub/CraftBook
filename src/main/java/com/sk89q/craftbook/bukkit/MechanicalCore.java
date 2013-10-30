@@ -124,12 +124,7 @@ public class MechanicalCore implements LocalComponent {
         BukkitConfiguration config = plugin.getConfiguration();
 
         // Let's register mechanics!
-
-        //Register Chunk Anchors first so that they are always the first mechanics to be checked for, allowing other mechanics to stay loaded in unloaded chunks.
-        if (config.chunkAnchorEnabled) plugin.registerMechanic(new ChunkAnchor.Factory());
-
         if (config.signCopyEnabled) plugin.registerMechanic(new SignCopier.Factory()); // Keep SignCopy close to the start, so it can copy mechanics without triggering them.
-        if (config.ammeterEnabled) plugin.registerMechanic(new Ammeter.Factory());
         if (config.bookcaseEnabled) {
             plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt");
             plugin.registerMechanic(new Bookcase.Factory());
@@ -140,14 +135,10 @@ public class MechanicalCore implements LocalComponent {
         if (config.elevatorEnabled) plugin.registerMechanic(new Elevator.Factory());
         if (config.teleporterEnabled) plugin.registerMechanic(new Teleporter.Factory());
         if (config.areaEnabled) plugin.registerMechanic(new Area.Factory());
-        if (config.commandSignEnabled) plugin.registerMechanic(new CommandSigns.Factory());
-        if (config.lightstoneEnabled) plugin.registerMechanic(new LightStone.Factory());
-        if (config.lightSwitchEnabled) plugin.registerMechanic(new LightSwitch.Factory());
         if (config.hiddenSwitchEnabled) plugin.registerMechanic(new HiddenSwitch.Factory());
         if (config.cookingPotEnabled) plugin.registerMechanic(new CookingPot.Factory());
         if (config.legacyCauldronEnabled) plugin.registerMechanic(new Cauldron.Factory());
         if (config.cauldronEnabled) plugin.registerMechanic(new ImprovedCauldron.Factory());
-        if (config.xpStorerEnabled) plugin.registerMechanic(new XPStorer.Factory());
 
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
@@ -171,6 +162,12 @@ public class MechanicalCore implements LocalComponent {
         if (config.marqueeEnabled) mechanics.add(new Marquee());
         if (config.treeLopperEnabled) mechanics.add(new TreeLopper());
         if (config.mapChangerEnabled) mechanics.add(new MapChanger());
+        if (config.xpStorerEnabled) mechanics.add(new XPStorer());
+        if (config.lightstoneEnabled) mechanics.add(new LightStone());
+        if (config.commandSignEnabled) mechanics.add(new CommandSigns());
+        if (config.lightSwitchEnabled) mechanics.add(new LightSwitch());
+        if (config.chunkAnchorEnabled) mechanics.add(new ChunkAnchor());
+        if (config.ammeterEnabled) mechanics.add(new Ammeter());
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
