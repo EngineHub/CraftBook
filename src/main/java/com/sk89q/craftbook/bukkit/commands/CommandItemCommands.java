@@ -298,7 +298,7 @@ public class CommandItemCommands {
         public Prompt acceptInput (ConversationContext context, final String input) {
 
             if(input.trim().length() == 0 || input.trim().equalsIgnoreCase("done"))
-                return new CreateItemPrompt();
+                return new KeepOnDeathPrompt();
 
             if(context.getSessionData("delayed-commands") == null)
                 context.setSessionData("delayed-commands", new ArrayList<String>(){{add(input.trim());}});
@@ -308,6 +308,22 @@ public class CommandItemCommands {
                 context.setSessionData("delayed-commands", list);
             }
             return new DelayedCommandPrompt();
+        }
+    }
+
+    private static class KeepOnDeathPrompt extends BooleanPrompt {
+
+        @Override
+        public String getPromptText (ConversationContext context) {
+            return ChatColor.YELLOW + "Do you wish the CommandItem to be kept on death?";
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput (ConversationContext context, boolean input) {
+
+            context.setSessionData("keep-on-death", input);
+
+            return new CreateItemPrompt();
         }
     }
 
@@ -334,7 +350,8 @@ public class CommandItemCommands {
                 boolean cancelAction = (Boolean) context.getSessionData("cancel-action");
                 boolean consumeSelf = (Boolean) context.getSessionData("consume-self");
                 TernaryState requireSneaking = (TernaryState) context.getSessionData("require-sneaking");
-                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking);
+                boolean keepOnDeath = (Boolean) context.getSessionData("keep-on-death");
+                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath);
                 CommandItems.INSTANCE.addDefinition(def);
                 CommandItems.INSTANCE.save();
                 return ChatColor.YELLOW + "Successfully added CommandItem: " + name;

@@ -25,12 +25,14 @@ import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
@@ -134,6 +136,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     }
                 }
             }, 1, 20);
+
+        if(CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items") == null)
+            CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<ItemStack>>());
 
         return true;
     }
@@ -253,6 +258,42 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getItem().getItemStack(), event.getPlayer(), event);
     }
 
+    @SuppressWarnings("unchecked")
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+
+        Iterator<ItemStack> stackIt = event.getDrops().iterator();
+        while(stackIt.hasNext()) {
+            final ItemStack stack = stackIt.next();
+            performCommandItems(stack, event.getEntity(), event);
+
+            for(CommandItemDefinition def : definitions) {
+                if(ItemUtil.areItemsIdentical(stack, def.getItem())) {
+                    stackIt.remove();
+                    Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
+                    List<ItemStack> its = items.get(event.getEntity().getName());
+                    if(its == null) its = new ArrayList<ItemStack>();
+                    its.add(stack);
+                    items.put(event.getEntity().getName(), its);
+                    CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+        Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
+        if(!items.containsKey(event.getPlayer().getName())) return;
+        List<ItemStack> its = items.get(event.getPlayer().getName());
+        for(ItemStack it : its)
+            event.getPlayer().getInventory().addItem(it);
+        items.remove(event.getPlayer().getName());
+        CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
+    }
+
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
@@ -309,6 +350,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             break current;
 
                         if(comdef.clickType == ClickType.ITEM_PICKUP && !(event instanceof PlayerPickupItemEvent))
+                            break current;
+                    } else if (comdef.clickType == ClickType.PLAYER_DEATH) {
+
+                        if(comdef.clickType == ClickType.PLAYER_DEATH && !(event instanceof PlayerDeathEvent))
                             break current;
                     }
                 }
@@ -426,12 +471,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         private TernaryState requireSneaking;
 
+        private boolean keepOnDeath;
+
         public ItemStack getItem() {
 
             return stack;
         }
 
-        public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking) {
+        public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath) {
 
             this.name = name;
             this.stack = stack;
@@ -446,6 +493,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             this.consumables = consumables;
             this.consumeSelf = consumeSelf;
             this.requireSneaking = requireSneaking;
+            this.keepOnDeath = keepOnDeath;
         }
 
         public static CommandItemDefinition load(YAMLProcessor config, String path) {
@@ -473,7 +521,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
             boolean consumeSelf = config.getBoolean(path + ".consume-self", false);
             TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
 
-            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking);
+            boolean keepOnDeath = config.getBoolean(path + ".keep-on-death", false);
+
+            return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath);
         }
 
         public void save(YAMLProcessor config, String path) {
@@ -495,6 +545,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             config.setProperty(path + ".consumed-items", consumables);
             config.setProperty(path + ".consume-self", consumeSelf);
             config.setProperty(path + ".require-sneaking-state", requireSneaking.name());
+            config.setProperty(path + ".keep-on-death", keepOnDeath);
         }
 
         public enum CommandType {
@@ -504,7 +555,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,PLAYER_DEATH;
         }
     }
 }
