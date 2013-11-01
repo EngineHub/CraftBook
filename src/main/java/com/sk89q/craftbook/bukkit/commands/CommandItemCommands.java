@@ -280,7 +280,7 @@ public class CommandItemCommands {
             context.setSessionData("delay", input.intValue());
 
             if(input.intValue() == 0)
-                return new CreateItemPrompt();
+                return new KeepOnDeathPrompt();
             else
                 return new DelayedCommandPrompt();
         }

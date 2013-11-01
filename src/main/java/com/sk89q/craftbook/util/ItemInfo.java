@@ -6,77 +6,77 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
+@SuppressWarnings("deprecation")
 public class ItemInfo {
 
-    public Material id;
-    public int data;
+    public MaterialData data;
 
     public ItemInfo(Material id, int data) {
 
-        this.id = id;
-        this.data = data;
+        this.data = new MaterialData(id, (byte) data);
     }
 
     @Deprecated
     public ItemInfo(int id, int data) {
 
-        this.id = Material.getMaterial(id);
-        this.data = data;
+        this.data = new MaterialData(id, (byte) data);
     }
 
     public ItemInfo(Block block) {
 
-        id = block.getType();
-        data = block.getData();
+        data = new MaterialData(block.getType(), block.getData());
     }
 
     public ItemInfo(String string) {
 
         ItemStack stack = ItemSyntax.getItem(string);
-        id = stack.getType();
-        data = stack.getData().getData();
+        data = stack.getData();
     }
 
     public int getId() {
 
-        if(id == null) id = Material.AIR;
-        return id.getId();
+        return data.getItemTypeId();
     }
 
     public Material getType() {
 
-        if(id == null) id = Material.AIR;
-        return id;
+        return data.getItemType();
     }
 
     public void setId(int id) {
 
-        this.id = Material.getMaterial(id);
+        data = new MaterialData(id, data.getData());
     }
 
     public int getData() {
 
-        return data;
+        return data.getData();
     }
 
     public void setData(int data) {
 
-        this.data = data;
+        this.data.setData((byte) data);
+    }
+
+    public MaterialData getMaterialData() {
+
+        return data;
     }
 
     public boolean isSame(Block block) {
 
-        if(block.getType() == id)
-            if(data == -1 || block.getData() == data)
+        if(block.getType() == data.getItemType())
+            if(data.getData() == -1 || block.getData() == data.getData())
                 return true;
         return false;
     }
 
     public boolean isSame(ItemStack stack) {
 
-        if(stack.getType() == id)
-            if(data == -1 || stack.getData().getData() == data)
+        if(stack.getType() == data.getItemType())
+            if(data.getData() == -1 || stack.getData().getData() == data.getData())
                 return true;
         return false;
     }
@@ -110,13 +110,13 @@ public class ItemInfo {
     @Override
     public String toString() {
 
-        return id.name() + ":" + data;
+        return data.getItemType().name() + ":" + data;
     }
 
     @Override
     public int hashCode() {
 
-        return (id.hashCode() * 1103515245 + 12345 ^ (data == -1 ? 0 : data) * 1103515245 + 12345) * 1103515245 + 12345;
+        return (data.getItemType().hashCode() * 1103515245 + 12345 ^ (data.getData() == -1 ? 0 : data.getData()) * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
     @Override

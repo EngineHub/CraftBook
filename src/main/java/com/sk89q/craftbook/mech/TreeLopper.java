@@ -13,6 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.material.Tree;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -54,6 +55,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         ItemInfo originalBlock = new ItemInfo(usedBlock);
         boolean hasPlanted = false;
 
+        if(!player.hasPermission("craftbook.mech.treelopper.sapling"))
+            hasPlanted = true;
+
         TreeSpecies species = null;
         if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
@@ -74,7 +78,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         for(BlockFace face : CraftBookPlugin.inst().getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
             if(visitedLocations.contains(usedBlock.getRelative(face).getLocation())) continue;
-            if(usedBlock.getRelative(face).getType() == originalBlock.getType() && (!CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData || usedBlock.getRelative(face).getData() == originalBlock.getData()))
+            if(canBreakBlock(originalBlock, usedBlock.getRelative(face)))
                 if(searchBlock(event, usedBlock.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
                     if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
@@ -86,6 +90,22 @@ public class TreeLopper extends AbstractCraftBookMechanic {
                     }
                 }
         }
+    }
+
+    public boolean canBreakBlock(ItemInfo originalBlock, Block toBreak) {
+
+        if(originalBlock.getType() == Material.LOG && toBreak.getType() == Material.LEAVES && CraftBookPlugin.inst().getConfiguration().treeLopperBreakLeaves) {
+            if(!CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData)
+                return true;
+            MaterialData nw = new MaterialData(toBreak.getType(), toBreak.getData());
+            if(nw instanceof Tree)
+                if(((Tree) nw).getSpecies() == ((Tree) originalBlock.getMaterialData()).getSpecies()) return true;
+        }
+
+        if(toBreak.getType() != originalBlock.getType()) return false;
+        if(CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData && toBreak.getData() != originalBlock.getData()) return false;
+
+        return true;
     }
 
     public boolean searchBlock(BlockBreakEvent event, Block block, LocalPlayer player, ItemInfo originalBlock, Set<Location> visitedLocations, int broken, boolean hasPlanted) {
@@ -113,7 +133,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         broken += 1;
         for(BlockFace face : CraftBookPlugin.inst().getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
             if(visitedLocations.contains(block.getRelative(face).getLocation())) continue;
-            if(block.getRelative(face).getTypeId() == originalBlock.getId() && (!CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData || block.getRelative(face).getData() == originalBlock.getData()))
+            if(canBreakBlock(originalBlock, block.getRelative(face)))
                 if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
                     if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
