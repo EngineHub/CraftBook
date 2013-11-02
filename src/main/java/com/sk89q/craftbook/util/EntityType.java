@@ -35,11 +35,11 @@ public enum EntityType {
             case ITEM:
                 return entity instanceof Item;
             case MOB_HOSTILE:
-                return entity instanceof Monster && !(entity instanceof Player);
+                return entity instanceof Monster && !(entity instanceof HumanEntity);
             case MOB_PEACEFUL:
-                return entity instanceof Animals;
+                return entity instanceof Animals && !(entity instanceof HumanEntity);
             case MOB_ANY:
-                return entity instanceof Creature;
+                return entity instanceof Creature && !(entity instanceof HumanEntity);
             case CART:
                 return entity instanceof Minecart;
             case CART_STORAGE:
