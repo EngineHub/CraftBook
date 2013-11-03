@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -93,8 +92,8 @@ public final class CustomDropManager {
 
     public DropDefinition[] getMobDrop(LivingEntity mob) {
 
-        if(mobDropDefinitions.containsKey(ChatColor.stripColor(mob.getType().name() + "|" + mob.getCustomName())))
-            return mobDropDefinitions.get(ChatColor.stripColor(mob.getType().name() + "|" + mob.getCustomName()));
+        if(mob.getCustomName() != null && mobDropDefinitions.containsKey((mob.getType().name() + "|" + mob.getCustomName()).toLowerCase(Locale.ENGLISH)))
+            return mobDropDefinitions.get((mob.getType().name() + "|" + mob.getCustomName()).toLowerCase(Locale.ENGLISH));
         return mobDropDefinitions.get(mob.getType().name().toLowerCase(Locale.ENGLISH));
     }
 
@@ -180,7 +179,7 @@ public final class CustomDropManager {
                                 drop.drops[data] = drops;
                             }
                         } else {
-                            itemsSource = ChatColor.stripColor(itemsSource.toLowerCase(Locale.ENGLISH));
+                            itemsSource = itemsSource.toLowerCase(Locale.ENGLISH);
                             if (mobDropDefinitions.containsKey(itemsSource)) {
                                 reader.close();
                                 throw new CustomDropParseException(prelude + "double drop definition");
