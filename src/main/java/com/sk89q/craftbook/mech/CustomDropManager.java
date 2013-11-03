@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -89,9 +90,11 @@ public final class CustomDropManager {
         else return blockDropDefinitions[block];
     }
 
-    public DropDefinition[] getMobDrop(String mobName) {
+    public DropDefinition[] getMobDrop(LivingEntity mob) {
 
-        return mobDropDefinitions.get(mobName.toLowerCase(Locale.ENGLISH));
+        if(mobDropDefinitions.containsKey(mob.getType().name() + "|" + mob.getCustomName()))
+            return mobDropDefinitions.get(mob.getType().name() + "|" + mob.getCustomName());
+        return mobDropDefinitions.get(mob.getType().name().toLowerCase(Locale.ENGLISH));
     }
 
     public void loadDropDefinitions(File file, boolean isMobDrop) throws IOException {

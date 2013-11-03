@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
@@ -48,7 +49,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
 
                 if (!drops[0].append) {
-                    event.getBlock().setTypeId(0);
+                    event.getBlock().setType(Material.AIR);
                     event.setCancelled(true);
                     ((ExperienceOrb) event.getBlock().getWorld().spawnEntity(l, EntityType.EXPERIENCE_ORB)).setExperience(event.getExpToDrop());
                 }
@@ -63,7 +64,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             return;
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(entityType.getName());
+        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(event.getEntity());
         if (drops != null) {
             if (!drops[0].append) {
                 event.getDrops().clear();
