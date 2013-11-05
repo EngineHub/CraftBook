@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7.9
+# CraftBook Configuration for Bukkit. Generated for version: 3.7.11
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -193,6 +193,7 @@ mechanics:
         enable: false
     command-sign:
         enable: true
+        allow-redstone: true
     cooking-pot:
         enable: true
         require-fuel: true
@@ -321,9 +322,10 @@ mechanics:
         allow-diagonals: false
         enforce-data: false
         place-saplings: false
+        break-leaves: false
     xp-storer:
         enable: true
-        block: 52
+        block: MOB_SPAWNER
 vehicles:
     minecart:
         decay-when-empty:

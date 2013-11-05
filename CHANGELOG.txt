@@ -1,3 +1,12 @@
+3.7.11
+* Converted most of the 'Mechanics' portion of CraftBook to use the new mechanics system. There are still a fair few mechanics to port over.
++ Added an option to disable/enable CommandSigns via redstone.
+* Fixed an error with Languages scan feature.
++ Added a 'keep-on-death' CommandItem option.
++ Added an option to TreeLopper to also break leaves.
+* Fixed all mob EntityType's seeing players as mobs.
++ Added support for named entities to mob drops. (Using | to seperate name)
+
 3.7.10
 * Fixed and tweaked HeadDrops.
 * Fixed a few TreeLopper errors.

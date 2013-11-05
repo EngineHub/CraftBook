@@ -32,7 +32,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemSyntax;
@@ -305,8 +304,7 @@ public final class CustomDropManager {
         public ItemStack getItemStack() {
 
             if (CraftBookPlugin.inst().getRandom().nextInt(100) > chance) return null;
-            ItemStack stack = new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data);
-            stack.setData(new MaterialData(id,data));
+            ItemStack stack = new ItemStack(id, countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1), data, data);
             stack.setItemMeta(meta);
             return stack;
         }
