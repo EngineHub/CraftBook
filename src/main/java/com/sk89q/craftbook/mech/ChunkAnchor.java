@@ -54,6 +54,9 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             ChangedSign sign = BukkitUtil.toChangedSign(block);
+
+            if(!sign.getLine(1).equals("[Chunk]")) return;
+
             sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
             sign.update(false);
         }
