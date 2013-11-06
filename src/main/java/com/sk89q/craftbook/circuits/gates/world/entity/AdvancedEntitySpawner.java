@@ -58,7 +58,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
         String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(getSign().getLine(3).trim());
         type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
-            type = EntityType.PIG;
+            type = EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
+            if(type == null)
+                type = EntityType.PIG;
         }
 
         try {
@@ -210,11 +212,13 @@ public class AdvancedEntitySpawner extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
-            if (EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH)) == null) {
+            EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
+            if(type == null)
+                type = EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
+            if (type == null)
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
-            } else if (!EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH)).isSpawnable()) {
+            else if (!type.isSpawnable())
                 throw new ICVerificationException("Entity is not spawnable!");
-            }
         }
     }
 }

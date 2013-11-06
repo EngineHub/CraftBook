@@ -57,7 +57,9 @@ public class CreatureSpawner extends AbstractIC {
 
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
-            type = EntityType.PIG;
+            type = EntityType.valueOf(getSign().getLine(2).trim().toUpperCase(Locale.ENGLISH));
+            if(type == null)
+                type = EntityType.PIG;
         }
         String line = getSign().getLine(3).trim();
         // parse the amount or rider type
@@ -137,11 +139,13 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH)) == null) {
+            EntityType type = EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH));
+            if(type == null)
+                type = EntityType.valueOf(sign.getLine(2).trim().toUpperCase(Locale.ENGLISH));
+            if (type == null)
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
-            } else if (!EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH)).isSpawnable()) {
+            else if (!type.isSpawnable())
                 throw new ICVerificationException("Entity is not spawnable!");
-            }
         }
     }
 }
