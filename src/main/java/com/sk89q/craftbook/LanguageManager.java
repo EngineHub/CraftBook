@@ -59,6 +59,10 @@ public class LanguageManager {
             }
 
             lang.setWriteDefaults(true);
+
+            for(Entry<String, String> s : defaultMessages.entrySet())
+                lang.getString(s.getKey(), s.getValue());
+
             languageMap.put(language, lang);
         }
     }
