@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -87,8 +89,10 @@ public class LanguageManager {
             String translated = null;
             if(def == null)
                 translated = languageData.getString(ChatColor.stripColor(message));
-            else
+            else {
                 translated = languageData.getString(ChatColor.stripColor(message), def);
+                languageMap.put(language, languageData);
+            }
 
             if(!CraftBookPlugin.inst().getConfiguration().languageScanText || translated != null) {
                 if(translated != null)
@@ -100,9 +104,10 @@ public class LanguageManager {
             } else {
                 String trans = message;
                 for(String tran : languageData.getMap().keySet()) {
-                    String trand = languageData.getString(tran);
+                    String trand = defaultMessages.get(tran) != null ? languageData.getString(tran, defaultMessages.get(tran)) : languageData.getString(tran);
                     if(tran == null || trand == null) continue;
                     trans = trans.replace(tran, trand);
+                    languageMap.put(language, languageData);
                 }
                 return trans;
             }
@@ -114,7 +119,7 @@ public class LanguageManager {
     public String getPlayersLanguage(Player p) {
 
         try {
-            Field d = Class.forName("net.minecraft.server.v1_6_R2.EntityPlayer").getDeclaredField("locale");
+            Field d = EntityPlayer.class.getDeclaredField("locale");
             d.setAccessible(true);
             return (String) d.get(((CraftPlayer) p).getHandle());
         } catch (Throwable e) {
