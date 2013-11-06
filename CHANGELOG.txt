@@ -1,3 +1,9 @@
+3.7.11.2
+* LanguageManager now loads all missing text into language files upon startup.
+* EntitySpawner IC's can now use alternative names for entities.
+* Fixed an error with BetterLeads.
+* Fixed an URGENT sign bug with Chunk Anchor.
+
 3.7.11
 * Converted most of the 'Mechanics' portion of CraftBook to use the new mechanics system. There are still a fair few mechanics to port over.
 + Added an option to disable/enable CommandSigns via redstone.
