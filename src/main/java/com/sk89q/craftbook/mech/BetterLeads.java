@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -150,9 +151,12 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
             if(!(ent instanceof LivingEntity)) continue;
             if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
-            if(!(ent instanceof Tameable) || !((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()) || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+            boolean isOwner = false;
+            if(ent instanceof Tameable && (!((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover())))
+                isOwner = true;
+            if(!(ent instanceof Tameable) || isOwner || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
-                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(ItemID.LEAD, 1));
+                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
                 continue;
             } else
                 amountConnected++;
