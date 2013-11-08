@@ -262,7 +262,7 @@ public class CommandItemCommands {
         @Override
         protected Prompt acceptValidatedInput (ConversationContext context, String input) {
 
-            context.setSessionData("require-sneaking", TernaryState.valueOf(input));
+            context.setSessionData("require-sneaking", TernaryState.getFromString(input));
             return new DelayPrompt();
         }
     }
