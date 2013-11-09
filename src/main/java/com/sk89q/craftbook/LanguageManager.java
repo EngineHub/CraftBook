@@ -69,42 +69,35 @@ public class LanguageManager {
 
     public String getString(String message, String language) {
 
-        if(language == null)
+        message = ChatColor.stripColor(message);
+        if(language == null || !languageMap.containsKey(language))
             language = CraftBookPlugin.inst().getConfiguration().language;
         YAMLProcessor languageData = languageMap.get(language);
-        String def = defaultMessages.get(ChatColor.stripColor(message));
+        String def = defaultMessages.get(message);
         if(languageData == null) {
-            languageData = languageMap.get(CraftBookPlugin.inst().getConfiguration().language);
-            if(languageData == null) {
-                if(!CraftBookPlugin.inst().getConfiguration().languageScanText || def != null) {
-                    if(def != null)
-                        return def;
-                    else
-                        return message;
-                } else {
-                    String trans = message;
-                    for(Entry<String, String> tran : defaultMessages.entrySet()) {
-                        trans = trans.replace(tran.getKey(), tran.getValue());
-                    }
-                    return trans;
+            if(!CraftBookPlugin.inst().getConfiguration().languageScanText || def != null) {
+                return def == null ? message : def;
+            } else {
+                String trans = message;
+                for(Entry<String, String> tran : defaultMessages.entrySet()) {
+                    trans = trans.replace(tran.getKey(), tran.getValue());
                 }
+                return trans;
             }
         } else {
             String translated = null;
-            if(def == null)
-                translated = languageData.getString(ChatColor.stripColor(message));
+            if(def == null || languageData.getString(message) != null)
+                translated = languageData.getString(message);
             else {
-                translated = languageData.getString(ChatColor.stripColor(message), def);
+                translated = languageData.getString(message, def);
                 languageMap.put(language, languageData);
             }
 
             if(!CraftBookPlugin.inst().getConfiguration().languageScanText || translated != null) {
                 if(translated != null)
                     return translated;
-                else if (def != null)
-                    return def;
                 else
-                    return message;
+                    return def == null ? message : def;
             } else {
                 String trans = message;
                 for(String tran : languageData.getMap().keySet()) {
@@ -116,8 +109,6 @@ public class LanguageManager {
                 return trans;
             }
         }
-
-        return message;
     }
 
     public String getPlayersLanguage(Player p) {
