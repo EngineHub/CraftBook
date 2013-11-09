@@ -20,6 +20,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.SignChangeEvent;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -596,5 +597,21 @@ public class SignUtil {
     public static void cancelSign(SignChangeEvent event) {
         event.setCancelled(true);
         event.getBlock().breakNaturally();
+    }
+
+    /**
+     * Check whether or not the block is a sign, and if so, does it contain the said text on that specific line.
+     * 
+     * @param sign The sign to check.
+     * @param text The text to check.
+     * @param line The line to check the text on.
+     * @return
+     */
+    public static boolean doesSignHaveText(Block sign, String text, int line) {
+
+        if(!isSign(sign)) return false;
+        ChangedSign signs = BukkitUtil.toChangedSign(sign);
+        if(!signs.getLine(line).equalsIgnoreCase(text)) return false;
+        return true;
     }
 }

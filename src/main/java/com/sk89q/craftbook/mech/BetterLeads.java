@@ -68,7 +68,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer()))
             CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
         else {
-            if(((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
+            if(event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
                 ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
             event.setCancelled(true);
             if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
