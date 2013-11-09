@@ -6,7 +6,6 @@ public enum TernaryState {
 
     public static TernaryState getFromString(String s) {
 
-        if(valueOf(s) != null) return valueOf(s);
         if(s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true") || s.equalsIgnoreCase("y") || s.equalsIgnoreCase("t") || s.equalsIgnoreCase("1"))
             return TRUE;
         if(s.equalsIgnoreCase("no") || s.equalsIgnoreCase("false") || s.equalsIgnoreCase("n") || s.equalsIgnoreCase("f") || s.equalsIgnoreCase("0"))
