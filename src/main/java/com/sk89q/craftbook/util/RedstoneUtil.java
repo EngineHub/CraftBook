@@ -1,10 +1,10 @@
 package com.sk89q.craftbook.util;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic that differenciates between the
@@ -62,25 +62,25 @@ public class RedstoneUtil {
      * @return true if the pow block is a power conductor (in CraftBook, at this time we only consider this to be
      *         wires).
      */
-    public static boolean isPotentialPowerSource(int typeId) {
+    public static boolean isPotentialPowerSource(Material typeId) {
 
-        return typeId == BlockID.REDSTONE_WIRE || typeId == BlockID.REDSTONE_REPEATER_ON
-                || typeId == BlockID.REDSTONE_REPEATER_OFF
-                || typeId == BlockID.LEVER
-                || typeId == BlockID.REDSTONE_TORCH_ON
-                || typeId == BlockID.REDSTONE_TORCH_OFF
-                || typeId == BlockID.WOODEN_PRESSURE_PLATE
-                || typeId == BlockID.STONE_PRESSURE_PLATE
-                || typeId == BlockID.PRESSURE_PLATE_LIGHT
-                || typeId == BlockID.PRESSURE_PLATE_HEAVY
-                || typeId == BlockID.COMPARATOR_OFF
-                || typeId == BlockID.COMPARATOR_ON
-                || typeId == BlockID.REDSTONE_BLOCK;
+        return typeId == Material.REDSTONE_WIRE || typeId == Material.DIODE_BLOCK_ON
+                || typeId == Material.DIODE_BLOCK_OFF
+                || typeId == Material.LEVER
+                || typeId == Material.REDSTONE_TORCH_ON
+                || typeId == Material.REDSTONE_TORCH_OFF
+                || typeId == Material.WOOD_PLATE
+                || typeId == Material.STONE_PLATE
+                || typeId == Material.GOLD_PLATE
+                || typeId == Material.IRON_PLATE
+                || typeId == Material.REDSTONE_COMPARATOR_OFF
+                || typeId == Material.REDSTONE_COMPARATOR_ON
+                || typeId == Material.REDSTONE_BLOCK;
     }
 
     public static boolean isPotentialPowerSource(Block pow) {
 
-        return isPotentialPowerSource(pow.getTypeId());
+        return isPotentialPowerSource(pow.getType());
     }
 
     /**

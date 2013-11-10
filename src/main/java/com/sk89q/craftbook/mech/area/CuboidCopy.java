@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
@@ -99,7 +100,7 @@ public abstract class CuboidCopy {
                             InventoryHolder holder = (InventoryHolder) block;
                             holder.getInventory().clear();
                         }
-                        block.setTypeId(0);
+                        block.setType(Material.AIR);
                     } else {
                         // Can't destroy these blocks yet
                         queued.add(pt);
@@ -115,7 +116,7 @@ public abstract class CuboidCopy {
                 InventoryHolder holder = (InventoryHolder) block;
                 holder.getInventory().clear();
             }
-            block.setTypeId(0);
+            block.setType(Material.AIR);
         }
     }
 

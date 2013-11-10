@@ -9,7 +9,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class BoatWaterPlaceOnly extends AbstractCraftBookMechanic {
 
@@ -30,6 +29,6 @@ public class BoatWaterPlaceOnly extends AbstractCraftBookMechanic {
 
     private boolean isWater(Block b) {
 
-        return b.getTypeId() == BlockID.WATER || b.getTypeId() == BlockID.STATIONARY_WATER;
+        return b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER;
     }
 }

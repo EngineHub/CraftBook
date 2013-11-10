@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import java.util.HashSet;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -12,7 +13,6 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Silthus, Me4502
@@ -225,7 +225,7 @@ public final class LocationUtil {
      */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
 
-        while (block.getTypeId() != BlockID.AIR && block.getRelative(direction).getTypeId() != BlockID.AIR) {
+        while (block.getType() != Material.AIR && block.getRelative(direction).getType() != Material.AIR) {
             if (!(block.getY() < block.getWorld().getMaxHeight())) {
                 break;
             }

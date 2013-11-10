@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.vehicles.cart;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Animals;
@@ -20,7 +21,6 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /*
  * @contributor LordEnki
@@ -169,7 +169,7 @@ public class CartSorter extends CartBlockMechanism {
 
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
-        if (targetTrack.getTypeId() == BlockID.MINECART_TRACKS) {
+        if (targetTrack.getType() == Material.RAILS) {
             targetTrack.setData(trackData);
         }
     }

@@ -59,25 +59,25 @@ public class BlockUtilTest {
     public void testIsBlockSimilarTo() {
 
         Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getTypeId()).thenReturn(5);
+        when(mockBlock1.getType()).thenReturn(Material.WOOD);
 
-        assertTrue(!BlockUtil.isBlockSimilarTo(mockBlock1, 4));
+        assertTrue(!BlockUtil.isBlockSimilarTo(mockBlock1, Material.COBBLESTONE));
 
-        assertTrue(BlockUtil.isBlockSimilarTo(mockBlock1, 5));
+        assertTrue(BlockUtil.isBlockSimilarTo(mockBlock1, Material.WOOD));
     }
 
     @Test
     public void testIsBlockIdenticalTo() {
 
         Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getTypeId()).thenReturn(5);
+        when(mockBlock1.getType()).thenReturn(Material.WOOD);
         when(mockBlock1.getData()).thenReturn((byte) 1);
 
-        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, 8, (byte) 1));
+        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.SAND, (byte) 1));
 
-        assertTrue(BlockUtil.isBlockIdenticalTo(mockBlock1, 5, (byte) 1));
+        assertTrue(BlockUtil.isBlockIdenticalTo(mockBlock1, Material.WOOD, (byte) 1));
 
-        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, 5, (byte) 4));
+        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.WOOD, (byte) 4));
     }
 
     @Test

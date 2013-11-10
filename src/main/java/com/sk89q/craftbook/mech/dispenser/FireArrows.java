@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Arrow;
@@ -8,25 +9,22 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-
 /**
  * @author Me4502
  */
 public class FireArrows extends Recipe {
 
-    public FireArrows(int[] recipe) {
+    public FireArrows(Material[] recipe) {
 
         super(recipe);
     }
 
     public FireArrows() {
 
-        super(new int[] {
-                BlockID.AIR,            ItemID.FIRE_CHARGE,     BlockID.AIR,
-                ItemID.FIRE_CHARGE,     ItemID.ARROW,           ItemID.FIRE_CHARGE,
-                BlockID.AIR,            ItemID.FIRE_CHARGE,     BlockID.AIR
+        super(new Material[] {
+                Material.AIR,            Material.FIREBALL,     Material.AIR,
+                Material.FIREBALL,     Material.ARROW,           Material.FIREBALL,
+                Material.AIR,            Material.FIREBALL,     Material.AIR
         });
     }
 

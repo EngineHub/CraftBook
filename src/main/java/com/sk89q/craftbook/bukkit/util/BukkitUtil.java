@@ -18,7 +18,6 @@ import org.bukkit.entity.Vehicle;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitChangedSign;
 import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.SignUtil;
@@ -69,19 +68,19 @@ public class BukkitUtil {
 
     public static ChangedSign toChangedSign(Sign sign, String[] lines) {
 
-        return new BukkitChangedSign(sign, lines);
+        return new ChangedSign(sign, lines);
     }
 
     public static ChangedSign toChangedSign(Sign sign, String[] lines, LocalPlayer player) {
 
-        return new BukkitChangedSign(sign, lines, player);
+        return new ChangedSign(sign, lines, player);
     }
 
     public static Sign toSign(ChangedSign sign) {
 
         try {
             if (sign.hasChanged()) sign.update(false);
-            return ((BukkitChangedSign) sign).getSign();
+            return sign.getSign();
         } catch (NullPointerException ex) {
             return null;
         }

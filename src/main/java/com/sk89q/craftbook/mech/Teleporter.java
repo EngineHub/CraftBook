@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -18,7 +19,6 @@ import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -52,7 +52,7 @@ public class Teleporter extends AbstractMechanic {
                 if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
                 String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                 if (pos.length > 2) return new Teleporter(block);
-            } else if (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON) {
+            } else if (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON) {
                 Button b = (Button) block.getState().getData();
                 if(b == null || b.getAttachedFace() == null)
                     return null;
@@ -157,8 +157,8 @@ public class Teleporter extends AbstractMechanic {
 
         if (CraftBookPlugin.inst().getConfiguration().teleporterRequireSign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
-            if (location.getTypeId() != BlockID.WALL_SIGN && location.getTypeId() != BlockID.SIGN_POST) {
-                if (location.getTypeId() == BlockID.STONE_BUTTON || location.getTypeId() == BlockID.WOODEN_BUTTON) {
+            if (location.getType() != Material.WALL_SIGN && location.getType() != Material.SIGN_POST) {
+                if (location.getType() == Material.STONE_BUTTON || location.getType() == Material.WOOD_BUTTON) {
                     Button b = (Button) location.getState().getData();
                     Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                     if (SignUtil.isSign(sign)) {

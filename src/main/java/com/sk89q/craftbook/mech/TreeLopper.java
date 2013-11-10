@@ -24,7 +24,6 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
@@ -121,7 +120,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             return false;
         }
         TreeSpecies species = null;
-        if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (block.getRelative(0, -1, 0).getTypeId() == BlockID.DIRT || block.getRelative(0, -1, 0).getTypeId() == BlockID.GRASS || block.getRelative(0, -1, 0).getTypeId() == BlockID.MYCELIUM) && !hasPlanted)
+        if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
             species = ((Tree) block.getState().getData()).getSpecies();
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {

@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
@@ -15,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class CartUtils {
 
@@ -74,15 +74,15 @@ public class CartUtils {
     public static ItemStack getCartStack(Minecart cart) {
 
         if(cart instanceof RideableMinecart)
-            return new ItemStack(ItemID.MINECART, 1);
+            return new ItemStack(Material.MINECART, 1);
         else if(cart instanceof StorageMinecart)
-            return new ItemStack(ItemID.STORAGE_MINECART, 1);
+            return new ItemStack(Material.STORAGE_MINECART, 1);
         else if(cart instanceof PoweredMinecart)
-            return new ItemStack(ItemID.POWERED_MINECART, 1);
+            return new ItemStack(Material.POWERED_MINECART, 1);
         else if(cart instanceof ExplosiveMinecart)
-            return new ItemStack(ItemID.TNT_MINECART, 1);
+            return new ItemStack(Material.EXPLOSIVE_MINECART, 1);
         else if(cart instanceof HopperMinecart)
-            return new ItemStack(ItemID.HOPPER_MINECART, 1);
+            return new ItemStack(Material.HOPPER_MINECART, 1);
 
         return null;
     }

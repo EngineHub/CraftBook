@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,7 +17,6 @@ import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)
@@ -84,7 +84,7 @@ public class Payment extends AbstractMechanic {
         public Payment detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
+            if (block.getType() == Material.WALL_SIGN) {
                 ChangedSign sign = BukkitUtil.toChangedSign(block);
                 if (sign.getLine(1).equalsIgnoreCase("[Pay]")) return new Payment();
             }

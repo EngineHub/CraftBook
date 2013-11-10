@@ -1,24 +1,24 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.Material;
+
 
 /**
  * @author Me4502
  */
 public class XPShooter extends ItemShooter {
 
-    public XPShooter(int[] recipe) {
+    public XPShooter(Material[] recipe) {
 
-        super(ItemID.BOTTLE_O_ENCHANTING, recipe);
+        super(Material.EXP_BOTTLE, recipe);
     }
 
     public XPShooter() {
 
-        super(ItemID.BOTTLE_O_ENCHANTING, new int[] {
-                BlockID.AIR,            ItemID.REDSTONE_DUST,   BlockID.AIR,
-                ItemID.REDSTONE_DUST,   ItemID.GLASS_BOTTLE,    ItemID.REDSTONE_DUST,
-                BlockID.AIR,            ItemID.REDSTONE_DUST,   BlockID.AIR
+        super(Material.EXP_BOTTLE, new Material[] {
+                Material.AIR,            Material.REDSTONE,   Material.AIR,
+                Material.REDSTONE,   Material.GLASS_BOTTLE,    Material.REDSTONE,
+                Material.AIR,            Material.REDSTONE,   Material.AIR
         });
     }
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class Footprints extends AbstractCraftBookMechanic {
 
@@ -34,10 +34,10 @@ public class Footprints extends AbstractCraftBookMechanic {
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
-        if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SLOW_SAND) {
+        if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW || event.getPlayer().getLocation().getBlock().getType() == Material.CARPET || event.getPlayer().getLocation().getBlock().getType() == Material.SOUL_SAND) {
             below = event.getPlayer().getLocation().getBlock();
             yOffset = 0.15D;
-            if(event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.SNOW && event.getPlayer().getLocation().getBlock().getData() == 0 || event.getPlayer().getLocation().getBlock().getTypeId() == BlockID.CARPET) {
+            if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW && event.getPlayer().getLocation().getBlock().getData() == 0 || event.getPlayer().getLocation().getBlock().getType() == Material.CARPET) {
                 yOffset = below.getY() - event.getPlayer().getLocation().getY();
                 yOffset += 0.15D;
             }

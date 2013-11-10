@@ -132,7 +132,7 @@ public class CartDeposit extends CartBlockMechanism {
                         if (!ItemUtil.isStackValid(item))
                             continue;
                         for(ItemInfo inf : items) {
-                            if (inf.getId() < 0 || inf.getId() == item.getTypeId())
+                            if (inf.getId() < 0 || inf.getType() == item.getType())
                                 if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
                                     transferitems.add(item.clone());
                                     containerinventory.remove(item);

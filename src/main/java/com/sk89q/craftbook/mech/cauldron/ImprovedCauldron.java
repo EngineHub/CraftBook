@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +26,6 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -58,9 +58,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         private boolean isCauldron(BlockWorldVector pos) {
 
             Block block = BukkitUtil.toBlock(pos);
-            if (block.getTypeId() == BlockID.CAULDRON) {
+            if (block.getType() == Material.CAULDRON) {
                 Cauldron cauldron = (Cauldron) block.getState().getData();
-                return block.getRelative(BlockFace.DOWN).getTypeId() == BlockID.FIRE && cauldron.isFull();
+                return block.getRelative(BlockFace.DOWN).getType() == Material.FIRE && cauldron.isFull();
             }
             return false;
         }
@@ -133,26 +133,26 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
 
     public double getSpoonChance(ItemStack item, double chance) {
 
-        int id = item.getTypeId();
+        Material id = item.getType();
         double temp = chance / 100;
         if (temp > 1) return 1;
         double toGo = temp = 1 - temp;
         double tenth = toGo / 10;
         int multiplier = 0;
         switch(id) {
-            case 269:
+            case WOOD_SPADE:
                 multiplier = 1;
                 break;
-            case 273:
+            case STONE_SPADE:
                 multiplier = 2;
                 break;
-            case 256:
+            case IRON_SPADE:
                 multiplier = 3;
                 break;
-            case 277:
+            case DIAMOND_SPADE:
                 multiplier = 4;
                 break;
-            case 284:
+            case GOLD_SPADE:
                 multiplier = 5;
                 break;
             default:

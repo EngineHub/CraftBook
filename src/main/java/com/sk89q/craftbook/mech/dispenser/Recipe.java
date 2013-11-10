@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech.dispenser;
 
 import java.util.Arrays;
 
+import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +13,11 @@ import org.bukkit.util.Vector;
  */
 public abstract class Recipe {
 
-    private final int[] recipe;
+    private final Material[] recipe;
 
-    public Recipe(int[] recipe) {
+    public Recipe(Material[] materials) {
 
-        this.recipe = recipe.clone();
+        recipe = materials.clone();
     }
 
     /**
@@ -36,7 +37,7 @@ public abstract class Recipe {
      *
      * @return the recipe contents
      */
-    public int[] getRecipe() {
+    public Material[] getRecipe() {
 
         return recipe;
     }

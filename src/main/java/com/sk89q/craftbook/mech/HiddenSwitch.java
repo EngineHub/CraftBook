@@ -1,10 +1,12 @@
 package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractMechanic;
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -12,12 +14,13 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class HiddenSwitch extends AbstractMechanic {
 
@@ -38,7 +41,7 @@ public class HiddenSwitch extends AbstractMechanic {
             Block b = world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ());
 
             // Must be Wall Sign
-            if (b == null || b.getTypeId() != BlockID.WALL_SIGN) return false;
+            if (b == null || b.getType() != Material.WALL_SIGN) return false;
             if (b.getState() == null || !SignUtil.isSign(b)) return false;
             ChangedSign s = BukkitUtil.toChangedSign(b);
 
@@ -86,7 +89,7 @@ public class HiddenSwitch extends AbstractMechanic {
 
             for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
-                if(testBlock.getTypeId() == BlockID.WALL_SIGN) {
+                if(testBlock.getType() == Material.WALL_SIGN) {
                     s = BukkitUtil.toChangedSign(testBlock);
                     break;
                 }
@@ -94,7 +97,7 @@ public class HiddenSwitch extends AbstractMechanic {
         } else {
             BlockFace face = event.getBlockFace().getOppositeFace();
             testBlock = switchBlock.getRelative(face);
-            if(testBlock.getTypeId() == BlockID.WALL_SIGN)
+            if(testBlock.getType() == Material.WALL_SIGN)
                 s = BukkitUtil.toChangedSign(testBlock);
         }
 
@@ -103,13 +106,10 @@ public class HiddenSwitch extends AbstractMechanic {
 
         if (s.getLine(1).equalsIgnoreCase("[X]")) {
 
-            int itemID = -1;
+            ItemStack itemID = null;
 
             if (!s.getLine(0).trim().isEmpty()) {
-                try {
-                    itemID = Integer.parseInt(s.getLine(0).trim());
-                } catch (NumberFormatException ignored) {
-                }
+                itemID = ItemSyntax.getItem(s.getLine(0).trim());
             }
 
             if (!s.getLine(2).trim().isEmpty())
@@ -120,17 +120,16 @@ public class HiddenSwitch extends AbstractMechanic {
 
             boolean success = false;
 
-            if (itemID == -1) {
+            if (!ItemUtil.isStackValid(itemID)) {
                 toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
                 success = true;
-            } else if (itemID >= 0) {
-                if (player.getHeldItemType() == itemID) {
+            } else {
+                if (ItemUtil.areItemsIdentical(event.getPlayer().getItemInHand(), itemID)) {
                     toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
                     success = true;
                 } else
                     player.printError("mech.hiddenswitch.key");
-            } else
-                player.printError("mech.hiddenswitch.key");
+            }
 
             if(success)
                 player.print("mech.hiddenswitch.toggle");
@@ -162,16 +161,14 @@ public class HiddenSwitch extends AbstractMechanic {
         for (BlockFace blockFace : checkFaces) {
             final Block checkBlock = sign.getRelative(blockFace);
 
-            if (checkBlock.getTypeId() == BlockID.LEVER) {
+            if (checkBlock.getType() == Material.LEVER) {
                 checkBlock.setData((byte) (checkBlock.getData() ^ 0x8));
-            } else if (checkBlock.getTypeId() == BlockID.STONE_BUTTON || checkBlock.getTypeId() == BlockID
-                    .WOODEN_BUTTON) {
+            } else if (checkBlock.getType() == Material.STONE_BUTTON || checkBlock.getType() == Material.WOOD_BUTTON) {
                 checkBlock.setData((byte) (checkBlock.getData() | 0x8));
-                Runnable turnOff = new Runnable() {
 
+                Runnable turnOff = new Runnable() {
                     @Override
                     public void run() {
-
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };

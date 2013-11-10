@@ -47,7 +47,7 @@ public class CartLift extends CartBlockMechanism {
 
             destination = destination.getRelative(face);
 
-            if (SignUtil.isSign(destination) && event.getBlocks().base.getTypeId() == destination.getRelative(BlockFace.UP, 1).getTypeId()) {
+            if (SignUtil.isSign(destination) && event.getBlocks().base.getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
 
                 ChangedSign state = BukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);

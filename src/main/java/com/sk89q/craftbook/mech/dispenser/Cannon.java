@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mech.dispenser;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.EntityType;
@@ -9,21 +10,18 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
-
 public class Cannon extends Recipe {
 
-    public Cannon(int[] recipe) {
+    public Cannon(Material[] recipe) {
 
         super(recipe);
     }
 
     public Cannon() {
-        super(new int[] {
-                ItemID.FIRE_CHARGE,     ItemID.SULPHUR, ItemID.FIRE_CHARGE,
-                ItemID.SULPHUR,         BlockID.TNT,    ItemID.SULPHUR,
-                ItemID.FIRE_CHARGE,     ItemID.SULPHUR, ItemID.FIRE_CHARGE
+        super(new Material[] {
+                Material.FIREBALL,     Material.SULPHUR, Material.FIREBALL,
+                Material.SULPHUR,         Material.TNT,    Material.SULPHUR,
+                Material.FIREBALL,     Material.SULPHUR, Material.FIREBALL
         });
     }
 

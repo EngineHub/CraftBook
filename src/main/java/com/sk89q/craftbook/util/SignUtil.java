@@ -16,13 +16,13 @@
 
 package com.sk89q.craftbook.util;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.SignChangeEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * <p>
@@ -53,12 +53,7 @@ public class SignUtil {
 
     public static boolean isSign(Block block) {
 
-        return isSign(block.getTypeId());
-    }
-
-    public static boolean isSign(int typeid) {
-
-        return typeid == BlockID.SIGN_POST || typeid == BlockID.WALL_SIGN;
+        return block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN;
     }
 
     /**
@@ -85,7 +80,7 @@ public class SignUtil {
     public static BlockFace getFront(Block sign) {
 
         if (BlockUtil.shouldUseOldFaces()) {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.WEST;
@@ -129,7 +124,7 @@ public class SignUtil {
                 }
             }
         } else {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.SOUTH;
@@ -193,7 +188,7 @@ public class SignUtil {
     public static BlockFace getBack(Block sign) {
 
         if (BlockUtil.shouldUseOldFaces()) {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.EAST;
@@ -237,7 +232,7 @@ public class SignUtil {
                 }
             }
         } else {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.NORTH;
@@ -319,7 +314,7 @@ public class SignUtil {
     public static BlockFace getRight(Block sign) {
 
         if (BlockUtil.shouldUseOldFaces()) {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.SOUTH;
@@ -363,7 +358,7 @@ public class SignUtil {
                 }
             }
         } else {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.EAST;
@@ -426,7 +421,7 @@ public class SignUtil {
     public static BlockFace getLeft(Block sign) {
 
         if (BlockUtil.shouldUseOldFaces()) {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.NORTH;
@@ -470,7 +465,7 @@ public class SignUtil {
                 }
             }
         } else {
-            if (sign.getTypeId() == BlockID.SIGN_POST) {
+            if (sign.getType() == Material.SIGN_POST) {
                 switch (sign.getData()) {
                     case 0x0:
                         return BlockFace.WEST;
@@ -532,7 +527,7 @@ public class SignUtil {
      */
     public static boolean isCardinal(Block sign) {
 
-        if (sign.getTypeId() == BlockID.SIGN_POST) {
+        if (sign.getType() == Material.SIGN_POST) {
             switch (sign.getData()) {
                 case 0x0:
                 case 0x4:

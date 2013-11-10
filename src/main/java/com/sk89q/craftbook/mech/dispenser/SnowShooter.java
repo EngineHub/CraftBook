@@ -1,24 +1,23 @@
 package com.sk89q.craftbook.mech.dispenser;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.Material;
 
 /**
  * @author Me4502
  */
 public class SnowShooter extends ItemShooter {
 
-    public SnowShooter(int[] recipe) {
+    public SnowShooter(Material[] recipe) {
 
-        super(ItemID.SNOWBALL, recipe);
+        super(Material.SNOW_BALL, recipe);
     }
 
     public SnowShooter() {
 
-        super(ItemID.SNOWBALL, new int[] {
-                BlockID.AIR,            BlockID.SNOW_BLOCK,     BlockID.AIR,
-                BlockID.SNOW_BLOCK,     ItemID.POTION,          BlockID.SNOW_BLOCK,
-                BlockID.AIR,            BlockID.SNOW_BLOCK,     BlockID.AIR
+        super(Material.SNOW_BALL, new Material[] {
+                Material.AIR,            Material.SNOW_BLOCK,     Material.AIR,
+                Material.SNOW_BLOCK,     Material.POTION,          Material.SNOW_BLOCK,
+                Material.AIR,            Material.SNOW_BLOCK,     Material.AIR
         });
     }
 }

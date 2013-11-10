@@ -55,7 +55,7 @@ public class CartMechanismBlocks {
     public static CartMechanismBlocks find(Block unknown) throws InvalidMechanismException {
 
         final int ti = unknown.getTypeId();
-        if (SignUtil.isSign(ti)) return findBySign(unknown);
+        if (SignUtil.isSign(unknown)) return findBySign(unknown);
         else if (BlockType.isRailBlock(ti)) return findByRail(unknown);
         else return findByBase(unknown);
     }
@@ -76,16 +76,16 @@ public class CartMechanismBlocks {
 
         if (!BlockType.isRailBlock(rail.getTypeId()))
             throw new InvalidMechanismException("rail argument must be a rail!");
-        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2).getTypeId())) return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 2));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3).getTypeId()))
+        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2))) return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 2));
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3)))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 3));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1).getTypeId()))
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1)))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1).getTypeId()))
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1)))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1).getTypeId()))
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1)))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1).getTypeId()))
+        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1)))
             return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1));
         return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), null);
     }
@@ -101,17 +101,17 @@ public class CartMechanismBlocks {
 
         if (!BlockType.isRailBlock(base.getRelative(BlockFace.UP, 1).getTypeId()))
             throw new InvalidMechanismException("could not find rails.");
-        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1).getTypeId()))
+        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2).getTypeId()))
+        else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 2));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.EAST, 1).getTypeId()))
+        else if (SignUtil.isSign(base.getRelative(BlockFace.EAST, 1)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.EAST, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.WEST, 1).getTypeId()))
+        else if (SignUtil.isSign(base.getRelative(BlockFace.WEST, 1)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.WEST, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.NORTH, 1).getTypeId()))
+        else if (SignUtil.isSign(base.getRelative(BlockFace.NORTH, 1)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.NORTH, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.SOUTH, 1).getTypeId()))
+        else if (SignUtil.isSign(base.getRelative(BlockFace.SOUTH, 1)))
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.SOUTH, 1));
         return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, null);
     }

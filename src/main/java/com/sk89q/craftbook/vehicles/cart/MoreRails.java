@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.vehicles.cart;
 
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
@@ -12,7 +13,6 @@ import org.bukkit.util.Vector;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class MoreRails extends AbstractCraftBookMechanic {
 
@@ -22,13 +22,13 @@ public class MoreRails extends AbstractCraftBookMechanic {
         if (!(event.getVehicle() instanceof Minecart)) return;
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsPressurePlate)
-            if (event.getTo().getBlock().getTypeId() == BlockID.STONE_PRESSURE_PLATE || event.getTo().getBlock().getTypeId() == BlockID.WOODEN_PRESSURE_PLATE || event.getTo().getBlock().getTypeId() == BlockID.PRESSURE_PLATE_HEAVY || event.getTo().getBlock().getTypeId() == BlockID.PRESSURE_PLATE_LIGHT)
+            if (event.getTo().getBlock().getType() == Material.STONE_PLATE || event.getTo().getBlock().getType() == Material.WOOD_PLATE || event.getTo().getBlock().getType() == Material.GOLD_PLATE || event.getTo().getBlock().getType() == Material.IRON_PLATE)
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
-            if (event.getTo().getBlock().getTypeId() == BlockID.LADDER)
+            if (event.getTo().getBlock().getType() == Material.LADDER)
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ())));
-            else if (event.getTo().getBlock().getTypeId() == BlockID.VINE) {
+            else if (event.getTo().getBlock().getType() == Material.VINE) {
                 BlockFace movementFace = BlockFace.SELF;
                 Vine vine = (Vine) event.getTo().getBlock().getState().getData();
                 for(BlockFace test : LocationUtil.getDirectFaces())

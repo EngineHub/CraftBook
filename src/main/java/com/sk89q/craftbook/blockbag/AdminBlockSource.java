@@ -21,13 +21,13 @@ import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.bags.BlockBagException;
 import com.sk89q.worldedit.bags.OutOfBlocksException;
 import com.sk89q.worldedit.bags.OutOfSpaceException;
-import com.sk89q.worldedit.blocks.BlockID;
 
 
 /**
@@ -117,16 +117,14 @@ public class AdminBlockSource extends BlockBag {
     public void addSingleSourcePosition(WorldVector arg0) {
 
         Block e = BukkitUtil.toWorld(arg0.getWorld()).getBlockAt(arg0.getBlockX(), arg0.getBlockY(), arg0.getBlockZ());
-        if (e.getTypeId() == BlockID.WALL_SIGN || e.getTypeId() == BlockID.SIGN_POST) {
+        if (SignUtil.isSign(e)) {
             ChangedSign s = BukkitUtil.toChangedSign(e);
 
-            if (store && s.getLine(2).equalsIgnoreCase("[Black Hole]")) {
+            if (store && s.getLine(2).equalsIgnoreCase("[Black Hole]"))
                 canStore = true;
-            }
 
-            if (fetch && s.getLine(2).equalsIgnoreCase("[Block Source]")) {
+            if (fetch && s.getLine(2).equalsIgnoreCase("[Block Source]"))
                 canFetch = true;
-            }
         }
     }
 

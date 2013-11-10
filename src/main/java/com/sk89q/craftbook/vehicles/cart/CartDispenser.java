@@ -3,6 +3,7 @@ package com.sk89q.craftbook.vehicles.cart;
 import java.util.Locale;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.EntityType;
@@ -24,7 +25,6 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockRedstoneEvent;
-import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -148,16 +148,15 @@ public class CartDispenser extends CartBlockMechanism {
         cart.setDamage(9000);
         cart.remove();
         if (inv != null) {
-            int cartType = ItemType.MINECART.getID();
-            if (cart instanceof StorageMinecart) {
-                cartType = ItemType.STORAGE_MINECART.getID();
-            } else if (cart instanceof PoweredMinecart) {
-                cartType = ItemType.POWERED_MINECART.getID();
-            } else if (cart instanceof ExplosiveMinecart) {
-                cartType = ItemType.TNT_MINECART.getID();
-            } else if (cart instanceof HopperMinecart) {
-                cartType = ItemType.HOPPER_MINECART.getID();
-            }
+            Material cartType = Material.MINECART;
+            if (cart instanceof StorageMinecart)
+                cartType = Material.STORAGE_MINECART;
+            else if (cart instanceof PoweredMinecart)
+                cartType = Material.POWERED_MINECART;
+            else if (cart instanceof ExplosiveMinecart)
+                cartType = Material.EXPLOSIVE_MINECART;
+            else if (cart instanceof HopperMinecart)
+                cartType = Material.HOPPER_MINECART;
             inv.addItem(new ItemStack(cartType, 1));
         }
     }
@@ -180,20 +179,20 @@ public class CartDispenser extends CartBlockMechanism {
 
         if (inv != null) {
             if (type.equals(CartType.Minecart)) {
-                if (!inv.contains(ItemType.MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.MINECART.getID(), 1));
+                if (!inv.contains(Material.MINECART)) return;
+                inv.removeItem(new ItemStack(Material.MINECART, 1));
             } else if (type.equals(CartType.StorageMinecart)) {
-                if (!inv.contains(ItemType.STORAGE_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.STORAGE_MINECART.getID(), 1));
+                if (!inv.contains(Material.STORAGE_MINECART)) return;
+                inv.removeItem(new ItemStack(Material.STORAGE_MINECART, 1));
             } else if (type.equals(CartType.PoweredMinecart)) {
-                if (!inv.contains(ItemType.POWERED_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.POWERED_MINECART.getID(), 1));
+                if (!inv.contains(Material.POWERED_MINECART)) return;
+                inv.removeItem(new ItemStack(Material.POWERED_MINECART, 1));
             } else if (type.equals(CartType.TNTMinecart)) {
-                if (!inv.contains(ItemType.TNT_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.TNT_MINECART.getID(), 1));
+                if (!inv.contains(Material.EXPLOSIVE_MINECART)) return;
+                inv.removeItem(new ItemStack(Material.EXPLOSIVE_MINECART, 1));
             } else if (type.equals(CartType.HopperMinecart)) {
-                if (!inv.contains(ItemType.HOPPER_MINECART.getID())) return;
-                inv.removeItem(new ItemStack(ItemType.HOPPER_MINECART.getID(), 1));
+                if (!inv.contains(Material.HOPPER_MINECART)) return;
+                inv.removeItem(new ItemStack(Material.HOPPER_MINECART, 1));
             }
         }
         Minecart cart = blocks.rail.getWorld().spawn(location, type.toClass());

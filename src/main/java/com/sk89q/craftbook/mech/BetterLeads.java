@@ -24,7 +24,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
@@ -34,7 +33,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!ItemUtil.isStackValid(event.getPlayer().getItemInHand())) return;
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(player.getHeldItemType() != ItemID.LEAD) return;
+        if(player.getHeldItemInfo().getType() != Material.LEASH) return;
         CraftBookPlugin.logDebugMessage("A player has right clicked an entity with a lead!", "betterleads.allowed-mobs");
 
         String typeName = event.getRightClicked().getType().getName();

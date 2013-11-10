@@ -9,16 +9,18 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.sk89q.craftbook.ChangedSign;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BukkitChangedSign.class)
+@PrepareForTest(ChangedSign.class)
 public class BukkitChangedSignTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testBukkitChangedSign() {
 
-        new BukkitChangedSign(null, null);
+        new ChangedSign(null, null);
 
-        BukkitChangedSign sign = new BukkitChangedSign(mock(Sign.class), new String[]{"","","",""});
+        ChangedSign sign = new ChangedSign(mock(Sign.class), new String[]{"","","",""});
         assertTrue(sign.getSign() != null);
         assertTrue(sign.getLines().length == 4);
     }

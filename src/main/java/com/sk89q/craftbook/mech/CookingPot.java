@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -23,8 +24,6 @@ import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
 
@@ -59,7 +58,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         public CookingPot detect(BlockWorldVector pt) {
 
             Block block = BukkitUtil.toLocation(pt).getBlock();
-            if (block.getTypeId() == BlockID.WALL_SIGN) {
+            if (block.getType() == Material.WALL_SIGN) {
                 ChangedSign sign = BukkitUtil.toChangedSign(block);
                 if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
                     return new CookingPot(pt);
@@ -111,9 +110,9 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         oldTick = lastTick;
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
-        if (cb.getTypeId() == BlockID.CHEST) {
+        if (cb.getType() == Material.CHEST) {
             Block fire = b.getRelative(0, 1, 0);
-            if (fire.getTypeId() == BlockID.FIRE) {
+            if (fire.getType() == Material.FIRE) {
                 Chest chest = (Chest) cb.getState();
                 if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && plugin.getConfiguration().cookingPotOres) {
                     if(lastTick < 500) {
@@ -164,23 +163,23 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
         Block b = SignUtil.getBackBlock(block);
         Block cb = b.getRelative(0, 2, 0);
-        if (cb.getTypeId() == BlockID.CHEST) {
+        if (cb.getType() == Material.CHEST) {
             Player player = event.getPlayer();
             if(!player.hasPermission("craftbook.mech.cook.refuel")) {
                 p.printError("mech.restock-permission");
                 event.setCancelled(true);
                 return;
             }
-            if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getTypeId())) {
-                int itemID = player.getItemInHand().getTypeId();
+            if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getType())) {
+                Material itemID = player.getItemInHand().getType();
                 increaseMultiplier(sign, Ingredients.getTime(itemID));
                 if (player.getItemInHand().getAmount() <= 1) {
                     player.setItemInHand(null);
                 } else {
                     player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
                 }
-                if(itemID == ItemID.LAVA_BUCKET && !plugin.getConfiguration().cookingPotDestroyBuckets)
-                    player.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
+                if(itemID == Material.LAVA_BUCKET && !plugin.getConfiguration().cookingPotDestroyBuckets)
+                    player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                 p.print("mech.cook.add-fuel");
                 event.setCancelled(true);
             } else if (plugin.getConfiguration().cookingPotSignOpen) {
@@ -258,24 +257,24 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
     }
 
     private enum Ingredients {
-        COAL(ItemID.COAL, 40), COALBLOCK(BlockID.COAL_BLOCK, 360), LAVA(ItemID.LAVA_BUCKET, 6000), BLAZE(ItemID.BLAZE_ROD, 500), BLAZEDUST(ItemID.BLAZE_POWDER, 250), SNOWBALL(ItemID.SNOWBALL, -40), SNOW(BlockID.SNOW_BLOCK, -100), ICE(BlockID.ICE, -1000);
+        COAL(Material.COAL, 40), COALBLOCK(Material.COAL_BLOCK, 360), LAVA(Material.LAVA_BUCKET, 6000), BLAZE(Material.BLAZE_ROD, 500), BLAZEDUST(Material.BLAZE_POWDER, 250), SNOWBALL(Material.SNOW_BALL, -40), SNOW(Material.SNOW_BLOCK, -100), ICE(Material.ICE, -1000);
 
-        private int id;
+        private Material id;
         private int mult;
 
-        private Ingredients(int id, int mult) {
+        private Ingredients(Material id, int mult) {
 
             this.id = id;
             this.mult = mult;
         }
 
-        public static boolean isIngredient(int id) {
+        public static boolean isIngredient(Material id) {
 
             for (Ingredients in : values()) { if (in.id == id) return true; }
             return false;
         }
 
-        public static int getTime(int id) {
+        public static int getTime(Material id) {
 
             for (Ingredients in : values()) { if (in.id == id) return in.mult; }
             return 0;

@@ -162,7 +162,7 @@ public class Gate extends AbstractMechanic {
 
         // The block above the gate cannot be air -- it has to be some
         // non-fence block
-        if (world.getBlockTypeIdAt(x, column.getStartingY() + 1, z) == 0) return false;
+        if (world.getBlockAt(x, column.getStartingY() + 1, z).getType() == Material.AIR) return false;
 
         if (visitedColumns.contains(column)) return false;
 

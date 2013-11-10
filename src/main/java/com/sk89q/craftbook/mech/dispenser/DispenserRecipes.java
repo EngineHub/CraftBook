@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech.dispenser;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -73,11 +74,11 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
         for (Recipe r : recipes) {
-            int[] recipe = r.getRecipe();
+            Material[] recipe = r.getRecipe();
             if (checkRecipe(stacks, recipe)) {
                 boolean toReturn = r.doAction(dis, item, velocity, event);
                 for (int i = 0; i < stacks.length; i++) {
-                    if (recipe[i] != 0) {
+                    if (recipe[i] != Material.AIR) {
                         stacks[i] = ItemUtil.getUsedItem(stacks[i]);
                     }
                 }
@@ -88,11 +89,11 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         return false;
     }
 
-    private static boolean checkRecipe(ItemStack[] stacks, int[] recipe) {
+    private static boolean checkRecipe(ItemStack[] stacks, Material[] recipe) {
 
         for (int i = 0; i < stacks.length; i++) {
             ItemStack stack = stacks[i];
-            int id = stack == null ? 0 : stack.getTypeId();
+            Material id = stack == null ? Material.AIR : stack.getType();
             if (recipe[i] != id) {
                 return false;
             }

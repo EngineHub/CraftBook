@@ -32,7 +32,6 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -70,11 +69,11 @@ public class Snow extends AbstractCraftBookMechanic {
             return;
         if(event.getBlock().getType() == Material.SNOW && ItemUtil.isStackValid(event.getPlayer().getItemInHand())) {
 
-            if(event.getPlayer().getItemInHand().getTypeId() == ItemID.WOOD_SHOVEL
-                    || event.getPlayer().getItemInHand().getTypeId() == ItemID.STONE_SHOVEL
-                    || event.getPlayer().getItemInHand().getTypeId() == ItemID.IRON_SHOVEL
-                    || event.getPlayer().getItemInHand().getTypeId() == ItemID.GOLD_SHOVEL
-                    || event.getPlayer().getItemInHand().getTypeId() == ItemID.DIAMOND_SHOVEL) {
+            if(event.getPlayer().getItemInHand().getType() == Material.WOOD_SPADE
+                    || event.getPlayer().getItemInHand().getType() == Material.STONE_SPADE
+                    || event.getPlayer().getItemInHand().getType() == Material.IRON_SPADE
+                    || event.getPlayer().getItemInHand().getType() == Material.GOLD_SPADE
+                    || event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SPADE) {
                 event.setCancelled(true);
                 int amount = event.getBlock().getData()+1;
                 event.getBlock().setType(Material.AIR);
