@@ -137,7 +137,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
             return new String[] {
                     "radius=x:y:z offset",
-                    "item*amount=minPlayers:inHand:slot"
+                    "item=minPlayers:inHand:slot"
             };
         }
     }

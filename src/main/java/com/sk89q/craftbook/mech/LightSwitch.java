@@ -69,7 +69,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ChangedSign sign = event.getSign();
-        if(!sign.getLine(1).equalsIgnoreCase("[I]") && sign.getLine(1).equalsIgnoreCase("[|]")) return;
+        if(!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]")) return;
         LocalPlayer player = event.getWrappedPlayer();
         if (!player.hasPermission("craftbook.mech.light-switch.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
