@@ -84,6 +84,34 @@ public class SearchArea {
         }
     }
 
+    public static boolean isValidArea(Block block, String line) {
+
+        if(line.startsWith("r:")) {
+
+            if(CraftBookPlugin.inst().getWorldGuard() == null)
+                return false;
+
+            ProtectedRegion reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
+            if(reg == null)
+                return false;
+
+            return true;
+        } else {
+
+            String[] locationParts = RegexUtil.EQUALS_PATTERN.split(line);
+            SignUtil.getBackBlock(block).getLocation();
+            try {
+                ICUtil.parseUnsafeRadius(locationParts[0]);
+                if(locationParts.length > 1)
+                    ICUtil.parseUnsafeBlockLocation(locationParts[1]);
+
+                return true;
+            } catch(Exception e){
+                return false;
+            }
+        }
+    }
+
     /**
      * Gets a list of all the players within this SearchArea.
      * 

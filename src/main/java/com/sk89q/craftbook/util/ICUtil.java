@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.material.Lever;
@@ -29,7 +30,6 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
@@ -52,7 +52,7 @@ public class ICUtil {
      */
     public static boolean setState(Block block, boolean state, Block source) {
 
-        if (block.getTypeId() != BlockID.LEVER) return false;
+        if (block.getType() != Material.LEVER) return false;
 
         // return if the lever is not attached to our IC block
         Lever lever = (Lever) block.getState().getData();
@@ -225,6 +225,24 @@ public class ICUtil {
         sign.update(false);
     }
 
+    public static Vector parseUnsafeBlockLocation(String line) throws NumberFormatException, ArrayIndexOutOfBoundsException {
+
+        line = line.replace("!", "").replace("^", "").replace("&", "");
+        int offsetX = 0, offsetY = 0, offsetZ = 0;
+
+        if (line.contains("="))
+            line = RegexUtil.EQUALS_PATTERN.split(line)[1];
+        String[] split = RegexUtil.COLON_PATTERN.split(line);
+        if (split.length > 1) {
+            offsetX = Integer.parseInt(split[0]);
+            offsetY = Integer.parseInt(split[1]);
+            offsetZ = Integer.parseInt(split[2]);
+        } else
+            offsetY = Integer.parseInt(line);
+
+        return new Vector(offsetX, offsetY, offsetZ);
+    }
+
     public static Block parseBlockLocation(ChangedSign sign, String line, LocationCheckType relative) {
 
         Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
@@ -236,32 +254,23 @@ public class ICUtil {
         else if (line.contains("&"))
             relative = LocationCheckType.getTypeFromChar('&');
 
-        line = line.replace("!", "").replace("^", "").replace("&", "");
-        int offsetX = 0, offsetY = 0, offsetZ = 0;
+        Vector offsets = new Vector(0,0,0);
 
-        if (line.contains("="))
-            line = RegexUtil.EQUALS_PATTERN.split(line)[1];
         try {
-            String[] split = RegexUtil.COLON_PATTERN.split(line);
-            if (split.length > 1) {
-                offsetX = Integer.parseInt(split[0]);
-                offsetY = Integer.parseInt(split[1]);
-                offsetZ = Integer.parseInt(split[2]);
-            } else
-                offsetY = Integer.parseInt(line);
+            offsets = parseUnsafeBlockLocation(line);
         } catch (NumberFormatException ignored) {
         } catch (ArrayIndexOutOfBoundsException ignored) {
         }
 
-        if(offsetX == 0 && offsetY == 0 && offsetZ == 0)
+        if(offsets.getBlockX() == 0 && offsets.getBlockY() == 0 && offsets.getBlockZ() == 0)
             return target;
 
         if (relative == LocationCheckType.RELATIVE)
-            target = LocationUtil.getRelativeOffset(sign, offsetX, offsetY, offsetZ);
+            target = LocationUtil.getRelativeOffset(sign, offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ());
         else if (relative == LocationCheckType.OFFSET)
-            target = LocationUtil.getOffset(target, offsetX, offsetY, offsetZ);
+            target = LocationUtil.getOffset(target, offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ());
         else if (relative == LocationCheckType.ABSOLUTE)
-            target = new Location(target.getWorld(), offsetX, offsetY, offsetZ).getBlock();
+            target = new Location(target.getWorld(), offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ()).getBlock();
         return target;
     }
 
@@ -328,21 +337,25 @@ public class ICUtil {
 
         Vector radius = new Vector(10,10,10);
         try {
-            String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
-            if(radians.length > 1) {
-                int x = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-                int y = VerifyUtil.verifyRadius(Integer.parseInt(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-                int z = VerifyUtil.verifyRadius(Integer.parseInt(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-                return new Vector(x,y,z);
-            }
-            else {
-                int r = Integer.parseInt(radians[0]);
-                r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-                return new Vector(r,r,r);
-            }
+            radius = parseUnsafeRadius(line);
         } catch (NumberFormatException ignored) {
         }
         return radius;
+    }
+
+    public static Vector parseUnsafeRadius(String line) throws NumberFormatException {
+        String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
+        if(radians.length > 1) {
+            int x = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            int y = VerifyUtil.verifyRadius(Integer.parseInt(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            int z = VerifyUtil.verifyRadius(Integer.parseInt(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            return new Vector(x,y,z);
+        }
+        else {
+            int r = Integer.parseInt(radians[0]);
+            r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            return new Vector(r,r,r);
+        }
     }
 
     public enum LocationCheckType {

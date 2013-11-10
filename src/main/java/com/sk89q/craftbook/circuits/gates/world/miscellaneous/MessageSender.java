@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -28,6 +29,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class MessageSender extends AbstractIC {
 
@@ -58,8 +60,15 @@ public class MessageSender extends AbstractIC {
 
     @Override
     public void load() {
-
+        name = getLine(2);
+        if(SearchArea.isValidArea(getBackBlock(), name))
+            area = SearchArea.createArea(getBackBlock(), name);
+        message = getLine(3);
     }
+
+    String name;
+    String message;
+    SearchArea area;
 
     /**
      * Returns true if a message was sent.
@@ -69,15 +78,22 @@ public class MessageSender extends AbstractIC {
     private boolean sendMessage() {
 
         boolean sent = false;
-        String name = getLine(2);
-        String message = getLine(3);
-        Player player = getServer().getPlayer(name);
 
-        if (player != null) {
-            player.sendMessage(message.replace("&", "\u00A7"));
-            sent = true;
-        } else if (name.equalsIgnoreCase("BROADCAST") || name.isEmpty()) {
-            getServer().broadcastMessage(message);
+        if(area != null) {
+            for(Player p : area.getPlayersInArea()) {
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                sent = true;
+            }
+        } else {
+            Player player = getServer().getPlayer(name);
+
+            if (player != null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                sent = true;
+            } else if (name.equalsIgnoreCase("BROADCAST") || name.isEmpty()) {
+                getServer().broadcastMessage(message);
+                sent = true;
+            }
         }
         return sent;
     }
@@ -112,7 +128,7 @@ public class MessageSender extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"name of player, or BROADCAST for whole server", "Message to send."};
+            return new String[] {"name of player, x:y:z=radius, or BROADCAST for whole server", "Message to send."};
         }
     }
 }
