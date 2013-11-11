@@ -1,3 +1,13 @@
+3.7.12
+* Fixed an error with CommandSigns.
+* Fixed CommandItems ingame creator requiring uppercase for sneak state.
+* Fixed BetterLeads causing errors with numerous mobs.
+* Fixed a few performance issues with LanguageManager.
++ Added radius/offset to MessageSender IC.
+* Fixed a LightSwitch bug.
+* More changes towards removing Item ID dependency.
+* Allowed bridges to work with signs on the side of the bridge, instead of only on top of/below.
+
 3.7.11.2
 * LanguageManager now loads all missing text into language files upon startup.
 * EntitySpawner IC's can now use alternative names for entities.
