@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import java.util.Collections;
+
 import org.bukkit.Server;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -13,24 +14,20 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemType;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Silthus
  */
 public class ItemSensor extends AbstractSelfTriggeredIC {
 
-    private int item;
-    private short data;
+    private ItemStack item;
 
-    private Block center;
-    private Vector radius;
+    private SearchArea area;
 
     public ItemSensor(Server server, ChangedSign block, ICFactory factory) {
 
@@ -40,40 +37,8 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3).trim());
-        // lets get the type to detect first
-        try {
-            item = Integer.parseInt(split[0]);
-        } catch (NumberFormatException e) {
-            // seems to be the name of the item
-            BlockType material = BlockType.lookup(split[0]);
-            if (material != null) {
-                item = material.getID();
-            } else {
-                ItemType it = ItemType.lookup(split[0]);
-                if (it != null) {
-                    item = it.getID();
-                }
-            }
-        }
-
-        if (item == 0) {
-            item = BlockID.STONE;
-        }
-
-        if (split.length > 1) {
-            data = Short.parseShort(split[1]);
-        } else data = -1;
-
-        // if the line contains a = the offset is given
-        // the given string should look something like that:
-        // radius=x:y:z or radius, e.g. 1=-2:5:11
-        radius = ICUtil.parseRadius(getSign());
-        if (getSign().getLine(2).contains("=")) {
-            center = ICUtil.parseBlockLocation(getSign());
-        } else {
-            center = getBackBlock();
-        }
+        item = ItemSyntax.getItem(getLine(3));
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
     }
 
     @Override
@@ -91,9 +56,8 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
+        if (chip.getInput(0))
             chip.setOutput(0, isDetected());
-        }
     }
 
     @Override
@@ -104,15 +68,10 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
 
     protected boolean isDetected() {
 
-        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
-            if (entity instanceof Item) {
-                ItemStack itemStack = ((Item) entity).getItemStack();
-                if (itemStack.getTypeId() == item) {
-                    if (data != -1 && !(itemStack.getDurability() == data)) return false;
-                    if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius))
-                        return true;
-                }
-            }
+        for (Entity entity : area.getEntitiesInArea(Collections.singleton(EntityType.ITEM))) {
+            ItemStack itemStack = ((Item) entity).getItemStack();
+            if (ItemUtil.areItemsIdentical(itemStack, item))
+                return true;
         }
         return false;
     }
