@@ -380,7 +380,7 @@ public class ItemUtil {
             case LOG:
                 return new ItemStack(Material.COAL, 1, (short) 1);
             case IRON_ORE:
-                return new ItemStack(Material.IRON_BARDING);
+                return new ItemStack(Material.IRON_INGOT);
             case REDSTONE_ORE:
                 return new ItemStack(Material.REDSTONE, 4);
             case EMERALD_ORE:
@@ -397,6 +397,8 @@ public class ItemUtil {
                 return new ItemStack(Material.NETHER_BRICK);
             case CLAY:
                 return new ItemStack(Material.HARD_CLAY);
+            case QUARTZ_ORE:
+                return new ItemStack(Material.QUARTZ);
             default:
                 return null;
         }
