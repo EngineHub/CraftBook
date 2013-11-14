@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -281,6 +282,15 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerItemClick(InventoryClickEvent event) {
+
+        if(event.getCurrentItem() == null || !(event.getWhoClicked() instanceof Player))
+            return;
+
+        performCommandItems(event.getCurrentItem(), (Player) event.getWhoClicked(), event);
+    }
+
     @SuppressWarnings("unchecked")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -305,57 +315,61 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 final CommandItemDefinition comdef = def;
 
                 if(comdef.clickType != ClickType.ANY) {
-                    if(comdef.clickType == ClickType.CLICK_RIGHT || comdef.clickType == ClickType.CLICK_LEFT || comdef.clickType == ClickType.CLICK_EITHER) {
 
-                        if(!(event instanceof PlayerInteractEvent))
+                    //Mouse
+
+                    if(comdef.clickType == ClickType.CLICK_RIGHT && !(event instanceof PlayerInteractEvent) && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
+                        break current;
+
+                    if(comdef.clickType == ClickType.CLICK_LEFT && !(event instanceof PlayerInteractEvent) && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
+                        break current;
+
+                    //Entity
+
+                    if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ENTITY_LEFT && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player)))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ENTITY_ARROW && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)))
+                        break current;
+
+                    //Block
+
+                    if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
+                        break current;
+
+                    //Item
+
+                    if(comdef.clickType == ClickType.ITEM_CONSUME && !(event instanceof PlayerItemConsumeEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ITEM_DROP && !(event instanceof PlayerDropItemEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ITEM_BREAK && !(event instanceof PlayerItemBreakEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ITEM_PICKUP && !(event instanceof PlayerPickupItemEvent))
+                        break current;
+
+                    if((comdef.clickType == ClickType.ITEM_CLICK_EITHER || comdef.clickType == ClickType.ITEM_CLICK_LEFT || comdef.clickType == ClickType.ITEM_CLICK_RIGHT) && !(event instanceof InventoryClickEvent))
+                        break current;
+                    else if (event instanceof InventoryClickEvent) {
+                        if(comdef.clickType == ClickType.ITEM_CLICK_LEFT && !((InventoryClickEvent) event).getClick().isLeftClick())
                             break current;
-
-                        if(comdef.clickType == ClickType.CLICK_RIGHT && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
-                            break current;
-
-                        if(comdef.clickType == ClickType.CLICK_LEFT && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
-                            break current;
-                    } else if (comdef.clickType == ClickType.ENTITY_RIGHT || comdef.clickType == ClickType.ENTITY_LEFT || comdef.clickType == ClickType.ENTITY_ARROW || comdef.clickType == ClickType.ENTITY_EITHER) {
-
-                        if(!(event instanceof PlayerInteractEntityEvent) && !(event instanceof EntityDamageByEntityEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ENTITY_LEFT && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player)))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ENTITY_ARROW && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)))
-                            break current;
-                    } else if (comdef.clickType == ClickType.BLOCK_BREAK || comdef.clickType == ClickType.BLOCK_PLACE || comdef.clickType == ClickType.BLOCK_EITHER) {
-
-                        if(!(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.BLOCK_BREAK && !(event instanceof BlockBreakEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
-                            break current;
-                    } else if (comdef.clickType == ClickType.ITEM_CONSUME || comdef.clickType == ClickType.ITEM_DROP || comdef.clickType == ClickType.ITEM_BREAK || comdef.clickType == ClickType.ITEM_PICKUP) {
-
-                        if(comdef.clickType == ClickType.ITEM_CONSUME && !(event instanceof PlayerItemConsumeEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ITEM_DROP && !(event instanceof PlayerDropItemEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ITEM_BREAK && !(event instanceof PlayerItemBreakEvent))
-                            break current;
-
-                        if(comdef.clickType == ClickType.ITEM_PICKUP && !(event instanceof PlayerPickupItemEvent))
-                            break current;
-                    } else if (comdef.clickType == ClickType.PLAYER_DEATH) {
-
-                        if(comdef.clickType == ClickType.PLAYER_DEATH && !(event instanceof PlayerDeathEvent))
+                        else if(comdef.clickType == ClickType.ITEM_CLICK_RIGHT && !((InventoryClickEvent) event).getClick().isRightClick())
                             break current;
                     }
+
+                    //Player
+
+                    if(comdef.clickType == ClickType.PLAYER_DEATH && !(event instanceof PlayerDeathEvent))
+                        break current;
                 }
 
                 if(comdef.requireSneaking == TernaryState.TRUE && !lplayer.isSneaking())
@@ -555,7 +569,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,PLAYER_DEATH;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH;
         }
     }
 }
