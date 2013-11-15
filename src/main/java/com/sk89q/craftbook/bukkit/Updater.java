@@ -21,6 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -44,7 +45,7 @@ import org.json.simple.JSONValue;
 
 public class Updater {
 
-    private CraftBookPlugin plugin;
+    private Plugin plugin;
     private UpdateType type;
     private String versionName;
     private String versionLink;
@@ -141,7 +142,7 @@ public class Updater {
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param announce True if the program should announce the progress of new updates in console
      */
-    public Updater(CraftBookPlugin plugin, int id, File file, UpdateType type, boolean announce) {
+    public Updater(Plugin plugin, int id, File file, UpdateType type, boolean announce) {
         this.plugin = plugin;
         this.type = type;
         this.announce = announce;
@@ -415,11 +416,11 @@ public class Updater {
      */
     private boolean versionCheck(String title) {
         if (type != UpdateType.NO_VERSION_CHECK) {
-            final String version = CraftBookPlugin.getVersion();
+            final String version = CraftBookPlugin.getVersion().trim();
             if (title.split(" v").length == 2) {
-                final String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
+                final String remoteVersion = title.split(" v")[1].split(" ")[0].trim(); // Get the newest file's version number
 
-                if (version.equalsIgnoreCase(remoteVersion)) {
+                if (hasTag(version) || version.equalsIgnoreCase(remoteVersion)) {
                     // We already have the latest version, or this build is tagged for no-update
                     result = Updater.UpdateResult.NO_UPDATE;
                     return false;
@@ -437,17 +438,18 @@ public class Updater {
         return true;
     }
 
-    ///**
-    // * Evaluate whether the version number is marked showing that it should not be updated by this program
-    // */
-    /*private boolean hasTag(String version) {
-        for (final String string : Updater.NO_UPDATE_TAG) {
+    /**
+     * Evaluate whether the version number is marked showing that it should not be updated by this program
+     */
+    private boolean hasTag(String version) {
+        return false;
+        /*for (final String string : Updater.NO_UPDATE_TAG) {
             if (version.contains(string)) {
                 return true;
             }
         }
-        return false;
-    }*/
+        return false;*/
+    }
 
     private boolean read() {
         try {
