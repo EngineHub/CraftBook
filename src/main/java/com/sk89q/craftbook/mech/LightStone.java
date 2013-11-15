@@ -46,7 +46,7 @@ public class LightStone extends AbstractCraftBookMechanic {
         }
 
         Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        player.print(ChatColor.YELLOW + "LightStone: [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
+        player.printRaw(ChatColor.YELLOW + player.translate("mech.lightstone.lightstone") + " [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
     }
 
     private String getLightLine(int data) {

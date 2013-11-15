@@ -29,7 +29,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         }
 
         String var = CraftBookPlugin.inst().getVariable(sign.getLine(2), sign.getLine(3).isEmpty() ? "global" : sign.getLine(3));
-        if(var == null || var.isEmpty()) var = "Missing Variable!";
+        if(var == null || var.isEmpty()) var = "variable.missing";
         lplayer.print(var);
 
         event.setCancelled(true);
@@ -42,7 +42,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.marquee")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
-                lplayer.printError("You don't have permission for this.");
+                lplayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
         }
@@ -51,13 +51,13 @@ public class Marquee extends AbstractCraftBookMechanic {
         String variable = event.getLine(2);
 
         if(!VariableCommands.hasVariablePermission(event.getPlayer(), namespace, variable, "get")) {
-            lplayer.printError("You don't have permission to use that variable!");
+            lplayer.printError("variable.use-permissions");
             SignUtil.cancelSign(event);
         }
 
         String var = CraftBookPlugin.inst().getVariable(variable, namespace);
         if(var == null || var.isEmpty()) {
-            lplayer.printError("Missing Variable!");
+            lplayer.printError("variable.missing");
             SignUtil.cancelSign(event);
         }
 

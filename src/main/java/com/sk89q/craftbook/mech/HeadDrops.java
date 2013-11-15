@@ -25,6 +25,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -131,8 +132,10 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(skull == null || !skull.hasOwner())
                 return;
 
+            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
             if(CraftBookPlugin.inst().getConfiguration().headDropsShowNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "This is the dismembered head of.. " + skull.getOwner());
+                player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + " " + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
                 skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
                 skull.update();
@@ -155,6 +158,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(!skull.hasOwner())
                 return;
             String playerName = ChatColor.stripColor(skull.getOwner());
+            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             EntityType type = MobSkullType.getEntityType(playerName);
 
@@ -168,8 +172,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 return;
 
             if(!event.getPlayer().hasPermission("craftbook.mech.headdrops.break")) {
-
-                event.getPlayer().sendMessage("You don't have permission to break heads!");
+                player.printError("mech.headdrops.break-permission");
                 return;
             }
 

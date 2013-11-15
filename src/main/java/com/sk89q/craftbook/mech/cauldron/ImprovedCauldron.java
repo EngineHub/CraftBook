@@ -95,7 +95,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                 // lets check permissions for that recipe
                 if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
                         && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
-                    player.printError("You dont have permission to cook this recipe.");
+                    player.printError("mech.cauldron.permissions");
                     return;
                 }
 
@@ -106,13 +106,13 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
                     event.setCancelled(true);
                 } else { // Spoons
                     if (event.getPlayer().getItemInHand() == null) return;
-                    if (isItemSpoon(event.getPlayer().getItemInHand().getTypeId())) {
+                    if (isItemSpoon(event.getPlayer().getItemInHand().getType())) {
                         double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
                         double ran = plugin.getRandom().nextDouble();
                         event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short) 1));
                         if (chance <= ran) {
                             cook(recipe, items);
-                            player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+                            player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());
                             block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
                             event.setCancelled(true);
                         } else {
@@ -126,9 +126,9 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         }
     }
 
-    public boolean isItemSpoon(int id) {
+    public boolean isItemSpoon(Material id) {
 
-        return id == 256 || id == 269 || id == 273 || id == 277 || id == 284;
+        return id == Material.WOOD_SPADE || id == Material.STONE_SPADE || id == Material.IRON_SPADE || id == Material.DIAMOND_SPADE || id == Material.GOLD_SPADE;
     }
 
     public double getSpoonChance(ItemStack item, double chance) {

@@ -32,10 +32,6 @@ public class Area extends AbstractMechanic {
 
     public static class Factory extends AbstractMechanicFactory<Area> {
 
-        public Factory() {
-
-        }
-
         private final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
         /**
@@ -64,7 +60,7 @@ public class Area extends AbstractMechanic {
                 sign.update(false);
                 // check if the namespace and area exists
                 isValidArea(sign);
-                player.print("Toggle area created.");
+                player.print("mech.area.create");
             } else return null;
 
             throw new ProcessedMechanismException();
@@ -107,7 +103,7 @@ public class Area extends AbstractMechanic {
                 if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return;
                 if (CopyManager.isExistingArea(plugin.getDataFolder(), namespace, areaOff)) return;
             }
-            throw new InvalidMechanismException("The area or namespace does not exist.");
+            throw new InvalidMechanismException("mech.area.missing");
         }
     }
 

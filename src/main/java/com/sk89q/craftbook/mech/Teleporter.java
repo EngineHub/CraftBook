@@ -178,22 +178,18 @@ public class Teleporter extends AbstractMechanic {
         Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
                 (int) Math.floor(toZ));
         // well, unless that's already a ceiling.
-        if (!occupiable(floor)) {
+        if (!BlockType.canPassThrough(floor.getTypeId()))
             floor = floor.getRelative(BlockFace.DOWN);
-        }
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor)) {
+            if (BlockType.canPassThrough(floor.getTypeId()))
                 foundFree++;
-            } else {
+            else
                 break;
-            }
-            if (floor.getY() == 0x0) {
-                break;
-            }
+            if (floor.getY() == 0x0) break;
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (foundFree < 2) {
@@ -206,14 +202,11 @@ public class Teleporter extends AbstractMechanic {
         subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 1, floor.getZ() + 0.5));
         if (player.isInsideVehicle()) {
             subspaceRift = player.getVehicle().getLocation();
-            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2,
-                    floor.getZ() + 0.5));
+            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2, floor.getZ() + 0.5));
             player.getVehicle().teleport(subspaceRift);
         }
         if (CraftBookPlugin.inst().getConfiguration().teleporterMaxRange > 0)
-            if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) >
-            CraftBookPlugin.inst().getConfiguration().teleporterMaxRange * CraftBookPlugin.inst()
-            .getConfiguration().teleporterMaxRange) {
+            if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > CraftBookPlugin.inst().getConfiguration().teleporterMaxRange * CraftBookPlugin.inst().getConfiguration().teleporterMaxRange) {
                 player.print("mech.teleport.range");
                 return;
             }
@@ -221,10 +214,5 @@ public class Teleporter extends AbstractMechanic {
         player.teleport(subspaceRift);
 
         player.print("mech.teleport.alert");
-    }
-
-    private static boolean occupiable(Block block) {
-
-        return BlockType.canPassThrough(block.getTypeId());
     }
 }

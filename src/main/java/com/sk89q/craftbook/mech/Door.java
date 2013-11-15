@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -69,8 +70,7 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Down]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -81,8 +81,7 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door Up]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -93,8 +92,7 @@ public class Door extends AbstractMechanic {
                 player.checkPermission("craftbook.mech.door");
 
                 sign.setLine(1, "[Door]");
-                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door" + "" +
-                        ".infinite")) {
+                if (sign.getLine(0).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.door.infinite")) {
                     sign.setLine(0, "0");
                 } else if (!sign.getLine(0).equalsIgnoreCase("infinite")) {
                     sign.setLine(0, "0");
@@ -120,7 +118,7 @@ public class Door extends AbstractMechanic {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
-            if (block.getTypeId() != BlockID.SIGN_POST) return null;
+            if (block.getType() != Material.SIGN_POST) return null;
             ChangedSign s = BukkitUtil.toChangedSign(block);
             if (!s.getLine(1).contains("Door") || s.getLine(1).equalsIgnoreCase("[Door]"))
                 return null;
@@ -175,7 +173,7 @@ public class Door extends AbstractMechanic {
             // i = settings.maxLength is actually the farthest place we're
             // allowed to find the distal signpost
 
-            if (otherSide.getTypeId() == BlockID.SIGN_POST) {
+            if (otherSide.getType() == Material.SIGN_POST) {
                 String otherSignText = BukkitUtil.toChangedSign(otherSide).getLines()[1];
                 if ("[Door Down]".equalsIgnoreCase(otherSignText))
                     break;
@@ -192,7 +190,7 @@ public class Door extends AbstractMechanic {
             }
         }
 
-        if (otherSide.getTypeId() != BlockID.SIGN_POST) throw new InvalidConstructionException("mech.door.other-sign");
+        if (otherSide.getType() != Material.SIGN_POST) throw new InvalidConstructionException("mech.door.other-sign");
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
 
@@ -221,14 +219,14 @@ public class Door extends AbstractMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getTypeId() && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData())
+            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData())
                 throw new InvalidConstructionException("mech.door.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getTypeId() && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData())
+            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData())
                 throw new InvalidConstructionException("mech.door.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }

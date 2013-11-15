@@ -393,7 +393,7 @@ public class Gate extends AbstractMechanic {
                         if (!isValidGateBlock(new ItemInfo(line0)))
                             throw new NumberFormatException();
                     } catch (NumberFormatException e) {
-                        throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
+                        throw new InvalidMechanismException("mech.gate.valid-item");
                     }
                 }
                 sign.setLine(1, "[DGate]");

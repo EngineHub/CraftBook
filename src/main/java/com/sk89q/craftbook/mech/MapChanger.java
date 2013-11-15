@@ -53,7 +53,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
                 id = -1;
             }
             if (id <= -1) {
-                event.getPlayer().sendMessage("Invalid Map!");
+                player.printError("mech.map.invalid");
                 return;
             }
             event.getPlayer().getItemInHand().setDurability(id);

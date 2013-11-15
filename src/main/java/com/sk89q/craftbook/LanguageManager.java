@@ -134,6 +134,11 @@ public class LanguageManager {
         put("area.break-permissions", "You don't have permissions to break that in this area!");
 
 
+        put("variable.missing", "This variable is missing!");
+        put("variable.use-permissions", "You don't have permission to use that variable!");
+
+
+        put("mech.create-permission", "You don't have permission to create this mechanic.");
         put("mech.use-permission", "You don't have permission to use this mechanic.");
         put("mech.restock-permission", "You don't have permission to restock this mechanic.");
         put("mech.not-enough-blocks","Not enough blocks to trigger mechanic!");
@@ -144,6 +149,9 @@ public class LanguageManager {
 
         put("mech.anchor.create","Chunk Anchor Created!");
         put("mech.anchor.already-anchored","This chunk is already anchored!");
+
+        put("mech.area.create","Toggle Area Created!");
+        put("mech.area.missing","The area or namespace does not exist.");
 
         put("mech.bookcase.fail-line", "Failed to fetch a line from the books file.");
         put("mech.bookcase.fail-file", "Failed to read the books file.");
@@ -163,6 +171,8 @@ public class LanguageManager {
         put("mech.cauldron.legacy-not-in-group","Doesn't seem as if you have the ability...");
         put("mech.cauldron.legacy-create","In a poof of smoke, you've made");
         put("mech.cauldron.stir","You stir the cauldron but nothing happens.");
+        put("mech.cauldron.permissions","You dont have permission to cook this recipe.");
+        put("mech.cauldron.cook", "You have cooked the recipe:");
 
         put("mech.chairs.sit", "You are now sitting!");
         put("mech.chairs.stand", "You are no longer sitting!");
@@ -190,10 +200,14 @@ public class LanguageManager {
         put("mech.gate.create","Gate Created!");
         put("mech.gate.toggle","Gate Toggled!");
         put("mech.gate.not-found","Failed to find a gate!");
+        put("mech.gate.valid-item","Line 1 needs to be a valid block id.");
         put("mech.dgate.create","Small Gate Created!");
 
         put("mech.hiddenswitch.key","The key did not fit!");
         put("mech.hiddenswitch.toggle","You hear the muffled click of a switch!");
+
+        put("mech.headdrops.click-message","This is the dismembered head of..");
+        put("mech.headdrops.break-permission","You don't have permission to break heads!");
 
         put("mech.lift.target-sign-created","Elevator target sign created.");
         put("mech.lift.down-sign-created","Elevator down sign created.");
@@ -208,7 +222,12 @@ public class LanguageManager {
         put("mech.lift.no-depart", "Cannot depart from this lift (can only arrive).");
         put("mech.lift.busy", "Elevator Busy!");
 
+        put("mech.lightstone.lightstone", "LightStone:");
+
         put("mech.lightswitch.create","Light Switch Created!");
+
+        put("mech.map.create","Map Changer Created!");
+        put("mech.map.invalid","Invalid Map ID!");
 
         put("mech.painting.editing","You are now editing this painting!");
         put("mech.painting.stop","You are no longer editing this painting!");
