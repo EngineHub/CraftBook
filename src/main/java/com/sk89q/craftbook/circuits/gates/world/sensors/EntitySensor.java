@@ -140,7 +140,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.createArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+            if(!SearchArea.isValidArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
 

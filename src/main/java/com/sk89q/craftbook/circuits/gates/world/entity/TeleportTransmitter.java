@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -15,7 +14,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 
 public class TeleportTransmitter extends AbstractSelfTriggeredIC {
@@ -73,18 +71,11 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
                 continue;
 
             if (closest == null) closest = e;
-            else if (LocationUtil.getDistanceSquared(closest.getLocation(), getCentre()) > LocationUtil.getDistanceSquared(e.getLocation(), getCentre())) closest = e;
+            if(area.getCenter() == null) break;
+            else if (LocationUtil.getDistanceSquared(closest.getLocation(), area.getCenter()) >= LocationUtil.getDistanceSquared(e.getLocation(), area.getCenter())) closest = e;
         }
         if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
-            closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon!");
-    }
-
-    private Location getCentre() {
-
-        if(area.hasRadiusAndCenter())
-            return area.getCenter();
-        else
-            return SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation();
+            closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon (3s)!");
     }
 
     public static Tuple2<Long, String> getValue(String band) {
@@ -107,7 +98,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         if (memory.containsKey(band)) {
             long time = System.currentTimeMillis() - memory.get(band).a;
             int seconds = (int) (time / 1000) % 60;
-            if (seconds > 5) { // Expired.
+            if (seconds > 3) { // Expired.
                 memory.remove(band);
             } else return false;
         }
