@@ -358,7 +358,7 @@ public class ItemUtil {
                 return new ItemStack(Material.COOKED_FISH);
             case PORK:
                 return new ItemStack(Material.GRILLED_PORK);
-            case POTATO:
+            case POTATO_ITEM:
                 return new ItemStack(Material.BAKED_POTATO);
             default:
                 return null;
