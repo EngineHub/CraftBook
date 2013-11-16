@@ -193,8 +193,8 @@ public class SearchArea {
 
         if(hasRegion()) {
 
-            Chunk c1 = getWorld().getChunkAt(getRegion().getMinimumPoint().getBlockX(), getRegion().getMinimumPoint().getBlockZ());
-            Chunk c2 = getWorld().getChunkAt(getRegion().getMaximumPoint().getBlockX(), getRegion().getMaximumPoint().getBlockZ());
+            Chunk c1 = getWorld().getChunkAt(getRegion().getMinimumPoint().getBlockX() >> 4, getRegion().getMinimumPoint().getBlockZ() >> 4);
+            Chunk c2 = getWorld().getChunkAt(getRegion().getMaximumPoint().getBlockX() >> 4, getRegion().getMaximumPoint().getBlockZ() >> 4);
             int xMin = Math.min(c1.getX(), c2.getX());
             int xMax = Math.max(c1.getX(), c2.getX());
             int zMin = Math.min(c1.getZ(), c2.getZ());
@@ -224,7 +224,7 @@ public class SearchArea {
      */
     public boolean hasRegion() {
 
-        return region != null && world != null;
+        return region != null && world != null && CraftBookPlugin.inst().getWorldGuard() != null;
     }
 
     /**
