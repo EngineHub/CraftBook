@@ -451,7 +451,7 @@ public class Gate extends AbstractMechanic {
             ItemInfo type = getGateBlock();
             if(type.getId() <= 0)
                 type = new ItemInfo(Material.FENCE, 1);
-            ItemStack toDrop = new ItemStack(type.getId(), amount, (short) type.getData());
+            ItemStack toDrop = new ItemStack(type.getType(), amount, (short) type.getData());
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
     }

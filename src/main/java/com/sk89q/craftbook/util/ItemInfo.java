@@ -110,7 +110,7 @@ public class ItemInfo {
     @Override
     public String toString() {
 
-        return data.getItemType().name() + ":" + data;
+        return data.getItemType().name() + ":" + data.getData();
     }
 
     @Override
