@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -69,7 +69,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         }
 
         p.teleport(getBackBlock().getLocation().add(0.5, 1.5, 0.5));
-        p.sendMessage(ChatColor.YELLOW + welcome);
+        CraftBookPlugin.inst().wrapPlayer(p).print(welcome);
     }
 
     public static class Factory extends AbstractICFactory {
