@@ -277,7 +277,7 @@ public class Gate extends AbstractMechanic {
 
         if (sign == null) return;
 
-        if (plugin.getConfiguration().safeDestruction && getGateBlock().getId() == player.getHeldItemType() && isValidGateBlock(getGateBlock(), false)) {
+        if (plugin.getConfiguration().safeDestruction && (getGateBlock().getId() == 0 || getGateBlock().getId() == player.getHeldItemType()) && isValidGateBlock(player.getHeldItemInfo(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -450,7 +450,7 @@ public class Gate extends AbstractMechanic {
         if (amount > 0) {
             ItemInfo type = getGateBlock();
             if(type.getId() <= 0)
-                type = new ItemInfo(Material.FENCE, 1);
+                type = new ItemInfo(Material.FENCE);
             ItemStack toDrop = new ItemStack(type.getType(), amount, (short) type.getData());
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
