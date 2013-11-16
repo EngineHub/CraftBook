@@ -318,10 +318,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                     //Mouse
 
-                    if(comdef.clickType == ClickType.CLICK_RIGHT && !(event instanceof PlayerInteractEvent) && !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK))
+                    if(comdef.clickType == ClickType.CLICK_RIGHT && (!(event instanceof PlayerInteractEvent) || !(((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK)))
                         break current;
 
-                    if(comdef.clickType == ClickType.CLICK_LEFT && !(event instanceof PlayerInteractEvent) && !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK))
+                    if(comdef.clickType == ClickType.CLICK_LEFT && (!(event instanceof PlayerInteractEvent) || !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK)))
                         break current;
 
                     //Entity
