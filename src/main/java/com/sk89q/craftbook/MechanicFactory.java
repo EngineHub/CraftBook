@@ -68,7 +68,5 @@ public interface MechanicFactory<T extends Mechanic> {
      *                                     but the mechanism is misconfigured and inoperable.
      * @throws ProcessedMechanismException
      */
-    public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException,
-    ProcessedMechanismException;
-
+    public T detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException;
 }

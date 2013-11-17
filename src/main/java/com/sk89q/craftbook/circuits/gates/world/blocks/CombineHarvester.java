@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -82,7 +83,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
                     if (harvestable(b)) {
 
                         collectDrops(BlockUtil.getBlockDrops(b, null));
-                        b.setTypeId(0);
+                        b.setType(Material.AIR);
                         return true;
                     }
                 }
@@ -97,7 +98,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         Block pipe = getBackBlock().getRelative(back);
         if(Pipes.Factory.setupPipes(pipe, getBackBlock(), drops) != null)
             return;
-        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(drops);
@@ -115,22 +116,22 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
     public boolean harvestable(Block block) {
 
-        if((block.getTypeId() == BlockID.CROPS || block.getTypeId() == BlockID.CARROTS || block.getTypeId() == BlockID.POTATOES) && block.getData() >= 0x7)
+        if((block.getType() == Material.CROPS || block.getType() == Material.CARROT || block.getType() == Material.POTATO) && block.getData() >= 0x7)
             return true;
 
-        if(block.getTypeId() == BlockID.CACTUS && block.getRelative(0, -1, 0).getTypeId() == BlockID.CACTUS && block.getRelative(0, 1, 0).getTypeId() != BlockID.CACTUS)
+        if(block.getType() == Material.CACTUS && block.getRelative(0, -1, 0).getType() == Material.CACTUS && block.getRelative(0, 1, 0).getType() != Material.CACTUS)
             return true;
 
-        if(block.getTypeId() == BlockID.REED && block.getRelative(0, -1, 0).getTypeId() == BlockID.REED && block.getRelative(0, 1, 0).getTypeId() != BlockID.REED)
+        if(block.getType() == Material.SUGAR_CANE && block.getRelative(0, -1, 0).getType() == Material.SUGAR_CANE && block.getRelative(0, 1, 0).getType() != Material.SUGAR_CANE)
             return true;
 
-        if(block.getTypeId() == BlockID.VINE && block.getRelative(0, 1, 0).getTypeId() == BlockID.VINE && block.getRelative(0, -1, 0).getTypeId() != BlockID.VINE)
+        if(block.getType() == Material.VINE && block.getRelative(0, 1, 0).getType() == Material.VINE && block.getRelative(0, -1, 0).getType() != Material.VINE)
             return true;
 
-        if(block.getTypeId() == BlockID.COCOA_PLANT && ((block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC))
+        if(block.getType() == Material.COCOA && ((block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC))
             return true;
 
-        if(block.getTypeId() == BlockID.NETHER_WART && block.getData() >= 0x3)
+        if(block.getType() == Material.NETHER_STALK && block.getData() >= 0x3)
             return true;
 
         if(block.getTypeId() == BlockID.MELON_BLOCK || block.getTypeId() == BlockID.PUMPKIN)

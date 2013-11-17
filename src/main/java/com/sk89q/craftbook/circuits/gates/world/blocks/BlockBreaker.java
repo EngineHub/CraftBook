@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,7 +23,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class BlockBreaker extends AbstractSelfTriggeredIC {
 
@@ -97,7 +97,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         if (chest != null && chest.getState() instanceof InventoryHolder)
             hasChest = true;
 
-        if (broken == null || broken.getTypeId() == 0 || broken.getTypeId() == BlockID.BEDROCK || broken.getTypeId() == BlockID.PISTON_MOVING_PIECE)
+        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.BEDROCK || broken.getType() == Material.PISTON_MOVING_PIECE)
             return false;
 
         if (id > 0 && id != broken.getTypeId()) return false;
@@ -129,7 +129,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
             dropItem(blockstack);
         }
-        broken.setTypeId(0);
+        broken.setType(Material.AIR);
 
         return true;
     }

@@ -44,7 +44,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -190,14 +189,13 @@ public class Gate extends AbstractMechanic {
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
-        int ID = 0;
-        byte data = 0;
-        if (close) {
-            ID = BukkitUtil.toBlock(column.getStartingPoint()).getTypeId();
-            data = BukkitUtil.toBlock(column.getStartingPoint()).getData();
-        }
+        ItemInfo item;
+        if (close)
+            item = new ItemInfo(BukkitUtil.toBlock(column.getStartingPoint()));
+        else
+            item = new ItemInfo(Material.AIR, 0);
 
-        CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + ID + ":" + data, "gates.search");
+        CraftBookPlugin.logDebugMessage("Setting column at " + pt.getX() + ":" + pt.getY() + ":" + pt.getZ() + " to " + item.toString(), "gates.search");
 
         for (Vector bl : column.getRegion()) {
 
@@ -218,7 +216,7 @@ public class Gate extends AbstractMechanic {
 
             if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
-                if (block.getTypeId() != 0 && !isValidGateBlock(new ItemInfo(block), true))
+                if (block.getType() != Material.AIR && !isValidGateBlock(new ItemInfo(block), true))
                     break;
             } else // Allowing water allows the use of gates as flood gates
                 if (!canPassThrough(block))
@@ -229,18 +227,18 @@ public class Gate extends AbstractMechanic {
                 if (!close || hasEnoughBlocks(sign, otherSign)) {
                     if (!close && isValidGateBlock(new ItemInfo(block), true))
                         addBlocks(sign, 1);
-                    else if (close && canPassThrough(block) && isValidGateBlock(new ItemInfo(ID, data), true))
+                    else if (close && canPassThrough(block) && isValidGateBlock(item, true))
                         removeBlocks(sign, 1);
-                    block.setTypeIdAndData(ID, data, true);
-                } else if (close && !hasEnoughBlocks(sign, otherSign) && isValidGateBlock(new ItemInfo(ID, data), true))
+                    block.setTypeIdAndData(item.getId(), (byte) item.getData(), true);
+                } else if (close && !hasEnoughBlocks(sign, otherSign) && isValidGateBlock(item, true))
                     if (player != null) {
                         player.printError("mech.not-enough-blocks");
                         return false;
                     }
             } else
-                block.setTypeIdAndData(ID, data, true);
+                block.setTypeIdAndData(item.getId(), (byte) item.getData(), true);
 
-            CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ":" + bl.getY() + ":" + bl.getZ() + " to " + ID + ":" + data, "gates.search");
+            CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ":" + bl.getY() + ":" + bl.getZ() + " to " + item.toString(), "gates.search");
 
             WorldVector pt = new BlockWorldVector(column.getStartingPoint(), bl.getBlockX(), bl.getBlockY(), bl.getBlockZ());
             recurseColumn(player, new BlockWorldVector(column.getStartingPoint(), pt.add(1, 0, 0)), visitedColumns, close);
@@ -277,7 +275,7 @@ public class Gate extends AbstractMechanic {
 
         if (sign == null) return;
 
-        if (plugin.getConfiguration().safeDestruction && (getGateBlock().getId() == 0 || getGateBlock().getId() == player.getHeldItemType()) && isValidGateBlock(player.getHeldItemInfo(), false)) {
+        if (plugin.getConfiguration().safeDestruction && (getGateBlock() == null || getGateBlock().getType() == Material.AIR || getGateBlock().getType() == player.getHeldItemInfo().getType()) && isValidGateBlock(player.getHeldItemInfo(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -361,20 +359,15 @@ public class Gate extends AbstractMechanic {
          * @throws ProcessedMechanismException
          */
         @Override
-        public Gate detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        public Gate detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
 
             if (sign.getLine(1).equalsIgnoreCase("[Gate]")) {
                 player.checkPermission("craftbook.mech.gate");
                 // get the material that this gate should toggle and verify it
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.isEmpty()) {
-                    try {
-                        if (!isValidGateBlock(new ItemInfo(line0)))
-                            throw new NumberFormatException();
-                    } catch (NumberFormatException e) {
+                    if (!isValidGateBlock(new ItemInfo(line0)))
                         throw new InvalidMechanismException("Line 1 needs to be a valid block id.");
-                    }
                 }
                 sign.setLine(1, "[Gate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
@@ -389,12 +382,8 @@ public class Gate extends AbstractMechanic {
                 // get the material that this gate should toggle and verify it
                 String line0 = sign.getLine(0).trim();
                 if (line0 != null && !line0.isEmpty()) {
-                    try {
-                        if (!isValidGateBlock(new ItemInfo(line0)))
-                            throw new NumberFormatException();
-                    } catch (NumberFormatException e) {
+                    if (!isValidGateBlock(new ItemInfo(line0)))
                         throw new InvalidMechanismException("mech.gate.valid-item");
-                    }
                 }
                 sign.setLine(1, "[DGate]");
                 if (sign.getLine(3).equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.mech.gate.infinite"))
@@ -423,12 +412,12 @@ public class Gate extends AbstractMechanic {
 
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
-                int id = Integer.parseInt(sign.getLine(0));
-                return block.getId() == id;
+                ItemInfo def = new ItemInfo(sign.getLine(0));
+                return block.equals(def);
             } catch (Exception e) {
                 if (check) {
                     type = getGateBlock();
-                    if(type.getId() > 0)
+                    if(type == null || type.getType() == Material.AIR)
                         return block.equals(type);
                 }
                 return plugin.getConfiguration().gateBlocks.contains(block);
@@ -449,8 +438,8 @@ public class Gate extends AbstractMechanic {
         int amount = getBlocks(sign);
         if (amount > 0) {
             ItemInfo type = getGateBlock();
-            if(type.getId() <= 0)
-                type = new ItemInfo(Material.FENCE);
+            if(type == null || type.getType() == Material.AIR)
+                type = new ItemInfo(Material.FENCE, 0);
             ItemStack toDrop = new ItemStack(type.getType(), amount, (short) type.getData());
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
@@ -458,18 +447,18 @@ public class Gate extends AbstractMechanic {
 
     private boolean canPassThrough(Block t) {
 
-        int[] passableBlocks = new int[9];
-        passableBlocks[0] = BlockID.WATER;
-        passableBlocks[1] = BlockID.STATIONARY_WATER;
-        passableBlocks[2] = BlockID.LAVA;
-        passableBlocks[3] = BlockID.STATIONARY_LAVA;
-        passableBlocks[4] = BlockID.SNOW;
-        passableBlocks[5] = BlockID.LONG_GRASS;
-        passableBlocks[6] = BlockID.VINE;
-        passableBlocks[7] = BlockID.DEAD_BUSH;
-        passableBlocks[8] = BlockID.AIR;
+        Material[] passableBlocks = new Material[9];
+        passableBlocks[0] = Material.WATER;
+        passableBlocks[1] = Material.STATIONARY_WATER;
+        passableBlocks[2] = Material.LAVA;
+        passableBlocks[3] = Material.STATIONARY_LAVA;
+        passableBlocks[4] = Material.SNOW;
+        passableBlocks[5] = Material.LONG_GRASS;
+        passableBlocks[6] = Material.VINE;
+        passableBlocks[7] = Material.DEAD_BUSH;
+        passableBlocks[8] = Material.AIR;
 
-        for (int aPassableBlock : passableBlocks) { if (aPassableBlock == t.getTypeId()) return true; }
+        for (Material aPassableBlock : passableBlocks) { if (aPassableBlock == t.getType()) return true; }
 
         return isValidGateBlock(new ItemInfo(t), true);
     }
@@ -513,10 +502,7 @@ public class Gate extends AbstractMechanic {
             }
         }
 
-        if(gateBlock == null)
-            gateBlock = new ItemInfo(0, 0);
-
-        if(plugin.getConfiguration().gateEnforceType && gateBlock.getId() != 0 && sign != null) {
+        if(plugin.getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
             sign.setLine(0, gateBlock.toString());
             sign.update(false);
         }

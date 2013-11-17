@@ -18,6 +18,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.Locale;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -140,7 +141,7 @@ public class FlexibleSetBlock extends AbstractIC {
         if (inp) {
             body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
         } else if (hold) {
-            body.getWorld().getBlockAt(x, y, z).setTypeId(0);
+            body.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
         }
     }
 

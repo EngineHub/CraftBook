@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,7 +17,6 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class Cultivator extends AbstractSelfTriggeredIC {
 
@@ -74,10 +74,10 @@ public class Cultivator extends AbstractSelfTriggeredIC {
                     int rz = target.getZ() - z;
                     Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
-                    if (b.getTypeId() == BlockID.DIRT || b.getTypeId() == BlockID.GRASS) {
+                    if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
 
-                        if (b.getRelative(BlockFace.UP).getTypeId() == 0 && damageHoe()) {
-                            b.setTypeId(BlockID.SOIL);
+                        if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
+                            b.setType(Material.SOIL);
                             return true;
                         }
                     }
@@ -90,7 +90,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
     public boolean damageHoe() {
 
-        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST) {
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             for (int i = 290; i <= 294; i++) {
                 for (int slot = 0; slot < c.getInventory().getSize(); slot++) {

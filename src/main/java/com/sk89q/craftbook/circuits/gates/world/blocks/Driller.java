@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -23,7 +24,6 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class Driller extends AbstractSelfTriggeredIC {
@@ -103,15 +103,15 @@ public class Driller extends AbstractSelfTriggeredIC {
 
         boolean hasChest = chest != null;
 
-        int brokenType = 0;
-        while (brokenType == 0) {
+        Material brokenType = Material.AIR;
+        while (brokenType == Material.AIR) {
 
             if (blockToBreak.getLocation().getBlockY() == 0) return false;
             blockToBreak = blockToBreak.getRelative(0, -1, 0);
-            brokenType = blockToBreak.getTypeId();
-            if (brokenType == BlockID.BEDROCK) return false;
+            brokenType = blockToBreak.getType();
+            if (brokenType == Material.BEDROCK) return false;
             if (!((Factory)getFactory()).breakNonNatural)
-                if (brokenType != BlockID.AIR && !BlockType.isNaturalTerrainBlock(brokenType)) return false;
+                if (brokenType != Material.AIR && !BlockType.isNaturalTerrainBlock(brokenType.getId())) return false;
         }
 
         ItemStack tool = null;
@@ -140,10 +140,10 @@ public class Driller extends AbstractSelfTriggeredIC {
             }
         }
 
-        brokenType = blockToBreak.getTypeId();
-        blockToBreak.setTypeId(0);
+        brokenType = blockToBreak.getType();
+        blockToBreak.setType(Material.AIR);
 
-        return !(brokenType == BlockID.LAVA || brokenType == BlockID.WATER || brokenType == BlockID.STATIONARY_LAVA || brokenType == BlockID.STATIONARY_WATER);
+        return !(brokenType == Material.LAVA || brokenType == Material.WATER || brokenType == Material.STATIONARY_LAVA || brokenType == Material.STATIONARY_WATER);
 
     }
 

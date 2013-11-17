@@ -35,6 +35,7 @@ public class ItemInfo {
         data = stack.getData();
     }
 
+    @Deprecated
     public int getId() {
 
         return data.getItemTypeId();
@@ -81,28 +82,12 @@ public class ItemInfo {
         return false;
     }
 
-    public static ItemInfo parseFromString(String string) {
-
-        Material id = Material.getMaterial(RegexUtil.COLON_PATTERN.split(string)[0]);
-        if(id == null)
-            id = Material.getMaterial(Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[0]));
-        int data = -1;
-
-        try {
-            data = Integer.parseInt(RegexUtil.COLON_PATTERN.split(string)[1]);
-        } catch (Exception e) {
-            data = -1;
-        }
-
-        return new ItemInfo(id, data);
-    }
-
     public static List<ItemInfo> parseListFromString(List<String> strings) {
 
         List<ItemInfo> infos = new ArrayList<ItemInfo>();
 
         for(String string: strings)
-            infos.add(parseFromString(string));
+            infos.add(new ItemInfo(string));
 
         return infos;
     }

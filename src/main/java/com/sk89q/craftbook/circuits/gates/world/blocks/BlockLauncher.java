@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
@@ -56,7 +57,7 @@ public class BlockLauncher extends AbstractIC {
         block = ItemUtil.makeItemValid(ItemSyntax.getItem(getLine(2)));
 
         if(getLine(2).isEmpty() || block == null)
-            block = new ItemStack(12,1);
+            block = new ItemStack(Material.SAND,1);
 
         if(getLine(3).isEmpty())
             velocity = new Vector(0,0.5,0);
@@ -70,14 +71,14 @@ public class BlockLauncher extends AbstractIC {
 
         Block above = getBackBlock().getRelative(0, 1, 0);
         int timeout = 12;
-        while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() >= 255) {
+        while (above.getType() != Material.AIR || timeout < 0 || above.getLocation().getY() >= 255) {
             above = above.getRelative(0, 1, 0);
             timeout--;
         }
         if (velocity.getY() < 0) {
             above = getBackBlock().getRelative(0, -1, 0);
             timeout = 12;
-            while (above.getTypeId() != 0 || timeout < 0 || above.getLocation().getY() <= 1) {
+            while (above.getType() != Material.AIR || timeout < 0 || above.getLocation().getY() <= 1) {
                 above = above.getRelative(0, -1, 0);
                 timeout--;
             }
@@ -87,7 +88,7 @@ public class BlockLauncher extends AbstractIC {
         if(!new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
             return;
 
-        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld().spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getTypeId(), this.block.getData().getData());
+        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld().spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getType(), this.block.getData().getData());
         block.setVelocity(velocity);
     }
 

@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -83,22 +84,22 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     public boolean plant() {
 
-        if (item != null && !plantableItem(item.getTypeId())) return false;
+        if (item != null && !plantableItem(item.getType())) return false;
 
-        if (onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST || onBlock.getRelative(0, 1, 0).getTypeId() == BlockID.TRAPPED_CHEST) {
+        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST || onBlock.getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
             for (ItemStack it : c.getInventory().getContents()) {
 
                 if (!ItemUtil.isStackValid(it)) continue;
-                if (!plantableItem(it.getTypeId())) continue;
+                if (!plantableItem(it.getType())) continue;
 
                 if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
 
                 Block b = null;
 
                 if ((b = searchBlocks(it)) != null) {
-                    if (c.getInventory().removeItem(new ItemStack(it.getTypeId(), 1, it.getDurability())).isEmpty()) {
+                    if (c.getInventory().removeItem(new ItemStack(it.getType(), 1, it.getDurability())).isEmpty()) {
                         b.setTypeIdAndData(getBlockByItem(it.getTypeId()), (byte) it.getDurability(), true);
                         return true;
                     } else
@@ -140,9 +141,9 @@ public class Planter extends AbstractSelfTriggeredIC {
                     int rz = target.getZ() - z;
                     Block b = onBlock.getWorld().getBlockAt(rx, ry, rz);
 
-                    if (b.getTypeId() != 0) continue;
+                    if (b.getType() != Material.AIR) continue;
 
-                    if (itemPlantableOnBlock(stack.getTypeId(), b.getRelative(0, -1, 0).getTypeId())) {
+                    if (itemPlantableOnBlock(stack.getType(), b.getRelative(0, -1, 0).getType())) {
 
                         return b;
                     }
@@ -152,50 +153,52 @@ public class Planter extends AbstractSelfTriggeredIC {
         return null;
     }
 
-    protected boolean plantableItem(int itemId) {
+    protected boolean plantableItem(Material itemId) {
 
         switch (itemId) {
-            case BlockID.SAPLING:
-            case ItemID.SEEDS:
-            case ItemID.NETHER_WART_SEED:
-            case ItemID.MELON_SEEDS:
-            case ItemID.PUMPKIN_SEEDS:
-            case BlockID.CACTUS:
-            case ItemID.POTATO:
-            case ItemID.CARROT:
-            case BlockID.RED_FLOWER:
-            case BlockID.YELLOW_FLOWER:
-            case BlockID.RED_MUSHROOM:
-            case BlockID.BROWN_MUSHROOM:
-            case BlockID.LILY_PAD:
+            case SAPLING:
+            case SEEDS:
+            case NETHER_WARTS:
+            case MELON_SEEDS:
+            case PUMPKIN_SEEDS:
+            case CACTUS:
+            case POTATO_ITEM:
+            case CARROT_ITEM:
+            case RED_ROSE:
+            case YELLOW_FLOWER:
+            case RED_MUSHROOM:
+            case BROWN_MUSHROOM:
+            case WATER_LILY:
                 return true;
             default:
                 return false;
         }
     }
 
-    protected boolean itemPlantableOnBlock(int itemId, int blockId) {
+    protected boolean itemPlantableOnBlock(Material itemId, Material blockId) {
 
         switch (itemId) {
-            case BlockID.SAPLING:
-            case BlockID.RED_FLOWER:
-            case BlockID.YELLOW_FLOWER:
-                return blockId == BlockID.DIRT || blockId == BlockID.GRASS;
-            case ItemID.SEEDS:
-            case ItemID.MELON_SEEDS:
-            case ItemID.PUMPKIN_SEEDS:
-            case ItemID.POTATO:
-            case ItemID.CARROT:
-                return blockId == BlockID.SOIL;
-            case ItemID.NETHER_WART_SEED:
-                return blockId == BlockID.SLOW_SAND;
-            case BlockID.CACTUS:
-                return blockId == BlockID.SAND;
-            case BlockID.RED_MUSHROOM:
-            case BlockID.BROWN_MUSHROOM:
-                return !BlockType.canPassThrough(blockId);
-            case BlockID.LILY_PAD:
-                return blockId == BlockID.WATER || blockId == BlockID.STATIONARY_WATER;
+            case SAPLING:
+            case RED_ROSE:
+            case YELLOW_FLOWER:
+                return blockId == Material.DIRT || blockId == Material.GRASS;
+            case SEEDS:
+            case MELON_SEEDS:
+            case PUMPKIN_SEEDS:
+            case POTATO:
+            case CARROT:
+                return blockId == Material.SOIL;
+            case NETHER_WARTS:
+                return blockId == Material.SOUL_SAND;
+            case CACTUS:
+                return blockId == Material.SAND;
+            case RED_MUSHROOM:
+            case BROWN_MUSHROOM:
+                return !BlockType.canPassThrough(blockId.getId());
+            case WATER_LILY:
+                return blockId == Material.WATER || blockId == Material.STATIONARY_WATER;
+            default:
+                break;
         }
         return false;
     }

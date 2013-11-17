@@ -174,7 +174,7 @@ public class Snow extends AbstractCraftBookMechanic {
             if (!tasks.containsKey(event)) return;
             if (event.getWorld().hasStorm()) {
                 if (event.getBlock().getData() > (byte) 7) return;
-                if (event.subtract(0, 1, 0).getBlock().getTypeId() == 0) return;
+                if (event.subtract(0, 1, 0).getBlock().getType() == Material.AIR) return;
 
                 event.add(0, 1, 0);
                 if (!(event.getBlock().getType() == Material.SNOW) && !(event.getBlock().getType() == Material.SNOW_BLOCK)) return;

@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -24,7 +25,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.craftbook.util.ItemInfo;
 
 public class SetBlockBelow extends SetBlock {
 
@@ -46,16 +47,16 @@ public class SetBlockBelow extends SetBlock {
     }
 
     @Override
-    protected void doSet(Block body, int block, byte meta, boolean force) {
+    protected void doSet(Block body, ItemInfo item, boolean force) {
 
         int x = body.getX();
         int y = body.getY();
         int z = body.getZ();
 
-        if (force || body.getWorld().getBlockAt(x, y - 1, z).getTypeId() == BlockID.AIR) {
-            body.getWorld().getBlockAt(x, y - 1, z).setTypeId(block);
-            if (!(meta == -1)) {
-                body.getWorld().getBlockAt(x, y - 1, z).setData(meta);
+        if (force || body.getWorld().getBlockAt(x, y - 1, z).getType() == Material.AIR) {
+            body.getWorld().getBlockAt(x, y - 1, z).setType(item.getType());
+            if (!(item.getData() == -1)) {
+                body.getWorld().getBlockAt(x, y - 1, z).setData((byte) item.getData());
             }
         }
     }

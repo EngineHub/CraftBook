@@ -96,7 +96,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         glowstoneEnabled = config.getBoolean("circuits.wiring.glowstone-enabled", false);
 
         config.setComment("circuits.wiring.glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
-        glowstoneOffBlock = ItemInfo.parseFromString(config.getString("circuits.wiring.glowstone-off-block", "GLASS"));
+        glowstoneOffBlock = new ItemInfo(config.getString("circuits.wiring.glowstone-off-block", "GLASS"));
 
 
         // Pipes Configuration Listener
@@ -140,7 +140,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", true);
 
         config.setComment("mechanics.ammeter.item", "Set the item that is the ammeter tool.");
-        ammeterItem = ItemInfo.parseFromString(config.getString("mechanics.ammeter.item", "COAL"));
+        ammeterItem = new ItemInfo(config.getString("mechanics.ammeter.item", "COAL"));
 
 
         // Area Configuration Listener
@@ -469,7 +469,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", true);
 
         config.setComment("mechanics.lightstone.item", "The item that the lightstone mechanic uses.");
-        lightstoneItem = ItemInfo.parseFromString(config.getString("mechanics.lightstone.item", "GLOWSTONE_DUST"));
+        lightstoneItem = new ItemInfo(config.getString("mechanics.lightstone.item", "GLOWSTONE_DUST"));
 
 
         // Light Switch Configuration Listener
@@ -507,7 +507,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
 
         config.setComment("mechanics.sign-copy.item", "The item the Sign Copy mechanic uses.");
-        signCopyItem = ItemInfo.parseFromString(config.getString("mechanics.sign-copy.item", "INK_SACK:0"));
+        signCopyItem = new ItemInfo(config.getString("mechanics.sign-copy.item", "INK_SACK:0"));
 
 
         // Snow Configuration Listener
@@ -549,7 +549,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
 
         config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
-        xpStorerBlock = ItemInfo.parseFromString(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
+        xpStorerBlock = new ItemInfo(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
 
 
         /* Vehicle Configuration */
@@ -562,60 +562,60 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Station Configuration Listener
         minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", true);
-        minecartStationBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.station.block", "OBSIDIAN:0"));
+        minecartStationBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.station.block", "OBSIDIAN:0"));
 
 
         // Vehicles Minecart Sorter Configuration Listener
         minecartSorterEnabled = config.getBoolean("vehicles.minecart.mechanisms.sorter.enable", true);
-        minecartSorterBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.sorter.block", "NETHERRACK:0"));
+        minecartSorterBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.sorter.block", "NETHERRACK:0"));
 
 
         // Vehicles Minecart Ejector Configuration Listener
         minecartEjectorEnabled = config.getBoolean("vehicles.minecart.mechanisms.ejector.enable", true);
-        minecartEjectorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.ejector.block", "IRON_BLOCK:0"));
+        minecartEjectorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.ejector.block", "IRON_BLOCK:0"));
 
 
         // Vehicles Minecart Deposit Configuration Listener
         minecartDepositEnabled = config.getBoolean("vehicles.minecart.mechanisms.deposit.enable", true);
-        minecartDepositBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.deposit.block", "IRON_ORE:0"));
+        minecartDepositBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.deposit.block", "IRON_ORE:0"));
 
 
         // Vehicles Minecart Teleport Configuration Listener
         minecartTeleportEnabled = config.getBoolean("vehicles.minecart.mechanisms.teleport.enable", true);
-        minecartTeleportBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.teleport.block", "EMERALD_BLOCK:0"));
+        minecartTeleportBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.teleport.block", "EMERALD_BLOCK:0"));
 
 
         // Vehicles Minecart Lift Configuration Listener
         minecartElevatorEnabled = config.getBoolean("vehicles.minecart.mechanisms.elevator.enable", true);
-        minecartElevatorBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.elevator.block", "NETHER_BRICK:0"));
+        minecartElevatorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.elevator.block", "NETHER_BRICK:0"));
 
 
         // Vehicles Minecart Messager Configuration Listener
         minecartMessagerEnabled = config.getBoolean("vehicles.minecart.mechanisms.messager.enable", true);
-        minecartMessagerBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.messager.block", "ENDER_STONE:0"));
+        minecartMessagerBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.messager.block", "ENDER_STONE:0"));
 
 
         // Vehicles Minecart Reverse Configuration Listener
         minecartReverseEnabled = config.getBoolean("vehicles.minecart.mechanisms.reverse.enable", true);
-        minecartReverseBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.reverse.block", "WOOL:0"));
+        minecartReverseBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.reverse.block", "WOOL:0"));
 
 
         // Vehicles Minecart MaxSpeed Configuration Listener
         minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", true);
-        minecartMaxSpeedBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.max-speed.block", "COAL_BLOCK:0"));
+        minecartMaxSpeedBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.max-speed.block", "COAL_BLOCK:0"));
 
 
         // Vehicles Minecart SpeedMod Configuration Listener
         minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", true);
-        minecartSpeedModMaxBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "GOLD_BLOCK:0"));
-        minecartSpeedMod25xBoostBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "GOLD_ORE:0"));
-        minecartSpeedMod50xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "SOUL_SAND:0"));
-        minecartSpeedMod20xSlowBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "GRAVEL:0"));
+        minecartSpeedModMaxBoostBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "GOLD_BLOCK:0"));
+        minecartSpeedMod25xBoostBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "GOLD_ORE:0"));
+        minecartSpeedMod50xSlowBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "SOUL_SAND:0"));
+        minecartSpeedMod20xSlowBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "GRAVEL:0"));
 
 
         // Vehicles Minecart Dispenser Configuration Listener
         minecartDispenserEnabled = config.getBoolean("vehicles.minecart.mechanisms.dispenser.enable", true);
-        minecartDispenserBlock = ItemInfo.parseFromString(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));
+        minecartDispenserBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));
         minecartDispenserLegacy = config.getBoolean("vehicles.minecart.mechanisms.dispenser.spawn-infront", false);
         minecartDispenserAntiSpam = config.getBoolean("vehicles.minecart.mechanisms.dispenser.check-for-carts", true);
         minecartDispenserPropel = config.getBoolean("vehicles.minecart.mechanisms.dispenser.propel-cart", false);

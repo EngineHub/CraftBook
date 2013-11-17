@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -16,8 +17,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class Irrigator extends AbstractSelfTriggeredIC {
 
@@ -73,7 +72,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
                     int ry = centre.getY() - y;
                     int rz = centre.getZ() - z;
                     Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                    if (b.getTypeId() == BlockID.SOIL && b.getData() < 0x1) {
+                    if (b.getType() == Material.SOIL && b.getData() < 0x1) {
                         if (consumeWater()) {
                             b.setData((byte) 0x8, false);
                             return true;
@@ -88,19 +87,19 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     public boolean consumeWater() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        if (chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getType() == Material.CHEST) {
             Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
+            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(Material.WATER, 1));
             if (over.isEmpty()) return true;
-            over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_WATER, 1));
+            over = c.getInventory().removeItem(new ItemStack(Material.STATIONARY_WATER, 1));
             if (over.isEmpty()) return true;
-            over = c.getInventory().removeItem(new ItemStack(ItemID.WATER_BUCKET, 1));
+            over = c.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET, 1));
             if (over.isEmpty()) {
-                c.getInventory().addItem(new ItemStack(ItemID.BUCKET, 1));
+                c.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                 return true;
             }
-        } else if (chest.getTypeId() == BlockID.WATER || chest.getTypeId() == BlockID.STATIONARY_WATER) {
-            chest.setTypeId(0);
+        } else if (chest.getType() == Material.WATER || chest.getType() == Material.STATIONARY_WATER) {
+            chest.setType(Material.AIR);
             return true;
         }
 

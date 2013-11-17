@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 
 import java.util.Locale;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -12,9 +13,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.craftbook.util.ItemInfo;
 
 public abstract class SetBlock extends AbstractSelfTriggeredIC {
 
@@ -23,48 +22,22 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    int block;
+    ItemInfo item;
     String force;
-    byte meta;
 
     @Override
     public void load() {
 
-        String[] splitBlockData = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).toUpperCase(Locale.ENGLISH).trim(), 2);
-        String strBlock = splitBlockData[0];
-        String strMeta = "";
-        if (splitBlockData.length > 1) {
-            strMeta = splitBlockData[1];
-        }
         force = getSign().getLine(3).toUpperCase(Locale.ENGLISH).trim();
 
-        try {
-            block = Integer.parseInt(strBlock);
-        } catch (Exception e) {
-            try {
-                block = BlockType.lookup(strBlock).getID();
-            } catch (Exception ignored) {
-            }
-        }
-
-        try {
-            if (!strMeta.isEmpty()) {
-                meta = Byte.parseByte(strMeta);
-            } else meta = -1;
-        } catch (Exception ignored) {
-            meta = -1;
-        }
+        item = new ItemInfo(getLine(2));
     }
 
     public void onTrigger() {
 
-        if (BlockType.fromID(block) == null || block >= 256) {
-            return;
-        }
-
         Block body = getBackBlock();
 
-        doSet(body, block, meta, force.equals("FORCE"));
+        doSet(body, item, force.equals("FORCE"));
     }
 
     @Override
@@ -81,11 +54,11 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
         onTrigger();
     }
 
-    protected abstract void doSet(Block block, int id, byte meta, boolean force);
+    protected abstract void doSet(Block block, ItemInfo item, boolean force);
 
-    public boolean takeFromChest(Block bl, int id, byte data) {
+    public boolean takeFromChest(Block bl, ItemInfo item) {
 
-        if (bl.getTypeId() != BlockID.CHEST) {
+        if (bl.getType() != Material.CHEST) {
             return false;
         }
         BlockState state = bl.getState();
@@ -99,12 +72,12 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
             if (stack == null) {
                 continue;
             }
-            if (stack.getAmount() > 0 && stack.getTypeId() == id) {
-                if (data != -1 && stack.getData().getData() != data) {
+            if (stack.getAmount() > 0 && stack.getType() == item.getType()) {
+                if (item.getData() != -1 && stack.getData().getData() != item.getData()) {
                     continue;
                 }
                 if (stack.getAmount() == 1) {
-                    is[i] = new ItemStack(0, 0);
+                    is[i] = new ItemStack(Material.AIR, 0);
                 } else {
                     stack.setAmount(stack.getAmount() - 1);
                 }

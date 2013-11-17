@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -13,8 +14,6 @@ import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * @author Me4502
@@ -60,7 +59,7 @@ public class Pump extends AbstractSelfTriggeredIC {
     public boolean scan() {
 
         Block pump = getBackBlock();
-        if (!(pump.getRelative(0, 1, 0).getTypeId() == BlockID.CHEST)) return false;
+        if (!(pump.getRelative(0, 1, 0).getType() == Material.CHEST)) return false;
         Chest c = (Chest) pump.getRelative(0, 1, 0).getState();
         for (int y = -1; y > -11; y--) {
             Block liquid = pump.getRelative(0, y, 0);
@@ -79,7 +78,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         if (!liquid.isLiquid()) return false;
         if (liquid.getData() == 0x0) {
             if (addToChest(c, liquid)) {
-                liquid.setTypeId(0);
+                liquid.setType(Material.AIR);
                 return true;
             }
         } else if (searchNear(c, liquid, depth + 1)) return true;
@@ -89,26 +88,26 @@ public class Pump extends AbstractSelfTriggeredIC {
     public boolean addToChest(Chest c, Block liquid) {
 
         if (((Factory) getFactory()).buckets) {
-            if (c.getInventory().contains(ItemID.BUCKET)) {
-                c.getInventory().remove(ItemID.BUCKET);
-                if (c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()) == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1)).isEmpty()) {
+            if (c.getInventory().contains(Material.BUCKET)) {
+                c.getInventory().remove(Material.BUCKET);
+                if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()) == Material.LAVA ? Material.LAVA_BUCKET : Material.WATER_BUCKET, 1)).isEmpty()) {
                     return true;
                 } else {
-                    c.getInventory().addItem(new ItemStack(ItemID.BUCKET));
+                    c.getInventory().addItem(new ItemStack(Material.BUCKET));
                     return false;
                 }
             } else return false;
         } else
-            if (c.getInventory().addItem(new ItemStack(parse(liquid.getTypeId()))).isEmpty()) return true;
+            if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()))).isEmpty()) return true;
 
         return false;
     }
 
-    public int parse(int mat) {
+    public Material parse(Material mat) {
 
-        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER) return BlockID.WATER;
-        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA) return BlockID.LAVA;
-        return BlockID.AIR;
+        if (mat == Material.STATIONARY_WATER || mat == Material.WATER) return Material.WATER;
+        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA) return Material.LAVA;
+        return Material.AIR;
     }
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {

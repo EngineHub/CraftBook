@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -73,7 +74,7 @@ public class Spigot extends AbstractIC {
         if (searched.contains(off.getLocation())) return false;
         searched.add(off.getLocation());
         if (LocationUtil.isWithinRadius(off.getLocation(), offset, radius)) return false;
-        if (off.getTypeId() == 0) {
+        if (off.getType() == Material.AIR) {
 
             int m = getFromChest();
             if (m == BlockID.AIR) return false;
