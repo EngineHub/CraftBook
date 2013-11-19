@@ -57,6 +57,11 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
         String[] minmax = RegexUtil.MINUS_PATTERN.split(getSign().getLine(2));
         min = Integer.parseInt(minmax[0]);
         max = Integer.parseInt(minmax[1]);
+
+        if (!getLine(3).isEmpty())
+            maxTicks = Integer.parseInt(getSign().getLine(3));
+        else
+            maxTicks = 10;
     }
 
     protected boolean shouldOutput(ChipState chip) {
@@ -67,27 +72,22 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
             amountDone = 0;
             ticks = 0;
 
-            if (getSign().getLine(3) != null || getSign().getLine(3).isEmpty()) {
-                maxTicks = Integer.parseInt(getSign().getLine(3));
-            } else {
-                maxTicks = 10;
-            }
-
             hasStarted = true;
             return false;
-        } else if (hasStarted) if (ticks >= maxTicks) {
-            amountDone++;
-            if (amountDone >= maxAmount) {
-                hasStarted = false;
-                amountDone = 0;
-                ticks = 0;
-                maxAmount = 0;
+        } else if (hasStarted)
+            if (ticks >= maxTicks) {
+                amountDone++;
+                if (amountDone >= maxAmount) {
+                    hasStarted = false;
+                    amountDone = 0;
+                    ticks = 0;
+                    maxAmount = 0;
+                }
+                return true;
+            } else {
+                ticks++;
+                return false;
             }
-            return true;
-        } else {
-            ticks++;
-            return false;
-        }
         return false;
     }
 

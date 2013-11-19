@@ -394,7 +394,7 @@ public class ItemUtil {
             case CLAY_BALL:
                 return new ItemStack(Material.BRICK);
             case NETHERRACK:
-                return new ItemStack(Material.NETHER_BRICK);
+                return new ItemStack(Material.NETHER_BRICK_ITEM);
             case CLAY:
                 return new ItemStack(Material.HARD_CLAY);
             case QUARTZ_ORE:
