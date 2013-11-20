@@ -27,6 +27,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -291,6 +292,15 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getCurrentItem(), (Player) event.getWhoClicked(), event);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+
+        if(event.getPlayer().getItemInHand() == null)
+            return;
+
+        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+    }
+
     @SuppressWarnings("unchecked")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -370,6 +380,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                     if(comdef.clickType == ClickType.PLAYER_DEATH && !(event instanceof PlayerDeathEvent))
                         break current;
+
+                    if(comdef.clickType == ClickType.PLAYER_CHAT && !(event instanceof AsyncPlayerChatEvent))
+                        break current;
                 }
 
                 if(comdef.requireSneaking == TernaryState.TRUE && !lplayer.isSneaking())
@@ -445,9 +458,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
             command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
         if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
-            command = command.replace("@b", ((BlockEvent) event).getBlock().getTypeId() + ((BlockEvent) event).getBlock().getData() == 0 ? "" : ":" + ((BlockEvent) event).getBlock().getData());
+            command = command.replace("@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
         if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e"))
             command = command.replace("@e", ((EntityEvent) event).getEntityType().getName());
+        if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
+            command = command.replace("@m", ((AsyncPlayerChatEvent) event).getMessage());
 
         command = ParsingUtil.parseLine(command, player);
         if(comdef.type == CommandType.CONSOLE)
@@ -569,7 +584,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         public enum ClickType {
 
-            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH;
+            CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH,PLAYER_CHAT;
         }
     }
 }
