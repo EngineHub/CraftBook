@@ -1,3 +1,18 @@
+3.7.13
+* Fixed Iron, CLay balls, potatoes and netherrack in Cooking Pot.
++ Added Quartz ore to cooking pot.
++ Added ItemStack and SearchArea support to ItemSensor.
++ Added ItemClick events to CommandItems.
++ Added more translatable lines of text.
+* Tweaked Teleporter SearchArea support.
+* Fixed SearchArea with entity detection for regions being off.
+* Fixed gate signs being wrong.
+* Fixed many major gate bugs. Dupes etc.
++ Added Chat Event to CommandItems and @m to get message.
+- Removed Legacy directional coding.
+* Tweaked code to be more ready for 1.7/1.8 etc. Config also now can use names instead of any Item ID.
++ Added CommandItems parsing to ItemSyntax. You can now use the name of a CommandItem in place of an item anywhere in CraftBook.
+
 3.7.12
 * Fixed an error with CommandSigns.
 * Fixed CommandItems ingame creator requiring uppercase for sneak state.

@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.7.11
+# CraftBook Configuration for Bukkit. Generated for version: 3.7.13
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -96,7 +96,7 @@ circuits:
     pipes:
         enable: true
         allow-diagonal: false
-        insulator-block: 35
+        insulator-block: WOOL
         stack-per-move: true
         require-sign: false
     jukebox:
@@ -268,7 +268,7 @@ mechanics:
         any-side: true
     legacy-cauldron:
         enable: true
-        block: 1
+        block: STONE
     lightstone:
         enable: true
         item: GLOWSTONE_DUST
