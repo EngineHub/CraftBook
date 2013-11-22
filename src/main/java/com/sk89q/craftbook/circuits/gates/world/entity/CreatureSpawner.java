@@ -19,6 +19,7 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 import java.util.Locale;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -38,8 +39,6 @@ import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -93,7 +92,7 @@ public class CreatureSpawner extends AbstractIC {
         if(!center.getChunk().isLoaded())
             return;
 
-        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getTypeId() == BlockID.MOB_SPAWNER) {
+        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getType() == Material.MOB_SPAWNER) {
 
             org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
                     0).getState();
@@ -105,7 +104,7 @@ public class CreatureSpawner extends AbstractIC {
             for (int i = 0; i < amount; i++) {
                 Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
                 if(entity instanceof Skeleton)
-                    ((Skeleton) entity).getEquipment().setItemInHand(new ItemStack(ItemID.BOW, 1));
+                    ((Skeleton) entity).getEquipment().setItemInHand(new ItemStack(Material.BOW, 1));
                 EntityUtil.setEntityData(entity, data);
             }
         }

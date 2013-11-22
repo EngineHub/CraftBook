@@ -19,6 +19,7 @@ package com.sk89q.craftbook.circuits.ic;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.AbstractMechanicFactory;
@@ -30,7 +31,6 @@ import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
 
@@ -59,7 +59,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
         // if we're not looking at a wall sign, it can't be an IC.
-        if (block.getTypeId() != BlockID.WALL_SIGN) return null;
+        if (block.getType() != Material.WALL_SIGN) return null;
         ChangedSign sign = BukkitUtil.toChangedSign(block);
 
         // detect the text on the sign to see if it's any kind of IC at all.
@@ -227,7 +227,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 suffix = str[1];
             }
 
-            if (block.getTypeId() != BlockID.WALL_SIGN)
+            if (block.getType() != Material.WALL_SIGN)
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             if (ICManager.isCachedIC(pt)) {
@@ -292,7 +292,7 @@ public class ICMechanicFactory extends AbstractMechanicFactory<ICMechanic> {
                 return null;
             }
 
-            if (block.getTypeId() != BlockID.WALL_SIGN)
+            if (block.getType() != Material.WALL_SIGN)
                 throw new InvalidMechanismException("Only wall signs are used for ICs.");
 
             sign.setLine(1, "[" + shortId + "]" + (st ? "S" : ""));

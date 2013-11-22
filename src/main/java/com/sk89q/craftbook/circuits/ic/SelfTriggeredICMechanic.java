@@ -16,12 +16,12 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggeringMechanic {
 
@@ -36,7 +36,7 @@ public class SelfTriggeredICMechanic extends ICMechanic implements SelfTriggerin
         BlockWorldVector pt = getTriggerPositions().get(0);
         Block block = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt));
 
-        if (block.getTypeId() == BlockID.WALL_SIGN) {
+        if (block.getType() == Material.WALL_SIGN) {
 
             ic.getSign().updateSign(BukkitUtil.toChangedSign(block));
             // Assuming that the plugin host isn't going wonky here

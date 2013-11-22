@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,7 +18,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class FlameThrower extends AbstractIC {
 
@@ -73,11 +73,11 @@ public class FlameThrower extends AbstractIC {
             Block fire = block.getRelative(direction, 2);
             for (int i = 0; i < distance; i++) {
                 if (make) {
-                    if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
-                        fire.setTypeId(BlockID.FIRE);
+                    if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
+                        fire.setType(Material.FIRE);
                     }
-                } else if (fire.getTypeId() == BlockID.FIRE) {
-                    fire.setTypeId(BlockID.AIR);
+                } else if (fire.getType() == Material.FIRE) {
+                    fire.setType(Material.AIR);
                 }
                 fire = fire.getRelative(direction);
             }
@@ -93,11 +93,11 @@ public class FlameThrower extends AbstractIC {
 
                         Block fire = block.getRelative(direction, 2+fi);
                         if (make) {
-                            if (fire.getTypeId() == 0 || fire.getTypeId() == BlockID.LONG_GRASS) {
-                                fire.setTypeId(BlockID.FIRE);
+                            if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
+                                fire.setType(Material.FIRE);
                             }
-                        } else if (fire.getTypeId() == BlockID.FIRE) {
-                            fire.setTypeId(BlockID.AIR);
+                        } else if (fire.getType() == Material.FIRE) {
+                            fire.setType(Material.AIR);
                         }
                     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -33,7 +34,6 @@ import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -75,9 +75,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         Inventory inv = disp.getInventory();
         for (ItemStack it : inv.getContents()) {
-            if (it == null || it.getTypeId() == 0) {
+            if (!ItemUtil.isStackValid(it))
                 continue;
-            }
             if (it.getAmount() < 2) return false;
         }
 
@@ -121,7 +120,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         }
         disp.getInventory().clear();
 
-        CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getTypeId() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
+        CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getType().name() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
 
         List<ItemStack> items = new ArrayList<ItemStack>();
         items.add(result);
@@ -190,13 +189,11 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         boolean ret = false;
         Block crafter = getBackBlock().getRelative(0, 1, 0);
-        if (crafter.getTypeId() == BlockID.DISPENSER || crafter.getTypeId() == BlockID.DROPPER) {
-            if (collect) {
+        if (crafter.getType() == Material.DISPENSER || crafter.getType() == Material.DROPPER) {
+            if (collect)
                 collect((InventoryHolder) crafter.getState());
-            }
-            if (craft) {
+            if (craft)
                 craft((InventoryHolder) crafter.getState());
-            }
         }
         return ret;
     }
@@ -306,7 +303,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
 
         Block crafter = getBackBlock().getRelative(0, 1, 0);
-        if (crafter.getTypeId() == BlockID.DISPENSER || crafter.getTypeId() == BlockID.DROPPER) {
+        if (crafter.getType() == Material.DISPENSER || crafter.getType() == Material.DROPPER) {
             InventoryHolder disp = (InventoryHolder) crafter.getState();
 
             boolean delete = true;

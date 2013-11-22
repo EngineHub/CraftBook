@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import java.util.Arrays;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,8 +22,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
@@ -91,7 +90,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Cow) {
 
-            if(doesChestContain(ItemID.BUCKET)) {
+            if(doesChestContain(Material.BUCKET)) {
 
                 return true;
             }
@@ -99,7 +98,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Sheep) {
 
-            if(doesChestContain(ItemID.SHEARS)) {
+            if(doesChestContain(Material.SHEARS)) {
 
                 Sheep sh = (Sheep) entity;
                 if(sh.isSheared())
@@ -116,11 +115,11 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Cow) {
 
-            if(doesChestContain(ItemID.BUCKET)) {
+            if(doesChestContain(Material.BUCKET)) {
 
-                removeFromChest(ItemID.BUCKET);
-                if(!addToChest(new ItemStack(ItemID.MILK_BUCKET, 1))) {
-                    addToChest(new ItemStack(ItemID.BUCKET, 1));
+                removeFromChest(Material.BUCKET);
+                if(!addToChest(new ItemStack(Material.MILK_BUCKET, 1))) {
+                    addToChest(new ItemStack(Material.BUCKET, 1));
                     return false;
                 }
 
@@ -130,22 +129,22 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Sheep) {
 
-            if(doesChestContain(ItemID.SHEARS)) {
+            if(doesChestContain(Material.SHEARS)) {
 
                 Sheep sh = (Sheep) entity;
                 if(sh.isSheared())
                     return false;
                 sh.setSheared(true);
-                return addToChest(new ItemStack(BlockID.CLOTH, 3, sh.getColor().getWoolData()));
+                return addToChest(new ItemStack(Material.WOOL, 3, sh.getColor().getWoolData()));
             }
         }
 
         return false;
     }
 
-    public boolean doesChestContain(int item) {
+    public boolean doesChestContain(Material item) {
 
-        if (chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getType() == Material.CHEST) {
 
             Chest c = (Chest) chest.getState();
             return c.getInventory().contains(item);
@@ -154,9 +153,9 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    public boolean addToChest(int item) {
+    public boolean addToChest(Material item) {
 
-        if (chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getType() == Material.CHEST) {
 
             Chest c = (Chest) chest.getState();
             return c.getInventory().addItem(new ItemStack(item, 1)).isEmpty();
@@ -167,7 +166,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
     public boolean addToChest(ItemStack item) {
 
-        if (chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getType() == Material.CHEST) {
 
             Chest c = (Chest) chest.getState();
             return c.getInventory().addItem(item).isEmpty();
@@ -176,9 +175,9 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    public boolean removeFromChest(int item) {
+    public boolean removeFromChest(Material item) {
 
-        if (chest.getTypeId() == BlockID.CHEST) {
+        if (chest.getType() == Material.CHEST) {
 
             Chest c = (Chest) chest.getState();
             c.getInventory().removeItem(new ItemStack(item, 1));

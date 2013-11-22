@@ -12,14 +12,14 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BlockSensor extends AbstractSelfTriggeredIC {
 
     private Block center;
-    private int id;
-    private byte data;
+    private ItemInfo item;
 
     public BlockSensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -29,18 +29,8 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] ids = RegexUtil.COLON_PATTERN.split(getSign().getLine(3), 2);
         center = ICUtil.parseBlockLocation(getSign());
-        try {
-            id = Integer.parseInt(ids[0]);
-        } catch (Exception ignored) {
-            id = 1;
-        }
-        try {
-            data = Byte.parseByte(ids[1]);
-        } catch (Exception ignored) {
-            data = -1;
-        }
+        item = new ItemInfo(getLine(3));
     }
 
     @Override
@@ -76,12 +66,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
      */
     protected boolean hasBlock() {
 
-        int blockID = center.getTypeId();
-
-        if (data != (byte) -1)
-            if (blockID == id) return
-                    data == center.getData();
-        return blockID == id;
+        return item.isSame(center);
     }
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {

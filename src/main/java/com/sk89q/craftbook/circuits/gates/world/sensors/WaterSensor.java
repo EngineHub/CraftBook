@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -76,9 +77,9 @@ public class WaterSensor extends AbstractSelfTriggeredIC {
      */
     protected boolean hasWater() {
 
-        int blockID = center.getTypeId();
+        Material blockID = center.getType();
 
-        return blockID == 8 || blockID == 9;
+        return blockID == Material.WATER || blockID == Material.STATIONARY_WATER;
     }
 
     public static class Factory extends AbstractICFactory {

@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 import java.util.Locale;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -27,7 +28,6 @@ import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class AdvancedEntitySpawner extends AbstractIC {
 
@@ -81,15 +81,13 @@ public class AdvancedEntitySpawner extends AbstractIC {
         if (!chip.getInput(0)) return;
         Block left = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock());
         ChangedSign effectSign = null;
-        if (left.getTypeId() == BlockID.WALL_SIGN) {
+        if (left.getType() == Material.WALL_SIGN)
             effectSign = BukkitUtil.toChangedSign(left);
-        }
 
         Block right = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock());
         ChangedSign armourSign = null;
-        if (right.getTypeId() == BlockID.WALL_SIGN) {
+        if (right.getType() == Material.WALL_SIGN)
             armourSign = BukkitUtil.toChangedSign(right);
-        }
 
         for (int i = 0; i < amount; i++) {
             Entity ent = BukkitUtil.toSign(getSign()).getWorld().spawn(location, type.getEntityClass());
@@ -161,22 +159,16 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     }
                 }
                 if (upwards == null) {
-                    if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1,
-                            0).getTypeId() == BlockID.WALL_SIGN) {
-                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0,
-                                1, 0));
+                    if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0).getType() == Material.WALL_SIGN) {
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0));
                         upwards = true;
-                    } else if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1,
-                            0).getTypeId() == BlockID.WALL_SIGN) {
-                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0,
-                                -1, 0));
+                    } else if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0).getType() == Material.WALL_SIGN) {
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0));
                         upwards = false;
                     } else break;
                 } else {
-                    if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0,
-                            upwards ? 1 : -1, 0).getTypeId() == BlockID.WALL_SIGN) effectSign = BukkitUtil
-                            .toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0,
-                                    upwards ? 1 : -1, 0));
+                    if (BukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0).getType() == Material.WALL_SIGN)
+                        effectSign = BukkitUtil.toChangedSign(BukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
                     else break;
                 }
             }

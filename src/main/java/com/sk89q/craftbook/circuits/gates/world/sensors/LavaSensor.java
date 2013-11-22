@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -76,9 +77,9 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
      */
     protected boolean hasLava() {
 
-        int blockID = center.getTypeId();
+        Material blockID = center.getType();
 
-        return blockID == 10 || blockID == 11;
+        return blockID == Material.LAVA || blockID == Material.STATIONARY_LAVA;
     }
 
     public static class Factory extends AbstractICFactory {

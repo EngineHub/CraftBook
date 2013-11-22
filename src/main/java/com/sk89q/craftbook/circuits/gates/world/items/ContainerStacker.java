@@ -16,6 +16,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -67,7 +68,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
                 ItemStack it = c.getInventory().getItem(i);
                 if (ItemUtil.isStackValid(it)) {
 
-                    if(((Factory)getFactory()).blacklist.contains(it.getTypeId()))
+                    if(((Factory)getFactory()).blacklist.contains(new ItemInfo(it)))
                         continue;
                     int amount = it.getAmount();
                     if (it.getAmount() < 64) {
@@ -110,7 +111,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {
 
-        List<Integer> blacklist = new ArrayList<Integer>();
+        List<ItemInfo> blacklist = new ArrayList<ItemInfo>();
 
         public Factory(Server server) {
 
@@ -131,7 +132,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
-            blacklist = config.getIntList(path + "blacklist", blacklist);
+            blacklist = ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blacklist)));
         }
     }
 }

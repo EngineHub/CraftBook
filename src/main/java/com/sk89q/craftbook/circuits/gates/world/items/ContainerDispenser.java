@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.HashMap;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
@@ -20,7 +21,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * @author Me4502
@@ -90,7 +90,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
         Inventory inv = null;
-        if (bl.getTypeId() == BlockID.CHEST) {
+        if (bl.getType() == Material.CHEST) {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
@@ -101,11 +101,11 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                     }
                 }
             }
-        } else if (bl.getTypeId() == BlockID.FURNACE || bl.getTypeId() == BlockID.BURNING_FURNACE) {
+        } else if (bl.getType() == Material.FURNACE || bl.getType() == Material.BURNING_FURNACE) {
             Furnace c = (Furnace) bl.getState();
             stack = c.getInventory().getResult();
             inv = c.getInventory();
-        } else if (bl.getTypeId() == BlockID.BREWING_STAND) {
+        } else if (bl.getType() == Material.BREWING_STAND) {
             BrewingStand c = (BrewingStand) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
@@ -119,7 +119,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                     }
                 }
             }
-        } else if (bl.getTypeId() == BlockID.DISPENSER) {
+        } else if (bl.getType() == Material.DISPENSER) {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
@@ -151,7 +151,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                 BukkitUtil
                 .toSign(getSign())
                 .getWorld()
-                .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getTypeId(), item.getAmount() - it.getAmount(), it.getDurability()));
+                .dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getType(), item.getAmount() - it.getAmount(), it.getDurability()));
                 return true;
             }
         }

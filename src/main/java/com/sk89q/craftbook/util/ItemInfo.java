@@ -31,8 +31,12 @@ public class ItemInfo {
 
     public ItemInfo(String string) {
 
-        ItemStack stack = ItemSyntax.getItem(string);
-        data = stack.getData();
+        this(ItemSyntax.getItem(string));
+    }
+
+    public ItemInfo(ItemStack item) {
+
+        data = item.getData();
     }
 
     @Deprecated
@@ -88,6 +92,16 @@ public class ItemInfo {
 
         for(String string: strings)
             infos.add(new ItemInfo(string));
+
+        return infos;
+    }
+
+    public static List<String> toStringList(List<ItemInfo> items) {
+
+        List<String> infos = new ArrayList<String>();
+
+        for(ItemInfo string: items)
+            infos.add(string.toString());
 
         return infos;
     }
