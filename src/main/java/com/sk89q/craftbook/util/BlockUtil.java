@@ -3,11 +3,9 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -116,27 +114,5 @@ public class BlockUtil {
         }
 
         return drops.toArray(new ItemStack[drops.size()]);
-    }
-
-
-    /**
-     * Used for backwards compatability of block faces.
-     */
-    private static Boolean useOldBlockFace;
-
-
-    /**
-     * Check to see if it should use the old block face methods.
-     *
-     * @return whether it should use the old BlockFace methods.
-     */
-    public static boolean shouldUseOldFaces() {
-
-        if (useOldBlockFace == null) {
-            Location loc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
-            useOldBlockFace = loc.getBlock().getRelative(BlockFace.WEST).getX() == 0;
-        }
-
-        return useOldBlockFace;
     }
 }
