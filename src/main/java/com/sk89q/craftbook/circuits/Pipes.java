@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
@@ -37,7 +38,6 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class Pipes extends AbstractMechanic {
 
@@ -55,7 +55,7 @@ public class Pipes extends AbstractMechanic {
          */
         public static Pipes setupPipes(Block pipe, Block source, ItemStack ... items) {
 
-            if (pipe.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+            if (pipe.getType() == Material.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) pipe.getState().getData();
                 Block fac = pipe.getRelative(p.getFacing());
@@ -75,9 +75,9 @@ public class Pipes extends AbstractMechanic {
 
         public Pipes detectWithItems(BlockWorldVector pt, List<ItemStack> items) {
 
-            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
+            Material type = BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt)).getType();
 
-            if (type == BlockID.PISTON_STICKY_BASE) {
+            if (type == Material.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
                 ChangedSign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
@@ -113,11 +113,11 @@ public class Pipes extends AbstractMechanic {
 
             if(face == piston.getFacing() || !SignUtil.isSign(block.getRelative(face)))
                 continue;
-            if(block.getRelative(face).getTypeId() != BlockID.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
+            if(block.getRelative(face).getType() != Material.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
                 continue;
-            else if (block.getRelative(face).getTypeId() == BlockID.SIGN_POST && face != BlockFace.UP && face != BlockFace.DOWN)
+            else if (block.getRelative(face).getType() == Material.SIGN_POST && face != BlockFace.UP && face != BlockFace.DOWN)
                 continue;
-            if(block.getRelative(face).getTypeId() != BlockID.SIGN_POST && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
+            if(block.getRelative(face).getType() != Material.SIGN_POST && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
             ChangedSign sign = BukkitUtil.toChangedSign(block.getRelative(face));
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
@@ -200,24 +200,24 @@ public class Pipes extends AbstractMechanic {
                     } else {
 
                         if (Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z) && Math.abs(y) == Math.abs(z)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == config.pipeInsulator
-                                    && block.getRelative(0, y, 0).getTypeId() == config.pipeInsulator
-                                    && block.getRelative(0, 0, z).getTypeId() == config.pipeInsulator) {
+                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && config.pipeInsulator.isSame(block.getRelative(0, y, 0))
+                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(y)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == config.pipeInsulator
-                                    && block.getRelative(0, y, 0).getTypeId() == config.pipeInsulator) {
+                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && config.pipeInsulator.isSame(block.getRelative(0, y, 0))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(z)) {
-                            if (block.getRelative(x, 0, 0).getTypeId() == config.pipeInsulator
-                                    && block.getRelative(0, 0, z).getTypeId() == config.pipeInsulator) {
+                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         } else if (Math.abs(y) == Math.abs(z)) {
-                            if (block.getRelative(0, y, 0).getTypeId() == config.pipeInsulator
-                                    && block.getRelative(0, 0, z).getTypeId() == config.pipeInsulator) {
+                            if (config.pipeInsulator.isSame(block.getRelative(0, y, 0))
+                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         }
@@ -225,15 +225,15 @@ public class Pipes extends AbstractMechanic {
 
                     Block off = block.getRelative(x, y, z);
 
-                    if (!isValidPipeBlock(off.getTypeId())) continue;
+                    if (!isValidPipeBlock(off.getType())) continue;
 
                     if (visitedPipes.contains(off.getLocation())) continue;
 
                     visitedPipes.add(off.getLocation());
 
-                    if(off.getTypeId() == BlockID.GLASS)
+                    if(off.getType() == Material.GLASS)
                         searchQueue.add(off);
-                    else if(off.getTypeId() == BlockID.PISTON_BASE)
+                    else if(off.getType() == Material.PISTON_BASE)
                         searchQueue.add(0, off); //Pistons are treated with higher priority.
                 }
             }
@@ -241,9 +241,9 @@ public class Pipes extends AbstractMechanic {
 
         //Use the queue to search blocks.
         for(Block bl : searchQueue) {
-            if (bl.getTypeId() == BlockID.GLASS)
+            if (bl.getType() == Material.GLASS)
                 searchNearbyPipes(bl);
-            else if (bl.getTypeId() == BlockID.PISTON_BASE) {
+            else if (bl.getType() == Material.PISTON_BASE) {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
 
@@ -277,7 +277,7 @@ public class Pipes extends AbstractMechanic {
 
                     newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
 
-                } else if (fac.getTypeId() == BlockID.WALL_SIGN) {
+                } else if (fac.getType() == Material.WALL_SIGN) {
 
                     CircuitCore circuitCore = CircuitCore.inst();
                     if (circuitCore.getICFactory() == null) continue;
@@ -302,22 +302,22 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    private boolean isValidPipeBlock(int typeId) {
+    private boolean isValidPipeBlock(Material typeId) {
 
-        return typeId == BlockID.GLASS || typeId == BlockID.PISTON_BASE || typeId == BlockID.PISTON_STICKY_BASE || typeId == BlockID.WALL_SIGN;
+        return typeId == Material.GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN;
     }
 
     public void startPipe(Block block) {
 
         visitedPipes.clear();
 
-        if (block.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+        if (block.getType() == Material.PISTON_STICKY_BASE) {
 
             List<ItemStack> leftovers = new ArrayList<ItemStack>();
 
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
-            if (fac.getTypeId() == BlockID.CHEST || fac.getTypeId() == BlockID.TRAPPED_CHEST || fac.getTypeId() == BlockID.DROPPER || fac.getTypeId() == BlockID.DISPENSER) {
+            if (fac.getType() == Material.CHEST || fac.getType() == Material.TRAPPED_CHEST || fac.getType() == Material.DROPPER || fac.getType() == Material.DISPENSER) {
 
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
@@ -341,7 +341,7 @@ public class Pipes extends AbstractMechanic {
                         leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
                     }
                 }
-            } else if (fac.getTypeId() == BlockID.FURNACE || fac.getTypeId() == BlockID.BURNING_FURNACE) {
+            } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BURNING_FURNACE) {
 
                 Furnace f = (Furnace) fac.getState();
                 if(!ItemUtil.doesItemPassFilters(f.getInventory().getResult(), filters, exceptions))

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ import com.sk89q.craftbook.AbstractMechanicFactory;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -55,25 +56,24 @@ public class Cauldron extends AbstractMechanic {
         int iy = pt.getBlockY();
         int iz = pt.getBlockZ();
 
-        int below = world.getBlockTypeIdAt(ix, iy - 1, iz);
-        int below2 = world.getBlockTypeIdAt(ix, iy - 2, iz);
-        int s1 = world.getBlockTypeIdAt(ix + 1, iy, iz);
-        int s3 = world.getBlockTypeIdAt(ix - 1, iy, iz);
-        int s2 = world.getBlockTypeIdAt(ix, iy, iz + 1);
-        int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
+        Material below = world.getBlockAt(ix, iy - 1, iz).getType();
+        Material below2 = world.getBlockAt(ix, iy - 2, iz).getType();
+        Block s1 = world.getBlockAt(ix + 1, iy, iz);
+        Block s3 = world.getBlockAt(ix - 1, iy, iz);
+        Block s2 = world.getBlockAt(ix, iy, iz + 1);
+        Block s4 = world.getBlockAt(ix, iy, iz - 1);
 
-        int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockItem = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 
         // stop strange lava ids
-        if (below == 11) {
-            below = 10;
+        if (below == Material.STATIONARY_LAVA) {
+            below = Material.LAVA;
         }
-        if (below2 == 11) {
-            below2 = 10;
+        if (below2 == Material.STATIONARY_LAVA) {
+            below2 = Material.LAVA;
         }
         // Preliminary check so we don't waste CPU cycles
-        if ((below == BlockID.LAVA || below2 == BlockID.LAVA) && (s1 == blockID || s2 == blockID || s3 == blockID ||
-                s4 == blockID)) {
+        if ((below == Material.LAVA || below2 == Material.LAVA) && (blockItem.isSame(s1) || blockItem.isSame(s2) || blockItem.isSame(s3) || blockItem.isSame(s4))) {
             return true;
         }
 
@@ -175,27 +175,26 @@ public class Cauldron extends AbstractMechanic {
         int iz = pt.getBlockZ();
 
         double rootY = y;
-        int below = world.getBlockTypeIdAt(ix, iy - 1, iz);
-        int below2 = world.getBlockTypeIdAt(ix, iy - 2, iz);
-        int s1 = world.getBlockTypeIdAt(ix + 1, iy, iz);
-        int s3 = world.getBlockTypeIdAt(ix - 1, iy, iz);
-        int s2 = world.getBlockTypeIdAt(ix, iy, iz + 1);
-        int s4 = world.getBlockTypeIdAt(ix, iy, iz - 1);
+        Material below = world.getBlockAt(ix, iy - 1, iz).getType();
+        Material below2 = world.getBlockAt(ix, iy - 2, iz).getType();
+        Block s1 = world.getBlockAt(ix + 1, iy, iz);
+        Block s3 = world.getBlockAt(ix - 1, iy, iz);
+        Block s2 = world.getBlockAt(ix, iy, iz + 1);
+        Block s4 = world.getBlockAt(ix, iy, iz - 1);
 
-        int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockItem = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 
         // stop strange lava ids
-        if (below == 11) {
-            below = 10;
+        if (below == Material.STATIONARY_LAVA) {
+            below = Material.LAVA;
         }
-        if (below2 == 11) {
-            below2 = 10;
+        if (below2 == Material.STATIONARY_LAVA) {
+            below2 = Material.LAVA;
         }
         // Preliminary check so we don't waste CPU cycles
-        if ((below == BlockID.LAVA || below2 == BlockID.LAVA) && (s1 == blockID || s2 == blockID || s3 == blockID ||
-                s4 == blockID)) {
+        if ((below == Material.LAVA || below2 == Material.LAVA) && (blockItem.isSame(s1) || blockItem.isSame(s2) || blockItem.isSame(s3) || blockItem.isSame(s4))) {
             // Cauldron is 2 units deep
-            if (below == BlockID.LAVA) {
+            if (below == Material.LAVA) {
                 rootY++;
             }
             performCauldron(player, world, new BlockWorldVector(pt.getWorld(), x, rootY, z));
@@ -217,10 +216,10 @@ public class Cauldron extends AbstractMechanic {
 
         Player p = ((BukkitPlayer)player).getPlayer();
 
-        int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockItem = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 
         // Used to store cauldron blocks -- walls are counted
-        Map<BlockWorldVector, Tuple2<Integer, Short>> visited = new HashMap<BlockWorldVector, Tuple2<Integer, Short>>();
+        Map<BlockWorldVector, ItemInfo> visited = new HashMap<BlockWorldVector, ItemInfo>();
 
         try {
             // The following attempts to recursively find adjacent blocks so
@@ -233,12 +232,12 @@ public class Cauldron extends AbstractMechanic {
             if (visited.size() != 24) throw new NotACauldronException("mech.cauldron.too-small");
 
             // Key is the block ID and the value is the amount
-            Map<Tuple2<Integer, Short>, Integer> contents = new HashMap<Tuple2<Integer, Short>, Integer>();
+            Map<ItemInfo, Integer> contents = new HashMap<ItemInfo, Integer>();
 
             // Now we have to ignore cauldron blocks so that we get the real
             // contents of the cauldron
-            for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet()) {
-                if (entry.getValue().a != blockID) if (!contents.containsKey(entry.getValue())) {
+            for (Map.Entry<BlockWorldVector, ItemInfo> entry : visited.entrySet()) {
+                if (entry.getValue().equals(blockItem)) if (!contents.containsKey(entry.getValue())) {
                     contents.put(entry.getValue(), 1);
                 } else {
                     contents.put(entry.getValue(), contents.get(entry.getValue()) + 1);
@@ -271,13 +270,12 @@ public class Cauldron extends AbstractMechanic {
 
                 player.print(player.translate("mech.cauldron.legacy-create") + " " + recipe.getName() + ".");
 
-                List<Tuple2<Integer, Short>> ingredients = new ArrayList<Tuple2<Integer,
-                        Short>>(recipe.getIngredients());
+                List<ItemInfo> ingredients = new ArrayList<ItemInfo>(recipe.getIngredients());
 
                 //List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
 
                 // Get rid of the blocks in world
-                for (Map.Entry<BlockWorldVector, Tuple2<Integer, Short>> entry : visited.entrySet())
+                for (Map.Entry<BlockWorldVector, ItemInfo> entry : visited.entrySet())
                     // This is not a fast operation, but we should not have
                     // too many ingredients
                 {
@@ -302,8 +300,8 @@ public class Cauldron extends AbstractMechanic {
                  */
 
                 // Give results
-                for (Tuple2<Integer, Short> id : recipe.getResults()) {
-                    HashMap<Integer, ItemStack> map = p.getInventory().addItem(new ItemStack(id.a, 1, id.b));
+                for (ItemInfo id : recipe.getResults()) {
+                    HashMap<Integer, ItemStack> map = p.getInventory().addItem(new ItemStack(id.getType(), id.getData()));
                     for (Entry<Integer, ItemStack> i : map.entrySet()) {
                         world.dropItem(p.getLocation(), i.getValue());
                     }
@@ -331,11 +329,9 @@ public class Cauldron extends AbstractMechanic {
      *
      * @throws Cauldron.NotACauldronException
      */
-    public void findCauldronContents(World world, BlockWorldVector pt, int minY, int maxY, Map<BlockWorldVector,
-            Tuple2<Integer, Short>> visited)
-                    throws NotACauldronException {
+    public void findCauldronContents(World world, BlockWorldVector pt, int minY, int maxY, Map<BlockWorldVector, ItemInfo> visited) throws NotACauldronException {
 
-        int blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
 
         // Don't want to go too low or high
         if (pt.getBlockY() < minY) return;
@@ -347,24 +343,23 @@ public class Cauldron extends AbstractMechanic {
         // Prevent infinite looping
         if (visited.containsKey(pt)) return;
 
-        int type = world.getBlockTypeIdAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+        Material type = world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getType();
 
         // Make water work reliably
-        if (type == 9) {
-            type = 8;
+        if (type == Material.STATIONARY_WATER) {
+            type = Material.WATER;
         }
 
         // Make lava work reliably
-        if (type == 11) {
-            type = 10;
+        if (type == Material.STATIONARY_LAVA) {
+            type = Material.LAVA;
         }
 
-        visited.put(pt, new Tuple2<Integer, Short>(type, (short) world.getBlockAt(pt.getBlockX(), pt.getBlockY(),
-                pt.getBlockZ()).getData()));
+        visited.put(pt, new ItemInfo(type, world.getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ()).getData()));
 
         // It's a wall -- we only needed to remember that we visited it but
         // we don't need to recurse
-        if (type == blockID) return;
+        if (type == blockID.getType()) return;
 
         // Must have a lava floor
         BlockWorldVector lavaPos = recurse(0, pt.getBlockY() - minY + 1, 0, pt);

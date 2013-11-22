@@ -13,7 +13,6 @@ import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * A implementation of YAML based off of {@link com.sk89q.worldedit.util.YAMLConfiguration} for CraftBook.
@@ -107,7 +106,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         pipesDiagonal = config.getBoolean("circuits.pipes.allow-diagonal", false);
 
         config.setComment("circuits.pipes.insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
-        pipeInsulator = config.getInt("circuits.pipes.insulator-block", BlockID.CLOTH);
+        pipeInsulator = new ItemInfo(config.getString("circuits.pipes.insulator-block", "WOOL"));
 
         config.setComment("circuits.pipes.stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
         pipeStackPerPull = config.getBoolean("circuits.pipes.stack-per-move", true);
@@ -461,7 +460,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         legacyCauldronEnabled = config.getBoolean("mechanics.legacy-cauldron.enable", true);
 
         config.setComment("mechanics.legacy-cauldron.block", "The block to use as the casing for the legacy cauldron.");
-        legacyCauldronBlock = config.getInt("mechanics.legacy-cauldron.block", BlockID.STONE);
+        legacyCauldronBlock = new ItemInfo(config.getString("mechanics.legacy-cauldron.block", "STONE"));
 
 
         // Lightstone Configuration Listener

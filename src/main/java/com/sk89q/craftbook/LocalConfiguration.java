@@ -39,7 +39,7 @@ public abstract class LocalConfiguration {
     // Circuits - Pipes
     public boolean pipesEnabled;
     public boolean pipesDiagonal;
-    public int pipeInsulator;
+    public ItemInfo pipeInsulator;
     public boolean pipeStackPerPull;
     public boolean pipeRequireSign;
     // Circuits - Redstone Jukebox
@@ -171,7 +171,7 @@ public abstract class LocalConfiguration {
     public boolean hiddenSwitchAnyside;
     // Mechanics - Legacy Cauldron
     public boolean legacyCauldronEnabled;
-    public int legacyCauldronBlock;
+    public ItemInfo legacyCauldronBlock;
     // Mechanics - Lightstone
     public boolean lightstoneEnabled;
     public ItemInfo lightstoneItem;
