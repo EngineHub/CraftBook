@@ -64,10 +64,10 @@ public class SearchArea {
 
         if(line.startsWith("r:")) {
 
-            if(CraftBookPlugin.inst().getWorldGuard() == null)
+            if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return new SearchArea();
 
-            ProtectedRegion reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
+            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
             if(reg == null)
                 return new SearchArea();
 
@@ -88,10 +88,10 @@ public class SearchArea {
 
         if(line.startsWith("r:")) {
 
-            if(CraftBookPlugin.inst().getWorldGuard() == null)
+            if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return false;
 
-            ProtectedRegion reg = CraftBookPlugin.inst().getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
+            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
             if(reg == null)
                 return false;
 
@@ -224,7 +224,7 @@ public class SearchArea {
      */
     public boolean hasRegion() {
 
-        return region != null && world != null && CraftBookPlugin.inst().getWorldGuard() != null;
+        return region != null && world != null && CraftBookPlugin.plugins.getWorldGuard() != null;
     }
 
     /**

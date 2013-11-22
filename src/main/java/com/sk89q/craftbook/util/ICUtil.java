@@ -100,13 +100,13 @@ public class ICUtil {
 
             if(sign.getLine(i).contains("[off]")) {
 
-                if(CraftBookPlugin.inst().getWorldEdit() == null) {
+                if(CraftBookPlugin.plugins.getWorldEdit() == null) {
                     sign.setLine(i, sign.getLine(i).replace("[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
-                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
 
-                        RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
 
                         try {
                             if(selector instanceof CuboidRegionSelector) {
@@ -169,14 +169,14 @@ public class ICUtil {
 
             if(sign.getLine(i).contains("[rad]")) {
 
-                if(CraftBookPlugin.inst().getWorldEdit() == null) {
+                if(CraftBookPlugin.plugins.getWorldEdit() == null) {
                     sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
 
-                    if(CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
 
-                        RegionSelector selector = CraftBookPlugin.inst().getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
 
                         try {
                             if(selector instanceof CuboidRegionSelector) {

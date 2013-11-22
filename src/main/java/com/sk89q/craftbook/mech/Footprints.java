@@ -96,7 +96,7 @@ public class Footprints extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
-        if (CraftBookPlugin.inst().hasProtocolLib()) return true;
+        if (CraftBookPlugin.plugins.hasProtocolLib()) return true;
         else CraftBookPlugin.inst().getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
         return false;
     }

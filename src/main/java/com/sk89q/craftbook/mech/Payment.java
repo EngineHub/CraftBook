@@ -47,15 +47,15 @@ public class Payment extends AbstractMechanic {
         double money = Double.parseDouble(sign.getLine(2));
         String reciever = sign.getLine(3);
 
-        if (CraftBookPlugin.inst().getEconomy().withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess())
-            if (CraftBookPlugin.inst().getEconomy().depositPlayer(reciever, money).transactionSuccess()) {
+        if (CraftBookPlugin.plugins.getEconomy().withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess())
+            if (CraftBookPlugin.plugins.getEconomy().depositPlayer(reciever, money).transactionSuccess()) {
                 Block back = SignUtil.getBackBlock(event.getClickedBlock());
                 BlockFace bface = SignUtil.getBack(event.getClickedBlock());
                 Block redstoneItem = back.getRelative(bface);
                 if (ICUtil.setState(redstoneItem, true, back))
                     CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new TurnOff(redstoneItem, back), 20L);
             } else
-                CraftBookPlugin.inst().getEconomy().depositPlayer(event.getPlayer().getName(), money);
+                CraftBookPlugin.plugins.getEconomy().depositPlayer(event.getPlayer().getName(), money);
 
         event.setCancelled(true);
     }

@@ -144,7 +144,7 @@ public class MechanicalCore implements LocalComponent {
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
 
         // Special mechanics.
-        if (plugin.getEconomy() != null && config.paymentEnabled) plugin.registerMechanic(new Payment.Factory());
+        if (CraftBookPlugin.plugins.getEconomy() != null && config.paymentEnabled) plugin.registerMechanic(new Payment.Factory());
 
         // New System Mechanics
         if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());

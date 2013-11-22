@@ -79,7 +79,7 @@ public class AreaCommands {
             throw new CommandException("Invalid area name. Needs to be between 1 and 13 letters long.");
 
         try {
-            WorldEditPlugin worldEdit = plugin.getWorldEdit();
+            WorldEditPlugin worldEdit = CraftBookPlugin.plugins.getWorldEdit();
 
             World world = ((Player) sender).getWorld();
             Selection sel = worldEdit.getSelection((Player) sender);

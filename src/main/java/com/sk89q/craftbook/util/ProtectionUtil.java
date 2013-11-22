@@ -64,7 +64,7 @@ public class ProtectionUtil {
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.inst().getWorldGuard() == null || CraftBookPlugin.inst().getWorldGuard().canBuild(player, block);
+        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().canBuild(player, block);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ProtectionUtil {
             return !event.isCancelled();
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.inst().getWorldGuard() == null || CraftBookPlugin.inst().getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.USE, loc, CraftBookPlugin.inst().getWorldGuard().wrapPlayer(player));
+        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.USE, loc, CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
     }
 
     /**
@@ -109,12 +109,12 @@ public class ProtectionUtil {
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }
-        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.inst().getWorldGuard() == null) return true;
+        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null) return true;
 
         if(newState.getType() == Material.SNOW)
-            return CraftBookPlugin.inst().getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.SNOW_FALL, block.getLocation());
+            return CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.SNOW_FALL, block.getLocation());
         if(newState.getType() == Material.ICE)
-            return CraftBookPlugin.inst().getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.ICE_FORM, block.getLocation());
+            return CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.ICE_FORM, block.getLocation());
 
         return true;
     }
