@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -34,6 +36,11 @@ public class ItemSyntax {
     private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     private static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
     private static final Pattern FSLASH_PATTERN = Pattern.compile("/", Pattern.LITERAL);
+
+    /**
+     * The plugin that stores this ItemSyntax reference. Only set this if you have a method: "public String parseItemSyntax(String item) {" in your plugin class.
+     */
+    public static JavaPlugin plugin;
 
     /**
      * The opposite of {@link getItem()}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
@@ -104,6 +111,27 @@ public class ItemSyntax {
 
         if (line == null || line.isEmpty())
             return null;
+
+        if(plugin != null) {
+            try {
+                line = (String) plugin.getClass().getMethod("parseItemSyntax", String.class).invoke(plugin, line);
+            } catch (NoSuchMethodException e) {
+                plugin = null;
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                plugin = null;
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                plugin = null;
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                plugin = null;
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                plugin = null;
+                e.printStackTrace();
+            }
+        }
 
         Material material = Material.AIR;
         int data = -1;

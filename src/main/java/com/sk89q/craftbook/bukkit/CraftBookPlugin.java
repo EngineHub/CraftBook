@@ -52,7 +52,10 @@ import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mech.CommandItems;
+import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition;
 import com.sk89q.craftbook.util.CompatabilityUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
@@ -150,6 +153,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set the instance
         instance = this;
+        ItemSyntax.plugin = this;
     }
 
     public static String getVersion() {
@@ -1113,5 +1117,22 @@ public class CraftBookPlugin extends JavaPlugin {
         getConfiguration().persistentStorageType = storage.getType();
         getConfiguration().config.setProperty("persistent-storage-type", storage.getType());
         getConfiguration().config.save();
+    }
+
+    /**
+     * Parses more advanced portions of the Item Syntax.
+     * 
+     * @param item The item to parse
+     * @return The parsed string. (Can be the same, and should be if nothing found)
+     */
+    public String parseItemSyntax(String item) {
+
+        if(CommandItems.INSTANCE != null)  {
+            CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(item);
+            if(def != null) {
+                return ItemSyntax.getStringFromItem(def.getItem());
+            }
+        }
+        return item;
     }
 }
