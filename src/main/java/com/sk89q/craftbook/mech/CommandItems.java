@@ -334,12 +334,18 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     if(comdef.clickType == ClickType.CLICK_LEFT && (!(event instanceof PlayerInteractEvent) || !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK)))
                         break current;
 
+                    if(comdef.clickType == ClickType.CLICK_EITHER && (!(event instanceof PlayerInteractEvent) || !(((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK)))
+                        break current;
+
                     //Entity
 
                     if(comdef.clickType == ClickType.ENTITY_RIGHT && !(event instanceof PlayerInteractEntityEvent))
                         break current;
 
                     if(comdef.clickType == ClickType.ENTITY_LEFT && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player)))
+                        break current;
+
+                    if(comdef.clickType == ClickType.ENTITY_EITHER && !(event instanceof PlayerInteractEntityEvent) && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Player)))
                         break current;
 
                     if(comdef.clickType == ClickType.ENTITY_ARROW && (!(event instanceof EntityDamageByEntityEvent) || !(((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)))
@@ -351,6 +357,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         break current;
 
                     if(comdef.clickType == ClickType.BLOCK_PLACE && !(event instanceof BlockPlaceEvent))
+                        break current;
+
+                    if(comdef.clickType == ClickType.BLOCK_EITHER && !(event instanceof BlockPlaceEvent) && !(event instanceof BlockBreakEvent))
                         break current;
 
                     //Item
