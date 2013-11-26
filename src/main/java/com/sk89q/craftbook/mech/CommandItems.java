@@ -268,7 +268,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
         while(stackIt.hasNext()) {
             final ItemStack stack = stackIt.next();
             performCommandItems(stack, event.getEntity(), event);
-
             for(CommandItemDefinition def : definitions) {
                 if(ItemUtil.areItemsIdentical(stack, def.getItem())) {
                     stackIt.remove();
