@@ -91,12 +91,17 @@ public class RandomBit extends AbstractSelfTriggeredIC {
                 if(first)
                     chip.setOutput(i, false); //Turn it off before changing it.
                 boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
+                boolean changed = false;
                 if(on >= maxOn && maxOn >= 0)
                     state = false;
-                if(chip.getOutput(i) != state)
+                if(chip.getOutput(i) != state) {
                     chip.setOutput(i, state); //Only change if needed
-                if(state)
+                    changed = true;
+                }
+                if(state && changed)
                     on++;
+                else if(!state && changed)
+                    on--;
             }
             first = false;
         } while(on < minOn);
