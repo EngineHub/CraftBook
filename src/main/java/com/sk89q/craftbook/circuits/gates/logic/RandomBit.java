@@ -85,7 +85,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         minOn = Math.min(minOn, chip.getOutputCount());
         if(maxOn < minOn && maxOn >= 0)
             maxOn = minOn;
-        while(on < minOn) {
+        do {
             for (short i = 0; i < chip.getOutputCount(); i++) {
                 chip.setOutput(i, false); //Turn it off before changing it.
                 boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
@@ -96,7 +96,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
                 if(state)
                     on++;
             }
-        }
+        } while(on < minOn);
     }
 
     public static class Factory extends AbstractICFactory {
