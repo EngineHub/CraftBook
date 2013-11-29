@@ -49,6 +49,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         @Override
         public void run() {
 
+            if (cart.isDead() || !cart.isValid()) return;
             if (cart != null && cart.isEmpty())
                 cart.remove();
         }

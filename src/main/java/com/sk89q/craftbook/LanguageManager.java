@@ -10,7 +10,6 @@ import java.util.Set;
 
 import net.minecraft.server.v1_6_R3.EntityPlayer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -69,7 +68,7 @@ public class LanguageManager {
 
     public String getString(String message, String language) {
 
-        message = ChatColor.stripColor(message);
+        //message = ChatColor.stripColor(message);
         if(language == null || !languageMap.containsKey(language))
             language = CraftBookPlugin.inst().getConfiguration().language;
         YAMLProcessor languageData = languageMap.get(language);
