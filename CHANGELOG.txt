@@ -1,3 +1,9 @@
+3.7.14
+* Fixed CommandItems _EITHER sections.
++ Added minOn to random IC's.
+* Fixed Random IC's not triggering redstone update if lever was already toggled previously.
++ Add SearchArea to SentryGun IC.
+
 3.7.13
 * Fixed Iron, CLay balls, potatoes and netherrack in Cooking Pot.
 + Added Quartz ore to cooking pot.
