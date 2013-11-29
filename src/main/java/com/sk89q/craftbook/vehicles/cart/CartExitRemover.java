@@ -19,6 +19,7 @@ public class CartExitRemover extends AbstractCraftBookMechanic {
     public void onVehicleExit(final VehicleExitEvent event) {
 
         if (!(event.getVehicle() instanceof Minecart)) return;
+        if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
