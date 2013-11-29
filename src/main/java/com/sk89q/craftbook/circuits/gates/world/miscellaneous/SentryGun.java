@@ -23,13 +23,13 @@ import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.Vector;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
 
     private Set<EntityType> types;
-    private Block center;
-    private Vector radius;
+    private SearchArea area;
     private float speed;
     private boolean manned;
 
@@ -49,11 +49,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         }
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
-        if(getLine(3).contains("="))
-            center = ICUtil.parseBlockLocation(getSign(), 3);
-        else
-            center = getBackBlock().getRelative(0, 1, 0);
-        radius = ICUtil.parseRadius(getSign(), 3);
+        area = SearchArea.createArea(getBackBlock(), getLine(3));
         manned = getSign().getLine(2).split(":").length > 2 && getSign().getLine(2).split(":")[2].equalsIgnoreCase("MAN");
     }
 
@@ -85,11 +81,11 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
         Player shooter = manned ? getShootingPlayer() : null;
         if(shooter != null) {
-            Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), shooter.getLocation().getDirection().normalize(), speed, 0);
+            Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()), shooter.getLocation().getDirection().normalize(), speed, 0);
             ar.setShooter(shooter);
             ar.setTicksLived(2500);
         } else {
-            for (Entity ent : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+            for (Entity ent : area.getEntitiesInArea()) {
                 if(!(ent instanceof LivingEntity)) continue;
                 boolean hasFound = false;
                 for(EntityType type : types) {
@@ -103,7 +99,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
                     double yOff = 0;
                     if(ent instanceof LivingEntity)
                         yOff = ((LivingEntity) ent).getEyeHeight();
-                    Arrow ar = center.getWorld().spawnArrow(BlockUtil.getBlockCentre(center), ent.getLocation().add(0, yOff, 0).subtract(center.getLocation().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
+                    Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()), ent.getLocation().add(0, yOff, 0).subtract((area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()).getLocation().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
                     if(!((LivingEntity)ent).hasLineOfSight(ar)) {
                         ar.remove();
                         continue;
@@ -153,7 +149,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Mob Type{:power:MAN}", "Radius=Offset"};
+            return new String[] {"Mob Type{:power:MAN}", "SearchArea"};
         }
     }
 }

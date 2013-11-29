@@ -274,6 +274,8 @@ public class SearchArea {
      */
     public World getWorld() {
 
+        if(world == null && getCenter() != null)
+            return getCenter().getWorld();
         return world;
     }
 
