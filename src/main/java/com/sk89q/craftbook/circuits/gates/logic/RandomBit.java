@@ -83,8 +83,8 @@ public class RandomBit extends AbstractSelfTriggeredIC {
     public void randomize(ChipState chip) {
         int on = 0;
         minOn = Math.min(minOn, chip.getOutputCount());
-        if(maxOn < minOn && maxOn >= 0)
-            maxOn = minOn;
+        if(maxOn <= minOn && maxOn >= 0)
+            maxOn = minOn+1;
         boolean first = true;
         do {
             for (short i = 0; i < chip.getOutputCount(); i++) {
