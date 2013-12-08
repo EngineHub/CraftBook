@@ -190,6 +190,8 @@ public class LanguageManager {
         put("mech.cook.ouch","Ouch! That was hot!");
         put("mech.cook.add-fuel","You put fuel into the cooking pot, and watch as the fire roars!");
 
+        put("mech.custom-crafting.recipe-permission", "You do not have permission to craft this recipe.");
+
         put("mech.door.create","Door Created!");
         put("mech.door.toggle","Door Toggled!");
         put("mech.door.other-sign","Door sign required on other side (or it was too far away).");

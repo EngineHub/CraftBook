@@ -30,6 +30,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.PermissionAttachment;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
@@ -118,8 +119,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         ItemStack bits = null;
         Player p = null;
+        LocalPlayer lp = null;
         try {
             p = (Player) event.getViewers().get(0);
+            lp = CraftBookPlugin.inst().wrapPlayer(p);
         } catch(Exception e){}
         CraftBookPlugin.logDebugMessage("Pre-Crafting has been initiated!", "advanced-data");
         try {
@@ -178,7 +181,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     if(p != null && recipe.hasAdvancedData("permission-node")) {
                         CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
                         if(!p.hasPermission((String) recipe.getAdvancedData("permission-node"))) {
-                            p.sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
+                            lp.printError("mech.custom-crafting.recipe-permission");
                             ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
                             return;
                         }
