@@ -193,6 +193,7 @@ public abstract class LocalConfiguration {
     // Mechanics - Snow
     public boolean snowPiling;
     public boolean snowTrample;
+    public boolean snowPartialTrample;
     public boolean snowPlace;
     public boolean snowSlowdown;
     public boolean snowRealistic;
