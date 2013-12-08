@@ -21,6 +21,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -165,7 +166,7 @@ public class BetterPistons extends AbstractMechanic {
         this.type = type;
     }
 
-    private double movemod = 1.0;
+    private final double movemod = 1.0;
 
     /**
      * Raised when an input redstone current changes.
@@ -174,7 +175,7 @@ public class BetterPistons extends AbstractMechanic {
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         //Make sure same type (Lazy checks)
-        if (event.getBlock().getTypeId() != trigger.getTypeId()) return;
+        if (!BlockUtil.areBlocksIdentical(trigger, event.getBlock())) return;
 
         PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
         ChangedSign signState = BukkitUtil.toChangedSign(sign);

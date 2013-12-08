@@ -24,7 +24,7 @@ public class InsufficientPermissionsException extends InvalidMechanismException 
 
     public InsufficientPermissionsException() {
 
-        super(CraftBookPlugin.inst().getConfiguration().showPermissionMessages ? "You don't have permission for this." : null);
+        super(CraftBookPlugin.inst().getConfiguration().showPermissionMessages ? "mech.create-permission" : null);
     }
 
     public InsufficientPermissionsException(String message, Throwable cause) {

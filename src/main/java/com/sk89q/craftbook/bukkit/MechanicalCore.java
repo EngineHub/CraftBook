@@ -124,7 +124,6 @@ public class MechanicalCore implements LocalComponent {
 
         // Let's register mechanics!
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
-        if (config.bridgeEnabled) plugin.registerMechanic(new Bridge.Factory());
         if (config.doorEnabled) plugin.registerMechanic(new Door.Factory());
         if (config.elevatorEnabled) plugin.registerMechanic(new Elevator.Factory());
         if (config.teleporterEnabled) plugin.registerMechanic(new Teleporter.Factory());
@@ -164,6 +163,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.ammeterEnabled) mechanics.add(new Ammeter());
         if (config.bookcaseEnabled) mechanics.add(new Bookcase());
         if (config.signCopyEnabled) mechanics.add(new SignCopier());
+        if (config.bridgeEnabled) mechanics.add(new Bridge());
 
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
