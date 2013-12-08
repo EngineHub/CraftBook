@@ -16,69 +16,43 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This mechanism allow players to toggle GlowStone.
  *
  * @author sk89q
  */
-public class GlowStone extends AbstractMechanic {
+public class GlowStone extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<GlowStone> {
-
-        @Override
-        public GlowStone detect(BlockWorldVector pt) {
-
-            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
-
-            if (CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(BukkitUtil.toWorld(pt).getBlockAt(BukkitUtil.toLocation(pt))) || type == BlockID.LIGHTSTONE)
-                return new GlowStone(pt);
-
-            return null;
-        }
-    }
-
-    BlockWorldVector pt;
-
-    /**
-     * Construct the mechanic for a location.
-     *
-     * @param pt
-     */
-    private GlowStone(BlockWorldVector pt) {
-
-        super();
-        this.pt = pt;
-    }
-
-    /**
-     * Raised when an input redstone current changes.
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if(event.isMinor())
             return;
 
-        if(event.isOn() == (event.getBlock().getTypeId() == BlockID.LIGHTSTONE))
+        if(!CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
+
+        if(event.isOn() == (event.getBlock().getType() == Material.GLOWSTONE))
             return;
 
-        event.getBlock().setTypeIdAndData(event.isOn() ? BlockID.LIGHTSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getId(), (byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()), true);
+        event.getBlock().setType(event.isOn() ? Material.GLOWSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getType());
+        event.getBlock().setData((byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()));
     }
 
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (event.getBlock().getTypeId() == BlockID.LIGHTSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
+        if(!CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
+
+        if (event.getBlock().getType() == Material.GLOWSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);
     }
 }

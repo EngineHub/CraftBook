@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
@@ -75,7 +76,7 @@ public class ItemUtil {
      * @param exclusions The list of items to exclude, skipped if empty.
      * @return If the item passes the filters.
      */
-    public static boolean doesItemPassFilters(ItemStack stack, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
+    public static boolean doesItemPassFilters(ItemStack stack, Set<ItemStack> inclusions, Set<ItemStack> exclusions) {
 
         boolean passesFilters = true;
         if(inclusions != null && inclusions.size() > 0) {

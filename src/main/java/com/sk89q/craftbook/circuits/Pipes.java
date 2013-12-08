@@ -41,8 +41,6 @@ import com.sk89q.worldedit.BlockWorldVector;
 
 public class Pipes extends AbstractMechanic {
 
-    final CraftBookPlugin plugin = CraftBookPlugin.inst();
-
     public static class Factory extends AbstractMechanicFactory<Pipes> {
 
         /**
@@ -79,8 +77,7 @@ public class Pipes extends AbstractMechanic {
 
             if (type == Material.PISTON_STICKY_BASE) {
 
-                PistonBaseMaterial piston = (PistonBaseMaterial) BukkitUtil.toBlock(pt).getState().getData();
-                ChangedSign sign = getSignOnPiston(piston, BukkitUtil.toBlock(pt));
+                ChangedSign sign = getSignOnPiston(BukkitUtil.toBlock(pt));
 
                 if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                     return null;
@@ -107,8 +104,9 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    public static ChangedSign getSignOnPiston(PistonBaseMaterial piston, Block block) {
+    public static ChangedSign getSignOnPiston(Block block) {
 
+        PistonBaseMaterial piston = (PistonBaseMaterial) block.getState().getData();
         for(BlockFace face : LocationUtil.getDirectFaces()) {
 
             if(face == piston.getFacing() || !SignUtil.isSign(block.getRelative(face)))
@@ -136,42 +134,16 @@ public class Pipes extends AbstractMechanic {
      */
     private Pipes(BlockWorldVector pt, ChangedSign sign, List<ItemStack> items) {
 
-        super();
-
-        scanSign(sign);
-
         if(items != null && !items.isEmpty()) {
-            fromIC = true;
+            customInitialization = true;
             this.items.addAll(items);
             startPipe(BukkitUtil.toBlock(pt));
         }
     }
 
-    public void scanSign(ChangedSign sign) {
-
-        if(sign != null) {
-
-            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-
-                filters.add(ItemSyntax.getItem(line3.trim()));
-            }
-            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-
-                exceptions.add(ItemSyntax.getItem(line4.trim()));
-            }
-        }
-
-        filters.removeAll(Collections.singleton(null));
-        exceptions.removeAll(Collections.singleton(null));
-    }
-
-    private HashSet<ItemStack> filters = new HashSet<ItemStack>();
-    private HashSet<ItemStack> exceptions = new HashSet<ItemStack>();
-
     private List<ItemStack> items = new ArrayList<ItemStack>();
-    private Set<Location> visitedPipes = new HashSet<Location>();
 
-    private boolean fromIC = false;
+    private boolean customInitialization = false;
 
     public List<ItemStack> getItems() {
 
@@ -179,7 +151,7 @@ public class Pipes extends AbstractMechanic {
         return items;
     }
 
-    public void searchNearbyPipes(Block block) {
+    public void searchNearbyPipes(Block block, Set<Location> visitedPipes, Set<ItemStack> filters, Set<ItemStack> exceptions) {
 
         BukkitConfiguration config = CraftBookPlugin.inst().getConfiguration();
 
@@ -231,9 +203,7 @@ public class Pipes extends AbstractMechanic {
 
                     visitedPipes.add(off.getLocation());
 
-                    if(block.getType() == Material.STAINED_GLASS)
-                        if(off.getType() == Material.STAINED_GLASS)
-                            if(block.getData() != off.getData()) continue;
+                    if(block.getType() == Material.STAINED_GLASS && off.getType() == Material.STAINED_GLASS && block.getData() != off.getData()) continue;
 
                     if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
                         searchQueue.add(off);
@@ -246,12 +216,12 @@ public class Pipes extends AbstractMechanic {
         //Use the queue to search blocks.
         for(Block bl : searchQueue) {
             if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS)
-                searchNearbyPipes(bl);
+                searchNearbyPipes(bl, visitedPipes, filters, exceptions);
             else if (bl.getType() == Material.PISTON_BASE) {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
 
-                ChangedSign sign = getSignOnPiston(p, bl);
+                ChangedSign sign = getSignOnPiston(bl);
 
                 HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
                 HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
@@ -301,7 +271,7 @@ public class Pipes extends AbstractMechanic {
                 items.removeAll(filteredItems);
                 items.addAll(newItems);
 
-                if (!items.isEmpty()) searchNearbyPipes(block);
+                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, filters, exceptions);
             }
         }
     }
@@ -313,7 +283,27 @@ public class Pipes extends AbstractMechanic {
 
     public void startPipe(Block block) {
 
-        visitedPipes.clear();
+        Set<ItemStack> filters = new HashSet<ItemStack>();
+        Set<ItemStack> exceptions = new HashSet<ItemStack>();
+
+        ChangedSign sign = getSignOnPiston(block);
+
+        if(sign != null) {
+
+            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+
+                filters.add(ItemSyntax.getItem(line3.trim()));
+            }
+            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+
+                exceptions.add(ItemSyntax.getItem(line4.trim()));
+            }
+        }
+
+        filters.removeAll(Collections.singleton(null));
+        exceptions.removeAll(Collections.singleton(null));
+
+        Set<Location> visitedPipes = new HashSet<Location>();
 
         if (block.getType() == Material.PISTON_STICKY_BASE) {
 
@@ -337,7 +327,7 @@ public class Pipes extends AbstractMechanic {
                         break;
                 }
                 visitedPipes.add(fac.getLocation());
-                searchNearbyPipes(block);
+                searchNearbyPipes(block, visitedPipes, filters, exceptions);
 
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
@@ -353,7 +343,7 @@ public class Pipes extends AbstractMechanic {
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
                 visitedPipes.add(fac.getLocation());
-                searchNearbyPipes(block);
+                searchNearbyPipes(block, visitedPipes, filters, exceptions);
 
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
@@ -365,8 +355,8 @@ public class Pipes extends AbstractMechanic {
                     }
                 } else f.getInventory().setResult(null);
             } else if (!items.isEmpty()) {
-                searchNearbyPipes(block);
-                if (!items.isEmpty() && !fromIC) //IC's should handle their own leftovers.
+                searchNearbyPipes(block, visitedPipes, filters, exceptions);
+                if (!items.isEmpty() && !customInitialization) //IC's should handle their own leftovers.
                     for (ItemStack item : items) {
                         if (!ItemUtil.isStackValid(item)) continue;
                         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
@@ -382,12 +372,8 @@ public class Pipes extends AbstractMechanic {
         }
     }
 
-    /**
-     * Raised when an input redstone current changes.
-     */
     @Override
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
-
         startPipe(event.getBlock());
     }
 }

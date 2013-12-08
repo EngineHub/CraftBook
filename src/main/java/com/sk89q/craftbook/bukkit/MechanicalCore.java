@@ -1,5 +1,4 @@
 package com.sk89q.craftbook.bukkit;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -124,11 +123,6 @@ public class MechanicalCore implements LocalComponent {
         BukkitConfiguration config = plugin.getConfiguration();
 
         // Let's register mechanics!
-        if (config.signCopyEnabled) plugin.registerMechanic(new SignCopier.Factory()); // Keep SignCopy close to the start, so it can copy mechanics without triggering them.
-        if (config.bookcaseEnabled) {
-            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "books.txt"), "books.txt");
-            plugin.registerMechanic(new Bookcase.Factory());
-        }
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
         if (config.bridgeEnabled) plugin.registerMechanic(new Bridge.Factory());
         if (config.doorEnabled) plugin.registerMechanic(new Door.Factory());
@@ -168,6 +162,9 @@ public class MechanicalCore implements LocalComponent {
         if (config.lightSwitchEnabled) mechanics.add(new LightSwitch());
         if (config.chunkAnchorEnabled) mechanics.add(new ChunkAnchor());
         if (config.ammeterEnabled) mechanics.add(new Ammeter());
+        if (config.bookcaseEnabled) mechanics.add(new Bookcase());
+        if (config.signCopyEnabled) mechanics.add(new SignCopier());
+
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

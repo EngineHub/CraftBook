@@ -291,12 +291,12 @@ public class CircuitCore implements LocalComponent {
         }
 
         // Let's register mechanics!
-        if (config.netherrackEnabled) plugin.registerMechanic(new Netherrack.Factory());
-        if (config.pumpkinsEnabled) plugin.registerMechanic(new JackOLantern.Factory());
-        if (config.glowstoneEnabled) plugin.registerMechanic(new GlowStone.Factory());
         if (config.pipesEnabled) plugin.registerMechanic(pipeFactory = new Pipes.Factory());
 
         if (config.jukeboxEnabled) mechanics.add(new RedstoneJukebox());
+        if (config.glowstoneEnabled) mechanics.add(new GlowStone());
+        if (config.netherrackEnabled) mechanics.add(new Netherrack());
+        if (config.pumpkinsEnabled) mechanics.add(new JackOLantern());
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

@@ -17,91 +17,67 @@
 package com.sk89q.craftbook.circuits;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
  *
  * @author sk89q
  */
-public class Netherrack extends AbstractMechanic {
+public class Netherrack extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<Netherrack> {
-
-        @Override
-        public Netherrack detect(BlockWorldVector pt) {
-
-            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
-
-            return type == BlockID.NETHERRACK ? new Netherrack() : null;
-        }
-    }
-
-    /**
-     * Construct the mechanic for a location.
-     *
-     * @param pt
-     */
-    private Netherrack() {
-
-        super();
-    }
-
-    /**
-     * Raised when an input redstone current changes.
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if(event.isMinor())
             return;
 
+        if(event.getBlock().getType() != Material.NETHERRACK) return;
+
         Block above = event.getBlock().getRelative(0, 1, 0);
 
-        if (event.isOn() && canReplaceWithFire(above.getTypeId())) {
-            above.setTypeId(BlockID.FIRE);
+        if (event.isOn() && canReplaceWithFire(above.getType())) {
+            above.setType(Material.FIRE);
             for(Player p : Bukkit.getOnlinePlayers())
-                p.sendBlockChange(above.getLocation(), BlockID.FIRE, (byte) 0);
-        } else if (!event.isOn() && above != null && above.getTypeId() == BlockID.FIRE) {
-            above.setTypeId(BlockID.AIR);
+                p.sendBlockChange(above.getLocation(), Material.FIRE, (byte) 0);
+        } else if (!event.isOn() && above != null && above.getType() == Material.FIRE) {
+            above.setType(Material.AIR);
             for(Player p : Bukkit.getOnlinePlayers())
-                p.sendBlockChange(above.getLocation(), BlockID.AIR, (byte) 0);
+                p.sendBlockChange(above.getLocation(), Material.AIR, (byte) 0);
         }
     }
 
-    /**
-     * Raised when clicked.
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onLeftClick(PlayerInteractEvent event) {
 
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        if(event.getClickedBlock().getType() != Material.NETHERRACK) return;
         if (event.getBlockFace() == BlockFace.UP) {
             Block fire = event.getClickedBlock().getRelative(event.getBlockFace());
-            if (fire.getTypeId() == BlockID.FIRE
-                    && fire.getRelative(BlockFace.DOWN).isBlockPowered()) {
+            if (fire.getType() == Material.FIRE && fire.getRelative(BlockFace.DOWN).isBlockPowered()) {
                 event.setCancelled(true);
             }
         }
     }
 
-    private boolean canReplaceWithFire(int t) {
+    private boolean canReplaceWithFire(Material t) {
 
         switch (t) {
-            case BlockID.SNOW:
-            case BlockID.LONG_GRASS:
-            case BlockID.VINE:
-            case BlockID.DEAD_BUSH:
-            case BlockID.AIR:
+            case SNOW:
+            case LONG_GRASS:
+            case VINE:
+            case DEAD_BUSH:
+            case AIR:
                 return true;
             default:
                 return false;

@@ -16,59 +16,31 @@
 
 package com.sk89q.craftbook.circuits;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
  *
  * @author sk89q
  */
-public class JackOLantern extends AbstractMechanic {
+public class JackOLantern extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<JackOLantern> {
-
-        @Override
-        public JackOLantern detect(BlockWorldVector pt) {
-
-            int type = BukkitUtil.toWorld(pt).getBlockTypeIdAt(BukkitUtil.toLocation(pt));
-
-            if (type == BlockID.PUMPKIN || type == BlockID.JACKOLANTERN) return new JackOLantern(pt);
-
-            return null;
-        }
-    }
-
-    BlockWorldVector pt;
-
-    /**
-     * Construct the mechanic for a location.
-     *
-     * @param pt
-     */
-    private JackOLantern(BlockWorldVector pt) {
-
-        super();
-        this.pt = pt;
-    }
-
-    /**
-     * Raised when an input redstone current changes.
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if(event.isMinor())
             return;
 
-        if(event.isOn() == (event.getBlock().getTypeId() == BlockID.JACKOLANTERN))
+        if (event.getBlock().getType() != Material.PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
+
+        if(event.isOn() == (event.getBlock().getType() == Material.JACK_O_LANTERN))
             return;
 
         setPowered(event.getBlock(), event.isOn());
@@ -79,13 +51,16 @@ public class JackOLantern extends AbstractMechanic {
     public void setPowered(Block block, boolean on) {
 
         byte data = block.getData();
-        block.setTypeId(on ? BlockID.JACKOLANTERN : BlockID.PUMPKIN);
+        block.setType(on ? Material.JACK_O_LANTERN : Material.PUMPKIN);
         block.setData(data);
     }
 
-    @Override
-    public void onBlockBreak(BlockBreakEvent evt) {
-        if (evt.getBlock().getTypeId() == BlockID.JACKOLANTERN && (evt.getBlock().isBlockIndirectlyPowered() || evt.getBlock().isBlockPowered()))
-            evt.setCancelled(true);
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+
+        if (event.getBlock().getType() != Material.PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
+
+        if (event.getBlock().getType() == Material.JACK_O_LANTERN && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
+            event.setCancelled(true);
     }
 }

@@ -26,23 +26,22 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
  *
  * @author sk89q
  */
-public class Bookcase extends AbstractMechanic {
-
-    protected final CraftBookPlugin plugin = CraftBookPlugin.inst();
+public class Bookcase extends AbstractCraftBookMechanic {
 
     /**
      * Reads a book.
@@ -64,6 +63,43 @@ public class Bookcase extends AbstractMechanic {
         }
     }
 
+    @Override
+    public boolean enable() {
+
+        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "books.txt"), "books.txt");
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
+            Set<String> list = new LinkedHashSet<String>();
+            String l = "";
+            while((l = reader.readLine()) != null)
+                list.add(l);
+
+            lines = list.toArray(new String[list.size()]);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(reader != null) try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void disable() {
+
+        lines = null;
+    }
+
+    public static String[] lines;
+
     /**
      * Get a line from the book lines file.
      *
@@ -73,60 +109,24 @@ public class Bookcase extends AbstractMechanic {
      */
     protected String getBookLine() throws Exception {
 
-        return Factory.lines[CraftBookPlugin.inst().getRandom().nextInt(Factory.lines.length)];
+        return lines[CraftBookPlugin.inst().getRandom().nextInt(lines.length)];
     }
 
-    /**
-     * Raised when a block is right clicked.
-     *
-     * @param event
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getConfiguration().bookcaseEnabled) return;
-        if (event.getPlayer().isSneaking() != plugin.getConfiguration().bookcaseReadWhenSneaking) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        if (plugin.getConfiguration().bookcaseReadHoldingBlock || !player.isHoldingBlock())
+        if (event.getPlayer().isSneaking() != CraftBookPlugin.inst().getConfiguration().bookcaseReadWhenSneaking) return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if(!player.hasPermission("craftbook.mech.bookshelf.use")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
+            return;
+        }
+        if (CraftBookPlugin.inst().getConfiguration().bookcaseReadHoldingBlock || !player.isHoldingBlock())
             read(player);
-    }
-
-    public static class Factory extends AbstractMechanicFactory<Bookcase> {
-
-        public Factory() {
-            super();
-
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
-                Set<String> list = new LinkedHashSet<String>();
-                String l = "";
-                while((l = reader.readLine()) != null)
-                    list.add(l);
-
-                lines = list.toArray(new String[list.size()]);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if(reader != null) try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public static String[] lines;
-
-        @Override
-        public Bookcase detect(BlockWorldVector pt, LocalPlayer player) {
-
-            return pt.getWorld().getBlockType(pt) == BlockID.BOOKCASE && player.hasPermission("craftbook.mech.bookshelf.use") ? new Bookcase() : null;
-        }
     }
 }
