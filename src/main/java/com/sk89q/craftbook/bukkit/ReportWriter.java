@@ -181,7 +181,8 @@ public class ReportWriter {
 
             for(SelfTriggeringMechanic mech : plugin.getManager().thinkingMechanics) {
                 if(mech instanceof ICMechanic) {
-                    log.put((ICMechanic) mech).getIC().getSign().getLocalWorld() + ': ' ((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), "%s", ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
+                    log.put((ICMechanic) mech).getIC().getSign().getLocalWorld() + ': ' + 
+                            ((ICMechanic) mech).getIC().getSign().getBlockVector().toString(), "%s", ((ICMechanic) mech).getIC().getSign().getLine(0) + "|" +
                             ((ICMechanic) mech).getIC().getSign().getLine(1) + "|" + ((ICMechanic) mech).getIC().getSign().getLine(2) + "|" +
                             ((ICMechanic) mech).getIC().getSign().getLine(3));
                 }
