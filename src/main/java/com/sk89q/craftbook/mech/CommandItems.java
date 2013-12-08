@@ -458,13 +458,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(command == null || command.trim().isEmpty())
             return;
 
-        if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
-            return;
-
-        if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
-            command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
-        if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
-            command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
+        if(event instanceof EntityDamageByEntityEvent)
+            command = command.replace("@d", ((EntityDamageByEntityEvent) event).getEntity() instanceof Player ? ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName() : ((EntityDamageByEntityEvent) event).getEntityType().getName());
+        if(event instanceof PlayerInteractEntityEvent)
+            command = command.replace("@d", ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player ? ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName() : ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
         if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
             command = command.replace("@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
         if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e"))
