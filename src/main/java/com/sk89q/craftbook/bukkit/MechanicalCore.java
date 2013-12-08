@@ -16,7 +16,6 @@ import com.sk89q.craftbook.mech.BetterPhysics;
 import com.sk89q.craftbook.mech.BetterPistons;
 import com.sk89q.craftbook.mech.BetterPistons.Types;
 import com.sk89q.craftbook.mech.Bookcase;
-import com.sk89q.craftbook.mech.Bridge;
 import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
@@ -24,7 +23,6 @@ import com.sk89q.craftbook.mech.CommandItems;
 import com.sk89q.craftbook.mech.CommandSigns;
 import com.sk89q.craftbook.mech.CookingPot;
 import com.sk89q.craftbook.mech.CustomDrops;
-import com.sk89q.craftbook.mech.Door;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.mech.Footprints;
 import com.sk89q.craftbook.mech.Gate;
@@ -44,6 +42,8 @@ import com.sk89q.craftbook.mech.XPStorer;
 import com.sk89q.craftbook.mech.ai.AIMechanic;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
+import com.sk89q.craftbook.mech.area.simple.Bridge;
+import com.sk89q.craftbook.mech.area.simple.Door;
 import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
@@ -124,7 +124,6 @@ public class MechanicalCore implements LocalComponent {
 
         // Let's register mechanics!
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
-        if (config.doorEnabled) plugin.registerMechanic(new Door.Factory());
         if (config.elevatorEnabled) plugin.registerMechanic(new Elevator.Factory());
         if (config.teleporterEnabled) plugin.registerMechanic(new Teleporter.Factory());
         if (config.areaEnabled) plugin.registerMechanic(new Area.Factory());
@@ -164,6 +163,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.bookcaseEnabled) mechanics.add(new Bookcase());
         if (config.signCopyEnabled) mechanics.add(new SignCopier());
         if (config.bridgeEnabled) mechanics.add(new Bridge());
+        if (config.doorEnabled) mechanics.add(new Door());
 
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();

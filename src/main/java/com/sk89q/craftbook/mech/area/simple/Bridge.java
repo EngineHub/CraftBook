@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.area.simple;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -24,12 +24,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -50,7 +48,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
  *
  * @author hash
  */
-public class Bridge extends AbstractCraftBookMechanic {
+public class Bridge extends CuboidToggleMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
@@ -85,7 +83,7 @@ public class Bridge extends AbstractCraftBookMechanic {
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (!SignUtil.isSign(event.getClickedBlock())) return;
-        if (!BukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1).equals("[Bridge]")) return;
+        if (!isApplicableSign(BukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.bridge.use")) {
@@ -102,7 +100,7 @@ public class Bridge extends AbstractCraftBookMechanic {
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
                 if (event.getPlayer().getItemInHand() != null)
-                    if (getBridgeBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType()) {
+                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType()) {
 
                         if (!player.hasPermission("craftbook.mech.bridge.restock")) {
                             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -144,7 +142,7 @@ public class Bridge extends AbstractCraftBookMechanic {
         if (event.isMinor()) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
-        if (!BukkitUtil.toChangedSign(event.getBlock()).getLine(1).equals("[Bridge]")) return;
+        if (!isApplicableSign(BukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
@@ -158,7 +156,8 @@ public class Bridge extends AbstractCraftBookMechanic {
         }, 2L);
     }
 
-    public Block getBridgeBase(Block trigger) throws UnacceptableMaterialException {
+    @Override
+    public Block getBlockBase(Block trigger) throws InvalidMechanismException {
         Block proximalBaseCenter = trigger.getRelative(BlockFace.UP);
         if (trigger.getY() < trigger.getWorld().getMaxHeight()-1 && CraftBookPlugin.inst().getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter; // On Top
@@ -174,6 +173,7 @@ public class Bridge extends AbstractCraftBookMechanic {
         else throw new UnacceptableMaterialException("mech.bridge.unusable");
     }
 
+    @Override
     public Block getFarSign(Block trigger) {
 
         BlockFace dir = SignUtil.getFacing(trigger);
@@ -198,36 +198,19 @@ public class Bridge extends AbstractCraftBookMechanic {
         return farSide;
     }
 
-    private boolean flipState(Block trigger, LocalPlayer player) throws InvalidMechanismException {
+    @Override
+    public CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException {
 
-        if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
-
-        // Attempt to detect whether the bridge is above or below the sign,
-        // first assuming that the bridge is above
-        Block proximalBaseCenter = getBridgeBase(trigger);
-
-        // Find the other side
-        Block farSide = getFarSign(trigger);
-
-        if (farSide.getType() != trigger.getType()) throw new InvalidConstructionException("mech.bridge.other-sign");
-
-        // Check the other side's base blocks for matching type
-        BlockFace face = trigger.getFace(proximalBaseCenter);
-        if(face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
-        Block distalBaseCenter = farSide.getRelative(face);
-        if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
-            throw new InvalidConstructionException("mech.bridge.material");
-
-        // Select the togglable region
         CuboidRegion toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
+        ChangedSign sign = BukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
-            left = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(2))));
+            left = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(sign.getLine(2))));
         } catch (Exception e) {
             left = 1;
         }
         try {
-            right = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(BukkitUtil.toChangedSign(trigger).getLine(3))));
+            right = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(sign.getLine(3))));
         } catch (Exception e) {
             right = 1;
         }
@@ -249,6 +232,32 @@ public class Bridge extends AbstractCraftBookMechanic {
         // Don't toggle the end points
         toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront(trigger)));
 
+        return toggle;
+    }
+
+    public boolean flipState(Block trigger, LocalPlayer player) throws InvalidMechanismException {
+
+        if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
+
+        // Attempt to detect whether the bridge is above or below the sign,
+        // first assuming that the bridge is above
+        Block proximalBaseCenter = getBlockBase(trigger);
+
+        // Find the other side
+        Block farSide = getFarSign(trigger);
+
+        if (farSide.getType() != trigger.getType()) throw new InvalidConstructionException("mech.bridge.other-sign");
+
+        // Check the other side's base blocks for matching type
+        BlockFace face = trigger.getFace(proximalBaseCenter);
+        if(face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
+        Block distalBaseCenter = farSide.getRelative(face);
+        if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
+            throw new InvalidConstructionException("mech.bridge.material");
+
+        // Select the togglable region
+        CuboidRegion toggle = getCuboidArea(trigger, proximalBaseCenter, distalBaseCenter);
+
         // this is kinda funky, but we only check one position
         // to see if the bridge is open and/or closable.
         // efficiency choice :/
@@ -260,137 +269,13 @@ public class Bridge extends AbstractCraftBookMechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && proximalBaseCenter.getType() != hinge.getType())
-            return closeBridge(trigger, farSide, proximalBaseCenter, toggle, player);
+            return close(trigger, farSide, proximalBaseCenter, toggle, player);
         else
-            return openBridge(trigger, farSide, proximalBaseCenter, toggle);
+            return open(trigger, farSide, proximalBaseCenter, toggle);
     }
 
-    public boolean openBridge(Block sign, Block farSide, Block base, CuboidRegion toggle) {
-
-        ChangedSign s = BukkitUtil.toChangedSign(sign);
-        ChangedSign other = BukkitUtil.toChangedSign(farSide);
-        for (Vector bv : toggle) {
-            Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            Material oldType = b.getType();
-            if (b.getType() == base.getType() || BlockUtil.isBlockReplacable(b.getTypeId())) {
-                b.setType(Material.AIR);
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
-                    if (oldType == base.getType()) {
-                        addBlocks(s, other, 1);
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public boolean closeBridge(Block sign, Block farSide, Block base, CuboidRegion toggle, LocalPlayer player) {
-
-        ChangedSign s = BukkitUtil.toChangedSign(sign);
-        ChangedSign other = BukkitUtil.toChangedSign(farSide);
-        for (Vector bv : toggle) {
-            Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if (BlockUtil.isBlockReplacable(b.getTypeId())) {
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
-                    if (hasEnoughBlocks(s, other)) {
-                        b.setType(base.getType());
-                        b.setData(base.getData());
-                        removeBlocks(s, other, 1);
-                    } else {
-                        if (player != null) {
-                            player.printError("mech.not-enough-blocks");
-                        }
-                        return false;
-                    }
-                } else {
-                    b.setType(base.getType());
-                    b.setData(base.getData());
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockBreakEvent event) {
-
-        if (!SignUtil.isSign(event.getBlock())) return;
-        if (!BukkitUtil.toChangedSign(event.getBlock()).getLine(1).equals("[Bridge]")) return;
-
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        ChangedSign sign = null, other;
-
-        if (SignUtil.isSign(event.getBlock()))
-            sign = BukkitUtil.toChangedSign(event.getBlock());
-
-        if (sign == null) return;
-
-        other = BukkitUtil.toChangedSign(getFarSign(event.getBlock()));
-
-        if (hasEnoughBlocks(sign, other)) {
-            Block bridge;
-            try {
-                bridge = getBridgeBase(event.getBlock());
-                ItemStack toDrop = new ItemStack(bridge.getType(), getBlocks(sign, other), bridge.getData());
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
-            } catch (InvalidMechanismException e) {
-                if(e.getMessage() != null)
-                    player.printError(e.getMessage());
-            }
-        }
-    }
-
-    public boolean removeBlocks(ChangedSign s, ChangedSign other, int amount) {
-
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
-        int curBlocks = getBlocks(s, other) - amount;
-        s.setLine(0, String.valueOf(curBlocks));
-        s.update(false);
-        return curBlocks >= 0;
-    }
-
-    public boolean addBlocks(ChangedSign s, ChangedSign other, int amount) {
-
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
-        int curBlocks = getBlocks(s, other) + amount;
-        s.setLine(0, String.valueOf(curBlocks));
-        s.update(false);
-        return curBlocks >= 0;
-    }
-
-    public void setBlocks(ChangedSign s, int amount) {
-
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return;
-        s.setLine(0, String.valueOf(amount));
-        s.update(false);
-    }
-
-    public int getBlocks(ChangedSign s, ChangedSign other) {
-
-        if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
-            return 0;
-        int curBlocks = 0;
-        try {
-            curBlocks = Integer.parseInt(s.getLine(0));
-            if(other != null) {
-                try {
-                    curBlocks += Integer.parseInt(other.getLine(0));
-                    setBlocks(s, curBlocks);
-                    setBlocks(other, 0);
-                } catch (Exception ignored) {
-                }
-            }
-        } catch (Exception e) {
-            curBlocks = 0;
-        }
-        return curBlocks;
-    }
-
-    public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
-
-        return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
+    @Override
+    public boolean isApplicableSign(String line) {
+        return line.equals("[Bridge]");
     }
 }
