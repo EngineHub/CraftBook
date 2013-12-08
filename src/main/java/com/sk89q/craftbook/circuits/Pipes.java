@@ -231,7 +231,11 @@ public class Pipes extends AbstractMechanic {
 
                     visitedPipes.add(off.getLocation());
 
-                    if(off.getType() == Material.GLASS)
+                    if(block.getType() == Material.STAINED_GLASS)
+                        if(off.getType() == Material.STAINED_GLASS)
+                            if(block.getData() != off.getData()) continue;
+
+                    if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
                         searchQueue.add(off);
                     else if(off.getType() == Material.PISTON_BASE)
                         searchQueue.add(0, off); //Pistons are treated with higher priority.
@@ -241,7 +245,7 @@ public class Pipes extends AbstractMechanic {
 
         //Use the queue to search blocks.
         for(Block bl : searchQueue) {
-            if (bl.getType() == Material.GLASS)
+            if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS)
                 searchNearbyPipes(bl);
             else if (bl.getType() == Material.PISTON_BASE) {
 
@@ -304,7 +308,7 @@ public class Pipes extends AbstractMechanic {
 
     private boolean isValidPipeBlock(Material typeId) {
 
-        return typeId == Material.GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN;
+        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN;
     }
 
     public void startPipe(Block block) {
