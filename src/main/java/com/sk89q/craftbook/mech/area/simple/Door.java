@@ -161,6 +161,8 @@ public class Door extends CuboidToggleMechanic {
 
         if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
 
+        ChangedSign sign = BukkitUtil.toChangedSign(trigger);
+
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
         Block proximalBaseCenter = getBlockBase(trigger);
@@ -171,9 +173,12 @@ public class Door extends CuboidToggleMechanic {
         if (farSide.getType() != trigger.getType()) throw new InvalidConstructionException("mech.door.other-sign");
 
         // Check the other side's base blocks for matching type
-        BlockFace face = trigger.getFace(proximalBaseCenter);
-        if(face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
-        Block distalBaseCenter = farSide.getRelative(face);
+        Block distalBaseCenter = null;
+        if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
+            distalBaseCenter = farSide.getRelative(BlockFace.DOWN);
+        } else if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
+            distalBaseCenter = farSide.getRelative(BlockFace.UP);
+        }
         if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
             throw new InvalidConstructionException("mech.door.material");
 
