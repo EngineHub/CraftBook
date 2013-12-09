@@ -24,11 +24,8 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.ICMechanic;
-import com.sk89q.craftbook.circuits.ic.PipeInputIC;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -176,24 +173,12 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 Block fac = bl.getRelative(p.getFacing());
                 if (fac.getState() instanceof InventoryHolder) {
-
                     newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
-
-                } else if (fac.getType() == Material.WALL_SIGN) {
-
-                    CircuitCore circuitCore = CircuitCore.inst();
-                    if (circuitCore.getICFactory() == null) continue;
-
-                    try {
-                        ICMechanic icmech = circuitCore.getICFactory().detect(BukkitUtil.toWorldVector(fac));
-                        if (icmech == null || !(icmech.getIC() instanceof PipeInputIC)) continue;
-                        newItems.addAll(((PipeInputIC) icmech.getIC()).onPipeTransfer(BukkitUtil.toWorldVector(bl), filteredItems));
-                    } catch (Exception e) {
-                        BukkitUtil.printStacktrace(e);
-                    }
                 } else {
+                    PipePutEvent event = new PipePutEvent(bl, filteredItems, fac);
+                    Bukkit.getPluginManager().callEvent(event);
 
-                    newItems.addAll(filteredItems);
+                    newItems.addAll(event.getItems());
                 }
 
                 items.removeAll(filteredItems);

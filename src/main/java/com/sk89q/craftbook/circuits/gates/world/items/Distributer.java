@@ -21,11 +21,11 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 
 public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -163,15 +163,15 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
     }
 
     @Override
-    public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
+    public void onPipeTransfer(PipePutEvent event) {
 
         List<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        for (ItemStack item : items)
+        for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))
                 if(!distributeItemStack(item))
                     leftovers.add(item);
 
-        return leftovers;
+        event.setItems(leftovers);
     }
 }

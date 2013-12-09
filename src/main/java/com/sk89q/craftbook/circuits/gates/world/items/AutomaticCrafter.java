@@ -29,11 +29,11 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 
 public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -301,7 +301,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     }
 
     @Override
-    public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
+    public void onPipeTransfer(PipePutEvent event) {
 
         Block crafter = getBackBlock().getRelative(0, 1, 0);
         if (crafter.getType() == Material.DISPENSER || crafter.getType() == Material.DROPPER) {
@@ -309,8 +309,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
             boolean delete = true;
             List<ItemStack> newItems = new ArrayList<ItemStack>();
-            newItems.addAll(items);
-            for (ItemStack ite : items) {
+            newItems.addAll(event.getItems());
+            for (ItemStack ite : event.getItems()) {
                 if (!ItemUtil.isStackValid(ite)) continue;
                 int iteind = newItems.indexOf(ite);
                 int newAmount = ite.getAmount();
@@ -333,9 +333,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 if (delete) newItems.remove(iteind);
                 else newItems.set(iteind, ite);
             }
-            items.clear();
-            items.addAll(newItems);
+            event.getItems().clear();
+            event.setItems(newItems);
         }
-        return items;
     }
 }

@@ -21,11 +21,11 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 
 public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -134,15 +134,15 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     }
 
     @Override
-    public List<ItemStack> onPipeTransfer(BlockWorldVector pipe, List<ItemStack> items) {
+    public void onPipeTransfer(PipePutEvent event) {
 
         List<ItemStack> leftovers = new ArrayList<ItemStack>();
 
-        for (ItemStack item : items)
+        for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))
                 if(!sortItemStack(item))
                     leftovers.add(item);
 
-        return leftovers;
+        event.setItems(leftovers);
     }
 }

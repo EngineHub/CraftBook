@@ -38,6 +38,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -208,6 +209,42 @@ public class MechanicManager {
             if (e.getMessage() != null) {
                 player.printError(e.getMessage());
             }
+        }
+        return returnValue;
+    }
+
+    /**
+     * Handle a block right click event.
+     *
+     * @param event
+     *
+     * @return the number of mechanics to processed
+     */
+    public short dispatchPipePut(PipePutEvent event) {
+
+        CraftBookPlugin plugin = CraftBookPlugin.inst();
+
+        // We don't need to handle events that no mechanic we use makes use of
+        if (!EventUtil.passesFilter(event)) return 0;
+
+        short returnValue = 0;
+
+        // See if this event could be occurring on any mechanism's triggering blocks
+        BlockWorldVector pos = toWorldVector(event.getPuttingBlock());
+
+        try {
+            HashSet<Mechanic> mechanics = load(pos, null);
+            for (Mechanic aMechanic : mechanics) {
+                if (aMechanic != null) {
+
+                    if(plugin.getConfiguration().advancedBlockChecks && event.isCancelled())
+                        return returnValue;
+
+                    aMechanic.onPipePut(event);
+                    returnValue++;
+                }
+            }
+        } catch (InvalidMechanismException e) {
         }
         return returnValue;
     }

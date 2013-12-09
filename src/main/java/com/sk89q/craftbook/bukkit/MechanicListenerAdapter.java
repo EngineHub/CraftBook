@@ -44,6 +44,7 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -442,5 +443,10 @@ public class MechanicListenerAdapter implements Listener {
 
         if(CraftBookPlugin.inst().getConfiguration().variablesCommandBlockOverride)
             event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPipePut(PipePutEvent event) {
+        CraftBookPlugin.inst().getManager().dispatchPipePut(event);
     }
 }

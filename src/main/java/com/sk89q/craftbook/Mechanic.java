@@ -20,6 +20,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
@@ -83,4 +84,10 @@ public interface Mechanic {
      */
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event);
 
+    /**
+     * Raised when a pipe tries to place an item in this mechanic.
+     * 
+     * @param event
+     */
+    public void onPipePut(PipePutEvent event);
 }
