@@ -41,6 +41,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
             if(ladder.getRelative(0, -1, 0).getType() != Material.AIR)
                 return;
             ladder.getWorld().spawnFallingBlock(ladder.getLocation(), ladder.getType(), ladder.getData());
+            ladder.setTypeId(Material.AIR.getId(), false);
         }
     }
 }
