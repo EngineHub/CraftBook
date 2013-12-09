@@ -3,6 +3,7 @@ package com.sk89q.craftbook.vehicles.cart;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.block.Chest;
@@ -17,6 +18,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 public class CartDeposit extends CartBlockMechanism {
@@ -42,20 +44,24 @@ public class CartDeposit extends CartBlockMechanism {
         boolean collecting = event.getBlocks().matches("collect");
 
         // go
-        List<ItemInfo> items = new ArrayList<ItemInfo>();
+        List<Tuple2<ItemInfo, Integer>> items = new ArrayList<Tuple2<ItemInfo, Integer>>();
         for(String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
             int itemID = -1;
             short itemData = -1;
+            int amount = -1;
             try {
-                String[] splitLine = RegexUtil.COLON_PATTERN.split(data);
+                String[] splitLine = RegexUtil.COLON_PATTERN.split(RegexUtil.ASTERISK_PATTERN.split(data)[0]);
                 itemID = Integer.parseInt(splitLine[0]);
                 if(splitLine.length > 1)
                     itemData = Short.parseShort(splitLine[1]);
+                try {
+                    amount = Integer.parseInt(RegexUtil.ASTERISK_PATTERN.split(data)[1]);
+                } catch(Exception ignored){}
             } catch (Exception ignored) {
                 continue;
             }
 
-            items.add(new ItemInfo(itemID, itemData));
+            items.add(new Tuple2<ItemInfo, Integer>(new ItemInfo(itemID, itemData), amount));
         }
 
         Inventory cartinventory = ((StorageMinecart) event.getMinecart()).getInventory();
@@ -75,11 +81,27 @@ public class CartDeposit extends CartBlockMechanism {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (!ItemUtil.isStackValid(item))
                         continue;
-                    for(ItemInfo inf : items) {
-                        if (inf.getId() < 0 || inf.getId() == item.getTypeId()) {
-                            if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
-                                transferItems.add(item.clone());
-                                cartinventory.remove(item);
+                    Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
+                    while(iter.hasNext()) {
+                        Tuple2<ItemInfo, Integer> inf = iter.next();
+                        if (inf.a.getId() < 0 || inf.a.getType() == item.getType()) {
+                            if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
+                                if(inf.b < 0) {
+                                    transferItems.add(item.clone());
+                                    cartinventory.remove(item);
+                                } else {
+                                    ItemStack stack = item.clone();
+                                    if(item.getAmount() > inf.b) {
+                                        stack.setAmount(inf.b);
+                                        iter.remove();
+                                        items.add(new Tuple2<ItemInfo, Integer>(inf.a, 0));
+                                    } else {
+                                        iter.remove();
+                                        items.add(new Tuple2<ItemInfo, Integer>(inf.a, inf.b - stack.getAmount()));
+                                    }
+                                    transferItems.add(stack.clone());
+                                    cartinventory.removeItem(stack);
+                                }
                             }
                         }
                     }
@@ -131,11 +153,27 @@ public class CartDeposit extends CartBlockMechanism {
                     for (ItemStack item : containerinventory.getContents()) {
                         if (!ItemUtil.isStackValid(item))
                             continue;
-                        for(ItemInfo inf : items) {
-                            if (inf.getId() < 0 || inf.getType() == item.getType())
-                                if (inf.getData() < 0 || inf.getData() == item.getDurability()) {
-                                    transferitems.add(item.clone());
-                                    containerinventory.remove(item);
+                        Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
+                        while(iter.hasNext()) {
+                            Tuple2<ItemInfo, Integer> inf = iter.next();
+                            if (inf.a.getId() < 0 || inf.a.getType() == item.getType())
+                                if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
+                                    if(inf.b < 0) {
+                                        transferitems.add(item.clone());
+                                        cartinventory.remove(item);
+                                    } else {
+                                        ItemStack stack = item.clone();
+                                        if(item.getAmount() > inf.b) {
+                                            stack.setAmount(inf.b);
+                                            iter.remove();
+                                            items.add(new Tuple2<ItemInfo, Integer>(inf.a, 0));
+                                        } else {
+                                            iter.remove();
+                                            items.add(new Tuple2<ItemInfo, Integer>(inf.a, inf.b - stack.getAmount()));
+                                        }
+                                        transferitems.add(stack.clone());
+                                        cartinventory.removeItem(stack);
+                                    }
                                 }
                         }
                     }
