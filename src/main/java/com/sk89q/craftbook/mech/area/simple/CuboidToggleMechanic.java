@@ -120,8 +120,11 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         List<ItemStack> items = event.getItems();
         try {
             Block base = getBlockBase(event.getSuckedBlock());
-            items.add(new ItemStack(base.getType(), getBlocks(sign, null), base.getData()));
-            setBlocks(sign, 0);
+            int blocks = getBlocks(sign, null);
+            if(blocks > 0) {
+                items.add(new ItemStack(base.getType(), blocks, base.getData()));
+                setBlocks(sign, 0);
+            }
             event.setItems(items);
         } catch (InvalidMechanismException e) {
         }
