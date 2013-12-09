@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.mech.area.simple;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -12,6 +15,8 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
+import com.sk89q.craftbook.circuits.pipe.PipeSuckEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -77,6 +82,49 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
 
         return true;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPipePut(PipePutEvent event) {
+
+        if(!SignUtil.isSign(event.getPuttingBlock())) return;
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getPuttingBlock());
+
+        if(!isApplicableSign(sign.getLine(1))) return;
+
+        List<ItemStack> leftovers = new ArrayList<ItemStack>();
+        try {
+            Block base = getBlockBase(event.getPuttingBlock());
+            for(ItemStack stack : event.getItems()) {
+                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+                    leftovers.add(stack);
+                    continue;
+                }
+
+                addBlocks(sign, null, stack.getAmount());
+            }
+
+            event.setItems(leftovers);
+        } catch (InvalidMechanismException e) {
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPipeSuck(PipeSuckEvent event) {
+
+        if(!SignUtil.isSign(event.getSuckedBlock())) return;
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getSuckedBlock());
+
+        if(!isApplicableSign(sign.getLine(1))) return;
+
+        List<ItemStack> items = event.getItems();
+        try {
+            Block base = getBlockBase(event.getSuckedBlock());
+            items.add(new ItemStack(base.getType(), getBlocks(sign, null), base.getData()));
+            setBlocks(sign, 0);
+            event.setItems(items);
+        } catch (InvalidMechanismException e) {
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

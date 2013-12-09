@@ -17,6 +17,7 @@ public class PipeSuckEvent extends PipeEvent implements Cancellable {
 
     public PipeSuckEvent(Block theBlock, List<ItemStack> items, Block sucked) {
         super(theBlock, items);
+        this.sucked = sucked;
     }
 
     public Block getSuckedBlock() {
