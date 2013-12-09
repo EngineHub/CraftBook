@@ -278,7 +278,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
                         if(effects.containsKey(line.replace("launch ", ""))) {
 
-                            if(!location.getBlock().getChunk().isLoaded())
+                            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
                             Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
                             FireworkMeta meta = firework.getFireworkMeta();
@@ -377,11 +377,10 @@ public class ProgrammableFireworkShow extends AbstractIC {
                             FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade
                                     (fade).flicker(flicker).trail(trail).build();
 
-                            if(!location.getBlock().getChunk().isLoaded())
+                            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
 
-                            Firework firework = (Firework) location.getWorld().spawnEntity(location,
-                                    EntityType.FIREWORK);
+                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
                             FireworkMeta meta = firework.getFireworkMeta();
                             meta.addEffect(effect);
                             meta.setPower((int) duration * 2);
