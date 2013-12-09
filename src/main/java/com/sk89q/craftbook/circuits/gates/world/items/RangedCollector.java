@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.util.com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -122,7 +123,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
                     Block pipe = getBackBlock().getRelative(back);
 
-                    PipeRequestEvent event = new PipeRequestEvent(pipe, Collections.singletonList(stack), getBackBlock());
+                    PipeRequestEvent event = new PipeRequestEvent(pipe, Lists.newArrayList(stack), getBackBlock());
                     Bukkit.getPluginManager().callEvent(event);
 
                     if(event.getItems().isEmpty()) {

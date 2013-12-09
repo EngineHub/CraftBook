@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.util.com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -90,7 +91,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         else
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
 
-        PipeRequestEvent event = new PipeRequestEvent(b, Collections.singletonList(item), getBackBlock());
+        PipeRequestEvent event = new PipeRequestEvent(b, Lists.newArrayList(item), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
         for(ItemStack it : event.getItems())
