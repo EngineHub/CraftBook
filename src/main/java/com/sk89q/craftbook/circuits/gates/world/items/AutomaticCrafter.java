@@ -23,13 +23,13 @@ import org.bukkit.inventory.ShapelessRecipe;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.PipeInputIC;
+import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
@@ -125,12 +125,13 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         List<ItemStack> items = new ArrayList<ItemStack>();
         items.add(result);
 
-        Pipes pp = Pipes.Factory.setupPipes(((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing()), ((BlockState) disp).getBlock(), items.toArray(new ItemStack[items.size()]));
+        Block pipe = ((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing());
+        Block base = ((BlockState) disp).getBlock();
 
-        if (pp != null) {
-            items.clear();
-            items.addAll(pp.getItems());
-        }
+        PipeRequestEvent event = new PipeRequestEvent(pipe, items, base);
+        Bukkit.getPluginManager().callEvent(event);
+
+        items = event.getItems();
 
         if(!items.isEmpty()) {
             for(ItemStack stack : items) {

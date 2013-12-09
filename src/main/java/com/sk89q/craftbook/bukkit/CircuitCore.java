@@ -18,7 +18,6 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.GlowStone;
 import com.sk89q.craftbook.circuits.JackOLantern;
 import com.sk89q.craftbook.circuits.Netherrack;
-import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.RedstoneJukebox;
 import com.sk89q.craftbook.circuits.gates.logic.AndGate;
 import com.sk89q.craftbook.circuits.gates.logic.Clock;
@@ -158,6 +157,7 @@ import com.sk89q.craftbook.circuits.ic.families.FamilySI3O;
 import com.sk89q.craftbook.circuits.ic.families.FamilySI5O;
 import com.sk89q.craftbook.circuits.ic.families.FamilySISO;
 import com.sk89q.craftbook.circuits.ic.families.FamilyVIVO;
+import com.sk89q.craftbook.circuits.pipe.Pipes;
 import com.sk89q.craftbook.circuits.plc.PlcFactory;
 import com.sk89q.craftbook.circuits.plc.lang.Perlstone;
 import com.sk89q.craftbook.util.config.YAMLICConfiguration;
@@ -177,7 +177,6 @@ public class CircuitCore implements LocalComponent {
     private YAMLICConfiguration icConfiguration;
 
     private ICMechanicFactory ICFactory;
-    private Pipes.Factory pipeFactory;
 
     private File romFolder;
     private File midiFolder;
@@ -229,7 +228,6 @@ public class CircuitCore implements LocalComponent {
                 factory.getFactory().unload();
             }
         }
-        pipeFactory = null;
         icConfiguration = null;
         ICFactory = null;
         ICManager.emptyCache();
@@ -259,11 +257,6 @@ public class CircuitCore implements LocalComponent {
         return ICFactory;
     }
 
-    public Pipes.Factory getPipeFactory() {
-
-        return pipeFactory;
-    }
-
     private void registerMechanics() {
 
         BukkitConfiguration config = CraftBookPlugin.inst().getConfiguration();
@@ -291,12 +284,11 @@ public class CircuitCore implements LocalComponent {
         }
 
         // Let's register mechanics!
-        if (config.pipesEnabled) plugin.registerMechanic(pipeFactory = new Pipes.Factory());
-
         if (config.jukeboxEnabled) mechanics.add(new RedstoneJukebox());
         if (config.glowstoneEnabled) mechanics.add(new GlowStone());
         if (config.netherrackEnabled) mechanics.add(new Netherrack());
         if (config.pumpkinsEnabled) mechanics.add(new JackOLantern());
+        if (config.pipesEnabled) mechanics.add(new Pipes());
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

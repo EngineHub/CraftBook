@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.circuits.Pipes;
+import com.sk89q.craftbook.circuits.pipe.Pipes;
 import com.sk89q.worldedit.BlockWorldVector;
 
 public interface PipeInputIC {

@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -14,12 +16,12 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
@@ -120,9 +122,10 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
                     Block pipe = getBackBlock().getRelative(back);
 
-                    Pipes pipes = Pipes.Factory.setupPipes(pipe, getBackBlock(), stack);
+                    PipeRequestEvent event = new PipeRequestEvent(pipe, Collections.singletonList(stack), getBackBlock());
+                    Bukkit.getPluginManager().callEvent(event);
 
-                    if(pipes != null && pipes.getItems().isEmpty()) {
+                    if(event.getItems().isEmpty()) {
                         entity.remove();
                         return true;
                     }

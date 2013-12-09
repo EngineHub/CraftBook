@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -13,13 +15,13 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -104,30 +106,33 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         if (data > 0 && data != broken.getData()) return false;
 
-        for (ItemStack blockstack : BlockUtil.getBlockDrops(broken, null)) {
+        for (ItemStack stack : BlockUtil.getBlockDrops(broken, null)) {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            Pipes pipes = Pipes.Factory.setupPipes(pipe, getBackBlock(), blockstack);
+            PipeRequestEvent event = new PipeRequestEvent(pipe, Collections.singletonList(stack), getBackBlock());
+            Bukkit.getPluginManager().callEvent(event);
 
-            if(pipes != null && pipes.getItems().isEmpty())
+            if(!event.isValid())
                 continue;
 
-            if (hasChest) {
-                InventoryHolder c = (InventoryHolder) chest.getState();
-                HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
-                ((BlockState) c).update();
-                if (overflow.isEmpty()) continue;
-                else {
-                    for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
-                        dropItem(bit.getValue());
+            for(ItemStack blockstack : event.getItems()) {
+                if (hasChest) {
+                    InventoryHolder c = (InventoryHolder) chest.getState();
+                    HashMap<Integer, ItemStack> overflow = c.getInventory().addItem(blockstack);
+                    ((BlockState) c).update();
+                    if (overflow.isEmpty()) continue;
+                    else {
+                        for (Map.Entry<Integer, ItemStack> bit : overflow.entrySet()) {
+                            dropItem(bit.getValue());
+                        }
+                        continue;
                     }
-                    continue;
                 }
-            }
 
-            dropItem(blockstack);
+                dropItem(blockstack);
+            }
         }
         broken.setType(Material.AIR);
 

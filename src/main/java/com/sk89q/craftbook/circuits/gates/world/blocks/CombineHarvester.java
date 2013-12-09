@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -11,17 +13,16 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.Pipes;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -96,19 +97,21 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
         Block pipe = getBackBlock().getRelative(back);
-        if(Pipes.Factory.setupPipes(pipe, getBackBlock(), drops) != null)
-            return;
+
+        PipeRequestEvent event = new PipeRequestEvent(pipe, Arrays.asList(drops), getBackBlock());
+        Bukkit.getPluginManager().callEvent(event);
+
+        if(!event.isValid()) return;
+
         if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST) {
 
             Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
-            HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(drops);
+            HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(event.getItems().toArray(new ItemStack[event.getItems().size()]));
             for (ItemStack item : leftovers.values()) {
-
                 onBlock.getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
             }
         } else {
-            for (ItemStack item : drops) {
-
+            for (ItemStack item : event.getItems()) {
                 onBlock.getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
             }
         }
@@ -134,7 +137,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(block.getType() == Material.NETHER_STALK && block.getData() >= 0x3)
             return true;
 
-        if(block.getTypeId() == BlockID.MELON_BLOCK || block.getTypeId() == BlockID.PUMPKIN)
+        if(block.getType() == Material.MELON_BLOCK || block.getType() == Material.PUMPKIN)
             return true;
 
         return false;

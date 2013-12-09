@@ -25,7 +25,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -35,6 +34,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
 import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
@@ -79,10 +79,9 @@ public class Bridge extends CuboidToggleMechanic {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onRightClick(PlayerInteractEvent event) {
+    public void onRightClick(SignClickEvent event) {
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!SignUtil.isSign(event.getClickedBlock())) return;
         if (!isApplicableSign(BukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -93,10 +92,7 @@ public class Bridge extends CuboidToggleMechanic {
         }
 
         try {
-            ChangedSign sign = null;
-
-            if (SignUtil.isSign(event.getClickedBlock()))
-                sign = BukkitUtil.toChangedSign(event.getClickedBlock());
+            ChangedSign sign = event.getSign();
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
                 if (event.getPlayer().getItemInHand() != null)
