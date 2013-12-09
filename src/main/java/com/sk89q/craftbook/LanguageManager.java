@@ -236,6 +236,7 @@ public class LanguageManager {
         put("mech.painting.range","You are too far away from the painting!");
 
         put("mech.pay.create","Pay Created!");
+        put("mech.pay.success","Payment Successful! You paid: ");
 
         put("mech.pistons.crush.created","Piston Crush Mechanic Created!");
         put("mech.pistons.supersticky.created","Piston Super-Sticky Mechanic Created!");
