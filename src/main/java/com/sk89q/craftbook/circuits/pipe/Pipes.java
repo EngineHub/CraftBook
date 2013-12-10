@@ -12,12 +12,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Directional;
 import org.bukkit.material.PistonBaseMaterial;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -57,10 +60,14 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     public static ChangedSign getSignOnPiston(Block block) {
 
-        PistonBaseMaterial piston = (PistonBaseMaterial) block.getState().getData();
+        BlockState state = block.getState();
+        BlockFace facing = BlockFace.SELF;
+        if(state.getData() instanceof Directional)
+            facing = ((Directional) state.getData()).getFacing();
+
         for(BlockFace face : LocationUtil.getDirectFaces()) {
 
-            if(face == piston.getFacing() || !SignUtil.isSign(block.getRelative(face)))
+            if(face == facing || !SignUtil.isSign(block.getRelative(face)))
                 continue;
             if(block.getRelative(face).getType() != Material.SIGN_POST && (face == BlockFace.UP || face == BlockFace.DOWN))
                 continue;
@@ -185,13 +192,52 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(newItems);
 
                 if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+            } else if (bl.getType() == Material.DROPPER) {
+
+                ChangedSign sign = getSignOnPiston(bl);
+
+                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
+                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
+
+                if(sign != null) {
+
+                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                        pFilters.add(ItemSyntax.getItem(line3.trim()));
+                    }
+                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
+                    }
+
+                    pFilters.removeAll(Collections.singleton(null));
+                    pExceptions.removeAll(Collections.singleton(null));
+                }
+
+                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+
+                if(filteredItems.isEmpty())
+                    continue;
+
+                Dropper dropper = (Dropper) bl.getState();
+                List<ItemStack> newItems = new ArrayList<ItemStack>();
+
+                newItems.addAll(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
+
+                for(ItemStack stack : dropper.getInventory().getContents())
+                    if(ItemUtil.isStackValid(stack))
+                        for(int i = 0; i < stack.getAmount(); i++)
+                            dropper.drop();
+
+                items.removeAll(filteredItems);
+                items.addAll(newItems);
+
+                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
             }
         }
     }
 
     private boolean isValidPipeBlock(Material typeId) {
 
-        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN;
+        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER;
     }
 
     public void startPipe(Block block, List<ItemStack> items, boolean request) {
