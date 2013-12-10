@@ -140,7 +140,14 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
                         searchQueue.add(off);
-                    else if(off.getType() == Material.PISTON_BASE)
+                    else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
+                        if (!isValidPipeBlock(off.getRelative(x, y, z).getType())) continue;
+                        if (visitedPipes.contains(off.getRelative(x, y, z).getLocation())) continue;
+                        if(off.getType() == Material.STAINED_GLASS_PANE)
+                            if(off.getData() != block.getData() || off.getData() != off.getRelative(x, y, z).getData()) continue;
+                        visitedPipes.add(off.getRelative(x, y, z).getLocation());
+                        searchQueue.add(off.getRelative(x, y, z));
+                    } else if(off.getType() == Material.PISTON_BASE)
                         searchQueue.add(0, off); //Pistons are treated with higher priority.
                 }
             }
@@ -247,7 +254,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     private boolean isValidPipeBlock(Material typeId) {
 
-        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER;
+        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER || typeId == Material.THIN_GLASS || typeId == Material.STAINED_GLASS_PANE;
     }
 
     public void startPipe(Block block, List<ItemStack> items, boolean request) {
