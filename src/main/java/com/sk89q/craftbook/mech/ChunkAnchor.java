@@ -25,7 +25,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.chunk")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
-                lplayer.printError("You don't have permission for this.");
+                lplayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
         }

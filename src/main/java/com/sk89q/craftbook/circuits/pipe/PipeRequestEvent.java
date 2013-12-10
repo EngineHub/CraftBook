@@ -12,7 +12,6 @@ public class PipeRequestEvent extends PipeSuckEvent {
 
     public PipeRequestEvent (Block theBlock, List<ItemStack> items, Block sucked) {
         super(theBlock, items, sucked);
-        setDropItems(false);
     }
 
     @Override

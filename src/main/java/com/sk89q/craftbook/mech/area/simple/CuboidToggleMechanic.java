@@ -15,6 +15,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.pipe.PipeFinishEvent;
 import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.circuits.pipe.PipeSuckEvent;
 import com.sk89q.craftbook.util.BlockUtil;
@@ -82,6 +83,31 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
 
         return true;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPipeFinish(PipeFinishEvent event) {
+
+        if(!SignUtil.isSign(event.getOrigin())) return;
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getOrigin());
+
+        if(!isApplicableSign(sign.getLine(1))) return;
+
+        List<ItemStack> leftovers = new ArrayList<ItemStack>();
+        try {
+            Block base = getBlockBase(event.getOrigin());
+            for(ItemStack stack : event.getItems()) {
+                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+                    leftovers.add(stack);
+                    continue;
+                }
+
+                addBlocks(sign, null, stack.getAmount());
+            }
+
+            event.setItems(leftovers);
+        } catch (InvalidMechanismException e) {
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

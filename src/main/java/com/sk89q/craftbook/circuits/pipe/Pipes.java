@@ -194,7 +194,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN;
     }
 
-    public void startPipe(Block block, List<ItemStack> items) {
+    public void startPipe(Block block, List<ItemStack> items, boolean request) {
 
         Set<ItemStack> filters = new HashSet<ItemStack>();
         Set<ItemStack> exceptions = new HashSet<ItemStack>();
@@ -288,14 +288,13 @@ public class Pipes extends AbstractCraftBookMechanic {
                     visitedPipes.add(fac.getLocation());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                 }
-                if (!items.isEmpty() && event.shouldDropItems()) {
-                    for (ItemStack item : items) {
-                        if (!ItemUtil.isStackValid(item)) continue;
-                        block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
-                    }
-                    items.clear();
-                }
+                leftovers.addAll(items);
             }
+
+            PipeFinishEvent fEvent = new PipeFinishEvent(block, leftovers, fac, request);
+            Bukkit.getPluginManager().callEvent(fEvent);
+
+            leftovers = fEvent.getItems();
 
             if (!leftovers.isEmpty()) {
                 for (ItemStack item : leftovers) {
@@ -316,7 +315,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                 return;
 
-            startPipe(event.getBlock(), new ArrayList<ItemStack>());
+            startPipe(event.getBlock(), new ArrayList<ItemStack>(), false);
         }
     }
 
@@ -330,7 +329,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                 return;
 
-            startPipe(event.getBlock(), event.getItems());
+            startPipe(event.getBlock(), event.getItems(), true);
         }
     }
 }

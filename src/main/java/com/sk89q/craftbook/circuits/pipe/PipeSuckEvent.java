@@ -13,8 +13,6 @@ public class PipeSuckEvent extends PipeEvent implements Cancellable {
 
     private Block sucked;
 
-    private boolean dropItems = true;
-
     public PipeSuckEvent(Block theBlock, List<ItemStack> items, Block sucked) {
         super(theBlock, items);
         this.sucked = sucked;
@@ -31,14 +29,6 @@ public class PipeSuckEvent extends PipeEvent implements Cancellable {
 
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    public boolean shouldDropItems() {
-        return dropItems;
-    }
-
-    public void setDropItems(boolean dropItems) {
-        this.dropItems = dropItems;
     }
 
     @Override

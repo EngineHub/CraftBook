@@ -58,8 +58,6 @@ import com.sk89q.worldedit.regions.CuboidRegion;
  */
 public class Gate extends AbstractMechanic {
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
-
     /**
      * Location of the gate.
      */
@@ -144,7 +142,7 @@ public class Gate extends AbstractMechanic {
      */
     private boolean recurseColumn(LocalPlayer player, WorldVector pt, Set<GateColumn> visitedColumns, Boolean close) {
 
-        if (plugin.getConfiguration().gateLimitColumns && visitedColumns.size() > plugin.getConfiguration().gateColumnLimit)
+        if (CraftBookPlugin.inst().getConfiguration().gateLimitColumns && visitedColumns.size() > CraftBookPlugin.inst().getConfiguration().gateColumnLimit)
             return false;
 
         World world = ((BukkitWorld) pt.getWorld()).getWorld();
@@ -223,7 +221,7 @@ public class Gate extends AbstractMechanic {
                     break;
 
             // bag.setBlockID(w, x, y1, z, ID);
-            if (plugin.getConfiguration().safeDestruction) {
+            if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                 if (!close || hasEnoughBlocks(sign, otherSign)) {
                     if (!close && isValidGateBlock(new ItemInfo(block), true))
                         addBlocks(sign, 1);
@@ -267,15 +265,13 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getConfiguration().gateEnabled) return;
-
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getClickedBlock());
 
         if (sign == null) return;
 
-        if (plugin.getConfiguration().safeDestruction && (getGateBlock() == null || getGateBlock().getType() == Material.AIR || getGateBlock().getType() == player.getHeldItemInfo().getType()) && isValidGateBlock(player.getHeldItemInfo(), false)) {
+        if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (getGateBlock() == null || getGateBlock().getType() == Material.AIR || getGateBlock().getType() == player.getHeldItemInfo().getType()) && isValidGateBlock(player.getHeldItemInfo(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -321,11 +317,11 @@ public class Gate extends AbstractMechanic {
     @Override
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if (!plugin.getConfiguration().gateAllowRedstone) return;
+        if (!CraftBookPlugin.inst().getConfiguration().gateAllowRedstone) return;
 
         if (event.isMinor()) return;
 
-        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
             @Override
             public void run() {
@@ -420,12 +416,12 @@ public class Gate extends AbstractMechanic {
                     if(type == null || type.getType() == Material.AIR)
                         return block.equals(type);
                 }
-                return plugin.getConfiguration().gateBlocks.contains(block);
+                return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
             }
         } else if(check && (type = getGateBlock()) != null)
             return block.equals(type);
         else
-            return plugin.getConfiguration().gateBlocks.contains(block);
+            return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
     }
 
     @Override
@@ -502,7 +498,7 @@ public class Gate extends AbstractMechanic {
             }
         }
 
-        if(plugin.getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
+        if(CraftBookPlugin.inst().getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
             sign.setLine(0, gateBlock.toString());
             sign.update(false);
         }

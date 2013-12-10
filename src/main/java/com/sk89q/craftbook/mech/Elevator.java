@@ -54,8 +54,6 @@ import com.sk89q.worldedit.blocks.BlockType;
  */
 public class Elevator extends AbstractMechanic {
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
-
     public static class Factory extends AbstractMechanicFactory<Elevator> {
 
         /**
@@ -129,9 +127,6 @@ public class Elevator extends AbstractMechanic {
      */
     private Elevator(Block trigger, Direction dir) throws InvalidMechanismException {
 
-        super();
-        this.trigger = trigger;
-
         // find destination sign
         shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
         int f = dir == Direction.UP ? trigger.getWorld().getMaxHeight() : 0;
@@ -146,7 +141,7 @@ public class Elevator extends AbstractMechanic {
                 break; // found it!
 
             if (destination.getY() == trigger.getY()) throw new InvalidConstructionException();
-            if (plugin.getConfiguration().elevatorLoop && !loopd) {
+            if (CraftBookPlugin.inst().getConfiguration().elevatorLoop && !loopd) {
                 if (destination.getY() == trigger.getWorld().getMaxHeight()) { // hit the top of the world
                     org.bukkit.Location low = destination.getLocation();
                     low.setY(0);
@@ -173,7 +168,6 @@ public class Elevator extends AbstractMechanic {
         // shaft.
     }
 
-    private final Block trigger;
     private final BlockFace shift;
     private Block destination;
 
@@ -184,12 +178,7 @@ public class Elevator extends AbstractMechanic {
     @Override
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getConfiguration().elevatorEnabled) return;
-
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)))
-            return; // wth? our manager is insane
-
-        LocalPlayer localPlayer = plugin.wrapPlayer(event.getPlayer());
+        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(task != null) {
             localPlayer.printError("mech.lift.busy");

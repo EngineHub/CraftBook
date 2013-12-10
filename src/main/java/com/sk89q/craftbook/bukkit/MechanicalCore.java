@@ -135,17 +135,12 @@ public class MechanicalCore implements LocalComponent {
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
 
-        // Special mechanics.
-        if (CraftBookPlugin.plugins.getEconomy() != null && config.paymentEnabled) plugin.registerMechanic(new Payment.Factory());
-
         // New System Mechanics
         if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());
         if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
         if (config.snowPiling || config.snowPlace) mechanics.add(new Snow());
         if (config.customDropEnabled) mechanics.add(new CustomDrops());
         if (config.aiEnabled) mechanics.add(new AIMechanic());
-        if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
-        if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
         if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
         if (config.physicsEnabled) mechanics.add(new BetterPhysics());
         if (config.headDropsEnabled) mechanics.add(new HeadDrops());
@@ -164,6 +159,10 @@ public class MechanicalCore implements LocalComponent {
         if (config.signCopyEnabled) mechanics.add(new SignCopier());
         if (config.bridgeEnabled) mechanics.add(new Bridge());
         if (config.doorEnabled) mechanics.add(new Door());
+
+        if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
+        if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
+        if (config.paymentEnabled) if(CraftBookPlugin.plugins.getEconomy() != null) mechanics.add(new Payment()); else plugin.getLogger().warning("Failed to initialize mechanic: Payment. Make sure you have Vault!");
 
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();

@@ -9,12 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
 
 public class SignCopier extends AbstractCraftBookMechanic {
 
@@ -34,9 +33,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onRightClick(PlayerInteractEvent event) {
-
-        if (!SignUtil.isSign(event.getClickedBlock())) return;
+    public void onRightClick(SignClickEvent event) {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -48,29 +45,27 @@ public class SignCopier extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(SignUtil.isSign(event.getClickedBlock())) {
-            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
-                player.print("mech.signcopy.copy");
-                event.setCancelled(true);
-            } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-                if(signs.containsKey(player.getName())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            signs.put(player.getName(), ((Sign) event.getClickedBlock().getState()).getLines());
+            player.print("mech.signcopy.copy");
+            event.setCancelled(true);
+        } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            if(signs.containsKey(player.getName())) {
 
-                    Sign s = (Sign) event.getClickedBlock().getState();
-                    String[] lines = signs.get(player.getName());
+                Sign s = (Sign) event.getClickedBlock().getState();
+                String[] lines = signs.get(player.getName());
 
-                    SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
-                    Bukkit.getPluginManager().callEvent(sev);
+                SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
+                Bukkit.getPluginManager().callEvent(sev);
 
-                    if(!sev.isCancelled()) {
-                        for(int i = 0; i < lines.length; i++)
-                            s.setLine(i, lines[i]);
-                        s.update();
-                    }
-
-                    player.print("mech.signcopy.paste");
-                    event.setCancelled(true);
+                if(!sev.isCancelled()) {
+                    for(int i = 0; i < lines.length; i++)
+                        s.setLine(i, lines[i]);
+                    s.update();
                 }
+
+                player.print("mech.signcopy.paste");
+                event.setCancelled(true);
             }
         }
     }
