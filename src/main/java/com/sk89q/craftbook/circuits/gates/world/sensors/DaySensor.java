@@ -48,9 +48,8 @@ public class DaySensor extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) {
+        if (chip.getInput(0))
             chip.setOutput(0, isDay());
-        }
     }
 
     @Override
@@ -85,8 +84,11 @@ public class DaySensor extends AbstractSelfTriggeredIC {
     protected boolean isDay() {
 
         long time = BukkitUtil.toSign(getSign()).getWorld().getTime();
-        if (time < 0) {
+        while (time < 0) {
             time += 24000;
+        }
+        while (time > 24000) {
+            time -= 24000;
         }
 
         if (day <= night) {
@@ -121,10 +123,5 @@ public class DaySensor extends AbstractSelfTriggeredIC {
 
             return new String[] {"custom day start", "custom day end"};
         }
-    }
-
-    @Override
-    public boolean isActive () {
-        return true;
     }
 }
