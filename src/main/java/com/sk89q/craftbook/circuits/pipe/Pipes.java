@@ -143,8 +143,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                     else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
                         if (!isValidPipeBlock(off.getRelative(x, y, z).getType())) continue;
                         if (visitedPipes.contains(off.getRelative(x, y, z).getLocation())) continue;
-                        if(off.getType() == Material.STAINED_GLASS_PANE)
-                            if(off.getData() != block.getData() || off.getData() != off.getRelative(x, y, z).getData()) continue;
+                        if(off.getType() == Material.STAINED_GLASS_PANE) {
+                            if((block.getType() == Material.STAINED_GLASS || block.getType() == Material.STAINED_GLASS_PANE) && off.getData() != block.getData() || (off.getRelative(x, y, z).getType() == Material.STAINED_GLASS || off.getRelative(x, y, z).getType() == Material.STAINED_GLASS_PANE) && off.getData() != off.getRelative(x, y, z).getData()) continue;
+                        }
                         visitedPipes.add(off.getRelative(x, y, z).getLocation());
                         searchQueue.add(off.getRelative(x, y, z));
                     } else if(off.getType() == Material.PISTON_BASE)
