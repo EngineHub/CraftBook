@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.pipe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -192,15 +193,20 @@ public class Pipes extends AbstractCraftBookMechanic {
                     newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
                 } else if(fac.getType() == Material.JUKEBOX) {
                     Jukebox juke = (Jukebox) fac.getState();
-                    if(juke.getPlaying() == null) {
-                        for(ItemStack st : filteredItems) {
+                    List<ItemStack> its = new ArrayList<ItemStack>(filteredItems);
+                    if(!juke.isPlaying()) {
+                        Iterator<ItemStack> iter = its.iterator();
+                        while(iter.hasNext()) {
+                            ItemStack st = iter.next();
                             if(!st.getType().isRecord()) continue;
                             juke.setPlaying(st.getType());
+                            iter.remove();
                             break;
                         }
                     }
+                    newItems.addAll(its);
                 } else {
-                    PipePutEvent event = new PipePutEvent(bl, filteredItems, fac);
+                    PipePutEvent event = new PipePutEvent(bl, new ArrayList<ItemStack>(filteredItems), fac);
                     Bukkit.getPluginManager().callEvent(event);
 
                     newItems.addAll(event.getItems());
