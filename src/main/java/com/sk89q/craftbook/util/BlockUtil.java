@@ -58,6 +58,25 @@ public class BlockUtil {
         }
     }
 
+    public static boolean hasTileData(Material material) {
+
+        switch(material) {
+
+            case CHEST:
+            case FURNACE:
+            case BURNING_FURNACE:
+            case BREWING_STAND:
+            case DISPENSER:
+            case DROPPER:
+            case HOPPER:
+            case SIGN:
+            case TRAPPED_CHEST:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static Location getBlockCentre(Block block) {
 
         return block.getLocation().add(0.5, 0.5, 0.5);

@@ -15,6 +15,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -181,6 +182,15 @@ public class Pipes extends AbstractCraftBookMechanic {
                 Block fac = bl.getRelative(p.getFacing());
                 if (fac.getState() instanceof InventoryHolder) {
                     newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
+                } else if(fac.getType() == Material.JUKEBOX) {
+                    Jukebox juke = (Jukebox) fac.getState();
+                    if(juke.getPlaying() == null) {
+                        for(ItemStack st : filteredItems) {
+                            if(!st.getType().isRecord()) continue;
+                            juke.setPlaying(st.getType());
+                            break;
+                        }
+                    }
                 } else {
                     PipePutEvent event = new PipePutEvent(bl, filteredItems, fac);
                     Bukkit.getPluginManager().callEvent(event);
