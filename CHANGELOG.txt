@@ -1,3 +1,28 @@
+3.8b1
+* Fixed RandomBit counting levers that didn't exist.
+* Fixed ChipState not being able to detect the existance of outputs.
+* Fixed messages not showing in colour.
+* Fixed many issues with the Random ICs.
+* Fixed ExitRemover still occuring on dead carts.
+* Fixed Teleport mechanic teleporting to any sign, not just teleporter signs. (Thanks ScoreUnder)
+* Updated compilation to 1.7.2, although CraftBook already supported 1.7.2.
++ Added an option to not trample snow that is in its lowest form.
++ Added Stained Glass support to pipes. Stained Glass will only transport to stained glass of the same colour (or non-stained glass).
+* Converted a majority of mechanics over to the new system.
+* Recoded Bridges and Doors. Both use the new system and share a lot of code.
++ Added the world name to /cb report -i (Thanks dddeeefff)
++ Added recipe permission text to the localizable messages list.
+* Fixed ProgrammableFireworkDisplay spawning fireworks in unloaded chunks.
++ Added support for item amounts to CartDeposit.
+* Fixed a BetterPhysics dupe.
+* Recoded pipes. Pipes now are event based and therefore are much more intergratable into external things. Other plugins can interact with pipes now.
++ Added pipe support to Bridges and Doors.
++ Added success message to Payment mechanic.
++ Added support for a dropper to be used instead of a piston in a pipe. This acts as a dropoff point that items will be shot from.
++ Added support for pipes to place into hoppers and jukeboxes.
++ Added glass pane to pipes to act as a junction block. Stained glass panes only conduct to their own colour.
+* Tweaked DaySensor.
+
 3.7.14
 * Fixed CommandItems _EITHER sections.
 + Added minOn to random IC's.
