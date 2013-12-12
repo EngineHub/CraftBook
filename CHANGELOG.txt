@@ -22,6 +22,7 @@
 + Added support for pipes to place into hoppers and jukeboxes.
 + Added glass pane to pipes to act as a junction block. Stained glass panes only conduct to their own colour.
 * Tweaked DaySensor.
+* Fixed fishes losing their type in Cooking Pots.
 
 3.7.14
 * Fixed CommandItems _EITHER sections.

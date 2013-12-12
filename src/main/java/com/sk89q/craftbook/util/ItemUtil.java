@@ -356,7 +356,7 @@ public class ItemUtil {
             case RAW_CHICKEN:
                 return new ItemStack(Material.COOKED_CHICKEN);
             case RAW_FISH:
-                return new ItemStack(Material.COOKED_FISH, item.getAmount(), item.getDurability());
+                return new ItemStack(Material.COOKED_FISH, 1, item.getDurability());
             case PORK:
                 return new ItemStack(Material.GRILLED_PORK);
             case POTATO_ITEM:
