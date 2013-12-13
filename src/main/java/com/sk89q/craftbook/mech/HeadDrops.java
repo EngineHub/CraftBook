@@ -210,15 +210,16 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         SPIDER("MHF_Spider", "Kelevra_V"),
         VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9"),
         IRON_GOLEM("MHF_Golem", "zippie007"),
+        SQUID("MHF_Squid", "squidette8"),
+        OCELOT("MHF_Ocelot", "scraftbrothers3"),
 
         //Unofficial/Community
         BAT("coolwhip101", "bozzobrain"),
         ENDER_DRAGON("KingEndermen", "KingEnderman"),
-        SQUID("squidette8"),
         SILVERFISH("AlexVMiner"),
         SNOWMAN("scraftbrothers2", "Koebasti"),
         HORSE("gavertoso"),
-        OCELOT("scraftbrothers3"),
+        WOLF("Budwolf"),
         WITCH("scrafbrothers4");
 
         MobSkullType(String playerName, String ... oldNames) {
