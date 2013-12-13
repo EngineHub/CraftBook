@@ -5,8 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -14,14 +13,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 public class BetterPhysics extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockPlace(BlockPlaceEvent event) {
-
-        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
+    public void onBlockBreak(BlockEvent event) {
 
         if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
