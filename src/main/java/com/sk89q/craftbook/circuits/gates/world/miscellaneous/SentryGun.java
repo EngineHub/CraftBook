@@ -3,8 +3,11 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +17,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
@@ -72,9 +76,11 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void think(ChipState state) {
+    public void think(ChipState chip) {
 
-        shoot();
+        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
+            trigger(chip);
+        }
     }
 
     public void shoot() {
@@ -96,10 +102,9 @@ public class SentryGun extends AbstractSelfTriggeredIC {
                 }
 
                 if (hasFound) {
-                    double yOff = 0;
-                    if(ent instanceof LivingEntity)
-                        yOff = ((LivingEntity) ent).getEyeHeight();
-                    Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()), ent.getLocation().add(0, yOff, 0).subtract((area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()).getLocation().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
+                    double yOff = ((LivingEntity) ent).getEyeHeight();
+                    Location k = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(getBackBlock(), BlockFace.UP));
+                    Arrow ar = area.getWorld().spawnArrow(k, ent.getLocation().add(0, yOff, 0).subtract(k.clone().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
                     if(!((LivingEntity)ent).hasLineOfSight(ar)) {
                         ar.remove();
                         continue;
@@ -121,7 +126,9 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         return null;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC {
+    public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
+
+        public boolean inverted = false;
 
         public Factory(Server server) {
 
@@ -150,6 +157,12 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {"Mob Type{:power:MAN}", "SearchArea"};
+        }
+
+        @Override
+        public void addConfiguration(YAMLProcessor config, String path) {
+
+            inverted = config.getBoolean(path + "inverted", false);
         }
     }
 }
