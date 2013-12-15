@@ -3,8 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sk89q.craftbook.circuits.ic.*;
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -13,6 +11,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.IC;
+import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.EntityUtil;
@@ -67,11 +72,9 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void think(ChipState chip) {
+    public void think(ChipState state) {
 
-        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
-            shoot();
-        }
+        shoot();
     }
 
     public void shoot() {
@@ -118,9 +121,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         return null;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
-
-        public boolean inverted = false;
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 
@@ -149,12 +150,6 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {"Mob Type{:power:MAN}", "SearchArea"};
-        }
-
-        @Override
-        public void addConfiguration(YAMLProcessor config, String path) {
-
-            inverted = config.getBoolean(path + "inverted", false);
         }
     }
 }
