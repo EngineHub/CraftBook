@@ -358,6 +358,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
         block.setTypeIdAndData(block.getTypeId(), data, false);
         for (Player p : block.getWorld().getPlayers()) {
+            if (p.getWorld() != block.getWorld()) continue;
             if (LocationUtil.getDistanceSquared(p.getLocation(), block.getLocation()) < CraftBookPlugin.inst().getServer().getViewDistance() * 16 * CraftBookPlugin.inst().getServer().getViewDistance() * 16)
                 p.sendBlockChange(block.getLocation(), block.getType(), data);
         }
