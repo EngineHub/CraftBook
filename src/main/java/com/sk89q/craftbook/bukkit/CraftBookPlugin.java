@@ -10,13 +10,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -160,6 +154,11 @@ public class CraftBookPlugin extends JavaPlugin {
     public static int getUpdaterID() {
 
         return 31055;
+    }
+
+    public List<LocalComponent> getComponents() {
+
+        return Collections.unmodifiableList(components);
     }
 
     /**
