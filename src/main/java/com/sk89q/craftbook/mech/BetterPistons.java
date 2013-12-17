@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mech;
 import java.util.Locale;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -56,7 +57,7 @@ public class BetterPistons extends AbstractMechanic {
 
             Block block = BukkitUtil.toBlock(pt);
             // check if this looks at all like something we're interested in first
-            if (block.getTypeId() == BlockID.PISTON_BASE || block.getTypeId() == BlockID.PISTON_STICKY_BASE) {
+            if (block.getType() == Material.PISTON_BASE || block.getType() == Material.PISTON_STICKY_BASE) {
 
                 PistonBaseMaterial piston = (PistonBaseMaterial) block.getState().getData();
                 Block sign = block.getRelative(piston.getFacing().getOppositeFace());
@@ -67,7 +68,7 @@ public class BetterPistons extends AbstractMechanic {
                         if (face == piston.getFacing())
                             continue;
                         sign = block.getRelative(face);
-                        if(!SignUtil.getBackBlock(sign).getLocation().equals(block.getLocation()))
+                        if(face != BlockFace.UP && face != BlockFace.DOWN && !SignUtil.getBackBlock(sign).getLocation().equals(block.getLocation()))
                             continue;
                         type = checkSign(sign);
                         if (type == this.type) {
