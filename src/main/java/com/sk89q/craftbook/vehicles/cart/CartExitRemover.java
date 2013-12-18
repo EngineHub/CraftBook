@@ -3,6 +3,7 @@ package com.sk89q.craftbook.vehicles.cart;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -18,7 +19,7 @@ public class CartExitRemover extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleExit(final VehicleExitEvent event) {
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof RideableMinecart)) return;
         if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
