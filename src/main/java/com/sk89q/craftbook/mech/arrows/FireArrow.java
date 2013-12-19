@@ -7,8 +7,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
-import com.sk89q.worldedit.blocks.ItemID;
-
 public class FireArrow extends AbstractArrow {
 
     ShapelessRecipe recipe;
@@ -21,9 +19,9 @@ public class FireArrow extends AbstractArrow {
     @Override
     public void addRecipe() {
 
-        recipe = new ShapelessRecipe(new ItemStack(ItemID.ARROW, 4));
-        recipe.addIngredient(Material.ARROW, 4);
-        recipe.addIngredient(Material.FIREBALL, 1);
+        recipe = new ShapelessRecipe(new ItemStack(Material.ARROW, 4));
+        recipe.addIngredient(4, Material.ARROW);
+        recipe.addIngredient(1, Material.FIREBALL);
         Bukkit.addRecipe(recipe);
     }
 

@@ -422,7 +422,7 @@ public class SignUtil {
 
         if(!isSign(sign)) return false;
         ChangedSign signs = BukkitUtil.toChangedSign(sign);
-        if(!signs.getLine(line).equalsIgnoreCase(text)) return false;
+        if(!signs.getLine(line).equals(text)) return false;
         return true;
     }
 }

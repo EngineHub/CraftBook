@@ -26,7 +26,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -52,36 +51,36 @@ public class Ammeter extends AbstractCraftBookMechanic {
         int data = getSpecialData(block);
         String line = getCurrentLine(data);
         player.print(player.translate("mech.ammeter.ammeter") + ": " + line + ChatColor.WHITE + " " + data + " A");
+        event.setCancelled(true);
     }
 
     private int getSpecialData(Block block) {
 
-        int typeId = block.getTypeId();
         byte data = block.getData();
         int current = 0;
-        switch (typeId) {
-            case BlockID.REDSTONE_WIRE:
+        switch (block.getType()) {
+            case REDSTONE_WIRE:
                 current = data;
                 break;
-            case BlockID.LEVER:
-            case BlockID.STONE_BUTTON:
-            case BlockID.WOODEN_BUTTON:
-            case BlockID.POWERED_RAIL:
-            case BlockID.DETECTOR_RAIL:
-            case BlockID.TRIPWIRE_HOOK:
-            case BlockID.ACTIVATOR_RAIL:
+            case LEVER:
+            case STONE_BUTTON:
+            case WOOD_BUTTON:
+            case POWERED_RAIL:
+            case DETECTOR_RAIL:
+            case TRIPWIRE_HOOK:
+            case ACTIVATOR_RAIL:
                 if ((data & 0x8) == 0x8)
                     current = 15;
                 break;
-            case BlockID.STONE_PRESSURE_PLATE:
-            case BlockID.WOODEN_PRESSURE_PLATE:
+            case STONE_PLATE:
+            case WOOD_PLATE:
                 if ((data & 0x1) == 0x1)
                     current = 15;
                 break;
-            case BlockID.REDSTONE_TORCH_ON:
-            case BlockID.REDSTONE_REPEATER_ON:
-            case BlockID.COMPARATOR_ON:
-            case BlockID.REDSTONE_BLOCK:
+            case REDSTONE_TORCH_ON:
+            case DIODE_BLOCK_ON:
+            case REDSTONE_COMPARATOR_ON:
+            case REDSTONE_BLOCK:
                 current = 15;
                 break;
             default:

@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -43,7 +44,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -333,7 +333,7 @@ public class Elevator extends AbstractMechanic {
         // just print a generic message
         ChangedSign info = null;
         if (!SignUtil.isSign(destination)) {
-            if (destination.getTypeId() == BlockID.STONE_BUTTON || destination.getTypeId() == BlockID.WOODEN_BUTTON) {
+            if (destination.getType() == Material.STONE_BUTTON || destination.getType() == Material.WOOD_BUTTON) {
 
                 Button button = (Button) destination.getState().getData();
                 if (SignUtil.isSign(destination.getRelative(button.getAttachedFace(), 2)))
@@ -367,7 +367,7 @@ public class Elevator extends AbstractMechanic {
     private static Elevator.Direction isLift(Block block) {
 
         if (!SignUtil.isSign(block)) {
-            if (CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled && (block.getTypeId() == BlockID.STONE_BUTTON || block.getTypeId() == BlockID.WOODEN_BUTTON)) {
+            if (CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled && (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON)) {
                 Button b = (Button) block.getState().getData();
                 if(b == null || b.getAttachedFace() == null)
                     return Direction.NONE;

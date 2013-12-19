@@ -2,14 +2,16 @@ package com.sk89q.craftbook.mech;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -18,71 +20,36 @@ import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.Vector;
 
-public class HiddenSwitch extends AbstractMechanic {
+public class HiddenSwitch extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<HiddenSwitch> {
+    private static boolean isValidWallSign(Block b) {
 
-        @Override
-        public HiddenSwitch detect(BlockWorldVector pos, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException {
-            if (sign.getLine(1).equalsIgnoreCase("[X]")) {
+        // Must be Wall Sign
+        if (b == null || b.getType() != Material.WALL_SIGN) return false;
+        ChangedSign s = BukkitUtil.toChangedSign(b);
 
-                player.checkPermission("craftbook.mech.hiddenswitch");
-                return new HiddenSwitch(BukkitUtil.toBlock(pos));
-            }
-            return null;
-        }
-
-        private boolean isValidWallSign(World world, Vector v) {
-
-            Block b = world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-
-            // Must be Wall Sign
-            if (b == null || b.getType() != Material.WALL_SIGN) return false;
-            if (b.getState() == null || !SignUtil.isSign(b)) return false;
-            ChangedSign s = BukkitUtil.toChangedSign(b);
-
-            return s.getLine(1).equalsIgnoreCase("[X]");
-        }
-
-        @Override
-        public HiddenSwitch detect(BlockWorldVector pos) throws InvalidMechanismException {
-
-            World wrd = BukkitUtil.toWorld(pos);
-            if (isValidWallSign(wrd, pos.add(1, 0, 0)) || isValidWallSign(wrd, pos.add(-1, 0,
-                    0)) || isValidWallSign(wrd, pos.add(0, 0, 1))
-                    || isValidWallSign(wrd, pos.add(0, 0, -1)))
-                return new HiddenSwitch(BukkitUtil.toBlock(pos));
-            return null;
-        }
+        return s.getLine(1).equalsIgnoreCase("[X]");
     }
 
-    final Block switchBlock;
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
 
-    public HiddenSwitch(Block block) {
+        if(!event.getLine(1).equalsIgnoreCase("[x]")) return;
+        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if(!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                lplayer.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
+        }
 
-        switchBlock = block;
+        event.setLine(1, "[X]");
     }
 
-    @Override
-    public void onRightClick(PlayerInteractEvent event) {
+    public boolean testBlock(Block switchBlock, BlockFace eventFace, Player player) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().hiddenSwitchEnabled) return;
-
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
-            return;
-
-        if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
-                || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
-                || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
-            return;
-
-
+        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
         ChangedSign s = null;
         Block testBlock = null;
         if(CraftBookPlugin.inst().getConfiguration().hiddenSwitchAnyside) {
@@ -95,14 +62,14 @@ public class HiddenSwitch extends AbstractMechanic {
                 }
             }
         } else {
-            BlockFace face = event.getBlockFace().getOppositeFace();
+            BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
             if(testBlock.getType() == Material.WALL_SIGN)
                 s = BukkitUtil.toChangedSign(testBlock);
         }
 
         if(s == null)
-            return;
+            return false;
 
         if (s.getLine(1).equalsIgnoreCase("[X]")) {
 
@@ -113,31 +80,55 @@ public class HiddenSwitch extends AbstractMechanic {
             }
 
             if (!s.getLine(2).trim().isEmpty())
-                if (!CraftBookPlugin.inst().inGroup(event.getPlayer(), s.getLine(2).trim())) {
-                    player.printError("mech.group");
-                    return;
+                if (!CraftBookPlugin.inst().inGroup(player, s.getLine(2).trim())) {
+                    lplayer.printError("mech.group");
+                    return true;
                 }
 
             boolean success = false;
 
             if (!ItemUtil.isStackValid(itemID)) {
-                toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                toggleSwitches(testBlock, eventFace.getOppositeFace());
                 success = true;
             } else {
-                if (ItemUtil.areItemsIdentical(event.getPlayer().getItemInHand(), itemID)) {
-                    toggleSwitches(testBlock, event.getBlockFace().getOppositeFace());
+                if (ItemUtil.areItemsIdentical(player.getItemInHand(), itemID)) {
+                    toggleSwitches(testBlock, eventFace.getOppositeFace());
                     success = true;
                 } else
-                    player.printError("mech.hiddenswitch.key");
+                    lplayer.printError("mech.hiddenswitch.key");
             }
 
             if(success)
-                player.print("mech.hiddenswitch.toggle");
+                lplayer.print("mech.hiddenswitch.toggle");
 
-            if (!event.getPlayer().isSneaking()) event.setCancelled(true);
+            if (!lplayer.isSneaking()) return true;
         }
 
+        return false;
+    }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onRightClick(PlayerInteractEvent event) {
+
+        if(event.getClickedBlock().getType() != Material.WALL_SIGN) return;
+
+        if(!SignUtil.doesSignHaveText(event.getClickedBlock(), "[X]", 1)) return;
+
+        if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
+                || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
+                || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
+            return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
+            return;
+
+        if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
+            return;
+
+        if(testBlock(event.getClickedBlock(), event.getBlockFace(), event.getPlayer()))
+            event.setCancelled(true);
     }
 
     private void toggleSwitches(Block sign, BlockFace direction) {
