@@ -31,6 +31,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -350,6 +351,27 @@ public class Pipes extends AbstractCraftBookMechanic {
                             leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
                     }
                 } else f.getInventory().setResult(null);
+            } else if (fac.getType() == Material.JUKEBOX) {
+
+                Jukebox juke = (Jukebox) fac.getState();
+
+                items.add(new ItemStack(juke.getPlaying()));
+
+                PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
+                Bukkit.getPluginManager().callEvent(event);
+                items = event.getItems();
+
+                if(!event.isCancelled()) {
+                    visitedPipes.add(fac.getLocation());
+                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                }
+
+                if (!items.isEmpty()) {
+                    for (ItemStack item : items) {
+                        if (item == null) continue;
+                        block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
+                    }
+                } else juke.setPlaying(null);
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
                 Bukkit.getPluginManager().callEvent(event);
