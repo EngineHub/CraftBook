@@ -10,7 +10,14 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -167,6 +174,8 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        System.gc();
+
         ItemSyntax.plugin = this;
 
         plugins = new CompanionPlugins();
@@ -232,6 +241,8 @@ public class CraftBookPlugin extends JavaPlugin {
         setupCraftBook();
         registerGlobalEvents();
         startComponents();
+
+        System.gc();
     }
 
     public boolean updateAvailable = false;

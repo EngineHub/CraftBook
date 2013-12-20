@@ -65,29 +65,36 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onUnload(final ChunkUnloadEvent event) {
 
-        boolean isOn = false;
-        boolean foundSign = false;
+        try {
+            boolean isOn = false;
+            boolean foundSign = false;
 
-        for(BlockState state : event.getChunk().getTileEntities()) {
-            if(state instanceof Sign) {
-                if(((Sign) state).getLine(1).equals("[Chunk]")) {
-                    foundSign = true;
-                    isOn = !((Sign) state).getLine(3).equalsIgnoreCase("off");
-                    break;
+            for(BlockState state : event.getChunk().getTileEntities()) {
+                if(state == null) continue;
+                if(state instanceof Sign) {
+                    if(((Sign) state).getLine(1).equals("[Chunk]")) {
+                        foundSign = true;
+                        isOn = !((Sign) state).getLine(3).equalsIgnoreCase("off");
+                        break;
+                    }
                 }
             }
+
+            if (!foundSign) return;
+            if (!isOn && CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
+            event.setCancelled(true);
+            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+                @Override
+                public void run () {
+                    event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true);
+                }
+
+            }, 2L);
+        } catch(Throwable t) {
+            CraftBookPlugin.logger().warning("A chunk failed to be kept in memory. Is the chunk corrupt? (X:" + event.getChunk().getX() + ", Z:" + event.getChunk().getZ() + ")");
+            if(CraftBookPlugin.inst().getConfiguration().debugMode)
+                BukkitUtil.printStacktrace(t);
         }
-
-        if (!foundSign) return;
-        if (!isOn && CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
-        event.setCancelled(true);
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-            @Override
-            public void run () {
-                event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true);
-            }
-
-        }, 2L);
     }
 }
