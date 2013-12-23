@@ -1,3 +1,18 @@
+3.8b2
+* Fixed Cooking Pot fish dupe bug.
++ Added wolves to HeadDrops. Also use more official head skins.
+* Fixed snow calculations sometimes causing errors.
++ Added the ability to turn off the Sentry Gun IC by powering it.
+* Fixed the Sentry Gun IC shooting arrows from inside solid blocks.
+* Fixed BetterPistons up/down sign support.
+* Fixed non-rideable carts despawning with empty decay.
+* Moved HiddenSwitch over to the new system.
++ Added jukebox pull support to pipes.
+* Fixed XPStorer error.
+* Fixed ChunkAnchors failing silently, when a fail may mean a much more severe problem with chunk loading.
+* Modified the way variables work.
++ Added usage information to variable commands.
+
 3.8b1
 * Fixed RandomBit counting levers that didn't exist.
 * Fixed ChipState not being able to detect the existance of outputs.
