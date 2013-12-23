@@ -31,6 +31,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         instance = this;
+        variableStore = new HashMap<Tuple2<String, String>, String>();
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
 
         try {
@@ -44,15 +45,16 @@ public class VariableManager extends AbstractCraftBookMechanic {
             return false;
         }
 
-        variableStore = new HashMap<Tuple2<String, String>, String>();
         return true;
     }
 
     @Override
     public void disable() {
 
-        variableConfiguration.save();
-        variableConfiguration = null;
+        if(variableConfiguration != null) {
+            variableConfiguration.save();
+            variableConfiguration = null;
+        }
         variableStore.clear();
         instance = null;
     }
