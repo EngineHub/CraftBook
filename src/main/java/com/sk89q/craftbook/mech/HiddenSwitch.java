@@ -7,6 +7,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -110,9 +111,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getClickedBlock().getType() != Material.WALL_SIGN) return;
-
-        if(!SignUtil.doesSignHaveText(event.getClickedBlock(), "[X]", 1)) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
