@@ -10,6 +10,7 @@ import org.bukkit.event.server.ServerCommandEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
@@ -41,7 +42,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
             variableConfiguration.load();
         } catch(Exception ignored){
-            instance = null;
+            BukkitUtil.printStacktrace(ignored);
             return false;
         }
 
