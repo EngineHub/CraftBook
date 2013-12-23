@@ -28,7 +28,7 @@ public class VariableCommands {
         this.plugin = plugin;
     }
 
-    @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
     public void set(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -55,7 +55,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "define", desc = "Defines a variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "define", desc = "Defines a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
     public void define(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -81,7 +81,7 @@ public class VariableCommands {
             throw new FastCommandException("Existing Variable!");
     }
 
-    @Command(aliases = "get", desc = "Checks a variable.", max=1, min=1, flags="n:")
+    @Command(aliases = "get", desc = "Checks a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
     public void get(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -103,7 +103,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = {"erase","remove","delete","rm"}, desc = "Erase a variable.", max=1, min=1, flags="n:")
+    @Command(aliases = {"erase","remove","delete","rm"}, desc = "Erase a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
     public void erase(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -141,7 +141,7 @@ public class VariableCommands {
             }
     }
 
-    @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Appended Value> -n <Namespace>")
     public void append(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -168,7 +168,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "prepend", desc = "Prepend to a variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "prepend", desc = "Prepend to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Prepended Value> -n <Namespace>")
     public void prepend(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -195,7 +195,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1, flags="n:")
+    @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
     public void toggle(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -229,7 +229,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Added Value> -n <Namespace>")
     public void add(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -268,7 +268,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Subtracting Value> -n <Namespace>")
     public void subtract(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -307,7 +307,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = {"multiply","multiple"}, desc = "Multiply a numeric variable.", max=2, min=2, flags="n:")
+    @Command(aliases = {"multiply","multiple"}, desc = "Multiply a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Multiplying Value> -n <Namespace>")
     public void multiple(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
@@ -346,7 +346,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2, flags="n:")
+    @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Dividing Value> -n <Namespace>")
     public void divide(CommandContext context, CommandSender sender) throws CommandException {
 
         String key = "global";
