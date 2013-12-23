@@ -10,6 +10,7 @@ import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
+import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;
@@ -38,7 +39,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -47,9 +48,9 @@ public class VariableCommands {
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.setVariable(context.getString(0), key, context.getString(1));
+            VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -65,7 +66,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(!plugin.hasVariable(context.getString(0), key)) {
+        if(!VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!hasVariablePermission(sender, key, context.getString(0), "define"))
                 throw new CommandPermissionsException();
@@ -73,9 +74,9 @@ public class VariableCommands {
                 throw new FastCommandException("Invalid Variable Name!");
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.setVariable(context.getString(0), key, context.getString(1));
+            VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Existing Variable!");
     }
@@ -91,13 +92,13 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!hasVariablePermission(sender, key, context.getString(0), "get"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + plugin.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -113,13 +114,13 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!hasVariablePermission(sender, key, context.getString(0), "erase"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            plugin.removeVariable(context.getString(0), key);
+            VariableManager.instance.removeVariable(context.getString(0), key);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Removed variable: " + context.getString(0));
         } else
@@ -151,7 +152,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -160,9 +161,9 @@ public class VariableCommands {
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.setVariable(context.getString(0), key, plugin.getVariable(context.getString(0), key) + context.getString(1));
+            VariableManager.instance.setVariable(context.getString(0), key, VariableManager.instance.getVariable(context.getString(0), key) + context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -178,7 +179,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -187,9 +188,9 @@ public class VariableCommands {
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            plugin.setVariable(context.getString(0), key, context.getString(1) + plugin.getVariable(context.getString(0), key));
+            VariableManager.instance.setVariable(context.getString(0), key, context.getString(1) + VariableManager.instance.getVariable(context.getString(0), key));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + plugin.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
@@ -205,14 +206,14 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            String var = plugin.getVariable(context.getString(0), key);
+            String var = VariableManager.instance.getVariable(context.getString(0), key);
             if(var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1"))
                 var = var.equalsIgnoreCase("1") ? "0" : "1";
             else if(var.equalsIgnoreCase("true") || var.equalsIgnoreCase("false"))
@@ -221,7 +222,7 @@ public class VariableCommands {
                 var = var.equalsIgnoreCase("yes") ? "no" : "yes";
             else
                 throw new FastCommandException("Variable not of boolean type!");
-            plugin.setVariable(context.getString(0), key, var);
+            VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
@@ -239,7 +240,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -249,7 +250,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.getVariable(context.getString(0), key);
+            String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
@@ -260,7 +261,7 @@ public class VariableCommands {
             } catch(Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
-            plugin.setVariable(context.getString(0), key, var);
+            VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
@@ -278,7 +279,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -288,7 +289,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.getVariable(context.getString(0), key);
+            String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
@@ -299,7 +300,7 @@ public class VariableCommands {
             } catch(Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
-            plugin.setVariable(context.getString(0), key, var);
+            VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
@@ -317,7 +318,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -327,7 +328,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.getVariable(context.getString(0), key);
+            String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
@@ -338,7 +339,7 @@ public class VariableCommands {
             } catch(Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
-            plugin.setVariable(context.getString(0), key, var);
+            VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
@@ -356,7 +357,7 @@ public class VariableCommands {
         if(context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(plugin.hasVariable(context.getString(0), key)) {
+        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
@@ -366,7 +367,7 @@ public class VariableCommands {
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
-            String var = plugin.getVariable(context.getString(0), key);
+            String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
@@ -381,7 +382,7 @@ public class VariableCommands {
             } catch(Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
-            plugin.setVariable(context.getString(0), key, var);
+            VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else

@@ -31,11 +31,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -48,7 +45,6 @@ import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
@@ -126,40 +122,40 @@ public class MechanicListenerAdapter implements Listener {
             return;
 
         if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
-            switch(event.getBlock().getTypeId()) {
+            switch(event.getBlock().getType()) {
 
-                case BlockID.REDSTONE_TORCH_ON:
-                case BlockID.REDSTONE_REPEATER_ON:
-                case BlockID.REDSTONE_BLOCK:
-                case BlockID.COMPARATOR_ON:
+                case REDSTONE_TORCH_ON:
+                case DIODE_BLOCK_ON:
+                case REDSTONE_BLOCK:
+                case REDSTONE_COMPARATOR_ON:
                     if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
                         break;
                     handleRedstoneForBlock(event.getBlock(), 15, 0);
                     break;
-                case BlockID.REDSTONE_WIRE:
+                case REDSTONE_WIRE:
                     if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
                         break;
                     if(event.getBlock().getData() > 0)
                         handleRedstoneForBlock(event.getBlock(), event.getBlock().getData(), 0);
                     break;
-                case BlockID.LEVER:
+                case LEVER:
                     if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
                         break;
                     if(((org.bukkit.material.Lever) event.getBlock().getState().getData()).isPowered())
                         handleRedstoneForBlock(event.getBlock(), 15, 0);
                     break;
-                case BlockID.WOODEN_BUTTON:
-                case BlockID.STONE_BUTTON:
+                case WOOD_BUTTON:
+                case STONE_BUTTON:
                     if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
                         break;
                     if(((org.bukkit.material.Button) event.getBlock().getState().getData()).isPowered())
                         handleRedstoneForBlock(event.getBlock(), 15, 0);
                     break;
-                case BlockID.STONE_PRESSURE_PLATE:
-                case BlockID.WOODEN_PRESSURE_PLATE:
-                case BlockID.PRESSURE_PLATE_HEAVY:
-                case BlockID.PRESSURE_PLATE_LIGHT:
-                case BlockID.DETECTOR_RAIL:
+                case STONE_PLATE:
+                case WOOD_PLATE:
+                case GOLD_PLATE:
+                case IRON_PLATE:
+                case DETECTOR_RAIL:
                     if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
                         break;
                     if(event.getBlock().getState().getData() instanceof PressureSensor && ((PressureSensor) event.getBlock().getState().getData()).isPressed())
@@ -422,27 +418,6 @@ public class MechanicListenerAdapter implements Listener {
         int chunkZ = event.getChunk().getZ();
 
         CraftBookPlugin.inst().getManager().unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
-    }
-
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-
-        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
-            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
-    }
-
-    @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
-        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
-            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
-    }
-
-    @EventHandler
-    public void onConsoleCommandPreprocess(ServerCommandEvent event) {
-
-        if(CraftBookPlugin.inst().getConfiguration().variablesCommandBlockOverride)
-            event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

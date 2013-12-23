@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.commandhelper;
+package com.sk89q.craftbook.common.commandhelper;
 
 import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
@@ -10,7 +10,7 @@ import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.common.VariableManager;
 
 public class CHFunctions {
 
@@ -25,7 +25,10 @@ public class CHFunctions {
             if(arg2.length == 2)
                 namespace = arg2[1].val();
 
-            String varValue = CraftBookPlugin.inst().getVariable(varName, namespace);
+            String varValue = null;
+
+            if(VariableManager.instance != null)
+                varValue = VariableManager.instance.getVariable(varName, namespace);
             if(varValue == null)
                 varValue = "Unknown Variable!";
 

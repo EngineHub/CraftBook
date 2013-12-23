@@ -13,7 +13,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +36,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.craftbook.LanguageManager;
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.Mechanic;
@@ -48,14 +47,14 @@ import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.common.LanguageManager;
+import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.mech.CommandItems;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition;
 import com.sk89q.craftbook.util.CompatabilityUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.compat.companion.CompanionPlugins;
-import com.sk89q.craftbook.util.config.VariableConfiguration;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -106,7 +105,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * Handles all configuration.
      */
     private BukkitConfiguration config;
-    private VariableConfiguration variableConfiguration;
 
     /**
      * The currently enabled LocalComponents
@@ -124,14 +122,14 @@ public class CraftBookPlugin extends JavaPlugin {
     private MechanicClock mechanicClock;
 
     /**
-     * Stores the variables used in VariableStore.
-     */
-    protected HashMap<Tuple2<String, String>, String> variableStore = new HashMap<Tuple2<String, String>, String>();
-
-    /**
      * The persistent storage database of CraftBook.
      */
     protected PersistentStorage persistentStorage;
+
+    /**
+     * List of common mechanics.
+     */
+    private List<CraftBookMechanic> mechanics;
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -277,6 +275,23 @@ public class CraftBookPlugin extends JavaPlugin {
                 CompatabilityUtil.init();
             }
         });
+
+        mechanics = new ArrayList<CraftBookMechanic>();
+
+        // VariableStore
+        if(config.variablesEnabled) mechanics.add(new VariableManager());
+
+        Iterator<CraftBookMechanic> iter = mechanics.iterator();
+        while(iter.hasNext()) {
+            CraftBookMechanic mech = iter.next();
+            if(!mech.enable()) {
+                getLogger().warning("Failed to initialize mechanic: " + mech.getClass().getSimpleName());
+                mech.disable();
+                iter.remove();
+                continue;
+            }
+            getServer().getPluginManager().registerEvents(mech, this);
+        }
     }
 
     /**
@@ -287,39 +302,6 @@ public class CraftBookPlugin extends JavaPlugin {
     public MechanicManager getManager() {
 
         return manager;
-    }
-
-    public boolean hasVariable(String variable, String namespace) {
-
-        if(!config.variablesEnabled)
-            return false;
-        return variableStore.containsKey(new Tuple2<String, String>(variable, namespace));
-    }
-
-    public String getVariable(String variable, String namespace) {
-
-        if(!config.variablesEnabled)
-            return "Variables Are Disabled!";
-        return variableStore.get(new Tuple2<String, String>(variable, namespace));
-    }
-
-    public String setVariable(String variable, String namespace, String value) {
-
-        if(!config.variablesEnabled)
-            return "Variables Are Disabled!";
-        return variableStore.put(new Tuple2<String, String>(variable, namespace), value);
-    }
-
-    public String removeVariable(String variable, String namespace) {
-
-        if(!config.variablesEnabled)
-            return "Variables Are Disabled!";
-        return variableStore.remove(new Tuple2<String, String>(variable, namespace));
-    }
-
-    public HashMap<Tuple2<String, String>, String> getVariableStore() {
-
-        return variableStore;
     }
 
     /**
@@ -458,18 +440,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public void startComponents() {
 
-        // VariableStore
-        if(config.variablesEnabled) {
-            logDebugMessage("Initializing Variables!", "startup.variables");
-            try {
-                File varFile = new File(getDataFolder(), "variables.yml");
-                if(!varFile.exists())
-                    varFile.createNewFile();
-                variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), logger());
-                variableConfiguration.load();
-            } catch(Exception ignored){}
-        }
-
         // Mechanics
         if (config.enableMechanisms) {
             logDebugMessage("Initializing Mechanisms!", "startup.mechanisms");
@@ -502,11 +472,11 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onDisable() {
 
         languageManager.close();
-        for (LocalComponent component : components) {
+        for (LocalComponent component : components)
             component.disable();
-        }
-        if(config.variablesEnabled)
-            variableConfiguration.save();
+        for(CraftBookMechanic mech : mechanics)
+            mech.disable();
+        mechanics = null;
         components.clear();
 
         if(hasPersistentStorage())
@@ -862,8 +832,9 @@ public class CraftBookPlugin extends JavaPlugin {
         for (LocalComponent component : components) {
             component.disable();
         }
-        if(config.variablesEnabled)
-            variableConfiguration.save();
+        for(CraftBookMechanic mech : mechanics)
+            mech.disable();
+        mechanics = null;
         components.clear();
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());

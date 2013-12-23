@@ -10,10 +10,16 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
+import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 
 public class Marquee extends AbstractCraftBookMechanic {
+
+    @Override
+    public boolean enable() {
+        return VariableManager.instance != null;
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onSignClick(SignClickEvent event) {
@@ -28,7 +34,7 @@ public class Marquee extends AbstractCraftBookMechanic {
             return;
         }
 
-        String var = CraftBookPlugin.inst().getVariable(sign.getLine(2), sign.getLine(3).isEmpty() ? "global" : sign.getLine(3));
+        String var = VariableManager.instance.getVariable(sign.getLine(2), sign.getLine(3).isEmpty() ? "global" : sign.getLine(3));
         if(var == null || var.isEmpty()) var = "variable.missing";
         lplayer.print(var);
 
@@ -55,7 +61,7 @@ public class Marquee extends AbstractCraftBookMechanic {
             SignUtil.cancelSign(event);
         }
 
-        String var = CraftBookPlugin.inst().getVariable(variable, namespace);
+        String var = VariableManager.instance.getVariable(variable, namespace);
         if(var == null || var.isEmpty()) {
             lplayer.printError("variable.missing");
             SignUtil.cancelSign(event);

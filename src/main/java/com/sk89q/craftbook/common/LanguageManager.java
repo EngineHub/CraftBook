@@ -1,4 +1,4 @@
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.common;
 
 import java.io.File;
 import java.io.IOException;

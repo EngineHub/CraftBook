@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
+import com.sk89q.craftbook.common.VariableManager;
 
 public class ParsingUtil {
 
@@ -51,7 +52,7 @@ public class ParsingUtil {
 
     public static String parseVariables(String line, CommandSender player) {
 
-        if(CraftBookPlugin.inst() == null)
+        if(CraftBookPlugin.inst() == null || VariableManager.instance == null)
             return line;
 
         CraftBookPlugin.logDebugMessage("Attempting to parse variables. Input line: " + line, "variables.line-parsing");
@@ -78,7 +79,7 @@ public class ParsingUtil {
                     continue;
             CraftBookPlugin.logDebugMessage(var + " permissions granted!", "variables.line-parsing");
 
-            for(Entry<Tuple2<String, String>, String> bit : CraftBookPlugin.inst().getVariableStore().entrySet()) {
+            for(Entry<Tuple2<String, String>, String> bit : VariableManager.instance.getVariableStore().entrySet()) {
                 if(bit.getKey().b.equalsIgnoreCase(key) && bit.getKey().a.equalsIgnoreCase(value))
                     line = line.replace("%" + var + "%", bit.getValue());
             }
