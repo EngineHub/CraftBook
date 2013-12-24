@@ -403,7 +403,7 @@ vehicles:
             enable: false
         speed-modifiers:
             enable: false
-            max-speed: 1.0
+            max-speed: 0.4
             off-rail-speed: 0.0
         empty-slowdown-stopper:
             enable: false

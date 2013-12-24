@@ -38,7 +38,8 @@ public class CartMaxSpeed extends CartBlockMechanism {
     public boolean verify(ChangedSign sign, LocalPlayer player) {
 
         try {
-            Double.parseDouble(sign.getLine(2));
+            if(!sign.getLine(2).isEmpty())
+                Double.parseDouble(sign.getLine(2));
         } catch (NumberFormatException e) {
             player.printError("Line 3 must be a number that represents the max speed!");
             return false;

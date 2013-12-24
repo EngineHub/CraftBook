@@ -672,7 +672,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Speed Modifier Listener
         minecartSpeedModifierEnable = config.getBoolean("vehicles.minecart.speed-modifiers.enable", false);
-        minecartSpeedModifierMaxSpeed = config.getDouble("vehicles.minecart.speed-modifiers.max-speed", 1);
+        minecartSpeedModifierMaxSpeed = config.getDouble("vehicles.minecart.speed-modifiers.max-speed", 0.4);
         minecartSpeedModifierOffRail = config.getDouble("vehicles.minecart.speed-modifiers.off-rail-speed", 0);
 
 
