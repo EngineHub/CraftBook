@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.vehicles.cart;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.RideableMinecart;
@@ -32,7 +33,7 @@ public class CartExitRemover extends AbstractCraftBookMechanic {
                     ItemStack stack = CartUtils.getCartStack((Minecart) event.getVehicle());
 
                     if(event.getExited() instanceof Player) {
-                        if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty())
+                        if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty() && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)
                             event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
                     } else if(event.getExited() != null)
                         event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);

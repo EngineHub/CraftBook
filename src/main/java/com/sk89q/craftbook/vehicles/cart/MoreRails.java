@@ -38,7 +38,14 @@ public class MoreRails extends AbstractCraftBookMechanic {
                     }
                 if(movementFace == BlockFace.SELF)
                     return;
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(movementFace.getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,movementFace.getModZ())));
+                Vector velocity = new Vector(movementFace.getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,movementFace.getModZ());
+                if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
+                    double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
+                    velocity.setX(velocity.getX() / length);
+                    velocity.setY(velocity.getY() / length);
+                    velocity.setZ(velocity.getZ() / length);
+                }
+                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
             }
     }
 }
