@@ -30,6 +30,7 @@ public class VariableConfiguration {
             return;
         }
 
+        if(config.getKeys("variables") == null) return;
         for(String key : config.getKeys("variables")) {
 
             String[] keys = RegexUtil.PIPE_PATTERN.split(key, 2);
