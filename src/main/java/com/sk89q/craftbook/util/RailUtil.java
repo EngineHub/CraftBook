@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class RailUtil {
 
@@ -49,18 +48,18 @@ public class RailUtil {
         return containers;
     }
 
-    private static final int[] trackBlocks = new int[] { BlockID.MINECART_TRACKS, BlockID.POWERED_RAIL, BlockID.DETECTOR_RAIL, BlockID.ACTIVATOR_RAIL};
+    private static final Material[] trackBlocks = new Material[] { Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL, Material.ACTIVATOR_RAIL};
 
-    public static boolean isTrack(int id) {
+    public static boolean isTrack(Material id) {
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsPressurePlate)
-            if (id == BlockID.STONE_PRESSURE_PLATE || id == BlockID.WOODEN_PRESSURE_PLATE || id == BlockID.PRESSURE_PLATE_HEAVY || id == BlockID.PRESSURE_PLATE_LIGHT)
+            if (id == Material.STONE_PLATE || id == Material.WOOD_PLATE || id == Material.IRON_PLATE || id == Material.GOLD_PLATE)
                 return true;
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
-            if (id == BlockID.LADDER || id == BlockID.VINE)
+            if (id == Material.LADDER || id == Material.VINE)
                 return true;
 
-        for (int trackBlock : trackBlocks) {
+        for (Material trackBlock : trackBlocks) {
             if (id == trackBlock) return true;
         }
         return false;

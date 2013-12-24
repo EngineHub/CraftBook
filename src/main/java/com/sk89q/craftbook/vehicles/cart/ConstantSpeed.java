@@ -17,7 +17,7 @@ public class ConstantSpeed extends AbstractCraftBookMechanic {
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 
-        if (RailUtil.isTrack(event.getTo().getBlock().getTypeId()) && event.getVehicle().getVelocity().lengthSquared() > 0) {
+        if (RailUtil.isTrack(event.getTo().getBlock().getType()) && event.getVehicle().getVelocity().lengthSquared() > 0) {
             Vector vel = event.getVehicle().getVelocity();
             event.getVehicle().setVelocity(vel.normalize().multiply(CraftBookPlugin.inst().getConfiguration().minecartConstantSpeedSpeed));
         }

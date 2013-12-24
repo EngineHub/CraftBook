@@ -24,7 +24,7 @@ public class VisionSteering extends AbstractCraftBookMechanic {
         if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < CraftBookPlugin.inst().getConfiguration().minecartVisionSteeringMinimumSensitivity)
             return;
 
-        if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getTypeId()))
+        if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
             return;
 
         Vector direction = event.getPlayer().getLocation().getDirection();

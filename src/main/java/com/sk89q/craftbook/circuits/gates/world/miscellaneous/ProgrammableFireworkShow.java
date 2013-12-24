@@ -374,8 +374,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
                             errorLocation = "Creation";
 
-                            FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade
-                                    (fade).flicker(flicker).trail(trail).build();
+                            FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade(fade).flicker(flicker).trail(trail).build();
 
                             if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
@@ -386,8 +385,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
-                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst " +
-                                    "reading line " + position + " of the firework file " + show + "!");
+                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + show + "!");
                             BukkitUtil.printStacktrace(e);
                         }
                     }
