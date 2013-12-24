@@ -12,6 +12,9 @@
 * Fixed ChunkAnchors failing silently, when a fail may mean a much more severe problem with chunk loading.
 * Modified the way variables work.
 + Added usage information to variable commands.
+* Fixed CartMaxSpeed not allowing blank for reset.
+* Fixed Cart Speed Modifier Maximum being way too over powered by default.
+* Fixed MoreRails Vertical Rails not obeying max cart speeds.
 
 3.8b1
 * Fixed RandomBit counting levers that didn't exist.
