@@ -26,9 +26,16 @@ public class MoreRails extends AbstractCraftBookMechanic {
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
-            if (event.getTo().getBlock().getType() == Material.LADDER)
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ())));
-            else if (event.getTo().getBlock().getType() == Material.VINE) {
+            if (event.getTo().getBlock().getType() == Material.LADDER) {
+                Vector velocity = new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ());
+                if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
+                    double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
+                    velocity.setX(velocity.getX() / length);
+                    velocity.setY(velocity.getY() / length);
+                    velocity.setZ(velocity.getZ() / length);
+                }
+                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
+            } else if (event.getTo().getBlock().getType() == Material.VINE) {
                 BlockFace movementFace = BlockFace.SELF;
                 Vine vine = (Vine) event.getTo().getBlock().getState().getData();
                 for(BlockFace test : LocationUtil.getDirectFaces())
