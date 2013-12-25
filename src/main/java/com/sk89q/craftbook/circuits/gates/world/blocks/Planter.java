@@ -188,8 +188,8 @@ public class Planter extends AbstractSelfTriggeredIC {
             case SEEDS:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
-            case POTATO:
-            case CARROT:
+            case POTATO_ITEM:
+            case CARROT_ITEM:
                 return blockId == Material.SOIL;
             case NETHER_WARTS:
                 return blockId == Material.SOUL_SAND;
