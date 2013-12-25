@@ -46,7 +46,10 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        item = ItemSyntax.getItem(getLine(2));
+        if(getLine(2).isEmpty())
+            item = null;
+        else
+            item = ItemSyntax.getItem(getLine(2));
 
         onBlock = getBackBlock();
 
