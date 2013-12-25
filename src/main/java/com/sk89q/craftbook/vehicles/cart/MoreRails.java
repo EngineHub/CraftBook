@@ -27,13 +27,15 @@ public class MoreRails extends AbstractCraftBookMechanic {
 
         if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
             if (event.getTo().getBlock().getType() == Material.LADDER) {
-                Vector velocity = new Vector(((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ());
+                Attachable ladder = (Attachable) event.getTo().getBlock().getState().getData();
+                Vector velocity = new Vector(0,CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ());
                 if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
                     double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
                     velocity.setX(velocity.getX() / length);
                     velocity.setY(velocity.getY() / length);
                     velocity.setZ(velocity.getZ() / length);
                 }
+                velocity.add(new Vector(ladder.getAttachedFace().getModX(), 0, ladder.getAttachedFace().getModZ()));
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
             } else if (event.getTo().getBlock().getType() == Material.VINE) {
                 BlockFace movementFace = BlockFace.SELF;
@@ -45,13 +47,14 @@ public class MoreRails extends AbstractCraftBookMechanic {
                     }
                 if(movementFace == BlockFace.SELF)
                     return;
-                Vector velocity = new Vector(movementFace.getModX(),CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,movementFace.getModZ());
+                Vector velocity = new Vector(0,CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,0);
                 if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
                     double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
                     velocity.setX(velocity.getX() / length);
                     velocity.setY(velocity.getY() / length);
                     velocity.setZ(velocity.getZ() / length);
                 }
+                velocity.add(new Vector(movementFace.getModX(), 0, movementFace.getModZ()));
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
             }
     }
