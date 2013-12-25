@@ -80,9 +80,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(canBreakBlock(originalBlock, usedBlock.getRelative(face)))
                 if(searchBlock(event, usedBlock.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
-                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
+                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getType()) > 0) {
                         heldItem.setDurability((short) (heldItem.getDurability() + 1));
-                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getTypeId()))
+                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getType()))
                             event.getPlayer().setItemInHand(heldItem);
                         else
                             event.getPlayer().setItemInHand(null);
@@ -135,9 +135,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(canBreakBlock(originalBlock, block.getRelative(face)))
                 if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
-                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getTypeId()) > 0) {
+                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getType()) > 0) {
                         heldItem.setDurability((short) (heldItem.getDurability() + 1));
-                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getTypeId()))
+                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getType()))
                             event.getPlayer().setItemInHand(heldItem);
                         else
                             event.getPlayer().setItemInHand(null);

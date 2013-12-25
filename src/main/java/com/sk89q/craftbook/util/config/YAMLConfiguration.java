@@ -510,6 +510,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Snow Configuration Listener
+        snowEnable = config.getBoolean("mechanics.snow.enable", false);
         snowPiling = config.getBoolean("mechanics.snow.piling", false);
         snowTrample = config.getBoolean("mechanics.snow.trample", false);
         snowPartialTrample = config.getBoolean("mechanics.snow.partial-trample-only", false);

@@ -40,7 +40,21 @@ import com.sk89q.worldedit.blocks.BlockID;
  */
 public class Snow extends AbstractCraftBookMechanic {
 
-    private Map<Location, BukkitTask> tasks = new HashMap<Location, BukkitTask>();
+    private Map<Location, BukkitTask> tasks;
+
+    @Override
+    public boolean enable() {
+        tasks = new HashMap<Location, BukkitTask>();
+
+        return true;
+    }
+
+    @Override
+    public void disable() {
+        for(BukkitTask task : tasks.values())
+            task.cancel();
+        tasks = null;
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSnowballHit(ProjectileHitEvent event) {
@@ -401,12 +415,5 @@ public class Snow extends AbstractCraftBookMechanic {
     public boolean isValidBlock(Block id) {
 
         return canPassThrough(id) || isSnowBlock(id);
-    }
-
-    @Override
-    public void disable () {
-        for(BukkitTask task : tasks.values())
-            task.cancel();
-        tasks.clear();
     }
 }

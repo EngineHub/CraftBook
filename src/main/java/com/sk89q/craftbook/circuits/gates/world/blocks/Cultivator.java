@@ -99,7 +99,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
                     if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                         ItemStack item = c.getInventory().getItem(slot);
                         item.setDurability((short) (item.getDurability() + 1));
-                        if(item.getDurability() > ItemUtil.getMaxDurability(item.getTypeId()))
+                        if(item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
                             item = null;
                         c.getInventory().setItem(slot, item);
                         return true;

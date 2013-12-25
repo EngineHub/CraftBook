@@ -3,10 +3,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
@@ -94,17 +90,6 @@ public class MechanicalCore implements LocalComponent {
             mech.disable();
         mechanics = null;
         customCrafting = null;
-        Iterator<String> it = Elevator.flyingPlayers.iterator();
-        while(it.hasNext()) {
-            OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
-            if(!op.isOnline()) {
-                it.remove();
-                continue;
-            }
-            op.getPlayer().setFlying(false);
-            op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
-            it.remove();
-        }
         instance = null;
     }
 
@@ -124,7 +109,6 @@ public class MechanicalCore implements LocalComponent {
 
         // Let's register mechanics!
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
-        if (config.elevatorEnabled) plugin.registerMechanic(new Elevator.Factory());
         if (config.teleporterEnabled) plugin.registerMechanic(new Teleporter.Factory());
         if (config.areaEnabled) plugin.registerMechanic(new Area.Factory());
         if (config.cookingPotEnabled) plugin.registerMechanic(new CookingPot.Factory());
@@ -137,7 +121,7 @@ public class MechanicalCore implements LocalComponent {
         // New System Mechanics
         if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());
         if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
-        if (config.snowPiling || config.snowPlace) mechanics.add(new Snow());
+        if (config.snowEnable) mechanics.add(new Snow());
         if (config.customDropEnabled) mechanics.add(new CustomDrops());
         if (config.aiEnabled) mechanics.add(new AIMechanic());
         if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
@@ -159,6 +143,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.bridgeEnabled) mechanics.add(new Bridge());
         if (config.doorEnabled) mechanics.add(new Door());
         if (config.hiddenSwitchEnabled) mechanics.add(new HiddenSwitch());
+        if (config.elevatorEnabled) mechanics.add(new Elevator());
 
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
         if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}

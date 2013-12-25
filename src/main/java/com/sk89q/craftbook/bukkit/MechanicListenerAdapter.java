@@ -16,9 +16,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.Iterator;
-
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,7 +29,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -42,7 +38,6 @@ import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
 import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
-import com.sk89q.craftbook.mech.Elevator;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -69,22 +64,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  * @author sk89q
  */
 public class MechanicListenerAdapter implements Listener {
-
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
-
-        //Clean up mechanics that store players that we don't want anymore.
-        Iterator<String> it = Elevator.flyingPlayers.iterator();
-        while(it.hasNext()) {
-            String p = it.next();
-            if(event.getPlayer().getName().equalsIgnoreCase(p)) {
-                event.getPlayer().setFlying(false);
-                event.getPlayer().setAllowFlight(event.getPlayer().getGameMode() == GameMode.CREATIVE);
-                it.remove();
-                break;
-            }
-        }
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {

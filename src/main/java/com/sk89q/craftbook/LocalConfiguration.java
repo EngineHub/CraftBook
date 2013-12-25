@@ -191,6 +191,7 @@ public abstract class LocalConfiguration {
     public boolean signCopyEnabled;
     public ItemInfo signCopyItem;
     // Mechanics - Snow
+    public boolean snowEnable;
     public boolean snowPiling;
     public boolean snowTrample;
     public boolean snowPartialTrample;

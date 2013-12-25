@@ -17,8 +17,10 @@
 package com.sk89q.craftbook.mech;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,13 +28,17 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.material.Button;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
@@ -41,9 +47,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -52,133 +55,151 @@ import com.sk89q.worldedit.blocks.BlockType;
  * @author sk89q
  * @author hash
  */
-public class Elevator extends AbstractMechanic {
+public class Elevator extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<Elevator> {
+    @Override
+    public boolean enable() {
+        flyingPlayers = new HashSet<String>();
+        return true;
+    }
 
-        /**
-         * Explore around the trigger to find a functional elevator; throw if things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         *
-         * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
-         *
-         * @throws InvalidMechanismException if the area looked like it was intended to be an elevator, but it failed.
-         */
-        @Override
-        public Elevator detect(BlockWorldVector pt) throws InvalidMechanismException {
+    @Override
+    public void disable() {
 
-            Block block = BukkitUtil.toBlock(pt);
-            // check if this looks at all like something we're interested in first
-            Direction dir = isLift(block);
-            switch (dir) {
-                case UP:
-                case DOWN:
-                    return new Elevator(block, dir);
-                case RECV:
-                    throw new NoDepartureException();
-                default:
-                    break;
+        Iterator<String> it = flyingPlayers.iterator();
+        while(it.hasNext()) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
+            if(!op.isOnline()) {
+                it.remove();
+                continue;
             }
-            return null;
+            op.getPlayer().setFlying(false);
+            op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
+            it.remove();
         }
 
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public Elevator detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
+        flyingPlayers = null;
+    }
 
-            Direction dir = isLift(sign);
-            switch (dir) {
-                case UP:
-                    player.checkPermission("craftbook.mech.elevator");
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
 
-                    player.print("mech.lift.up-sign-created");
-                    sign.setLine(1, "[Lift Up]");
-                    break;
-                case DOWN:
-                    player.checkPermission("craftbook.mech.elevator");
-
-                    player.print("mech.lift.down-sign-created");
-                    sign.setLine(1, "[Lift Down]");
-                    break;
-                case RECV:
-                    player.checkPermission("craftbook.mech.elevator");
-
-                    player.print("mech.lift.target-sign-created");
-                    sign.setLine(1, "[Lift]");
-                    break;
-                default:
-                    return null;
+        //Clean up mechanics that store players that we don't want anymore.
+        Iterator<String> it = flyingPlayers.iterator();
+        while(it.hasNext()) {
+            String p = it.next();
+            if(event.getPlayer().getName().equalsIgnoreCase(p)) {
+                event.getPlayer().setFlying(false);
+                event.getPlayer().setAllowFlight(event.getPlayer().getGameMode() == GameMode.CREATIVE);
+                it.remove();
+                break;
             }
-            throw new ProcessedMechanismException();
         }
     }
 
-    /**
-     * @param trigger if you didn't already check if this is a wall sign with appropriate text,
-     *                you're going on Santa's naughty list.
-     * @param dir     the direction (UP or DOWN) in which we're looking for a destination
-     *
-     * @throws InvalidMechanismException
-     */
-    private Elevator(Block trigger, Direction dir) throws InvalidMechanismException {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
+
+        Direction dir = Direction.NONE;
+        if(event.getLine(1).equalsIgnoreCase("[lift down]")) dir = Direction.DOWN;
+        if(event.getLine(1).equalsIgnoreCase("[lift up]")) dir = Direction.UP;
+        if(event.getLine(1).equalsIgnoreCase("[lift]")) dir = Direction.RECV;
+
+        if(dir == Direction.NONE) return;
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(!player.hasPermission("craftbook.mech.elevator")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
+        }
+
+        switch (dir) {
+            case UP:
+                player.print("mech.lift.up-sign-created");
+                event.setLine(1, "[Lift Up]");
+                break;
+            case DOWN:
+                player.print("mech.lift.down-sign-created");
+                event.setLine(1, "[Lift Down]");
+                break;
+            case RECV:
+                player.print("mech.lift.target-sign-created");
+                event.setLine(1, "[Lift]");
+                break;
+            default:
+                return;
+        }
+    }
+
+    public static enum Direction {
+        NONE, UP, DOWN, RECV
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onRightClick(PlayerInteractEvent event) {
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        // check if this looks at all like something we're interested in first
+        Direction dir = isLift(event.getClickedBlock());
+        switch (dir) {
+            case UP:
+            case DOWN:
+                break;
+            case RECV:
+                localPlayer.printError("mech.lift.no-depart");
+                return;
+            default:
+                return;
+        }
 
         // find destination sign
-        shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
-        int f = dir == Direction.UP ? trigger.getWorld().getMaxHeight() : 0;
-        destination = trigger;
-        if (destination.getY() == f) // heading up from top or down from bottom
-            throw new InvalidConstructionException();
+        BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
+        int f = dir == Direction.UP ? event.getClickedBlock().getWorld().getMaxHeight() : 0;
+        Block destination = event.getClickedBlock();
+        // heading up from top or down from bottom
+        if (destination.getY() == f) {
+            localPlayer.printError("mech.lift.no-destination");
+            return;
+        }
         boolean loopd = false;
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(trigger), BukkitUtil.toChangedSign(destination)))
+            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(event.getClickedBlock()), BukkitUtil.toChangedSign(destination)))
                 break; // found it!
 
-            if (destination.getY() == trigger.getY()) throw new InvalidConstructionException();
+            if (destination.getY() == event.getClickedBlock().getY()) {
+                localPlayer.printError("mech.lift.no-destination");
+                return;
+            }
             if (CraftBookPlugin.inst().getConfiguration().elevatorLoop && !loopd) {
-                if (destination.getY() == trigger.getWorld().getMaxHeight()) { // hit the top of the world
+                if (destination.getY() == event.getClickedBlock().getWorld().getMaxHeight()) { // hit the top of the world
                     org.bukkit.Location low = destination.getLocation();
                     low.setY(0);
                     destination = destination.getWorld().getBlockAt(low);
                     loopd = true;
                 } else if (destination.getY() == 0) { // hit the bottom of the world
                     org.bukkit.Location low = destination.getLocation();
-                    low.setY(trigger.getWorld().getMaxHeight());
+                    low.setY(event.getClickedBlock().getWorld().getMaxHeight());
                     destination = destination.getWorld().getBlockAt(low);
                     loopd = true;
                 }
             } else {
-                if (destination.getY() == trigger.getWorld().getMaxHeight()) // hit the top of the world
-                    throw new InvalidConstructionException();
-                else if (destination.getY() == 0) // hit the bottom of the world
-                    throw new InvalidConstructionException();
+                if (destination.getY() == event.getClickedBlock().getWorld().getMaxHeight()) {
+                    localPlayer.printError("mech.lift.no-destination");
+                    return;
+                }
+                else if (destination.getY() == 0) {
+                    localPlayer.printError("mech.lift.no-destination");
+                    return;
+                }
             }
         }
-        // and if we made it here without exceptions, destination is set.
-
-        // finding solid ground is deferred until a click event comes in
-        // since we teleport the player straight up, and the sign can be
-        // clicked from blocks other than the ones directly in the elevator
-        // shaft.
-    }
-
-    private final BlockFace shift;
-    private Block destination;
-
-    public static enum Direction {
-        NONE, UP, DOWN, RECV
-    }
-
-    @Override
-    public void onRightClick(PlayerInteractEvent event) {
-
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(task != null) {
             localPlayer.printError("mech.lift.busy");
@@ -192,17 +213,17 @@ public class Elevator extends AbstractMechanic {
             return;
         }
 
-        makeItSo(localPlayer);
+        makeItSo(localPlayer, destination, shift);
 
         event.setCancelled(true);
     }
 
-    private void makeItSo(LocalPlayer player) {
+    private void makeItSo(LocalPlayer player, Block destination, BlockFace shift) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getPosition().getZ()));
         // well, unless that's already a ceiling.
-        if (!occupiable(floor)) {
+        if (!BlockType.canPassThrough(floor.getTypeId())) {
             floor = floor.getRelative(BlockFace.DOWN);
         }
 
@@ -211,7 +232,7 @@ public class Elevator extends AbstractMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (occupiable(floor)) {
+            if (BlockType.canPassThrough(floor.getTypeId())) {
                 foundFree++;
             } else {
                 foundGround = true;
@@ -231,12 +252,12 @@ public class Elevator extends AbstractMechanic {
             return;
         }
 
-        teleportPlayer(player, floor);
+        teleportPlayer(player, floor, destination, shift);
     }
 
-    public static final HashSet<String> flyingPlayers = new HashSet<String>();
+    public HashSet<String> flyingPlayers;
 
-    public void teleportPlayer(final LocalPlayer player, final Block floor) {
+    public void teleportPlayer(final LocalPlayer player, final Block floor, final Block destination, final BlockFace shift) {
 
         final Location newLocation = BukkitUtil.toLocation(player.getPosition());
         newLocation.setY(floor.getY() + 1);
@@ -269,7 +290,7 @@ public class Elevator extends AbstractMechanic {
 
                     if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
                         p.teleport(newLocation);
-                        teleportFinish(player);
+                        teleportFinish(player, destination, shift);
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         task.cancel();
@@ -299,7 +320,7 @@ public class Elevator extends AbstractMechanic {
                     } else {
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
-                        teleportFinish(player);
+                        teleportFinish(player, destination, shift);
                         task.cancel();
                         task = null;
                         flyingPlayers.remove(p.getName());
@@ -321,13 +342,13 @@ public class Elevator extends AbstractMechanic {
             }
             player.setPosition(BukkitUtil.toLocation(newLocation).getPosition(), newLocation.getPitch(), newLocation.getYaw());
 
-            teleportFinish(player);
+            teleportFinish(player, destination, shift);
         }
     }
 
     private BukkitTask task;
 
-    public void teleportFinish(LocalPlayer player) {
+    public void teleportFinish(LocalPlayer player, Block destination, BlockFace shift) {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
@@ -390,30 +411,5 @@ public class Elevator extends AbstractMechanic {
         if (sign.getLine(1).equalsIgnoreCase("[Lift Down]")) return Direction.DOWN;
         if (sign.getLine(1).equalsIgnoreCase("[Lift]")) return Direction.RECV;
         return Direction.NONE;
-    }
-
-    private static boolean occupiable(Block block) {
-
-        return BlockType.canPassThrough(block.getTypeId());
-    }
-
-    private static class NoDepartureException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = 3845311158458450314L;
-
-        public NoDepartureException() {
-
-            super("mech.lift.no-depart");
-        }
-    }
-
-    private static class InvalidConstructionException extends InvalidMechanismException {
-
-        private static final long serialVersionUID = 2306504048848430689L;
-
-        public InvalidConstructionException() {
-
-            super("mech.lift.no-destination");
-        }
     }
 }
