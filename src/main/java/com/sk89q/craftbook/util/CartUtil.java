@@ -17,7 +17,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class CartUtils {
+public class CartUtil {
 
     public static void reverse(Minecart cart) {
 

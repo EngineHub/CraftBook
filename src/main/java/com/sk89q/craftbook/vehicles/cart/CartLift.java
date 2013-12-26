@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.CartUtils;
+import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
@@ -59,7 +59,7 @@ public class CartLift extends CartBlockMechanism {
             }
         }
 
-        CartUtils.teleport(cart, new Location(destination.getWorld(), destination.getX(), destination.getY(), destination.getZ(), cart.getLocation().getYaw(), cart.getLocation().getPitch()));
+        CartUtil.teleport(cart, new Location(destination.getWorld(), destination.getX(), destination.getY(), destination.getZ(), cart.getLocation().getYaw(), cart.getLocation().getPitch()));
     }
 
     @Override

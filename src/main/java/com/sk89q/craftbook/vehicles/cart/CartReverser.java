@@ -1,5 +1,5 @@
 package com.sk89q.craftbook.vehicles.cart;
-import static com.sk89q.craftbook.util.CartUtils.reverse;
+import static com.sk89q.craftbook.util.CartUtil.reverse;
 
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;

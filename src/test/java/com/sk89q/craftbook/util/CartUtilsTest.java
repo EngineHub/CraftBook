@@ -12,7 +12,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(CartUtils.class)
+@PrepareForTest(CartUtil.class)
 public class CartUtilsTest {
 
     @Test
@@ -20,7 +20,7 @@ public class CartUtilsTest {
 
         Minecart cart = mock(Minecart.class);
         when(cart.getVelocity()).thenReturn(new Vector(0,1,0));
-        CartUtils.reverse(cart);
+        CartUtil.reverse(cart);
         verify(cart).setVelocity(new Vector(0,-1,0));
     }
 
@@ -28,7 +28,7 @@ public class CartUtilsTest {
     public void testStop() {
 
         Minecart cart = mock(Minecart.class);
-        CartUtils.stop(cart);
+        CartUtil.stop(cart);
         verify(cart).setVelocity(new Vector(0,0,0));
     }
 }

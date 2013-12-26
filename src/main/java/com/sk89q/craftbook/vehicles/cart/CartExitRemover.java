@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.CartUtils;
+import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 
 public class CartExitRemover extends AbstractCraftBookMechanic {
@@ -30,7 +30,7 @@ public class CartExitRemover extends AbstractCraftBookMechanic {
                 if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
                 if(CraftBookPlugin.inst().getConfiguration().minecartRemoveOnExitGiveItem) {
 
-                    ItemStack stack = CartUtils.getCartStack((Minecart) event.getVehicle());
+                    ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
 
                     if(event.getExited() instanceof Player) {
                         if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty() && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)

@@ -27,7 +27,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
     public void onChunkLoad(ChunkLoadEvent event) {
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (ent == null || ent.isDead())
+            if (ent == null || !ent.isValid())
                 continue;
             if (!(ent instanceof RideableMinecart))
                 continue;
@@ -49,9 +49,8 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         @Override
         public void run() {
 
-            if (cart.isDead() || !cart.isValid()) return;
-            if (cart != null && cart.isEmpty())
-                cart.remove();
+            if (cart == null || !cart.isValid() || !cart.isEmpty()) return;
+            cart.remove();
         }
     }
 }
