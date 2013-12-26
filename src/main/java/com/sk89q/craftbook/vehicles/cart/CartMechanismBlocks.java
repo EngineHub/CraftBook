@@ -3,10 +3,13 @@ package com.sk89q.craftbook.vehicles.cart;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.material.Attachable;
+import org.bukkit.material.Vine;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -77,18 +80,32 @@ public class CartMechanismBlocks {
 
         if (!RailUtil.isTrack(rail.getType()))
             throw new InvalidMechanismException("rail argument must be a rail!");
-        if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 2))) return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 2));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 3)))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 3));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1)))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.EAST, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1)))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.WEST, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1)))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.NORTH, 1));
-        else if (SignUtil.isSign(rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1)))
-            return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), rail.getRelative(BlockFace.DOWN, 1).getRelative(BlockFace.SOUTH, 1));
-        return new CartMechanismBlocks(rail, rail.getRelative(BlockFace.DOWN, 1), null);
+        BlockFace face = BlockFace.DOWN;
+
+        if (rail.getType() == Material.LADDER)
+            face = ((Attachable) rail.getState().getData()).getAttachedFace();
+        else if (rail.getType() == Material.VINE) {
+            Vine vine = (Vine) rail.getState().getData();
+            for(BlockFace test : LocationUtil.getDirectFaces()) {
+                if(vine.isOnFace(test)) {
+                    face = test;
+                    break;
+                }
+            }
+        }
+
+        if (SignUtil.isSign(rail.getRelative(face, 2))) return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 2));
+        else if (SignUtil.isSign(rail.getRelative(face, 3)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 3));
+        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1));
+        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.WEST, 1)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.WEST, 1));
+        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.NORTH, 1)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.NORTH, 1));
+        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.SOUTH, 1)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.SOUTH, 1));
+        return new CartMechanismBlocks(rail, rail.getRelative(face, 1), null);
     }
 
     /**
