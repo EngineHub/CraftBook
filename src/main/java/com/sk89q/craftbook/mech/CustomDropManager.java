@@ -235,9 +235,9 @@ public final class CustomDropManager {
         if (split3.length > 2) throw new CustomDropParseException(prelude + ": invalid number drops range");
         int countMin = Integer.parseInt(split3[0]);
         int countMax = split3.length == 1 ? countMin : Integer.parseInt(split3[1]);
-        int chance = 100;
+        double chance = 100;
         try {
-            chance = Integer.parseInt(RegexUtil.PERCENT_PATTERN.split(s)[1]);
+            chance = Double.parseDouble(RegexUtil.PERCENT_PATTERN.split(s)[1]);
         } catch (Exception ignored) {
         }
 
@@ -280,10 +280,10 @@ public final class CustomDropManager {
         public final int countMin;
         public final int countMax;
         public final boolean append;
-        public final int chance;
+        public final double chance;
         public final ItemMeta meta;
 
-        public DropDefinition(int id, byte data, ItemMeta meta, int countMin, int countMax, int chance, boolean append) {
+        public DropDefinition(int id, byte data, ItemMeta meta, int countMin, int countMax, double chance, boolean append) {
 
             if (countMax < countMin) {
                 int temp = countMin;
