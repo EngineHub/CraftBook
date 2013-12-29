@@ -273,6 +273,10 @@ public class RecipeManager extends LocalConfiguration {
             if (permNode != null)
                 addAdvancedData("permission-node", permNode);
 
+            String permError = config.getString("crafting-recipes." + id + ".permission-error", null);
+            if (permError != null)
+                addAdvancedData("permission-error", permError);
+
             List<String> actions = config.getKeys("crafting-recipes." + id + ".craft-actions");
 
             if(actions != null && !actions.isEmpty()) {
@@ -316,6 +320,8 @@ public class RecipeManager extends LocalConfiguration {
             config.setProperty("crafting-recipes." + id + ".results", resz);
             if(hasAdvancedData("permission-node"))
                 config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
+            if(hasAdvancedData("permission-error"))
+                config.setProperty("crafting-recipes." + id + ".permission-error", getAdvancedData("permission-error"));
             if(hasAdvancedData("commands-player") || hasAdvancedData("commands-console")) {
                 config.addNode("crafting-recipes." + id + ".craft-actions");
                 if(hasAdvancedData("commands-player"))

@@ -181,7 +181,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     if(p != null && recipe.hasAdvancedData("permission-node")) {
                         CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
                         if(!p.hasPermission((String) recipe.getAdvancedData("permission-node"))) {
-                            lp.printError("mech.custom-crafting.recipe-permission");
+                            if(recipe.hasAdvancedData("permission-error"))
+                                lp.printError((String) recipe.getAdvancedData("permission-error"));
+                            else
+                                lp.printError("mech.custom-crafting.recipe-permission");
                             ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
                             return;
                         }
