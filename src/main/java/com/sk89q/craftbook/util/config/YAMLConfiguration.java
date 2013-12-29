@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
@@ -551,6 +552,9 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
         xpStorerBlock = new ItemInfo(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
+
+        config.setComment("mechanics.xp-storer.require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
+        xpStorerSneaking = TernaryState.getFromString(config.getString("mechanics.xp-storer.require-sneaking-state", "no"));
 
 
         /* Vehicle Configuration */

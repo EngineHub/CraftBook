@@ -6,10 +6,22 @@ public enum TernaryState {
 
     public static TernaryState getFromString(String s) {
 
-        if(s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true") || s.equalsIgnoreCase("y") || s.equalsIgnoreCase("t") || s.equalsIgnoreCase("1"))
+        s = s.toLowerCase();
+
+        if(s.equals("yes") || s.equals("true") || s.equals("y") || s.equals("t") || s.equals("1"))
             return TRUE;
-        if(s.equalsIgnoreCase("no") || s.equalsIgnoreCase("false") || s.equalsIgnoreCase("n") || s.equalsIgnoreCase("f") || s.equalsIgnoreCase("0"))
+        if(s.equals("no") || s.equals("false") || s.equals("n") || s.equals("f") || s.equals("0") || s.equals("not"))
             return FALSE;
         return NONE;
+    }
+
+    public boolean doesPass(boolean bool) {
+        if(this == TRUE && bool)
+            return true;
+        if(this == FALSE && !bool)
+            return true;
+        if(this == NONE)
+            return true;
+        return false;
     }
 }

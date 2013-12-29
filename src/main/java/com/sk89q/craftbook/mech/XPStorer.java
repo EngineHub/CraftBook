@@ -20,7 +20,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (player.isSneaking() || event.getPlayer().getLevel() < 1)
+        if (!CraftBookPlugin.inst().getConfiguration().xpStorerSneaking.doesPass(player.isSneaking()) || event.getPlayer().getLevel() < 1)
             return;
 
         if(!player.hasPermission("craftbook.mech.xpstore.use")) {

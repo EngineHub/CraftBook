@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.TernaryState;
 
 /**
  * A implementation of Configuration based off of {@link com.sk89q.worldedit.LocalConfiguration} for CraftBook.
@@ -218,6 +219,7 @@ public abstract class LocalConfiguration {
     // Mechanics - XPStorer
     public boolean xpStorerEnabled;
     public ItemInfo xpStorerBlock;
+    public TernaryState xpStorerSneaking;
 
     // Vehicles
     // Vehicles - Minecart Decay Options
