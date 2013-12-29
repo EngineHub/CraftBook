@@ -131,20 +131,20 @@ public class Playlist {
 
                         if(!areIdentical(players, lastPlayers)) {
 
-                            for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : players) {
-
-                                if(lastPlayers.contains(p))
-                                    continue;
-
-                                jNote.play(p.a.getName(), midiSequencer, p.b.a, p.b.b);
-                            }
-
                             for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : lastPlayers) {
 
                                 if(players.contains(p))
                                     continue;
 
                                 jNote.stop(p.a.getName());
+                            }
+
+                            for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : players) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.play(p.a.getName(), midiSequencer, p.b.a, p.b.b);
                             }
 
                             lastPlayers = (HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>) players.clone();
@@ -164,20 +164,20 @@ public class Playlist {
 
                         if(!lastPlayers.equals(players)) {
 
-                            for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : players) {
-
-                                if(lastPlayers.contains(p))
-                                    continue;
-
-                                jNote.play(p.a.getName(), stringSequencer, p.b.a, p.b.b);
-                            }
-
                             for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : lastPlayers) {
 
                                 if(players.contains(p))
                                     continue;
 
                                 jNote.stop(p.a.getName());
+                            }
+
+                            for(Tuple2<Player, Tuple2<WorldVector, Integer>> p : players) {
+
+                                if(lastPlayers.contains(p))
+                                    continue;
+
+                                jNote.play(p.a.getName(), stringSequencer, p.b.a, p.b.b);
                             }
 
                             lastPlayers = (HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>) players.clone();
