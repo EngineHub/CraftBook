@@ -183,10 +183,10 @@ public class ReportWriter {
 
         if(flags.contains("i")) {
 
-            appendHeader("Loaded Self Triggering Mechanics");
+            appendHeader("Loaded Self Triggering ICs");
 
             for(Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
-                log.put(mech.getKey().toString(), "%", mech.getValue().getSign().toString());
+                log.put(mech.getKey().toString(), "%s", mech.getValue().getSign().toString());
             }
         }
 
