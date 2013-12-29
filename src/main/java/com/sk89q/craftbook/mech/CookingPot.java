@@ -42,6 +42,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         event.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
         player.print("mech.cook.create");
 
+        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -115,6 +116,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
+        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getClickedBlock().getLocation());
+
         LocalPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -158,12 +161,15 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
+        if(!SignUtil.isSign(event.getBlock())) return;
+
         ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 
-        if(sign == null)
-            return;
+        if(!sign.getLine(1).equals("[Cook]")) return;
 
-        if (event.getNewCurrent() > event.getOldCurrent())
+        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+
+        if (event.isOn() && !event.isMinor())
             increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
 
         if(sign.hasChanged())
