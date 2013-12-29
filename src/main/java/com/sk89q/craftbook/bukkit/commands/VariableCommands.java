@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CircuitCore;
@@ -17,7 +18,6 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.worldedit.BlockWorldVector;
 
 public class VariableCommands {
 
@@ -132,9 +132,9 @@ public class VariableCommands {
         if(CircuitCore.inst() != null)
             if(CircuitCore.inst().getIcManager() != null) {//Make sure IC's are enabled.
 
-                Iterator<Entry<BlockWorldVector, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
+                Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
                 while(iterator.hasNext()) {
-                    Entry<BlockWorldVector, IC> ic = iterator.next();
+                    Entry<Location, IC> ic = iterator.next();
                     if(ic.getValue().getSign().hasVariable(namespace + "|" + variable) || ic.getValue().getSign().hasVariable(variable))
                         iterator.remove();
                 }

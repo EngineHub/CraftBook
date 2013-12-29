@@ -146,7 +146,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
@@ -175,8 +175,6 @@ public class CircuitCore implements LocalComponent {
     private ICManager icManager;
 
     private YAMLICConfiguration icConfiguration;
-
-    private ICMechanicFactory ICFactory;
 
     private File romFolder;
     private File midiFolder;
@@ -229,7 +227,6 @@ public class CircuitCore implements LocalComponent {
             }
         }
         icConfiguration = null;
-        ICFactory = null;
         ICManager.emptyCache();
         instance = null;
     }
@@ -252,11 +249,6 @@ public class CircuitCore implements LocalComponent {
         return midiFolder;
     }
 
-    public ICMechanicFactory getICFactory() {
-
-        return ICFactory;
-    }
-
     private void registerMechanics() {
 
         BukkitConfiguration config = CraftBookPlugin.inst().getConfiguration();
@@ -274,7 +266,7 @@ public class CircuitCore implements LocalComponent {
             getFireworkFolder();
 
             registerICs();
-            //FIXME plugin.registerMechanic(ICFactory = new ICMechanicFactory(getIcManager()));
+            mechanics.add(new ICMechanic(getIcManager()));
 
             try {
                 icConfiguration.load();
@@ -562,7 +554,7 @@ public class CircuitCore implements LocalComponent {
                 col = !col;
                 ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                if (!ICMechanicFactory.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase(Locale.ENGLISH))) {
+                if (!ICMechanic.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase(Locale.ENGLISH))) {
                     colour = col ? ChatColor.RED : ChatColor.DARK_RED;
                 }
                 strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"

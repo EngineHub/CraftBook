@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map.Entry;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
@@ -22,7 +23,6 @@ import com.sk89q.craftbook.mech.crafting.RecipeManager;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.LogListBlock;
-import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Writes reports.
@@ -180,7 +180,7 @@ public class ReportWriter {
 
             appendHeader("Loaded Self Triggering Mechanics");
 
-            for(Entry<BlockWorldVector, IC> mech : ICManager.getCachedICs().entrySet()) {
+            for(Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
                 log.put(mech.getKey().toString(), "%", mech.getValue().getSign().toString());
             }
         }

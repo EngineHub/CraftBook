@@ -27,7 +27,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.SearchArea;
 
@@ -115,7 +115,7 @@ public class MessageSender extends AbstractIC {
         public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
 
             if (!sign.getLine(2).equalsIgnoreCase(player.getName()))
-                if (!ICMechanicFactory.hasRestrictedPermissions(player, this, "mc1510"))
+                if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1510"))
                     throw new ICVerificationException("You don't have permission to use other players!");
         }
 

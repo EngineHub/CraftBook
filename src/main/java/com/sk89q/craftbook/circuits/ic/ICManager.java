@@ -27,10 +27,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import org.bukkit.Location;
+
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through CraftBook,
@@ -54,7 +55,7 @@ public class ICManager {
      */
     public final Map<String, String> longRegistered = new HashMap<String, String>();
 
-    private static final Map<BlockWorldVector, IC> cachedICs = new HashMap<BlockWorldVector, IC>();
+    private static final Map<Location, IC> cachedICs = new HashMap<Location, IC>();
 
     private static final Set<String> customPrefix = new HashSet<String>();
 
@@ -147,7 +148,7 @@ public class ICManager {
      *
      * @return true if ic is cached
      */
-    public static boolean isCachedIC(BlockWorldVector pt) {
+    public static boolean isCachedIC(Location pt) {
 
         return cachedICs.containsKey(pt);
     }
@@ -159,7 +160,7 @@ public class ICManager {
      *
      * @return cached ic.
      */
-    public static IC getCachedIC(BlockWorldVector pt) {
+    public static IC getCachedIC(Location pt) {
 
         return cachedICs.get(pt);
     }
@@ -170,7 +171,7 @@ public class ICManager {
      * @param pt of the ic
      * @param ic to add
      */
-    public static void addCachedIC(BlockWorldVector pt, IC ic) {
+    public static void addCachedIC(Location pt, IC ic) {
 
         if (!CraftBookPlugin.inst().getConfiguration().ICCached) return;
         cachedICs.put(pt, ic);
@@ -183,7 +184,7 @@ public class ICManager {
      *
      * @return the removed ic
      */
-    public static IC removeCachedIC(BlockWorldVector pt) {
+    public static IC removeCachedIC(Location pt) {
 
         if (cachedICs.containsKey(pt)) return cachedICs.remove(pt);
         return null;
@@ -194,7 +195,7 @@ public class ICManager {
      *
      * @param pt of the block break
      */
-    public static void unloadIC(BlockWorldVector pt) {
+    public static void unloadIC(Location pt) {
 
         removeCachedIC(pt);
     }
@@ -211,7 +212,7 @@ public class ICManager {
     /**
      * Gets the IC Cache map.
      */
-    public static Map<BlockWorldVector, IC> getCachedICs() {
+    public static Map<Location, IC> getCachedICs() {
 
         return cachedICs;
     }

@@ -18,7 +18,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.circuits.ic.ICMechanicFactory;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.circuits.jinglenote.MidiJingleSequencer;
@@ -169,7 +169,7 @@ public class Melody extends AbstractIC {
         public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
 
             if (sign.getLine(3).trim().isEmpty())
-                if (!ICMechanicFactory.hasRestrictedPermissions(player, this, "mc1270"))
+                if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1270"))
                     throw new ICVerificationException("You don't have permission to globally broadcast!");
         }
 
