@@ -181,17 +181,20 @@ public class ReportWriter {
         log.put("Mechanics Loaded", "%d", i);
         log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().thinkingMechanics.size());
 
+        append(log);
+        appendln();
+
         if(flags.contains("i")) {
 
             appendHeader("Loaded Self Triggering ICs");
 
+            log = new LogListBlock();
             for(Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
                 log.put(mech.getKey().toString(), "%s", mech.getValue().getSign().toString());
             }
+            append(log);
+            appendln();
         }
-
-        append(log);
-        appendln();
     }
 
     private void appendCustomCraftingInformation(CraftBookPlugin plugin) {

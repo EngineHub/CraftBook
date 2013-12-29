@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +112,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, Arrays.asList(stack), getBackBlock());
+            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(stack)), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
             if(!event.isValid())

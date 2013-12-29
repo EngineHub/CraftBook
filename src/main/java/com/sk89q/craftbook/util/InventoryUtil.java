@@ -165,7 +165,7 @@ public class InventoryUtil {
         List<ItemStack> leftovers = new ArrayList<ItemStack>(inv.getInventory().removeItem(stacks).values());
 
         if(!leftovers.isEmpty()) {
-            List<ItemStack> itemsToAdd = Arrays.asList(stacks);
+            List<ItemStack> itemsToAdd = new ArrayList<ItemStack>(Arrays.asList(stacks));
             for(ItemStack left : leftovers) {
                 itemsToAdd.remove(left);
             }

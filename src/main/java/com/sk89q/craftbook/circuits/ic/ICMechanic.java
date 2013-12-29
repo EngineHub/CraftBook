@@ -241,14 +241,21 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onThinkUnregister(SelfTriggerUnregisterEvent event) {
 
-        if(setupIC(event.getBlock()) != null) {
+        final Object[] icData = setupIC(event.getBlock());
+
+        if(icData != null) {
             if(event.getReason() == UnregisterReason.ERROR) {
                 if(CraftBookPlugin.inst().getConfiguration().ICBreakOnError) {
+                    ((IC) icData[2]).unload();
                     event.getBlock().breakNaturally();
                     return;
                 }
             }
-            if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded) event.setCancelled(true);
+            if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded) {
+                event.setCancelled(true);
+                return;
+            }
+            ((IC) icData[2]).unload();
         }
     }
 
@@ -276,12 +283,13 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
         ICManager.removeCachedIC(event.getBlock().getLocation());
         ((IC) icData[2]).onICBreak(event);
+        ((IC) icData[2]).unload();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
 
-        final Object[] icData = setupIC(event.getBlock());
+        final Object[] icData = setupIC(event.getPuttingBlock());
 
         if(icData == null) return;
 
@@ -363,6 +371,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             if (ICManager.isCachedIC(block.getLocation())) {
 
                 CraftBookPlugin.logDebugMessage("Existing IC found at selected location!", "ic-create");
+                ICManager.getCachedIC(block.getLocation()).unload();
                 ICManager.removeCachedIC(block.getLocation());
             }
 

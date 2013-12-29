@@ -78,6 +78,7 @@ public class Clock extends AbstractSelfTriggeredIC {
         }
 
         getSign().setLine(3, Short.toString(tick));
+        getSign().update(false);
     }
 
     @Override

@@ -92,7 +92,6 @@ public abstract class AbstractIC implements IC {
 
     @Override
     public void onICBreak(BlockBreakEvent event) {
-        ICManager.removeCachedIC(event.getBlock().getLocation());
     }
 
     @Override

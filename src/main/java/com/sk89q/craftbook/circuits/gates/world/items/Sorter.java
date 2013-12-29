@@ -90,7 +90,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         else
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
 
-        PipeRequestEvent event = new PipeRequestEvent(b, Arrays.asList(item), getBackBlock());
+        PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<ItemStack>(Arrays.asList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
         for(ItemStack it : event.getItems())

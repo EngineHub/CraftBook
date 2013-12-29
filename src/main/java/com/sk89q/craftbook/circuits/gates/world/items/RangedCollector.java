@@ -122,7 +122,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
                     Block pipe = getBackBlock().getRelative(back);
 
-                    PipeRequestEvent event = new PipeRequestEvent(pipe, Arrays.asList(stack), getBackBlock());
+                    PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(stack)), getBackBlock());
                     Bukkit.getPluginManager().callEvent(event);
 
                     if(event.getItems().isEmpty()) {

@@ -1,6 +1,6 @@
 package com.sk89q.craftbook;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -22,7 +22,7 @@ public class SelfTriggeringManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    public final Set<Location> thinkingMechanics = new LinkedHashSet<Location>();
+    public final Set<Location> thinkingMechanics = new HashSet<Location>();
 
     public void registerSelfTrigger(Chunk chunk) {
         for(BlockState state : chunk.getTileEntities()) {
