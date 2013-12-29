@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 
-public class BoatUncrashable extends AbstractCraftBookMechanic {
+public class Uncrashable extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleDestroy(VehicleDestroyEvent event) {

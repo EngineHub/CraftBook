@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 
-public class BoatWaterPlaceOnly extends AbstractCraftBookMechanic {
+public class WaterPlaceOnly extends AbstractCraftBookMechanic {
 
     @EventHandler
     public void playerInteractEvent(PlayerInteractEvent event) {

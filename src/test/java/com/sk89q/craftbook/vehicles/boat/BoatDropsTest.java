@@ -15,7 +15,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleDestroyEvent.class, BoatDrops.class})
+@PrepareForTest({Boat.class, VehicleDestroyEvent.class, Drops.class})
 public class BoatDropsTest {
 
     @Test
@@ -32,7 +32,7 @@ public class BoatDropsTest {
         when(event.getVehicle()).thenReturn(boat);
         when(event.getAttacker()).thenReturn(null);
 
-        new BoatDrops().onVehicleDestroy(event);
+        new Drops().onVehicleDestroy(event);
 
         verify(event).setCancelled(true);
         verify(boat).remove();

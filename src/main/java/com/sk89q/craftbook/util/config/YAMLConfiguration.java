@@ -691,9 +691,17 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartNoCollideFull = config.getBoolean("vehicles.minecart.no-collide.full-carts", false);
 
 
-        // Vehicles - Boat Options
-        boatNoCrash = config.getBoolean("vehicles.boat.disable-crashing", false);
-        boatBreakReturn = config.getBoolean("vehicles.boat.break-return-boat", false);
+        // Vehicles - Boat Drops Listener
+        boatDropsEnabled = config.getBoolean("vehicles.boat.drops.enable", false);
+
+
+        // Vehicles Boat Remove On Exit Listener
+        boatRemoveOnExitEnabled = config.getBoolean("vehicles.boat.remove-on-exit.enable", false);
+        boatRemoveOnExitGiveItem = config.getBoolean("vehicles.boat.remove-on-exit.give-item", false);
+
+
+        // Vehicles Boat Land Boats Listener
+        boatLandBoatsEnable = config.getBoolean("vehicles.boat.land-boats.enable", false);
 
 
         // Vehicles - Boat Remove Entities Listener
@@ -703,18 +711,13 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Boat Speed Modifier Listener
         boatSpeedModifierEnable = config.getBoolean("vehicles.boat.speed-modifiers.enable", false);
-        boatSpeedModifierMaxSpeed = config.getDouble("vehicles.boat.speed-modifiers.max-speed", 1);
-        boatSpeedModifierUnnoccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.unnoccupied-deceleration", 1);
-        boatSpeedModifierOccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.occupied-deceleration", 1);
+        boatSpeedModifierMaxSpeed = config.getDouble("vehicles.boat.speed-modifiers.max-speed", 0.4D);
+        boatSpeedModifierUnnoccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.unnoccupied-deceleration", -1);
+        boatSpeedModifierOccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.occupied-deceleration", 0.2);
 
 
-        // Vehicles Boat Land Boats Listener
-        boatLandBoatsEnable = config.getBoolean("vehicles.boat.land-boats.enable", false);
-
-
-        // Vehicles Boat Remove On Exit Listener
-        boatRemoveOnExitEnabled = config.getBoolean("vehicles.boat.remove-on-exit.enable", false);
-        boatRemoveOnExitGiveItem = config.getBoolean("vehicles.boat.remove-on-exit.give-item", false);
+        // Vehicles - Boat Uncrashable Listener
+        boatNoCrashEnabled = config.getBoolean("vehicles.boat.uncrashable.enable", false);
 
 
         // Vehicles Boat Water Place Only Listener

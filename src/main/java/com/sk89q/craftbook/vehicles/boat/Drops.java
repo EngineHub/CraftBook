@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 
-public class BoatDrops extends AbstractCraftBookMechanic {
+public class Drops extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleDestroy(VehicleDestroyEvent event) {

@@ -304,8 +304,8 @@ public abstract class LocalConfiguration {
     public boolean minecartNoCollideEmpty;
     public boolean minecartNoCollideFull;
     // Vehicles - Boat Options
-    public boolean boatNoCrash;
-    public boolean boatBreakReturn;
+    public boolean boatNoCrashEnabled;
+    public boolean boatDropsEnabled;
     // Vehicles - Boat Remove Entities Options
     public boolean boatRemoveEntitiesEnabled;
     public boolean boatRemoveEntitiesOtherBoats;

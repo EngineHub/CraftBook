@@ -14,7 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleDestroyEvent.class, BoatUncrashable.class})
+@PrepareForTest({Boat.class, VehicleDestroyEvent.class, Uncrashable.class})
 public class BoatUncrashableTest {
 
     @Test
@@ -25,10 +25,10 @@ public class BoatUncrashableTest {
 
         when(event.getVehicle()).thenReturn(boat);
 
-        new BoatUncrashable().onVehicleDestroy(event);
+        new Uncrashable().onVehicleDestroy(event);
 
         when(event.getAttacker()).thenReturn(mock(LivingEntity.class));
-        new BoatUncrashable().onVehicleDestroy(event);
+        new Uncrashable().onVehicleDestroy(event);
 
         verify(event).setCancelled(true);
         verify(boat).setVelocity(new Vector(0,0,0));

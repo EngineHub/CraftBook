@@ -8,7 +8,7 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class BoatSpeedModifiers extends AbstractCraftBookMechanic {
+public class SpeedModifiers extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleCreate(VehicleCreateEvent event) {

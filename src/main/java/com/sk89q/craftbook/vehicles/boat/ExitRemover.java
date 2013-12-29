@@ -13,7 +13,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
 
-public class BoatExitRemover extends AbstractCraftBookMechanic {
+public class ExitRemover extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleExit(VehicleExitEvent event) {

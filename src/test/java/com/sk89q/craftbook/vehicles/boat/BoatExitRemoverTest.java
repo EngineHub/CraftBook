@@ -29,7 +29,7 @@ import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleExitEvent.class, BoatExitRemover.class})
+@PrepareForTest({Boat.class, VehicleExitEvent.class, ExitRemover.class})
 public class BoatExitRemoverTest {
 
     @SuppressWarnings("serial")
@@ -57,7 +57,7 @@ public class BoatExitRemoverTest {
 
         when(event.getVehicle()).thenReturn(boat);
 
-        BoatExitRemover rem = new BoatExitRemover();
+        ExitRemover rem = new ExitRemover();
         rem.onVehicleExit(event);
 
         verify(server).getScheduler();
