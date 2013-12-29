@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8b1
+# CraftBook Configuration for Bukkit. Generated for version: 3.8b2
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -288,6 +288,7 @@ mechanics:
         enable: true
         item: INK_SACK:0
     snow:
+        enable: false
         piling: false
         trample: false
         partial-trample-only: false
@@ -327,6 +328,7 @@ mechanics:
     xp-storer:
         enable: true
         block: MOB_SPAWNER
+        require-sneaking-state: 'no'
 vehicles:
     minecart:
         decay-when-empty:
@@ -412,20 +414,22 @@ vehicles:
             empty-carts: true
             full-carts: false
     boat:
-        disable-crashing: false
-        break-return-boat: false
+        drops:
+            enable: false
+        remove-on-exit:
+            enable: false
+            give-item: false
+        land-boats:
+            enable: false
         remove-entities:
             enable: false
             remove-other-boats: false
         speed-modifiers:
             enable: false
-            max-speed: 1.0
-            unnoccupied-deceleration: 1.0
-            occupied-deceleration: 1.0
-        land-boats:
+            max-speed: 0.4
+            unnoccupied-deceleration: -1.0
+            occupied-deceleration: 0.2
+        uncrashable:
             enable: false
-        remove-on-exit:
-            enable: false
-            give-item: false
         water-place-only:
             enable: false
