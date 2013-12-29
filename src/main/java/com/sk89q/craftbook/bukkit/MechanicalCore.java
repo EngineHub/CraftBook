@@ -108,7 +108,6 @@ public class MechanicalCore implements LocalComponent {
         BukkitConfiguration config = plugin.getConfiguration();
 
         // Let's register mechanics!
-        if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
         if (config.cookingPotEnabled) plugin.registerMechanic(new CookingPot.Factory());
 
         for(Types type : BetterPistons.Types.values())
@@ -144,6 +143,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.areaEnabled) mechanics.add(new Area());
         if (config.cauldronEnabled) mechanics.add(new ImprovedCauldron());
         if (config.legacyCauldronEnabled) mechanics.add(new Cauldron());
+        if (config.gateEnabled) mechanics.add(new Gate());
 
 
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
