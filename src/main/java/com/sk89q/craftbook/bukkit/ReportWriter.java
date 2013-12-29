@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
+import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -173,7 +174,11 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        //FIXME log.put("Factories Loaded", "%d", plugin.getManager().factories.size());
+        int i = 0;
+        i += CraftBookPlugin.inst().getMechanics().size();
+        for(LocalComponent comp : CraftBookPlugin.inst().getComponents())
+            i += comp.getMechanics().size();
+        log.put("Mechanics Loaded", "%d", i);
         log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().thinkingMechanics.size());
 
         if(flags.contains("i")) {

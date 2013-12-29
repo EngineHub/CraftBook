@@ -166,6 +166,11 @@ public class CraftBookPlugin extends JavaPlugin {
         return Collections.unmodifiableList(components);
     }
 
+    public List<CraftBookMechanic> getMechanics() {
+
+        return mechanics;
+    }
+
     /**
      * Called on plugin enable.
      */
