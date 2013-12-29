@@ -21,7 +21,6 @@ import static com.sk89q.worldedit.bukkit.BukkitUtil.toWorldVector;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -77,11 +76,6 @@ public class MechanicManager {
      * not be trigger blocks and are probably not. Watch blocks aren't utilized yet.
      */
     private final WatchBlockManager watchBlockManager;
-
-    /**
-     * List of mechanics that think on a routine basis.
-     */
-    public final Set<SelfTriggeringMechanic> thinkingMechanics = new LinkedHashSet<SelfTriggeringMechanic>();
 
     /**
      * Construct the manager.
@@ -419,29 +413,6 @@ public class MechanicManager {
             ptMechanic = null;
         }
 
-        // No mechanic detected!
-        if (ptMechanic == null) {
-            for (Mechanic aMechanic : detectedMechanics) {
-                if (aMechanic == null) {
-                    continue;
-                }
-
-                // Register mechanic if it's a persistent type
-                if (aMechanic instanceof PersistentMechanic) {
-                    PersistentMechanic pm = (PersistentMechanic) aMechanic;
-                    triggersManager.register(pm);
-                    watchBlockManager.register(pm);
-
-                    if (aMechanic instanceof SelfTriggeringMechanic) {
-                        synchronized (this) {
-                            thinkingMechanics.add((SelfTriggeringMechanic) aMechanic);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
         // Lets handle what happens when ptMechanic is here
         if (ptMechanic != null) {
 
@@ -641,49 +612,5 @@ public class MechanicManager {
 
         if (event != null && event.isCancelled())
             return;
-
-        synchronized (this) {
-            thinkingMechanics.remove(mechanic);
-        }
-
-        if (mechanic instanceof PersistentMechanic) {
-            PersistentMechanic pm = (PersistentMechanic) mechanic;
-            triggersManager.deregister(pm);
-            watchBlockManager.deregister(pm);
-        }
-    }
-
-    /**
-     * Causes all thinking mechanics to think.
-     */
-    public void think() {
-
-        SelfTriggeringMechanic[] mechs;
-
-        synchronized (this) {
-            // Copy to array to get rid of concurrency snafus
-            mechs = thinkingMechanics.toArray(new SelfTriggeringMechanic[thinkingMechanics.size()]);
-        }
-
-        for (SelfTriggeringMechanic mechanic : mechs) {
-            if (mechanic instanceof PersistentMechanic && ((PersistentMechanic) mechanic).isActive()) {
-                try {
-                    mechanic.think();
-                } catch (Throwable t) { // Mechanic failed to think for some reason
-                    CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + mechanic.getClass().getSimpleName());
-                    BukkitUtil.printStacktrace(t);
-                    if(mechanic instanceof ICMechanic && CraftBookPlugin.inst().getConfiguration().ICBreakOnError)
-                        BukkitUtil.toSign(((ICMechanic)mechanic).getIC().getSign()).getBlock().breakNaturally();
-                }
-            } else {
-                unload(mechanic, null);
-                if(mechanic instanceof ICMechanic) {
-                    try {
-                        load(((ICMechanic) mechanic).getIC().getSign().getBlockVector(), null);
-                    } catch (InvalidMechanismException ignored) {
-                    }
-                }
-            }
-        }
     }
 }

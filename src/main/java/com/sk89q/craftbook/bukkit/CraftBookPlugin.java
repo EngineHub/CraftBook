@@ -45,6 +45,7 @@ import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicClock;
 import com.sk89q.craftbook.MechanicFactory;
 import com.sk89q.craftbook.MechanicManager;
+import com.sk89q.craftbook.SelfTriggeringManager;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
@@ -132,6 +133,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * List of common mechanics.
      */
     private List<CraftBookMechanic> mechanics;
+
+    /**
+     * The manager for SelfTriggering components.
+     */
+    private SelfTriggeringManager selfTriggerManager;
 
     /**
      * Construct objects. Actual loading occurs when the plugin is enabled, so
@@ -295,6 +301,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 CompatabilityUtil.init();
             }
         });
+
+        selfTriggerManager = new SelfTriggeringManager();
 
         mechanics = new ArrayList<CraftBookMechanic>();
 
@@ -841,6 +849,14 @@ public class CraftBookPlugin extends JavaPlugin {
     public LocalPlayer wrapPlayer(Player player) {
 
         return new BukkitPlayer(this, player);
+    }
+
+    /**
+     * Grabs the manager for self triggered components.
+     */
+    public SelfTriggeringManager getSelfTriggerManager() {
+
+        return selfTriggerManager;
     }
 
     /**

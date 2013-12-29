@@ -23,6 +23,6 @@ public class MechanicClock implements Runnable {
     @Override
     public void run() {
 
-        CraftBookPlugin.inst().getManager().think();
+        CraftBookPlugin.inst().getSelfTriggerManager().think();
     }
 }

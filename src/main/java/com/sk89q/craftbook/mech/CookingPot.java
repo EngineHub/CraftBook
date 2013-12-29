@@ -1,105 +1,59 @@
 package com.sk89q.craftbook.mech;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.PersistentMechanic;
-import com.sk89q.craftbook.SelfTriggeringMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
 
-public class CookingPot extends PersistentMechanic implements SelfTriggeringMechanic {
+public class CookingPot extends AbstractCraftBookMechanic {
 
-    /**
-     * Plugin.
-     */
-    private final CraftBookPlugin plugin = CraftBookPlugin.inst();
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
 
-    /**
-     * Location.
-     */
-    private final BlockWorldVector pt;
+        if (!event.getLine(1).equalsIgnoreCase("[Cook]")) return;
 
-    /**
-     * Construct a cooking pot for a location.
-     */
-    public CookingPot(BlockWorldVector pt) {
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        super();
-        this.pt = pt;
-    }
-
-    @Override
-    public boolean isActive() {
-
-        return true;
-    }
-
-    public static class Factory extends AbstractMechanicFactory<CookingPot> {
-
-        @Override
-        public CookingPot detect(BlockWorldVector pt) {
-
-            Block block = BukkitUtil.toLocation(pt).getBlock();
-            if (block.getType() == Material.WALL_SIGN) {
-                ChangedSign sign = BukkitUtil.toChangedSign(block);
-                if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                    return new CookingPot(pt);
-                }
-            }
-
-            return null;
+        if (!player.hasPermission("craftbook.mech.cook")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
         }
 
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public CookingPot detect(BlockWorldVector pt, LocalPlayer player, ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
-
-            if (sign.getLine(1).equalsIgnoreCase("[Cook]")) {
-                if (!player.hasPermission("craftbook.mech.cook")) throw new InsufficientPermissionsException();
-
-                sign.setLine(1, "[Cook]");
-                sign.setLine(2, "0");
-                sign.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
-                sign.update(false);
-                player.print("mech.cook.create");
-            } else return null;
-
-            throw new ProcessedMechanismException();
-        }
+        event.setLine(1, "[Cook]");
+        event.setLine(2, "0");
+        event.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
+        player.print("mech.cook.create");
 
     }
 
-    @Override
-    public void think() {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onThink(SelfTriggerThinkEvent event) {
+
+        if(!SignUtil.isSign(event.getBlock())) return;
+
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+
+        if(!sign.getLine(1).equals("[Cook]")) return;
 
         int lastTick = 0, oldTick;
-        Block block = BukkitUtil.toLocation(pt).getBlock();
-        ChangedSign sign = BukkitUtil.toChangedSign(block);
-
-        if(sign == null)
-            return;
 
         try {
             lastTick = Math.max(0, Integer.parseInt(sign.getLine(2).trim()));
@@ -108,13 +62,13 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
             sign.update(false);
         }
         oldTick = lastTick;
-        Block b = SignUtil.getBackBlock(block);
+        Block b = SignUtil.getBackBlock(event.getBlock());
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getType() == Material.CHEST) {
             Block fire = b.getRelative(0, 1, 0);
             if (fire.getType() == Material.FIRE) {
                 Chest chest = (Chest) cb.getState();
-                if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && plugin.getConfiguration().cookingPotOres) {
+                if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && CraftBookPlugin.inst().getConfiguration().cookingPotOres) {
                     if(lastTick < 500) {
                         lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
                         if(getMultiplier(sign) > 0)
@@ -126,7 +80,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
                             if (!ItemUtil.isStackValid(i)) continue;
                             ItemStack cooked = ItemUtil.getCookedResult(i);
                             if (cooked == null) {
-                                if (plugin.getConfiguration().cookingPotOres)
+                                if (CraftBookPlugin.inst().getConfiguration().cookingPotOres)
                                     cooked = ItemUtil.getSmeletedResult(i);
                                 if (cooked == null) continue;
                             }
@@ -151,61 +105,57 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         }
     }
 
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        Block block = event.getClickedBlock();
-        ChangedSign sign = BukkitUtil.toChangedSign(block);
-        LocalPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        if(sign == null)
-            return;
-
-        Block b = SignUtil.getBackBlock(block);
-        Block cb = b.getRelative(0, 2, 0);
-        if (cb.getType() == Material.CHEST) {
-            Player player = event.getPlayer();
-            if(!player.hasPermission("craftbook.mech.cook.refuel")) {
-                p.printError("mech.restock-permission");
-                event.setCancelled(true);
-                return;
-            }
-            if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getType())) {
-                Material itemID = player.getItemInHand().getType();
-                increaseMultiplier(sign, Ingredients.getTime(itemID));
-                if (player.getItemInHand().getAmount() <= 1) {
-                    player.setItemInHand(null);
-                } else {
-                    player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-                }
-                if(itemID == Material.LAVA_BUCKET && !plugin.getConfiguration().cookingPotDestroyBuckets)
-                    player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
-                p.print("mech.cook.add-fuel");
-                event.setCancelled(true);
-            } else if (plugin.getConfiguration().cookingPotSignOpen) {
-                player.openInventory(((Chest) cb.getState()).getBlockInventory());
-                event.setCancelled(true);
-            }
-        }
-
-        if(sign.hasChanged())
-            sign.update(false);
-    }
-
-    @Override
-    public void onLeftClick(PlayerInteractEvent event) {
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        if(!SignUtil.isSign(event.getClickedBlock())) return;
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getClickedBlock());
 
-        if(sign == null)
-            return;
+        if(!sign.getLine(1).equals("[Cook]")) return;
 
-        event.getPlayer().setFireTicks(getMultiplier(sign)+40);
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        player.printError("mech.cook.ouch");
+        LocalPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block b = SignUtil.getBackBlock(event.getClickedBlock());
+            Block cb = b.getRelative(0, 2, 0);
+            if (cb.getType() == Material.CHEST) {
+                Player player = event.getPlayer();
+                if(!player.hasPermission("craftbook.mech.cook.refuel")) {
+                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        p.printError("mech.restock-permission");
+                    event.setCancelled(true);
+                    return;
+                }
+                if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getType())) {
+                    Material itemID = player.getItemInHand().getType();
+                    increaseMultiplier(sign, Ingredients.getTime(itemID));
+                    if (player.getItemInHand().getAmount() <= 1) {
+                        player.setItemInHand(null);
+                    } else {
+                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                    }
+                    if(itemID == Material.LAVA_BUCKET && !CraftBookPlugin.inst().getConfiguration().cookingPotDestroyBuckets)
+                        player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
+                    p.print("mech.cook.add-fuel");
+                    event.setCancelled(true);
+                } else if (CraftBookPlugin.inst().getConfiguration().cookingPotSignOpen) {
+                    player.openInventory(((Chest) cb.getState()).getBlockInventory());
+                    event.setCancelled(true);
+                }
+            }
+
+            if(sign.hasChanged())
+                sign.update(false);
+        } else {
+            event.getPlayer().setFireTicks(getMultiplier(sign)+40);
+            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            player.printError("mech.cook.ouch");
+        }
     }
 
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
@@ -222,7 +172,7 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
 
     public void setMultiplier(ChangedSign sign, int amount) {
 
-        if(!plugin.getConfiguration().cookingPotFuel)
+        if(!CraftBookPlugin.inst().getConfiguration().cookingPotFuel)
             amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
     }
@@ -243,17 +193,11 @@ public class CookingPot extends PersistentMechanic implements SelfTriggeringMech
         try {
             multiplier = Integer.parseInt(sign.getLine(3).trim());
         } catch (Exception e) {
-            multiplier = plugin.getConfiguration().cookingPotFuel ? 0 : 1;
+            multiplier = CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
         }
-        if (multiplier <= 0 && !plugin.getConfiguration().cookingPotFuel) return 1;
+        if (multiplier <= 0 && !CraftBookPlugin.inst().getConfiguration().cookingPotFuel) return 1;
         return Math.max(0, multiplier);
-    }
-
-    @Override
-    public List<BlockWorldVector> getWatchedPositions() {
-
-        return Arrays.asList(pt);
     }
 
     private enum Ingredients {

@@ -213,6 +213,11 @@ public class ChangedSign {
                 ^ getRawData() * 1103515245 + 12345) * 1103515245 + 12345;
     }
 
+    @Override
+    public String toString() {
+        return lines[0] + "|" + lines[1] + "|" + lines[2] + "|" + lines[3];
+    }
+
     public boolean hasVariable(String var) {
 
         var = var.toLowerCase(Locale.ENGLISH);
