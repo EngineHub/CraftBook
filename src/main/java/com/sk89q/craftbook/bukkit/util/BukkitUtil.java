@@ -76,6 +76,10 @@ public class BukkitUtil {
         return new ChangedSign(sign, lines, player);
     }
 
+    public static Block toBlock(ChangedSign sign) {
+        return sign.getSign().getBlock();
+    }
+
     public static Sign toSign(ChangedSign sign) {
 
         try {
