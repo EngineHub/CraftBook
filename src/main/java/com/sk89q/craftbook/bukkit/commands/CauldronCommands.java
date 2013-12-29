@@ -27,8 +27,9 @@ public class CauldronCommands {
     @CommandPermissions("craftbook.mech.cauldron.reload")
     public void reload(CommandContext context, CommandSender sender) {
 
+        if(ImprovedCauldron.instance == null) return;
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
-        ImprovedCauldron.Factory.INSTANCE.recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.inst().getLogger());
+        ImprovedCauldron.instance.recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.inst().getLogger());
         sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
     }
 }

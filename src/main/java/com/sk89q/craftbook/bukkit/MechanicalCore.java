@@ -111,7 +111,6 @@ public class MechanicalCore implements LocalComponent {
         if (config.gateEnabled) plugin.registerMechanic(new Gate.Factory());
         if (config.cookingPotEnabled) plugin.registerMechanic(new CookingPot.Factory());
         if (config.legacyCauldronEnabled) plugin.registerMechanic(new Cauldron.Factory());
-        if (config.cauldronEnabled) plugin.registerMechanic(new ImprovedCauldron.Factory());
 
         for(Types type : BetterPistons.Types.values())
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
@@ -144,6 +143,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.elevatorEnabled) mechanics.add(new Elevator());
         if (config.teleporterEnabled) mechanics.add(new Teleporter());
         if (config.areaEnabled) mechanics.add(new Area());
+        if (config.cauldronEnabled) mechanics.add(new ImprovedCauldron());
 
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
         if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}

@@ -21,14 +21,12 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class ImprovedCauldronCookbook extends LocalConfiguration {
 
-    public static ImprovedCauldronCookbook INSTANCE;
     private Collection<Recipe> recipes;
     protected final YAMLProcessor config;
     protected final Logger logger;
 
     public ImprovedCauldronCookbook(YAMLProcessor config, Logger logger) {
 
-        INSTANCE = this;
         this.config = config;
         this.logger = logger;
         load();
@@ -51,6 +49,10 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
         if (keys != null)
             for (String key : keys)
                 recipes.add(new Recipe(key, config));
+    }
+
+    public boolean hasRecipes() {
+        return recipes.size() > 0;
     }
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {

@@ -12,117 +12,94 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * @author Silthus
  */
-public class ImprovedCauldron extends AbstractMechanic implements Listener {
+public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
+    public static ImprovedCauldron instance;
+    public ImprovedCauldronCookbook recipes;
 
-    public static class Factory extends AbstractMechanicFactory<ImprovedCauldron> {
+    @Override
+    public boolean enable() {
 
-        private CraftBookPlugin plugin = CraftBookPlugin.inst();
-        public static Factory INSTANCE;
-        public ImprovedCauldronCookbook recipes;
+        instance = this;
+        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
+        recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
-        public Factory() {
-
-            INSTANCE = this;
-            plugin.createDefaultConfiguration(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
-            recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(plugin.getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), plugin.getLogger());
-        }
-
-        @Override
-        public ImprovedCauldron detect(BlockWorldVector pos) throws InvalidMechanismException {
-
-            if (isCauldron(pos)) return new ImprovedCauldron(BukkitUtil.toBlock(pos), recipes);
-            return null;
-        }
-
-        private boolean isCauldron(BlockWorldVector pos) {
-
-            Block block = BukkitUtil.toBlock(pos);
-            if (block.getType() == Material.CAULDRON) {
-                Cauldron cauldron = (Cauldron) block.getState().getData();
-                return block.getRelative(BlockFace.DOWN).getType() == Material.FIRE && cauldron.isFull();
-            }
-            return false;
-        }
-
-    }
-
-    private Block block;
-    private ImprovedCauldronCookbook cookbook;
-
-    private ImprovedCauldron(Block block, ImprovedCauldronCookbook recipes) {
-
-        super();
-        this.block = block;
-        cookbook = recipes;
+        return recipes.hasRecipes();
     }
 
     @Override
+    public void disable() {
+        recipes = null;
+        instance = null;
+    }
+
+    private boolean isCauldron(Block block) {
+
+        if (block.getType() == Material.CAULDRON && block.getRelative(BlockFace.DOWN).getType() == Material.FIRE)
+            return ((Cauldron) block.getState().getData()).isFull();
+        return false;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!plugin.getConfiguration().cauldronEnabled) return;
-        LocalPlayer player = plugin.wrapPlayer(event.getPlayer());
-        if (block.equals(event.getClickedBlock())) {
-            if (!player.hasPermission("craftbook.mech.cauldron.use")) {
-                if(plugin.getConfiguration().showPermissionMessages)
-                    player.printError("mech.use-permission");
+        if(!isCauldron(event.getClickedBlock())) return;
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (!player.hasPermission("craftbook.mech.cauldron.use")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.use-permission");
+            return;
+        }
+        try {
+            Collection<Item> items = getItems(event.getClickedBlock());
+            ImprovedCauldronCookbook.Recipe recipe = recipes.getRecipe(CauldronItemStack.convert(items));
+
+            // lets check permissions for that recipe
+            if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
+                    && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
+                player.printError("mech.cauldron.permissions");
                 return;
             }
-            try {
-                Collection<Item> items = getItems();
-                ImprovedCauldronCookbook.Recipe recipe = cookbook.getRecipe(CauldronItemStack.convert(items));
 
-                // lets check permissions for that recipe
-                if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
-                        && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
-                    player.printError("mech.cauldron.permissions");
-                    return;
-                }
-
-                if (!plugin.getConfiguration().cauldronUseSpoons) {
-                    cook(recipe, items);
-                    player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
-                    block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-                    event.setCancelled(true);
-                } else { // Spoons
-                    if (event.getPlayer().getItemInHand() == null) return;
-                    if (isItemSpoon(event.getPlayer().getItemInHand().getType())) {
-                        double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
-                        double ran = plugin.getRandom().nextDouble();
-                        event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short) 1));
-                        if (chance <= ran) {
-                            cook(recipe, items);
-                            player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());
-                            block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-                            event.setCancelled(true);
-                        } else {
-                            player.print("mech.cauldron.stir");
-                        }
+            if (!CraftBookPlugin.inst().getConfiguration().cauldronUseSpoons) {
+                cook(event.getClickedBlock(), recipe, items);
+                player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+                event.getClickedBlock().getWorld().createExplosion(event.getClickedBlock().getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                event.setCancelled(true);
+            } else { // Spoons
+                if (event.getPlayer().getItemInHand() == null) return;
+                if (isItemSpoon(event.getPlayer().getItemInHand().getType())) {
+                    double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
+                    double ran = CraftBookPlugin.inst().getRandom().nextDouble();
+                    event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short) 1));
+                    if (chance <= ran) {
+                        cook(event.getClickedBlock(), recipe, items);
+                        player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());
+                        event.getClickedBlock().getWorld().createExplosion(event.getClickedBlock().getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                        event.setCancelled(true);
+                    } else {
+                        player.print("mech.cauldron.stir");
                     }
                 }
-            } catch (UnknownRecipeException e) {
-                player.printError(e.getMessage());
             }
+        } catch (UnknownRecipeException e) {
+            player.printError(e.getMessage());
         }
     }
 
@@ -169,7 +146,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
      * @param recipe
      * @param items
      */
-    private void cook(ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
+    private void cook(Block block, ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
         // first lets destroy all items inside the cauldron
         for (Item item : items)
             item.remove();
@@ -179,7 +156,7 @@ public class ImprovedCauldron extends AbstractMechanic implements Listener {
         }
     }
 
-    private Collection<Item> getItems() {
+    private Collection<Item> getItems(Block block) {
 
         List<Item> items = new ArrayList<Item>();
         for (Entity entity : block.getChunk().getEntities()) {
