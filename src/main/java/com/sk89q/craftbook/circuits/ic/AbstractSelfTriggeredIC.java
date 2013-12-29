@@ -11,6 +11,11 @@ public abstract class AbstractSelfTriggeredIC extends AbstractIC implements Self
     }
 
     @Override
+    public void think(ChipState chip) {
+        trigger(chip);
+    }
+
+    @Override
     public boolean isActive() {
 
         return true;
