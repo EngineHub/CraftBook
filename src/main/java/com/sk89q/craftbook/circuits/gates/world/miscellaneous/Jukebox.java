@@ -2,7 +2,6 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -64,7 +63,7 @@ public class Jukebox extends AbstractIC {
 
         if(playlist == null) return; //Heh?
 
-        Map<Player, SearchArea> players = new WeakHashMap<Player, SearchArea>();
+        Map<Player, SearchArea> players = new HashMap<Player, SearchArea>();
         for(Player p : Bukkit.getServer().getOnlinePlayers()) {
             if(area != null && !area.isWithinArea(p.getLocation())) continue;
             players.put(p, area);

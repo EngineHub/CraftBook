@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         band = getLine(2);
         if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
 
-        listening = new WeakHashMap<Player, SearchArea>();
+        listening = new HashMap<Player, SearchArea>();
     }
 
     @Override

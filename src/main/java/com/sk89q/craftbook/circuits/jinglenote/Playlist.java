@@ -6,11 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -45,8 +45,8 @@ public class Playlist {
 
     public Playlist(String name) {
 
-        players = new WeakHashMap<Player, SearchArea>();
-        lastPlayers = new WeakHashMap<Player, SearchArea>();
+        players = new HashMap<Player, SearchArea>();
+        lastPlayers = new HashMap<Player, SearchArea>();
         playlist = name;
         try {
             readPlaylist();
@@ -98,20 +98,20 @@ public class Playlist {
 
     public void setPlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
+        lastPlayers = new HashMap<Player, SearchArea>(this.players);
         this.players.clear();
         this.players.putAll(players);
     }
 
     public void addPlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
+        lastPlayers = new HashMap<Player, SearchArea>(this.players);
         this.players.putAll(players);
     }
 
     public void removePlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
+        lastPlayers = new HashMap<Player, SearchArea>(this.players);
         for(Player player : players.keySet())
             this.players.remove(player);
     }
@@ -145,7 +145,7 @@ public class Playlist {
                                 jNote.play(p.getKey().getName(), midiSequencer, p.getValue());
                             }
 
-                            lastPlayers = new WeakHashMap<Player, SearchArea>(players);
+                            lastPlayers = new HashMap<Player, SearchArea>(players);
                         }
 
                         try {
@@ -178,7 +178,7 @@ public class Playlist {
                                 jNote.play(p.getKey().getName(), stringSequencer, p.getValue());
                             }
 
-                            lastPlayers = new WeakHashMap<Player, SearchArea>(players);
+                            lastPlayers = new HashMap<Player, SearchArea>(players);
                         }
 
                         try {
@@ -309,7 +309,7 @@ public class Playlist {
         if ( h1.size() != h2.size() ) {
             return false;
         }
-        Map<?,?> clone = new WeakHashMap(h2);
+        Map<?,?> clone = new HashMap(h2);
         Iterator<?> it = h1.entrySet().iterator();
         while (it.hasNext() ){
             Object o = it.next();

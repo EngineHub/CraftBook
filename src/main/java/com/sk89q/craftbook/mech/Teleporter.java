@@ -62,7 +62,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        Block trigger = event.getClickedBlock();
+        Block trigger = null;
 
         if (SignUtil.isSign(event.getClickedBlock())) {
             ChangedSign s = BukkitUtil.toChangedSign(event.getClickedBlock());
@@ -72,6 +72,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 localPlayer.printError("mech.teleport.invalidcoords");
                 return;
             }
+            trigger = event.getClickedBlock();
         } else if (event.getClickedBlock().getType() == Material.STONE_BUTTON || event.getClickedBlock().getType() == Material.WOOD_BUTTON) {
             Button b = (Button) event.getClickedBlock().getState().getData();
             if(b == null || b.getAttachedFace() == null) return;
@@ -89,6 +90,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         } else
             return;
 
+        if(trigger == null) return;
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
