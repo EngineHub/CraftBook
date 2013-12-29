@@ -119,6 +119,7 @@ public class MechanicalCore implements LocalComponent {
             if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
 
         // New System Mechanics
+        if (config.commandItemsEnabled) mechanics.add(new CommandItems());
         if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());
         if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
         if (config.snowEnable) mechanics.add(new Snow());
@@ -127,7 +128,6 @@ public class MechanicalCore implements LocalComponent {
         if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
         if (config.physicsEnabled) mechanics.add(new BetterPhysics());
         if (config.headDropsEnabled) mechanics.add(new HeadDrops());
-        if (config.commandItemsEnabled) mechanics.add(new CommandItems());
         if (config.leadsEnabled) mechanics.add(new BetterLeads());
         if (config.marqueeEnabled) mechanics.add(new Marquee());
         if (config.treeLopperEnabled) mechanics.add(new TreeLopper());

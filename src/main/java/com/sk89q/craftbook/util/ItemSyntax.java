@@ -22,6 +22,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+
 /**
  * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
  * 
@@ -117,19 +119,19 @@ public class ItemSyntax {
                 line = (String) plugin.getClass().getMethod("parseItemSyntax", String.class).invoke(plugin, line);
             } catch (NoSuchMethodException e) {
                 plugin = null;
-                e.printStackTrace();
+                BukkitUtil.printStacktrace(e);
             } catch (SecurityException e) {
                 plugin = null;
-                e.printStackTrace();
+                BukkitUtil.printStacktrace(e);
             } catch (IllegalAccessException e) {
                 plugin = null;
-                e.printStackTrace();
+                BukkitUtil.printStacktrace(e);
             } catch (IllegalArgumentException e) {
                 plugin = null;
-                e.printStackTrace();
+                BukkitUtil.printStacktrace(e);
             } catch (InvocationTargetException e) {
                 plugin = null;
-                e.printStackTrace();
+                BukkitUtil.printStacktrace(e);
             }
         }
 
