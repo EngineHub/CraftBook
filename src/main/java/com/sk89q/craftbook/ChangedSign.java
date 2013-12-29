@@ -180,7 +180,6 @@ public class ChangedSign {
     public boolean equals(Object o) {
 
         if(o instanceof ChangedSign) {
-
             if(((ChangedSign) o).getType() != getType())
                 return false;
             if(((ChangedSign) o).getRawData() != getRawData())
