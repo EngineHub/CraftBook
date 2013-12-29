@@ -173,7 +173,7 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        log.put("Factories Loaded", "%d", plugin.getManager().factories.size());
+        //FIXME log.put("Factories Loaded", "%d", plugin.getManager().factories.size());
         log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().thinkingMechanics.size());
 
         if(flags.contains("i")) {

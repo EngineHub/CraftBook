@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +20,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 public class CookingPot extends AbstractCraftBookMechanic {
@@ -156,6 +158,18 @@ public class CookingPot extends AbstractCraftBookMechanic {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             player.printError("mech.cook.ouch");
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onBlockDestroy(BlockBreakEvent event) {
+
+        if(!SignUtil.isSign(event.getBlock())) return;
+
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+
+        if(!sign.getLine(1).equals("[Cook]")) return;
+
+        CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)

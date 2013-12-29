@@ -24,10 +24,8 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
@@ -37,7 +35,6 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
-import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -51,7 +48,6 @@ import com.sk89q.craftbook.vehicles.cart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.BlockWorldVector2D;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
@@ -77,21 +73,6 @@ public class MechanicListenerAdapter implements Listener {
             if(ev.isCancelled())
                 event.setCancelled(true);
         }
-
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-            CraftBookPlugin.inst().getManager().dispatchBlockRightClick(event);
-
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
-            CraftBookPlugin.inst().getManager().dispatchBlockLeftClick(event);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onSignChange(SignChangeEvent event) {
-
-        if (EventUtil.shouldIgnoreEvent(event))
-            return;
-
-        CraftBookPlugin.inst().getManager().dispatchSignChange(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -144,8 +125,6 @@ public class MechanicListenerAdapter implements Listener {
                     break;
             }
         }
-
-        CraftBookPlugin.inst().getManager().dispatchBlockBreak(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -309,7 +288,6 @@ public class MechanicListenerAdapter implements Listener {
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
 
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
-        CraftBookPlugin.inst().getManager().dispatchBlockRedstoneChange(event);
 
         CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
 
@@ -380,7 +358,7 @@ public class MechanicListenerAdapter implements Listener {
             @Override
             public void run() {
 
-                CraftBookPlugin.inst().getManager().enumerate(event.getChunk());
+                //TODO
             }
         }, 2);
     }
@@ -396,11 +374,6 @@ public class MechanicListenerAdapter implements Listener {
         int chunkX = event.getChunk().getX();
         int chunkZ = event.getChunk().getZ();
 
-        CraftBookPlugin.inst().getManager().unload(new BlockWorldVector2D(BukkitUtil.getLocalWorld(event.getWorld()), chunkX, chunkZ), event);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPipePut(PipePutEvent event) {
-        CraftBookPlugin.inst().getManager().dispatchPipePut(event);
+        //TODO
     }
 }

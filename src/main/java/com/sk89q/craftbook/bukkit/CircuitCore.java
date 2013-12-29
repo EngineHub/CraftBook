@@ -274,7 +274,7 @@ public class CircuitCore implements LocalComponent {
             getFireworkFolder();
 
             registerICs();
-            plugin.registerMechanic(ICFactory = new ICMechanicFactory(getIcManager()));
+            //FIXME plugin.registerMechanic(ICFactory = new ICMechanicFactory(getIcManager()));
 
             try {
                 icConfiguration.load();

@@ -41,10 +41,7 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.Mechanic;
 import com.sk89q.craftbook.MechanicClock;
-import com.sk89q.craftbook.MechanicFactory;
-import com.sk89q.craftbook.MechanicManager;
 import com.sk89q.craftbook.SelfTriggeringManager;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
@@ -86,11 +83,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * The language manager
      */
     private LanguageManager languageManager;
-
-    /**
-     * The mechanic manager
-     */
-    private MechanicManager manager;
 
     /**
      * The random
@@ -210,7 +202,6 @@ public class CraftBookPlugin extends JavaPlugin {
             persistentStorage.open();
 
         logDebugMessage("Initializing Managers!", "startup");
-        manager = new MechanicManager();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
 
@@ -320,16 +311,6 @@ public class CraftBookPlugin extends JavaPlugin {
             }
             getServer().getPluginManager().registerEvents(mech, this);
         }
-    }
-
-    /**
-     * Get the mechanic manager.
-     * 
-     * @return The mechanic manager.
-     */
-    public MechanicManager getManager() {
-
-        return manager;
     }
 
     /**
@@ -580,52 +561,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Register a mechanic if possible
-     *
-     * @param factory
-     */
-    public void registerMechanic(MechanicFactory<? extends Mechanic> factory) {
-
-        manager.register(factory);
-    }
-
-    /**
-     * Register a array of mechanics if possible
-     *
-     * @param factories
-     */
-    protected void registerMechanic(MechanicFactory<? extends Mechanic>[] factories) {
-
-        for (MechanicFactory<? extends Mechanic> aFactory : factories) {
-            registerMechanic(aFactory);
-        }
-    }
-
-    /**
-     * Unregister a mechanic if possible TODO Ensure no remnants are left behind
-     *
-     * @param factory
-     *
-     * @return true if the mechanic was successfully unregistered.
-     */
-    protected boolean unregisterMechanic(MechanicFactory<? extends Mechanic> factory) {
-
-        return manager.unregister(factory);
-    }
-
-    protected boolean unregisterAllMechanics() {
-
-        Iterator<MechanicFactory<? extends Mechanic>> iterator = manager.factories.iterator();
-
-        while (iterator.hasNext()) {
-            iterator.next();
-            manager.unregister(iterator);
-        }
-
-        return true;
-    }
-
-    /**
      * Setup the required components of self-triggered Mechanics.
      */
     private void setupSelfTriggered() {
@@ -638,7 +573,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         for (World world : getServer().getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
-                manager.enumerate(chunk);
+                //TODO
                 numChunks++;
             }
 
@@ -864,7 +799,6 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void reloadConfiguration() throws Throwable {
 
-        unregisterAllMechanics();
         for (LocalComponent component : components) {
             component.disable();
         }
@@ -875,7 +809,6 @@ public class CraftBookPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
         config.load();
-        manager = new MechanicManager();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
         setupCraftBook();
