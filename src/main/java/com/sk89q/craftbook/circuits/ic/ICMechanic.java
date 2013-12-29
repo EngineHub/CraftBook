@@ -241,8 +241,15 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onThinkUnregister(SelfTriggerUnregisterEvent event) {
 
-        if(setupIC(event.getBlock()) != null)
+        if(setupIC(event.getBlock()) != null) {
+            if(event.getReason() == UnregisterReason.ERROR) {
+                if(CraftBookPlugin.inst().getConfiguration().ICBreakOnError) {
+                    event.getBlock().breakNaturally();
+                    return;
+                }
+            }
             if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded) event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
