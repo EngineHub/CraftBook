@@ -251,6 +251,8 @@ public class LanguageManager {
         put("mech.teleport.range","Out of Range!");
         put("mech.teleport.sign","There is no Sign at your Destination!");
         put("mech.teleport.arriveonly","You can only arrive at this teleporter!");
+        put("mech.teleport.invalidcoords", "The entered coordinates are invalid!");
+        put("mech.teleport.obstruct","Your destination is obstructed!");
 
 
         put("circuits.pipes.create","Pipe created!");

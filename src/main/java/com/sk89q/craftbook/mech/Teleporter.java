@@ -3,20 +3,20 @@ package com.sk89q.craftbook.mech;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Button;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -28,93 +28,66 @@ import com.sk89q.worldedit.blocks.BlockType;
  * @author hash
  * @author Me4502
  */
-public class Teleporter extends AbstractMechanic {
+public class Teleporter extends AbstractCraftBookMechanic {
 
-    public static class Factory extends AbstractMechanicFactory<Teleporter> {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
 
-        /**
-         * Explore around the trigger to find a functional elevator; throw if things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         *
-         * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
-         *
-         * @throws InvalidMechanismException if the area looked like it was intended to be an elevator, but it failed.
-         */
-        @Override
-        public Teleporter detect(BlockWorldVector pt) throws InvalidMechanismException {
-
-            Block block = BukkitUtil.toBlock(pt);
-            // check if this looks at all like something we're interested in first
-
-            if (SignUtil.isSign(block)) {
-                ChangedSign s = BukkitUtil.toChangedSign(block);
-                if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-                String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-                if (pos.length > 2) return new Teleporter(block);
-            } else if (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON) {
-                Button b = (Button) block.getState().getData();
-                if(b == null || b.getAttachedFace() == null)
-                    return null;
-                Block sign = block.getRelative(b.getAttachedFace(), 2);
-                if (SignUtil.isSign(sign)) {
-                    ChangedSign s = BukkitUtil.toChangedSign(sign);
-                    if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-                    String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-                    if (pos.length > 2) return new Teleporter(sign);
-                }
-            }
-
-            return null;
-        }
-
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public Teleporter detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException,
-                ProcessedMechanismException {
-
-            if (!sign.getLine(1).equalsIgnoreCase("[Teleporter]")) return null;
-
-            player.checkPermission("craftbook.mech.teleporter");
-
-            player.print("mech.teleport.create");
-            sign.setLine(1, "[Teleporter]");
-
-            String[] pos = RegexUtil.COLON_PATTERN.split(sign.getLine(2));
-            if (!(pos.length > 2)) return null;
-
-            throw new ProcessedMechanismException();
-        }
-    }
-
-    /**
-     * @param trigger if you didn't already check if this is a wall sign with appropriate text,
-     *                you're going on Santa's naughty list.
-     *
-     * @throws InvalidMechanismException
-     */
-    private Teleporter(Block trigger) throws InvalidMechanismException {
-
-        super();
-        this.trigger = trigger;
-    }
-
-    private final Block trigger;
-
-    @Override
-    public void onRightClick(PlayerInteractEvent event) {
-
-        if (!CraftBookPlugin.inst().getConfiguration().teleporterEnabled) return;
-
-        if (!BukkitUtil.toWorldVector(event.getClickedBlock()).equals(BukkitUtil.toWorldVector(trigger)) && !(event.getClickedBlock().getState().getData() instanceof Button))
-            return; // wth? our manager is insane.
+        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(localPlayer.hasPermission("craftbook.mech.teleporter")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
+        }
+
+        String[] pos = RegexUtil.COLON_PATTERN.split(event.getLine(2));
+        if (pos.length <= 2) {
+            localPlayer.printError("mech.teleport.invalidcoords");
+            SignUtil.cancelSign(event);
+            return;
+        }
+
+        localPlayer.print("mech.teleport.create");
+        event.setLine(1, "[Teleporter]");
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onRightClick(PlayerInteractEvent event) {
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        Block trigger = event.getClickedBlock();
+
+        if (SignUtil.isSign(event.getClickedBlock())) {
+            ChangedSign s = BukkitUtil.toChangedSign(event.getClickedBlock());
+            if (!s.getLine(1).equals("[Teleporter]")) return;
+            String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
+            if (pos.length <= 2) {
+                localPlayer.printError("mech.teleport.invalidcoords");
+                return;
+            }
+        } else if (event.getClickedBlock().getType() == Material.STONE_BUTTON || event.getClickedBlock().getType() == Material.WOOD_BUTTON) {
+            Button b = (Button) event.getClickedBlock().getState().getData();
+            if(b == null || b.getAttachedFace() == null) return;
+            Block sign = event.getClickedBlock().getRelative(b.getAttachedFace(), 2);
+            if (SignUtil.isSign(sign)) {
+                ChangedSign s = BukkitUtil.toChangedSign(sign);
+                if (!s.getLine(1).equals("[Teleporter]")) return;
+                String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
+                if (pos.length <= 2) {
+                    localPlayer.printError("mech.teleport.invalidcoords");
+                    return;
+                }
+                trigger = sign;
+            }
+        }
+
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -122,12 +95,12 @@ public class Teleporter extends AbstractMechanic {
             return;
         }
 
-        makeItSo(CraftBookPlugin.inst().wrapPlayer(event.getPlayer()));
+        makeItSo(localPlayer, trigger);
 
         event.setCancelled(true);
     }
 
-    private void makeItSo(LocalPlayer player) {
+    private void makeItSo(LocalPlayer player, Block trigger) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         // check if this looks at all like something we're interested in first
@@ -156,7 +129,7 @@ public class Teleporter extends AbstractMechanic {
 
         if (CraftBookPlugin.inst().getConfiguration().teleporterRequireSign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
-            if (location.getType() == Material.WALL_SIGN || location.getType() == Material.SIGN_POST) {
+            if (SignUtil.isSign(location)) {
                 if (!checkTeleportSign(player, location)) {
                     return;
                 }
@@ -190,7 +163,7 @@ public class Teleporter extends AbstractMechanic {
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (foundFree < 2) {
-            player.printError("mech.lift.obstruct");
+            player.printError("mech.teleport.obstruct");
             return;
         }
 
@@ -221,7 +194,7 @@ public class Teleporter extends AbstractMechanic {
         }
 
         ChangedSign s = BukkitUtil.toChangedSign(sign);
-        if (!s.getLine(1).equalsIgnoreCase("[Teleporter]")) {
+        if (!s.getLine(1).equals("[Teleporter]")) {
             player.printError("mech.teleport.sign");
             return false;
         }

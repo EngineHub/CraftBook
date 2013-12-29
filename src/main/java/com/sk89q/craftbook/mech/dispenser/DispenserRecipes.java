@@ -20,7 +20,7 @@ import com.sk89q.craftbook.util.ItemUtil;
  */
 public class DispenserRecipes extends AbstractCraftBookMechanic {
 
-    private final Set<Recipe> recipes = new HashSet<Recipe>();
+    private Set<Recipe> recipes;
 
     private static DispenserRecipes instance;
 
@@ -28,13 +28,14 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     public boolean enable () {
 
         instance = this;
+        recipes = new HashSet<Recipe>();
         if(CraftBookPlugin.inst().getConfiguration().customDispensingXPShooter) addRecipe(new XPShooter());
         if(CraftBookPlugin.inst().getConfiguration().customDispensingSnowShooter) addRecipe(new SnowShooter());
         if(CraftBookPlugin.inst().getConfiguration().customDispensingFireArrows) addRecipe(new FireArrows());
         if(CraftBookPlugin.inst().getConfiguration().customDispensingFan) addRecipe(new Fan());
         if(CraftBookPlugin.inst().getConfiguration().customDispensingCannon) addRecipe(new Cannon());
 
-        return true;
+        return recipes.size() > 0;
     }
 
     /**
@@ -60,12 +61,10 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
 
-        if (CraftBookPlugin.inst().getConfiguration().customDispensingEnabled) {
-            if (!(event.getBlock().getState() instanceof Dispenser)) return; // Heh? Isn't this just for dispensers?
-            Dispenser dis = (Dispenser) event.getBlock().getState();
-            if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
-                event.setCancelled(true);
-            }
+        if (!(event.getBlock().getState() instanceof Dispenser)) return; // Heh? Isn't this just for dispensers?
+        Dispenser dis = (Dispenser) event.getBlock().getState();
+        if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
+            event.setCancelled(true);
         }
     }
 

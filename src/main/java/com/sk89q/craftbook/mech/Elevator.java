@@ -129,6 +129,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 event.setLine(1, "[Lift]");
                 break;
             default:
+                SignUtil.cancelSign(event);
                 return;
         }
     }
