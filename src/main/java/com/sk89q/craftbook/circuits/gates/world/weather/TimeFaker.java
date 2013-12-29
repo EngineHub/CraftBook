@@ -1,22 +1,20 @@
 package com.sk89q.craftbook.circuits.gates.world.weather;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Me4502
@@ -27,8 +25,6 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
 
         super(server, sign, factory);
     }
-
-    private ArrayList<String> players = new ArrayList<String>();
 
     @Override
     public String getTitle() {
@@ -68,13 +64,17 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
         }
     }
 
-    Vector radius;
+    private Set<String> players;
+
+    SearchArea area;
     long time;
 
     @Override
     public void load() {
 
-        radius = ICUtil.parseRadius(getSign());
+        players = new HashSet<String>();
+
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
 
         try {
             time = Long.parseLong(getSign().getLine(3));
@@ -84,25 +84,30 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void trigger(ChipState chip) {
+    public boolean isAlwaysST() {
 
+        return true;
     }
 
     @Override
-    public void think(ChipState chip) {
-
+    public void trigger(ChipState chip) {
         if (chip.getInput(0)) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-
-                if (!players.contains(p.getName()) && LocationUtil.isWithinRadius(p.getLocation(),
-                        BukkitUtil.toSign(getSign()).getLocation(), radius)) {
+                if(area.isWithinArea(p.getLocation())) {
                     p.setPlayerTime(time, false);
                     players.add(p.getName());
-                } else if (players.contains(p.getName())) {
-                    p.resetPlayerTime();
+                } else if(players.contains(p.getName())) {
                     players.remove(p.getName());
+                    p.resetPlayerTime();
                 }
             }
+        } else {
+            for(String p : players) {
+                Player pp = Bukkit.getPlayerExact(p);
+                if(pp == null) continue;
+                pp.resetPlayerTime();
+            }
+            players.clear();
         }
     }
 }
