@@ -38,6 +38,9 @@ import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -229,6 +232,31 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         ((IC) icData[2]).onRightClick(event.getPlayer());
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onThinkPing(SelfTriggerPingEvent event) {
+
+        setupIC(event.getBlock());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onThinkUnregister(SelfTriggerUnregisterEvent event) {
+
+        if(setupIC(event.getBlock()) != null)
+            if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded) event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onThink(SelfTriggerThinkEvent event) {
+
+        final Object[] icData = setupIC(event.getBlock());
+
+        if(icData == null) return;
+
+        if((IC) icData[2] instanceof SelfTriggeredIC) {
+            ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitUtil.toWorldVector(event.getBlock()), ((IC) icData[2]).getSign());
+            ((SelfTriggeredIC) icData[2]).think(chipState);
+        }
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -371,9 +399,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                     IC ic = registration.getFactory().create(sign);
                     ic.load();
 
-                    event.setLine(1, "[" + registration.getId() + "]" + suffix);
+                    sign.setLine(1, "[" + registration.getId() + "]" + suffix);
                     if (!shortHand)
-                        event.setLine(0, ic.getSignTitle());
+                        sign.setLine(0, ic.getSignTitle());
+
+                    sign.update(false);
 
                     if (ic instanceof SelfTriggeredIC && (event.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
                         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
