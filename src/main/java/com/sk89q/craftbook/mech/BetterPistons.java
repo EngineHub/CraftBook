@@ -119,12 +119,12 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             if(face != BlockFace.UP && face != BlockFace.DOWN && !SignUtil.getBackBlock(sign).getLocation().equals(event.getBlock().getLocation()))
                 continue;
             type = checkSign(sign);
-            if(!types.contains(new Tuple2<Types, Block>(type, sign)) && type != null)
+            if(type != null && !types.contains(new Tuple2<Types, Block>(type, sign)))
                 types.add(new Tuple2<Types, Block>(type, sign));
             if (type != null && SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign.getRelative(face)) == SignUtil.getFacing(sign)) {
                 sign = sign.getRelative(face);
                 type = checkSign(sign);
-                if(!types.contains(new Tuple2<Types, Block>(type, sign)) && type != null)
+                if(type != null && !types.contains(new Tuple2<Types, Block>(type, sign)))
                     types.add(new Tuple2<Types, Block>(type, sign));
             }
         }
