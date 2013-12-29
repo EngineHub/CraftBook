@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -24,18 +25,16 @@ public class SelfTriggeringManager {
     public final Set<Location> thinkingMechanics = new LinkedHashSet<Location>();
 
     public void registerSelfTrigger(Chunk chunk) {
-        for(int x = 0; x < 16; x++)
-            for(int z = 0; z < 16; z++)
-                for(int y = 0; y < chunk.getWorld().getMaxHeight(); y++) {
-                    Block block = chunk.getWorld().getBlockAt(x, y, z);
-                    if(thinkingMechanics.contains(block.getLocation())) continue;
-                    SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
-                    Bukkit.getServer().getPluginManager().callEvent(event);
-                }
+        for(BlockState state : chunk.getTileEntities()) {
+            Block block = state.getBlock();
+            if(thinkingMechanics.contains(block.getLocation())) continue;
+            SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
+            Bukkit.getServer().getPluginManager().callEvent(event);
+        }
     }
 
     public void registerSelfTrigger(Location location) {
-        
+
         if(thinkingMechanics.contains(location)) return;
         thinkingMechanics.add(location);
     }
@@ -50,10 +49,20 @@ public class SelfTriggeringManager {
     }
 
     public void unregisterSelfTrigger(Chunk chunk) {
-        for(int x = 0; x < 16; x++)
-            for(int z = 0; z < 16; z++)
-                for(int y = 0; y < chunk.getWorld().getMaxHeight(); y++)
-                    unregisterSelfTrigger(chunk.getBlock(x, y, z).getLocation(), UnregisterReason.UNLOAD);
+
+        if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
+
+        Location[] registeredLocations;
+
+        synchronized (this) {
+            // Copy to array to get rid of concurrency snafus
+            registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
+        }
+
+        for (Location location : registeredLocations) {
+            if(location.getChunk().equals(chunk))
+                unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
+        }
     }
 
     /**

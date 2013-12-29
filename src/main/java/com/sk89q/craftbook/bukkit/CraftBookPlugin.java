@@ -204,6 +204,7 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
+        selfTriggerManager = new SelfTriggeringManager();
 
         logDebugMessage("Initializing Permission!", "startup");
         PermissionsResolverManager.initialize(this);
@@ -292,8 +293,6 @@ public class CraftBookPlugin extends JavaPlugin {
                 CompatabilityUtil.init();
             }
         });
-
-        selfTriggerManager = new SelfTriggeringManager();
 
         mechanics = new ArrayList<CraftBookMechanic>();
 
@@ -573,7 +572,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         for (World world : getServer().getWorlds()) {
             for (Chunk chunk : world.getLoadedChunks()) {
-                //TODO
+                getSelfTriggerManager().registerSelfTrigger(chunk);
                 numChunks++;
             }
 
@@ -582,8 +581,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms " +
-                "elapsed)");
+        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, getConfiguration().stThinkRate);

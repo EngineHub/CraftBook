@@ -358,7 +358,7 @@ public class MechanicListenerAdapter implements Listener {
             @Override
             public void run() {
 
-                //TODO
+                CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getChunk());
             }
         }, 2);
     }
@@ -371,9 +371,7 @@ public class MechanicListenerAdapter implements Listener {
 
         if (EventUtil.shouldIgnoreEvent(event))
             return;
-        int chunkX = event.getChunk().getX();
-        int chunkZ = event.getChunk().getZ();
 
-        //TODO
+        CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getChunk());
     }
 }

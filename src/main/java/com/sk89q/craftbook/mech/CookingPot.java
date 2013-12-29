@@ -19,6 +19,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -43,6 +44,18 @@ public class CookingPot extends AbstractCraftBookMechanic {
         event.setLine(2, "0");
         event.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
         player.print("mech.cook.create");
+
+        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onPing(SelfTriggerPingEvent event) {
+
+        if(!SignUtil.isSign(event.getBlock())) return;
+
+        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+
+        if(!sign.getLine(1).equals("[Cook]")) return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
     }
