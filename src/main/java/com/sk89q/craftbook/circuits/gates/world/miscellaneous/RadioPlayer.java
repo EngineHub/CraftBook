@@ -3,8 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -16,16 +14,14 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.worldedit.WorldVector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class RadioPlayer extends AbstractIC {
 
     String band;
-    int radius;
+    SearchArea area;
 
-    Map<Player, Tuple2<WorldVector, Integer>> listening;
+    Map<Player, SearchArea> listening;
 
     public RadioPlayer (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -35,14 +31,9 @@ public class RadioPlayer extends AbstractIC {
     public void load() {
 
         band = getLine(2);
-        try {
-            radius = Integer.parseInt(getLine(3));
-        }
-        catch(Exception e) {
-            radius = -1;
-        }
+        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
 
-        listening = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
+        listening = new WeakHashMap<Player, SearchArea>();
     }
 
     @Override
@@ -64,25 +55,13 @@ public class RadioPlayer extends AbstractIC {
             return;
 
         if(chip.getInput(0)) {
-            if(radius < 0) {
-                Map<Player, Tuple2<WorldVector, Integer>> players = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
-                for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+            for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
 
-                    players.put(p, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
-                }
-
-                listening.putAll(players);
-                playlist.addPlayers(listening);
-            } else {
-                Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
-                for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-
-                    if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
-                        listening.put(player, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
-                }
-
-                playlist.addPlayers(listening);
+                if(area != null && !area.isWithinArea(player.getLocation())) continue;
+                listening.put(player, area);
             }
+
+            playlist.addPlayers(listening);
         } else {
 
             playlist.removePlayers(listening);

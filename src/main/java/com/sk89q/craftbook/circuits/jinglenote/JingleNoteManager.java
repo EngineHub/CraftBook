@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.sk89q.craftbook.circuits.jinglenote.bukkit.BukkitJingleNotePlayer;
-import com.sk89q.worldedit.WorldVector;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * A manager of play instances.
@@ -23,7 +23,7 @@ public class JingleNoteManager {
      */
     protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
-    public void play(String player, JingleSequencer sequencer, WorldVector centre, int radius) {
+    public void play(String player, JingleSequencer sequencer, SearchArea area) {
 
         // Existing player found!
         if (instances.containsKey(player)) {
@@ -32,7 +32,7 @@ public class JingleNoteManager {
             instances.remove(player);
         }
 
-        JingleNotePlayer notePlayer = new BukkitJingleNotePlayer(player, sequencer, centre, radius);
+        JingleNotePlayer notePlayer = new BukkitJingleNotePlayer(player, sequencer, area);
         Thread thread = new Thread(notePlayer);
         thread.setDaemon(true);
         thread.setPriority(Thread.MAX_PRIORITY);

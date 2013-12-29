@@ -4,7 +4,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -12,8 +11,8 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.circuits.jinglenote.StringJingleSequencer;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class Tune extends AbstractIC {
 
@@ -53,11 +52,10 @@ public class Tune extends AbstractIC {
                 if (player == null) {
                     continue;
                 }
-                if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(),
-                        player.getLocation(), radius)) {
+                if (area != null && !area.isWithinArea(player.getLocation())) {
                     continue;
                 }
-                jNote.play(player.getName(), sequencer, getSign().getBlockVector(), radius);
+                jNote.play(player.getName(), sequencer, area);
             }
         } else if (!chip.getInput(0) && sequencer != null) {
             sequencer.stop();
@@ -68,18 +66,14 @@ public class Tune extends AbstractIC {
         }
     }
 
-    int radius;
+    SearchArea area;
     int delay;
     String tune;
 
     @Override
     public void load() {
 
-        try {
-            radius = Integer.parseInt(getSign().getLine(3));
-        } catch (Exception ignored) {
-            radius = -1;
-        }
+        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
 
         if (getLine(2).contains(":")) {
 

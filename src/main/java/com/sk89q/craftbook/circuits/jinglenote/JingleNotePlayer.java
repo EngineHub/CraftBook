@@ -7,29 +7,26 @@ package com.sk89q.craftbook.circuits.jinglenote;
 
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
-import com.sk89q.worldedit.WorldVector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public abstract class JingleNotePlayer implements Runnable {
 
     protected final String player;
     protected JingleSequencer sequencer;
-    protected WorldVector centre;
-    protected int radius;
+    protected SearchArea area;
 
     /**
      * Constructs a new JingleNotePlayer
      * 
      * @param player The player who is hearing this's name.
      * @param seq The JingleSequencer to play.
-     * @param centre The source of the sound. (Optional)
-     * @param radius The radius this sound can be heard from. 0 or less means limitless.
+     * @param area The SearchArea for this player. (optional)
      */
-    public JingleNotePlayer(String player, JingleSequencer seq, WorldVector centre, int radius) {
+    public JingleNotePlayer(String player, JingleSequencer seq, SearchArea area) {
 
         this.player = player;
         sequencer = seq;
-        this.centre = centre;
-        this.radius = radius;
+        this.area = area;
     }
 
     @Override

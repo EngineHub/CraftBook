@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CircuitCore;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -22,8 +21,8 @@ import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
 import com.sk89q.craftbook.circuits.jinglenote.MidiJingleSequencer;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SearchArea;
 
 /**
  * @author Me4502
@@ -63,7 +62,7 @@ public class Melody extends AbstractIC {
         }
     }
 
-    int radius;
+    SearchArea area;
     File file;
     String midiName;
     boolean forceStart, loop;
@@ -74,14 +73,8 @@ public class Melody extends AbstractIC {
         try {
             String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3),2);
 
-            try {
-                radius = Integer.parseInt(split[0]);
-            } catch (Exception ignored) {
-                if(split[0].trim().isEmpty())
-                    radius = -1;
-                else
-                    radius = CraftBookPlugin.inst().getConfiguration().ICMaxRange;
-            }
+            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+
             if(split.length > 1) {
                 forceStart = split[1].toUpperCase(Locale.ENGLISH).contains("START");
                 loop = split[1].toUpperCase(Locale.ENGLISH).contains("LOOP");
@@ -134,9 +127,9 @@ public class Melody extends AbstractIC {
                     if (player == null || !player.isOnline()) {
                         continue;
                     }
-                    if (radius > 0 && !LocationUtil.isWithinSphericalRadius(BukkitUtil.toSign(getSign()).getLocation(), player.getLocation(), radius))
+                    if (area != null && !area.isWithinArea(player.getLocation()))
                         continue;
-                    jNote.play(player.getName(), sequencer, getSign().getBlockVector(), radius);
+                    jNote.play(player.getName(), sequencer, area);
                     player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                 }
             } else if (!chip.getInput(0) && sequencer != null) {

@@ -8,14 +8,12 @@ import com.sk89q.craftbook.circuits.jinglenote.Instrument;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNotePlayer;
 import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer;
 import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
-    public BukkitJingleNotePlayer (String player, JingleSequencer seq, WorldVector centre, int radius) {
-        super(player, seq, centre, radius);
+    public BukkitJingleNotePlayer (String player, JingleSequencer seq, SearchArea area) {
+        super(player, seq, area);
     }
 
     Player p = null;
@@ -29,10 +27,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
         if (p == null || !p.isOnline() || note == null)
             return;
 
-        if(centre != null && radius > 0) {
-            if(!LocationUtil.isWithinSphericalRadius(BukkitUtil.toLocation(centre), p.getLocation(), radius))
-                return;
-        }
+        if(area != null) if(!area.isWithinArea(p.getLocation())) return;
 
         p.playSound(p.getLocation(), toSound(note.getInstrument()), note.getVelocity(), note.getNote());
     }

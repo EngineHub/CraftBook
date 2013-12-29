@@ -22,15 +22,14 @@ import org.bukkit.scheduler.BukkitTask;
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.worldedit.WorldVector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class Playlist {
 
     String playlist;
 
-    protected volatile Map<Player, Tuple2<WorldVector, Integer>> players; // Super safe code here.. this is going to be accessed across threads.
-    private volatile Map<Player, Tuple2<WorldVector, Integer>> lastPlayers;
+    protected volatile Map<Player, SearchArea> players; // Super safe code here.. this is going to be accessed across threads.
+    private volatile Map<Player, SearchArea> lastPlayers;
 
     int position;
 
@@ -46,8 +45,8 @@ public class Playlist {
 
     public Playlist(String name) {
 
-        players = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
-        lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
+        players = new WeakHashMap<Player, SearchArea>();
+        lastPlayers = new WeakHashMap<Player, SearchArea>();
         playlist = name;
         try {
             readPlaylist();
@@ -97,22 +96,22 @@ public class Playlist {
         stopping = true;
     }
 
-    public void setPlayers(Map<Player, Tuple2<WorldVector, Integer>> players) {
+    public void setPlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>(this.players);
+        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
         this.players.clear();
         this.players.putAll(players);
     }
 
-    public void addPlayers(Map<Player, Tuple2<WorldVector, Integer>> players) {
+    public void addPlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>(this.players);
+        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
         this.players.putAll(players);
     }
 
-    public void removePlayers(Map<Player, Tuple2<WorldVector, Integer>> players) {
+    public void removePlayers(Map<Player, SearchArea> players) {
 
-        lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>(this.players);
+        lastPlayers = new WeakHashMap<Player, SearchArea>(this.players);
         for(Player player : players.keySet())
             this.players.remove(player);
     }
@@ -130,7 +129,7 @@ public class Playlist {
 
                         if(!areIdentical(players, lastPlayers)) {
 
-                            for(Entry<Player, Tuple2<WorldVector, Integer>> p : lastPlayers.entrySet()) {
+                            for(Entry<Player, SearchArea> p : lastPlayers.entrySet()) {
 
                                 if(players.containsKey(p.getKey()))
                                     continue;
@@ -138,15 +137,15 @@ public class Playlist {
                                 jNote.stop(p.getKey().getName());
                             }
 
-                            for(Entry<Player, Tuple2<WorldVector, Integer>> p : players.entrySet()) {
+                            for(Entry<Player, SearchArea> p : players.entrySet()) {
 
                                 if(lastPlayers.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.play(p.getKey().getName(), midiSequencer, p.getValue().a, p.getValue().b);
+                                jNote.play(p.getKey().getName(), midiSequencer, p.getValue());
                             }
 
-                            lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>(players);
+                            lastPlayers = new WeakHashMap<Player, SearchArea>(players);
                         }
 
                         try {
@@ -163,7 +162,7 @@ public class Playlist {
 
                         if(!lastPlayers.equals(players)) {
 
-                            for(Entry<Player, Tuple2<WorldVector, Integer>> p : lastPlayers.entrySet()) {
+                            for(Entry<Player, SearchArea> p : lastPlayers.entrySet()) {
 
                                 if(players.containsKey(p.getKey()))
                                     continue;
@@ -171,15 +170,15 @@ public class Playlist {
                                 jNote.stop(p.getKey().getName());
                             }
 
-                            for(Entry<Player, Tuple2<WorldVector, Integer>> p : players.entrySet()) {
+                            for(Entry<Player, SearchArea> p : players.entrySet()) {
 
                                 if(lastPlayers.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.play(p.getKey().getName(), stringSequencer, p.getValue().a, p.getValue().b);
+                                jNote.play(p.getKey().getName(), stringSequencer, p.getValue());
                             }
 
-                            lastPlayers = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>(players);
+                            lastPlayers = new WeakHashMap<Player, SearchArea>(players);
                         }
 
                         try {
@@ -247,8 +246,8 @@ public class Playlist {
                             midiSequencer.getSequencer().open();
                         }
 
-                        for(Entry<Player, Tuple2<WorldVector, Integer>> player : players.entrySet())
-                            jNote.play(player.getKey().getName(), midiSequencer, player.getValue().a, player.getValue().b);
+                        for(Entry<Player, SearchArea> player : players.entrySet())
+                            jNote.play(player.getKey().getName(), midiSequencer, player.getValue());
 
                         try {
                             Thread.sleep(1000L);
@@ -276,8 +275,8 @@ public class Playlist {
 
                     stringSequencer = new StringJingleSequencer(tune, 0);
 
-                    for(Entry<Player, Tuple2<WorldVector, Integer>> player : players.entrySet())
-                        jNote.play(player.getKey().getName(), stringSequencer, player.getValue().a, player.getValue().b);
+                    for(Entry<Player, SearchArea> player : players.entrySet())
+                        jNote.play(player.getKey().getName(), stringSequencer, player.getValue());
 
                     try {
                         Thread.sleep(1000L);
