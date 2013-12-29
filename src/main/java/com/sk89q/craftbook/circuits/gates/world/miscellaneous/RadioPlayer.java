@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import java.util.HashSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,7 +25,7 @@ public class RadioPlayer extends AbstractIC {
     String band;
     int radius;
 
-    HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>> listening;
+    Map<Player, Tuple2<WorldVector, Integer>> listening;
 
     public RadioPlayer (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -41,7 +42,7 @@ public class RadioPlayer extends AbstractIC {
             radius = -1;
         }
 
-        listening = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();
+        listening = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
     }
 
     @Override
@@ -64,20 +65,20 @@ public class RadioPlayer extends AbstractIC {
 
         if(chip.getInput(0)) {
             if(radius < 0) {
-                HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>> players = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();
+                Map<Player, Tuple2<WorldVector, Integer>> players = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
                 for(Player p : Bukkit.getServer().getOnlinePlayers()) {
 
-                    players.add(new Tuple2<Player, Tuple2<WorldVector, Integer>>(p, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius)));
+                    players.put(p, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
                 }
 
-                listening.addAll(players);
+                listening.putAll(players);
                 playlist.addPlayers(listening);
             } else {
                 Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
                 for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
 
                     if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
-                        listening.add(new Tuple2<Player, Tuple2<WorldVector, Integer>>(player, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius)));
+                        listening.put(player, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
                 }
 
                 playlist.addPlayers(listening);

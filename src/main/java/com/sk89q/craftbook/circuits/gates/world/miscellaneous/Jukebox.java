@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -74,10 +74,10 @@ public class Jukebox extends AbstractIC {
         if(playlist == null) return; //Heh?
 
         if(radius < 0) {
-            HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>> players = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();
+            Map<Player, Tuple2<WorldVector, Integer>> players = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
             for(Player p : Bukkit.getServer().getOnlinePlayers()) {
 
-                players.add(new Tuple2<Player, Tuple2<WorldVector, Integer>>(p, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius)));
+                players.put(p, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
             }
 
             playlist.setPlayers(players);
@@ -86,12 +86,12 @@ public class Jukebox extends AbstractIC {
             else
                 playlist.stopPlaylist();
         } else {
-            HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>> players = new HashSet<Tuple2<Player, Tuple2<WorldVector, Integer>>>();
+            Map<Player, Tuple2<WorldVector, Integer>> players = new WeakHashMap<Player, Tuple2<WorldVector, Integer>>();
             Location signLoc = BukkitUtil.toSign(getSign()).getLocation();
             for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
 
                 if(LocationUtil.isWithinSphericalRadius(signLoc, player.getLocation(), radius))
-                    players.add(new Tuple2<Player, Tuple2<WorldVector, Integer>>(player, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius)));
+                    players.put(player, new Tuple2<WorldVector, Integer>(getSign().getBlockVector(), radius));
             }
 
             playlist.setPlayers(players);
