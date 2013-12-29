@@ -1,6 +1,8 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,201 +13,151 @@ import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.AbstractMechanic;
-import com.sk89q.craftbook.AbstractMechanicFactory;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.ProcessedMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
 
-public class BetterPistons extends AbstractMechanic {
-
-    public static class Factory extends AbstractMechanicFactory<BetterPistons> {
-
-        Types type;
-
-        public Factory(Types type) {
-
-            this.type = type;
-        }
-
-        /**
-         * Explore around the trigger to find a functional elevator; throw if things look funny.
-         *
-         * @param pt the trigger (should be a signpost)
-         * @return an Elevator if we could make a valid one, or null if this looked nothing like an elevator.
-         * @throws InvalidMechanismException if the area looked like it was intended to be an elevator, but it failed.
-         */
-        @Override
-        public BetterPistons detect(BlockWorldVector pt) throws InvalidMechanismException {
-
-            Block block = BukkitUtil.toBlock(pt);
-            // check if this looks at all like something we're interested in first
-            if (block.getType() == Material.PISTON_BASE || block.getType() == Material.PISTON_STICKY_BASE) {
-
-                PistonBaseMaterial piston = (PistonBaseMaterial) block.getState().getData();
-                Block sign = block.getRelative(piston.getFacing().getOppositeFace());
-                Types type = null;
-                signCheck:
-                {
-                    for (BlockFace face : LocationUtil.getDirectFaces()) {
-                        if (face == piston.getFacing())
-                            continue;
-                        sign = block.getRelative(face);
-                        if(face != BlockFace.UP && face != BlockFace.DOWN && !SignUtil.getBackBlock(sign).getLocation().equals(block.getLocation()))
-                            continue;
-                        type = checkSign(sign);
-                        if (type == this.type) {
-                            break signCheck;
-                        } else if (type != null && SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign.getRelative(face)) == SignUtil.getFacing(sign)) {
-                            sign = sign.getRelative(face);
-                            type = checkSign(sign);
-                            if (type == this.type) {
-                                break signCheck;
-                            }
-                        }
-                    }
-                }
-
-                return type == null || type != this.type ? null : new BetterPistons(block, sign, type);
-            }
-
-            return null;
-        }
-
-        /**
-         * Check to see if the sign is a valid and enabled sign
-         *
-         * @param sign The sign to check
-         * @return the type of piston created
-         */
-        public Types checkSign(Block sign) {
-
-            Types type = null;
-
-            if (SignUtil.isSign(sign)) {
-
-                ChangedSign s = BukkitUtil.toChangedSign(sign);
-                if (s.getLine(1).equalsIgnoreCase("[Crush]") && Types.isEnabled(Types.CRUSH)) {
-                    s.setLine(1, "[Crush]");
-                    s.update(false);
-                    type = Types.CRUSH;
-                } else if (s.getLine(1).equalsIgnoreCase("[SuperSticky]") && Types.isEnabled(Types.SUPERSTICKY)) {
-                    s.setLine(1, "[SuperSticky]");
-                    s.update(false);
-                    type = Types.SUPERSTICKY;
-                } else if (s.getLine(1).equalsIgnoreCase("[Bounce]") && Types.isEnabled(Types.BOUNCE)) {
-                    s.setLine(1, "[Bounce]");
-                    s.update(false);
-                    type = Types.BOUNCE;
-                } else if (s.getLine(1).equalsIgnoreCase("[SuperPush]") && Types.isEnabled(Types.SUPERPUSH)) {
-                    s.setLine(1, "[SuperPush]");
-                    s.update(false);
-                    type = Types.SUPERPUSH;
-                }
-            }
-
-            return type;
-        }
-
-        /**
-         * Detect the mechanic at a placed sign.
-         *
-         * @throws ProcessedMechanismException
-         */
-        @Override
-        public BetterPistons detect(BlockWorldVector pt, LocalPlayer player,
-                ChangedSign sign) throws InvalidMechanismException, ProcessedMechanismException {
-
-            Block block = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
-            Types type;
-            // check if this looks at all like something we're interested in first
-            if (block.getTypeId() == BlockID.PISTON_BASE || block.getTypeId() == BlockID.PISTON_STICKY_BASE) {
-
-                type = checkSign(BukkitUtil.toSign(sign).getBlock());
-
-                if (type == null || type != this.type) return null;
-
-                player.checkPermission("craftbook.mech.pistons." + type.name().toLowerCase(Locale.ENGLISH));
-
-                player.print("mech.pistons." + type.name().toLowerCase(Locale.ENGLISH) + ".created");
-
-                throw new ProcessedMechanismException();
-            }
-
-            return null;
-        }
-    }
+public class BetterPistons extends AbstractCraftBookMechanic {
 
     /**
-     * @param trigger The piston triggering.
-     * @param sign The sign
-     * @param type The type of piston mechanic this is.
-     * @throws InvalidMechanismException
+     * Check to see if the sign is a valid and enabled sign
+     *
+     * @param sign The sign to check
+     * @return the type of piston created
      */
-    private BetterPistons(Block trigger, Block sign, Types type) throws InvalidMechanismException {
+    public Types checkSign(Block sign) {
 
-        super();
-        this.trigger = trigger;
-        this.sign = sign;
-        this.type = type;
+        Types type = null;
+
+        if (SignUtil.isSign(sign)) {
+
+            ChangedSign s = BukkitUtil.toChangedSign(sign);
+            if (s.getLine(1).equals("[Crush]") && Types.isEnabled(Types.CRUSH))
+                type = Types.CRUSH;
+            else if (s.getLine(1).equals("[SuperSticky]") && Types.isEnabled(Types.SUPERSTICKY))
+                type = Types.SUPERSTICKY;
+            else if (s.getLine(1).equals("[Bounce]") && Types.isEnabled(Types.BOUNCE))
+                type = Types.BOUNCE;
+            else if (s.getLine(1).equals("[SuperPush]") && Types.isEnabled(Types.SUPERPUSH))
+                type = Types.SUPERPUSH;
+        }
+
+        return type;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        Block block = SignUtil.getBackBlock(event.getBlock());
+        Types type = null;
+        // check if this looks at all like something we're interested in first
+        if (block.getType() == Material.PISTON_BASE || block.getType() == Material.PISTON_STICKY_BASE) {
+
+            if (event.getLine(1).equalsIgnoreCase("[Crush]") && Types.isEnabled(Types.CRUSH)) {
+                event.setLine(1, "[Crush]");
+                type = Types.CRUSH;
+            } else if (event.getLine(1).equalsIgnoreCase("[SuperSticky]") && Types.isEnabled(Types.SUPERSTICKY)) {
+                event.setLine(1, "[SuperSticky]");
+                type = Types.SUPERSTICKY;
+            } else if (event.getLine(1).equalsIgnoreCase("[Bounce]") && Types.isEnabled(Types.BOUNCE)) {
+                event.setLine(1, "[Bounce]");
+                type = Types.BOUNCE;
+            } else if (event.getLine(1).equalsIgnoreCase("[SuperPush]") && Types.isEnabled(Types.SUPERPUSH)) {
+                event.setLine(1, "[SuperPush]");
+                type = Types.SUPERPUSH;
+            }
+
+            if (type == null) return;
+
+            if(!player.hasPermission("craftbook.mech.pistons." + type.name().toLowerCase(Locale.ENGLISH))) {
+                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    player.printError("mech.create-permission");
+                SignUtil.cancelSign(event);
+                return;
+            }
+
+            player.print("mech.pistons." + type.name().toLowerCase(Locale.ENGLISH) + ".created");
+        }
     }
 
     private final double movemod = 1.0;
 
-    /**
-     * Raised when an input redstone current changes.
-     */
-    @Override
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        //Make sure same type (Lazy checks)
-        if (!BlockUtil.areBlocksIdentical(trigger, event.getBlock())) return;
+        if (event.getBlock().getType() != Material.PISTON_BASE && event.getBlock().getType() != Material.PISTON_STICKY_BASE) return;
 
-        PistonBaseMaterial piston = (PistonBaseMaterial) trigger.getState().getData();
-        ChangedSign signState = BukkitUtil.toChangedSign(sign);
+        Set<Tuple2<Types, Block>> types = new HashSet<Tuple2<Types, Block>>();
 
-        switch (type) {
-            case CRUSH:
-                if (event.getNewCurrent() > event.getOldCurrent()) {
-                    crush(piston, signState);
-                }
-                break;
-            case BOUNCE:
-                if (event.getNewCurrent() > event.getOldCurrent()) {
-                    bounce(piston, signState);
-                }
-                break;
-            case SUPERSTICKY:
-                if (event.getNewCurrent() < event.getOldCurrent()) {
-                    superSticky(piston, signState);
-                }
-                break;
-            case SUPERPUSH:
-                if (event.getNewCurrent() > event.getOldCurrent()) {
-                    superPush(piston, signState);
-                }
-                break;
+        // check if this looks at all like something we're interested in first
+        PistonBaseMaterial piston = (PistonBaseMaterial) event.getBlock().getState().getData();
+        Block sign = event.getBlock().getRelative(piston.getFacing().getOppositeFace());
+        Types type = null;
+
+        for (BlockFace face : LocationUtil.getDirectFaces()) {
+            if (face == piston.getFacing())
+                continue;
+            sign = event.getBlock().getRelative(face);
+            if(face != BlockFace.UP && face != BlockFace.DOWN && !SignUtil.getBackBlock(sign).getLocation().equals(event.getBlock().getLocation()))
+                continue;
+            type = checkSign(sign);
+            if(!types.contains(new Tuple2<Types, Block>(type, sign)) && type != null)
+                types.add(new Tuple2<Types, Block>(type, sign));
+            if (type != null && SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign.getRelative(face)) == SignUtil.getFacing(sign)) {
+                sign = sign.getRelative(face);
+                type = checkSign(sign);
+                if(!types.contains(new Tuple2<Types, Block>(type, sign)) && type != null)
+                    types.add(new Tuple2<Types, Block>(type, sign));
+            }
+        }
+
+        for(Tuple2<Types, Block> tups : types) {
+            ChangedSign signState = BukkitUtil.toChangedSign(tups.b);
+
+            switch (tups.a) {
+                case CRUSH:
+                    if (event.getNewCurrent() > event.getOldCurrent()) {
+                        crush(event.getBlock(), piston, signState);
+                    }
+                    break;
+                case BOUNCE:
+                    if (event.getNewCurrent() > event.getOldCurrent()) {
+                        bounce(event.getBlock(), piston, signState);
+                    }
+                    break;
+                case SUPERSTICKY:
+                    if (event.getNewCurrent() < event.getOldCurrent()) {
+                        superSticky(event.getBlock(), piston, signState);
+                    }
+                    break;
+                case SUPERPUSH:
+                    if (event.getNewCurrent() > event.getOldCurrent()) {
+                        superPush(event.getBlock(), piston, signState);
+                    }
+                    break;
+            }
         }
     }
 
-    public void crush(PistonBaseMaterial piston, ChangedSign signState) {
+    public void crush(Block trigger, PistonBaseMaterial piston, ChangedSign signState) {
 
         //piston.setPowered(false);
 
@@ -224,7 +176,7 @@ public class BetterPistons extends AbstractMechanic {
         trigger.getRelative(piston.getFacing()).setTypeId(0, false);
     }
 
-    public void bounce(PistonBaseMaterial piston, ChangedSign signState) {
+    public void bounce(Block trigger, PistonBaseMaterial piston, ChangedSign signState) {
 
         if (piston.isSticky()) return;
 
@@ -236,7 +188,7 @@ public class BetterPistons extends AbstractMechanic {
         }
 
         Vector vel = new Vector(piston.getFacing().getModX(), piston.getFacing().getModY(), piston.getFacing().getModZ()).multiply(mult);
-        if (trigger.getRelative(piston.getFacing()).getTypeId() == 0 || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
+        if (trigger.getRelative(piston.getFacing()).getType() == Material.AIR || trigger.getRelative(piston.getFacing()).getState() != null && trigger.getRelative(piston.getFacing()).getState() instanceof InventoryHolder || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                 if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                     ent.setVelocity(ent.getVelocity().add(vel));
@@ -244,16 +196,16 @@ public class BetterPistons extends AbstractMechanic {
             }
         } else {
             FallingBlock fall = trigger.getWorld().spawnFallingBlock(trigger.getRelative(piston.getFacing()).getLocation().add(vel), trigger.getRelative(piston.getFacing()).getTypeId(), trigger.getRelative(piston.getFacing()).getData());
-            trigger.getRelative(piston.getFacing()).setTypeId(0);
+            trigger.getRelative(piston.getFacing()).setType(Material.AIR);
             fall.setVelocity(vel);
         }
     }
 
-    public void superSticky(final PistonBaseMaterial piston, final ChangedSign signState) {
+    public void superSticky(final Block trigger, final PistonBaseMaterial piston, final ChangedSign signState) {
 
         if (!piston.isSticky()) return;
 
-        if (trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getTypeId() == BlockID.PISTON_MOVING_PIECE) {
+        if (trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_EXTENSION || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_MOVING_PIECE) {
 
             int block = 10;
             int amount = 1;
@@ -283,8 +235,8 @@ public class BetterPistons extends AbstractMechanic {
                             if (x == 1 && !(trigger.getRelative(piston.getFacing(), i).getState() instanceof InventoryHolder) && fp == 0) {
                                 x = i = 2;
                             }
-                            if (x >= fblock + 2 || trigger.getRelative(piston.getFacing(), i + 1).getTypeId() == 0 && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i + 1))) {
-                                trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                            if (x >= fblock + 2 || trigger.getRelative(piston.getFacing(), i + 1).getType() == Material.AIR && !air || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i + 1))) {
+                                trigger.getRelative(piston.getFacing(), i).setType(Material.AIR);
                                 break;
                             }
                             for (Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
@@ -301,9 +253,9 @@ public class BetterPistons extends AbstractMechanic {
         }
     }
 
-    public void superPush(final PistonBaseMaterial piston, ChangedSign signState) {
+    public void superPush(final Block trigger, final PistonBaseMaterial piston, ChangedSign signState) {
 
-        if (trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getTypeId() != BlockID.PISTON_MOVING_PIECE) {
+        if (trigger.getRelative(piston.getFacing()).getType() != Material.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getType() !=Material.PISTON_MOVING_PIECE) {
 
             int block = 10;
             int amount = 1;
@@ -326,9 +278,9 @@ public class BetterPistons extends AbstractMechanic {
                     public void run() {
                         for (int x = fblock + 2; x >= 1; x--) {
                             final int i = x;
-                            if (trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getTypeId() == BlockID.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
+                            if (trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getType() == Material.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
                                 continue;
-                            if (trigger.getRelative(piston.getFacing(), i + 1).getTypeId() == 0) {
+                            if (trigger.getRelative(piston.getFacing(), i + 1).getType() == Material.AIR) {
                                 for (Entity ent : trigger.getRelative(piston.getFacing(), i + 1).getChunk().getEntities()) {
 
                                     if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i + 1))) {
@@ -336,7 +288,7 @@ public class BetterPistons extends AbstractMechanic {
                                     }
                                 }
                                 if(copyData(trigger.getRelative(piston.getFacing(), i), trigger.getRelative(piston.getFacing(), i + 1)))
-                                    trigger.getRelative(piston.getFacing(), i).setTypeId(0);
+                                    trigger.getRelative(piston.getFacing(), i).setType(Material.AIR);
                             }
                         }
                     }
@@ -369,7 +321,7 @@ public class BetterPistons extends AbstractMechanic {
             from.setTypeId(0);
         }
         to.setTypeIdAndData(type, data, true);
-        if (to.getTypeId() == BlockID.STONE_BUTTON || to.getTypeId() == BlockID.WOODEN_BUTTON) {
+        if (to.getType() == Material.STONE_BUTTON || to.getType() == Material.WOOD_BUTTON) {
             if ((to.getData() & 0x8) == 0x8) {
                 to.setData((byte) (to.getData() ^ 0x8));
             }
@@ -395,18 +347,14 @@ public class BetterPistons extends AbstractMechanic {
         if(CraftBookPlugin.inst().getConfiguration().pistonsMovementBlacklist.contains(new ItemInfo(block)))
             return false;
 
-        switch (block.getTypeId()) {
+        switch (block.getType()) {
 
-            case BlockID.PISTON_MOVING_PIECE:
+            case PISTON_MOVING_PIECE:
                 return false;
             default:
                 return true;
         }
     }
-
-    private final Block trigger;
-    private final Block sign;
-    private final Types type;
 
     public static enum Types {
 

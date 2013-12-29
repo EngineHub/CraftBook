@@ -11,7 +11,6 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.BetterLeads;
 import com.sk89q.craftbook.mech.BetterPhysics;
 import com.sk89q.craftbook.mech.BetterPistons;
-import com.sk89q.craftbook.mech.BetterPistons.Types;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Cauldron;
 import com.sk89q.craftbook.mech.Chair;
@@ -110,9 +109,6 @@ public class MechanicalCore implements LocalComponent {
         // Let's register mechanics!
         if (config.cookingPotEnabled) plugin.registerMechanic(new CookingPot.Factory());
 
-        for(Types type : BetterPistons.Types.values())
-            if (config.pistonsEnabled && Types.isEnabled(type)) plugin.registerMechanic(new BetterPistons.Factory(type));
-
         // New System Mechanics
         if (config.commandItemsEnabled) mechanics.add(new CommandItems());
         if (config.customCraftingEnabled) mechanics.add(customCrafting = new CustomCrafting());
@@ -144,6 +140,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.cauldronEnabled) mechanics.add(new ImprovedCauldron());
         if (config.legacyCauldronEnabled) mechanics.add(new Cauldron());
         if (config.gateEnabled) mechanics.add(new Gate());
+        if (config.pistonsEnabled) mechanics.add(new BetterPistons());
 
 
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
