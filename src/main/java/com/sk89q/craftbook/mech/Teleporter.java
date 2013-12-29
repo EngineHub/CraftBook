@@ -86,7 +86,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 }
                 trigger = sign;
             }
-        }
+        } else
+            return;
 
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
