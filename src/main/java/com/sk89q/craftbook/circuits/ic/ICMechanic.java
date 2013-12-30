@@ -225,6 +225,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
+        if(ICManager.isCachedIC(event.getClickedBlock().getLocation()) && event.getPlayer().isSneaking()) {
+            ICManager.getCachedIC(event.getClickedBlock().getLocation()).unload();
+            ICManager.removeCachedIC(event.getClickedBlock().getLocation());
+        }
+
         final Object[] icData = setupIC(event.getClickedBlock());
 
         if(icData == null) return;
