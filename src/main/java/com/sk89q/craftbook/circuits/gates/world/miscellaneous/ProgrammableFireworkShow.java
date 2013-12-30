@@ -67,6 +67,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
         if (chip.getInput(0))
             handler.startShow();
+        //else if(handler.)
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -171,6 +172,7 @@ public class ProgrammableFireworkShow extends AbstractIC {
             String currentBuilding = null;
             Location location = BukkitUtil.toSign(getSign()).getLocation();
             float duration = 0.5f;
+            boolean preciseDuration = false;
             FireworkEffect.Builder builder = FireworkEffect.builder();
 
             public FyrestoneInterpreter() {
@@ -248,7 +250,12 @@ public class ProgrammableFireworkShow extends AbstractIC {
                         location = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
                     } else if (line.startsWith("duration ")) {
 
-                        duration = Float.parseFloat(line.replace("duration ", ""));
+                        String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("duration ", ""));
+                        duration = Float.parseFloat(bits[0]);
+                        if(bits.length > 1)
+                            preciseDuration = bits[1].equalsIgnoreCase("precise");
+                        else
+                            preciseDuration = false;
                     } else if (line.startsWith("wait ")) {
 
                         FyrestoneInterpreter show = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);
@@ -280,12 +287,19 @@ public class ProgrammableFireworkShow extends AbstractIC {
 
                             if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
-                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                            final Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
                             FireworkMeta meta = firework.getFireworkMeta();
                             for(FireworkEffect effect : effects.get(line.replace("launch ", "")))
                                 meta.addEffect(effect);
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
+                            if(preciseDuration)
+                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                                    @Override
+                                    public void run () {
+                                        firework.detonate();
+                                    }
+                                }, (long) (duration*10));
                         }
                     }
                 }
