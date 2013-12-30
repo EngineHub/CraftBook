@@ -303,6 +303,8 @@ public abstract class LocalConfiguration {
     public boolean minecartNoCollideEnable;
     public boolean minecartNoCollideEmpty;
     public boolean minecartNoCollideFull;
+    // Vehicles - Minecart Place Anywhere Options
+    public boolean minecartPlaceAnywhereEnable;
     // Vehicles - Boat Options
     public boolean boatNoCrashEnabled;
     public boolean boatDropsEnabled;

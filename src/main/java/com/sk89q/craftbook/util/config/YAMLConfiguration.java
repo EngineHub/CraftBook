@@ -691,6 +691,10 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartNoCollideFull = config.getBoolean("vehicles.minecart.no-collide.full-carts", false);
 
 
+        // Vehicles Minecart Place Anywhere Listener
+        minecartPlaceAnywhereEnable = config.getBoolean("vehicles.minecart.place-anywhere.enable", false);
+
+
         // Vehicles - Boat Drops Listener
         boatDropsEnabled = config.getBoolean("vehicles.boat.drops.enable", false);
 
