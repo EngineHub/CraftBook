@@ -174,6 +174,8 @@ public class ICManager {
     public static void addCachedIC(Location pt, IC ic) {
 
         if (!CraftBookPlugin.inst().getConfiguration().ICCached) return;
+        if(cachedICs.containsKey(pt)) return;
+        CraftBookPlugin.logDebugMessage("Caching IC at: " + pt.toString(), "ic-cache");
         cachedICs.put(pt, ic);
     }
 
@@ -186,7 +188,10 @@ public class ICManager {
      */
     public static IC removeCachedIC(Location pt) {
 
-        if (cachedICs.containsKey(pt)) return cachedICs.remove(pt);
+        if (cachedICs.containsKey(pt)) {
+            CraftBookPlugin.logDebugMessage("Removing cached IC at: " + pt.toString(), "ic-cache");
+            return cachedICs.remove(pt);
+        }
         return null;
     }
 
@@ -206,6 +211,7 @@ public class ICManager {
      */
     public static void emptyCache() {
 
+        CraftBookPlugin.logDebugMessage("Culling cached IC list.", "ic-cache");
         cachedICs.clear();
     }
 
