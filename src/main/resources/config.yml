@@ -413,6 +413,8 @@ vehicles:
             enable: false
             empty-carts: true
             full-carts: false
+        place-anywhere:
+            enable: false
     boat:
         drops:
             enable: false

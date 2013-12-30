@@ -1,3 +1,32 @@
+3.8b3
++ Add an enable option for snow, instead of using a combination of other options.
+- Remove the old MechanicManager system.
+* Moved all outstanding mechanics over to the new system. (Teleporter, ToggleArea, ImprovedCauldron, LegacyCauldron, Gates, BetterPistons, Cooking Pots, ICs)
+* Fixed planter with empty ID line.
+* Fixed carrots and potatoes not being plantable by the Planter IC.
+* Fixed more rails vertical rail normalizing side velocity.
++ Added support for vehicle mechanics underneath/behind More Rails rails. (Including vertical rail)
++ Added support for some vehicle mechanics to be on their sign, for use with More Rails vertical rails.
+* Fixed a dependency on the google commons library, which is now packaged inside minecraft. (Fixed pre 1.7 compatability)
++ Added support for decimal places in CustomDrops chances.
+* Fixed CommandItems not working as an item name in many mechanics.
++ Added the ability to set custom CustomRecipes permission errors per recipe.
++ Added an option to set what sneaking state the player must have to use XP Storer.
+* Tweaked Boat and Minecart configurations.
+* Experimental fix for macs with signs. This should effect all plugins.
+* Made AI Mechanics much more lightweight.
+* Fixed a few /cb report issues, and made it show more details about mechanics and ICs.
+* Fixed Playlist skipping if a player is added twice.
+* Playlist related ICs are now less buggy and should be more resource efficient.
++ Added support for 'SearchArea' to any music playing IC. Allows WorldGuard regions, etc.
+* Fixed Weather/Time Faker radius only effecting players who were within radius when IC was enabled.
++ Add a place anywhere feature to minecarts, similar to LandBoats for boats.
++ Added the ability to shift right click ICs to reload them. This may mess with their current functionality, and cause them to lose their state.
++ Added precise duration to firework IC.
++ Added a sound command to firework IC.
++ Added a way to turn off the firework IC.
++ Added the firework IC outputting whether it is playing or not.
+
 3.8b2
 * Fixed Cooking Pot fish dupe bug.
 + Added wolves to HeadDrops. Also use more official head skins.
