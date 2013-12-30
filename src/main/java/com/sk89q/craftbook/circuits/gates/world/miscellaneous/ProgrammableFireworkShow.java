@@ -15,6 +15,7 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -262,6 +263,27 @@ public class ProgrammableFireworkShow extends AbstractIC {
                         task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show,
                                 Long.parseLong(line.replace("wait ", "")));
                         return;
+                    } else if (line.startsWith("sound ")) {
+
+                        String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("sound ", ""));
+                        Sound sound = Sound.valueOf(bits[0]);
+                        Location sloc = location.clone();
+                        float volume = 1.0f,pitch = 1.0f;
+                        if(bits.length > 1) {
+                            double x,y,z;
+                            String[] args = RegexUtil.COMMA_PATTERN.split(bits[1]);
+                            x = Double.parseDouble(args[0]);
+                            y = Double.parseDouble(args[1]);
+                            z = Double.parseDouble(args[2]);
+
+                            sloc = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                            if(bits.length > 2) {
+                                volume = Float.parseFloat(bits[2]);
+                                if(bits.length > 3)
+                                    pitch = Float.parseFloat(bits[3]);
+                            }
+                        }
+                        sloc.getWorld().playSound(sloc, sound, volume, pitch);
                     } else if (line.startsWith("start ")) {
 
                         currentBuilding = line.replace("start ", "");
