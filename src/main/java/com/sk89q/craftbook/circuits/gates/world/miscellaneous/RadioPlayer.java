@@ -21,7 +21,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
     String band;
     SearchArea area;
 
-    Map<Player, SearchArea> listening;
+    Map<String, SearchArea> listening;
 
     public RadioPlayer (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -33,7 +33,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         band = getLine(2);
         if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
 
-        listening = new HashMap<Player, SearchArea>();
+        listening = new HashMap<String, SearchArea>();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
             for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
 
                 if(area != null && !area.isWithinArea(player.getLocation())) continue;
-                listening.put(player, area);
+                listening.put(player.getName(), area);
             }
 
             playlist.addPlayers(listening);

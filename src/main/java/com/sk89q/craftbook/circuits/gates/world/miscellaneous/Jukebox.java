@@ -63,10 +63,10 @@ public class Jukebox extends AbstractIC {
 
         if(playlist == null) return; //Heh?
 
-        Map<Player, SearchArea> players = new HashMap<Player, SearchArea>();
+        Map<String, SearchArea> players = new HashMap<String, SearchArea>();
         for(Player p : Bukkit.getServer().getOnlinePlayers()) {
             if(area != null && !area.isWithinArea(p.getLocation())) continue;
-            players.put(p, area);
+            players.put(p.getName(), area);
         }
 
         playlist.setPlayers(players);

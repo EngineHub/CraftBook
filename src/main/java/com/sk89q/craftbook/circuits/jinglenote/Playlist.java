@@ -28,8 +28,8 @@ public class Playlist {
 
     String playlist;
 
-    protected volatile Map<Player, SearchArea> players; // Super safe code here.. this is going to be accessed across threads.
-    private volatile Map<Player, SearchArea> lastPlayers;
+    protected volatile Map<String, SearchArea> players; // Super safe code here.. this is going to be accessed across threads.
+    private volatile Map<String, SearchArea> lastPlayers;
 
     int position;
 
@@ -45,8 +45,8 @@ public class Playlist {
 
     public Playlist(String name) {
 
-        players = new HashMap<Player, SearchArea>();
-        lastPlayers = new HashMap<Player, SearchArea>();
+        players = new HashMap<String, SearchArea>();
+        lastPlayers = new HashMap<String, SearchArea>();
         playlist = name;
         try {
             readPlaylist();
@@ -96,23 +96,23 @@ public class Playlist {
         stopping = true;
     }
 
-    public void setPlayers(Map<Player, SearchArea> players) {
+    public void setPlayers(Map<String, SearchArea> players) {
 
-        lastPlayers = new HashMap<Player, SearchArea>(this.players);
+        lastPlayers = new HashMap<String, SearchArea>(this.players);
         this.players.clear();
         this.players.putAll(players);
     }
 
-    public void addPlayers(Map<Player, SearchArea> players) {
+    public void addPlayers(Map<String, SearchArea> players) {
 
-        lastPlayers = new HashMap<Player, SearchArea>(this.players);
+        lastPlayers = new HashMap<String, SearchArea>(this.players);
         this.players.putAll(players);
     }
 
-    public void removePlayers(Map<Player, SearchArea> players) {
+    public void removePlayers(Map<String, SearchArea> players) {
 
-        lastPlayers = new HashMap<Player, SearchArea>(this.players);
-        for(Player player : players.keySet())
+        lastPlayers = new HashMap<String, SearchArea>(this.players);
+        for(String player : players.keySet())
             this.players.remove(player);
     }
 
@@ -129,23 +129,23 @@ public class Playlist {
 
                         if(!areIdentical(players, lastPlayers)) {
 
-                            for(Entry<Player, SearchArea> p : lastPlayers.entrySet()) {
+                            for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
                                 if(players.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.stop(p.getKey().getName());
+                                jNote.stop(p.getKey());
                             }
 
-                            for(Entry<Player, SearchArea> p : players.entrySet()) {
+                            for(Entry<String, SearchArea> p : players.entrySet()) {
 
                                 if(lastPlayers.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.play(p.getKey().getName(), midiSequencer, p.getValue());
+                                jNote.play(p.getKey(), midiSequencer, p.getValue());
                             }
 
-                            lastPlayers = new HashMap<Player, SearchArea>(players);
+                            lastPlayers = new HashMap<String, SearchArea>(players);
                         }
 
                         try {
@@ -162,23 +162,23 @@ public class Playlist {
 
                         if(!lastPlayers.equals(players)) {
 
-                            for(Entry<Player, SearchArea> p : lastPlayers.entrySet()) {
+                            for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
                                 if(players.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.stop(p.getKey().getName());
+                                jNote.stop(p.getKey());
                             }
 
-                            for(Entry<Player, SearchArea> p : players.entrySet()) {
+                            for(Entry<String, SearchArea> p : players.entrySet()) {
 
                                 if(lastPlayers.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.play(p.getKey().getName(), stringSequencer, p.getValue());
+                                jNote.play(p.getKey(), stringSequencer, p.getValue());
                             }
 
-                            lastPlayers = new HashMap<Player, SearchArea>(players);
+                            lastPlayers = new HashMap<String, SearchArea>(players);
                         }
 
                         try {
@@ -246,8 +246,8 @@ public class Playlist {
                             midiSequencer.getSequencer().open();
                         }
 
-                        for(Entry<Player, SearchArea> player : players.entrySet())
-                            jNote.play(player.getKey().getName(), midiSequencer, player.getValue());
+                        for(Entry<String, SearchArea> player : players.entrySet())
+                            jNote.play(player.getKey(), midiSequencer, player.getValue());
 
                         try {
                             Thread.sleep(1000L);
@@ -275,8 +275,8 @@ public class Playlist {
 
                     stringSequencer = new StringJingleSequencer(tune, 0);
 
-                    for(Entry<Player, SearchArea> player : players.entrySet())
-                        jNote.play(player.getKey().getName(), stringSequencer, player.getValue());
+                    for(Entry<String, SearchArea> player : players.entrySet())
+                        jNote.play(player.getKey(), stringSequencer, player.getValue());
 
                     try {
                         Thread.sleep(1000L);
@@ -295,8 +295,11 @@ public class Playlist {
                     }
                     String message = line.replace("send ", "");
 
-                    for(Player player : players.keySet())
-                        player.sendMessage(message);
+                    for(String player : players.keySet()) {
+                        Player pp = Bukkit.getPlayerExact(player);
+                        if(pp != null)
+                            pp.sendMessage(message);
+                    }
                 } else if (line.startsWith("goto ")) {
 
                     position = Integer.parseInt(line.replace("goto ", ""));
