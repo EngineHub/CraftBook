@@ -26,6 +26,7 @@ public class ProtectionUtil {
      *
      * @param player The player to check.
      * @param loc    The location to check at.
+     * @param build True for build, false for break
      *
      * @return whether {@code player} can build at {@code loc}
      *

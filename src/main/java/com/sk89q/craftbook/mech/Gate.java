@@ -36,6 +36,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -279,6 +280,12 @@ public class Gate extends AbstractCraftBookMechanic {
             return;
         }
 
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.use-permissions");
+            return;
+        }
+
         if (toggleGates(player, event.getClickedBlock(), smallSearchSize, null))
             player.print("mech.gate.toggle");
         else
@@ -406,6 +413,14 @@ public class Gate extends AbstractCraftBookMechanic {
 
         final ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.break-permissions");
+            return;
+        }
 
         int amount = getBlocks(sign);
         if (amount > 0) {
