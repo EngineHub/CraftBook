@@ -278,6 +278,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.chair.require-sign", "Require a sign to be attached to the chair in order to work!");
         chairRequireSign = config.getBoolean("mechanics.chair.require-sign", false);
 
+        config.setComment("mechanics.chair.max-distance", "The maximum distance between the click point and the sign. (When require sign is on)");
+        chairMaxDistance = config.getInt("mechanics.chair.max-distance", 3);
+
 
         // Chunk Anchor Configuration Listener
         config.setComment("mechanics.chunk-anchor.enable", "Enable chunk anchors.");

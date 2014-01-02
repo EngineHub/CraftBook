@@ -97,7 +97,7 @@ public class Chair extends AbstractCraftBookMechanic {
         chairs.remove(player.getName());
     }
 
-    public boolean hasSign(Block block, List<Location> searched) {
+    public boolean hasSign(Block block, List<Location> searched, Block original) {
 
         boolean found = false;
 
@@ -109,13 +109,15 @@ public class Chair extends AbstractCraftBookMechanic {
 
             if (found) break;
 
+            if(block.getLocation().distanceSquared(original.getLocation()) > Math.pow(CraftBookPlugin.inst().getConfiguration().chairMaxDistance, 2)) continue;
+
             if (SignUtil.isSign(otherBlock) && SignUtil.getFront(otherBlock) == face) {
                 found = true;
                 break;
             }
 
             if (BlockUtil.areBlocksIdentical(block, otherBlock))
-                found = hasSign(otherBlock, searched);
+                found = hasSign(otherBlock, searched, original);
         }
 
         return found;
@@ -164,7 +166,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         // Now everything looks good, continue;
         if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !lplayer.isHoldingBlock() || lplayer.getHeldItemInfo().getType() == Material.AIR) {
-            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>()))
+            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)

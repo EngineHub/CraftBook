@@ -103,6 +103,7 @@ public abstract class LocalConfiguration {
     public List<ItemInfo> chairBlocks;
     public boolean chairFacing;
     public boolean chairRequireSign;
+    public int chairMaxDistance;
     // Mechanics - Chunk Anchor
     public boolean chunkAnchorEnabled;
     public boolean chunkAnchorRedstone;
