@@ -78,11 +78,15 @@ public class NumericModifier extends AbstractIC {
                     break;
             }
 
-            String var = String.valueOf(currentValue);
-            if (var.endsWith(".0"))
-                var = var.replace(".0", "");
+            String val = String.valueOf(currentValue);
+            if (val.endsWith(".0"))
+                val = val.replace(".0", "");
 
-            VariableManager.instance.setVariable(variable, "global", var);
+            String var,key;
+            var = VariableManager.instance.getVariableName(variable);
+            key = VariableManager.instance.getNamespace(variable);
+
+            VariableManager.instance.setVariable(var, key, val);
             chip.setOutput(0, true);
             return;
         } catch(Exception ignored){}

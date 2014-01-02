@@ -60,6 +60,7 @@ import com.sk89q.craftbook.circuits.gates.logic.RsNorFlipFlop;
 import com.sk89q.craftbook.circuits.gates.logic.ToggleFlipFlop;
 import com.sk89q.craftbook.circuits.gates.logic.XnorGate;
 import com.sk89q.craftbook.circuits.gates.logic.XorGate;
+import com.sk89q.craftbook.circuits.gates.variables.ItemCounter;
 import com.sk89q.craftbook.circuits.gates.variables.NumericModifier;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockBreaker;
 import com.sk89q.craftbook.circuits.gates.world.blocks.BlockLauncher;
@@ -454,6 +455,7 @@ public class CircuitCore implements LocalComponent {
 
         //Variable ICs
         registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO);
+        registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO);
     }
 
     /**

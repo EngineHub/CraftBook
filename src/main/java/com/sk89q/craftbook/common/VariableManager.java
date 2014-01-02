@@ -12,6 +12,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.config.VariableConfiguration;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -83,6 +84,38 @@ public class VariableManager extends AbstractCraftBookMechanic {
     public HashMap<Tuple2<String, String>, String> getVariableStore() {
 
         return variableStore;
+    }
+
+    /**
+     * Grabs the namespace off a variable. Returns global if none.
+     * 
+     * @param variable The variable
+     * @return The namespace or global.
+     */
+    public String getNamespace(String variable) {
+
+        if(variable.contains("|") && RegexUtil.PIPE_PATTERN.split(variable).length >= 2) {
+            String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
+            return bits[0];
+        } else {
+            return "global";
+        }
+    }
+
+    /**
+     * Grabs the variable name off a variable.
+     * 
+     * @param variable The variable
+     * @return The name.
+     */
+    public String getVariableName(String variable) {
+
+        if(variable.contains("|") && RegexUtil.PIPE_PATTERN.split(variable).length >= 2) {
+            String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
+            return bits[1];
+        } else {
+            return variable;
+        }
     }
 
     @EventHandler
