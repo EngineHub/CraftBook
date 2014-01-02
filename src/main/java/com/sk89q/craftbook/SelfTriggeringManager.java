@@ -36,6 +36,7 @@ public class SelfTriggeringManager {
     public void registerSelfTrigger(Location location) {
 
         if(thinkingMechanics.contains(location)) return;
+        hasChanged = true;
         thinkingMechanics.add(location);
     }
 
@@ -44,8 +45,10 @@ public class SelfTriggeringManager {
         if(!thinkingMechanics.contains(location)) return;
         SelfTriggerUnregisterEvent event = new SelfTriggerUnregisterEvent(location.getBlock(), reason);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if(!event.isCancelled())
+        if(!event.isCancelled()) {
+            hasChanged = true;
             thinkingMechanics.remove(location);
+        }
     }
 
     public void unregisterSelfTrigger(Chunk chunk) {
@@ -65,6 +68,9 @@ public class SelfTriggeringManager {
         }
     }
 
+    Location[] registeredLocations;
+    private boolean hasChanged = false;
+
     /**
      * Causes all thinking mechanics to think.
      */
@@ -72,16 +78,18 @@ public class SelfTriggeringManager {
 
         if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
 
-        Location[] registeredLocations;
-
-        synchronized (this) {
-            // Copy to array to get rid of concurrency snafus
-            registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
+        if(hasChanged || registeredLocations == null) {
+            synchronized (this) {
+                // Copy to array to get rid of concurrency snafus
+                registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
+            }
         }
 
         for (Location location : registeredLocations) {
-            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
-                location.getChunk().load();
+            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
+                unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
+                continue;
+            }
             try {
                 SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(location.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
