@@ -475,11 +475,18 @@ public class ItemUtil {
 
     public static boolean containsRawFood(Inventory inv) {
 
+        return getRawFood(inv).size() > 0;
+    }
+
+    public static List<ItemStack> getRawFood(Inventory inv) {
+
+        List<ItemStack> ret = new ArrayList<ItemStack>();
+
         for (ItemStack it : inv.getContents()) {
             if (isStackValid(it) && isCookable(it))
-                return true;
+                ret.add(it);
         }
-        return false;
+        return ret;
     }
 
     public static boolean containsRawMinerals(Inventory inv) {
@@ -491,6 +498,17 @@ public class ItemUtil {
         return false;
     }
 
+    public static List<ItemStack> getRawMinerals(Inventory inv) {
+
+        List<ItemStack> ret = new ArrayList<ItemStack>();
+
+        for (ItemStack it : inv.getContents()) {
+            if (isStackValid(it) && isSmeltable(it))
+                ret.add(it);
+        }
+        return ret;
+    }
+
     public static boolean containsRawMaterials(Inventory inv) {
 
         for (ItemStack it : inv.getContents()) {
@@ -498,6 +516,17 @@ public class ItemUtil {
                 return true;
         }
         return false;
+    }
+
+    public static List<ItemStack> getRawMaterials(Inventory inv) {
+
+        List<ItemStack> ret = new ArrayList<ItemStack>();
+
+        for (ItemStack it : inv.getContents()) {
+            if (isStackValid(it) && isFurnacable(it))
+                ret.add(it);
+        }
+        return ret;
     }
 
     public static boolean isFurnacable(ItemStack item) {

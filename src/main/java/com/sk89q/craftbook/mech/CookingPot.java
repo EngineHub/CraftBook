@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mech;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -79,35 +81,41 @@ public class CookingPot extends AbstractCraftBookMechanic {
         }
         oldTick = lastTick;
         Block b = SignUtil.getBackBlock(event.getBlock());
+        Block fire = b.getRelative(0, 1, 0);
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getType() == Material.CHEST) {
-            Block fire = b.getRelative(0, 1, 0);
             if (fire.getType() == Material.FIRE) {
                 Chest chest = (Chest) cb.getState();
-                if (ItemUtil.containsRawFood(chest.getInventory()) || ItemUtil.containsRawMinerals(chest.getInventory()) && CraftBookPlugin.inst().getConfiguration().cookingPotOres) {
-                    if(lastTick < 500) {
-                        lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
-                        if(getMultiplier(sign) > 0)
-                            decreaseMultiplier(sign, 1);
-                    }
-                    if (lastTick >= 50) {
-                        for (ItemStack i : chest.getInventory().getContents()) {
+                List<ItemStack> items;
+                if(CraftBookPlugin.inst().getConfiguration().cookingPotOres)
+                    items = ItemUtil.getRawMaterials(chest.getInventory());
+                else
+                    items = ItemUtil.getRawFood(chest.getInventory());
 
-                            if (!ItemUtil.isStackValid(i)) continue;
-                            ItemStack cooked = ItemUtil.getCookedResult(i);
-                            if (cooked == null) {
-                                if (CraftBookPlugin.inst().getConfiguration().cookingPotOres)
-                                    cooked = ItemUtil.getSmeletedResult(i);
-                                if (cooked == null) continue;
-                            }
-                            if (chest.getInventory().addItem(cooked).isEmpty()) {
-                                ItemStack toRemove = i.clone();
-                                toRemove.setAmount(1);
-                                chest.getInventory().removeItem(toRemove);
-                                chest.update();
-                                lastTick -= 50;
-                                break;
-                            }
+                if(items.size() == 0) return;
+
+                if(lastTick < 500) {
+                    lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
+                    if(getMultiplier(sign) > 0)
+                        decreaseMultiplier(sign, 1);
+                }
+                if (lastTick >= 50) {
+                    for (ItemStack i : items) {
+
+                        if (!ItemUtil.isStackValid(i)) continue;
+                        ItemStack cooked = ItemUtil.getCookedResult(i);
+                        if (cooked == null) {
+                            if (CraftBookPlugin.inst().getConfiguration().cookingPotOres)
+                                cooked = ItemUtil.getSmeletedResult(i);
+                            if (cooked == null) continue;
+                        }
+                        if (chest.getInventory().addItem(cooked).isEmpty()) {
+                            ItemStack toRemove = i.clone();
+                            toRemove.setAmount(1);
+                            chest.getInventory().removeItem(toRemove);
+                            chest.update();
+                            lastTick -= 50;
+                            break;
                         }
                     }
                 }
