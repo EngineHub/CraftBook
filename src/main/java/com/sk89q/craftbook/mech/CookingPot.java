@@ -71,6 +71,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
+        event.setHandled(true);
+
         int lastTick = 0, oldTick;
 
         try {

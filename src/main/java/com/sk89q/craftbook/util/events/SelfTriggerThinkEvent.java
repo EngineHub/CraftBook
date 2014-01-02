@@ -20,4 +20,14 @@ public class SelfTriggerThinkEvent extends BlockEvent {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
+    private boolean handled;
+
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
+
+    public boolean isHandled() {
+        return handled;
+    }
 }

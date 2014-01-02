@@ -93,6 +93,9 @@ public class SelfTriggeringManager {
             try {
                 SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(location.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
+                if(!event.isHandled()) {
+                    unregisterSelfTrigger(location, UnregisterReason.UNKNOWN);
+                }
             } catch (Throwable t) { // Mechanic failed to think for some reason
                 CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
                 BukkitUtil.printStacktrace(t);
