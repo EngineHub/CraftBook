@@ -72,7 +72,11 @@ public class ItemCounter extends AbstractIC {
 
             double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
 
-            VariableManager.instance.setVariable(var, key, String.valueOf(existing + amount));
+            String val = String.valueOf(existing + amount);
+            if (val.endsWith(".0"))
+                val = val.replace(".0", "");
+
+            VariableManager.instance.setVariable(var, key, val);
         }
     }
 
