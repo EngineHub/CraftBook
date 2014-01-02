@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.variables;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.block.BlockState;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,11 +49,12 @@ public class ItemCounter extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        InventoryHolder chest = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
+        BlockState state = getBackBlock().getRelative(0, 1, 0).getState();
 
         int amount = 0;
 
-        if(getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST) {
+        if(state instanceof InventoryHolder) {
+            InventoryHolder chest = (InventoryHolder) state;
             for(ItemStack stack : chest.getInventory().getContents()) {
                 if(!ItemUtil.isStackValid(stack)) continue;
                 if(item == null || ItemUtil.areItemsIdentical(stack, item)) {
