@@ -22,7 +22,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (event.getEntity() == null) return;
+        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
 
         if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled)) {
             if(event.getTarget() != null) return;
@@ -69,7 +69,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
-        if (event.getEntity() == null) return;
+        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
 
         if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)) {
             int amount = 0;
@@ -95,9 +95,11 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
     public boolean isEntityEnabled(Entity ent, List<String> entities) {
 
+        if(entities == null) return false;
         for(String entity : entities)
-            if(ent.getType().getName().equalsIgnoreCase(entity) || ent.getType().name().equalsIgnoreCase(entity))
-                return true;
+            if(entity != null)
+                if(ent.getType().getName().equalsIgnoreCase(entity) || ent.getType().name().equalsIgnoreCase(entity))
+                    return true;
         return false;
     }
 
