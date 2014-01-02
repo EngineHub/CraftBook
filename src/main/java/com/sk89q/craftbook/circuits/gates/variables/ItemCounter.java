@@ -49,29 +49,31 @@ public class ItemCounter extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        BlockState state = getBackBlock().getRelative(0, 1, 0).getState();
+        if(chip.getInput(0)) {
+            BlockState state = getBackBlock().getRelative(0, 1, 0).getState();
 
-        int amount = 0;
+            int amount = 0;
 
-        if(state instanceof InventoryHolder) {
-            InventoryHolder chest = (InventoryHolder) state;
-            for(ItemStack stack : chest.getInventory().getContents()) {
-                if(!ItemUtil.isStackValid(stack)) continue;
-                if(item == null || ItemUtil.areItemsIdentical(stack, item)) {
-                    amount += stack.getAmount();
+            if(state instanceof InventoryHolder) {
+                InventoryHolder chest = (InventoryHolder) state;
+                for(ItemStack stack : chest.getInventory().getContents()) {
+                    if(!ItemUtil.isStackValid(stack)) continue;
+                    if(item == null || ItemUtil.areItemsIdentical(stack, item)) {
+                        amount += stack.getAmount();
+                    }
                 }
             }
+
+            chip.setOutput(0, amount > 0);
+
+            String var,key;
+            var = VariableManager.instance.getVariableName(variable);
+            key = VariableManager.instance.getNamespace(variable);
+
+            double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
+
+            VariableManager.instance.setVariable(var, key, String.valueOf(existing + amount));
         }
-
-        chip.setOutput(0, amount > 0);
-
-        String var,key;
-        var = VariableManager.instance.getVariableName(variable);
-        key = VariableManager.instance.getNamespace(variable);
-
-        double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
-
-        VariableManager.instance.setVariable(var, key, String.valueOf(existing + amount));
     }
 
     public static class Factory extends AbstractICFactory {
