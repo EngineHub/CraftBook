@@ -49,7 +49,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         }
 
         if (getLine(3).contains(":"))
-            type = PlayerType.getFromChar(getLine(2).trim().toCharArray()[0]);
+            type = PlayerType.getFromChar(getLine(3).trim().toCharArray()[0]);
         else
             type = PlayerType.ALL;
 
