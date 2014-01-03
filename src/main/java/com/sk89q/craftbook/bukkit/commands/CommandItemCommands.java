@@ -127,8 +127,11 @@ public class CommandItemCommands {
         @Override
         public Prompt acceptInput (ConversationContext context, final String input) {
 
-            if(input.trim().length() == 0 || input.trim().equalsIgnoreCase("done"))
+            if(input.trim().length() == 0 || input.trim().equalsIgnoreCase("done")) {
+                if(context.getSessionData("commands") == null)
+                    context.setSessionData("commands", new ArrayList<String>());
                 return new RunAsPrompt();
+            }
 
             if(context.getSessionData("commands") == null)
                 context.setSessionData("commands", new ArrayList<String>(){{add(input.trim());}});
