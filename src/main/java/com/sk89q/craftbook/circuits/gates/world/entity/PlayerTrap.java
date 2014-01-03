@@ -40,20 +40,20 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), RegexUtil.AMPERSAND_PATTERN.split(getSign().getLine(2))[0]);
 
         try {
-            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[2]);
+            damage = Integer.parseInt(RegexUtil.AMPERSAND_PATTERN.split(getSign().getLine(2))[1]);
         } catch (Exception ignored) {
             damage = 2;
         }
 
-        if (getLine(2).contains(":"))
+        if (getLine(3).contains(":"))
             type = PlayerType.getFromChar(getLine(2).trim().toCharArray()[0]);
         else
             type = PlayerType.ALL;
 
-        nameLine = getLine(2).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
+        nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea=damage", "Player Criteria"};
+            return new String[] {"SearchArea&damage", "Player Criteria"};
         }
     }
 }

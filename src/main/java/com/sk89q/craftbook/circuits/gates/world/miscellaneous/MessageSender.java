@@ -69,7 +69,7 @@ public class MessageSender extends AbstractIC {
         for(String bit : bits) {
             if (bit.contains(":"))
                 type = PlayerType.getFromChar(bit.trim().toCharArray()[0]);
-            else
+            else if (type == null)
                 type = PlayerType.ALL;
 
             bit = bit.replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
