@@ -6,8 +6,8 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
@@ -15,7 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 
-public class IsAtLeast extends AbstractIC {
+public class IsAtLeast extends AbstractSelfTriggeredIC {
 
     public IsAtLeast (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -47,14 +47,23 @@ public class IsAtLeast extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if(chip.getInput(0)) {
-            String var,key;
-            var = VariableManager.instance.getVariableName(variable);
-            key = VariableManager.instance.getNamespace(variable);
-
-            double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
-
-            chip.setOutput(0, existing > amount);
+            chip.setOutput(0, isAtLeast());
         }
+    }
+
+    @Override
+    public void think(ChipState chip) {
+        chip.setOutput(0, isAtLeast());
+    }
+
+    public boolean isAtLeast() {
+        String var,key;
+        var = VariableManager.instance.getVariableName(variable);
+        key = VariableManager.instance.getNamespace(variable);
+
+        double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
+
+        return existing >= amount;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -67,19 +76,19 @@ public class IsAtLeast extends AbstractIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new NumericModifier(getServer(), sign, this);
+            return new IsAtLeast(getServer(), sign, this);
         }
 
         @Override
         public String getShortDescription() {
 
-            return "Modifies a variable using the specified function.";
+            return "Checks if a variable is at least...";
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "Function:Amount"};
+            return new String[] {"Variable Name", "Amount"};
         }
 
         @Override
