@@ -139,12 +139,15 @@ public class Cauldron extends AbstractCraftBookMechanic {
         // Now we have to ignore cauldron blocks so that we get the real
         // contents of the cauldron
         for (Map.Entry<Location, ItemInfo> entry : visited.entrySet()) {
-            if (entry.getValue().equals(blockItem)) if (!contents.containsKey(entry.getValue())) {
-                contents.put(entry.getValue(), 1);
-            } else {
-                contents.put(entry.getValue(), contents.get(entry.getValue()) + 1);
-            }
+            if (!entry.getValue().equals(blockItem))
+                if (!contents.containsKey(entry.getValue())) {
+                    contents.put(entry.getValue(), 1);
+                } else {
+                    contents.put(entry.getValue(), contents.get(entry.getValue()) + 1);
+                }
         }
+
+        CraftBookPlugin.logDebugMessage("Ingredients: " + contents.keySet().toString(), "legacy-cauldron.ingredients");
 
         // Find the recipe
         CauldronCookbook.Recipe recipe = recipes.find(contents);
