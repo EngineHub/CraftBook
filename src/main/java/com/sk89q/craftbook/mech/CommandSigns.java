@@ -9,9 +9,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -84,11 +86,10 @@ public class CommandSigns extends AbstractCraftBookMechanic {
             command = command + sign.getLine(2) + sign.getLine(3);
         }
 
-        if (player == null) {
+        if (player == null)
             if (command.contains("@p")) return; // We don't work with player commands.
-        } else {
-            command = command.replace("@p", player.getName());
-        }
+
+        command = ParsingUtil.parseLine(command, player == null ? null : ((BukkitPlayer) player).getPlayer());
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
