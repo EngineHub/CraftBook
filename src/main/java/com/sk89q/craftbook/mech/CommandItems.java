@@ -269,7 +269,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             final ItemStack stack = stackIt.next();
             performCommandItems(stack, event.getEntity(), event);
             for(CommandItemDefinition def : definitions) {
-                if(ItemUtil.areItemsIdentical(stack, def.getItem())) {
+                if(ItemUtil.areItemsIdentical(stack, def.getItem()) && def.keepOnDeath) {
                     stackIt.remove();
                     Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
                     List<ItemStack> its = items.get(event.getEntity().getName());
