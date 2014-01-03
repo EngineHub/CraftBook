@@ -19,6 +19,7 @@ public class RegexUtil {
     public static final Pattern FIELD_SEPARATOR_PATTERN = Pattern.compile("->", Pattern.LITERAL);
     public static final Pattern X_PATTERN = Pattern.compile("x", Pattern.LITERAL);
     public static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
+    public static final Pattern AMPERSAND_PATTERN = Pattern.compile("&", Pattern.LITERAL);
     public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
     public static final Pattern FSLASH_PATTERN = Pattern.compile("/", Pattern.LITERAL);
     public static final Pattern BSLASH_PATTERN = Pattern.compile("\\", Pattern.LITERAL);

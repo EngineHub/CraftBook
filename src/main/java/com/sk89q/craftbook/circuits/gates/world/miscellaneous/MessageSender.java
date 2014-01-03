@@ -31,6 +31,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.PlayerType;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SearchArea;
 
 public class MessageSender extends AbstractIC {
@@ -63,15 +64,21 @@ public class MessageSender extends AbstractIC {
     @Override
     public void load() {
 
-        if (getLine(2).contains(":"))
-            type = PlayerType.getFromChar(getLine(2).trim().toCharArray()[0]);
-        else
-            type = PlayerType.ALL;
+        String[] bits = RegexUtil.AMPERSAND_PATTERN.split(getLine(2));
 
-        name = getLine(2).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
+        for(String bit : bits) {
+            if (bit.contains(":"))
+                type = PlayerType.getFromChar(bit.trim().toCharArray()[0]);
+            else
+                type = PlayerType.ALL;
 
-        if(SearchArea.isValidArea(getBackBlock(), name))
-            area = SearchArea.createArea(getBackBlock(), name);
+            bit = bit.replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
+
+            if(SearchArea.isValidArea(getBackBlock(), bit))
+                area = SearchArea.createArea(getBackBlock(), bit);
+            else
+                name = bit;
+        }
         message = getLine(3);
     }
 
