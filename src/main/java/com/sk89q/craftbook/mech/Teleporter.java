@@ -37,7 +37,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(localPlayer.hasPermission("craftbook.mech.teleporter")) {
+        if(!localPlayer.hasPermission("craftbook.mech.teleporter")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
