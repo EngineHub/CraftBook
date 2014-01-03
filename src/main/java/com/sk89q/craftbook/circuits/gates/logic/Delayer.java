@@ -58,10 +58,7 @@ public class Delayer extends AbstractIC {
 
                 @Override
                 public void run() {
-
-                    if (chip.getInput(0)) {
-                        chip.setOutput(0, true);
-                    }
+                    chip.setOutput(0, true);
                 }
             }, tdelay);
         } else {
