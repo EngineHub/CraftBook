@@ -88,6 +88,7 @@ import com.sk89q.craftbook.circuits.gates.world.entity.AnimalHarvester;
 import com.sk89q.craftbook.circuits.gates.world.entity.CreatureSpawner;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityCannon;
 import com.sk89q.craftbook.circuits.gates.world.entity.EntityTrap;
+import com.sk89q.craftbook.circuits.gates.world.entity.PlayerTrap;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportReciever;
 import com.sk89q.craftbook.circuits.gates.world.entity.TeleportTransmitter;
 import com.sk89q.craftbook.circuits.gates.world.items.AutomaticCrafter;
@@ -393,6 +394,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1276", "radio station", new RadioStation.Factory(server), familySISO, familyAISO);
         registerIC("MC1277", "radio player", new RadioPlayer.Factory(server), familySISO, familyAISO);
         registerIC("MC1278", "sentry gun", new SentryGun.Factory(server), familySISO, familyAISO); //Restricted
+        registerIC("MC1279", "player trap",new PlayerTrap.Factory(server), familySISO, familyAISO);
         registerIC("MC1280", "animal breed", new AnimalBreeder.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
