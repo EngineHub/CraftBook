@@ -91,7 +91,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
             maxOn = minOn;
         boolean first = true;
         do {
-            if(on >= maxOn) break;
+            if(on >= maxOn && maxOn >= 0) break;
             for (short i = 0; i < chip.getOutputCount(); i++) {
                 if(!chip.isValid(i)) continue;
                 if(first)
@@ -110,7 +110,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
                     on--;
             }
             first = false;
-        } while(on <= minOn);
+        } while(on < minOn);
     }
 
     public static class Factory extends AbstractICFactory {
