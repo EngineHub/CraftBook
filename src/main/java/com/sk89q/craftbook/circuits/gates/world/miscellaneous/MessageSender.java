@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.PlayerType;
 import com.sk89q.craftbook.util.SearchArea;
 
 public class MessageSender extends AbstractIC {
@@ -60,12 +62,20 @@ public class MessageSender extends AbstractIC {
 
     @Override
     public void load() {
-        name = getLine(2);
+
+        if (getLine(2).contains(":"))
+            type = PlayerType.getFromChar(getLine(2).trim().toCharArray()[0]);
+        else
+            type = PlayerType.ALL;
+
+        name = getLine(2).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
+
         if(SearchArea.isValidArea(getBackBlock(), name))
             area = SearchArea.createArea(getBackBlock(), name);
         message = getLine(3);
     }
 
+    PlayerType type;
     String name;
     String message;
     SearchArea area;
@@ -81,18 +91,28 @@ public class MessageSender extends AbstractIC {
 
         if(area != null) {
             for(Player p : area.getPlayersInArea()) {
+                if(!type.doesPlayerPass(p, name)) continue;
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
                 sent = true;
             }
         } else {
-            Player player = getServer().getPlayer(name);
 
-            if (player != null) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-                sent = true;
-            } else if (name.equalsIgnoreCase("BROADCAST") || name.isEmpty()) {
-                getServer().broadcastMessage(message);
-                sent = true;
+            if(type == PlayerType.NAME) {
+                Player player = Bukkit.getPlayer(name);
+                if(player != null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                    sent = true;
+                }
+            }
+
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                if (type.doesPlayerPass(player, name)) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                    sent = true;
+                } else if (name.equalsIgnoreCase("BROADCAST") || name.isEmpty()) {
+                    getServer().broadcastMessage(message);
+                    sent = true;
+                }
             }
         }
         return sent;
