@@ -25,11 +25,17 @@ public class SelfTriggeringManager {
     public final Set<Location> thinkingMechanics = new HashSet<Location>();
 
     public void registerSelfTrigger(Chunk chunk) {
-        for(BlockState state : chunk.getTileEntities()) {
-            Block block = state.getBlock();
-            if(thinkingMechanics.contains(block.getLocation())) continue;
-            SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+        try {
+            for(BlockState state : chunk.getTileEntities()) {
+                Block block = state.getBlock();
+                if(thinkingMechanics.contains(block.getLocation())) continue;
+                SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+            }
+        } catch (NullPointerException e) {
+            Bukkit.getLogger().warning("A corrupt tile entity was found in the chunk: (x:" + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.");
+            if(CraftBookPlugin.inst().getConfiguration().debugMode)
+                BukkitUtil.printStacktrace(e);
         }
     }
 
