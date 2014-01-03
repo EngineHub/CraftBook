@@ -45,7 +45,7 @@ public class XnorGate extends SimpleTwoInputLogicGate {
     @Override
     protected boolean getResult(boolean a, boolean b) {
 
-        return a == b && a;
+        return a == b;
     }
 
     public static class Factory extends AbstractICFactory {
