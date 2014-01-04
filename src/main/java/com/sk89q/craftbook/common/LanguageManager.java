@@ -177,6 +177,7 @@ public class LanguageManager {
         put("mech.chairs.stand", "You are no longer sitting!");
         put("mech.chairs.in-use", "This chair is in use!");
         put("mech.chairs.floating", "This chair has nothing below it!");
+        put("mech.chairs.too-far", "This chair is too far away!");
 
         put("mech.command.create","Command Sign Created!");
 

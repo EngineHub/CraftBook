@@ -183,6 +183,12 @@ public class Chair extends AbstractCraftBookMechanic {
                     lplayer.printError("area.use-permissions");
                 return;
             }
+
+            if(event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(CraftBookPlugin.inst().getConfiguration().chairMaxClickRadius, 2)) {
+                lplayer.printError("mech.chairs.too-far");
+                return;
+            }
+
             if (hasChair(player.getPlayer())) { // Stand
                 removeChair(player.getPlayer());
             } else { // Sit
