@@ -32,6 +32,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         if(EventUtil.shouldIgnoreEvent(event))
             return;
+
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 

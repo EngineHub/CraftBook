@@ -16,11 +16,15 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
 
@@ -68,6 +72,9 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityShootBow(EntityShootBowEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
 

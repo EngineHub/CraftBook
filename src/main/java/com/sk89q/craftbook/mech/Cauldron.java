@@ -37,7 +37,9 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -85,6 +87,9 @@ public class Cauldron extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(!isACauldron(event.getClickedBlock())) return;
 
@@ -93,6 +98,12 @@ public class Cauldron extends AbstractCraftBookMechanic {
         if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("area.use-permissions");
             return;
         }
 

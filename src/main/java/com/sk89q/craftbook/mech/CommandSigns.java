@@ -14,6 +14,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -50,6 +51,12 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("area.use-permissions");
             return;
         }
 

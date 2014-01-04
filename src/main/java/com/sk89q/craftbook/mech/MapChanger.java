@@ -10,6 +10,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 
@@ -43,6 +44,12 @@ public class MapChanger extends AbstractCraftBookMechanic {
         if (!player.hasPermission("craftbook.mech.map.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.use-permissions");
             return;
         }
         if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP) {

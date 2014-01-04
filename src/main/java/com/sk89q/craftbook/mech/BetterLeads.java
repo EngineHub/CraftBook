@@ -23,12 +23,16 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEntityEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if(!ItemUtil.isStackValid(event.getPlayer().getItemInHand())) return;
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
@@ -85,6 +89,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(!(event.getEntity() instanceof Monster)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed()) return;
         if(!(event.getTarget() instanceof Player)) return;
@@ -115,6 +122,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onHitchBreakRandomly(final HangingBreakEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists) return;
         if(!(event.getEntity() instanceof LeashHitch)) return;
 
@@ -138,6 +148,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onHitchBreak(final HangingBreakByEntityEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
         if(!(event.getEntity() instanceof LeashHitch)) return;
@@ -173,6 +186,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;

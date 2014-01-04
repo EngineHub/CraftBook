@@ -13,6 +13,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 
 public class SignCopier extends AbstractCraftBookMechanic {
@@ -42,6 +43,12 @@ public class SignCopier extends AbstractCraftBookMechanic {
         if (!player.hasPermission("craftbook.mech.signcopy.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.use-permissions");
             return;
         }
 

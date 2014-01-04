@@ -327,6 +327,9 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleMove(VehicleMoveEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getVehicle() instanceof Minecart) {
             try {
                 Minecart cart = (Minecart) event.getVehicle();
@@ -347,6 +350,9 @@ public class MechanicListenerAdapter implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleEnter(VehicleEnterEvent event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
             return;
@@ -374,6 +380,7 @@ public class MechanicListenerAdapter implements Listener {
 
         if (EventUtil.shouldIgnoreEvent(event))
             return;
+
         CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
             @Override

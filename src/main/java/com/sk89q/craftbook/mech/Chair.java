@@ -29,8 +29,10 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -155,6 +157,9 @@ public class Chair extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
@@ -171,6 +176,11 @@ public class Chair extends AbstractCraftBookMechanic {
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     lplayer.printError("mech.use-permission");
+                return;
+            }
+            if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    lplayer.printError("area.use-permissions");
                 return;
             }
             if (hasChair(player.getPlayer())) { // Stand

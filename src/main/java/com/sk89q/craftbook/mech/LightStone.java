@@ -26,6 +26,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 
 /**
  * This allows users to Right-click to check the light level.
@@ -35,6 +37,9 @@ public class LightStone extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -42,6 +47,12 @@ public class LightStone extends AbstractCraftBookMechanic {
         if(!player.hasPermission("craftbook.mech.lightstone.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.use-permissions");
             return;
         }
 

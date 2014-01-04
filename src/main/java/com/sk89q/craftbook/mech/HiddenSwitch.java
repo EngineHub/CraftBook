@@ -17,9 +17,11 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class HiddenSwitch extends AbstractCraftBookMechanic {
@@ -111,6 +113,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
@@ -121,6 +126,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
+            return;
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction()))
             return;
 
         if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))

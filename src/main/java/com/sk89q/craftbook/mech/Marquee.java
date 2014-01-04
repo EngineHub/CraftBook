@@ -11,6 +11,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 import com.sk89q.craftbook.common.VariableManager;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 
@@ -31,6 +32,12 @@ public class Marquee extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.marquee.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                lplayer.printError("area.use-permissions");
             return;
         }
 

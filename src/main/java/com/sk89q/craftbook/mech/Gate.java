@@ -239,6 +239,9 @@ public class Gate extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());

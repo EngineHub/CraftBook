@@ -44,6 +44,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
@@ -264,6 +265,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         Iterator<ItemStack> stackIt = event.getDrops().iterator();
         while(stackIt.hasNext()) {
             final ItemStack stack = stackIt.next();
@@ -304,6 +308,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
         if(!items.containsKey(event.getPlayer().getName())) return;
         List<ItemStack> its = items.get(event.getPlayer().getName());
@@ -315,6 +322,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
+
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
 

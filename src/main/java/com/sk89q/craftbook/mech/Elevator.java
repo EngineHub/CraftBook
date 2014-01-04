@@ -45,6 +45,8 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -141,6 +143,9 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -211,6 +216,12 @@ public class Elevator extends AbstractCraftBookMechanic {
             event.setCancelled(true);
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
+            return;
+        }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                localPlayer.printError("area.use-permissions");
             return;
         }
 

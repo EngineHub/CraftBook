@@ -35,6 +35,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
@@ -115,6 +117,9 @@ public class Bookcase extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if (EventUtil.shouldIgnoreEvent(event))
+            return;
+
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
@@ -126,6 +131,13 @@ public class Bookcase extends AbstractCraftBookMechanic {
                 player.printError("mech.use-permission");
             return;
         }
+
+        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("area.use-permissions");
+            return;
+        }
+
         if (CraftBookPlugin.inst().getConfiguration().bookcaseReadHoldingBlock || !player.isHoldingBlock())
             read(player);
     }
