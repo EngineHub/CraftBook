@@ -1,3 +1,26 @@
+3.8b4
+* Fixed many mechanics ignoring plugin protection.
+* Cache the secondary instance list of triggering mechanics to improve speed.
+* Heavily optimize Cooking Pot.
++ Add a max chair size option. Limits the distance between the clicked block and the sign (If sign required).
+* Fixed an error with AI mechanics.
++ Added Item Counter Variable IC.
++ Added CommandSign expansion signs.
+* Fixed SelfTriggering ICs not unloading correctly if the block behind the sign is destroyed.
++ Add a nicer message for corrupt tile entities.
+* Fixed Random ICs.
+* Fixed Teleporter permissions being inverted.
+* Fixed Cauldron ingredients not searching correctly.
+* Fixed CommandSigns not finding variables split across lines.
++ Added team support to PlayerSensor.
++ Added support for all PlayerSensor criteria in MessageSender IC.
++ Added PlayerTrap IC. Damages players with criteria of PlayerSensor.
+* Fixed CommandItem keep on death option.
++ Added IsAtLeast Variable IC.
+* Fixed XNOR having incorrect output.
++ Added an option to limit the speed of sign clicks.
+* Refactor and remove unneeded code.
+
 3.8b3
 + Add an enable option for snow, instead of using a combination of other options.
 - Remove the old MechanicManager system.

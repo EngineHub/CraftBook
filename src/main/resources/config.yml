@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8b2
+# CraftBook Configuration for Bukkit. Generated for version: 3.8b4
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -41,6 +41,9 @@ advanced-block-checks: true
 
 # In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.
 pedantic-block-checks: false
+
+# Make sure a player can only press signs so often.
+sign-click-timeout: 4
 
 # The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.
 language: en_US
@@ -185,6 +188,7 @@ mechanics:
         - QUARTZ_STAIRS
         face-correct-direction: true
         require-sign: false
+        max-distance: 3
     chunk-anchor:
         enable: true
         enable-redstone: true
