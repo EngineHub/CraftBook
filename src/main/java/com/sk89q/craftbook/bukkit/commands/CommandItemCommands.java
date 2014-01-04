@@ -78,6 +78,11 @@ public class CommandItemCommands {
     @CommandPermissions("craftbook.mech.commanditems.create")
     public void addCommandItem(CommandContext context, CommandSender sender) throws CommandException {
 
+        if(CommandItems.INSTANCE == null) {
+            sender.sendMessage("CommandItems are not enabled!");
+            return;
+        }
+
         if(!(sender instanceof Player))
             throw new CommandException("Can only add CommandItems as a player!");
         if(((Player) sender).getInventory().getItemInHand() == null)
