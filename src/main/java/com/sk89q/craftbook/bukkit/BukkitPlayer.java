@@ -21,7 +21,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.Vehicle;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
@@ -103,12 +102,6 @@ public class BukkitPlayer implements LocalPlayer {
     public boolean isInsideVehicle() {
 
         return player.isInsideVehicle();
-    }
-
-    @Override
-    public Vehicle getVehicle() {
-
-        return BukkitUtil.toVehicle((org.bukkit.entity.Vehicle) player.getVehicle());
     }
 
     @Override

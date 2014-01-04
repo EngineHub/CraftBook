@@ -52,8 +52,6 @@ public interface LocalPlayer {
 
     public boolean isInsideVehicle();
 
-    public Vehicle getVehicle();
-
     @Deprecated
     public int getHeldItemType();
 

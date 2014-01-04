@@ -42,7 +42,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
-import com.sk89q.craftbook.bukkit.BukkitVehicle;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
@@ -345,12 +344,13 @@ public class Elevator extends AbstractCraftBookMechanic {
         } else {
             // Teleport!
             if (player.isInsideVehicle()) {
-                newLocation.setX(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getX());
+
+                newLocation.setX(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getX());
                 newLocation.setY(floor.getY() + 2);
-                newLocation.setZ(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getZ());
-                newLocation.setYaw(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getYaw());
-                newLocation.setPitch(((BukkitVehicle)player.getVehicle()).getVehicle().getLocation().getPitch());
-                ((BukkitVehicle)player.getVehicle()).getVehicle().teleport(newLocation);
+                newLocation.setZ(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getZ());
+                newLocation.setYaw(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getYaw());
+                newLocation.setPitch(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
+                ((BukkitPlayer)player).getPlayer().getVehicle().teleport(newLocation);
             }
             player.setPosition(BukkitUtil.toLocation(newLocation).getPosition(), newLocation.getPitch(), newLocation.getYaw());
 
