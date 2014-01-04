@@ -27,6 +27,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean advancedBlockChecks;
     public boolean pedanticBlockChecks;
     public boolean showPermissionMessages;
+    public long signClickTimeout;
 
     public boolean updateNotifier;
     public boolean easterEggs;
@@ -102,6 +103,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("pedantic-block-checks", "In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.");
         pedanticBlockChecks = config.getBoolean("pedantic-block-checks", false);
+
+        config.setComment("sign-click-timeout", "Make sure a player can only press signs so often.");
+        signClickTimeout = config.getInt("sign-click-timeout", 4);
 
         config.setComment("language", "The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.");
         language = config.getString("language", "en_US");

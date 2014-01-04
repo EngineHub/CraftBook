@@ -16,6 +16,11 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -61,13 +66,29 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  */
 public class MechanicListenerAdapter implements Listener {
 
+    Set<String> signClickTimer = new HashSet<String>();
+
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(final PlayerInteractEvent event) {
 
         if (EventUtil.shouldIgnoreEvent(event))
             return;
 
         if(event.getClickedBlock() != null && SignUtil.isSign(event.getClickedBlock())) {
+            if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
+                if(signClickTimer.contains(event.getPlayer().getName())) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "Clicking sign too fast!");
+                    return;
+                } else {
+                    signClickTimer.add(event.getPlayer().getName());
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                        @Override
+                        public void run () {
+                            signClickTimer.remove(event.getPlayer().getName());
+                        }
+                    }, CraftBookPlugin.inst().getConfiguration().signClickTimeout);
+                }
+            }
             SignClickEvent ev = new SignClickEvent(event.getPlayer(), event.getAction(), event.getItem(), event.getClickedBlock(), event.getBlockFace());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if(ev.isCancelled())
