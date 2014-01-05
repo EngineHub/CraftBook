@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.sensors;
 
-import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.Server;
@@ -37,8 +36,6 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
 
     @Override
     public void load() {
-
-        getSign().setLine(3, getLine(3).toUpperCase(Locale.ENGLISH));
 
         // lets get the types to detect first
         types = EntityType.getDetected(getLine(3).split("<")[0].trim().split("<=")[0].trim().split(">=")[0].trim().split("==")[0].trim().split(">")[0].trim());

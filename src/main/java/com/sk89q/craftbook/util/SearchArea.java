@@ -54,6 +54,11 @@ public class SearchArea {
         this.world = world;
     }
 
+    public static SearchArea createEmptyArea() {
+
+        return new SearchArea();
+    }
+
     /**
      * Parses a line and creates the appropriate system of parsing for this Area.
      * 
@@ -177,7 +182,8 @@ public class SearchArea {
         } else if(hasRadiusAndCenter()) {
             if(LocationUtil.isWithinRadius(location, getCenter(), getRadius()))
                 return true;
-        }
+        } else
+            return true;
 
         return false;
     }

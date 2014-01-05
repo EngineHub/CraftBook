@@ -91,7 +91,7 @@ public enum EntityType {
         if (type != null) {
             types.add(type);
         } else {
-            for (char aChar : line.toCharArray()) {
+            for (char aChar : line.toUpperCase().toCharArray()) {
                 for (EntityType aType : EntityType.values()) {
                     if (aType.getCharName() == aChar) {
                         types.add(aType);

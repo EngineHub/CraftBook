@@ -7,7 +7,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -31,7 +30,10 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
     public void load() {
 
         band = getLine(2);
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+        if (!getLine(3).isEmpty())
+            area = SearchArea.createArea(getBackBlock(), getLine(3));
+        else
+            area = SearchArea.createEmptyArea();
 
         listening = new HashMap<String, SearchArea>();
     }
@@ -55,12 +57,8 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
             return;
 
         if(chip.getInput(0)) {
-            for(Player player : BukkitUtil.toSign(getSign()).getWorld().getPlayers()) {
-
-                if(area != null && !area.isWithinArea(player.getLocation())) continue;
+            for(Player player : area.getPlayersInArea())
                 listening.put(player.getName(), area);
-            }
-
             playlist.addPlayers(listening);
         } else {
 
