@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -12,6 +13,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.worldedit.blocks.BlockType;
 
 public class TeleportReciever extends AbstractSelfTriggeredIC {
 
@@ -68,7 +70,11 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
             return;
         }
 
-        p.teleport(getBackBlock().getLocation().add(0.5, 1.5, 0.5));
+        Block block = getBackBlock();
+        while(!BlockType.canPassThrough(block.getTypeId()))
+            block = block.getRelative(0,1,0);
+
+        p.teleport(block.getLocation().add(0.5, 0.5, 0.5));
         CraftBookPlugin.inst().wrapPlayer(p).print(welcome);
     }
 
