@@ -43,9 +43,11 @@ public class ParsingUtil {
 
         List<String> variables = new ArrayList<String>();
 
-        for(String bit : RegexUtil.PERCENT_PATTERN.split(line))
+        for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
+            if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
             if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
                 variables.add(bit.trim());
+        }
 
         return variables;
     }
@@ -85,6 +87,6 @@ public class ParsingUtil {
             }
         }
 
-        return line;
+        return line.replace("\\%", "%");
     }
 }
