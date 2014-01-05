@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -77,7 +76,6 @@ public class MechanicListenerAdapter implements Listener {
         if(event.getClickedBlock() != null && SignUtil.isSign(event.getClickedBlock())) {
             if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
                 if(signClickTimer.contains(event.getPlayer().getName())) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "Clicking sign too fast!");
                     return;
                 } else {
                     signClickTimer.add(event.getPlayer().getName());
