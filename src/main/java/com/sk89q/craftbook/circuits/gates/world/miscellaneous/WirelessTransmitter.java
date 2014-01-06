@@ -174,8 +174,14 @@ public class WirelessTransmitter extends AbstractIC {
                     memory.remove(args.getString(2));
                 else
                     sender.sendMessage(ChatColor.RED + "Invalid Boolean Argument!");
+            } else if (args.getString(1).equalsIgnoreCase("toggle") && args.argsLength() > 2) {
+
+                if(memory.contains(args.getString(2)))
+                    memory.remove(args.getString(2));
+                else
+                    memory.add(args.getString(2));
             } else
-                sender.sendMessage(ChatColor.RED + "Usage: /ic ic mc1110 <get/set> <band> <state>");
+                sender.sendMessage(ChatColor.RED + "Usage: /ic ic mc1110 <get/set/toggle> <band> <state>");
         }
 
         @Override
