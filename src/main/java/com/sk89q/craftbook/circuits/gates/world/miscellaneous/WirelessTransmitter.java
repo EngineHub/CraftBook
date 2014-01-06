@@ -162,7 +162,7 @@ public class WirelessTransmitter extends AbstractIC {
 
             if (args.getString(1).equalsIgnoreCase("get")) {
 
-                if(memory.contains(args.getString(1)))
+                if(memory.contains(args.getString(2)))
                     sender.sendMessage("Wireless-Band-State: TRUE");
                 else
                     sender.sendMessage("Wireless-Band-State: FALSE");
