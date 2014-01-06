@@ -1,7 +1,11 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -49,6 +53,11 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+        return true;
+    }
+
+    @Override
     public void trigger (ChipState chip) {
 
         Playlist playlist = RadioStation.getPlaylist(band);
@@ -57,11 +66,31 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
             return;
 
         if(chip.getInput(0)) {
+            List<String> players = new ArrayList<String>();
             for(Player player : area.getPlayersInArea())
-                listening.put(player.getName(), area);
-            playlist.addPlayers(listening);
-        } else {
+                players.add(player.getName());
+            if(players.size() != listening.size()) {
 
+                Map<String, SearchArea> removals = new HashMap<String, SearchArea>();
+
+                Iterator<Entry<String, SearchArea>> iter = listening.entrySet().iterator();
+                while(iter.hasNext()) {
+                    Entry<String, SearchArea> ent = iter.next();
+                    if(!players.contains(ent.getKey())) {
+                        removals.put(ent.getKey(), ent.getValue());
+                        iter.remove();
+                    }
+                }
+
+                for(String player : players) {
+                    if(!listening.containsKey(player))
+                        listening.put(player, area);
+                }
+
+                playlist.removePlayers(removals);
+                playlist.addPlayers(listening);
+            }
+        } else if(listening.size() > 0) {
             playlist.removePlayers(listening);
             listening.clear();
         }
