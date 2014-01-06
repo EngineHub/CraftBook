@@ -281,6 +281,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.chair.max-distance", "The maximum distance between the click point and the sign. (When require sign is on)");
         chairMaxDistance = config.getInt("mechanics.chair.max-distance", 3);
 
+        config.setComment("mechanics.chair.max-click-radius", "The maximum distance the player can be from the sign.");
+        chairMaxClickRadius = config.getInt("mechanics.chair.max-click-radius", 5);
+
 
         // Chunk Anchor Configuration Listener
         config.setComment("mechanics.chunk-anchor.enable", "Enable chunk anchors.");
