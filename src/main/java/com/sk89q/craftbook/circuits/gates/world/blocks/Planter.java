@@ -19,9 +19,7 @@ import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.blocks.ItemID;
 
 /**
  * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
@@ -103,7 +101,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                 if ((b = searchBlocks(it)) != null) {
                     if (c.getInventory().removeItem(new ItemStack(it.getType(), 1, it.getDurability())).isEmpty()) {
-                        b.setTypeIdAndData(getBlockByItem(it.getTypeId()), (byte) it.getDurability(), true);
+                        b.setTypeIdAndData(getBlockByItem(it.getType()).getId(), (byte) it.getDurability(), true);
                         return true;
                     } else
                         continue;
@@ -123,7 +121,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                     Block b = null;
                     if ((b = searchBlocks(stack)) != null) {
                         if (ItemUtil.takeFromItemEntity(itemEnt, 1)) {
-                            b.setTypeIdAndData(getBlockByItem(stack.getTypeId()), stack.getData().getData(), true);
+                            b.setTypeIdAndData(getBlockByItem(stack.getType()).getId(), stack.getData().getData(), true);
                             return true;
                         }
                     }
@@ -161,7 +159,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         switch (itemId) {
             case SAPLING:
             case SEEDS:
-            case NETHER_WARTS:
+            case NETHER_STALK:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
             case CACTUS:
@@ -191,7 +189,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case POTATO_ITEM:
             case CARROT_ITEM:
                 return blockId == Material.SOIL;
-            case NETHER_WARTS:
+            case NETHER_STALK:
                 return blockId == Material.SOUL_SAND;
             case CACTUS:
                 return blockId == Material.SAND;
@@ -206,35 +204,21 @@ public class Planter extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    protected int getBlockByItem(int itemId) {
+    protected Material getBlockByItem(Material itemId) {
 
         switch (itemId) {
-            case ItemID.SEEDS:
-                return BlockID.CROPS;
-            case ItemID.MELON_SEEDS:
-                return BlockID.MELON_STEM;
-            case ItemID.PUMPKIN_SEEDS:
-                return BlockID.PUMPKIN_STEM;
-            case BlockID.SAPLING:
-                return BlockID.SAPLING;
-            case ItemID.NETHER_WART_SEED:
-                return BlockID.NETHER_WART;
-            case BlockID.CACTUS:
-                return BlockID.CACTUS;
-            case ItemID.POTATO:
-                return BlockID.POTATOES;
-            case ItemID.CARROT:
-                return BlockID.CARROTS;
-            case BlockID.RED_FLOWER:
-                return BlockID.RED_FLOWER;
-            case BlockID.YELLOW_FLOWER:
-                return BlockID.YELLOW_FLOWER;
-            case BlockID.RED_MUSHROOM:
-                return BlockID.RED_MUSHROOM;
-            case BlockID.BROWN_MUSHROOM:
-                return BlockID.BROWN_MUSHROOM;
-            case BlockID.LILY_PAD:
-                return BlockID.LILY_PAD;
+            case SEEDS:
+                return Material.CROPS;
+            case MELON_SEEDS:
+                return Material.MELON_STEM;
+            case PUMPKIN_SEEDS:
+                return Material.PUMPKIN_STEM;
+            case NETHER_STALK:
+                return Material.NETHER_WARTS;
+            case POTATO_ITEM:
+                return Material.POTATO;
+            case CARROT_ITEM:
+                return Material.CARROT;
             default:
                 return itemId;
         }

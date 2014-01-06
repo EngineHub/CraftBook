@@ -455,7 +455,7 @@ public class ItemUtil {
     public static boolean isAPotionIngredient(ItemStack item) {
 
         switch(item.getType()) {
-            case NETHER_WARTS:
+            case NETHER_STALK:
             case GLOWSTONE_DUST:
             case REDSTONE:
             case SPIDER_EYE:

@@ -135,7 +135,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(block.getType() == Material.COCOA && ((block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC))
             return true;
 
-        if(block.getType() == Material.NETHER_STALK && block.getData() >= 0x3)
+        if(block.getType() == Material.NETHER_WARTS && block.getData() >= 0x3)
             return true;
 
         if(block.getType() == Material.MELON_BLOCK || block.getType() == Material.PUMPKIN)
