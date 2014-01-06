@@ -292,6 +292,19 @@ public class Chair extends AbstractCraftBookMechanic {
                     }
                 }
             }).syncStart();
+
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+                @Override
+                public void onPacketReceiving(PacketEvent e) {
+                    if (!e.isCancelled()) {
+                        for(double d : e.getPacket().getDoubles().getValues())
+                            if(Double.isNaN(d)) {
+                                e.setCancelled(true);
+                                return;
+                            }
+                    }
+                }
+            }).syncStart();
         } catch(Throwable e) {
             CraftBookPlugin.inst().getLogger().warning("ProtocolLib is required for chairs! Disabling chairs!");
             return false;
