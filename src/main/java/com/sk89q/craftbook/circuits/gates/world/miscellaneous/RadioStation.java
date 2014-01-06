@@ -3,15 +3,15 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
 import com.sk89q.craftbook.util.HistoryHashMap;
 
-public class RadioStation extends AbstractIC {
+public class RadioStation extends AbstractSelfTriggeredIC {
 
     String band;
 
@@ -24,6 +24,11 @@ public class RadioStation extends AbstractIC {
     public static Playlist getPlaylist(String band) {
 
         return stations.get(band);
+    }
+
+    @Override
+    public boolean isAlwaysST() {
+        return true;
     }
 
     @Override
@@ -51,9 +56,9 @@ public class RadioStation extends AbstractIC {
             Playlist playlist = new Playlist(getLine(2));
             stations.put(band, playlist);
         }
-        if (chip.getInput(0)) {
+        if (chip.getInput(0) && !stations.get(band).isPlaying()) {
             stations.get(band).startPlaylist();
-        } else {
+        } else if(stations.get(band).isPlaying()) {
             stations.get(band).stopPlaylist();
         }
     }

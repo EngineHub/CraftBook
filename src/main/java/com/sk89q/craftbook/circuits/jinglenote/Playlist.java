@@ -41,7 +41,7 @@ public class Playlist {
     volatile MidiJingleSequencer midiSequencer;
     volatile StringJingleSequencer stringSequencer;
 
-    boolean stopping = false;
+    boolean stopping = true;
 
     public Playlist(String name) {
 
@@ -73,6 +73,11 @@ public class Playlist {
         }
 
         br.close();
+    }
+
+    public boolean isPlaying() {
+
+        return !stopping;
     }
 
     public void startPlaylist() {
