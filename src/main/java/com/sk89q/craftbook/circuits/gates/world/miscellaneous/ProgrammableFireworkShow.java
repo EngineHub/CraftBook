@@ -121,7 +121,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Name of firework show", null};
+            return new String[] {"Name of firework show", "true to stop on low"};
         }
     }
 
