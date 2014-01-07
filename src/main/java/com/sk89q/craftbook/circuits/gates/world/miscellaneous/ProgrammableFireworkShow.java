@@ -61,11 +61,17 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
     String show;
     FireworkShowHandler handler;
 
+    boolean stopOnLow;
+
     @Override
     public void load() {
 
         show = getLine(2).trim();
         handler = new FireworkShowHandler(show);
+
+        String[] bits = RegexUtil.COMMA_PATTERN.split(getLine(3));
+        if(bits.length > 0)
+            stopOnLow = Boolean.getBoolean(bits[0]);
     }
 
     @Override
@@ -73,7 +79,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0) && !handler.isShowRunning())
             handler.startShow();
-        else if (handler.isShowRunning())
+        else if (handler.isShowRunning() && stopOnLow)
             handler.stopShow();
     }
 
