@@ -29,19 +29,15 @@ public class Playlist {
     String playlist;
 
     protected volatile Map<String, SearchArea> players; // Super safe code here.. this is going to be accessed across threads.
-    private volatile Map<String, SearchArea> lastPlayers;
-
-    int position;
+    private volatile  Map<String, SearchArea> lastPlayers;
 
     List<String> lines = new ArrayList<String>();
 
     BukkitTask task;
 
-    volatile JingleNoteManager jNote = new JingleNoteManager();
-    volatile MidiJingleSequencer midiSequencer;
-    volatile StringJingleSequencer stringSequencer;
+    protected PlaylistInterpreter show = new PlaylistInterpreter();
 
-    boolean stopping = true;
+    private boolean playing = false;
 
     public Playlist(String name) {
 
@@ -77,95 +73,78 @@ public class Playlist {
 
     public boolean isPlaying() {
 
-        return !stopping;
+        return playing;
     }
 
     public void startPlaylist() {
 
-        stopping = false;
-        position = 0;
+        playing = true;
         if (task != null)
             task.cancel();
-        Runnable show = new PlaylistInterpreter();
+        show = new PlaylistInterpreter();
         task = Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), show);
     }
 
     public void stopPlaylist() {
 
         lastPlayers.clear();
-        jNote.stopAll();
+        show.jNote.stopAll();
+        if(show.sequencer != null)
+            show.sequencer.stop();
         players.clear();
-        position = 0;
         if (task != null)
             task.cancel();
-        stopping = true;
+        show.position = 0;
+        playing = false;
     }
 
-    public void setPlayers(Map<String, SearchArea> players) {
+    public void setPlayers(Map<String, SearchArea> newPlayers) {
 
-        lastPlayers = new HashMap<String, SearchArea>(this.players);
-        this.players.clear();
-        this.players.putAll(players);
+        lastPlayers = new HashMap<String, SearchArea>(players);
+        players.clear();
+        players.putAll(newPlayers);
+        CraftBookPlugin.logDebugMessage("Reset player list!", "playlist");
     }
 
-    public void addPlayers(Map<String, SearchArea> players) {
+    public void addPlayers(Map<String, SearchArea> newPlayers) {
 
-        lastPlayers = new HashMap<String, SearchArea>(this.players);
-        this.players.putAll(players);
+        lastPlayers = new HashMap<String, SearchArea>(players);
+        players.putAll(newPlayers);
+        CraftBookPlugin.logDebugMessage("Added player list!", "playlist");
     }
 
-    public void removePlayers(Map<String, SearchArea> players) {
+    public void removePlayers(Map<String, SearchArea> newPlayers) {
 
-        lastPlayers = new HashMap<String, SearchArea>(this.players);
-        for(String player : players.keySet())
-            this.players.remove(player);
+        lastPlayers = new HashMap<String, SearchArea>(players);
+        for(String player : newPlayers.keySet())
+            players.remove(player);
+        CraftBookPlugin.logDebugMessage("Subtracted from player list!", "playlist");
     }
 
     private class PlaylistInterpreter implements Runnable {
 
+        protected volatile int position;
+
+        volatile JingleNoteManager jNote = new JingleNoteManager();
+        volatile JingleSequencer sequencer;
+
+        public PlaylistInterpreter() {
+            position = 0;
+        }
+
         @Override
         public void run () {
 
-            while (position < lines.size() && !stopping) {
+            while (position < lines.size() && isPlaying()) {
 
-                if(midiSequencer != null) {
+                if(sequencer != null) {
 
-                    while(midiSequencer != null && midiSequencer.isSongPlaying()) {
+                    while(sequencer != null && sequencer.isPlaying()) {
 
-                        if(!areIdentical(players, lastPlayers)) {
+                        if(!players.equals(lastPlayers)) {
 
-                            for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
-
-                                if(players.containsKey(p.getKey()))
-                                    continue;
-
-                                jNote.stop(p.getKey());
-                            }
-
-                            for(Entry<String, SearchArea> p : players.entrySet()) {
-
-                                if(lastPlayers.containsKey(p.getKey()))
-                                    continue;
-
-                                jNote.play(p.getKey(), midiSequencer, p.getValue());
-                            }
-
-                            lastPlayers = new HashMap<String, SearchArea>(players);
-                        }
-
-                        try {
-                            Thread.sleep(1000L);
-                        } catch (InterruptedException e) {
-                            BukkitUtil.printStacktrace(e);
-                        }
-                    }
-                    midiSequencer = null;
-                }
-                if(stringSequencer != null) {
-
-                    while(stringSequencer != null && stringSequencer.isSongPlaying()) {
-
-                        if(!lastPlayers.equals(players)) {
+                            CraftBookPlugin.logDebugMessage("Old Players: " + players.toString(), "playlist");
+                            CraftBookPlugin.logDebugMessage("Old LastPlayers: " + lastPlayers.toString(), "playlist");
 
                             for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
@@ -173,6 +152,8 @@ public class Playlist {
                                     continue;
 
                                 jNote.stop(p.getKey());
+
+                                CraftBookPlugin.logDebugMessage("Removed player from sequencer: " + p.getKey(), "playlist");
                             }
 
                             for(Entry<String, SearchArea> p : players.entrySet()) {
@@ -180,20 +161,25 @@ public class Playlist {
                                 if(lastPlayers.containsKey(p.getKey()))
                                     continue;
 
-                                jNote.play(p.getKey(), stringSequencer, p.getValue());
+                                jNote.play(p.getKey(), sequencer, p.getValue());
+
+                                CraftBookPlugin.logDebugMessage("Added player to sequencer: " + p.getKey(), "playlist");
                             }
 
                             lastPlayers = new HashMap<String, SearchArea>(players);
                         }
 
                         try {
-                            Thread.sleep(1000L);
+                            Thread.sleep(10L);
                         } catch (InterruptedException e) {
                             BukkitUtil.printStacktrace(e);
                         }
                     }
-                    stringSequencer = null;
+                    sequencer = null;
+                    CraftBookPlugin.logDebugMessage("Erasing sequencer", "playlist");
                 }
+
+                if(sequencer != null) continue; //Don't continue until they've closed.
 
                 if(position >= lines.size()) {
                     CraftBookPlugin.inst().getLogger().warning("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
@@ -207,8 +193,10 @@ public class Playlist {
 
                 if (line.startsWith("wait ")) {
 
-                    if(!stopping) {
+                    if(isPlaying()) {
+                        task.cancel();
                         PlaylistInterpreter show = new PlaylistInterpreter();
+                        show.position = position;
                         task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
                     }
                     return;
@@ -246,13 +234,19 @@ public class Playlist {
                     }
 
                     try {
-                        midiSequencer = new MidiJingleSequencer(file, false);
-                        if (!midiSequencer.getSequencer().isOpen()) {
-                            midiSequencer.getSequencer().open();
+                        sequencer = new MidiJingleSequencer(file, false);
+                        if (!((MidiJingleSequencer) sequencer).getSequencer().isOpen()) {
+                            ((MidiJingleSequencer) sequencer).getSequencer().open();
                         }
 
-                        for(Entry<String, SearchArea> player : players.entrySet())
-                            jNote.play(player.getKey(), midiSequencer, player.getValue());
+                        CraftBookPlugin.logDebugMessage("Player list on midi create: " + players.toString(), "playlist");
+
+                        for(Entry<String, SearchArea> player : players.entrySet()) {
+                            jNote.play(player.getKey(), sequencer, player.getValue());
+                            CraftBookPlugin.logDebugMessage("Added player to midi sequencer upon creation: " + player.getKey(), "playlist");
+                        }
+
+                        lastPlayers = new HashMap<String, SearchArea>(players);
 
                         try {
                             Thread.sleep(1000L);
@@ -278,10 +272,14 @@ public class Playlist {
                     }
                     String tune = line.replace("tune ", "");
 
-                    stringSequencer = new StringJingleSequencer(tune, 0);
+                    sequencer = new StringJingleSequencer(tune, 0);
 
-                    for(Entry<String, SearchArea> player : players.entrySet())
-                        jNote.play(player.getKey(), stringSequencer, player.getValue());
+                    for(Entry<String, SearchArea> player : players.entrySet()) {
+                        jNote.play(player.getKey(), sequencer, player.getValue());
+                        CraftBookPlugin.logDebugMessage("Added player to string sequencer upon creation: " + player.getKey(), "playlist");
+                    }
+
+                    lastPlayers = new HashMap<String, SearchArea>(players);
 
                     try {
                         Thread.sleep(1000L);
@@ -313,20 +311,19 @@ public class Playlist {
         }
     }
 
-    public boolean areIdentical(Map<?,?> h1, Map<?,?> h2) {
-        if ( h1.size() != h2.size() ) {
+    public boolean areIdentical(Map<String, SearchArea> h1, Map<String, SearchArea> h2) {
+        if ( h1.size() != h2.size() )
             return false;
-        }
-        Map<?,?> clone = new HashMap(h2);
-        Iterator<?> it = h1.entrySet().iterator();
+        Map<String, SearchArea> clone = new HashMap<String, SearchArea>(h2);
+        Iterator<String> it = h1.keySet().iterator();
         while (it.hasNext() ){
-            Object o = it.next();
+            String o = it.next();
             if (clone.containsKey(o)){
                 clone.remove(o);
             } else {
                 return false;
             }
         }
-        return true;
+        return clone.isEmpty();
     }
 }

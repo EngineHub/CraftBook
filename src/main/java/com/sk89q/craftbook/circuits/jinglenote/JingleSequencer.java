@@ -17,6 +17,8 @@ public interface JingleSequencer {
 
     public void stop();
 
+    public boolean isPlaying();
+
     public class Note {
 
         Instrument instrument;

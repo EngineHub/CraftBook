@@ -207,7 +207,8 @@ public class StringJingleSequencer implements JingleSequencer {
 
     }
 
-    public boolean isSongPlaying () {
+    @Override
+    public boolean isPlaying () {
         return isPlaying;
     }
 }

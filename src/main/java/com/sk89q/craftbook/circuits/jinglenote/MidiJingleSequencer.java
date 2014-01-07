@@ -62,6 +62,7 @@ public class MidiJingleSequencer implements JingleSequencer {
 
     protected final File midiFile;
     private Sequencer sequencer = null;
+    private boolean running = false;
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
 
@@ -92,6 +93,8 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
 
+        if(notePlayer.override) return;
+
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
@@ -104,6 +107,8 @@ public class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
+
+                    if(notePlayer.override) return;
 
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
 
@@ -135,17 +140,24 @@ public class MidiJingleSequencer implements JingleSequencer {
             try {
                 if (sequencer.isOpen()) {
                     sequencer.start();
-                }
+                    running = true;
+                    CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + notePlayer.player, "midi");
+                } else
+                    throw new IllegalArgumentException("Sequencer is not open!");
             }
-            catch(Exception ignored){}
+            catch(Exception e){
+                BukkitUtil.printStacktrace(e);
+            }
 
             while (sequencer.isRunning()) {
-                Thread.sleep(1000);
+                if(notePlayer.override) return;
+                Thread.sleep(10L);
             }
 
-            if (sequencer.isRunning()) {
+            if (sequencer.isRunning())
                 sequencer.stop();
-            }
+            running = false;
+            CraftBookPlugin.logDebugMessage("Closing midi sequencer: " + notePlayer.player, "midi");
         } catch (MidiUnavailableException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
@@ -158,7 +170,9 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void stop() {
 
+        CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer", "midi");
         if (sequencer != null && sequencer.isOpen()) {
+            sequencer.stop();
             sequencer.close();
         }
     }
@@ -212,13 +226,13 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) percussion[i];
     }
 
-
-    public boolean isSongPlaying() {
-
-        return sequencer.isRunning();
-    }
-
     public Sequencer getSequencer() {
         return sequencer;
+    }
+
+    @Override
+    public boolean isPlaying () {
+
+        return running;
     }
 }

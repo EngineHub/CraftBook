@@ -23,13 +23,16 @@ public class JingleNoteManager {
      */
     protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
+    public boolean isPlaying(String player) {
+
+        return instances.containsKey(player) && instances.get(player).sequencer.isPlaying();
+    }
+
     public void play(String player, JingleSequencer sequencer, SearchArea area) {
 
         // Existing player found!
         if (instances.containsKey(player)) {
-            JingleNotePlayer existing = instances.get(player);
-            existing.stop();
-            instances.remove(player);
+            stop(player);
         }
 
         JingleNotePlayer notePlayer = new BukkitJingleNotePlayer(player, sequencer, area);
@@ -46,9 +49,7 @@ public class JingleNoteManager {
 
         // Existing player found!
         if (instances.containsKey(player)) {
-            JingleNotePlayer existing = instances.get(player);
-            existing.stop();
-            instances.remove(player);
+            instances.remove(player).stop();
             return true;
         }
         return false;

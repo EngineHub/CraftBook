@@ -1,9 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,6 +8,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -66,33 +64,45 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
             return;
 
         if(chip.getInput(0)) {
-            List<String> players = new ArrayList<String>();
-            for(Player player : area.getPlayersInArea())
-                players.add(player.getName());
-            if(players.size() != listening.size()) {
+            if(area.getPlayersInArea().size() != listening.size()) {
 
                 Map<String, SearchArea> removals = new HashMap<String, SearchArea>();
 
-                Iterator<Entry<String, SearchArea>> iter = listening.entrySet().iterator();
-                while(iter.hasNext()) {
-                    Entry<String, SearchArea> ent = iter.next();
-                    if(!players.contains(ent.getKey())) {
-                        removals.put(ent.getKey(), ent.getValue());
-                        iter.remove();
+                for(Entry<String, SearchArea> key : listening.entrySet()) {
+                    boolean found = false;
+                    for(Player p : area.getPlayersInArea()) {
+                        if(p.getName().equals(key.getKey())) {
+                            found = true;
+                            break;
+                        }
                     }
+                    if (!found) removals.put(key.getKey(), key.getValue());
                 }
 
-                for(String player : players) {
-                    if(!listening.containsKey(player))
-                        listening.put(player, area);
+                if(removals.size() > 0) {
+                    playlist.removePlayers(removals);
+                    for(String key : removals.keySet())
+                        listening.remove(key);
                 }
 
-                playlist.removePlayers(removals);
-                playlist.addPlayers(listening);
+                boolean changed = false;
+
+                for(Player player : area.getPlayersInArea())
+                    if(!listening.containsKey(player.getName())) {
+                        listening.put(player.getName(), area);
+                        changed = true;
+                    }
+
+                if(changed)
+                    playlist.addPlayers(listening);
+
+                CraftBookPlugin.logDebugMessage("Reset listener list! Size of: " + listening.size(), "ic-mc1277");
             }
         } else if(listening.size() > 0) {
             playlist.removePlayers(listening);
             listening.clear();
+
+            CraftBookPlugin.logDebugMessage("Cleared listener list!", "ic-mc1277");
         }
     }
 

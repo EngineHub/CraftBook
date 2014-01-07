@@ -15,6 +15,8 @@ public abstract class JingleNotePlayer implements Runnable {
     protected JingleSequencer sequencer;
     protected SearchArea area;
 
+    protected boolean override = false;
+
     /**
      * Constructs a new JingleNotePlayer
      * 
@@ -27,6 +29,7 @@ public abstract class JingleNotePlayer implements Runnable {
         this.player = player;
         sequencer = seq;
         this.area = area;
+        override = false;
     }
 
     @Override
@@ -50,6 +53,10 @@ public abstract class JingleNotePlayer implements Runnable {
         }
     }
 
+    public boolean isPlaying() {
+        return sequencer.isPlaying();
+    }
+
     public String getPlayer() {
 
         return player;
@@ -57,9 +64,10 @@ public abstract class JingleNotePlayer implements Runnable {
 
     public void stop() {
 
-        if (sequencer != null) {
-            sequencer.stop();
-        }
+        override = true;
+        //if (sequencer != null) {
+        //sequencer.stop();
+        //}
     }
 
     public abstract void play(Note note);

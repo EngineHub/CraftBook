@@ -52,15 +52,18 @@ public class RadioStation extends AbstractSelfTriggeredIC {
     @Override
     public void trigger (ChipState chip) {
 
-        if (stations.get(band) == null) {
-            Playlist playlist = new Playlist(getLine(2));
+        Playlist playlist = null;
+
+        if (!stations.containsKey(band)) {
+            playlist = new Playlist(getLine(2));
             stations.put(band, playlist);
-        }
-        if (chip.getInput(0) && !stations.get(band).isPlaying()) {
-            stations.get(band).startPlaylist();
-        } else if(stations.get(band).isPlaying()) {
-            stations.get(band).stopPlaylist();
-        }
+        } else
+            playlist = stations.get(band);
+
+        if (chip.getInput(0) && !playlist.isPlaying())
+            playlist.startPlaylist();
+        else if(playlist.isPlaying())
+            playlist.stopPlaylist();
     }
 
     public static class Factory extends AbstractICFactory {
