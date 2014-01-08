@@ -183,7 +183,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
             ChangedSign otherSign = null;
 
-            Block ot = SignUtil.getNextSign(block, sign.getLine(1), 4);
+            Block ot = SignUtil.getNextSign(BukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
             if(ot != null)
                 otherSign = BukkitUtil.toChangedSign(ot);
 
@@ -560,12 +560,10 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
-        if(other != null) {
-            addBlocks(s, getBlocks(other));
-            setBlocks(other, 0);
+        if(other == null)
             return hasEnoughBlocks(s);
-        } else
-            return hasEnoughBlocks(s);
+        else
+            return s.getLine(3).equalsIgnoreCase("infinite") || other.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
 
     protected class GateColumn {
