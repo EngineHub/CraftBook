@@ -25,7 +25,6 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 
 public class RecipeCommands {
 
@@ -51,6 +50,7 @@ public class RecipeCommands {
     }
 
     @Command(aliases = {"save", "add"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
+    @CommandPermissions(value = "craftbook.mech.recipes.add")
     public void saveRecipe(CommandContext context, CommandSender sender) throws CommandException {
 
         if(RecipeManager.INSTANCE == null) {
@@ -64,9 +64,6 @@ public class RecipeCommands {
         String name = context.getString(0);
         RecipeType type = RecipeType.getTypeFromName(context.getString(1));
         HashMap<String, Object> advancedData = new HashMap<String, Object>();
-
-        if(!player.hasPermission("craftbook.mech.recipes.add"))
-            throw new CommandPermissionsException();
 
         if (context.hasFlag('p')) {
             advancedData.put("permission-node", context.getFlag('p'));
