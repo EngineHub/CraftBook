@@ -341,15 +341,26 @@ public class CraftBookPlugin extends JavaPlugin {
                     Calendar date = Calendar.getInstance();
 
                     if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
-                        getLogger().info("Happy " + (date.get(Calendar.YEAR) - 2012) + "th reddit cakeday me4502!");
+                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2012) + " reddit cakeday me4502!");
                     else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
                         getLogger().info("Happy birthday me4502!");
                     else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
                         getLogger().info("Happy new years! Happy " + date.get(Calendar.YEAR) + "!!!");
                     else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
-                        getLogger().info("Happy " + (date.get(Calendar.YEAR) - 2010) + "th birthday CraftBook!");
+                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2010) + " birthday CraftBook!");
                     else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
                         getLogger().info("CraftBook has been under Me4502's 'harsh dictatorship :P' for " + (date.get(Calendar.YEAR) - 2012) + " year(s) today!");
+                }
+
+                private String formatDate(int date) {
+                    if (String.valueOf(date).endsWith("1"))
+                        return date + "st";
+                    else if (String.valueOf(date).endsWith("2"))
+                        return date + "nd";
+                    else if (String.valueOf(date).endsWith("3"))
+                        return date + "rd";
+                    else
+                        return date + "th";
                 }
             }, 20L);
         }
