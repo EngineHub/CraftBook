@@ -65,6 +65,11 @@ public class Jukebox extends AbstractSelfTriggeredIC {
 
         if(playlist == null) return; //Heh?
 
+        if (chip.getInput(0) && !playlist.isPlaying())
+            playlist.startPlaylist();
+        else if(!chip.getInput(0) && playlist.isPlaying())
+            playlist.stopPlaylist();
+
         for(Player p : Bukkit.getServer().getOnlinePlayers()) {
             if(area != null && !area.isWithinArea(p.getLocation())) {
                 if(players.containsKey(p.getName()))
@@ -75,10 +80,6 @@ public class Jukebox extends AbstractSelfTriggeredIC {
         }
 
         playlist.getPlaylistInterpreter().setPlayers(players);
-        if (chip.getInput(0) && !playlist.isPlaying())
-            playlist.startPlaylist();
-        else if (!chip.getInput(0) && playlist.isPlaying())
-            playlist.stopPlaylist();
 
         chip.setOutput(0, playlist.isPlaying());
     }
