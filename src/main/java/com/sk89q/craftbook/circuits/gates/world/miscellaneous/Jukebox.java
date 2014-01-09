@@ -21,6 +21,8 @@ public class Jukebox extends AbstractSelfTriggeredIC {
 
     public static Map<Location, Playlist> playlists;
 
+    Map<String, SearchArea> players;
+
     SearchArea area;
 
     public Jukebox (Server server, ChangedSign sign, ICFactory factory) {
@@ -42,6 +44,8 @@ public class Jukebox extends AbstractSelfTriggeredIC {
 
         if(!playlists.containsKey(getBackBlock().getLocation()))
             playlists.put(getBackBlock().getLocation(), new Playlist(plist));
+
+        players = new HashMap<String, SearchArea>();
     }
 
     @Override
@@ -61,17 +65,22 @@ public class Jukebox extends AbstractSelfTriggeredIC {
 
         if(playlist == null) return; //Heh?
 
-        Map<String, SearchArea> players = new HashMap<String, SearchArea>();
         for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if(area != null && !area.isWithinArea(p.getLocation())) continue;
-            players.put(p.getName(), area);
+            if(area != null && !area.isWithinArea(p.getLocation())) {
+                if(players.containsKey(p.getName()))
+                    players.remove(p.getName());
+                continue;
+            } else if (!players.containsKey(p.getName()))
+                players.put(p.getName(), area);
         }
 
-        playlist.setPlayers(players);
-        if(chip.getInput(0))
+        playlist.getPlaylistInterpreter().setPlayers(players);
+        if (chip.getInput(0) && !playlist.isPlaying())
             playlist.startPlaylist();
-        else
+        else if (!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
+
+        chip.setOutput(0, playlist.isPlaying());
     }
 
     public static class Factory extends AbstractICFactory {

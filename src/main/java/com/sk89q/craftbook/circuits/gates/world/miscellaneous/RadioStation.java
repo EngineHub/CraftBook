@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -9,13 +12,12 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.jinglenote.Playlist;
-import com.sk89q.craftbook.util.HistoryHashMap;
 
 public class RadioStation extends AbstractSelfTriggeredIC {
 
     String band;
 
-    public static final HistoryHashMap<String, Playlist> stations = new HistoryHashMap<String, Playlist>(100);
+    public static final Map<String, Playlist> stations = new HashMap<String, Playlist>();
 
     public RadioStation (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
@@ -62,8 +64,10 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0) && !playlist.isPlaying())
             playlist.startPlaylist();
-        else if(playlist.isPlaying())
+        else if(!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
+
+        chip.setOutput(0, playlist.isPlaying());
     }
 
     public static class Factory extends AbstractICFactory {

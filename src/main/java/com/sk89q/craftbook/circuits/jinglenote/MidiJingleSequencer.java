@@ -133,7 +133,7 @@ public class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void close() {
-
+                    running = false;
                 }
             });
 
@@ -170,11 +170,12 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void stop() {
 
-        CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer", "midi");
+        CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer. (Stop called)", "midi");
         if (sequencer != null && sequencer.isOpen()) {
             sequencer.stop();
             sequencer.close();
         }
+        running = false;
     }
 
     protected static byte toMCNote(int n) {

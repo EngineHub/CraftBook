@@ -5,6 +5,7 @@
 
 package com.sk89q.craftbook.circuits.jinglenote;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.jinglenote.JingleSequencer.Note;
 import com.sk89q.craftbook.util.SearchArea;
@@ -15,7 +16,7 @@ public abstract class JingleNotePlayer implements Runnable {
     protected JingleSequencer sequencer;
     protected SearchArea area;
 
-    protected boolean override = false;
+    protected boolean override;
 
     /**
      * Constructs a new JingleNotePlayer
@@ -44,16 +45,18 @@ public abstract class JingleNotePlayer implements Runnable {
                 BukkitUtil.printStacktrace(t);
             }
 
-            Thread.sleep(500);
+            Thread.sleep(500L);
         } catch (InterruptedException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
+            CraftBookPlugin.logDebugMessage("Finished playing for: " + player + " (Override is: " + override + ")", "midi");
             sequencer.stop();
             sequencer = null;
         }
     }
 
     public boolean isPlaying() {
+        if(override) return false;
         return sequencer.isPlaying();
     }
 
@@ -66,7 +69,7 @@ public abstract class JingleNotePlayer implements Runnable {
 
         override = true;
         //if (sequencer != null) {
-        //sequencer.stop();
+        //    sequencer.stop();
         //}
     }
 

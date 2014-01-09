@@ -80,7 +80,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
                 }
 
                 if(removals.size() > 0) {
-                    playlist.removePlayers(removals);
+                    playlist.getPlaylistInterpreter().removePlayers(removals);
                     for(String key : removals.keySet())
                         listening.remove(key);
                 }
@@ -94,16 +94,18 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
                     }
 
                 if(changed)
-                    playlist.addPlayers(listening);
+                    playlist.getPlaylistInterpreter().addPlayers(listening);
 
                 CraftBookPlugin.logDebugMessage("Reset listener list! Size of: " + listening.size(), "ic-mc1277");
             }
         } else if(listening.size() > 0) {
-            playlist.removePlayers(listening);
+            playlist.getPlaylistInterpreter().removePlayers(listening);
             listening.clear();
 
             CraftBookPlugin.logDebugMessage("Cleared listener list!", "ic-mc1277");
         }
+
+        chip.setOutput(0, playlist.isPlaying());
     }
 
     public static class Factory extends AbstractICFactory {
