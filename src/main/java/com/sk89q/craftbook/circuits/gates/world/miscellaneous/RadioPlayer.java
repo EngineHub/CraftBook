@@ -105,7 +105,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
             CraftBookPlugin.logDebugMessage("Cleared listener list!", "ic-mc1277");
         }
 
-        chip.setOutput(0, playlist.isPlaying());
+        chip.setOutput(0, playlist.isPlaying() && !listening.isEmpty());
     }
 
     public static class Factory extends AbstractICFactory {
