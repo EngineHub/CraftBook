@@ -110,10 +110,8 @@ public class ProtectionUtil {
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
 
-            //TODO
-            //EventUtil.ignoreEvent(event);
-            //CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
-            //return !event.isCancelled();
+            if(!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK))
+                return false;
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
         return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.CHEST_ACCESS, block.getLocation(), CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
