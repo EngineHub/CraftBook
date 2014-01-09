@@ -51,6 +51,7 @@ public class ProtectionUtil {
      */
     public static boolean canBuild(Player player, Block block, boolean build) {
 
+        if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
 
             CompatabilityUtil.disableInterferences(player);
@@ -81,6 +82,7 @@ public class ProtectionUtil {
      */
     public static boolean canUse(Player player, Location loc, BlockFace face, Action action) {
 
+        if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
 
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
@@ -90,6 +92,31 @@ public class ProtectionUtil {
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
         return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.USE, loc, CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
+    }
+
+    /**
+     * Checks to see if a player can use at a location. This will return
+     * true if region protection is disabled or WorldGuard is not found.
+     *
+     * @param player The player to check.
+     * @param loc    The location to check at.
+     *
+     * @return whether {@code player} can build at {@code loc}
+     *
+     * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
+     */
+    public static boolean canAccessInventory(Player player, Block block) {
+
+        if (!shouldUseProtection()) return true;
+        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+
+            //TODO
+            //EventUtil.ignoreEvent(event);
+            //CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
+            //return !event.isCancelled();
+        }
+        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
+        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.CHEST_ACCESS, block.getLocation(), CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
     }
 
     /**
@@ -103,6 +130,7 @@ public class ProtectionUtil {
      */
     public static boolean canBlockForm(Block block, BlockState newState) {
 
+        if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
 
             BlockFormEvent event = new BlockFormEvent(block, newState);
@@ -118,5 +146,15 @@ public class ProtectionUtil {
             return CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.ICE_FORM, block.getLocation());
 
         return true;
+    }
+
+    /**
+     * Checks whether or not protection related code should even be tested.
+     * 
+     * @return should check or not.
+     */
+    public static boolean shouldUseProtection() {
+
+        return CraftBookPlugin.inst().getConfiguration().advancedBlockChecks || CraftBookPlugin.inst().getConfiguration().obeyWorldguard;
     }
 }

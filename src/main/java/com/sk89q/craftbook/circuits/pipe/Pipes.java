@@ -36,6 +36,7 @@ import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
@@ -55,6 +56,20 @@ public class Pipes extends AbstractCraftBookMechanic {
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
+        }
+
+        if(ProtectionUtil.shouldUseProtection() && SignUtil.getBackBlock(event.getBlock()).getType() == Material.PISTON_STICKY_BASE) {
+
+            PistonBaseMaterial pis = (PistonBaseMaterial) SignUtil.getBackBlock(event.getBlock()).getState().getData();
+            Block off = SignUtil.getBackBlock(event.getBlock()).getRelative(pis.getFacing());
+            if(off.getState() instanceof InventoryHolder) {
+                if(!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
+                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        player.printError("area.use-permission");
+                    SignUtil.cancelSign(event);
+                    return;
+                }
+            }
         }
 
         event.setLine(1, "[Pipe]");
