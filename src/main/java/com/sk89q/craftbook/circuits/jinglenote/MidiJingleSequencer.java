@@ -63,6 +63,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     protected final File midiFile;
     private Sequencer sequencer = null;
     private boolean running = false;
+    private boolean playedBefore = false;
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
 
@@ -141,6 +142,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                 if (sequencer.isOpen()) {
                     sequencer.start();
                     running = true;
+                    playedBefore = true;
                     CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + notePlayer.player, "midi");
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
@@ -235,5 +237,10 @@ public class MidiJingleSequencer implements JingleSequencer {
     public boolean isPlaying () {
 
         return running;
+    }
+
+    @Override
+    public boolean hasPlayedBefore () {
+        return playedBefore;
     }
 }

@@ -12,8 +12,8 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
@@ -27,10 +27,10 @@ import com.sk89q.craftbook.util.SearchArea;
 /**
  * @author Me4502
  */
-public class Melody extends AbstractIC {
+public class Melody extends AbstractSelfTriggeredIC {
 
     MidiJingleSequencer sequencer;
-    JingleNoteManager jNote = new JingleNoteManager();
+    JingleNoteManager jNote;
 
     public Melody(Server server, ChangedSign block, ICFactory factory) {
 
@@ -50,13 +50,15 @@ public class Melody extends AbstractIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+        return true;
+    }
+
+    @Override
     public void unload() {
 
         try {
             sequencer.stop();
-            for (Player player : getServer().getOnlinePlayers()) {
-                jNote.stop(player.getName());
-            }
             jNote.stopAll();
         } catch (Exception ignored) {
         }
@@ -71,13 +73,17 @@ public class Melody extends AbstractIC {
     public void load() {
 
         try {
-            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(3),2);
+            if(getLine(3).toUpperCase().endsWith(":START")) getSign().setLine(3, getLine(3).replace(":START", ";START"));
+            if(getLine(3).toUpperCase().endsWith(":LOOP")) getSign().setLine(3, getLine(3).replace(":LOOP", ";LOOP"));
 
-            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+            String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
 
-            if(split.length > 1) {
-                forceStart = split[1].toUpperCase(Locale.ENGLISH).contains("START");
-                loop = split[1].toUpperCase(Locale.ENGLISH).contains("LOOP");
+            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), split[0]);
+            else area = SearchArea.createEmptyArea();
+
+            for(int i = 1; i < split.length; i++) {
+                if(split[i].toUpperCase(Locale.ENGLISH).contains("START")) forceStart = true;
+                if(split[i].toUpperCase(Locale.ENGLISH).contains("LOOP")) loop = true;
             }
         } catch (Exception ignored) {
         }
@@ -98,6 +104,8 @@ public class Melody extends AbstractIC {
                 break;
             }
         }
+
+        jNote = new JingleNoteManager();
     }
 
     @Override
@@ -115,34 +123,31 @@ public class Melody extends AbstractIC {
 
         try {
             if (chip.getInput(0)) {
-
-                if (sequencer != null || jNote != null) {
+                if(sequencer == null)
+                    sequencer = new MidiJingleSequencer(file, loop);
+                if(sequencer.isPlaying() || !sequencer.hasPlayedBefore()) {
                     for (Player player : getServer().getOnlinePlayers()) {
-                        jNote.stop(player.getName());
+                        if (area != null && !area.isWithinArea(player.getLocation())) {
+                            if(jNote.isPlaying(player.getName()))
+                                jNote.stop(player.getName());
+                            continue;
+                        } else if(!jNote.isPlaying(player.getName())) {
+                            jNote.play(player.getName(), sequencer, area);
+                            player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
+                        }
                     }
-                    jNote.stopAll();
                 }
-                sequencer = new MidiJingleSequencer(file, loop);
-                for (Player player : getServer().getOnlinePlayers()) {
-                    if (player == null || !player.isOnline()) {
-                        continue;
-                    }
-                    if (area != null && !area.isWithinArea(player.getLocation()))
-                        continue;
-                    jNote.play(player.getName(), sequencer, area);
-                    player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
-                }
-            } else if (!chip.getInput(0) && sequencer != null) {
+            } else if (!chip.getInput(0) && !forceStart && sequencer != null) {
                 sequencer.stop();
-                for (Player player : getServer().getOnlinePlayers()) {
-                    jNote.stop(player.getName());
-                }
                 jNote.stopAll();
+                sequencer = null;
             }
         } catch (Throwable e) {
             getServer().getLogger().log(Level.SEVERE, "Midi Failed To Play!");
             BukkitUtil.printStacktrace(e);
         }
+
+        chip.setOutput(0, sequencer != null && sequencer.isPlaying());
     }
 
     public static class Factory extends AbstractICFactory {
@@ -175,7 +180,7 @@ public class Melody extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"MIDI name", "Radius"};
+            return new String[] {"MIDI name", "Radius;LOOP;START"};
         }
     }
 }

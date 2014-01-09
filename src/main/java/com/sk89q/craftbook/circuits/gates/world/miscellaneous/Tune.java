@@ -4,8 +4,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.circuits.ic.AbstractIC;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
@@ -14,10 +14,10 @@ import com.sk89q.craftbook.circuits.jinglenote.StringJingleSequencer;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SearchArea;
 
-public class Tune extends AbstractIC {
+public class Tune extends AbstractSelfTriggeredIC {
 
     StringJingleSequencer sequencer;
-    JingleNoteManager jNote = new JingleNoteManager();
+    JingleNoteManager jNote;
 
     public Tune(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -37,33 +37,34 @@ public class Tune extends AbstractIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+        return true;
+    }
+
+    @Override
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-
-            if (sequencer != null || jNote != null) {
+            if(sequencer == null)
+                sequencer = new StringJingleSequencer(tune, delay);
+            if(sequencer.isPlaying() || !sequencer.hasPlayedBefore()) {
                 for (Player player : getServer().getOnlinePlayers()) {
-                    jNote.stop(player.getName());
+                    if (!area.isWithinArea(player.getLocation())) {
+                        if(jNote.isPlaying(player.getName()))
+                            jNote.stop(player.getName());
+                        continue;
+                    } else if (!jNote.isPlaying(player.getName())) {
+                        jNote.play(player.getName(), sequencer, area);
+                    }
                 }
-                jNote.stopAll();
-            }
-            sequencer = new StringJingleSequencer(tune, delay);
-            for (Player player : getServer().getOnlinePlayers()) {
-                if (player == null) {
-                    continue;
-                }
-                if (area != null && !area.isWithinArea(player.getLocation())) {
-                    continue;
-                }
-                jNote.play(player.getName(), sequencer, area);
             }
         } else if (!chip.getInput(0) && sequencer != null) {
             sequencer.stop();
-            for (Player player : getServer().getOnlinePlayers()) {
-                jNote.stop(player.getName());
-            }
             jNote.stopAll();
+            sequencer = null;
         }
+
+        chip.setOutput(0, sequencer != null && sequencer.isPlaying());
     }
 
     SearchArea area;
@@ -74,6 +75,7 @@ public class Tune extends AbstractIC {
     public void load() {
 
         if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+        else area = SearchArea.createEmptyArea();
 
         if (getLine(2).contains(":")) {
 
@@ -89,17 +91,16 @@ public class Tune extends AbstractIC {
             tune = getSign().getLine(2);
             delay = 2;
         }
+
+        jNote = new JingleNoteManager();
     }
 
     @Override
     public void unload() {
 
         try {
-            sequencer.stop();
-            for (Player player : getServer().getOnlinePlayers()) {
-                jNote.stop(player.getName());
-            }
             jNote.stopAll();
+            sequencer.stop();
         } catch (Exception ignored) {
         }
     }

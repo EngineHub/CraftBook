@@ -37,6 +37,11 @@ public class Jukebox extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+        return true;
+    }
+
+    @Override
     public void load() {
 
         String plist = getLine(2);
@@ -70,16 +75,26 @@ public class Jukebox extends AbstractSelfTriggeredIC {
         else if(!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
 
-        for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-            if(area != null && !area.isWithinArea(p.getLocation())) {
-                if(players.containsKey(p.getName()))
-                    players.remove(p.getName());
-                continue;
-            } else if (!players.containsKey(p.getName()))
-                players.put(p.getName(), area);
-        }
+        if(chip.getInput(0)) {
 
-        playlist.getPlaylistInterpreter().setPlayers(players);
+            boolean hasChanged = false;
+
+            for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+                if(area != null && !area.isWithinArea(p.getLocation())) {
+                    if(players.containsKey(p.getName())) {
+                        players.remove(p.getName());
+                        hasChanged = true;
+                    }
+                    continue;
+                } else if (!players.containsKey(p.getName())) {
+                    players.put(p.getName(), area);
+                    hasChanged = true;
+                }
+            }
+
+            if(hasChanged)
+                playlist.getPlaylistInterpreter().setPlayers(players);
+        }
 
         chip.setOutput(0, playlist.isPlaying());
     }
