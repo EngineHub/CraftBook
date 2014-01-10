@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8b4
+# CraftBook Configuration for Bukkit. Generated for version: 3.8b5
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -189,6 +189,7 @@ mechanics:
         face-correct-direction: true
         require-sign: false
         max-distance: 3
+        max-click-radius: 5
     chunk-anchor:
         enable: true
         enable-redstone: true
@@ -310,6 +311,11 @@ mechanics:
         - RED_MUSHROOM
         - FIRE
         falldown-animation-speed: 5
+    sponge:
+        enable: false
+        radius: 5
+        circular-radius: true
+        require-redstone: false
     teleporter:
         enable: true
         require-sign: false

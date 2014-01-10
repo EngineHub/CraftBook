@@ -1,3 +1,27 @@
+3.8b5 (Most likely last beta)
+* Fixed CommandItems add command still working when they are disabled.
+* Fixed the Teleport Reciever teleporting the player into walls.
++ Added a way to cancel out variables in text.
+* Fixed the clicking speed checks showing an annoying message. It's silent now.
+* Fixed EntitySensor always overwriting the last line.
+* Fixed WirelessTransmitter get command.
++ Added a WirelessTransmitter toggle command.
+* Fixed chair max click radius not being set by the configuration.
+* Experimental NaN packet removal. Should fix chairs, but remove the Nope! kick entirely.
+* Fixed Netherwart usage in ICs.
+* Fixed MIDI/Tune related ICs not continuing on server restart.
+* Fixed a lot of Playlist related bugs.
++ Added option for firework IC to not stop on low power.
+* Fixed HiddenSwitch protection checks firing more than it should.
+* Fixed Area-Protection for Bridges and Doors not being checked.
+* Fixed gates not checking the other sign for blocks.
+* Fixed Easter Eggs saying "1th, 2th and 3th".
++ Added inventory access checks to pipes on placement of pipe sign.
++ Added support for MIDI/Tune ICs to output high when playing.
++ Added an improved version of the sponge mechanic from worldguard.
+* Fixed CraftBook requiring Java 7.
++ Added an 'enabled mechanics' metrics graph.
+
 3.8b4
 * Fixed many mechanics ignoring plugin protection.
 * Cache the secondary instance list of triggering mechanics to improve speed.
