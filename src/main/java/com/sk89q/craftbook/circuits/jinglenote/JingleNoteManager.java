@@ -25,7 +25,7 @@ public class JingleNoteManager {
 
     public boolean isPlaying(String player) {
 
-        return instances.containsKey(player) && instances.get(player).sequencer != null && instances.get(player).sequencer.isPlaying();
+        return instances.containsKey(player) && instances.get(player).isPlaying();
     }
 
     public void play(String player, JingleSequencer sequencer, SearchArea area) {

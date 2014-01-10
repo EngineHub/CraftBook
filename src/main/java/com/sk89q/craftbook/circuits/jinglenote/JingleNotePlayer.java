@@ -42,25 +42,22 @@ public abstract class JingleNotePlayer implements Runnable {
                 BukkitUtil.printStacktrace(t);
             }
 
-            while(sequencer != null && sequencer.isPlaying()){
-                if(!sequencer.isPlaying(this))
-                    break;
+            while(isPlaying()){
+                Thread.sleep(10L);
             }
 
             Thread.sleep(500L);
         } catch (InterruptedException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
-            CraftBookPlugin.logDebugMessage("Finished playing for: " + player, "midi");
-            if(sequencer != null) {
-                sequencer.stop(this);
-                sequencer = null;
-            }
+            CraftBookPlugin.logDebugMessage("Finished playing for: " + player, "midi.stop");
+            stop();
         }
     }
 
     public boolean isPlaying() {
-        return sequencer.isPlaying();
+
+        return sequencer != null && sequencer.isPlaying() && !sequencer.getPlayers().isEmpty();
     }
 
     public String getPlayer() {

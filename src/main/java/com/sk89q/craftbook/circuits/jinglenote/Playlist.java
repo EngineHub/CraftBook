@@ -89,8 +89,7 @@ public class Playlist {
 
         show.lastPlayers.clear();
         show.jNote.stopAll();
-        if(show.sequencer != null)
-            show.sequencer.stop();
+        show.sequencer = null;
         show.players.clear();
         if (task != null)
             task.cancel();
@@ -151,11 +150,11 @@ public class Playlist {
 
                 if(sequencer != null) {
 
-                    while(sequencer != null && sequencer.isPlaying()) {
+                    while(sequencer != null && sequencer.isPlaying() && !sequencer.getPlayers().isEmpty()) {
 
                         for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
-                            if(getPlayers().containsKey(p.getKey()))
+                            if(getPlayers().containsKey(p.getKey()) && jNote.isPlaying(p.getKey()))
                                 continue;
 
                             jNote.stop(p.getKey());
@@ -218,6 +217,10 @@ public class Playlist {
                         task.cancel();
                         PlaylistInterpreter show = new PlaylistInterpreter();
                         show.position = position;
+                        show.players = players;
+                        show.lastPlayers = lastPlayers;
+                        show.sequencer = sequencer;
+                        show.jNote = jNote;
                         task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
                     }
                     return;
