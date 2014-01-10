@@ -43,7 +43,7 @@ public class BoatExitRemoverTest {
         when(server.getName()).thenReturn("Mock");
         when(server.getVersion()).thenReturn("MockVer");
         when(server.getBukkitVersion()).thenReturn("MockVer");
-        when(server.getLogger()).thenReturn(Logger.getGlobal());
+        when(server.getLogger()).thenReturn(Logger.getLogger(Logger.GLOBAL_LOGGER_NAME));
         when(server.getScheduler()).thenReturn(mock(BukkitScheduler.class));
 
         Bukkit.setServer(server);

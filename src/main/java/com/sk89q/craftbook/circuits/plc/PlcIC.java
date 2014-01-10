@@ -23,8 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -131,11 +129,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             File oldFolder = new File(worldDir, "craftbook-plcs");
             if(!targetDir.exists())
                 targetDir.mkdirs();
-            try {
-                Files.move(oldFolder.toPath(), targetDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
+            if(!oldFolder.renameTo(targetDir))
                 logger.warning("Failed to copy PLC States over to new directory!");
-            }
             oldFolder.delete();
         }
         targetDir.mkdirs();

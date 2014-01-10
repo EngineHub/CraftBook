@@ -17,7 +17,7 @@ public class GenerateConfiguration {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(new File("config.yml"), true, YAMLFormat.EXTENDED), Logger.getGlobal());
+        BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(new File("config.yml"), true, YAMLFormat.EXTENDED), Logger.getLogger(Logger.GLOBAL_LOGGER_NAME));
         config.load();
     }
 }
