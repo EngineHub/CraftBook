@@ -32,6 +32,7 @@ import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.SignCopier;
 import com.sk89q.craftbook.mech.Snow;
+import com.sk89q.craftbook.mech.Sponge;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.TreeLopper;
 import com.sk89q.craftbook.mech.XPStorer;
@@ -139,6 +140,7 @@ public class MechanicalCore implements LocalComponent {
         if (config.gateEnabled) mechanics.add(new Gate());
         if (config.pistonsEnabled) mechanics.add(new BetterPistons());
         if (config.cookingPotEnabled) mechanics.add(new CookingPot());
+        if (config.spongeEnabled) mechanics.add(new Sponge());
 
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
         if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){plugin.getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}

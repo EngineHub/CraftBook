@@ -530,6 +530,13 @@ public class YAMLConfiguration extends LocalConfiguration {
         snowFallAnimationSpeed = config.getInt("mechanics.snow.falldown-animation-speed", 5);
 
 
+        // Sponge Configuration Listener
+        spongeEnabled = config.getBoolean("mechanics.sponge.enable", false);
+        spongeRadius = config.getInt("mechanics.sponge.radius", 5);
+        spongeCircleRadius = config.getBoolean("mechanics.sponge.circular-radius", true);
+        spongeRedstone = config.getBoolean("mechanics.sponge.require-redstone", false);
+
+
         // Teleporter Configuration Listener
         config.setComment("mechanics.teleporter.enable", "Enables the Teleporter mechanic.");
         teleporterEnabled = config.getBoolean("mechanics.teleporter.enable", true);

@@ -32,11 +32,6 @@ public abstract class LocalConfiguration {
     public boolean ICSavePersistentData;
     public boolean ICMidiUsePercussion;
     public boolean ICBreakOnError;
-    // Circuits - Wiring
-    public boolean netherrackEnabled;
-    public boolean pumpkinsEnabled;
-    public boolean glowstoneEnabled;
-    public ItemInfo glowstoneOffBlock;
     // Circuits - Pipes
     public boolean pipesEnabled;
     public boolean pipesDiagonal;
@@ -45,6 +40,11 @@ public abstract class LocalConfiguration {
     public boolean pipeRequireSign;
     // Circuits - Redstone Jukebox
     public boolean jukeboxEnabled;
+    // Circuits - Wiring
+    public boolean netherrackEnabled;
+    public boolean pumpkinsEnabled;
+    public boolean glowstoneEnabled;
+    public ItemInfo glowstoneOffBlock;
 
     // Mechanics
     // Mechanics - AI
@@ -205,6 +205,11 @@ public abstract class LocalConfiguration {
     public boolean snowJumpTrample;
     public List<ItemInfo> snowRealisticReplacables;
     public int snowFallAnimationSpeed;
+    // Mechanics - Sponges
+    public boolean spongeEnabled;
+    public int spongeRadius;
+    public boolean spongeCircleRadius;
+    public boolean spongeRedstone;
     // Mechanics - Teleporter
     public boolean teleporterEnabled;
     public boolean teleporterRequireSign;
