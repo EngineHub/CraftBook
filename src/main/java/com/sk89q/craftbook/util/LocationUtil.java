@@ -19,7 +19,7 @@ import com.sk89q.worldedit.Vector;
  */
 public final class LocationUtil {
 
-    public static boolean isWithinSphericalRadius(Location l1, Location l2, int radius) {
+    public static boolean isWithinSphericalRadius(Location l1, Location l2, double radius) {
 
         return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
     }

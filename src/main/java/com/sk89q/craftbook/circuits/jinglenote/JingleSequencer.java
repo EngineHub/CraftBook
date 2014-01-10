@@ -5,6 +5,8 @@
 
 package com.sk89q.craftbook.circuits.jinglenote;
 
+import java.util.Set;
+
 
 /**
  * Interface for a sequencer.
@@ -13,13 +15,21 @@ package com.sk89q.craftbook.circuits.jinglenote;
  */
 public interface JingleSequencer {
 
-    public void run(JingleNotePlayer player) throws InterruptedException;
+    public void run() throws InterruptedException;
 
     public void stop();
 
+    public void stop(JingleNotePlayer player);
+
     public boolean isPlaying();
 
+    public boolean isPlaying(JingleNotePlayer player);
+
     public boolean hasPlayedBefore();
+
+    public void play(JingleNotePlayer player);
+
+    public Set<JingleNotePlayer> getPlayers();
 
     public class Note {
 

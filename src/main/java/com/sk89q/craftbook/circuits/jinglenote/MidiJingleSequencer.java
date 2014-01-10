@@ -8,7 +8,9 @@ package com.sk89q.craftbook.circuits.jinglenote;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
@@ -59,11 +61,12 @@ public class MidiJingleSequencer implements JingleSequencer {
         3, 3,                   //50 - Open Triangle
     };
 
-
     protected final File midiFile;
     private Sequencer sequencer = null;
     private boolean running = false;
     private boolean playedBefore = false;
+
+    private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
 
@@ -92,9 +95,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public void run(final JingleNotePlayer notePlayer) throws InterruptedException {
-
-        if(notePlayer.override) return;
+    public void run() throws InterruptedException {
 
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
@@ -108,8 +109,6 @@ public class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
-
-                    if(notePlayer.override) return;
 
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
 
@@ -125,9 +124,11 @@ public class MidiJingleSequencer implements JingleSequencer {
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
                             if(CraftBookPlugin.inst().getConfiguration().ICMidiUsePercussion)
-                                notePlayer.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
+                                for(JingleNotePlayer player : players)
+                                    player.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
                         } else {
-                            notePlayer.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
+                            for(JingleNotePlayer player : players)
+                                player.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                         }
                     }
                 }
@@ -143,7 +144,8 @@ public class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                     running = true;
                     playedBefore = true;
-                    CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + notePlayer.player, "midi");
+                    for(JingleNotePlayer player : players)
+                        CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
             }
@@ -152,14 +154,15 @@ public class MidiJingleSequencer implements JingleSequencer {
             }
 
             while (sequencer.isRunning()) {
-                if(notePlayer.override) return;
+                if(players.isEmpty()) return;
                 Thread.sleep(10L);
             }
 
             if (sequencer.isRunning())
                 sequencer.stop();
             running = false;
-            CraftBookPlugin.logDebugMessage("Closing midi sequencer: " + notePlayer.player, "midi");
+            for(JingleNotePlayer player : players)
+                CraftBookPlugin.logDebugMessage("Closing midi sequencer: " + player.player, "midi");
         } catch (MidiUnavailableException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
@@ -242,5 +245,34 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public boolean hasPlayedBefore () {
         return playedBefore;
+    }
+
+    @Override
+    public void stop (JingleNotePlayer player) {
+        players.remove(player);
+        if(players.isEmpty()) {
+            stop();
+        }
+    }
+
+    @Override
+    public void play (JingleNotePlayer player) {
+        players.add(player);
+        if(!playedBefore)
+            try {
+                run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+    }
+
+    @Override
+    public Set<JingleNotePlayer> getPlayers () {
+        return players;
+    }
+
+    @Override
+    public boolean isPlaying (JingleNotePlayer player) {
+        return players.contains(player);
     }
 }

@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.circuits.jinglenote;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 
@@ -21,6 +23,8 @@ public class StringJingleSequencer implements JingleSequencer {
 
     List<Note> song;
 
+    private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
+
     public StringJingleSequencer(String tune, int delay) {
 
         this.tune = tune;
@@ -29,7 +33,7 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public void run(final JingleNotePlayer player) throws InterruptedException {
+    public void run() throws InterruptedException {
 
         position = 0;
         if(song == null)
@@ -43,12 +47,13 @@ public class StringJingleSequencer implements JingleSequencer {
             @Override
             public void run() {
 
-                if (position >= song.size() || !isPlaying || player.override) {
+                if (position >= song.size() || !isPlaying || players.isEmpty()) {
                     Bukkit.getScheduler().cancelTask(taskID);
                     isPlaying = false;
                     return;
                 }
-                player.play(song.get(position));
+                for(JingleNotePlayer player : players)
+                    player.play(song.get(position));
                 position++;
             }
 
@@ -218,5 +223,31 @@ public class StringJingleSequencer implements JingleSequencer {
     @Override
     public boolean hasPlayedBefore () {
         return playedBefore;
+    }
+
+    @Override
+    public void stop (JingleNotePlayer player) {
+        players.remove(player);
+    }
+
+    @Override
+    public void play (JingleNotePlayer player) {
+        players.add(player);
+        if(!playedBefore)
+            try {
+                run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+    }
+
+    @Override
+    public Set<JingleNotePlayer> getPlayers () {
+        return players;
+    }
+
+    @Override
+    public boolean isPlaying (JingleNotePlayer player) {
+        return players.contains(player);
     }
 }

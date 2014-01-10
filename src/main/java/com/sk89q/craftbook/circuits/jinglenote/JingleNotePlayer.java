@@ -16,8 +16,6 @@ public abstract class JingleNotePlayer implements Runnable {
     protected JingleSequencer sequencer;
     protected SearchArea area;
 
-    protected boolean override;
-
     /**
      * Constructs a new JingleNotePlayer
      * 
@@ -30,7 +28,6 @@ public abstract class JingleNotePlayer implements Runnable {
         this.player = player;
         sequencer = seq;
         this.area = area;
-        override = false;
     }
 
     @Override
@@ -40,23 +37,29 @@ public abstract class JingleNotePlayer implements Runnable {
             return;
         try {
             try {
-                sequencer.run(this);
+                sequencer.play(this);
             } catch (Throwable t) {
                 BukkitUtil.printStacktrace(t);
+            }
+
+            while(sequencer != null && sequencer.isPlaying()){
+                if(!sequencer.isPlaying(this))
+                    break;
             }
 
             Thread.sleep(500L);
         } catch (InterruptedException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
-            CraftBookPlugin.logDebugMessage("Finished playing for: " + player + " (Override is: " + override + ")", "midi");
-            sequencer.stop();
-            sequencer = null;
+            CraftBookPlugin.logDebugMessage("Finished playing for: " + player, "midi");
+            if(sequencer != null) {
+                sequencer.stop(this);
+                sequencer = null;
+            }
         }
     }
 
     public boolean isPlaying() {
-        if(override) return false;
         return sequencer.isPlaying();
     }
 
@@ -67,10 +70,10 @@ public abstract class JingleNotePlayer implements Runnable {
 
     public void stop() {
 
-        override = true;
-        //if (sequencer != null) {
-        //    sequencer.stop();
-        //}
+        if (sequencer != null) {
+            sequencer.stop(this);
+            sequencer = null;
+        }
     }
 
     public abstract void play(Note note);
