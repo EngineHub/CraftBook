@@ -370,9 +370,9 @@ public class CraftBookPlugin extends JavaPlugin {
             Metrics metrics = new Metrics(this);
             metrics.start();
 
-            Graph g = metrics.createGraph("Language");
+            Graph languagesGraph = metrics.createGraph("Language");
             for (String language : languageManager.getLanguages()) {
-                g.addPlotter(new Plotter(language) {
+                languagesGraph.addPlotter(new Plotter(language) {
 
                     @Override
                     public int getValue () {
@@ -380,7 +380,7 @@ public class CraftBookPlugin extends JavaPlugin {
                     }
                 });
             }
-            g.addPlotter(new Plotter("Total") {
+            languagesGraph.addPlotter(new Plotter("Total") {
 
                 @Override
                 public int getValue () {
@@ -388,9 +388,9 @@ public class CraftBookPlugin extends JavaPlugin {
                 }
             });
 
-            Graph comp = metrics.createGraph("Components");
+            Graph componentsGraph = metrics.createGraph("Components");
             if (config.enableCircuits)
-                comp.addPlotter(new Plotter("Circuits") {
+                componentsGraph.addPlotter(new Plotter("Circuits") {
 
                     @Override
                     public int getValue () {
@@ -398,7 +398,7 @@ public class CraftBookPlugin extends JavaPlugin {
                     }
                 });
             if (config.enableMechanisms)
-                comp.addPlotter(new Plotter("Mechanisms") {
+                componentsGraph.addPlotter(new Plotter("Mechanisms") {
 
                     @Override
                     public int getValue () {
@@ -406,13 +406,25 @@ public class CraftBookPlugin extends JavaPlugin {
                     }
                 });
             if (config.enableVehicles)
-                comp.addPlotter(new Plotter("Vehicles") {
+                componentsGraph.addPlotter(new Plotter("Vehicles") {
 
                     @Override
                     public int getValue () {
                         return 1;
                     }
                 });
+
+            Graph mechanicsGraph = metrics.createGraph("Enabled Mechanics");
+            for(LocalComponent compo : getComponents()) {
+                for(CraftBookMechanic mech : compo.getMechanics()) {
+                    mechanicsGraph.addPlotter(new Plotter(mech.getClass().getSimpleName()) {
+                        @Override
+                        public int getValue () {
+                            return 1;
+                        }
+                    });
+                }
+            }
         } catch (Throwable e1) {
             BukkitUtil.printStacktrace(e1);
         }
