@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,21 +29,6 @@ import com.sk89q.craftbook.vehicles.boat.RemoveEntities;
 import com.sk89q.craftbook.vehicles.boat.SpeedModifiers;
 import com.sk89q.craftbook.vehicles.boat.Uncrashable;
 import com.sk89q.craftbook.vehicles.boat.WaterPlaceOnly;
-import com.sk89q.craftbook.vehicles.cart.CartBlockMechanism;
-import com.sk89q.craftbook.vehicles.cart.CartBooster;
-import com.sk89q.craftbook.vehicles.cart.CartDeposit;
-import com.sk89q.craftbook.vehicles.cart.CartDispenser;
-import com.sk89q.craftbook.vehicles.cart.CartEjector;
-import com.sk89q.craftbook.vehicles.cart.CartExitRemover;
-import com.sk89q.craftbook.vehicles.cart.CartLift;
-import com.sk89q.craftbook.vehicles.cart.CartMaxSpeed;
-import com.sk89q.craftbook.vehicles.cart.CartMessenger;
-import com.sk89q.craftbook.vehicles.cart.CartRemoveEntities;
-import com.sk89q.craftbook.vehicles.cart.CartReverser;
-import com.sk89q.craftbook.vehicles.cart.CartSorter;
-import com.sk89q.craftbook.vehicles.cart.CartSpeedModifiers;
-import com.sk89q.craftbook.vehicles.cart.CartStation;
-import com.sk89q.craftbook.vehicles.cart.CartTeleporter;
 import com.sk89q.craftbook.vehicles.cart.CollisionEntry;
 import com.sk89q.craftbook.vehicles.cart.ConstantSpeed;
 import com.sk89q.craftbook.vehicles.cart.EmptyDecay;
@@ -55,6 +41,18 @@ import com.sk89q.craftbook.vehicles.cart.NoCollide;
 import com.sk89q.craftbook.vehicles.cart.PlaceAnywhere;
 import com.sk89q.craftbook.vehicles.cart.RailPlacer;
 import com.sk89q.craftbook.vehicles.cart.VisionSteering;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockMechanism;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartBooster;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartDeposit;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartDispenser;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartEjector;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartLift;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMaxSpeed;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMessenger;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartReverser;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartSorter;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartStation;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartTeleporter;
 
 /**
  * Author: Turtle9598
@@ -144,17 +142,17 @@ public class VehicleCore implements LocalComponent, Listener {
         for(CartBlockMechanism mech : cartBlockMechanisms) mechanics.add(mech);
 
         if(plugin.getConfiguration().minecartMoreRailsEnabled) mechanics.add(new MoreRails());
-        if(plugin.getConfiguration().minecartRemoveEntitiesEnabled) mechanics.add(new CartRemoveEntities());
+        if(plugin.getConfiguration().minecartRemoveEntitiesEnabled) mechanics.add(new com.sk89q.craftbook.vehicles.cart.RemoveEntities());
         if(plugin.getConfiguration().minecartVisionSteeringEnabled) mechanics.add(new VisionSteering());
         if(plugin.getConfiguration().minecartDecayEnabled) mechanics.add(new EmptyDecay());
         if(plugin.getConfiguration().minecartBlockMobEntryEnabled) mechanics.add(new MobBlocker());
-        if(plugin.getConfiguration().minecartRemoveOnExitEnabled) mechanics.add(new CartExitRemover());
+        if(plugin.getConfiguration().minecartRemoveOnExitEnabled) mechanics.add(new com.sk89q.craftbook.vehicles.cart.ExitRemover());
         if(plugin.getConfiguration().minecartCollisionEntryEnabled) mechanics.add(new CollisionEntry());
         if(plugin.getConfiguration().minecartItemPickupEnabled) mechanics.add(new ItemPickup());
         if(plugin.getConfiguration().minecartFallModifierEnabled) mechanics.add(new FallModifier());
         if(plugin.getConfiguration().minecartConstantSpeedEnable) mechanics.add(new ConstantSpeed());
         if(plugin.getConfiguration().minecartRailPlacerEnable) mechanics.add(new RailPlacer());
-        if(plugin.getConfiguration().minecartSpeedModifierEnable) mechanics.add(new CartSpeedModifiers());
+        if(plugin.getConfiguration().minecartSpeedModifierEnable) mechanics.add(new com.sk89q.craftbook.vehicles.cart.SpeedModifiers());
         if(plugin.getConfiguration().minecartEmptySlowdownStopperEnable) mechanics.add(new EmptySlowdown());
         if(plugin.getConfiguration().minecartNoCollideEnable) mechanics.add(new NoCollide());
         if(plugin.getConfiguration().minecartPlaceAnywhereEnable) mechanics.add(new PlaceAnywhere());

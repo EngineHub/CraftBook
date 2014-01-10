@@ -5,7 +5,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
-import com.sk89q.craftbook.vehicles.cart.CartMechanismBlocks;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMechanismBlocks;
 
 public class CartBlockImpactEvent extends VehicleMoveEvent {
 

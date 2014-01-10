@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.area.simple;
 
 import java.util.HashSet;
 import java.util.Set;

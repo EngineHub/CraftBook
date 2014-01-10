@@ -6,7 +6,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
-import com.sk89q.craftbook.vehicles.cart.CartMechanismBlocks;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMechanismBlocks;
 
 public class CartBlockEnterEvent extends VehicleEnterEvent {
 
