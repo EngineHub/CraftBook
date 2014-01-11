@@ -141,7 +141,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             }, 1, 20);
 
         if(CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items") == null)
-            CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<ItemStack>>());
+            CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<String>>());
 
         return true;
     }
@@ -275,10 +275,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
             for(CommandItemDefinition def : definitions) {
                 if(ItemUtil.areItemsIdentical(stack, def.getItem()) && def.keepOnDeath) {
                     stackIt.remove();
-                    Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
-                    List<ItemStack> its = items.get(event.getEntity().getName());
-                    if(its == null) its = new ArrayList<ItemStack>();
-                    its.add(stack);
+                    Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
+                    List<String> its = items.get(event.getEntity().getName());
+                    if(its == null) its = new ArrayList<String>();
+                    its.add(ItemSyntax.getStringFromItem(stack));
                     items.put(event.getEntity().getName(), its);
                     CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
                 }
@@ -311,11 +311,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if (EventUtil.shouldIgnoreEvent(event))
             return;
 
-        Map<String, List<ItemStack>> items = (Map<String, List<ItemStack>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
+        Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
         if(!items.containsKey(event.getPlayer().getName())) return;
-        List<ItemStack> its = items.get(event.getPlayer().getName());
-        for(ItemStack it : its)
-            event.getPlayer().getInventory().addItem(it);
+        List<String> its = items.get(event.getPlayer().getName());
+        for(String it : its)
+            event.getPlayer().getInventory().addItem(ItemSyntax.getItem(it));
         items.remove(event.getPlayer().getName());
         CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
     }
