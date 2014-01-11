@@ -346,7 +346,7 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1219", "auto craft", new AutomaticCrafter.Factory(server), familySISO, familyAISO);
         registerIC("MC1220", "a b break", new BlockBreaker.Factory(server, false), familySISO, familyAISO);
         registerIC("MC1221", "b b break", new BlockBreaker.Factory(server, true), familySISO, familyAISO);
-        registerIC("MC1222", "liquid flood", new LiquidFlood.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1222", "liq flood", new LiquidFlood.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1223", "terraform", new BonemealTerraformer.Factory(server), familySISO, familyAISO);
         registerIC("MC1224", "time bomb", new TimedExplosion.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1225", "pump", new Pump.Factory(server), familySISO, familyAISO);
@@ -368,8 +368,8 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1241", "shoot arrows", new ArrowBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1242", "stocker", new ContainerStocker.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1243", "distributer", new Distributer.Factory(server), familySISO, familyAISO);
-        registerIC("MC1244", "animal harvest", new AnimalHarvester.Factory(server), familySISO, familyAISO);
-        registerIC("MC1245", "cont stacker", new ContainerStacker.Factory(server), familySISO, familyAISO);
+        registerIC("MC1244", "animal harv", new AnimalHarvester.Factory(server), familySISO, familyAISO);
+        registerIC("MC1245", "cont stkr", new ContainerStacker.Factory(server), familySISO, familyAISO);
         registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); //Restricted
         //TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
         registerIC("MC1248", "driller", new Driller.Factory(server), familySISO, familyAISO); //Restricted
@@ -383,21 +383,21 @@ public class CircuitCore implements LocalComponent {
         registerIC("MC1262", "sense light", new LightSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1263", "sense block", new BlockSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1264", "sense item", new ItemSensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1265", "inv sense item", new ItemNotSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1265", "inv sns itm", new ItemNotSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);
         //FIXME registerIC("MC1267", "sense move", new MovementSensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1268", "sense contents", new ContentsSensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1269", "sense p contents", new PlayerInventorySensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1268", "sns cntns", new ContentsSensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1269", "sns p cntns", new PlayerInventorySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1270", "melody", new Melody.Factory(server), familySISO, familyAISO);
-        registerIC("MC1271", "sense entity", new EntitySensor.Factory(server), familySISO, familyAISO);
-        registerIC("MC1272", "sense player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1271", "sns entity", new EntitySensor.Factory(server), familySISO, familyAISO);
+        registerIC("MC1272", "sns player", new PlayerSensor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1273", "jukebox", new Jukebox.Factory(server), familySISO, familyAISO);
         registerIC("MC1275", "tune", new Tune.Factory(server), familySISO, familyAISO);
         registerIC("MC1276", "radio station", new RadioStation.Factory(server), familySISO, familyAISO);
         registerIC("MC1277", "radio player", new RadioPlayer.Factory(server), familySISO, familyAISO);
         registerIC("MC1278", "sentry gun", new SentryGun.Factory(server), familySISO, familyAISO); //Restricted
         registerIC("MC1279", "player trap",new PlayerTrap.Factory(server), familySISO, familyAISO);
-        registerIC("MC1280", "animal breed", new AnimalBreeder.Factory(server), familySISO, familyAISO);
+        registerIC("MC1280", "animal brd", new AnimalBreeder.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
         registerIC("MC1422", "monostable", new Monostable.Factory(server), familySISO, familyAISO);

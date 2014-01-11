@@ -65,11 +65,14 @@ public class GenerateWikiICList {
                 String family = "";
                 for(ICFamily fam : ric.getFamilies()) {
                     if(!family.isEmpty())
-                        family = family + ",";
+                        family = family + " ";
                     family = family + "[[../IC families/#" + fam.getClass().getSimpleName().replace("Family", "") + "|" + fam.getClass().getSimpleName().replace("Family", "") + "]]";
                 }
 
                 IC ic = ric.getFactory().create(null);
+
+                if(ric.getShorthand().length() > (isSelfTriggering && !((SelfTriggeredIC) ic).isAlwaysST() ? 11 : 14))
+                    System.err.println("Shorthand " + ric.getShorthand() + " is longer than max chars!");
 
                 writer.println("|-");
                 writer.println("| [[../" + ric.getId() + "/]] || " + ric.getShorthand() + " || " + String.valueOf(isSelfTriggering) + " || " + family + " || " + ic.getTitle() + (isRestricted ? "<strong style=\"color: red\">*</strong>" : "") + " || " + ric.getFactory().getShortDescription());
