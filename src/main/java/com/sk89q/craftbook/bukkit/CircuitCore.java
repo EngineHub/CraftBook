@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -480,8 +481,8 @@ public class CircuitCore implements LocalComponent {
     public List<RegisteredICFactory> getICList() {
 
         if(getIcManager() == null)
-            return new ArrayList<RegisteredICFactory>();
-        List<RegisteredICFactory> ics = new ArrayList<RegisteredICFactory>();
+            return new LinkedList<RegisteredICFactory>();
+        List<RegisteredICFactory> ics = new LinkedList<RegisteredICFactory>();
         for (Map.Entry<String, RegisteredICFactory> e : getIcManager().registered.entrySet()) {
             ics.add(e.getValue());
         }

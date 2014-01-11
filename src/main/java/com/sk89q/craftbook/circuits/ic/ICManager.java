@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class ICManager {
      *
      * @see RegisteredICFactory
      */
-    public final Map<String, RegisteredICFactory> registered = new HashMap<String, RegisteredICFactory>();
+    public final Map<String, RegisteredICFactory> registered = new LinkedHashMap<String, RegisteredICFactory>();
 
     /**
      * Holds a map of long IDs to short IDs

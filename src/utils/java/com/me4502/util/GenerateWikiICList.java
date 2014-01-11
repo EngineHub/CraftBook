@@ -12,8 +12,10 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
+import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.circuits.plc.PlcFactory;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -56,6 +58,10 @@ public class GenerateWikiICList {
                 if(SelfTriggeredIC.class.isAssignableFrom(ric.getFactory().getClass().getEnclosingClass()))
                     isSelfTriggering = true;
 
+                boolean isRestricted = false;
+                if(RestrictedIC.class.isAssignableFrom(ric.getFactory().getClass()))
+                    isRestricted = true;
+
                 String family = "";
                 for(ICFamily fam : ric.getFamilies()) {
                     if(!family.isEmpty())
@@ -63,8 +69,10 @@ public class GenerateWikiICList {
                     family = family + "[[../IC families/#" + fam.getClass().getSimpleName().replace("Family", "") + "|" + fam.getClass().getSimpleName().replace("Family", "") + "]]";
                 }
 
+                IC ic = ric.getFactory().create(null);
+
                 writer.println("|-");
-                writer.println("| [[../" + ric.getId() + "/]] || " + ric.getShorthand() + " || " + String.valueOf(isSelfTriggering) + " || " + family + " || " + ric + " || " + ric.getFactory().getShortDescription());
+                writer.println("| [[../" + ric.getId() + "/]] || " + ric.getShorthand() + " || " + String.valueOf(isSelfTriggering) + " || " + family + " || " + ic.getTitle() + (isRestricted ? "<strong style=\"color: red\">*</strong>" : "") + " || " + ric.getFactory().getShortDescription());
             }
 
             writer.println("|}");
