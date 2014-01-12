@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -360,8 +361,17 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         } else newData = (byte) (block.getData() + 1);
         if (newData > (byte) 7 && CraftBookPlugin.inst().getConfiguration().snowHighPiles) {
-            block.setTypeId(BlockID.SNOW_BLOCK, false);
-            newData = (byte) 0;
+            Block test = block;
+            int piled = 0;
+            while(test.getRelative(BlockFace.DOWN).getType() == Material.SNOW_BLOCK) {
+
+                piled++;
+                if(piled > CraftBookPlugin.inst().getConfiguration().snowMaxPileHeight) break;
+            }
+            if(piled <= CraftBookPlugin.inst().getConfiguration().snowMaxPileHeight) {
+                block.setTypeId(BlockID.SNOW_BLOCK, false);
+                newData = (byte) 0;
+            }
         } else if (newData > 7) {
             newData = 7;
         }

@@ -73,13 +73,15 @@ public class GenerateWikiConfigLists {
                 pw.println("| " + (path == null ? key : path + "." + key));
                 pw.println("| " + String.valueOf(config.getProperty(path == null ? key : path + "." + key)));
                 String comment = config.getComment(path == null ? key : path + "." + key);
-                if(comment == null) comment = "";
+                if(comment == null) {
+                    System.out.println("[WARNING] Key " + path == null ? key : path + "." + key + " is missing a comment!");
+                    comment = "";
+                }
                 if(!comment.trim().isEmpty()) comment = comment.trim().substring(2);
                 pw.println("| " + comment);
                 lines++;
             } else
                 createConfigSectionFile(new File(folder, key + "/"), config, path == null ? key : path + "." + key);
-            System.out.println(key);
         }
 
         pw.println("|}");
@@ -88,5 +90,6 @@ public class GenerateWikiConfigLists {
 
         if(lines == 0)
             file.delete();
+        folder.delete(); //Delete if empty.
     }
 }

@@ -202,6 +202,7 @@ public abstract class LocalConfiguration {
     public boolean snowSlowdown;
     public boolean snowRealistic;
     public boolean snowHighPiles;
+    public int snowMaxPileHeight;
     public boolean snowJumpTrample;
     public List<ItemInfo> snowRealisticReplacables;
     public int snowFallAnimationSpeed;

@@ -431,15 +431,33 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Head Drops Configuration Listener
+        config.setComment("mechanics.head-drops.enable", "Enables the Head Drops mechanic.");
         headDropsEnabled = config.getBoolean("mechanics.head-drops.enable", false);
+
+        config.setComment("mechanics.head-drops.drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
         headDropsMobs = config.getBoolean("mechanics.head-drops.drop-mob-heads", true);
+
+        config.setComment("mechanics.head-drops.drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
         headDropsPlayers = config.getBoolean("mechanics.head-drops.drop-player-heads", true);
+
+        config.setComment("mechanics.head-drops.require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
         headDropsPlayerKillOnly = config.getBoolean("mechanics.head-drops.require-player-killed", true);
+
+        config.setComment("mechanics.head-drops.drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
         headDropsMiningDrops = config.getBoolean("mechanics.head-drops.drop-head-when-mined", true);
+
+        config.setComment("mechanics.head-drops.override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
         headDropsDropOverrideNatural = config.getBoolean("mechanics.head-drops.override-natural-head-drops", false);
+
+        config.setComment("mechanics.head-drops.drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
         headDropsDropRate = config.getDouble("mechanics.head-drops.drop-rate", 0.05);
+
+        config.setComment("mechanics.head-drops.looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
         headDropsLootingRateModifier = config.getDouble("mechanics.head-drops.looting-rate-modifier", 0.05);
+
+        config.setComment("mechanics.head-drops.show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
         headDropsShowNameClick = config.getBoolean("mechanics.head-drops.show-name-right-click", true);
+
         headDropsCustomDropRate = new HashMap<String, Double>();
         if(config.getKeys("mechanics.head-drops.drop-rates") != null) {
             for(String key : config.getKeys("mechanics.head-drops.drop-rates"))
@@ -505,6 +523,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Payment Configuration Listener
+        config.setComment("mechanics.payment.enable", "Enables the Payment mechanic.");
         paymentEnabled = config.getBoolean("mechanics.payment.enable", true);
 
 
@@ -517,16 +536,40 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Snow Configuration Listener
+        config.setComment("mechanics.snow.enable", "Enables the Snow mechanic.");
         snowEnable = config.getBoolean("mechanics.snow.enable", false);
+
+        config.setComment("mechanics.snow.piling", "Enables the piling feature of the Snow mechanic.");
         snowPiling = config.getBoolean("mechanics.snow.piling", false);
+
+        config.setComment("mechanics.snow.trample", "Enables the trampling feature of the Snow mechanic.");
         snowTrample = config.getBoolean("mechanics.snow.trample", false);
+
+        config.setComment("mechanics.snow.partial-trample-only", "If trampling is enabled, only trample it down to the smallest snow.");
         snowPartialTrample = config.getBoolean("mechanics.snow.partial-trample-only", false);
-        snowPlace = config.getBoolean("mechanics.snow.place", false);
-        snowSlowdown = config.getBoolean("mechanics.snow.slowdown", false);
-        snowRealistic = config.getBoolean("mechanics.snow.realistic", false);
-        snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
+
+        config.setComment("mechanics.snow.jump-trample", "Require jumping to trample snow.");
         snowJumpTrample = config.getBoolean("mechanics.snow.jump-trample", false);
+
+        config.setComment("mechanics.snow.place", "Allow snowballs to create snow when they land.");
+        snowPlace = config.getBoolean("mechanics.snow.place", false);
+
+        config.setComment("mechanics.snow.slowdown", "Slows down entities as they walk through thick snow.");
+        snowSlowdown = config.getBoolean("mechanics.snow.slowdown", false);
+
+        config.setComment("mechanics.snow.realistic", "Realistically move snow around, creating an 'avalanche' or 'mound' effect.");
+        snowRealistic = config.getBoolean("mechanics.snow.realistic", false);
+
+        config.setComment("mechanics.snow.high-piling", "Allow piling above the 1 block height.");
+        snowHighPiles = config.getBoolean("mechanics.snow.high-piling", false);
+
+        config.setComment("mechanics.snow.max-pile-height", "The maximum piling height of high piling snow.");
+        snowMaxPileHeight = config.getInt("mechanics.snow.max-pile-height", 3);
+
+        config.setComment("mechanics.snow.replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
         snowRealisticReplacables = ItemInfo.parseListFromString(config.getStringList("mechanics.snow.replacable-blocks", Arrays.asList("DEAD_BUSH", "LONG_GRASS", "YELLOW_FLOWER", "RED_ROSE", "BROWN_MUSHROOM", "RED_MUSHROOM", "FIRE")));
+
+        config.setComment("mechanics.snow.falldown-animation-speed", "The fall animation speed of realistic snow.");
         snowFallAnimationSpeed = config.getInt("mechanics.snow.falldown-animation-speed", 5);
 
 
