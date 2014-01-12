@@ -150,12 +150,14 @@ public class MechanicalCore implements LocalComponent {
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
+            try {
             if(!mech.enable()) {
                 plugin.getLogger().warning("Failed to initialize mechanic: " + mech.getClass().getSimpleName());
                 mech.disable();
                 iter.remove();
                 continue;
             }
+            } catch(Throwable e){}
             plugin.getServer().getPluginManager().registerEvents(mech, plugin);
         }
     }
