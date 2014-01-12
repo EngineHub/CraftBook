@@ -40,6 +40,10 @@ public class GenerateWikiICList {
             File file = new File("ICList.txt");
             if(!file.exists())
                 file.createNewFile();
+            else {
+                file.delete();
+                file.createNewFile();
+            }
 
             PrintWriter writer = new PrintWriter(file);
 

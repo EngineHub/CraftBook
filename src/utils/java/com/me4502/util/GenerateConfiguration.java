@@ -12,10 +12,19 @@ public class GenerateConfiguration {
 
     public static void main(String[] args) {
 
-        if(!new File("config.yml").exists()) try {
-            new File("config.yml").createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!new File("config.yml").exists()) {
+            try {
+                new File("config.yml").createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            new File("config.yml").delete();
+            try {
+                new File("config.yml").createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(new File("config.yml"), true, YAMLFormat.EXTENDED), Logger.getLogger(Logger.GLOBAL_LOGGER_NAME));
         config.load();

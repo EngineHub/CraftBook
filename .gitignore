@@ -46,3 +46,9 @@ debug.log
 # Doxygen
 /docs/html
 debug.txt
+
+# Generated Files
+/configs/
+/ICList.txt
+/config.yml
+/en_US.yml

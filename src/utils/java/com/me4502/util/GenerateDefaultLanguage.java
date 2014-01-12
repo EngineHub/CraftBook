@@ -12,10 +12,19 @@ public class GenerateDefaultLanguage {
 
     public static void main(String[] args) {
 
-        if(!new File("en_US.yml").exists()) try {
-            new File("en_US.yml").createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!new File("en_US.yml").exists()) {
+            try {
+                new File("en_US.yml").createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            new File("en_US.yml").delete();
+            try {
+                new File("en_US.yml").createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         YAMLProcessor proc = new YAMLProcessor(new File("en_US.yml"), true, YAMLFormat.EXTENDED);
         try {
