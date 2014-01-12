@@ -45,7 +45,7 @@ public class GenerateWikiICList {
                 file.createNewFile();
             }
 
-            PrintWriter writer = new PrintWriter(file);
+            PrintWriter writer = new PrintWriter(file, "UTF-8");
 
             writer.println("{| class=\"wiki-table sortable\"");
             writer.println("! IC ID");

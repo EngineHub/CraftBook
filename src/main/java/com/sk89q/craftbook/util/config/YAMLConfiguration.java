@@ -639,170 +639,275 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Vehicles Minecart Decay Configuration Listener
+        config.setComment("vehicles.minecart.decay-when-empty.enable", "Enables the Minecart Decay Mechanic.");
         minecartDecayEnabled = config.getBoolean("vehicles.minecart.decay-when-empty.enable", false);
+
+        config.setComment("vehicles.minecart.decay-when-empty.time-in-ticks", "The time in ticks that the cart will wait before decaying.");
         minecartDecayTime = config.getInt("vehicles.minecart.decay-when-empty.time-in-ticks", 20);
 
 
         // Vehicles Minecart Station Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.station.enable", "Enables the Minecart Station Mechanic.");
         minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.station.block", "Sets the block that is the base of the station mechanic.");
         minecartStationBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.station.block", "OBSIDIAN:0"));
 
 
         // Vehicles Minecart Sorter Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.sorter.enable", "Enables the Minecart Sorter Mechanic.");
         minecartSorterEnabled = config.getBoolean("vehicles.minecart.mechanisms.sorter.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.sorter.block", "Sets the block that is the base of the sorter mechanic.");
         minecartSorterBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.sorter.block", "NETHERRACK:0"));
 
 
         // Vehicles Minecart Ejector Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.ejector.enable", "Enables the Minecart Ejector Mechanic.");
         minecartEjectorEnabled = config.getBoolean("vehicles.minecart.mechanisms.ejector.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.ejector.block", "Sets the block that is the base of the ejector mechanic.");
         minecartEjectorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.ejector.block", "IRON_BLOCK:0"));
 
 
         // Vehicles Minecart Deposit Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.deposit.enable", "Enables the Minecart Deposit Mechanic.");
         minecartDepositEnabled = config.getBoolean("vehicles.minecart.mechanisms.deposit.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.deposit.block", "Sets the block that is the base of the deposit mechanic.");
         minecartDepositBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.deposit.block", "IRON_ORE:0"));
 
 
         // Vehicles Minecart Teleport Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.teleport.enable", "Enables the Minecart Teleport Mechanic.");
         minecartTeleportEnabled = config.getBoolean("vehicles.minecart.mechanisms.teleport.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.teleport.block", "Sets the block that is the base of the teleport mechanic.");
         minecartTeleportBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.teleport.block", "EMERALD_BLOCK:0"));
 
 
         // Vehicles Minecart Lift Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.elevator.enable", "Enables the Minecart Elevator Mechanic.");
         minecartElevatorEnabled = config.getBoolean("vehicles.minecart.mechanisms.elevator.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.elevator.block", "Sets the block that is the base of the elevator mechanic.");
         minecartElevatorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.elevator.block", "NETHER_BRICK:0"));
 
 
         // Vehicles Minecart Messager Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.messager.enable", "Enables the Minecart Messager Mechanic.");
         minecartMessagerEnabled = config.getBoolean("vehicles.minecart.mechanisms.messager.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.messager.block", "Sets the block that is the base of the messager mechanic.");
         minecartMessagerBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.messager.block", "ENDER_STONE:0"));
 
 
         // Vehicles Minecart Reverse Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.reverse.enable", "Enables the Minecart Reverse Mechanic.");
         minecartReverseEnabled = config.getBoolean("vehicles.minecart.mechanisms.reverse.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.reverse.block", "Sets the block that is the base of the reverse mechanic.");
         minecartReverseBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.reverse.block", "WOOL:0"));
 
 
         // Vehicles Minecart MaxSpeed Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.max-speed.enable", "Enables the Minecart Max Speed Mechanic.");
         minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.max-speed.block", "Sets the block that is the base of the max speed mechanic.");
         minecartMaxSpeedBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.max-speed.block", "COAL_BLOCK:0"));
 
 
         // Vehicles Minecart SpeedMod Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.speed-modifier.enable", "Enables the Minecart Speed Modifier Block Mechanic.");
         minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "Sets the block that is the base of the max boost block.");
         minecartSpeedModMaxBoostBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "GOLD_BLOCK:0"));
+
+        config.setComment("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "Sets the block that is the base of the 25x boost block.");
         minecartSpeedMod25xBoostBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.25x-boost-block", "GOLD_ORE:0"));
+
+        config.setComment("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "Sets the block that is the base of the 50x slower block.");
         minecartSpeedMod50xSlowBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.50x-slow-block", "SOUL_SAND:0"));
+
+        config.setComment("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "Sets the block that is the base of the 20x slower block.");
         minecartSpeedMod20xSlowBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.20x-slow-block", "GRAVEL:0"));
 
 
         // Vehicles Minecart Dispenser Configuration Listener
+        config.setComment("vehicles.minecart.mechanisms.dispenser.enable", "Enables the Minecart Dispenser Mechanic.");
         minecartDispenserEnabled = config.getBoolean("vehicles.minecart.mechanisms.dispenser.enable", true);
+
+        config.setComment("vehicles.minecart.mechanisms.dispenser.block", "Sets the block that is the base of the dispenser mechanic.");
         minecartDispenserBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));
+
+        config.setComment("vehicles.minecart.mechanisms.dispenser.spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
         minecartDispenserLegacy = config.getBoolean("vehicles.minecart.mechanisms.dispenser.spawn-infront", false);
+
+        config.setComment("vehicles.minecart.mechanisms.dispenser.check-for-carts", "Sets whether or not the mechanic checks for existing carts before spawning a new one.");
         minecartDispenserAntiSpam = config.getBoolean("vehicles.minecart.mechanisms.dispenser.check-for-carts", true);
+
+        config.setComment("vehicles.minecart.mechanisms.dispenser.propel-cart", "Sets whether or not the dispenser propels carts that it spawns.");
         minecartDispenserPropel = config.getBoolean("vehicles.minecart.mechanisms.dispenser.propel-cart", false);
 
 
         // Vehicles Minecart Fall Speed Listener
+        config.setComment("vehicles.minecart.fall-speed.enable", "Enables the Fall Speed Changer mechanic.");
         minecartFallModifierEnabled = config.getBoolean("vehicles.minecart.fall-speed.enable", false);
+
+        config.setComment("vehicles.minecart.fall-speed.vertical-fall-speed", "Sets the vertical fall speed of the minecart");
         minecartFallVerticalSpeed = config.getDouble("vehicles.minecart.fall-speed.vertical-fall-speed", 0.9D);
+
+        config.setComment("vehicles.minecart.fall-speed.horizontal-fall-speed", "Sets the horizontal fall speed of the minecart");
         minecartFallHorizontalSpeed = config.getDouble("vehicles.minecart.fall-speed.horizontal-fall-speed", 1.1D);
 
 
         // Vehicles Minecart More Rails Listener
+        config.setComment("vehicles.minecart.more-rails.enable", "Enables the More Rails mechanic.");
         minecartMoreRailsEnabled = config.getBoolean("vehicles.minecart.more-rails.enable", false);
+
+        config.setComment("vehicles.minecart.more-rails.pressure-plate-intersection", "Enables the pressure plate as an intersection.");
         minecartMoreRailsPressurePlate = config.getBoolean("vehicles.minecart.more-rails.pressure-plate-intersection", false);
+
+        config.setComment("vehicles.minecart.more-rails.ladder-vertical-rail", "Enables the ladder as a vertical rail.");
         minecartMoreRailsLadder = config.getBoolean("vehicles.minecart.more-rails.ladder-vertical-rail", false);
+
+        config.setComment("vehicles.minecart.more-rails.ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
         minecartMoreRailsLadderVelocity = config.getDouble("vehicles.minecart.more-rails.ladder-vertical-rail-velocity", 0.5D);
 
 
         // Vehicles Minecart Remove Entities Listener
+        config.setComment("vehicles.minecart.remove-entities.enable", "Enables the Remove Entities mechanic for minecarts.");
         minecartRemoveEntitiesEnabled = config.getBoolean("vehicles.minecart.remove-entities.enable", false);
+
+        config.setComment("vehicles.minecart.remove-entities.remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
         minecartRemoveEntitiesOtherCarts = config.getBoolean("vehicles.minecart.remove-entities.remove-other-minecarts", false);
 
 
         // Vehicles Minecart Vision Steering Listener
+        config.setComment("vehicles.minecart.vision-steering.enable", "Enables the Vision Steering mechanic.");
         minecartVisionSteeringEnabled = config.getBoolean("vehicles.minecart.vision-steering.enable", false);
+
+        config.setComment("vehicles.minecart.vision-steering.minimum-sensitivity", "Sets the sensitivity of Vision Steering.");
         minecartVisionSteeringMinimumSensitivity = config.getInt("vehicles.minecart.vision-steering.minimum-sensitivity", 3);
 
 
         // Vehicles Minecart Block Mob Entry Listener
+        config.setComment("vehicles.minecart.block-mob-entry.enable", "Enables the Block Mob Entry mechanic.");
         minecartBlockMobEntryEnabled = config.getBoolean("vehicles.minecart.block-mob-entry.enable", false);
 
 
         // Vehicles Minecart Remove On Exit Listener
+        config.setComment("vehicles.minecart.remove-on-exit.enable", "Enables the Remove on Exit mechanic.");
         minecartRemoveOnExitEnabled = config.getBoolean("vehicles.minecart.remove-on-exit.enable", false);
+
+        config.setComment("vehicles.minecart.remove-on-exit.give-item", "Sets whether to give the player the item back or not.");
         minecartRemoveOnExitGiveItem = config.getBoolean("vehicles.minecart.remove-on-exit.give-item", false);
 
 
         // Vehicles Minecart Collision Entry Listener
+        config.setComment("vehicles.minecart.collision-entry.enable", "Enables the Collision Entry mechanic.");
         minecartCollisionEntryEnabled = config.getBoolean("vehicles.minecart.collision-entry.enable", false);
 
 
         // Vehicles Minecart Item Pickup Listener
+        config.setComment("vehicles.minecart.item-pickup.enable", "Enables the Item Pickup mechanic.");
         minecartItemPickupEnabled = config.getBoolean("vehicles.minecart.item-pickup.enable", false);
 
 
         // Vehicles Minecart Constant Speed Listener
+        config.setComment("vehicles.minecart.constant-speed.enable", "Enables the Constant Speed mechanic.");
         minecartConstantSpeedEnable = config.getBoolean("vehicles.minecart.constant-speed.enable", false);
+
+        config.setComment("vehicles.minecart.constant-speed.speed", "Sets the speed to move at constantly.");
         minecartConstantSpeedSpeed = config.getDouble("vehicles.minecart.constant-speed.speed", 0.5);
 
 
         // Vehicles Minecart Rail Placer Listener
+        config.setComment("vehicles.minecart.rail-placer.enable", "Enables the Rail Placer mechanic.");
         minecartRailPlacerEnable = config.getBoolean("vehicles.minecart.rail-placer.enable", false);
 
 
         // Vehicles Minecart Speed Modifier Listener
+        config.setComment("vehicles.minecart.speed-modifiers.enable", "Enables the Speed Modifiers mechanic.");
         minecartSpeedModifierEnable = config.getBoolean("vehicles.minecart.speed-modifiers.enable", false);
+
+        config.setComment("vehicles.minecart.speed-modifiers.max-speed", "Sets the max speed of carts. Normal max speed speed is 0.4D");
         minecartSpeedModifierMaxSpeed = config.getDouble("vehicles.minecart.speed-modifiers.max-speed", 0.4);
+
+        config.setComment("vehicles.minecart.speed-modifiers.off-rail-speed", "Sets the off-rail speed modifier of carts. 0 is none.");
         minecartSpeedModifierOffRail = config.getDouble("vehicles.minecart.speed-modifiers.off-rail-speed", 0);
 
 
         // Vehicles Minecart Configuration Listener
+        config.setComment("vehicles.minecart.empty-slowdown-stopper.enable", "Enables the Empty Slowdown Stopper mechanic.");
         minecartEmptySlowdownStopperEnable = config.getBoolean("vehicles.minecart.empty-slowdown-stopper.enable", false);
 
 
         // Vehicles Minecart No Collide Listener
+        config.setComment("vehicles.minecart.no-collide.enable", "Enables the No Collide mechanic.");
         minecartNoCollideEnable = config.getBoolean("vehicles.minecart.no-collide.enable", false);
+
+        config.setComment("vehicles.minecart.no-collide.empty-carts", "Enable No Collide for empty carts.");
         minecartNoCollideEmpty = config.getBoolean("vehicles.minecart.no-collide.empty-carts", true);
+
+        config.setComment("vehicles.minecart.no-collide.full-carts", "Enable No Collide for occupied carts.");
         minecartNoCollideFull = config.getBoolean("vehicles.minecart.no-collide.full-carts", false);
 
 
         // Vehicles Minecart Place Anywhere Listener
+        config.setComment("vehicles.minecart.place-anywhere.enable", "Enables the Place Anywhere mechanic.");
         minecartPlaceAnywhereEnable = config.getBoolean("vehicles.minecart.place-anywhere.enable", false);
 
 
         // Vehicles - Boat Drops Listener
+        config.setComment("vehicles.boat.drops.enable", "Enables the Boat Drops Mechanic.");
         boatDropsEnabled = config.getBoolean("vehicles.boat.drops.enable", false);
 
 
         // Vehicles Boat Remove On Exit Listener
+        config.setComment("vehicles.boat.remove-on-exit.enable", "Enables the Remove On Exit mechanic.");
         boatRemoveOnExitEnabled = config.getBoolean("vehicles.boat.remove-on-exit.enable", false);
+
+        config.setComment("vehicles.boat.remove-on-exit.give-item", "Sets whether to give the player the item back or not.");
         boatRemoveOnExitGiveItem = config.getBoolean("vehicles.boat.remove-on-exit.give-item", false);
 
 
         // Vehicles Boat Land Boats Listener
+        config.setComment("vehicles.boat.land-boats.enable", "Enables the Land Boats mechanic.");
         boatLandBoatsEnable = config.getBoolean("vehicles.boat.land-boats.enable", false);
 
 
         // Vehicles - Boat Remove Entities Listener
+        config.setComment("vehicles.boat.remove-entities.enable", "Enables the Remove Entities mechanic for boats.");
         boatRemoveEntitiesEnabled = config.getBoolean("vehicles.boat.remove-entities.enable", false);
+
+        config.setComment("vehicles.boat.remove-entities.remove-other-boats", "Allows the remove entities boats to remove other boats.");
         boatRemoveEntitiesOtherBoats = config.getBoolean("vehicles.boat.remove-entities.remove-other-boats", false);
 
 
         // Vehicles Boat Speed Modifier Listener
+        config.setComment("vehicles.boat.speed-modifiers.enable", "Enables the Speed Modifiers mechanic.");
         boatSpeedModifierEnable = config.getBoolean("vehicles.boat.speed-modifiers.enable", false);
+
+        config.setComment("vehicles.boat.speed-modifiers.max-speed", "Sets the maximum speed of a boat. 0.4D is normal maximum speed.");
         boatSpeedModifierMaxSpeed = config.getDouble("vehicles.boat.speed-modifiers.max-speed", 0.4D);
+
+        config.setComment("vehicles.boat.speed-modifiers.unnoccupied-deceleration", "Sets the unnoccupied deceleration of a boat. -1 is disabled.");
         boatSpeedModifierUnnoccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.unnoccupied-deceleration", -1);
+
+        config.setComment("vehicles.boat.speed-modifiers.occupied-deceleration", "Sets the occupied deceleration of a boat. 0.3 is normal occupied deceleration");
         boatSpeedModifierOccupiedDeceleration = config.getDouble("vehicles.boat.speed-modifiers.occupied-deceleration", 0.2);
 
 
         // Vehicles - Boat Uncrashable Listener
+        config.setComment("vehicles.boat.uncrashable.enable", "Enables the Boat Uncrashable mechanic.");
         boatNoCrashEnabled = config.getBoolean("vehicles.boat.uncrashable.enable", false);
 
 
         // Vehicles Boat Water Place Only Listener
+        config.setComment("vehicles.boat.water-place-only.enable", "Enables the Boat Water Place Only mechanic.");
         boatWaterPlaceOnly = config.getBoolean("vehicles.boat.water-place-only.enable", false);
 
 

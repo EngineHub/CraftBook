@@ -35,11 +35,14 @@ public class GenerateWikiConfigLists {
         File configFolder = new File("configs/");
         configFolder.mkdir();
 
+        missingComments = 0;
         try {
             createConfigSectionFile(configFolder, config.config, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println(missingComments + " Comments Are Missing");
     }
 
     public static void createConfigSectionFile(File folder, YAMLProcessor config, String path) throws IOException {
@@ -56,7 +59,7 @@ public class GenerateWikiConfigLists {
             file.delete();
             file.createNewFile();
         }
-        PrintWriter pw = new PrintWriter(file);
+        PrintWriter pw = new PrintWriter(file, "UTF-8");
         int lines = 0;
 
         pw.println("== Configuration ==");
@@ -75,6 +78,7 @@ public class GenerateWikiConfigLists {
                 String comment = config.getComment(path == null ? key : path + "." + key);
                 if(comment == null) {
                     System.out.println("[WARNING] Key " + path == null ? key : path + "." + key + " is missing a comment!");
+                    missingComments++;
                     comment = "";
                 }
                 if(!comment.trim().isEmpty()) comment = comment.trim().substring(2);
@@ -92,4 +96,6 @@ public class GenerateWikiConfigLists {
             file.delete();
         folder.delete(); //Delete if empty.
     }
+
+    static int missingComments = 0;
 }
