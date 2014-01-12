@@ -574,9 +574,16 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // Sponge Configuration Listener
+        config.setComment("mechanics.sponge.enable", "Enables sponge mechanic.");
         spongeEnabled = config.getBoolean("mechanics.sponge.enable", false);
+
+        config.setComment("mechanics.sponge.radius", "The maximum radius of the sponge.");
         spongeRadius = config.getInt("mechanics.sponge.radius", 5);
+
+        config.setComment("mechanics.sponge.circular-radius", "Whether the radius should be circular or square.");
         spongeCircleRadius = config.getBoolean("mechanics.sponge.circular-radius", true);
+
+        config.setComment("mechanics.sponge.require-redstone", "Whether to require redstone to suck up water or not.");
         spongeRedstone = config.getBoolean("mechanics.sponge.require-redstone", false);
 
 
@@ -592,13 +599,28 @@ public class YAMLConfiguration extends LocalConfiguration {
 
 
         // TreeLopper Configuration Listener
+        config.setComment("mechanics.tree-lopper.enable", "Enables the Tree Lopper mechanic.");
         treeLopperEnabled = config.getBoolean("mechanics.tree-lopper.enable", false);
-        treeLopperBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.tree-lopper.block-list", Arrays.asList("LOG")));
+
+        config.setComment("mechanics.tree-lopper.block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
+        treeLopperBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.tree-lopper.block-list", Arrays.asList("LOG", "LOG_2")));
+
+        config.setComment("mechanics.tree-lopper.tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
         treeLopperItems = ItemInfo.parseListFromString(config.getStringList("mechanics.tree-lopper.tool-list", Arrays.asList("IRON_AXE", "WOOD_AXE", "STONE_AXE", "DIAMOND_AXE", "GOLD_AXE")));
+
+        config.setComment("mechanics.tree-lopper.max-size", "The maximum amount of blocks the TreeLopper can break.");
         treeLopperMaxSize = config.getInt("mechanics.tree-lopper.max-size", 30);
+
+        config.setComment("mechanics.tree-lopper.allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
         treeLopperAllowDiagonals = config.getBoolean("mechanics.tree-lopper.allow-diagonals", false);
+
+        config.setComment("mechanics.tree-lopper.enforce-data", "Make sure the blocks broken by TreeLopper all share the same data values.");
         treeLopperEnforceData = config.getBoolean("mechanics.tree-lopper.enforce-data", false);
+
+        config.setComment("mechanics.tree-lopper.place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
         treeLopperPlaceSapling = config.getBoolean("mechanics.tree-lopper.place-saplings", false);
+
+        config.setComment("mechanics.tree-lopper.break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
         treeLopperBreakLeaves = config.getBoolean("mechanics.tree-lopper.break-leaves", false);
 
 
