@@ -43,7 +43,7 @@ import com.sk89q.worldedit.blocks.BlockType;
  */
 public class Chair extends AbstractCraftBookMechanic {
 
-    public Map<String, Tuple2<Entity, Block>> chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
+    public Map<String, Tuple2<Entity, Block>> chairs;
 
     public void addChair(final Player player, Block block) {
 
@@ -266,6 +266,8 @@ public class Chair extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
+        chairs = new ConcurrentHashMap<String, Tuple2<Entity, Block>>();
+
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 
         try {
@@ -316,6 +318,9 @@ public class Chair extends AbstractCraftBookMechanic {
     @Override
     public void disable () {
         chairs.clear();
-        ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
+        try {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
+        } catch(Throwable e) {
+        }
     }
 }

@@ -999,4 +999,8 @@ public class CraftBookPlugin extends JavaPlugin {
         }
         return item;
     }
+
+    public String getWikiDomain() {
+        return "http://wiki.sk89q.com/wiki/CraftBook";
+    }
 }

@@ -64,7 +64,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
-                "# http://wiki.sk89q.com/wiki/CraftBook/Usage",
+                "# " + CraftBookPlugin.inst().getWikiDomain() + "/Usage",
                 "",
                 "");
 

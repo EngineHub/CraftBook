@@ -45,7 +45,7 @@ public class ICDocsParser {
             } else {
                 player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + "http://wiki.sk89q.com/wiki/CraftBook/" + ric.getId().toUpperCase(Locale.ENGLISH));
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.inst().getWikiDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }
