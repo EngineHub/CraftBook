@@ -5,19 +5,16 @@ import java.util.Locale;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class ICDocsParser {
 
-    private static CircuitCore core = CircuitCore.inst();
-
     public static void generateICDocs(Player player, String id) {
 
-        RegisteredICFactory ric = core.getIcManager().registered.get(id.toLowerCase(Locale.ENGLISH));
+        RegisteredICFactory ric = ICManager.INSTANCE.registered.get(id.toLowerCase(Locale.ENGLISH));
         if (ric == null) {
             try {
-                ric = core.getIcManager().registered.get(core.getSearchID(player, id));
+                ric = ICManager.INSTANCE.registered.get(ICManager.INSTANCE.getSearchID(player, id));
                 if (ric == null) {
                     player.sendMessage(ChatColor.RED + "Invalid IC!");
                     return;

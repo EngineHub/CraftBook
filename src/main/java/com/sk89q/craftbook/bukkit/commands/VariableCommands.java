@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -129,16 +128,15 @@ public class VariableCommands {
 
     public void resetICCache(String variable, String namespace) {
 
-        if(CircuitCore.inst() != null)
-            if(CircuitCore.inst().getIcManager() != null) {//Make sure IC's are enabled.
+        if(ICManager.INSTANCE != null) {//Make sure IC's are enabled.
 
-                Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
-                while(iterator.hasNext()) {
-                    Entry<Location, IC> ic = iterator.next();
-                    if(ic.getValue().getSign().hasVariable(namespace + "|" + variable) || ic.getValue().getSign().hasVariable(variable))
-                        iterator.remove();
-                }
+            Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
+            while(iterator.hasNext()) {
+                Entry<Location, IC> ic = iterator.next();
+                if(ic.getValue().getSign().hasVariable(namespace + "|" + variable) || ic.getValue().getSign().hasVariable(variable))
+                    iterator.remove();
             }
+        }
     }
 
     @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Appended Value> -n <Namespace>")

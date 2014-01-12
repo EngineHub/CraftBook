@@ -10,13 +10,13 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.jinglenote.JingleNoteManager;
@@ -91,9 +91,9 @@ public class Melody extends AbstractSelfTriggeredIC {
         midiName = getSign().getLine(2);
 
         File[] trialPaths = {
-                new File(CircuitCore.inst().getMidiFolder(), midiName),
-                new File(CircuitCore.inst().getMidiFolder(), midiName + ".mid"),
-                new File(CircuitCore.inst().getMidiFolder(), midiName + ".midi"),
+                new File(ICManager.INSTANCE.getMidiFolder(), midiName),
+                new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".mid"),
+                new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".midi"),
                 new File("midi", midiName), new File("midi", midiName + ".mid"),
                 new File("midi", midiName + ".midi"),
         };

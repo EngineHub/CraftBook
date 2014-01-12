@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.VehicleCore;
+import com.sk89q.craftbook.vehicles.cart.StationManager;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 
@@ -23,7 +23,7 @@ public class VehicleCommands {
         }
         Player player = (Player) sender;
         if (context.argsLength() == 0) {
-            String stationName = VehicleCore.inst().getStation(player.getName());
+            String stationName = StationManager.getStation(player.getName());
 
             if (stationName == null)
                 sender.sendMessage("You have no station selected.");
@@ -31,7 +31,7 @@ public class VehicleCommands {
                 sender.sendMessage("Your currently selected station is " + stationName);
         } else {
             String stationName = context.getString(0);
-            VehicleCore.inst().setStation(player.getName(), stationName);
+            StationManager.setStation(player.getName(), stationName);
             sender.sendMessage("Station set to: " + stationName);
         }
     }

@@ -12,12 +12,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
@@ -39,23 +39,99 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
-import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
+import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
+import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.circuits.GlowStone;
+import com.sk89q.craftbook.circuits.JackOLantern;
+import com.sk89q.craftbook.circuits.Netherrack;
+import com.sk89q.craftbook.circuits.RedstoneJukebox;
+import com.sk89q.craftbook.circuits.ic.ICManager;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
+import com.sk89q.craftbook.circuits.pipe.Pipes;
 import com.sk89q.craftbook.common.LanguageManager;
 import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.common.st.MechanicClock;
 import com.sk89q.craftbook.common.st.SelfTriggeringManager;
+import com.sk89q.craftbook.mech.AIMechanic;
+import com.sk89q.craftbook.mech.Ammeter;
+import com.sk89q.craftbook.mech.BetterLeads;
+import com.sk89q.craftbook.mech.BetterPhysics;
+import com.sk89q.craftbook.mech.BetterPistons;
+import com.sk89q.craftbook.mech.Bookcase;
+import com.sk89q.craftbook.mech.Cauldron;
+import com.sk89q.craftbook.mech.Chair;
+import com.sk89q.craftbook.mech.ChunkAnchor;
 import com.sk89q.craftbook.mech.CommandItems;
 import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition;
+import com.sk89q.craftbook.mech.CommandSigns;
+import com.sk89q.craftbook.mech.CookingPot;
+import com.sk89q.craftbook.mech.CustomDrops;
+import com.sk89q.craftbook.mech.Elevator;
+import com.sk89q.craftbook.mech.Footprints;
+import com.sk89q.craftbook.mech.HeadDrops;
+import com.sk89q.craftbook.mech.HiddenSwitch;
+import com.sk89q.craftbook.mech.LightStone;
+import com.sk89q.craftbook.mech.LightSwitch;
+import com.sk89q.craftbook.mech.MapChanger;
+import com.sk89q.craftbook.mech.Marquee;
+import com.sk89q.craftbook.mech.PaintingSwitch;
+import com.sk89q.craftbook.mech.Payment;
+import com.sk89q.craftbook.mech.SignCopier;
+import com.sk89q.craftbook.mech.Snow;
+import com.sk89q.craftbook.mech.Sponge;
+import com.sk89q.craftbook.mech.Teleporter;
+import com.sk89q.craftbook.mech.TreeLopper;
+import com.sk89q.craftbook.mech.XPStorer;
+import com.sk89q.craftbook.mech.area.Area;
+import com.sk89q.craftbook.mech.area.simple.Bridge;
+import com.sk89q.craftbook.mech.area.simple.Door;
+import com.sk89q.craftbook.mech.area.simple.Gate;
+import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
+import com.sk89q.craftbook.mech.crafting.CustomCrafting;
+import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.util.CompatabilityUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.compat.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
+import com.sk89q.craftbook.vehicles.boat.Drops;
+import com.sk89q.craftbook.vehicles.boat.ExitRemover;
+import com.sk89q.craftbook.vehicles.boat.LandBoats;
+import com.sk89q.craftbook.vehicles.boat.RemoveEntities;
+import com.sk89q.craftbook.vehicles.boat.SpeedModifiers;
+import com.sk89q.craftbook.vehicles.boat.Uncrashable;
+import com.sk89q.craftbook.vehicles.boat.WaterPlaceOnly;
+import com.sk89q.craftbook.vehicles.cart.CollisionEntry;
+import com.sk89q.craftbook.vehicles.cart.ConstantSpeed;
+import com.sk89q.craftbook.vehicles.cart.EmptyDecay;
+import com.sk89q.craftbook.vehicles.cart.EmptySlowdown;
+import com.sk89q.craftbook.vehicles.cart.FallModifier;
+import com.sk89q.craftbook.vehicles.cart.ItemPickup;
+import com.sk89q.craftbook.vehicles.cart.MobBlocker;
+import com.sk89q.craftbook.vehicles.cart.MoreRails;
+import com.sk89q.craftbook.vehicles.cart.NoCollide;
+import com.sk89q.craftbook.vehicles.cart.PlaceAnywhere;
+import com.sk89q.craftbook.vehicles.cart.RailPlacer;
+import com.sk89q.craftbook.vehicles.cart.VisionSteering;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockManager;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockMechanism;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartBooster;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartDeposit;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartDispenser;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartEjector;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartLift;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMaxSpeed;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartMessenger;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartReverser;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartSorter;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartStation;
+import com.sk89q.craftbook.vehicles.cart.blocks.CartTeleporter;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -100,11 +176,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * Handles all configuration.
      */
     private BukkitConfiguration config;
-
-    /**
-     * The currently enabled LocalComponents
-     */
-    private List<LocalComponent> components = new ArrayList<LocalComponent>();
 
     /**
      * The adapter for events to the manager.
@@ -159,11 +230,6 @@ public class CraftBookPlugin extends JavaPlugin {
     public static int getUpdaterID() {
 
         return 31055;
-    }
-
-    public List<LocalComponent> getComponents() {
-
-        return Collections.unmodifiableList(components);
     }
 
     public List<CraftBookMechanic> getMechanics() {
@@ -243,7 +309,6 @@ public class CraftBookPlugin extends JavaPlugin {
         // Let's start the show
         setupCraftBook();
         registerGlobalEvents();
-        startComponents();
 
         System.gc();
 
@@ -304,16 +369,151 @@ public class CraftBookPlugin extends JavaPlugin {
         // VariableStore
         if(config.variablesEnabled) mechanics.add(new VariableManager());
 
+        // Mechanics
+        if (config.enableMechanisms) {
+            logDebugMessage("Initializing Mechanisms!", "startup.mechanisms");
+            registerCommands(MechanismCommands.class);
+
+            if (config.commandItemsEnabled) mechanics.add(new CommandItems());
+            if (config.customCraftingEnabled) mechanics.add(new CustomCrafting());
+            if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
+            if (config.snowEnable) mechanics.add(new Snow());
+            if (config.customDropEnabled) mechanics.add(new CustomDrops());
+            if (config.aiEnabled) mechanics.add(new AIMechanic());
+            if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
+            if (config.physicsEnabled) mechanics.add(new BetterPhysics());
+            if (config.headDropsEnabled) mechanics.add(new HeadDrops());
+            if (config.leadsEnabled) mechanics.add(new BetterLeads());
+            if (config.marqueeEnabled) mechanics.add(new Marquee());
+            if (config.treeLopperEnabled) mechanics.add(new TreeLopper());
+            if (config.mapChangerEnabled) mechanics.add(new MapChanger());
+            if (config.xpStorerEnabled) mechanics.add(new XPStorer());
+            if (config.lightstoneEnabled) mechanics.add(new LightStone());
+            if (config.commandSignEnabled) mechanics.add(new CommandSigns());
+            if (config.lightSwitchEnabled) mechanics.add(new LightSwitch());
+            if (config.chunkAnchorEnabled) mechanics.add(new ChunkAnchor());
+            if (config.ammeterEnabled) mechanics.add(new Ammeter());
+            if (config.bookcaseEnabled) mechanics.add(new Bookcase());
+            if (config.signCopyEnabled) mechanics.add(new SignCopier());
+            if (config.bridgeEnabled) mechanics.add(new Bridge());
+            if (config.doorEnabled) mechanics.add(new Door());
+            if (config.hiddenSwitchEnabled) mechanics.add(new HiddenSwitch());
+            if (config.elevatorEnabled) mechanics.add(new Elevator());
+            if (config.teleporterEnabled) mechanics.add(new Teleporter());
+            if (config.areaEnabled) mechanics.add(new Area());
+            if (config.cauldronEnabled) mechanics.add(new ImprovedCauldron());
+            if (config.legacyCauldronEnabled) mechanics.add(new Cauldron());
+            if (config.gateEnabled) mechanics.add(new Gate());
+            if (config.pistonsEnabled) mechanics.add(new BetterPistons());
+            if (config.cookingPotEnabled) mechanics.add(new CookingPot());
+            if (config.spongeEnabled) mechanics.add(new Sponge());
+
+            if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
+            if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
+            if (config.paymentEnabled) if(CraftBookPlugin.plugins.getEconomy() != null) mechanics.add(new Payment()); else getLogger().warning("Failed to initialize mechanic: Payment. Make sure you have Vault!");
+        }
+
+        // Circuits
+        if (config.enableCircuits) {
+            logDebugMessage("Initializing Circuits!", "startup.circuits");
+            registerCommands(CircuitCommands.class);
+
+            if (config.jukeboxEnabled) mechanics.add(new RedstoneJukebox());
+            if (config.glowstoneEnabled) mechanics.add(new GlowStone());
+            if (config.netherrackEnabled) mechanics.add(new Netherrack());
+            if (config.pumpkinsEnabled) mechanics.add(new JackOLantern());
+            if (config.pipesEnabled) mechanics.add(new Pipes());
+            if (config.ICEnabled) {
+                mechanics.add(new ICMechanic(new ICManager()));
+                ICManager.INSTANCE.enable();
+                ICManager.INSTANCE.registerICs(getServer());
+            }
+        }
+
+        // Vehicles
+        if (config.enableVehicles) {
+            logDebugMessage("Initializing Vehicles!", "startup.vehicles");
+            registerCommands(VehicleCommands.class);
+
+            if(CartBlockManager.INSTANCE != null)
+                HandlerList.unregisterAll(CartBlockManager.INSTANCE);
+            CartBlockManager man = new CartBlockManager();
+            getServer().getPluginManager().registerEvents(man, this);
+
+            if(config.minecartSpeedModEnabled) {
+                if(config.minecartSpeedModMaxBoostBlock.getId() > 0)
+                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedModMaxBoostBlock, 100));
+                if(config.minecartSpeedMod25xBoostBlock.getId() > 0)
+                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod25xBoostBlock, 1.25));
+                if(config.minecartSpeedMod20xSlowBlock.getId() > 0)
+                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod20xSlowBlock, 0.8));
+                if(config.minecartSpeedMod50xSlowBlock.getId() > 0)
+                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod50xSlowBlock, 0.5));
+            }
+            if(config.minecartReverseEnabled && config.minecartReverseBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartReverser(config.minecartReverseBlock));
+            if(config.minecartSorterEnabled && config.minecartSorterBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartSorter(config.minecartSorterBlock));
+            if(config.minecartStationEnabled && config.minecartStationBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartStation(config.minecartStationBlock));
+            if(config.minecartEjectorEnabled && config.minecartEjectorBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartEjector(config.minecartEjectorBlock));
+            if(config.minecartDepositEnabled && config.minecartDepositBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartDeposit(config.minecartDepositBlock));
+            if(config.minecartTeleportEnabled && config.minecartTeleportBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartTeleporter(config.minecartTeleportBlock));
+            if(config.minecartElevatorEnabled && config.minecartElevatorBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartLift(config.minecartElevatorBlock));
+            if(config.minecartDispenserEnabled && config.minecartDispenserBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartDispenser(config.minecartDispenserBlock));
+            if(config.minecartMessagerEnabled && config.minecartMessagerBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartMessenger(config.minecartMessagerBlock));
+            if(config.minecartMaxSpeedEnabled && config.minecartMaxSpeedBlock.getId() > 0)
+                man.cartBlockMechanisms.add(new CartMaxSpeed(config.minecartMaxSpeedBlock));
+
+            for(CartBlockMechanism mech : man.cartBlockMechanisms) mechanics.add(mech);
+
+            if(config.minecartMoreRailsEnabled) mechanics.add(new MoreRails());
+            if(config.minecartRemoveEntitiesEnabled) mechanics.add(new com.sk89q.craftbook.vehicles.cart.RemoveEntities());
+            if(config.minecartVisionSteeringEnabled) mechanics.add(new VisionSteering());
+            if(config.minecartDecayEnabled) mechanics.add(new EmptyDecay());
+            if(config.minecartBlockMobEntryEnabled) mechanics.add(new MobBlocker());
+            if(config.minecartRemoveOnExitEnabled) mechanics.add(new com.sk89q.craftbook.vehicles.cart.ExitRemover());
+            if(config.minecartCollisionEntryEnabled) mechanics.add(new CollisionEntry());
+            if(config.minecartItemPickupEnabled) mechanics.add(new ItemPickup());
+            if(config.minecartFallModifierEnabled) mechanics.add(new FallModifier());
+            if(config.minecartConstantSpeedEnable) mechanics.add(new ConstantSpeed());
+            if(config.minecartRailPlacerEnable) mechanics.add(new RailPlacer());
+            if(config.minecartSpeedModifierEnable) mechanics.add(new com.sk89q.craftbook.vehicles.cart.SpeedModifiers());
+            if(config.minecartEmptySlowdownStopperEnable) mechanics.add(new EmptySlowdown());
+            if(config.minecartNoCollideEnable) mechanics.add(new NoCollide());
+            if(config.minecartPlaceAnywhereEnable) mechanics.add(new PlaceAnywhere());
+
+            if(config.boatRemoveEntitiesEnabled) mechanics.add(new RemoveEntities());
+            if(config.boatNoCrashEnabled) mechanics.add(new Uncrashable());
+            if(config.boatDropsEnabled) mechanics.add(new Drops());
+            if(config.boatSpeedModifierEnable) mechanics.add(new SpeedModifiers());
+            if(config.boatLandBoatsEnable) mechanics.add(new LandBoats());
+            if(config.boatRemoveOnExitEnabled) mechanics.add(new ExitRemover());
+            if(config.boatWaterPlaceOnly) mechanics.add(new WaterPlaceOnly());
+        }
+
+        setupSelfTriggered();
+
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
-            if(!mech.enable()) {
-                getLogger().warning("Failed to initialize mechanic: " + mech.getClass().getSimpleName());
-                mech.disable();
-                iter.remove();
-                continue;
+            try {
+                if(!mech.enable()) {
+                    getLogger().warning("Failed to initialize mechanic: " + mech.getClass().getSimpleName());
+                    mech.disable();
+                    iter.remove();
+                    continue;
+                }
+                getServer().getPluginManager().registerEvents(mech, this);
+            } catch(Throwable t) {
+                getLogger().log(Level.WARNING, "Failed to initialize mechanic: " + mech.getClass().getSimpleName(), t);
             }
-            getServer().getPluginManager().registerEvents(mech, this);
         }
     }
 
@@ -415,15 +615,13 @@ public class CraftBookPlugin extends JavaPlugin {
                 });
 
             Graph mechanicsGraph = metrics.createGraph("Enabled Mechanics");
-            for(LocalComponent compo : getComponents()) {
-                for(CraftBookMechanic mech : compo.getMechanics()) {
-                    mechanicsGraph.addPlotter(new Plotter(mech.getClass().getSimpleName()) {
-                        @Override
-                        public int getValue () {
-                            return 1;
-                        }
-                    });
-                }
+            for(CraftBookMechanic mech : getMechanics()) {
+                mechanicsGraph.addPlotter(new Plotter(mech.getClass().getSimpleName()) {
+                    @Override
+                    public int getValue () {
+                        return 1;
+                    }
+                });
             }
         } catch (Throwable e1) {
             BukkitUtil.printStacktrace(e1);
@@ -474,33 +672,6 @@ public class CraftBookPlugin extends JavaPlugin {
         }
     }
 
-    public void startComponents() {
-
-        // Mechanics
-        if (config.enableMechanisms) {
-            logDebugMessage("Initializing Mechanisms!", "startup.mechanisms");
-            MechanicalCore mechanicalCore = new MechanicalCore();
-            mechanicalCore.enable();
-            components.add(mechanicalCore);
-        }
-        // Circuits
-        if (config.enableCircuits) {
-            logDebugMessage("Initializing Circuits!", "startup.circuits");
-            CircuitCore circuitCore = new CircuitCore();
-            circuitCore.enable();
-            components.add(circuitCore);
-        }
-        // Vehicles
-        if (config.enableVehicles) {
-            logDebugMessage("Initializing Vehicles!", "startup.vehicles");
-            VehicleCore vehicleCore = new VehicleCore();
-            vehicleCore.enable();
-            components.add(vehicleCore);
-        }
-
-        setupSelfTriggered();
-    }
-
     /**
      * Called on plugin disable.
      */
@@ -508,12 +679,9 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onDisable() {
 
         languageManager.close();
-        for (LocalComponent component : components)
-            component.disable();
         for(CraftBookMechanic mech : mechanics)
             mech.disable();
         mechanics = null;
-        components.clear();
 
         if(hasPersistentStorage())
             getPersistentStorage().close();
@@ -825,13 +993,9 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void reloadConfiguration() throws Throwable {
 
-        for (LocalComponent component : components) {
-            component.disable();
-        }
         for(CraftBookMechanic mech : mechanics)
             mech.disable();
         mechanics = null;
-        components.clear();
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
         config.load();
@@ -839,7 +1003,6 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanicClock = new MechanicClock();
         setupCraftBook();
         registerGlobalEvents();
-        startComponents();
     }
 
     /**

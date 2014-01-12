@@ -11,10 +11,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.CommandIC;
 import com.sk89q.craftbook.circuits.ic.ICDocsParser;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -22,8 +22,6 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 
 public class CircuitCommands {
-
-    private static CircuitCore circuitCore = CircuitCore.inst();
 
     public CircuitCommands(CraftBookPlugin plugin) {
 
@@ -48,7 +46,7 @@ public class CircuitCommands {
 
                 String list = "";
 
-                for(RegisteredICFactory factory : CircuitCore.inst().getIcManager().registered.values()) {
+                for(RegisteredICFactory factory : ICManager.INSTANCE.registered.values()) {
                     if(factory.getFactory() instanceof CommandIC) {
 
                         if(list.isEmpty())
@@ -61,7 +59,7 @@ public class CircuitCommands {
                 sender.sendMessage(ChatColor.YELLOW + "Command IC List: " + list);
             } else {
 
-                RegisteredICFactory factory = CircuitCore.inst().getIcManager().registered.get(args.getString(0));
+                RegisteredICFactory factory = ICManager.INSTANCE.registered.get(args.getString(0));
 
                 if(factory != null && factory.getFactory() instanceof CommandIC) {
                     if(((CommandIC) factory.getFactory()).getMinCommandArgs()+1 > args.argsLength())
@@ -91,7 +89,7 @@ public class CircuitCommands {
                 ar = args.getString(1).toCharArray();
             } catch (Exception ignored) {
             }
-            String[] lines = circuitCore.generateICText(player, null, ar);
+            String[] lines = ICManager.INSTANCE.generateICText(player, null, ar);
             int pages = (lines.length - 1) / 9 + 1;
             int accessedPage;
 
@@ -125,7 +123,7 @@ public class CircuitCommands {
                 ar = args.getString(2).toCharArray();
             } catch (Exception ignored) {
             }
-            String[] lines = circuitCore.generateICText(player, args.getString(0), ar);
+            String[] lines = ICManager.INSTANCE.generateICText(player, args.getString(0), ar);
             int pages = (lines.length - 1) / 9 + 1;
             int accessedPage;
 
@@ -165,7 +163,7 @@ public class CircuitCommands {
                     return name.endsWith("mid") || name.endsWith(".midi");
                 }
             };
-            for (File f : circuitCore.getMidiFolder().listFiles(fnf)) {
+            for (File f : ICManager.INSTANCE.getMidiFolder().listFiles(fnf)) {
                 lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
             }
             Collections.sort(lines, new Comparator<String>() {
@@ -214,7 +212,7 @@ public class CircuitCommands {
                     return name.endsWith(".fwk") || name.endsWith(".txt");
                 }
             };
-            for (File f : circuitCore.getFireworkFolder().listFiles(fnf)) {
+            for (File f : ICManager.INSTANCE.getFireworkFolder().listFiles(fnf)) {
                 lines.add(f.getName().replace(".txt", "").replace(".fwk", ""));
             }
             Collections.sort(lines, new Comparator<String>() {

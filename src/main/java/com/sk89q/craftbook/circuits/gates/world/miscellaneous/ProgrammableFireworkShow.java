@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
@@ -30,6 +29,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -106,8 +106,8 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2).trim().isEmpty() || !new File(CircuitCore.inst().getFireworkFolder(),
-                    sign.getLine(2).trim() + ".txt").exists() && !new File(CircuitCore.inst().getFireworkFolder(),
+            if (sign.getLine(2).trim().isEmpty() || !new File(ICManager.INSTANCE.getFireworkFolder(),
+                    sign.getLine(2).trim() + ".txt").exists() && !new File(ICManager.INSTANCE.getFireworkFolder(),
                             sign.getLine(2).trim() + ".fwk").exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
@@ -152,10 +152,10 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         public void readShow() throws IOException {
 
             lines.clear();
-            File firework = new File(CircuitCore.inst().getFireworkFolder(), showName + ".txt");
+            File firework = new File(ICManager.INSTANCE.getFireworkFolder(), showName + ".txt");
             if(!firework.exists()) {
                 fyrestone = true;
-                firework = new File(CircuitCore.inst().getFireworkFolder(), showName + ".fwk");
+                firework = new File(ICManager.INSTANCE.getFireworkFolder(), showName + ".fwk");
                 if (!firework.exists()) {
                     CraftBookPlugin.logger().severe("Firework File Not Found! " + firework.getName());
                     return;

@@ -9,11 +9,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import org.bukkit.Server;
+
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFamily;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
@@ -31,11 +33,12 @@ public class GenerateWikiICList {
             f.setAccessible(true);
             f.set(plugin, new BukkitConfiguration(new YAMLProcessor(new File("config.yml"), true, YAMLFormat.EXTENDED), Logger.getAnonymousLogger()));
             plugin.getConfiguration().ICsDisabled = new ArrayList<String>();
-            CircuitCore core = new CircuitCore();
 
-            Method meth = CircuitCore.class.getDeclaredMethod("registerICs");
+            ICManager manager = new ICManager();
+            Method meth = ICManager.class.getDeclaredMethod("registerICs", Server.class);
             meth.setAccessible(true);
-            meth.invoke(core);
+            Server serv = null;
+            meth.invoke(manager, serv);
 
             File file = new File("ICList.txt");
             if(!file.exists())
@@ -54,7 +57,7 @@ public class GenerateWikiICList {
             writer.println("! Families");
             writer.println("! Name");
             writer.println("! Description");
-            for(RegisteredICFactory ric : core.getICList()) {
+            for(RegisteredICFactory ric : manager.getICList()) {
                 if(ric.getFactory() instanceof PlcFactory)
                     continue;
 

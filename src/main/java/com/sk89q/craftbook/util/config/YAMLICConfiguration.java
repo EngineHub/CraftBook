@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.bukkit.CircuitCore;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
+import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -30,7 +30,7 @@ public class YAMLICConfiguration extends LocalConfiguration {
             e.printStackTrace();
         }
 
-        for (RegisteredICFactory factory : CircuitCore.inst().getICList())
+        for (RegisteredICFactory factory : ICManager.INSTANCE.getICList())
             if (factory.getFactory() instanceof ConfigurableIC)
                 ((ConfigurableIC) factory.getFactory()).addConfiguration(config, "ics." + factory.getId() + ".");
 

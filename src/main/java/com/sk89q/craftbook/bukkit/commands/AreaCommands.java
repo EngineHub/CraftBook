@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.MechanicalCore;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.area.Area;
 import com.sk89q.craftbook.mech.area.CopyManager;
@@ -40,6 +39,8 @@ import com.sk89q.worldedit.data.DataException;
  * @author Silthus
  */
 public class AreaCommands {
+
+    private final CopyManager copyManager = new CopyManager();
 
     public AreaCommands(CraftBookPlugin plugin) {
 
@@ -100,7 +101,7 @@ public class AreaCommands {
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
             if (config.areaMaxAreaPerUser >= 0 && !namespace.equals("global")) {
-                int count = MechanicalCore.inst().getCopyManager().meetsQuota(world, namespace, id,
+                int count = copyManager.meetsQuota(world, namespace, id,
                         config.areaMaxAreaPerUser);
 
                 if (count > -1) {

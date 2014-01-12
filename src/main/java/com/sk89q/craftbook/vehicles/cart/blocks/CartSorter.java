@@ -15,10 +15,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.VehicleCore;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.vehicles.cart.StationManager;
 import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
 
 /*
@@ -190,7 +190,7 @@ public class CartSorter extends CartBlockMechanism {
         }
         if (line.startsWith("#")) {
             if (player != null) {
-                String selectedStation = VehicleCore.inst().getStation(player.getName());
+                String selectedStation = StationManager.getStation(player.getName());
                 return line.equalsIgnoreCase("#" + selectedStation);
             }
         }
