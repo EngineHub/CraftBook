@@ -16,5 +16,4 @@ public class StationManager {
 
         stationSelection.put(playerName, stationName);
     }
-
 }

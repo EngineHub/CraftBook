@@ -11,10 +11,10 @@ public class ICDocsParser {
 
     public static void generateICDocs(Player player, String id) {
 
-        RegisteredICFactory ric = ICManager.INSTANCE.registered.get(id.toLowerCase(Locale.ENGLISH));
+        RegisteredICFactory ric = ICManager.inst().registered.get(id.toLowerCase(Locale.ENGLISH));
         if (ric == null) {
             try {
-                ric = ICManager.INSTANCE.registered.get(ICManager.INSTANCE.getSearchID(player, id));
+                ric = ICManager.inst().registered.get(ICManager.inst().getSearchID(player, id));
                 if (ric == null) {
                     player.sendMessage(ChatColor.RED + "Invalid IC!");
                     return;

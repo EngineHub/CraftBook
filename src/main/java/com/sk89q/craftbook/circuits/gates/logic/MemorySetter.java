@@ -45,7 +45,7 @@ public class MemorySetter extends AbstractIC {
     @Override
     public void load() {
 
-        f = new File(ICManager.INSTANCE.getRomFolder(), getSign().getLine(2) + ".dat");
+        f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
     }
 
     public boolean setMemory(ChipState chip) {

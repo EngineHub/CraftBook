@@ -425,8 +425,8 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.pipesEnabled) mechanics.add(new Pipes());
             if (config.ICEnabled) {
                 mechanics.add(new ICMechanic(new ICManager()));
-                ICManager.INSTANCE.enable();
-                ICManager.INSTANCE.registerICs(getServer());
+                ICManager.inst().enable();
+                ICManager.inst().registerICs(getServer());
             }
         }
 
@@ -435,43 +435,26 @@ public class CraftBookPlugin extends JavaPlugin {
             logDebugMessage("Initializing Vehicles!", "startup.vehicles");
             registerCommands(VehicleCommands.class);
 
-            if(CartBlockManager.INSTANCE != null)
-                HandlerList.unregisterAll(CartBlockManager.INSTANCE);
-            CartBlockManager man = new CartBlockManager();
-            getServer().getPluginManager().registerEvents(man, this);
+            mechanics.add(new CartBlockManager());
 
             if(config.minecartSpeedModEnabled) {
-                if(config.minecartSpeedModMaxBoostBlock.getId() > 0)
-                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedModMaxBoostBlock, 100));
-                if(config.minecartSpeedMod25xBoostBlock.getId() > 0)
-                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod25xBoostBlock, 1.25));
-                if(config.minecartSpeedMod20xSlowBlock.getId() > 0)
-                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod20xSlowBlock, 0.8));
-                if(config.minecartSpeedMod50xSlowBlock.getId() > 0)
-                    man.cartBlockMechanisms.add(new CartBooster(config.minecartSpeedMod50xSlowBlock, 0.5));
+                CartBlockManager.inst().addMechanic(new CartBooster(config.minecartSpeedModMaxBoostBlock, 100));
+                CartBlockManager.inst().addMechanic(new CartBooster(config.minecartSpeedMod25xBoostBlock, 1.25));
+                CartBlockManager.inst().addMechanic(new CartBooster(config.minecartSpeedMod20xSlowBlock, 0.8));
+                CartBlockManager.inst().addMechanic(new CartBooster(config.minecartSpeedMod50xSlowBlock, 0.5));
             }
-            if(config.minecartReverseEnabled && config.minecartReverseBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartReverser(config.minecartReverseBlock));
-            if(config.minecartSorterEnabled && config.minecartSorterBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartSorter(config.minecartSorterBlock));
-            if(config.minecartStationEnabled && config.minecartStationBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartStation(config.minecartStationBlock));
-            if(config.minecartEjectorEnabled && config.minecartEjectorBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartEjector(config.minecartEjectorBlock));
-            if(config.minecartDepositEnabled && config.minecartDepositBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartDeposit(config.minecartDepositBlock));
-            if(config.minecartTeleportEnabled && config.minecartTeleportBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartTeleporter(config.minecartTeleportBlock));
-            if(config.minecartElevatorEnabled && config.minecartElevatorBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartLift(config.minecartElevatorBlock));
-            if(config.minecartDispenserEnabled && config.minecartDispenserBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartDispenser(config.minecartDispenserBlock));
-            if(config.minecartMessagerEnabled && config.minecartMessagerBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartMessenger(config.minecartMessagerBlock));
-            if(config.minecartMaxSpeedEnabled && config.minecartMaxSpeedBlock.getId() > 0)
-                man.cartBlockMechanisms.add(new CartMaxSpeed(config.minecartMaxSpeedBlock));
+            if(config.minecartReverseEnabled) CartBlockManager.inst().addMechanic(new CartReverser(config.minecartReverseBlock));
+            if(config.minecartSorterEnabled) CartBlockManager.inst().addMechanic(new CartSorter(config.minecartSorterBlock));
+            if(config.minecartStationEnabled) CartBlockManager.inst().addMechanic(new CartStation(config.minecartStationBlock));
+            if(config.minecartEjectorEnabled) CartBlockManager.inst().addMechanic(new CartEjector(config.minecartEjectorBlock));
+            if(config.minecartDepositEnabled) CartBlockManager.inst().addMechanic(new CartDeposit(config.minecartDepositBlock));
+            if(config.minecartTeleportEnabled) CartBlockManager.inst().addMechanic(new CartTeleporter(config.minecartTeleportBlock));
+            if(config.minecartElevatorEnabled) CartBlockManager.inst().addMechanic(new CartLift(config.minecartElevatorBlock));
+            if(config.minecartDispenserEnabled) CartBlockManager.inst().addMechanic(new CartDispenser(config.minecartDispenserBlock));
+            if(config.minecartMessagerEnabled) CartBlockManager.inst().addMechanic(new CartMessenger(config.minecartMessagerBlock));
+            if(config.minecartMaxSpeedEnabled) CartBlockManager.inst().addMechanic(new CartMaxSpeed(config.minecartMaxSpeedBlock));
 
-            for(CartBlockMechanism mech : man.cartBlockMechanisms) mechanics.add(mech);
+            for(CartBlockMechanism mech : CartBlockManager.inst().getMechanics()) mechanics.add(mech);
 
             if(config.minecartMoreRailsEnabled) mechanics.add(new MoreRails());
             if(config.minecartRemoveEntitiesEnabled) mechanics.add(new com.sk89q.craftbook.vehicles.cart.RemoveEntities());

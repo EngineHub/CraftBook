@@ -8,23 +8,45 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 
-public class CartBlockManager implements Listener {
+public class CartBlockManager extends AbstractCraftBookMechanic {
 
-    public static CartBlockManager INSTANCE;
+    private static CartBlockManager INSTANCE;
+    private Set<CartBlockMechanism> cartBlockMechanisms;
 
-    public CartBlockManager() {
+    @Override
+    public boolean enable() {
+
         INSTANCE = this;
+        cartBlockMechanisms = new HashSet<CartBlockMechanism>();
+        return true;
     }
 
-    public Set<CartBlockMechanism> cartBlockMechanisms = new HashSet<CartBlockMechanism>();
+    @Override
+    public void disable() {
+        cartBlockMechanisms = null;
+        INSTANCE = null;
+    }
+
+    public static CartBlockManager inst() {
+        return INSTANCE;
+    }
+
+    public void addMechanic(CartBlockMechanism mech) {
+        if(mech.getMaterial().getId() > 0)
+            cartBlockMechanisms.add(mech);
+    }
+
+    public Set<CartBlockMechanism> getMechanics() {
+        return cartBlockMechanisms;
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onSignChange(SignChangeEvent event) {

@@ -128,7 +128,7 @@ public class VariableCommands {
 
     public void resetICCache(String variable, String namespace) {
 
-        if(ICManager.INSTANCE != null) {//Make sure IC's are enabled.
+        if(ICManager.inst() != null) {//Make sure IC's are enabled.
 
             Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
             while(iterator.hasNext()) {

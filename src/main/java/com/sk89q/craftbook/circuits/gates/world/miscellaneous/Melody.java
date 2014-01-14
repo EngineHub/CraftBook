@@ -91,9 +91,9 @@ public class Melody extends AbstractSelfTriggeredIC {
         midiName = getSign().getLine(2);
 
         File[] trialPaths = {
-                new File(ICManager.INSTANCE.getMidiFolder(), midiName),
-                new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".mid"),
-                new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".midi"),
+                new File(ICManager.inst().getMidiFolder(), midiName),
+                new File(ICManager.inst().getMidiFolder(), midiName + ".mid"),
+                new File(ICManager.inst().getMidiFolder(), midiName + ".midi"),
                 new File("midi", midiName), new File("midi", midiName + ".mid"),
                 new File("midi", midiName + ".midi"),
         };

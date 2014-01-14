@@ -155,7 +155,7 @@ public class MessageSender extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"name of player, x:y:z=radius, or BROADCAST for whole server", "Message to send."};
+            return new String[] {"p:name of player, x:y:z=radius, or BROADCAST for whole server", "Message to send."};
         }
     }
 }

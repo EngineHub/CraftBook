@@ -202,10 +202,14 @@ public class ICManager {
     private File midiFolder;
     private File fireworkFolder;
 
-    public static ICManager INSTANCE;
+    private static ICManager INSTANCE;
 
     public ICManager() {
         INSTANCE = this;
+    }
+
+    public static ICManager inst() {
+        return INSTANCE;
     }
 
     public void enable() {

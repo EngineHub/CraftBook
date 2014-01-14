@@ -47,7 +47,7 @@ public class MemoryAccess extends AbstractIC {
     public boolean readMemory(ChipState chip) {
 
         try {
-            File f = new File(ICManager.INSTANCE.getRomFolder(), getSign().getLine(2) + ".dat");
+            File f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
             if (!f.exists()) {
                 f.createNewFile();
                 return false;

@@ -46,7 +46,7 @@ public class CircuitCommands {
 
                 String list = "";
 
-                for(RegisteredICFactory factory : ICManager.INSTANCE.registered.values()) {
+                for(RegisteredICFactory factory : ICManager.inst().registered.values()) {
                     if(factory.getFactory() instanceof CommandIC) {
 
                         if(list.isEmpty())
@@ -59,7 +59,7 @@ public class CircuitCommands {
                 sender.sendMessage(ChatColor.YELLOW + "Command IC List: " + list);
             } else {
 
-                RegisteredICFactory factory = ICManager.INSTANCE.registered.get(args.getString(0));
+                RegisteredICFactory factory = ICManager.inst().registered.get(args.getString(0));
 
                 if(factory != null && factory.getFactory() instanceof CommandIC) {
                     if(((CommandIC) factory.getFactory()).getMinCommandArgs()+1 > args.argsLength())
@@ -89,7 +89,7 @@ public class CircuitCommands {
                 ar = args.getString(1).toCharArray();
             } catch (Exception ignored) {
             }
-            String[] lines = ICManager.INSTANCE.generateICText(player, null, ar);
+            String[] lines = ICManager.inst().generateICText(player, null, ar);
             int pages = (lines.length - 1) / 9 + 1;
             int accessedPage;
 
@@ -123,7 +123,7 @@ public class CircuitCommands {
                 ar = args.getString(2).toCharArray();
             } catch (Exception ignored) {
             }
-            String[] lines = ICManager.INSTANCE.generateICText(player, args.getString(0), ar);
+            String[] lines = ICManager.inst().generateICText(player, args.getString(0), ar);
             int pages = (lines.length - 1) / 9 + 1;
             int accessedPage;
 
@@ -163,7 +163,7 @@ public class CircuitCommands {
                     return name.endsWith("mid") || name.endsWith(".midi");
                 }
             };
-            for (File f : ICManager.INSTANCE.getMidiFolder().listFiles(fnf)) {
+            for (File f : ICManager.inst().getMidiFolder().listFiles(fnf)) {
                 lines.add(f.getName().replace(".midi", "").replace(".mid", ""));
             }
             Collections.sort(lines, new Comparator<String>() {
@@ -212,7 +212,7 @@ public class CircuitCommands {
                     return name.endsWith(".fwk") || name.endsWith(".txt");
                 }
             };
-            for (File f : ICManager.INSTANCE.getFireworkFolder().listFiles(fnf)) {
+            for (File f : ICManager.inst().getFireworkFolder().listFiles(fnf)) {
                 lines.add(f.getName().replace(".txt", "").replace(".fwk", ""));
             }
             Collections.sort(lines, new Comparator<String>() {

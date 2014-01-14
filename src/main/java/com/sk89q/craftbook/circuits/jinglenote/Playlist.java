@@ -54,7 +54,7 @@ public class Playlist {
     public void readPlaylist() throws IOException {
 
         lines.clear();
-        File file = new File(new File(ICManager.INSTANCE.getMidiFolder(), "playlists"), playlist + ".txt");
+        File file = new File(new File(ICManager.inst().getMidiFolder(), "playlists"), playlist + ".txt");
         if(!file.exists()) {
             CraftBookPlugin.logger().severe("Playlist File Not Found! " + file.getName());
             return;
@@ -230,9 +230,9 @@ public class Playlist {
                     String midiName = line.replace("midi ", "");
 
                     File[] trialPaths = {
-                            new File(ICManager.INSTANCE.getMidiFolder(), midiName),
-                            new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".mid"),
-                            new File(ICManager.INSTANCE.getMidiFolder(), midiName + ".midi"),
+                            new File(ICManager.inst().getMidiFolder(), midiName),
+                            new File(ICManager.inst().getMidiFolder(), midiName + ".mid"),
+                            new File(ICManager.inst().getMidiFolder(), midiName + ".midi"),
                             new File("midi", midiName), new File("midi", midiName + ".mid"),
                             new File("midi", midiName + ".midi"),
                     };

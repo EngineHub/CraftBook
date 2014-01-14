@@ -106,9 +106,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2).trim().isEmpty() || !new File(ICManager.INSTANCE.getFireworkFolder(),
-                    sign.getLine(2).trim() + ".txt").exists() && !new File(ICManager.INSTANCE.getFireworkFolder(),
-                            sign.getLine(2).trim() + ".fwk").exists())
+            if (sign.getLine(2).trim().isEmpty() || !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".txt").exists() && !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".fwk").exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
 
@@ -152,10 +150,10 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         public void readShow() throws IOException {
 
             lines.clear();
-            File firework = new File(ICManager.INSTANCE.getFireworkFolder(), showName + ".txt");
+            File firework = new File(ICManager.inst().getFireworkFolder(), showName + ".txt");
             if(!firework.exists()) {
                 fyrestone = true;
-                firework = new File(ICManager.INSTANCE.getFireworkFolder(), showName + ".fwk");
+                firework = new File(ICManager.inst().getFireworkFolder(), showName + ".fwk");
                 if (!firework.exists()) {
                     CraftBookPlugin.logger().severe("Firework File Not Found! " + firework.getName());
                     return;

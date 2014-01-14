@@ -30,7 +30,7 @@ public class YAMLICConfiguration extends LocalConfiguration {
             e.printStackTrace();
         }
 
-        for (RegisteredICFactory factory : ICManager.INSTANCE.getICList())
+        for (RegisteredICFactory factory : ICManager.inst().getICList())
             if (factory.getFactory() instanceof ConfigurableIC)
                 ((ConfigurableIC) factory.getFactory()).addConfiguration(config, "ics." + factory.getId() + ".");
 
