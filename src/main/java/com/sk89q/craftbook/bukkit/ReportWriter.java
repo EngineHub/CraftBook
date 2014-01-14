@@ -15,7 +15,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
-import com.sk89q.craftbook.LocalComponent;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -174,10 +173,7 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        int i = 0;
-        i += CraftBookPlugin.inst().getMechanics().size();
-        for(LocalComponent comp : CraftBookPlugin.inst().getComponents())
-            i += comp.getMechanics().size();
+        int i = CraftBookPlugin.inst().getMechanics().size();
         log.put("Mechanics Loaded", "%d", i);
         log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().thinkingMechanics.size());
 
@@ -202,7 +198,7 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        if(!MechanicalCore.isEnabled() || RecipeManager.INSTANCE == null) {
+        if(RecipeManager.INSTANCE == null) {
             log.put("CustomCrafting is disabled!","");
             append(log);
             appendln();
