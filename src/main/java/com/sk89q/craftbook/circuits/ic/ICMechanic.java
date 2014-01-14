@@ -115,7 +115,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
         if (registration == null) {
-            //throw new InvalidMechanismException("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
+            CraftBookPlugin.logger().warning("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
             return null;
         }
 
@@ -385,7 +385,6 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
             final RegisteredICFactory registration = manager.get(id);
             if (registration == null) {
-                //throw new InvalidMechanismException("Unknown IC detected: " + id);
                 player.printError("Unknown IC detected: " + id);
                 SignUtil.cancelSign(event);
                 return;

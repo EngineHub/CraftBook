@@ -22,8 +22,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 
 /**
  * A variation of the redstone event with a source block.
- *
- * @author sk89q
  */
 public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
 

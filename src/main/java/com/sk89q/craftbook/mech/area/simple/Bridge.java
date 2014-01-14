@@ -37,10 +37,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InvalidConstructionException;
-import com.sk89q.craftbook.util.exceptions.InvalidDirectionException;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.UnacceptableMaterialException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -173,7 +170,7 @@ public class Bridge extends CuboidToggleMechanic {
         proximalBaseCenter = trigger.getRelative(SignUtil.getBack(trigger));
         if (CraftBookPlugin.inst().getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter; // it's behind
-        else throw new UnacceptableMaterialException("mech.bridge.unusable");
+        else throw new InvalidMechanismException("mech.bridge.unusable");
     }
 
     @Override
@@ -221,14 +218,14 @@ public class Bridge extends CuboidToggleMechanic {
         // Expand Left
         for (int i = 0; i < left; i++) {
             if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i), proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i)))
-                throw new InvalidConstructionException("mech.bridge.material");
+                throw new InvalidMechanismException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
             if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i), proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i)))
-                throw new InvalidConstructionException("mech.bridge.material");
+                throw new InvalidMechanismException("mech.bridge.material");
             toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
 
@@ -240,7 +237,7 @@ public class Bridge extends CuboidToggleMechanic {
 
     public boolean flipState(Block trigger, LocalPlayer player) throws InvalidMechanismException {
 
-        if (!SignUtil.isCardinal(trigger)) throw new InvalidDirectionException();
+        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException();
 
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above
@@ -249,14 +246,14 @@ public class Bridge extends CuboidToggleMechanic {
         // Find the other side
         Block farSide = getFarSign(trigger);
 
-        if (farSide.getType() != trigger.getType()) throw new InvalidConstructionException("mech.bridge.other-sign");
+        if (farSide.getType() != trigger.getType()) throw new InvalidMechanismException("mech.bridge.other-sign");
 
         // Check the other side's base blocks for matching type
         BlockFace face = trigger.getFace(proximalBaseCenter);
         if(face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
         Block distalBaseCenter = farSide.getRelative(face);
         if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
-            throw new InvalidConstructionException("mech.bridge.material");
+            throw new InvalidMechanismException("mech.bridge.material");
 
         // Select the togglable region
         CuboidRegion toggle = getCuboidArea(trigger, proximalBaseCenter, distalBaseCenter);

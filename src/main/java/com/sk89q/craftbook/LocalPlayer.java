@@ -24,7 +24,6 @@ import com.sk89q.worldedit.Vector;
 /**
  * Holds an abstraction for players.
  *
- * @author sk89q
  */
 public interface LocalPlayer {
 

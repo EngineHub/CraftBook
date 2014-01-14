@@ -1,9 +1,5 @@
 package com.sk89q.craftbook.util.config;
 
-/**
- * @author Turtle9598
- */
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

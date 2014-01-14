@@ -96,12 +96,6 @@ public class ChangedSign {
         return sign.getZ();
     }
 
-    /*
-     * @Override public Chunk getChunk() {
-     * 
-     * return BukkitUtil.sign.getChunk(); }
-     */
-
     public String[] getLines() {
 
         return lines;
