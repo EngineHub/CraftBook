@@ -21,12 +21,9 @@ public class CartBlockManager extends AbstractCraftBookMechanic {
     private static CartBlockManager INSTANCE;
     private Set<CartBlockMechanism> cartBlockMechanisms;
 
-    @Override
-    public boolean enable() {
-
+    public CartBlockManager() {
         INSTANCE = this;
         cartBlockMechanisms = new HashSet<CartBlockMechanism>();
-        return true;
     }
 
     @Override
