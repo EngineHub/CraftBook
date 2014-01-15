@@ -2,6 +2,8 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 
@@ -147,10 +149,10 @@ public class Melody extends AbstractSelfTriggeredIC {
                     for (Player player : getServer().getOnlinePlayers()) {
                         if (area != null && !area.isWithinArea(player.getLocation())) {
                             if(this.player.getJNote().isPlaying(player.getName()))
-                                this.player.getJNote().stop(player.getName());
+                                this.player.stop(player.getName());
                             continue;
                         } else if(!this.player.getJNote().isPlaying(player.getName())) {
-                            this.player.getJNote().play(player.getName(), this.player.getSequencer(), area);
+                            this.player.play(player.getName());
                             player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
                     }
@@ -173,9 +175,21 @@ public class Melody extends AbstractSelfTriggeredIC {
         private MidiJingleSequencer sequencer;
         private boolean isPlaying;
 
+        private final List<String> toStop, toPlay;
+
         public MelodyPlayer(MidiJingleSequencer sequencer) {
             this.sequencer = sequencer;
             jNote = new JingleNoteManager();
+            toStop = new LinkedList<String>();
+            toPlay = new LinkedList<String>();
+        }
+
+        public void stop(String player) {
+            toStop.add(player);
+        }
+
+        public void play(String player) {
+            toPlay.add(player);
         }
 
         public boolean isPlaying() {
@@ -196,6 +210,12 @@ public class Melody extends AbstractSelfTriggeredIC {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                for(String player : toStop)
+                    jNote.stop(player);
+                toStop.clear();
+                for(String player : toPlay)
+                    jNote.play(player, sequencer, area);
+                toPlay.clear();
             }
 
             sequencer.stop();
