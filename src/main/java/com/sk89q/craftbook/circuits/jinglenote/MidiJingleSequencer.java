@@ -155,7 +155,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                 BukkitUtil.printStacktrace(e);
             }
 
-            while (sequencer.isRunning()) {
+            while (sequencer != null && sequencer.isRunning()) {
                 if(players.isEmpty()) break;
                 Thread.sleep(10L);
             }

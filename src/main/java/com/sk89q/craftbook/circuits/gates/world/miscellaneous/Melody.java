@@ -58,7 +58,8 @@ public class Melody extends AbstractSelfTriggeredIC {
 
     @Override
     public void unload() {
-
+        if(player.isPlaying())
+            player.setPlaying(false);
     }
 
     SearchArea area;
@@ -128,6 +129,18 @@ public class Melody extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
         }
 
+        if(player.getSequencer() == null) {
+            try {
+                player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
+            } catch (MidiUnavailableException e) {
+                e.printStackTrace();
+            } catch (InvalidMidiDataException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             if (chip.getInput(0)) {
                 if(player.isPlaying()) {
@@ -163,7 +176,6 @@ public class Melody extends AbstractSelfTriggeredIC {
         public MelodyPlayer(MidiJingleSequencer sequencer) {
             this.sequencer = sequencer;
             jNote = new JingleNoteManager();
-            isPlaying = false;
         }
 
         public boolean isPlaying() {
@@ -179,11 +191,15 @@ public class Melody extends AbstractSelfTriggeredIC {
             isPlaying = true;
 
             while(isPlaying) {
-
+                try {
+                    Thread.sleep(10L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
+            sequencer.stop();
             jNote.stopAll();
-            jNote = null;
             sequencer = null;
         }
 
