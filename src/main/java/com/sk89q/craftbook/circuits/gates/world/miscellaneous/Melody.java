@@ -1,9 +1,14 @@
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -28,9 +33,6 @@ import com.sk89q.craftbook.util.SearchArea;
  * @author Me4502
  */
 public class Melody extends AbstractSelfTriggeredIC {
-
-    MidiJingleSequencer sequencer;
-    JingleNoteManager jNote;
 
     public Melody(Server server, ChangedSign block, ICFactory factory) {
 
@@ -57,17 +59,14 @@ public class Melody extends AbstractSelfTriggeredIC {
     @Override
     public void unload() {
 
-        try {
-            sequencer.stop();
-            jNote.stopAll();
-        } catch (Exception ignored) {
-        }
     }
 
     SearchArea area;
     File file;
     String midiName;
     boolean forceStart, loop;
+
+    MelodyPlayer player;
 
     @Override
     public void load() {
@@ -105,7 +104,15 @@ public class Melody extends AbstractSelfTriggeredIC {
             }
         }
 
-        jNote = new JingleNoteManager();
+        try {
+            player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -117,37 +124,76 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         try {
-            if (sequencer != null && sequencer.isPlaying() && forceStart) return;
+            if (player.isPlaying() && forceStart) return;
         } catch (Exception ignored) {
         }
 
         try {
             if (chip.getInput(0)) {
-                if(sequencer == null)
-                    sequencer = new MidiJingleSequencer(file, loop);
-                if(sequencer.isPlaying() || !sequencer.hasPlayedBefore()) {
+                if(player.isPlaying()) {
                     for (Player player : getServer().getOnlinePlayers()) {
                         if (area != null && !area.isWithinArea(player.getLocation())) {
-                            if(jNote.isPlaying(player.getName()))
-                                jNote.stop(player.getName());
+                            if(this.player.getJNote().isPlaying(player.getName()))
+                                this.player.getJNote().stop(player.getName());
                             continue;
-                        } else if(!jNote.isPlaying(player.getName())) {
-                            jNote.play(player.getName(), sequencer, area);
+                        } else if(!this.player.getJNote().isPlaying(player.getName())) {
+                            this.player.getJNote().play(player.getName(), this.player.getSequencer(), area);
                             player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
                     }
-                }
-            } else if (!chip.getInput(0) && !forceStart && sequencer != null) {
-                sequencer.stop();
-                jNote.stopAll();
-                sequencer = null;
+                } else
+                    Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
+            } else if (!chip.getInput(0) && !forceStart) {
+                player.setPlaying(false);
             }
         } catch (Throwable e) {
             getServer().getLogger().log(Level.SEVERE, "Midi Failed To Play!");
             BukkitUtil.printStacktrace(e);
         }
 
-        chip.setOutput(0, sequencer != null && sequencer.isPlaying());
+        chip.setOutput(0, player.isPlaying());
+    }
+
+    private class MelodyPlayer implements Runnable {
+
+        private JingleNoteManager jNote;
+        private MidiJingleSequencer sequencer;
+        private boolean isPlaying;
+
+        public MelodyPlayer(MidiJingleSequencer sequencer) {
+            this.sequencer = sequencer;
+            jNote = new JingleNoteManager();
+            isPlaying = false;
+        }
+
+        public boolean isPlaying() {
+            return isPlaying;
+        }
+
+        public void setPlaying(boolean playing) {
+            isPlaying = playing;
+        }
+
+        @Override
+        public void run () {
+            isPlaying = true;
+
+            while(isPlaying) {
+
+            }
+
+            jNote.stopAll();
+            jNote = null;
+            sequencer = null;
+        }
+
+        public JingleNoteManager getJNote() {
+            return jNote;
+        }
+
+        public MidiJingleSequencer getSequencer() {
+            return sequencer;
+        }
     }
 
     public static class Factory extends AbstractICFactory {
