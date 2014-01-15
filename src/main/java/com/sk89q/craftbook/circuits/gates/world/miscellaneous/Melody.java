@@ -131,7 +131,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
         }
 
-        if(player.getSequencer() == null) {
+        if(player == null || player.getSequencer() == null) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
             } catch (MidiUnavailableException e) {
@@ -145,7 +145,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         try {
             if (chip.getInput(0)) {
-                if(player.isPlaying()) {
+                if(player.isPlaying() && player.getSequencer() != null) {
                     for (Player player : getServer().getOnlinePlayers()) {
                         if (area != null && !area.isWithinArea(player.getLocation())) {
                             if(this.player.getJNote().isPlaying(player.getName()))
@@ -156,7 +156,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                             player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
                     }
-                } else
+                } else if(!player.isPlaying())
                     Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
             } else if (!chip.getInput(0) && !forceStart) {
                 player.setPlaying(false);
@@ -204,18 +204,29 @@ public class Melody extends AbstractSelfTriggeredIC {
         public void run () {
             isPlaying = true;
 
+            for(String player : toStop)
+                jNote.stop(player);
+            toStop.clear();
+            for(String player : toPlay)
+                jNote.play(player, sequencer, area);
+            toPlay.clear();
+
             while(isPlaying) {
-                try {
-                    Thread.sleep(10L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 for(String player : toStop)
                     jNote.stop(player);
                 toStop.clear();
                 for(String player : toPlay)
                     jNote.play(player, sequencer, area);
                 toPlay.clear();
+                try {
+                    Thread.sleep(10L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(sequencer == null || !sequencer.isPlaying() && sequencer.hasPlayedBefore()) {
+                    isPlaying = false;
+                    break;
+                }
             }
 
             sequencer.stop();

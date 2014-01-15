@@ -241,7 +241,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public boolean isPlaying () {
 
-        return running;
+        return running && sequencer != null;
     }
 
     @Override
