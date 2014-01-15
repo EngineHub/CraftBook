@@ -17,6 +17,7 @@ import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -47,7 +48,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
             return;
         }
 
-        String[] pos = RegexUtil.COLON_PATTERN.split(event.getLine(2));
+        String[] pos = RegexUtil.COLON_PATTERN.split(ParsingUtil.parseLine(event.getLine(2), event.getPlayer()));
         if (pos.length <= 2) {
             localPlayer.printError("mech.teleport.invalidcoords");
             SignUtil.cancelSign(event);
