@@ -481,8 +481,6 @@ public class CraftBookPlugin extends JavaPlugin {
             if(config.boatWaterPlaceOnly) mechanics.add(new WaterPlaceOnly());
         }
 
-        setupSelfTriggered();
-
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
@@ -498,6 +496,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 getLogger().log(Level.WARNING, "Failed to initialize mechanic: " + mech.getClass().getSimpleName(), t);
             }
         }
+
+        setupSelfTriggered();
     }
 
     /**
