@@ -82,6 +82,11 @@ public class TopLevelCommands {
                 Updater updater = new Updater(CraftBookPlugin.inst(), CraftBookPlugin.getUpdaterID(), CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
                 if(updater.getResult() == UpdateResult.NO_UPDATE)
                     sender.sendMessage("No updates are available!");
+                else
+                {
+                    sender.sendMessage("Update Found! Check console for install progress.");
+                    CraftBookPlugin.inst().checkForUpdates();
+                }
             }
         }
 
