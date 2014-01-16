@@ -329,7 +329,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
                 Bukkit.getPluginManager().callEvent(event);
-                items = event.getItems();
+                items.clear();
+                items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
@@ -351,7 +352,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
                 Bukkit.getPluginManager().callEvent(event);
-                items = event.getItems();
+                items.clear();
+                items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
@@ -374,7 +376,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
                 Bukkit.getPluginManager().callEvent(event);
-                items = event.getItems();
+                items.clear();
+                items.addAll(event.getItems());
 
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation());
@@ -390,7 +393,8 @@ public class Pipes extends AbstractCraftBookMechanic {
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
                 Bukkit.getPluginManager().callEvent(event);
-                items = event.getItems();
+                items.clear();
+                items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
                     visitedPipes.add(fac.getLocation());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
