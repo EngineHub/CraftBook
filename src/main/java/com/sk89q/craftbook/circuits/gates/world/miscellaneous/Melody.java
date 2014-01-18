@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
@@ -122,7 +123,7 @@ public class Melody extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (file == null || !file.exists()) {
-            getServer().getLogger().log(Level.SEVERE, "Midi file not found!");
+            CraftBookPlugin.logDebugMessage("Midi file not found!", "midi");
             return;
         }
 

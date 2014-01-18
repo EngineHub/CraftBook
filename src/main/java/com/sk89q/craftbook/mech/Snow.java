@@ -318,7 +318,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
             } else block.getRelative(0, -1, 0).setTypeId(BlockID.AIR, false);
         } else if(block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
-            return false;
+            return true; //Make it still erase the snow, so it doesn't pile on the edged.
         }
 
         if(!canLandOn(block.getRelative(0, -1, 0)))
@@ -408,6 +408,7 @@ public class Snow extends AbstractCraftBookMechanic {
     public boolean canLandOn(Block id) {
 
 
+        MaterialData data;
         switch(id.getType()) {
 
             case WOOD_STAIRS:
@@ -416,12 +417,14 @@ public class Snow extends AbstractCraftBookMechanic {
             case SANDSTONE_STAIRS:
             case QUARTZ_STAIRS:
             case COBBLESTONE_STAIRS:
-                Stairs stair = (Stairs) new MaterialData(id.getType(), id.getData());
-                return stair.isInverted();
+                data = new MaterialData(id.getType(), id.getData());
+                if(!(data instanceof Stairs)) return false;
+                return ((Stairs) data).isInverted();
             case STEP:
             case WOOD_STEP:
-                Step step = (Step) new MaterialData(id.getType(), id.getData());
-                return step.isInverted();
+                data = new MaterialData(id.getType(), id.getData());
+                if(!(data instanceof Step)) return false;
+                return ((Step) data).isInverted();
             case ACTIVATOR_RAIL:
             case CAKE_BLOCK:
             case DAYLIGHT_DETECTOR:
@@ -433,6 +436,7 @@ public class Snow extends AbstractCraftBookMechanic {
             case CARPET:
             case DETECTOR_RAIL:
             case POWERED_RAIL:
+            case SAPLING:
                 return false;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
