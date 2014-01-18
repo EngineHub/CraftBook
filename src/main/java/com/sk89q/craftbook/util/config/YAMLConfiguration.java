@@ -568,6 +568,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.snow.falldown-animation-speed", "The fall animation speed of realistic snow.");
         snowFallAnimationSpeed = config.getInt("mechanics.snow.falldown-animation-speed", 5);
 
+        config.setComment("mechanics.snow.freeze-water", "Should snow freeze water?");
+        snowFreezeWater = config.getBoolean("mechanics.snow.freeze-water", false);
+
 
         // Sponge Configuration Listener
         config.setComment("mechanics.sponge.enable", "Enables sponge mechanic.");
