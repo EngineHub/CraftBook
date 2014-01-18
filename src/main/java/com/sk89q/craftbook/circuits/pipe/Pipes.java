@@ -327,7 +327,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -350,7 +350,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
 
-                PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -374,7 +374,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 items.add(new ItemStack(juke.getPlaying()));
 
-                PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -391,7 +391,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     }
                 } else juke.setPlaying(null);
             } else {
-                PipeSuckEvent event = new PipeSuckEvent(block, items, fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());

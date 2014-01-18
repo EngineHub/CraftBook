@@ -20,6 +20,9 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Stairs;
+import org.bukkit.material.Step;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -248,9 +251,10 @@ public class Snow extends AbstractCraftBookMechanic {
             if (block.getRelative(0, -1, 0).getData() < block.getData() || block.getRelative(0, -1, 0).getType() != Material.SNOW) {
                 if(!canLandOn(block.getRelative(0, -2, 0)))
                     return false;
-                incrementData(block.getRelative(0, -1, 0), depth+1);
-                if (remove) lowerData(block);
-                return true;
+                if(incrementData(block.getRelative(0, -1, 0), depth+1)) {
+                    if (remove) lowerData(block);
+                    return true;
+                }
             }
         }
 
@@ -258,9 +262,10 @@ public class Snow extends AbstractCraftBookMechanic {
             if (block.getRelative(1, 0, 0).getData() < block.getData() || block.getRelative(1, 0,0).getType() != Material.SNOW) {
                 if(!canLandOn(block.getRelative(1, -1, 0)))
                     return false;
-                incrementData(block.getRelative(1, 0, 0), depth+1);
-                if (remove) lowerData(block);
-                return true;
+                if(incrementData(block.getRelative(1, 0, 0), depth+1)) {
+                    if (remove) lowerData(block);
+                    return true;
+                }
             }
         }
 
@@ -268,9 +273,10 @@ public class Snow extends AbstractCraftBookMechanic {
             if (block.getRelative(-1, 0, 0).getData() < block.getData() || block.getRelative(-1, 0, 0).getType() != Material.SNOW) {
                 if(!canLandOn(block.getRelative(-1, -1, 0)))
                     return false;
-                incrementData(block.getRelative(-1, 0, 0), depth+1);
-                if (remove) lowerData(block);
-                return true;
+                if(incrementData(block.getRelative(-1, 0, 0), depth+1)) {
+                    if (remove) lowerData(block);
+                    return true;
+                }
             }
         }
 
@@ -278,9 +284,10 @@ public class Snow extends AbstractCraftBookMechanic {
             if (block.getRelative(0, 0, 1).getData() < block.getData() || block.getRelative(0, 0, 1).getType() != Material.SNOW) {
                 if(!canLandOn(block.getRelative(0, -1, 1)))
                     return false;
-                incrementData(block.getRelative(0, 0, 1), depth+1);
-                if (remove) lowerData(block);
-                return true;
+                if(incrementData(block.getRelative(0, 0, 1), depth+1)) {
+                    if (remove) lowerData(block);
+                    return true;
+                }
             }
         }
 
@@ -288,19 +295,20 @@ public class Snow extends AbstractCraftBookMechanic {
             if (block.getRelative(0, 0, -1).getData() < block.getData() || block.getRelative(0, 0, -1).getType() != Material.SNOW) {
                 if(!canLandOn(block.getRelative(0, -1, -1)))
                     return false;
-                incrementData(block.getRelative(0, 0, -1), depth+1);
-                if (remove) lowerData(block);
-                return true;
+                if(incrementData(block.getRelative(0, 0, -1), depth+1)) {
+                    if (remove) lowerData(block);
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-    public void incrementData(final Block block, final int depth) {
+    public boolean incrementData(final Block block, final int depth) {
 
         if(block.getLocation().getY() == 0)
-            return;
+            return false;
 
         if (CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER)) {
             if(block.getRelative(0, -1, 0).getData() == 0) {
@@ -310,20 +318,18 @@ public class Snow extends AbstractCraftBookMechanic {
                     block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
             } else block.getRelative(0, -1, 0).setTypeId(BlockID.AIR, false);
         } else if(block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
-            return;
+            return false;
         }
 
         if(!canLandOn(block.getRelative(0, -1, 0)))
-            return;
+            return false;
 
         if (!isValidBlock(block) && isValidBlock(block.getRelative(0, 1, 0))) {
-            incrementData(block.getRelative(0, 1, 0), depth+1);
-            return;
-        } else if (!isValidBlock(block)) return;
+            return incrementData(block.getRelative(0, 1, 0), depth+1);
+        } else if (!isValidBlock(block)) return false;
 
         if (depth < 1 && canPassThrough(block) && canPassThrough(block.getRelative(0, -1, 0))) {
-            incrementData(block.getRelative(0, -1, 0), depth+1);
-            return;
+            return incrementData(block.getRelative(0, -1, 0), depth+1);
         } else if (depth >= 1 && canPassThrough(block) && canPassThrough(block.getRelative(0, -1, 0))) {
 
             boolean remove = false;
@@ -346,21 +352,19 @@ public class Snow extends AbstractCraftBookMechanic {
                     incrementData(block.getRelative(0, -1, 0), depth+1);
                 }
             }, CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
-            return;
+            return true;
         }
 
         if (canPassThrough(block) && block.getRelative(0, -1, 0).getType() == Material.SNOW && block.getRelative(0, -1, 0).getData() < 0x7) {
-            incrementData(block.getRelative(0, -1, 0), depth+1);
-            return;
+            return incrementData(block.getRelative(0, -1, 0), depth+1);
         }
 
         if (block.getType() == Material.SNOW_BLOCK && isValidBlock(block.getRelative(0, 1, 0))) {
-            incrementData(block.getRelative(0, 1, 0), depth+1);
-            return;
+            return incrementData(block.getRelative(0, 1, 0), depth+1);
         }
 
         if (CraftBookPlugin.inst().getConfiguration().snowRealistic) {
-            if (block.getType() == Material.SNOW && disperse(block, false, depth+1)) return;
+            if (block.getType() == Material.SNOW && disperse(block, false, depth+1)) return true;
         }
 
         byte newData = 0;
@@ -387,6 +391,8 @@ public class Snow extends AbstractCraftBookMechanic {
             newData = 7;
         }
         setBlockDataWithNotify(block, newData);
+
+        return true;
     }
 
     public void setBlockDataWithNotify(Block block, byte data) {
@@ -404,8 +410,18 @@ public class Snow extends AbstractCraftBookMechanic {
 
         switch(id.getType()) {
 
+            case WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case SMOOTH_STAIRS:
+            case SANDSTONE_STAIRS:
+            case QUARTZ_STAIRS:
+            case COBBLESTONE_STAIRS:
+                Stairs stair = (Stairs) new MaterialData(id.getType(), id.getData());
+                return stair.isInverted();
             case STEP:
             case WOOD_STEP:
+                Step step = (Step) new MaterialData(id.getType(), id.getData());
+                return step.isInverted();
             case ACTIVATOR_RAIL:
             case CAKE_BLOCK:
             case DAYLIGHT_DETECTOR:
@@ -417,12 +433,6 @@ public class Snow extends AbstractCraftBookMechanic {
             case CARPET:
             case DETECTOR_RAIL:
             case POWERED_RAIL:
-            case WOOD_STAIRS:
-            case BRICK_STAIRS:
-            case SMOOTH_STAIRS:
-            case SANDSTONE_STAIRS:
-            case QUARTZ_STAIRS:
-            case COBBLESTONE_STAIRS:
                 return false;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
