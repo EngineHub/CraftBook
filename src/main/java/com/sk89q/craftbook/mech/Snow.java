@@ -169,7 +169,7 @@ public class Snow extends AbstractCraftBookMechanic {
     public void schedule(Location loc) {
 
         if (tasks.containsKey(loc)) return;
-        long delay = CraftBookPlugin.inst().getRandom().nextInt(60) + 40; // 100 is max possible
+        long delay = CraftBookPlugin.inst().getRandom().nextInt(80) + 60; // 140 is max possible
         BukkitTask taskID = CraftBookPlugin.inst().getServer().getScheduler().runTaskTimer(CraftBookPlugin.inst(), new MakeSnow(loc), delay * 20L, delay * 20L);
         if (taskID.getTaskId() == -1)
             CraftBookPlugin.logger().log(Level.SEVERE, "Snow Mechanic failed to schedule!");

@@ -1,20 +1,29 @@
 package com.sk89q.craftbook.circuits.gates.world.items;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
+import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.SignUtil;
 
 public class ContainerStocker extends AbstractSelfTriggeredIC {
 
@@ -64,12 +73,22 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
 
         if (offset.getBlock().getState() instanceof InventoryHolder) {
 
+            BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+            Block pipe = getBackBlock().getRelative(back);
+
+            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(item.clone())), getBackBlock());
+            Bukkit.getPluginManager().callEvent(event);
+
+            if(!event.isValid())
+                return false;
+
             InventoryHolder c = (InventoryHolder) offset.getBlock().getState();
-            if (c.getInventory().addItem(item.clone()).isEmpty()) {
-                if(c instanceof BlockState)
-                    ((BlockState) c).update();
-                return true;
-            }
+            for(ItemStack stack : event.getItems())
+                if (c.getInventory().addItem(stack).isEmpty()) {
+                    if(c instanceof BlockState)
+                        ((BlockState) c).update();
+                    return true;
+                }
         }
         return false;
     }
