@@ -418,6 +418,12 @@ public class Snow extends AbstractCraftBookMechanic {
             case CARPET:
             case DETECTOR_RAIL:
             case POWERED_RAIL:
+            case WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case SMOOTH_STAIRS:
+            case SANDSTONE_STAIRS:
+            case QUARTZ_STAIRS:
+            case COBBLESTONE_STAIRS:
                 return false;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
