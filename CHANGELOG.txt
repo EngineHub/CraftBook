@@ -1,3 +1,26 @@
+3.8b6 (Definitely the last beta, I swear!)
+* Fixed many sponge bugs.
+* Fixed a lot of sequencer related issues.
+* Fixed a few persistence bugs.
++ Added ways to generate the IC list for the wiki, and the configurations for the wiki.
+* Fixed many IC shorthands being too long.
++ Added an option for snow max piling height.
++ Added new log types as default to TreeLopper.
+* Fixed chairs breaking CraftBook when ProtocolLib was not installed.
+* Tweaked mechanism loading, should be more safe. Mechanisms shouldn't be able to break the plugin anymore.
+- Removed the 'components' system. Which is the splitting of Circuits, Vehicles and Mechanisms. They are still split at the config level, but not at the code level.
+* Made the Melody IC Async. Should stop Sequencer hangs crashing the server.
+* Removed useless code that was making the plugin larger.
+* Fixed Teleporter Mech with variables.
+* Fixed pipe dupe with ICs.
+* Notify the user about a successful update schedule with 'cb update'
++ Added an option for snow to freeze water.
++ Added pipe support to ContainerStocker.
+* Stopped snow landing on stairs.
+* Fixed Snow having blocks landing on a lot of places it shouldn't, and allowed it to land in places it should.
+* Fixed pipe erasing some items.
+* Fixed the melody file missing message not occuring only in debug mode.
+
 3.8b5 (Most likely last beta)
 * Fixed CommandItems add command still working when they are disabled.
 * Fixed the Teleport Reciever teleporting the player into walls.
