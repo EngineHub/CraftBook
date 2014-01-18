@@ -214,8 +214,6 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(ProtectionUtil.canBlockForm(state.getBlock(), state))
                     block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
             } else block.getRelative(0, -1, 0).setTypeId(BlockID.AIR, false);
-        } else if(block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
-            return;
         }
 
         byte newData = (byte) (block.getData() - 1);
@@ -242,6 +240,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     block.getRelative(0, -1, 0).setTypeId(BlockID.ICE, false);
             } else block.getRelative(0, -1, 0).setTypeId(BlockID.AIR, false);
         } else if(block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
+            if (remove) lowerData(block);
             return false;
         }
 
