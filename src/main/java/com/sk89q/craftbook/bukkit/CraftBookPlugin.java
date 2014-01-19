@@ -426,7 +426,6 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.ICEnabled) {
                 mechanics.add(new ICMechanic(new ICManager()));
                 ICManager.inst().enable();
-                ICManager.inst().registerICs(getServer());
             }
         }
 

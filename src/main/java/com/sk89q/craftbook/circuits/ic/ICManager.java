@@ -223,6 +223,8 @@ public class ICManager {
 
         fireworkFolder = new File(CraftBookPlugin.inst().getDataFolder(), "fireworks/");
 
+        registerICs(CraftBookPlugin.inst().getServer());
+
         try {
             icConfiguration.load();
         } catch (Throwable e) {
