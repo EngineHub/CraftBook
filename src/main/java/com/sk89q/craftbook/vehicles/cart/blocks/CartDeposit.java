@@ -206,8 +206,10 @@ public class CartDeposit extends CartBlockMechanism {
                 }
                 Inventory containerinventory = container.getInventory();
 
-                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()
-                                                                                                ])).values());
+                leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
+                containerinventory.clear();
+                for(ItemStack item : leftovers)
+                    containerinventory.addItem(item);
                 transferitems.clear();
                 transferitems.addAll(leftovers);
                 leftovers.clear();
