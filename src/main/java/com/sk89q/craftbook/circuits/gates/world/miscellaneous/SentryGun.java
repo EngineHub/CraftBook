@@ -3,7 +3,6 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -20,14 +19,13 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SearchArea;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
@@ -139,12 +137,6 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         public IC create(ChangedSign sign) {
 
             return new SentryGun(getServer(), sign, this);
-        }
-
-        @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
-
-            ICUtil.verifySignLocationSyntax(sign, 3);
         }
 
         @Override
