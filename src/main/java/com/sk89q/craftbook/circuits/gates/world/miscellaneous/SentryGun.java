@@ -85,7 +85,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
         Player shooter = manned ? getShootingPlayer() : null;
         if(shooter != null) {
-            Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()), shooter.getLocation().getDirection().normalize(), speed, 0);
+            Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()).add(0, 1, 0), shooter.getLocation().getDirection().normalize(), speed, 0);
             ar.setShooter(shooter);
             ar.setTicksLived(2500);
         } else {
