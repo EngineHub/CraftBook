@@ -13,6 +13,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
@@ -462,18 +463,12 @@ public class Snow extends AbstractCraftBookMechanic {
         return true;
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
-        if(event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(event.getBlock()))) {
-            if(event.getBlock().getWorld().hasStorm() && event.getBlock().getY() == event.getBlock().getWorld().getHighestBlockYAt(event.getBlock().getLocation())) {
-                if(event.getBlock().getTemperature() < 0.15 && CraftBookPlugin.inst().getRandom().nextInt(10) == 0) {
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
-                    return;
-                }
-            }
-        }
-    }*/
+        if(event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK && CraftBookPlugin.inst().getRandom().nextInt(10) == 0)
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+    }
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
@@ -527,7 +522,7 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     public long getRandomDelay() {
-        return CraftBookPlugin.inst().getRandom().nextInt(5) + CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed; // snowfallanimation+5 is max possible, snowfallanimation is min possible.
+        return CraftBookPlugin.inst().getRandom().nextInt(4) + 1; // 5 is max possible, 1 is min possible.
     }
 
     public class SnowHandler implements Runnable {
@@ -639,7 +634,7 @@ public class Snow extends AbstractCraftBookMechanic {
         public boolean increaseSnow(Block snow, boolean disperse) {
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK) {
                 if(snow.getType() == Material.AIR || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(snow))) {
-                    snow.setTypeId(Material.SNOW.getId(), true);
+                    snow.setTypeId(Material.SNOW.getId(), false);
                     if(disperse)
                         disperse(snow, null);
                     return true;
@@ -657,7 +652,7 @@ public class Snow extends AbstractCraftBookMechanic {
                         }
                     }
                     if(allowed) {
-                        snow.setTypeId(Material.SNOW_BLOCK.getId(), true);
+                        snow.setTypeId(Material.SNOW_BLOCK.getId(), false);
                         if(disperse)
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                         return true;
@@ -666,7 +661,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 } else
                     return false;
             } else
-                snow.setData(data, true);
+                snow.setData(data, false);
 
             if(disperse)
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
@@ -679,11 +674,11 @@ public class Snow extends AbstractCraftBookMechanic {
                 return false;
             byte data = (byte) (snow.getData()-1);
             if(snow.getType() == Material.SNOW && (data < 0x0 || data > 0x7 || snow.getData() == 0x0))
-                snow.setTypeId(Material.AIR.getId(), true);
+                snow.setTypeId(Material.AIR.getId(), false);
             else if(snow.getType() == Material.SNOW_BLOCK)
-                snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, true);
+                snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, false);
             else
-                snow.setData(data, true);
+                snow.setData(data, false);
 
             if(disperse && CraftBookPlugin.inst().getConfiguration().snowRealistic) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
