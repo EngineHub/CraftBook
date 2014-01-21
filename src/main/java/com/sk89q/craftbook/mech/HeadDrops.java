@@ -216,7 +216,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         //Unofficial/Community
         BAT("coolwhip101", "bozzobrain"),
         ENDER_DRAGON("KingEndermen", "KingEnderman"),
-        SILVERFISH("AlexVMiner"),
+        SILVERFISH("Xzomag", "AlexVMiner"),
         SNOWMAN("scraftbrothers2", "Koebasti"),
         HORSE("gavertoso"),
         WOLF("Budwolf"),

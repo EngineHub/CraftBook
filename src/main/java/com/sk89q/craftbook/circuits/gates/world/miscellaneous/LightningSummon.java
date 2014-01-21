@@ -61,8 +61,7 @@ public class LightningSummon extends AbstractIC {
         if(!getLine(3).isEmpty()) {
             try {
                 chance = Math.min(Integer.parseInt(getLine(3)), 100);
-            }
-            catch(Exception e){
+            } catch(Exception e){
                 chance = 100;
             }
         } else {
