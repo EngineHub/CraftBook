@@ -101,6 +101,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) return;
         //Clean up mechanics that store players that we don't want anymore.
         Iterator<String> it = flyingPlayers.iterator();
         while(it.hasNext()) {
