@@ -180,6 +180,13 @@ public class CartSorter extends CartBlockMechanism {
                     if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
                 } catch (NumberFormatException ignored) {
                 }
+            } else if (parts[1].equalsIgnoreCase("!")) {
+                for (ItemStack item : storageInventory.getContents()) {
+                    if (item != null) {
+                        return false;
+                    }
+                }
+                return true;
             } else {
                 try {
                     int item = Integer.parseInt(parts[1]);
