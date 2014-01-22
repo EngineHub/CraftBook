@@ -182,7 +182,7 @@ public class CartSorter extends CartBlockMechanism {
                 }
             } else if (parts[1].equalsIgnoreCase("!")) {
                 for (ItemStack item : storageInventory.getContents()) {
-                    if (item!= null) {
+                    if (item != null) {
                         return false;
                     }
                 }
