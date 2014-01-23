@@ -207,6 +207,7 @@ public abstract class LocalConfiguration {
     public List<ItemInfo> snowRealisticReplacables;
     public int snowFallAnimationSpeed;
     public boolean snowFreezeWater;
+    public boolean snowMeltSunlight;
     // Mechanics - Sponges
     public boolean spongeEnabled;
     public int spongeRadius;

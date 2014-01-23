@@ -571,6 +571,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.snow.freeze-water", "Should snow freeze water?");
         snowFreezeWater = config.getBoolean("mechanics.snow.freeze-water", false);
 
+        config.setComment("mechanics.snow.melt-in-sunlight", "Enables snow to melt in sunlight.");
+        snowMeltSunlight = config.getBoolean("mechanics.snow.melt-in-sunlight", false);
+
 
         // Sponge Configuration Listener
         config.setComment("mechanics.sponge.enable", "Enables sponge mechanic.");
