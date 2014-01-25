@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -153,10 +154,10 @@ public class SetDoor extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && BlockUtil.isBlockReplacable(onMaterial)) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(Material.getMaterial(onMaterial))) continue;
                     block.setTypeIdAndData(onMaterial, (byte) onData, true);
                 } else {
-                    if (isSource && BlockUtil.isBlockReplacable(offMaterial)) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(Material.getMaterial(offMaterial))) continue;
                     block.setTypeIdAndData(offMaterial, (byte) offData, true);
                 }
             }

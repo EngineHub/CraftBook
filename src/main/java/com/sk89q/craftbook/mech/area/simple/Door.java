@@ -208,7 +208,7 @@ public class Door extends CuboidToggleMechanic {
         // there are no errors reported upon weird blocks like
         // obsidian in the middle of a wooden bridge, just weird
         // results.
-        if (BlockUtil.isBlockReplacable(hinge.getTypeId()) && proximalBaseCenter.getType() != hinge.getType())
+        if (BlockUtil.isBlockReplacable(hinge.getType()) && proximalBaseCenter.getType() != hinge.getType())
             return close(trigger, farSide, proximalBaseCenter, toggle, player);
         else
             return open(trigger, farSide, proximalBaseCenter, toggle);

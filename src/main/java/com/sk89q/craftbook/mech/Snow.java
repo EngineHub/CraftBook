@@ -12,14 +12,18 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
 import org.bukkit.util.BlockVector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 
@@ -63,26 +67,6 @@ public class Snow extends AbstractCraftBookMechanic {
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
             incrementData(block, 0);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockBreakEvent event) {
-
-        if(!EventUtil.passesFilter(event))
-            return;
-        if(event.getBlock().getType() == Material.SNOW && ItemUtil.isStackValid(event.getPlayer().getItemInHand())) {
-
-            if(event.getPlayer().getItemInHand().getType() == Material.WOOD_SPADE
-                    || event.getPlayer().getItemInHand().getType() == Material.STONE_SPADE
-                    || event.getPlayer().getItemInHand().getType() == Material.IRON_SPADE
-                    || event.getPlayer().getItemInHand().getType() == Material.GOLD_SPADE
-                    || event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SPADE) {
-                event.setCancelled(true);
-                int amount = event.getBlock().getData()+1;
-                event.getBlock().setType(Material.AIR);
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.SNOW_BALL, amount));
-            }
         }
     }
 
@@ -474,6 +458,19 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event))
+            return;
+        if(event.getBlock().getType() == Material.SNOW) {
+            event.setCancelled(true);
+            event.getBlock().setType(Material.AIR);
+            for(ItemStack stack : BlockUtil.getBlockDrops(event.getBlock(), event.getPlayer().getItemInHand()))
+                event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), stack);
+        }
     }
 
     @EventHandler

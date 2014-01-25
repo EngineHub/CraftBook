@@ -2,16 +2,17 @@ package com.sk89q.craftbook.util;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.sk89q.worldedit.blocks.BlockID;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BlockUtil.class)
@@ -83,9 +84,43 @@ public class BlockUtilTest {
     @Test
     public void testIsBlockReplacable() {
 
-        assertTrue(!BlockUtil.isBlockReplacable(BlockID.STONE));
-        assertTrue(BlockUtil.isBlockReplacable(BlockID.WATER));
-        assertTrue(BlockUtil.isBlockReplacable(BlockID.LAVA));
-        assertTrue(BlockUtil.isBlockReplacable(BlockID.AIR));
+        assertTrue(!BlockUtil.isBlockReplacable(Material.STONE));
+        assertTrue(BlockUtil.isBlockReplacable(Material.WATER));
+        assertTrue(BlockUtil.isBlockReplacable(Material.LAVA));
+        assertTrue(BlockUtil.isBlockReplacable(Material.AIR));
+    }
+
+    @Test
+    public void testHasTileData() {
+
+        assertTrue(!BlockUtil.hasTileData(Material.STONE));
+        assertTrue(BlockUtil.isBlockReplacable(Material.WATER));
+        assertTrue(BlockUtil.isBlockReplacable(Material.LAVA));
+        assertTrue(BlockUtil.isBlockReplacable(Material.AIR));
+    }
+
+    @Test
+    public void testGetBlockCentre() {
+
+        Block mlock = mock(Block.class);
+        Location mocation = mock(Location.class);
+
+        when(mlock.getLocation()).thenReturn(mocation);
+
+        BlockUtil.getBlockCentre(mlock);
+
+        verify(mocation).add(0.5, 0.5, 0.5);
+    }
+
+    @Test
+    public void testGetBlockDrops() {
+
+        Block mlock = mock(Block.class);
+
+        when(mlock.getType()).thenReturn(Material.SNOW);
+
+        ItemStack[] drops = BlockUtil.getBlockDrops(mlock, null);
+
+        assertTrue(drops.length == 0);
     }
 }

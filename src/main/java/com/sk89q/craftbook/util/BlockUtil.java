@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.blocks.BlockID;
 
 public class BlockUtil {
 
@@ -33,23 +32,23 @@ public class BlockUtil {
         return block.getType() == type && block.getData() == data;
     }
 
-    public static boolean isBlockReplacable(int id) {
+    public static boolean isBlockReplacable(Material id) {
 
         switch (id) {
 
-            case BlockID.AIR:
-            case BlockID.CROPS:
-            case BlockID.DEAD_BUSH:
-            case BlockID.END_PORTAL:
-            case BlockID.FIRE:
-            case BlockID.LONG_GRASS:
-            case BlockID.LAVA:
-            case BlockID.STATIONARY_LAVA:
-            case BlockID.WATER:
-            case BlockID.STATIONARY_WATER:
-            case BlockID.VINE:
-            case BlockID.SNOW:
-            case BlockID.PISTON_MOVING_PIECE:
+            case AIR:
+            case CROPS:
+            case DEAD_BUSH:
+            case ENDER_PORTAL:
+            case FIRE:
+            case LONG_GRASS:
+            case LAVA:
+            case STATIONARY_LAVA:
+            case WATER:
+            case STATIONARY_WATER:
+            case VINE:
+            case SNOW:
+            case PISTON_MOVING_PIECE:
                 return true;
             default:
                 return false;
@@ -93,8 +92,9 @@ public class BlockUtil {
 
         switch(block.getType()) {
             case SNOW:
-                if(tool == null || tool.getType() == Material.WOOD_SPADE || tool.getType() == Material.STONE_SPADE || tool.getType() == Material.IRON_SPADE || tool.getType() == Material.GOLD_SPADE || tool.getType() == Material.DIAMOND_SPADE)
-                    drops.add(new ItemStack(Material.SNOW_BALL));
+                if(tool == null) break;
+                if(tool.getType() == Material.WOOD_SPADE || tool.getType() == Material.STONE_SPADE || tool.getType() == Material.IRON_SPADE || tool.getType() == Material.GOLD_SPADE || tool.getType() == Material.DIAMOND_SPADE)
+                    drops.add(new ItemStack(Material.SNOW_BALL, block.getData() + 1));
                 break;
             case CROPS:
                 drops.add(new ItemStack(Material.WHEAT, 1));
