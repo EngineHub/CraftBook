@@ -31,7 +31,7 @@ public class ElementalArrowsMechanic implements Listener {
         registerArrow(new FireArrow());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onArrowHit(ProjectileHitEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -43,7 +43,7 @@ public class ElementalArrowsMechanic implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onArrowShot(EntityShootBowEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -55,7 +55,7 @@ public class ElementalArrowsMechanic implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onItemCraft(PrepareItemCraftEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

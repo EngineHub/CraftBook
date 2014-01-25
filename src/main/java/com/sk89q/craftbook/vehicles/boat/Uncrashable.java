@@ -11,7 +11,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class Uncrashable extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleDestroy(VehicleDestroyEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

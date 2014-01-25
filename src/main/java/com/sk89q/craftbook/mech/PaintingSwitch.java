@@ -40,7 +40,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -76,7 +76,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

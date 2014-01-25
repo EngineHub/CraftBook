@@ -11,7 +11,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class NoCollide extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onCartCollision(VehicleEntityCollisionEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

@@ -18,7 +18,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class ExitRemover extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(final VehicleExitEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

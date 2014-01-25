@@ -11,7 +11,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class SpeedModifiers extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

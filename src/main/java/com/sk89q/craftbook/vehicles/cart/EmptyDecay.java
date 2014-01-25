@@ -14,7 +14,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class EmptyDecay extends AbstractCraftBookMechanic {
 
-    @EventHandler( priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -26,7 +26,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) vehicle), CraftBookPlugin.inst().getConfiguration().minecartDecayTime);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

@@ -27,7 +27,7 @@ public class FallModifier extends AbstractCraftBookMechanic {
         fallSpeed = null;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -37,7 +37,7 @@ public class FallModifier extends AbstractCraftBookMechanic {
         ((Minecart) event.getVehicle()).setFlyingVelocityMod(fallSpeed);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

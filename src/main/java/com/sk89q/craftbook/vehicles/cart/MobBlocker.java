@@ -12,7 +12,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class MobBlocker extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

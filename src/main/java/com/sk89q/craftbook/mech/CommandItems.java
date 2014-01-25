@@ -166,7 +166,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         enable();
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
 
         if(event.getItem() == null)
@@ -178,7 +178,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getItem(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onPlayerHitEntity(final PlayerInteractEntityEvent event) {
 
         if(event.getPlayer().getItemInHand() == null)
@@ -187,7 +187,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onEntityDamageEntity(final EntityDamageByEntityEvent event) {
 
         Player p = null;
@@ -207,7 +207,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(p.getItemInHand(), p, event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onBlockBreak(final BlockBreakEvent event) {
 
         if(event.getPlayer().getItemInHand() == null)
@@ -216,7 +216,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onBlockPlace(final BlockPlaceEvent event) {
 
         if(event.getPlayer().getItemInHand() == null)
@@ -225,7 +225,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onItemConsume(final PlayerItemConsumeEvent event) {
 
         if(event.getItem() == null)
@@ -234,7 +234,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getItem(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onItemDrop(final PlayerDropItemEvent event) {
 
         if(event.getItemDrop() == null || !ItemUtil.isStackValid(event.getItemDrop().getItemStack()))
@@ -243,7 +243,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getItemDrop().getItemStack(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onItemBreak(final PlayerItemBreakEvent event) {
 
         if(event.getBrokenItem() == null)
@@ -252,7 +252,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getBrokenItem(), event.getPlayer(), event);
     }
 
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onItemPickup(final PlayerPickupItemEvent event) {
 
         if(event.getItem() == null)
@@ -262,7 +262,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
     }
 
     @SuppressWarnings("unchecked")
-    @EventHandler(priority=EventPriority.HIGHEST)
+    @EventHandler(priority=EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -286,7 +286,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerItemClick(InventoryClickEvent event) {
 
         if(event.getCurrentItem() == null || !(event.getWhoClicked() instanceof Player))
@@ -295,7 +295,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getCurrentItem(), (Player) event.getWhoClicked(), event);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
         if(event.getPlayer().getItemInHand() == null)
@@ -305,7 +305,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
     }
 
     @SuppressWarnings("unchecked")
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
         if (!EventUtil.passesFilter(event))

@@ -14,7 +14,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class ItemPickup extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

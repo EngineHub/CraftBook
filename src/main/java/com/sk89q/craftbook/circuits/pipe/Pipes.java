@@ -435,7 +435,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPipeRequest(PipeRequestEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

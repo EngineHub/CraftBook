@@ -81,6 +81,8 @@ public final class LocationUtil {
 
     public static double getDistanceSquared(Location l1, Location l2) {
 
+        if(l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
+
         if (CraftBookPlugin.inst().getConfiguration().useBlockDistance)
             return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
         else return l1.distanceSquared(l2);
@@ -95,6 +97,8 @@ public final class LocationUtil {
      * @return greatest distance
      */
     public static int getBlockDistance(Location l1, Location l2) {
+
+        if(l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());

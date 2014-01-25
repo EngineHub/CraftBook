@@ -59,7 +59,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         return instance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockDispense(BlockDispenseEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

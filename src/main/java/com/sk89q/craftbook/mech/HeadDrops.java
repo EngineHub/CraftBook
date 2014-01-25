@@ -33,7 +33,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -123,7 +123,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -147,7 +147,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;

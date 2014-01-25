@@ -46,7 +46,7 @@ public class CartBlockManager extends AbstractCraftBookMechanic {
         return cartBlockMechanisms;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

@@ -21,7 +21,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
     public CustomDropManager customDrops;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event))
@@ -58,7 +58,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
         if(!EventUtil.passesFilter(event))

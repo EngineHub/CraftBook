@@ -20,7 +20,7 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -70,7 +70,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
         if (!EventUtil.passesFilter(event))

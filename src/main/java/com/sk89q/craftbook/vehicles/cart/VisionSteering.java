@@ -13,7 +13,7 @@ import com.sk89q.craftbook.util.RailUtil;
 
 public class VisionSteering extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

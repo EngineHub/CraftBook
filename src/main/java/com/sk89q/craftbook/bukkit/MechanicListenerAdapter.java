@@ -67,7 +67,7 @@ public class MechanicListenerAdapter implements Listener {
 
     Set<String> signClickTimer = new HashSet<String>();
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -94,7 +94,7 @@ public class MechanicListenerAdapter implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -146,7 +146,7 @@ public class MechanicListenerAdapter implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -322,7 +322,7 @@ public class MechanicListenerAdapter implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -346,7 +346,7 @@ public class MechanicListenerAdapter implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -373,7 +373,7 @@ public class MechanicListenerAdapter implements Listener {
     /**
      * Called when a chunk is loaded.
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(final ChunkLoadEvent event) {
 
         if (!EventUtil.passesFilter(event))
@@ -392,7 +392,7 @@ public class MechanicListenerAdapter implements Listener {
     /**
      * Called when a chunk is unloaded.
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChunkUnload(ChunkUnloadEvent event) {
 
         if (!EventUtil.passesFilter(event))

@@ -13,7 +13,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 
 public class RailPlacer extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;

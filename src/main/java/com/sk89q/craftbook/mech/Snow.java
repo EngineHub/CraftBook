@@ -46,7 +46,7 @@ public class Snow extends AbstractCraftBookMechanic {
         tasks = null;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSnowballHit(ProjectileHitEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
@@ -66,7 +66,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event))
@@ -86,7 +86,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
@@ -122,7 +122,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockForm(final BlockFormEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
@@ -142,7 +142,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPhysics(final BlockPhysicsEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
