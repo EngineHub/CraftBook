@@ -23,8 +23,7 @@ public class ArrayUtilTest {
         strings.add("Line3");
         strings.add("Line4");
         String[] lines = ArrayUtil.getArrayPage(strings, 1);
-        assertTrue(lines.length == 8);
-        assertTrue(lines[7] == null);
+        assertTrue(lines.length == 4);
         strings.add("Line5");
         strings.add("Line6");
         strings.add("Line7");
