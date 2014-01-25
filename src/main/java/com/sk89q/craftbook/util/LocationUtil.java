@@ -26,6 +26,7 @@ public final class LocationUtil {
 
     public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector radius) {
 
+        if(!l1.getWorld().equals(l2.getWorld())) return false;
         if(l2.getX() < l1.getX() + radius.getX() && l2.getX() > l1.getX() - radius.getX())
             if(l2.getY() < l1.getY() + radius.getY() && l2.getY() > l1.getY() - radius.getY())
                 if(l2.getZ() < l1.getZ() + radius.getZ() && l2.getZ() > l1.getZ() - radius.getX())
