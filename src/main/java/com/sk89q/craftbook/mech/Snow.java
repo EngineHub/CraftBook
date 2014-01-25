@@ -373,21 +373,6 @@ public class Snow extends AbstractCraftBookMechanic {
             if (LocationUtil.getDistanceSquared(p.getLocation(), block.getLocation()) < CraftBookPlugin.inst().getServer().getViewDistance() * 16 * CraftBookPlugin.inst().getServer().getViewDistance() * 16)
                 p.sendBlockChange(block.getLocation(), block.getType(), data);
         }
-    }
-
-    public boolean canPassThrough(Block id) {
-
-        return id.getType() == Material.AIR || CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(id));
-    }
-
-    public boolean isSnowBlock(Block id) {
-
-        return id.getType() == Material.SNOW;// || id == BlockID.SNOW_BLOCK;
-    }
-
-    public boolean isValidBlock(Block id) {
-
-        return canPassThrough(id) || isSnowBlock(id);
     }*/
 
     public boolean canLandOn(Block id) {
@@ -426,14 +411,8 @@ public class Snow extends AbstractCraftBookMechanic {
 
     public boolean isReplacable(Block block) {
 
-        switch(block.getType()) {
-
-            case LONG_GRASS:
-            case DEAD_BUSH:
-                return true;
-            default:
-                return CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(block));
-        }
+        if(BlockUtil.isBlockReplacable(block.getType())) return true;
+        return CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(block));
     }
 
     @Override
@@ -620,7 +599,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
                 Block block = snow.getRelative(dir);
                 if(from != null && block.getLocation().toVector().toBlockVector().equals(from)) continue;
-                if(block.getType() != Material.AIR && !isReplacable(snow) && block.getType() != Material.SNOW) continue;
+                if(!isReplacable(snow)) continue;
                 if(block.getType() == Material.SNOW && block.getData() >= snow.getData() && dir != BlockFace.DOWN && dir != BlockFace.UP) {
                     if(block.getData() > snow.getData()+1) {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
@@ -660,8 +639,14 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         public boolean increaseSnow(Block snow, boolean disperse) {
+
+            if(isReplacable(snow.getRelative(0, -1, 0))) {
+                if(snow.getRelative(0, -1, 0).getType() != Material.SNOW || snow.getRelative(0,-1,0).getData() < 0x7)
+                    return increaseSnow(snow.getRelative(0,-1,0), disperse);
+            }
+
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK) {
-                if(snow.getType() == Material.AIR || isReplacable(snow)) {
+                if(isReplacable(snow)) {
                     snow.setTypeId(Material.SNOW.getId(), false);
                     if(disperse)
                         disperse(snow, null);
@@ -700,6 +685,11 @@ public class Snow extends AbstractCraftBookMechanic {
         public boolean decreaseSnow(Block snow, boolean disperse) {
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK)
                 return false;
+
+            if(snow.getRelative(0, 1, 0).getType() == Material.SNOW || snow.getRelative(0, 1, 0).getType() == Material.SNOW_BLOCK) {
+                return decreaseSnow(snow.getRelative(0,1,0), disperse);
+            }
+
             byte data = (byte) (snow.getData()-1);
             if(snow.getType() == Material.SNOW && snow.getData() == 0x0)
                 snow.setTypeId(Material.AIR.getId(), false);
