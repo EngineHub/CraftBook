@@ -21,11 +21,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
     public CustomDropManager customDrops;
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event))
             return;
+
         if (CraftBookPlugin.inst().getConfiguration().customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
@@ -57,7 +58,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void handleCustomMobDrops(EntityDeathEvent event) {
 
         if(!EventUtil.passesFilter(event))

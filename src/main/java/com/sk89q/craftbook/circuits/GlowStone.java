@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
@@ -32,8 +33,10 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
  */
 public class GlowStone extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.isMinor())
             return;
@@ -47,8 +50,10 @@ public class GlowStone extends AbstractCraftBookMechanic {
         event.getBlock().setData((byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()));
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
 

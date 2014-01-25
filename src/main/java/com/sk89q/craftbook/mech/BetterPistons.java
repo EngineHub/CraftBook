@@ -63,10 +63,10 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         return type;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -104,10 +104,10 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
     private final double movemod = 1.0;
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (event.getBlock().getType() != Material.PISTON_BASE && event.getBlock().getType() != Material.PISTON_STICKY_BASE) return;

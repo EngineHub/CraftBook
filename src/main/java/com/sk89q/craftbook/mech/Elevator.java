@@ -115,8 +115,10 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         Direction dir = Direction.NONE;
         if(event.getLine(1).equalsIgnoreCase("[lift down]")) dir = Direction.DOWN;
@@ -156,10 +158,10 @@ public class Elevator extends AbstractCraftBookMechanic {
         NONE, UP, DOWN, RECV
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

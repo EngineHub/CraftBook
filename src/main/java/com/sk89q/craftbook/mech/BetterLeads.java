@@ -28,10 +28,10 @@ import com.sk89q.craftbook.util.ItemUtil;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(PlayerInteractEntityEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!ItemUtil.isStackValid(event.getPlayer().getItemInHand())) return;
@@ -86,10 +86,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!(event.getEntity() instanceof Monster)) return;
@@ -119,10 +119,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreakRandomly(final HangingBreakEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists) return;
@@ -146,10 +146,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreak(final HangingBreakByEntityEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
@@ -184,10 +184,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;

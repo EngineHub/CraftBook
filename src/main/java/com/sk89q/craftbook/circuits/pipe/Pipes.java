@@ -32,6 +32,7 @@ import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -44,8 +45,10 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[pipe]")) return;
 
@@ -416,8 +419,10 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getBlock().getType() == Material.PISTON_STICKY_BASE) {
 
@@ -430,8 +435,10 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPipeRequest(PipeRequestEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getBlock().getType() == Material.PISTON_STICKY_BASE) {
 

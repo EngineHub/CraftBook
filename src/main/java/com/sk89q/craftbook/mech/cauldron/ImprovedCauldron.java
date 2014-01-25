@@ -22,6 +22,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -56,8 +57,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!isCauldron(event.getClickedBlock())) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());

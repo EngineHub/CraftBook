@@ -6,11 +6,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.util.EventUtil;
 
 public class EmptySlowdown extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onVehicleCreate(VehicleCreateEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 

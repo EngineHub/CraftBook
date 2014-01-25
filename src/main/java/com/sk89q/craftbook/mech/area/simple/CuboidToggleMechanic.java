@@ -19,6 +19,7 @@ import com.sk89q.craftbook.circuits.pipe.PipeFinishEvent;
 import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
 import com.sk89q.craftbook.circuits.pipe.PipeSuckEvent;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.Vector;
@@ -85,8 +86,10 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPipeFinish(PipeFinishEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getOrigin())) return;
         ChangedSign sign = BukkitUtil.toChangedSign(event.getOrigin());
@@ -110,8 +113,10 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getPuttingBlock())) return;
         ChangedSign sign = BukkitUtil.toChangedSign(event.getPuttingBlock());
@@ -135,8 +140,10 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPipeSuck(PipeSuckEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getSuckedBlock())) return;
         ChangedSign sign = BukkitUtil.toChangedSign(event.getSuckedBlock());
@@ -156,8 +163,10 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
         if (!isApplicableSign(BukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;

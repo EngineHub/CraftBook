@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 
@@ -39,8 +40,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getRightClicked() instanceof Painting) {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -73,8 +76,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;

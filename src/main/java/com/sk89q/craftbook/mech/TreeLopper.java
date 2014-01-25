@@ -27,10 +27,10 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(EventUtil.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
 
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)

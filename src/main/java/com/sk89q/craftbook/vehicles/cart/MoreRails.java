@@ -12,12 +12,16 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+
 
 public class MoreRails extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onVehicleMove(VehicleMoveEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 

@@ -236,10 +236,10 @@ public class Gate extends AbstractCraftBookMechanic {
      *
      * @param event
      */
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -298,8 +298,10 @@ public class Gate extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!CraftBookPlugin.inst().getConfiguration().gateAllowRedstone) return;
 
@@ -320,8 +322,10 @@ public class Gate extends AbstractCraftBookMechanic {
         }, 2);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[Gate]") && !event.getLine(1).equalsIgnoreCase("[DGate]")) return;
 
@@ -410,10 +414,10 @@ public class Gate extends AbstractCraftBookMechanic {
             return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(EventUtil.shouldIgnoreEvent(event)) return;
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
 

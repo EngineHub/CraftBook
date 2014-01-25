@@ -10,11 +10,14 @@ import org.bukkit.event.world.ChunkLoadEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 
 public class EmptyDecay extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler( priority = EventPriority.HIGHEST)
     public void onVehicleExit(VehicleExitEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         Vehicle vehicle = event.getVehicle();
 
@@ -23,8 +26,10 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) vehicle), CraftBookPlugin.inst().getConfiguration().minecartDecayTime);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChunkLoad(ChunkLoadEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         for (Entity ent : event.getChunk().getEntities()) {
             if (ent == null || !ent.isValid())

@@ -34,6 +34,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -116,8 +117,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW)
     public void prepareCraft(PrepareItemCraftEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         ItemStack bits = null;
         Player p = null;
@@ -214,8 +217,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW)
     public void prepareFurnace(InventoryClickEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!(event.getInventory() instanceof FurnaceInventory)) return;
         if(event.getAction() != InventoryAction.PLACE_ALL && event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME) return;
@@ -243,8 +248,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW)
     public void onFurnaceCook(FurnaceSmeltEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         ItemStack bits = null;
         CraftBookPlugin.logDebugMessage("Smelting has been initiated!", "advanced-data");
@@ -296,8 +303,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         CraftBookPlugin.logDebugMessage("Crafting has been initiated!", "advanced-data");
         Player p = (Player) event.getWhoClicked();

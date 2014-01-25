@@ -70,7 +70,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(final PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getClickedBlock() != null && SignUtil.isSign(event.getClickedBlock())) {
@@ -97,7 +97,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
@@ -149,7 +149,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent());
@@ -322,10 +322,10 @@ public class MechanicListenerAdapter implements Listener {
         });
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onVehicleMove(VehicleMoveEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getVehicle() instanceof Minecart) {
@@ -346,10 +346,10 @@ public class MechanicListenerAdapter implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
@@ -376,7 +376,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChunkLoad(final ChunkLoadEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
@@ -395,7 +395,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChunkUnload(ChunkUnloadEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getChunk());

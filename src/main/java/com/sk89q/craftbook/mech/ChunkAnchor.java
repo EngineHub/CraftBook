@@ -13,13 +13,16 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 public class ChunkAnchor extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -50,6 +53,8 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     @EventHandler
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
+        if(!EventUtil.passesFilter(event)) return;
+
         if(!CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
@@ -62,8 +67,10 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onUnload(final ChunkUnloadEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         try {
             boolean isOn = false;

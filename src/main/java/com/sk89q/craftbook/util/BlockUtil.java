@@ -20,8 +20,7 @@ public class BlockUtil {
 
     public static boolean areBlocksIdentical(Block block, Block block2) {
 
-        if (block.getType() == block2.getType()) if (block.getData() == block2.getData()) return true;
-        return false;
+        return block.getType() == block2.getType() && block.getData() == block2.getData();
     }
 
     public static boolean isBlockSimilarTo(Block block, Material type) {
@@ -31,8 +30,7 @@ public class BlockUtil {
 
     public static boolean isBlockIdenticalTo(Block block, Material type, byte data) {
 
-        if (block.getType() == type) if (block.getData() == data) return true;
-        return false;
+        return block.getType() == type && block.getData() == data;
     }
 
     public static boolean isBlockReplacable(int id) {

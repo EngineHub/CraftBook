@@ -144,8 +144,10 @@ public class Chair extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (hasChair(event.getBlock())) {
@@ -154,10 +156,10 @@ public class Chair extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;

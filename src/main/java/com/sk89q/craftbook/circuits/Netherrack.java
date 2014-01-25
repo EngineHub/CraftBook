@@ -27,6 +27,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
@@ -36,8 +37,10 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
  */
 public class Netherrack extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.isMinor())
             return;
@@ -57,8 +60,10 @@ public class Netherrack extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onLeftClick(PlayerInteractEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getAction() != Action.LEFT_CLICK_BLOCK) return;
         if(event.getClickedBlock().getType() != Material.NETHERRACK) return;

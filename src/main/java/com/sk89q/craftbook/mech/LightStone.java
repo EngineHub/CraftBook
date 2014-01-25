@@ -34,10 +34,10 @@ import com.sk89q.craftbook.util.ProtectionUtil;
  */
 public class LightStone extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

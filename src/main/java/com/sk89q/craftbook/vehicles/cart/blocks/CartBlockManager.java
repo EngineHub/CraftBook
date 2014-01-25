@@ -14,6 +14,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 
 public class CartBlockManager extends AbstractCraftBookMechanic {
@@ -45,8 +46,10 @@ public class CartBlockManager extends AbstractCraftBookMechanic {
         return cartBlockMechanisms;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         Block block = event.getBlock();
         String[] lines = event.getLines();

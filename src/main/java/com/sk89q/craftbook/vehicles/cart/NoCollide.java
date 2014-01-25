@@ -7,11 +7,14 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 
 public class NoCollide extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCartCollision(VehicleEntityCollisionEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getVehicle() instanceof Minecart) {
             if (event.getVehicle().isEmpty() && !CraftBookPlugin.inst().getConfiguration().minecartNoCollideEmpty) return;

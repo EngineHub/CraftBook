@@ -16,6 +16,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 
 public class Footprints extends AbstractCraftBookMechanic {
@@ -24,8 +25,10 @@ public class Footprints extends AbstractCraftBookMechanic {
 
     public Set<String> footsteps = new HashSet<String>();
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(final PlayerMoveEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getFrom().getX() == event.getTo().getX() && event.getFrom().getZ() == event.getTo().getZ())
             return;

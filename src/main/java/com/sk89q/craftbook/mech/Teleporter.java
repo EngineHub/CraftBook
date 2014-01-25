@@ -34,8 +34,10 @@ import com.sk89q.worldedit.blocks.BlockType;
  */
 public class Teleporter extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
 
@@ -59,10 +61,10 @@ public class Teleporter extends AbstractCraftBookMechanic {
         event.setLine(1, "[Teleporter]");
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

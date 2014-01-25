@@ -14,10 +14,10 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 
 public class XPStorer extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

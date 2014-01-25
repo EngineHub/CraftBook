@@ -114,10 +114,10 @@ public class Bookcase extends AbstractCraftBookMechanic {
         return lines[CraftBookPlugin.inst().getRandom().nextInt(lines.length)];
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

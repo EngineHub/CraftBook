@@ -23,6 +23,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
@@ -32,8 +33,10 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
  */
 public class JackOLantern extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.isMinor())
             return;
@@ -55,8 +58,10 @@ public class JackOLantern extends AbstractCraftBookMechanic {
         block.setData(data);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getBlock().getType() != Material.PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
 

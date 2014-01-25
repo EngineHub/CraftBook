@@ -35,6 +35,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.pipe.PipePutEvent;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -174,8 +175,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         return rets;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock());
 
@@ -220,8 +223,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
@@ -237,14 +242,18 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         ((IC) icData[2]).onRightClick(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onThinkPing(SelfTriggerPingEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         setupIC(event.getBlock());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onThinkUnregister(SelfTriggerUnregisterEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock());
 
@@ -264,8 +273,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onThink(SelfTriggerThinkEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock());
 
@@ -279,8 +290,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.UNKNOWN);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock());
 
@@ -294,8 +307,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             ((IC) icData[2]).unload();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getPuttingBlock());
 
@@ -305,8 +320,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             ((PipeInputIC) icData[2]).onPipeTransfer(event);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         initializeIC(event.getBlock(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer()), event, false);
     }

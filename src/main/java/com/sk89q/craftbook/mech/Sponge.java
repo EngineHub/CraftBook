@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -24,8 +25,10 @@ public class Sponge extends AbstractCraftBookMechanic {
         return true;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getBlock().getType() != Material.WATER && event.getBlock().getType() != Material.STATIONARY_WATER) return;
 
@@ -44,8 +47,10 @@ public class Sponge extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
@@ -54,8 +59,10 @@ public class Sponge extends AbstractCraftBookMechanic {
         removeWater(event.getBlock());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
@@ -64,8 +71,10 @@ public class Sponge extends AbstractCraftBookMechanic {
         addWater(event.getBlock());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneChange(SourcedBlockRedstoneEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!CraftBookPlugin.inst().getConfiguration().spongeRedstone) return;
         if(event.getBlock().getType() == Material.SPONGE) return;

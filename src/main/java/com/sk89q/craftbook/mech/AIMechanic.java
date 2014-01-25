@@ -20,10 +20,10 @@ import com.sk89q.craftbook.util.EventUtil;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
@@ -70,10 +70,10 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
-        if (EventUtil.shouldIgnoreEvent(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;

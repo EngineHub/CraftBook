@@ -33,8 +33,10 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;
@@ -121,8 +123,10 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
@@ -143,12 +147,12 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!CraftBookPlugin.inst().getConfiguration().headDropsMiningDrops) return;
-        if(EventUtil.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 

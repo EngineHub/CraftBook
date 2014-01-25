@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
@@ -37,18 +38,20 @@ public class CartUtil {
         if(type == EntityType.MINECART_CHEST) {
             toCart = cart.getWorld().spawn(destination, StorageMinecart.class);
             ((StorageMinecart)toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
-        }
-        else if(type == EntityType.MINECART_FURNACE)
+        } else if(type == EntityType.MINECART_FURNACE) {
             toCart = cart.getWorld().spawn(destination, PoweredMinecart.class);
-        else if(type == EntityType.MINECART_HOPPER) {
+        } else if(type == EntityType.MINECART_HOPPER) {
             toCart = cart.getWorld().spawn(destination, HopperMinecart.class);
             ((HopperMinecart)toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
-        }
-        else if(type == EntityType.MINECART_MOB_SPAWNER)
+        } else if(type == EntityType.MINECART_MOB_SPAWNER) {
             toCart = cart.getWorld().spawn(destination, SpawnerMinecart.class);
-        else if(type == EntityType.MINECART_TNT)
+        } else if(type == EntityType.MINECART_TNT)
             toCart = cart.getWorld().spawn(destination, ExplosiveMinecart.class);
-        else
+        else if(type == EntityType.MINECART_COMMAND) {
+            toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
+            ((CommandMinecart)toCart).setCommand(((CommandMinecart)toCart).getCommand());
+            ((CommandMinecart)toCart).setName(((CommandMinecart)toCart).getName());
+        } else
             toCart = cart.getWorld().spawn(destination, RideableMinecart.class);
 
         final Entity passenger = cart.getPassenger();
@@ -83,6 +86,8 @@ public class CartUtil {
             return new ItemStack(Material.EXPLOSIVE_MINECART, 1);
         else if(cart instanceof HopperMinecart)
             return new ItemStack(Material.HOPPER_MINECART, 1);
+        else if(cart instanceof CommandMinecart)
+            return new ItemStack(Material.COMMAND_MINECART, 1);
 
         return null;
     }

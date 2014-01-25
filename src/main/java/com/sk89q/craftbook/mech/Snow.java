@@ -46,7 +46,7 @@ public class Snow extends AbstractCraftBookMechanic {
         tasks = null;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSnowballHit(ProjectileHitEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
@@ -66,10 +66,10 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(EventUtil.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         if(event.getBlock().getType() == Material.SNOW && ItemUtil.isStackValid(event.getPlayer().getItemInHand())) {
 
@@ -86,7 +86,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
@@ -122,7 +122,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockForm(final BlockFormEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
@@ -142,7 +142,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPhysics(final BlockPhysicsEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
@@ -479,7 +479,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
-        if(EventUtil.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         if(event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK && CraftBookPlugin.inst().getRandom().nextInt(10) == 0)
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
@@ -488,7 +488,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        if(EventUtil.shouldIgnoreEvent(event))
+        if(!EventUtil.passesFilter(event))
             return;
         if(!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
 

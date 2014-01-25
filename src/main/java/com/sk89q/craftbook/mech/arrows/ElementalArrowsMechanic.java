@@ -11,6 +11,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
+import com.sk89q.craftbook.util.EventUtil;
+
 // TODO finish
 public class ElementalArrowsMechanic implements Listener {
 
@@ -29,8 +31,10 @@ public class ElementalArrowsMechanic implements Listener {
         registerArrow(new FireArrow());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArrowHit(ProjectileHitEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getEntity() instanceof Arrow) {
             for (ElementalArrow e : arrows) {
@@ -39,8 +43,10 @@ public class ElementalArrowsMechanic implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArrowShot(EntityShootBowEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (event.getProjectile() instanceof Arrow) {
             for (ElementalArrow e : arrows) {
@@ -49,8 +55,10 @@ public class ElementalArrowsMechanic implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onItemCraft(PrepareItemCraftEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         for (ElementalArrow e : arrows) {
             if (e.onCraft(event)) return;

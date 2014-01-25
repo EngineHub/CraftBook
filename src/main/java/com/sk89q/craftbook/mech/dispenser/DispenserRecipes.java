@@ -13,6 +13,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
 /**
@@ -58,8 +59,10 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         return instance;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockDispense(BlockDispenseEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!(event.getBlock().getState() instanceof Dispenser)) return; // Heh? Isn't this just for dispensers?
         Dispenser dis = (Dispenser) event.getBlock().getState();

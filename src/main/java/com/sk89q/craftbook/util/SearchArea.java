@@ -165,7 +165,7 @@ public class SearchArea {
     @SuppressWarnings("serial")
     public List<Entity> getEntitiesInArea() {
 
-        return getEntitiesInArea(new ArrayList<EntityType>(){{add(EntityType.ANY);}});
+        return getEntitiesInArea(new ArrayList<EntityType>(1){{add(EntityType.ANY);}});
     }
 
     /**
