@@ -164,9 +164,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             if(!(ent instanceof LivingEntity)) continue;
             if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
             boolean isOwner = false;
-            if(ent instanceof Tameable && (!((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover())))
-                isOwner = true;
-            if(!(ent instanceof Tameable) || isOwner || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+            if(ent instanceof Tameable)
+                if(!((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
+                    isOwner = true;
+            if(isOwner || !(ent instanceof Tameable) || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
                 continue;
@@ -193,7 +194,8 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
-        if(!(event.getEntity() instanceof Tameable) || !((Tameable) event.getEntity()).isTamed()) return;
+        if(!(event.getEntity() instanceof Tameable)) return;
+        if(!!((Tameable) event.getEntity()).isTamed()) return;
         if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
     }
