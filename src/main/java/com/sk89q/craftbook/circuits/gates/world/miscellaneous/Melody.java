@@ -81,7 +81,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
             String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
 
-            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), split[0]);
+            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), split[0]);
             else area = SearchArea.createEmptyArea();
 
             for(int i = 1; i < split.length; i++) {

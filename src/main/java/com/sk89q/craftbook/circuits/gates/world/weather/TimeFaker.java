@@ -74,7 +74,7 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
 
         players = new HashSet<String>();
 
-        area = SearchArea.createArea(getBackBlock(), getLine(2));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
 
         try {
             time = Long.parseLong(getSign().getLine(3));

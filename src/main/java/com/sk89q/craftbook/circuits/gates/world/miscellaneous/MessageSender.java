@@ -74,8 +74,8 @@ public class MessageSender extends AbstractIC {
 
             bit = bit.replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
 
-            if(SearchArea.isValidArea(getBackBlock(), bit))
-                area = SearchArea.createArea(getBackBlock(), bit);
+            if(SearchArea.isValidArea(getLocation().getBlock(), bit))
+                area = SearchArea.createArea(getLocation().getBlock(), bit);
             else
                 name = bit;
         }

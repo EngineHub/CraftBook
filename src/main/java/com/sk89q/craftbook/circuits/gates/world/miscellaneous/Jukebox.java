@@ -45,7 +45,7 @@ public class Jukebox extends AbstractSelfTriggeredIC {
     public void load() {
 
         String plist = getLine(2);
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
 
         if(!playlists.containsKey(getBackBlock().getLocation()))
             playlists.put(getBackBlock().getLocation(), new Playlist(plist));

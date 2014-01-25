@@ -33,7 +33,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(getBackBlock(), getLine(2));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
     }
 
     @Override

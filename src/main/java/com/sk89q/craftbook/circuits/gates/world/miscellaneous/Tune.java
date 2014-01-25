@@ -74,7 +74,7 @@ public class Tune extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getBackBlock(), getLine(3));
+        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
         else area = SearchArea.createEmptyArea();
 
         if (getLine(2).contains(":")) {

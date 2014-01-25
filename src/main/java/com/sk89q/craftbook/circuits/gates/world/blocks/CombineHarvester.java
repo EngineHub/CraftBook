@@ -36,7 +36,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(getBackBlock(), getLine(2));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
     }
 
     @Override

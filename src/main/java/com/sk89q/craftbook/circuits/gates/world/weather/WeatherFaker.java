@@ -104,7 +104,7 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
 
         players = new HashSet<String>();
 
-        area = SearchArea.createArea(getBackBlock(), getLine(2));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
         rain = getLine(3).equals("rain");
     }
 }

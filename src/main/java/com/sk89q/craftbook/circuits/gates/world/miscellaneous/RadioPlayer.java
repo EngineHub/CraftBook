@@ -33,7 +33,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
 
         band = getLine(2);
         if (!getLine(3).isEmpty())
-            area = SearchArea.createArea(getBackBlock(), getLine(3));
+            area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
         else
             area = SearchArea.createEmptyArea();
 

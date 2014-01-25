@@ -38,7 +38,7 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
     public void load() {
 
         item = ItemSyntax.getItem(getLine(3));
-        area = SearchArea.createArea(getBackBlock(), getLine(2));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
     }
 
     @Override

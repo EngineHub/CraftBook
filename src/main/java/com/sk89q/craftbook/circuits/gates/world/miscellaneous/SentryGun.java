@@ -51,7 +51,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         }
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
-        area = SearchArea.createArea(getBackBlock(), getLine(3));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
         manned = getSign().getLine(2).split(":").length > 2 && getSign().getLine(2).split(":")[2].equalsIgnoreCase("MAN");
     }
 

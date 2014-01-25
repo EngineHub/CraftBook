@@ -45,7 +45,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         else
             item = ItemSyntax.getItem(getLine(2));
 
-        area = SearchArea.createArea(getBackBlock(), getLine(3));
+        area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
     }
 
     @Override
