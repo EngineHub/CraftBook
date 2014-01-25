@@ -224,6 +224,42 @@ public class SearchArea {
     }
 
     /**
+     * Get a random block from within the area.
+     * 
+     * @return the block.
+     */
+    public Block getRandomBlockInArea() {
+
+        int xMin=0,xMax=0,yMin=0,yMax=0,zMin=0,zMax=0;
+
+        if(hasRegion()) {
+            xMin = getRegion().getMinimumPoint().getBlockX();
+            xMax = getRegion().getMaximumPoint().getBlockX();
+            yMin = getRegion().getMinimumPoint().getBlockY();
+            yMax = getRegion().getMaximumPoint().getBlockY();
+            zMin = getRegion().getMinimumPoint().getBlockZ();
+            zMax = getRegion().getMaximumPoint().getBlockZ();
+        } else if(hasRadiusAndCenter()) {
+
+            xMin = getCenter().getBlockX() - getRadius().getBlockX();
+            xMax = getCenter().getBlockX() + getRadius().getBlockX();
+            yMin = getCenter().getBlockY() - getRadius().getBlockY();
+            yMax = getCenter().getBlockY() + getRadius().getBlockY();
+            zMin = getCenter().getBlockZ() - getRadius().getBlockZ();
+            zMax = getCenter().getBlockZ() + getRadius().getBlockZ();
+        } else
+            return null;
+
+        int x = xMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (xMax - xMin + 1));
+        int y = yMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (yMax - yMin + 1));
+        int z = zMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (zMax - zMin + 1));
+        Location loc = new Location(getWorld(), x, y, z);
+        if(!isWithinArea(loc))
+            return getRandomBlockInArea();
+        return loc.getBlock();
+    }
+
+    /**
      * Checks if this SearchArea is a Region type, compared to other types.
      * 
      * @return If it is a Region type.

@@ -9,14 +9,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class Irrigator extends AbstractSelfTriggeredIC {
 
@@ -25,18 +23,12 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    Block centre;
-    Vector radius;
+    SearchArea area;
 
     @Override
     public void load() {
 
-        if (getLine(2).contains("=")) {
-            centre = ICUtil.parseBlockLocation(getSign(), 2);
-        } else {
-            centre = getBackBlock();
-        }
-        radius = ICUtil.parseRadius(getSign());
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
     }
 
     @Override
@@ -60,25 +52,17 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, irrigate());
+        for(int i = 0; i < 10; i++)
+            chip.setOutput(0, irrigate());
     }
 
     public boolean irrigate() {
 
-        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    int rx = centre.getX() - x;
-                    int ry = centre.getY() - y;
-                    int rz = centre.getZ() - z;
-                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                    if (b.getType() == Material.SOIL && b.getData() < 0x1) {
-                        if (consumeWater()) {
-                            b.setData((byte) 0x8, false);
-                            return true;
-                        }
-                    }
-                }
+        Block b = area.getRandomBlockInArea();
+        if (b.getType() == Material.SOIL && b.getData() < 0x1) {
+            if (consumeWater()) {
+                b.setData((byte) 0x8, false);
+                return true;
             }
         }
         return false;

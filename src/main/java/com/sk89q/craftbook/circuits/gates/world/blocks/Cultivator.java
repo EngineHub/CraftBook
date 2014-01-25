@@ -8,15 +8,13 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 
 public class Cultivator extends AbstractSelfTriggeredIC {
 
@@ -37,19 +35,12 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         return "CULTIVATOR";
     }
 
-    Vector radius;
-    Block target, onBlock;
+    SearchArea area;
 
     @Override
     public void load() {
 
-        onBlock = getBackBlock();
-        radius = ICUtil.parseRadius(getSign(), 2);
-        if (getLine(2).contains("=")) {
-            target = ICUtil.parseBlockLocation(getSign(), 2);
-        } else {
-            target = getBackBlock();
-        }
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
     }
 
     @Override
@@ -61,27 +52,19 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        state.setOutput(0, cultivate());
+        for(int i = 0; i < 10; i++)
+            state.setOutput(0, cultivate());
     }
 
     public boolean cultivate() {
 
-        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    int rx = target.getX() - x;
-                    int ry = target.getY() - y;
-                    int rz = target.getZ() - z;
-                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+        Block b = area.getRandomBlockInArea();
 
-                    if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
+        if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
 
-                        if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
-                            b.setType(Material.SOIL);
-                            return true;
-                        }
-                    }
-                }
+            if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
+                b.setType(Material.SOIL);
+                return true;
             }
         }
 
@@ -90,8 +73,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
     public boolean damageHoe() {
 
-        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST) {
-            Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
+        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST) {
+            Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
             for (int i = 290; i <= 294; i++) {
                 for (int slot = 0; slot < c.getInventory().getSize(); slot++) {
                     if (c.getInventory().getItem(slot) == null || c.getInventory().getItem(slot).getTypeId() != i)

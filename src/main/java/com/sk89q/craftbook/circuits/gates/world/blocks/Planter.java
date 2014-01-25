@@ -14,11 +14,9 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -37,9 +35,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     ItemStack item;
 
-    Block target;
-    Block onBlock;
-    Vector radius;
+    SearchArea area;
 
     @Override
     public void load() {
@@ -49,14 +45,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         else
             item = ItemSyntax.getItem(getLine(2));
 
-        onBlock = getBackBlock();
-
-        radius = ICUtil.parseRadius(getSign(), 3);
-        if (getLine(3).contains("=")) {
-            target = ICUtil.parseBlockLocation(getSign(), 3);
-        } else {
-            target = getBackBlock();
-        }
+        area = SearchArea.createArea(getBackBlock(), getLine(3));
     }
 
     @Override
@@ -80,16 +69,17 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        plant();
+        for(int i = 0; i < 10; i++)
+            plant();
     }
 
     public boolean plant() {
 
         if (item != null && !plantableItem(item.getType())) return false;
 
-        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST || onBlock.getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
+        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST || getBackBlock().getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
 
-            Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
+            Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
             for (ItemStack it : c.getInventory().getContents()) {
 
                 if (!ItemUtil.isStackValid(it)) continue;
@@ -108,7 +98,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                 }
             }
         } else {
-            for (Entity ent : LocationUtil.getNearbyEntities(target.getLocation(), radius)) {
+            for (Entity ent : area.getEntitiesInArea()) {
                 if (!(ent instanceof Item)) continue;
 
                 Item itemEnt = (Item) ent;
@@ -134,22 +124,13 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     public Block searchBlocks(ItemStack stack) {
 
-        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    int rx = target.getX() - x;
-                    int ry = target.getY() - y;
-                    int rz = target.getZ() - z;
-                    Block b = onBlock.getWorld().getBlockAt(rx, ry, rz);
+        Block b = area.getRandomBlockInArea();
 
-                    if (b.getType() != Material.AIR) continue;
+        if (b.getType() != Material.AIR) return null;
 
-                    if (itemPlantableOnBlock(stack.getType(), b.getRelative(0, -1, 0).getType())) {
+        if (itemPlantableOnBlock(stack.getType(), b.getRelative(0, -1, 0).getType())) {
 
-                        return b;
-                    }
-                }
-            }
+            return b;
         }
         return null;
     }

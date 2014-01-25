@@ -13,20 +13,17 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.blocks.BlockID;
 
 public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
-    Vector radius;
-    Block location;
+    SearchArea area;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -36,12 +33,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        radius = ICUtil.parseRadius(getSign());
-        if (getLine(2).contains("=")) {
-            location = ICUtil.parseBlockLocation(getSign(), 2);
-        } else {
-            location = getBackBlock();
-        }
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
     }
 
     @Override
@@ -60,142 +52,133 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            terraform(true);
+            terraform();
         }
     }
 
     @Override
     public void think(ChipState state) {
 
-        terraform(false);
+        for(int i = 0; i < 10; i++)
+            terraform();
     }
 
-    public void terraform(boolean overrideChance) {
+    public void terraform() {
 
-        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    if (overrideChance || CraftBookPlugin.inst().getRandom().nextInt(40) == 0) {
-                        int rx = location.getX() - x;
-                        int ry = location.getY() - y;
-                        int rz = location.getZ() - z;
-                        Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getType() == Material.CROPS && b.getData() < 0x7) {
-                            if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() + 0x1));
-                            }
-                            return;
-                        }
-                        if ((b.getType() == Material.CROPS || b.getType() == Material.CARROT || b.getType() == Material.POTATO || b.getType() == Material.MELON_STEM || b.getType() == Material.PUMPKIN_STEM) && b.getData() < 0x7) {
-                            if (consumeBonemeal()) {
-                                byte add = (byte) CraftBookPlugin.inst().getRandom().nextInt(3);
-                                if(b.getData() + add > 0x7)
-                                    b.setData((byte) 0x7);
-                                else
-                                    b.setData((byte) (b.getData() + add));
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.COCOA && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
-                            if (consumeBonemeal()) {
-                                if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0)
-                                    b.setData((byte) (b.getData() | 0xC));
-                                else b.setData((byte) (b.getData() | 0x8));
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.NETHER_WARTS && b.getData() < 0x3) {
-                            if (consumeBonemeal()) {
-                                b.setData((byte) (b.getData() + 0x1));
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.SAPLING) {
-                            if (consumeBonemeal()) {
-                                if (!growTree(b, CraftBookPlugin.inst().getRandom())) refundBonemeal();
-                                else return;
-                            }
-                        }
-                        if (b.getType() == Material.BROWN_MUSHROOM || b.getType() == Material.RED_MUSHROOM) {
-                            if (consumeBonemeal()) {
-                                if (b.getType() == Material.BROWN_MUSHROOM) {
-                                    b.setType(Material.AIR);
-                                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM)) {
-                                        b.setType(Material.BROWN_MUSHROOM);
-                                        refundBonemeal();
-                                    } else return;
-                                }
-                                if (b.getType() == Material.RED_MUSHROOM) {
-                                    b.setType(Material.AIR);
-                                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM)) {
-                                        b.setType(Material.RED_MUSHROOM);
-                                        refundBonemeal();
-                                    } else return;
-                                }
-                            }
-                        }
-                        if ((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getType() == Material.AIR) {
-                            if (consumeBonemeal()) {
-                                b.getRelative(0, 1, 0).setType(b.getType());
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getType() == Material.AIR) {
-                            if (consumeBonemeal()) {
-                                b.setType(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_SHORE ? Material.MYCEL : Material.GRASS);
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.GRASS && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
-                            if (consumeBonemeal()) {
-                                int t = CraftBookPlugin.inst().getRandom().nextInt(7);
-                                if (t == 0) {
-                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
-                                } else if (t == 1) {
-                                    b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
-                                } else if (t == 2) {
-                                    b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
-                                } else if (t == 3) {
-                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
-                                } else {
-                                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
-                                }
-                            }
-                            return;
-                        }
-                        if (b.getTypeId() == BlockID.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
-                            if (consumeBonemeal()) {
-                                b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 0, true);
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
-                            if (consumeBonemeal()) {
-                                b.getRelative(0, -1, 0).setTypeIdAndData(BlockID.VINE, b.getData(), true);
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.STATIONARY_WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
-                            if (consumeBonemeal()) {
-                                b.getRelative(0, 1, 0).setType(Material.WATER_LILY);
-                            }
-                            return;
-                        }
-                        if (b.getType() == Material.MYCEL && b.getRelative(0, 1, 0).getType() == Material.AIR
-                                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
-                            if (consumeBonemeal()) {
-                                int t = CraftBookPlugin.inst().getRandom().nextInt(2);
-                                if (t == 0) {
-                                    b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
-                                } else if (t == 1) {
-                                    b.getRelative(0, 1, 0).setType(Material.BROWN_MUSHROOM);
-                                }
-                            }
-                            return;
-                        }
-                    }
+        Block b = area.getRandomBlockInArea();
+
+        if (b.getType() == Material.CROPS && b.getData() < 0x7) {
+            if (consumeBonemeal()) {
+                b.setData((byte) (b.getData() + 0x1));
+            }
+            return;
+        }
+        if ((b.getType() == Material.CROPS || b.getType() == Material.CARROT || b.getType() == Material.POTATO || b.getType() == Material.MELON_STEM || b.getType() == Material.PUMPKIN_STEM) && b.getData() < 0x7) {
+            if (consumeBonemeal()) {
+                byte add = (byte) CraftBookPlugin.inst().getRandom().nextInt(3);
+                if(b.getData() + add > 0x7)
+                    b.setData((byte) 0x7);
+                else
+                    b.setData((byte) (b.getData() + add));
+            }
+            return;
+        }
+        if (b.getType() == Material.COCOA && ((b.getData() & 0x8) != 0x8 || (b.getData() & 0xC) != 0xC)) {
+            if (consumeBonemeal()) {
+                if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0)
+                    b.setData((byte) (b.getData() | 0xC));
+                else b.setData((byte) (b.getData() | 0x8));
+            }
+            return;
+        }
+        if (b.getType() == Material.NETHER_WARTS && b.getData() < 0x3) {
+            if (consumeBonemeal()) {
+                b.setData((byte) (b.getData() + 0x1));
+            }
+            return;
+        }
+        if (b.getType() == Material.SAPLING) {
+            if (consumeBonemeal()) {
+                if (!growTree(b, CraftBookPlugin.inst().getRandom())) refundBonemeal();
+                else return;
+            }
+        }
+        if (b.getType() == Material.BROWN_MUSHROOM || b.getType() == Material.RED_MUSHROOM) {
+            if (consumeBonemeal()) {
+                if (b.getType() == Material.BROWN_MUSHROOM) {
+                    b.setType(Material.AIR);
+                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM)) {
+                        b.setType(Material.BROWN_MUSHROOM);
+                        refundBonemeal();
+                    } else return;
+                }
+                if (b.getType() == Material.RED_MUSHROOM) {
+                    b.setType(Material.AIR);
+                    if (!b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM)) {
+                        b.setType(Material.RED_MUSHROOM);
+                        refundBonemeal();
+                    } else return;
                 }
             }
+        }
+        if ((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getType() == Material.AIR) {
+            if (consumeBonemeal()) {
+                b.getRelative(0, 1, 0).setType(b.getType());
+            }
+            return;
+        }
+        if (b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getType() == Material.AIR) {
+            if (consumeBonemeal()) {
+                b.setType(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_SHORE ? Material.MYCEL : Material.GRASS);
+            }
+            return;
+        }
+        if (b.getType() == Material.GRASS && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+            if (consumeBonemeal()) {
+                int t = CraftBookPlugin.inst().getRandom().nextInt(7);
+                if (t == 0) {
+                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
+                } else if (t == 1) {
+                    b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
+                } else if (t == 2) {
+                    b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
+                } else if (t == 3) {
+                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
+                } else {
+                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
+                }
+            }
+            return;
+        }
+        if (b.getTypeId() == BlockID.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+            if (consumeBonemeal()) {
+                b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 0, true);
+            }
+            return;
+        }
+        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+            if (consumeBonemeal()) {
+                b.getRelative(0, -1, 0).setTypeIdAndData(BlockID.VINE, b.getData(), true);
+            }
+            return;
+        }
+        if (b.getType() == Material.STATIONARY_WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+            if (consumeBonemeal()) {
+                b.getRelative(0, 1, 0).setType(Material.WATER_LILY);
+            }
+            return;
+        }
+        if (b.getType() == Material.MYCEL && b.getRelative(0, 1, 0).getType() == Material.AIR
+                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+            if (consumeBonemeal()) {
+                int t = CraftBookPlugin.inst().getRandom().nextInt(2);
+                if (t == 0) {
+                    b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
+                } else if (t == 1) {
+                    b.getRelative(0, 1, 0).setType(Material.BROWN_MUSHROOM);
+                }
+            }
+            return;
         }
     }
 

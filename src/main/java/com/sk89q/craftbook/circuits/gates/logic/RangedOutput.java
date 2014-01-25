@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.logic;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -68,7 +69,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0)) {
 
-            maxAmount = min + (int) (Math.random() * (max - min + 1));
+            maxAmount = min + (int) (CraftBookPlugin.inst().getRandom().nextDouble() * (max - min + 1));
             amountDone = 0;
             ticks = 0;
 

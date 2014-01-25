@@ -21,9 +21,8 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -32,20 +31,12 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    Vector radius;
-    Block target;
-    Block onBlock;
+    SearchArea area;
 
     @Override
     public void load() {
 
-        onBlock = getBackBlock();
-        radius = ICUtil.parseRadius(getSign());
-        if (getLine(2).contains("=")) {
-            target = ICUtil.parseBlockLocation(getSign());
-        } else {
-            target = getBackBlock();
-        }
+        area = SearchArea.createArea(getBackBlock(), getLine(2));
     }
 
     @Override
@@ -69,27 +60,18 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, harvest());
+        for(int i = 0; i < 10; i++)
+            chip.setOutput(0, harvest());
     }
 
     public boolean harvest() {
 
-        for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-            for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
-                    int rx = target.getX() - x;
-                    int ry = target.getY() - y;
-                    int rz = target.getZ() - z;
-                    Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+        Block b = area.getRandomBlockInArea();
 
-                    if (harvestable(b)) {
-
-                        collectDrops(BlockUtil.getBlockDrops(b, null));
-                        b.setType(Material.AIR);
-                        return true;
-                    }
-                }
-            }
+        if (harvestable(b)) {
+            collectDrops(BlockUtil.getBlockDrops(b, null));
+            b.setType(Material.AIR);
+            return true;
         }
         return false;
     }
@@ -104,16 +86,16 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         if(!event.isValid()) return;
 
-        if (onBlock.getRelative(0, 1, 0).getType() == Material.CHEST) {
+        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST) {
 
-            Chest c = (Chest) onBlock.getRelative(0, 1, 0).getState();
+            Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
             HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(event.getItems().toArray(new ItemStack[event.getItems().size()]));
             for (ItemStack item : leftovers.values()) {
-                onBlock.getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
+                getBackBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
             }
         } else {
             for (ItemStack item : event.getItems()) {
-                onBlock.getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
+                getBackBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
             }
         }
     }
