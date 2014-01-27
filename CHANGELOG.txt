@@ -1,3 +1,21 @@
+3.8
+* Fixed ICs with configuration in ic-config.yml having issues.
+* Fixed a dupe bug with CartDeposit.
+* Fixed Horse data with entity ICs.
+* Fixed SentryGun not working with the r: region tag.
+* Temporarily disabled the snow mechanic, it is part way through being rewritten.
+* Fixed players recieving damage in slow elevators.
+* Fixed the HeadDrops silverfish head.
++ Added sorter option to check if storage cart is empty. (Thanks Tomski)
+* Fixed Farming ICs being more resource intensive than a resource intensive thing.
+* Fixed IC offsets on ICs that use a SearchArea.
+* Fixed some radius checks working across worlds.
+* Fixed event filters not being checked properly across the entire plugin.
+* Fixed Highest priority being used, not High.
+* Fixed a potential BetterLeads error.
+* Fixed a few test cases being off or missing.
+* Fixed Pulsers that are unloaded during pulsing causing an error.
+
 3.8b6 (Definitely the last beta, I swear!)
 * Fixed many sponge bugs.
 * Fixed a lot of sequencer related issues.

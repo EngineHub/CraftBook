@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8b5
+# CraftBook Configuration for Bukkit. Generated for version: 3.8
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -297,11 +297,12 @@ mechanics:
         piling: false
         trample: false
         partial-trample-only: false
+        jump-trample: false
         place: false
         slowdown: false
         realistic: false
         high-piling: false
-        jump-trample: false
+        max-pile-height: 3
         replacable-blocks:
         - DEAD_BUSH
         - LONG_GRASS
@@ -311,6 +312,8 @@ mechanics:
         - RED_MUSHROOM
         - FIRE
         falldown-animation-speed: 5
+        freeze-water: false
+        melt-in-sunlight: false
     sponge:
         enable: false
         radius: 5
@@ -324,6 +327,7 @@ mechanics:
         enable: false
         block-list:
         - LOG
+        - LOG_2
         tool-list:
         - IRON_AXE
         - WOOD_AXE

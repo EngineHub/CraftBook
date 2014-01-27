@@ -83,7 +83,6 @@ import com.sk89q.craftbook.mech.Marquee;
 import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.SignCopier;
-import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Sponge;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.TreeLopper;
@@ -214,7 +213,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getVersion() {
 
-        return "3.8b6";
+        return "3.8";
     }
 
     /**
@@ -224,7 +223,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "3555";
+        return "3579";
     }
 
     public static int getUpdaterID() {
@@ -377,7 +376,10 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.commandItemsEnabled) mechanics.add(new CommandItems());
             if (config.customCraftingEnabled) mechanics.add(new CustomCrafting());
             if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
-            if (config.snowEnable) mechanics.add(new Snow());
+            if (config.snowEnable) {
+                getLogger().warning("Snow is disabled in this version due to being partially recoded!");
+                //mechanics.add(new Snow());
+            }
             if (config.customDropEnabled) mechanics.add(new CustomDrops());
             if (config.aiEnabled) mechanics.add(new AIMechanic());
             if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
@@ -1145,7 +1147,7 @@ public class CraftBookPlugin extends JavaPlugin {
         return item;
     }
 
-    public String getWikiDomain() {
+    public static String getWikiDomain() {
         return "http://wiki.sk89q.com/wiki/CraftBook";
     }
 }
