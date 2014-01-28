@@ -308,9 +308,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
         if(!items.containsKey(event.getPlayer().getName())) return;
         List<String> its = items.get(event.getPlayer().getName());

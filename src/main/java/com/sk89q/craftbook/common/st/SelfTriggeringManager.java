@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.common.st;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -22,7 +22,7 @@ public class SelfTriggeringManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    public final Set<Location> thinkingMechanics = new HashSet<Location>();
+    private final Collection<Location> thinkingMechanics = new ArrayList<Location>();
 
     public void registerSelfTrigger(Chunk chunk) {
         try {
@@ -74,7 +74,12 @@ public class SelfTriggeringManager {
         }
     }
 
-    Location[] registeredLocations;
+    public Collection<Location> getSelfTriggeringMechanics() {
+
+        return new ArrayList<Location>(thinkingMechanics);
+    }
+
+    private Location[] registeredLocations;
     private boolean hasChanged = false;
 
     /**
