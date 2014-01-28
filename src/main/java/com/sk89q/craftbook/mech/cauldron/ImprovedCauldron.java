@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
@@ -61,6 +62,8 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         if(!isCauldron(event.getClickedBlock())) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
