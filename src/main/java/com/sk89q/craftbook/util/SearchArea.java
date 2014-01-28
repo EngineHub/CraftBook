@@ -241,12 +241,12 @@ public class SearchArea {
             zMax = getRegion().getMaximumPoint().getBlockZ();
         } else if(hasRadiusAndCenter()) {
 
-            xMin = getCenter().getBlockX() - getRadius().getBlockX();
-            xMax = getCenter().getBlockX() + getRadius().getBlockX();
-            yMin = getCenter().getBlockY() - getRadius().getBlockY();
-            yMax = getCenter().getBlockY() + getRadius().getBlockY();
-            zMin = getCenter().getBlockZ() - getRadius().getBlockZ();
-            zMax = getCenter().getBlockZ() + getRadius().getBlockZ();
+            xMin = Math.min(getCenter().getBlockX() - getRadius().getBlockX(), getCenter().getBlockX() + getRadius().getBlockX());
+            xMax = Math.max(getCenter().getBlockX() - getRadius().getBlockX(), getCenter().getBlockX() + getRadius().getBlockX());
+            yMin = Math.min(getCenter().getBlockY() - getRadius().getBlockY(), getCenter().getBlockY() + getRadius().getBlockY());
+            yMax = Math.max(getCenter().getBlockY() - getRadius().getBlockY(), getCenter().getBlockY() + getRadius().getBlockY());
+            zMin = Math.min(getCenter().getBlockZ() - getRadius().getBlockZ(), getCenter().getBlockZ() + getRadius().getBlockZ());
+            zMax = Math.max(getCenter().getBlockZ() - getRadius().getBlockZ(), getCenter().getBlockZ() + getRadius().getBlockZ());
         } else
             return null;
 
