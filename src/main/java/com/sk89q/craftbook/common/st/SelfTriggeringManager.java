@@ -2,6 +2,7 @@ package com.sk89q.craftbook.common.st;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -16,19 +17,20 @@ import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import com.sk89q.worldedit.BlockWorldVector;
 
 public class SelfTriggeringManager {
 
     /**
      * List of mechanics that think on a routine basis.
      */
-    private final Collection<Location> thinkingMechanics = new ArrayList<Location>();
+    private final Collection<BlockWorldVector> thinkingMechanics = new HashSet<BlockWorldVector>();
 
     public void registerSelfTrigger(Chunk chunk) {
         try {
             for(BlockState state : chunk.getTileEntities()) {
                 Block block = state.getBlock();
-                if(thinkingMechanics.contains(block.getLocation())) continue;
+                if(thinkingMechanics.contains(BukkitUtil.toWorldVector(block.getLocation()))) continue;
                 SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
                 Bukkit.getServer().getPluginManager().callEvent(event);
             }
@@ -41,19 +43,21 @@ public class SelfTriggeringManager {
 
     public void registerSelfTrigger(Location location) {
 
-        if(thinkingMechanics.contains(location)) return;
+        BlockWorldVector vec = BukkitUtil.toWorldVector(location);
+        if(thinkingMechanics.contains(vec)) return;
         hasChanged = true;
-        thinkingMechanics.add(location);
+        thinkingMechanics.add(vec);
     }
 
     public void unregisterSelfTrigger(Location location, UnregisterReason reason) {
 
-        if(!thinkingMechanics.contains(location)) return;
+        BlockWorldVector vec = BukkitUtil.toWorldVector(location);
+        if(!thinkingMechanics.contains(vec)) return;
         SelfTriggerUnregisterEvent event = new SelfTriggerUnregisterEvent(location.getBlock(), reason);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if(!event.isCancelled()) {
             hasChanged = true;
-            thinkingMechanics.remove(location);
+            thinkingMechanics.remove(vec);
         }
     }
 
@@ -61,25 +65,26 @@ public class SelfTriggeringManager {
 
         if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
 
-        Location[] registeredLocations;
-
-        synchronized (this) {
-            // Copy to array to get rid of concurrency snafus
-            registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
+        if(hasChanged || registeredLocations == null) {
+            synchronized (this) {
+                // Copy to array to get rid of concurrency snafus
+                registeredLocations = thinkingMechanics.toArray(new BlockWorldVector[thinkingMechanics.size()]);
+            }
         }
 
-        for (Location location : registeredLocations) {
-            if(location.getChunk().equals(chunk))
-                unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
+        for (BlockWorldVector location : registeredLocations) {
+            Location loc = BukkitUtil.toLocation(location);
+            if(loc.getChunk().equals(chunk))
+                unregisterSelfTrigger(loc, UnregisterReason.UNLOAD);
         }
     }
 
-    public Collection<Location> getSelfTriggeringMechanics() {
+    public Collection<BlockWorldVector> getSelfTriggeringMechanics() {
 
-        return new ArrayList<Location>(thinkingMechanics);
+        return new ArrayList<BlockWorldVector>(thinkingMechanics);
     }
 
-    private Location[] registeredLocations;
+    private BlockWorldVector[] registeredLocations;
     private boolean hasChanged = false;
 
     /**
@@ -92,25 +97,26 @@ public class SelfTriggeringManager {
         if(hasChanged || registeredLocations == null) {
             synchronized (this) {
                 // Copy to array to get rid of concurrency snafus
-                registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
+                registeredLocations = thinkingMechanics.toArray(new BlockWorldVector[thinkingMechanics.size()]);
             }
         }
 
-        for (Location location : registeredLocations) {
-            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
-                unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
+        for (BlockWorldVector location : registeredLocations) {
+            Location loc = BukkitUtil.toLocation(location);
+            if(!loc.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
+                unregisterSelfTrigger(loc, UnregisterReason.UNLOAD);
                 continue;
             }
             try {
-                SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(location.getBlock());
+                SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(loc.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
                 if(!event.isHandled()) {
-                    unregisterSelfTrigger(location, UnregisterReason.UNKNOWN);
+                    unregisterSelfTrigger(loc, UnregisterReason.UNKNOWN);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
                 CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
                 BukkitUtil.printStacktrace(t);
-                unregisterSelfTrigger(location, UnregisterReason.ERROR);
+                unregisterSelfTrigger(loc, UnregisterReason.ERROR);
             }
         }
     }

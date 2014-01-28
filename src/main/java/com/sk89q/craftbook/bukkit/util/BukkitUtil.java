@@ -88,14 +88,14 @@ public class BukkitUtil {
         }
     }
 
-    private static final Map<World, LocalWorld> wlw = new HashMap<World, LocalWorld>();
+    private static final Map<String, LocalWorld> wlw = new HashMap<String, LocalWorld>();
 
     public static LocalWorld getLocalWorld(World w) {
 
-        LocalWorld lw = wlw.get(w);
+        LocalWorld lw = wlw.get(w.getName());
         if (lw == null) {
             lw = new BukkitWorld(w);
-            wlw.put(w, lw);
+            wlw.put(w.getName(), lw);
         }
         return lw;
     }
@@ -113,6 +113,11 @@ public class BukkitUtil {
     public static BlockWorldVector toWorldVector(Block block) {
 
         return new BlockWorldVector(getLocalWorld(block.getWorld()), block.getX(), block.getY(), block.getZ());
+    }
+
+    public static BlockWorldVector toWorldVector(org.bukkit.Location location) {
+
+        return new BlockWorldVector(getLocalWorld(location.getWorld()), location.getX(), location.getY(), location.getZ());
     }
 
     public static Vector toVector(org.bukkit.Location loc) {
