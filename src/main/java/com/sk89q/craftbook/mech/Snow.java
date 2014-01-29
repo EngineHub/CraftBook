@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -26,6 +27,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ProtectionUtil;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -436,6 +438,8 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
+        //CraftBookPlugin.inst().getConfiguration().snowRealistic = false;
+
         return true;
     }
 
@@ -457,7 +461,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
         if(!EventUtil.passesFilter(event))
@@ -466,11 +470,12 @@ public class Snow extends AbstractCraftBookMechanic {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
 
         if(!EventUtil.passesFilter(event))
             return;
+
         if(!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
 
         boolean isChunkUseful = false;
@@ -558,17 +563,16 @@ public class Snow extends AbstractCraftBookMechanic {
             if(amount == 0) {
                 if(CraftBookPlugin.inst().getConfiguration().snowRealistic)
                     if(!disperse(block) && !canLandOn(block.getRelative(0, -1, 0)))
-                        return;
-                //decreaseSnow(block, false);
+                        decreaseSnow(block, false);
             } else if (amount < 0) { // Odd edge case.
-                decreaseSnow(block, true);
-                amount++;
+                if(decreaseSnow(block, true))
+                    amount++;
                 if(amount < 0)
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                 return;
             } else {
-                increaseSnow(block, CraftBookPlugin.inst().getConfiguration().snowRealistic);
-                amount--;
+                if(increaseSnow(block, CraftBookPlugin.inst().getConfiguration().snowRealistic))
+                    amount--;
                 if(amount > 0)
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                 return;
@@ -622,10 +626,10 @@ public class Snow extends AbstractCraftBookMechanic {
                 boolean success = false;
                 if(amount < 0) {
                     if(decreaseSnow(block, false))
-                        increaseSnow(snow, true);
+                        success = increaseSnow(snow, true);
                 } else {
                     if(decreaseSnow(snow, false))
-                        increaseSnow(block, true);
+                        success = increaseSnow(block, true);
                 }
 
                 return success;
@@ -639,6 +643,17 @@ public class Snow extends AbstractCraftBookMechanic {
             if(snow.getRelative(0, -1, 0).getType() != Material.AIR && isReplacable(snow.getRelative(0, -1, 0))) {
                 if(snow.getRelative(0, -1, 0).getType() != Material.SNOW || snow.getRelative(0,-1,0).getData() < 0x7)
                     return increaseSnow(snow.getRelative(0,-1,0), disperse);
+            }
+
+            if (CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER)) {
+                if(snow.getRelative(0, -1, 0).getData() == 0) {
+                    BlockState state = snow.getRelative(0, -1, 0).getState();
+                    state.setType(Material.ICE);
+                    if(ProtectionUtil.canBlockForm(state.getBlock(), state))
+                        snow.getRelative(0, -1, 0).setTypeId(Material.ICE.getId(), false);
+                } else snow.getRelative(0, -1, 0).setTypeId(Material.AIR.getId(), false);
+            } else if(snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
+                return true; //Still return true, pretend it's actually succeeded.
             }
 
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK) {

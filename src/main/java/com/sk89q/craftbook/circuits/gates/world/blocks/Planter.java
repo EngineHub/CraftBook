@@ -126,7 +126,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if (b.getType() != Material.AIR) return null;
+        if (b == null || b.getType() != Material.AIR) return null;
 
         if (itemPlantableOnBlock(stack.getType(), b.getRelative(0, -1, 0).getType())) {
 

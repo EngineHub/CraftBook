@@ -67,6 +67,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
+        if(b == null) return;
+
         if (b.getType() == Material.CROPS && b.getData() < 0x7) {
             if (consumeBonemeal()) {
                 b.setData((byte) (b.getData() + 0x1));

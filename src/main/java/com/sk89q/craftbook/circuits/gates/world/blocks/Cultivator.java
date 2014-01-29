@@ -60,6 +60,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
+        if(b == null) return false;
+
         if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
 
             if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {

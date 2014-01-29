@@ -68,6 +68,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
+        if(b == null) return false;
+
         if (harvestable(b)) {
             collectDrops(BlockUtil.getBlockDrops(b, null));
             b.setType(Material.AIR);

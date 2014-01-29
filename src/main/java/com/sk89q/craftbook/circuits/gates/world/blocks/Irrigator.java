@@ -59,6 +59,9 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     public boolean irrigate() {
 
         Block b = area.getRandomBlockInArea();
+
+        if(b == null) return false;
+
         if (b.getType() == Material.SOIL && b.getData() < 0x1) {
             if (consumeWater()) {
                 b.setData((byte) 0x8, false);
