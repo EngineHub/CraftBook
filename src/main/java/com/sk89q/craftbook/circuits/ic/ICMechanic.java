@@ -110,6 +110,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         if (!manager.hasCustomPrefix(prefix)) return null;
 
         String id = matcher.group(1);
+
+        if(CraftBookPlugin.inst().getConfiguration().ICsDisabled.contains(id.toLowerCase()) || CraftBookPlugin.inst().getConfiguration().ICsDisabled.contains(id)) return null; //This IC is disabled.
         // after this point, we don't return null if we can't make an IC: we throw shit,
         // because it SHOULD be an IC and can't possibly be any other kind of mechanic.
 
