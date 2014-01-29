@@ -413,6 +413,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
     public boolean isReplacable(Block block) {
 
+        if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) return false;
         if(BlockUtil.isBlockReplacable(block.getType())) return true;
         return CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(block));
     }
