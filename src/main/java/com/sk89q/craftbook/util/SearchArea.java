@@ -255,7 +255,7 @@ public class SearchArea {
         int z = zMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (zMax - zMin + 1));
         Location loc = new Location(getWorld(), x, y, z);
         if(!isWithinArea(loc))
-            return getRandomBlockInArea();
+            return null;
         return loc.getBlock();
     }
 
