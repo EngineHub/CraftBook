@@ -69,7 +69,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         this.manager = manager;
     }
 
-    public Object[] setupIC(Block block) {
+    public Object[] setupIC(Block block, boolean create) {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (block.getType() != Material.WALL_SIGN) return null;
@@ -86,7 +86,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
-            return setupIC(block);
+            return setupIC(block, create);
         }
         if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
             if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
@@ -97,14 +97,14 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
-            return setupIC(block);
+            return setupIC(block, create);
         }
 
         if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
             sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
-            return setupIC(block);
+            return setupIC(block, create);
         }
 
         if (!manager.hasCustomPrefix(prefix)) return null;
@@ -138,7 +138,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 // add the created ic to the cache
                 ICManager.addCachedIC(block.getLocation(), ic);
             }
-        } else {
+        } else if (create) {
             ic = registration.getFactory().create(sign);
             if(!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
                 sign.setLine(0, ic.getSignTitle());
@@ -147,7 +147,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             ic.load();
             // add the created ic to the cache
             ICManager.addCachedIC(block.getLocation(), ic);
-        }
+        } else
+            return null;
         // extract the suffix
         String suffix = "";
         String[] str = RegexUtil.RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
@@ -182,7 +183,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        final Object[] icData = setupIC(event.getBlock());
+        final Object[] icData = setupIC(event.getBlock(), true);
 
         if(icData == null) return;
 
@@ -237,7 +238,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             ICManager.removeCachedIC(event.getClickedBlock().getLocation());
         }
 
-        final Object[] icData = setupIC(event.getClickedBlock());
+        final Object[] icData = setupIC(event.getClickedBlock(), true);
 
         if(icData == null) return;
 
@@ -249,7 +250,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        setupIC(event.getBlock());
+        setupIC(event.getBlock(), true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -257,7 +258,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        final Object[] icData = setupIC(event.getBlock());
+        final Object[] icData = setupIC(event.getBlock(), false);
 
         if(icData != null) {
             if(event.getReason() == UnregisterReason.ERROR) {
@@ -280,7 +281,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        final Object[] icData = setupIC(event.getBlock());
+        final Object[] icData = setupIC(event.getBlock(), true);
 
         if(icData == null) return;
 
@@ -297,7 +298,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        final Object[] icData = setupIC(event.getBlock());
+        final Object[] icData = setupIC(event.getBlock(), false);
 
         if(icData == null) return;
 
@@ -314,7 +315,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        final Object[] icData = setupIC(event.getPuttingBlock());
+        final Object[] icData = setupIC(event.getPuttingBlock(), true);
 
         if(icData == null) return;
 
