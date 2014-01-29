@@ -13,6 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -144,25 +145,23 @@ public class Chair extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (hasChair(event.getBlock())) {
             event.setCancelled(true);
             CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).printError("mech.chairs.in-use");
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
         if (!EventUtil.passesFilter(event))
             return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().chairEnabled) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
             return;

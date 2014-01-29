@@ -59,8 +59,10 @@ public class EventUtil {
      */
     public static boolean passesFilter(Event event) {
 
-        if(event instanceof Cancellable && ((Cancellable) event).isCancelled() && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks)
-            return false;
+        if(CraftBookPlugin.inst() != null && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+            if(event instanceof Cancellable && ((Cancellable) event).isCancelled())
+                return false;
+        }
 
         if(EventUtil.shouldIgnoreEvent(event)) return false;
 
