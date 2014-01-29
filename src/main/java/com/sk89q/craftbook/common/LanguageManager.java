@@ -30,9 +30,6 @@ public class LanguageManager {
 
     public void close() {
 
-        for(YAMLProcessor proc : languageMap.values()) {
-            proc.save();
-        }
     }
 
     public void checkForLanguages() {
@@ -90,7 +87,6 @@ public class LanguageManager {
                 translated = languageData.getString(message);
             else {
                 translated = languageData.getString(message, def);
-                languageMap.put(language, languageData);
             }
 
             if(!CraftBookPlugin.inst().getConfiguration().languageScanText || translated != null) {
@@ -104,7 +100,6 @@ public class LanguageManager {
                     String trand = defaultMessages.get(tran) != null ? languageData.getString(tran, defaultMessages.get(tran)) : languageData.getString(tran);
                     if(tran == null || trand == null) continue;
                     trans = trans.replace(tran, trand);
-                    languageMap.put(language, languageData);
                 }
                 return trans;
             }
