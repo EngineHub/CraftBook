@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -22,7 +22,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class LanguageManager {
 
-    HashMap<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
+    Map<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
 
     public void init() {
         checkForLanguages();
@@ -37,8 +37,7 @@ public class LanguageManager {
 
     public void checkForLanguages() {
 
-        List<String> languages = CraftBookPlugin.inst().getConfiguration().languages;
-        for (String language : languages) {
+        for (String language : CraftBookPlugin.inst().getConfiguration().languages) {
             language = language.trim();
             File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".yml");
             if(!f.exists())
@@ -52,7 +51,7 @@ public class LanguageManager {
             try {
                 lang.load();
             } catch (Throwable e) {
-                CraftBookPlugin.inst().getLogger().severe("An error occured loading the languages file for: " + language + "! This language MAY NOT WORK UNTIL FIXED!");
+                CraftBookPlugin.inst().getLogger().severe("An error occured loading the languages file for: " + language + "! This language WILL NOT WORK UNTIL FIXED!");
                 e.printStackTrace();
                 continue;
             }
@@ -61,6 +60,8 @@ public class LanguageManager {
 
             for(Entry<String, String> s : defaultMessages.entrySet())
                 lang.getString(s.getKey(), s.getValue());
+
+            lang.save();
 
             languageMap.put(language, lang);
         }
