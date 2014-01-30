@@ -9,11 +9,13 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
@@ -228,6 +230,12 @@ public class Planter extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {"+oItem to plant id{:data}", "+oradius=x:y:z offset"};
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+            if(!SearchArea.isValidArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+                throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
     }
 }

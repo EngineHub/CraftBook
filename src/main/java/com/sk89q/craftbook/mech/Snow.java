@@ -624,6 +624,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if(best != null) {
                 Block block = snow.getRelative(best);
+                if(snow.getLocation().equals(block.getLocation())) return false;
                 boolean success = false;
                 if(amount < 0) {
                     if(decreaseSnow(block, false))
@@ -659,7 +660,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK) {
                 if(isReplacable(snow)) {
-                    snow.setTypeId(Material.SNOW.getId(), false);
+                    snow.setTypeIdAndData(Material.SNOW.getId(), (byte) 0, false);
                     if(disperse)
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                     return true;

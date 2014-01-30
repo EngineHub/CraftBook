@@ -19,6 +19,7 @@ import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.SearchArea;
@@ -151,6 +152,12 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {"+oradius=x:y:z offset", null};
+        }
+
+        @Override
+        public void verify(ChangedSign sign) throws ICVerificationException {
+            if(!SearchArea.isValidArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+                throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }
 }
