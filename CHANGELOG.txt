@@ -1,3 +1,18 @@
+3.8.1
+* Fixed an error with improved cauldrons
+* Only disable a mechanic if it successfully loaded.
+* Fixed a few issues with SearchArea's get random block algorithm, in certain circumstances.
+* Fixed Self Triggering mechanics not using the more efficient way to iterate mechanics on chunk unload.
+* Fixed a few issues with distance calculations, which were breaking a fair few mechanics.
+* Fixed language files being saved on shutdown, instead of at startup.
+* Fixed ICs that were disabled triggering the invalid ic console warning.
+* Fixed ICs creating duplicate instances on unload before unloading.
+* Fixed snow replacing water.
++ Added SearchArea verification to Farming ICs.
+* Fixed chairs not counting signs as a block.
+* Disabled all craftbook mechanics by default in the config. (Won't effect existing configurations)
+* Fixed snow scheduling multiple block changes at the same block.
+
 3.8
 * Fixed ICs with configuration in ic-config.yml having issues.
 * Fixed a dupe bug with CartDeposit.
