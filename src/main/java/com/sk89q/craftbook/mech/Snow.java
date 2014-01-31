@@ -2,8 +2,10 @@ package com.sk89q.craftbook.mech;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -543,16 +545,22 @@ public class Snow extends AbstractCraftBookMechanic {
     public class SnowHandler implements Runnable {
 
         Block block;
+        SnowBlock snowblock;
         int amount;
 
         public SnowHandler(Block block, int amount) {
+            snowblock = new SnowBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
+            if(queue.contains(snowblock)) {
+                snowblock = null;
+                return;
+            }
             this.block = block;
             this.amount = amount;
+            queue.add(snowblock);
         }
 
         public SnowHandler(Block block, int amount, BlockVector from) {
-            this.block = block;
-            this.amount = amount;
+            this(block, amount);
             this.from = from;
         }
 
@@ -560,6 +568,10 @@ public class Snow extends AbstractCraftBookMechanic {
 
         @Override
         public void run () {
+
+            if(snowblock == null || !queue.contains(snowblock)) return; //Something went wrong here.
+
+            queue.remove(snowblock);
 
             if(amount == 0) {
                 if(CraftBookPlugin.inst().getConfiguration().snowRealistic)
@@ -601,6 +613,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 Block block = snow.getRelative(dir);
                 if(from != null && block.getLocation().getBlockX() == from.getBlockX() && block.getLocation().getBlockY() == from.getBlockY() && block.getLocation().getBlockZ() == from.getBlockZ()) continue;
                 if(!isReplacable(block)) continue;
+                if(queue.contains(new SnowBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ()))) continue;
                 if(block.getType() == Material.SNOW && block.getData() >= snow.getData() && dir != BlockFace.DOWN && dir != BlockFace.UP) {
                     if(block.getData() > snow.getData()+1) {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
@@ -717,6 +730,34 @@ public class Snow extends AbstractCraftBookMechanic {
             }
 
             return true;
+        }
+    }
+
+    private Set<SnowBlock> queue = new HashSet<SnowBlock>();
+
+    private class SnowBlock {
+
+        int x,y,z;
+        char[] worldname;
+
+        public SnowBlock(String worldname, int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.worldname = worldname.toCharArray();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if(!(o instanceof SnowBlock)) return false;
+            if(((SnowBlock)o).x == x && ((SnowBlock)o).y == y && ((SnowBlock)o).z == z) return ((SnowBlock)o).worldname.equals(worldname);
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+
+            return x ^ y ^ z & worldname.hashCode();
         }
     }
 }
