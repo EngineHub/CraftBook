@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -108,7 +109,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(1, 0, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(1, 0, 0).getType()))
+                        water.getRelative(1, 0, 0).setType(Material.WATER);
                 }
             }
         }
@@ -120,7 +122,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(-1, 0, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(-1, 0, 0).getType()))
+                        water.getRelative(-1, 0, 0).setType(Material.WATER);
                 }
             }
         }
@@ -132,7 +135,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(0, 1, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 1, 0).getType()))
+                        water.getRelative(0, 1, 0).setType(Material.WATER);
                 }
             }
         }
@@ -144,7 +148,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(0, -1, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, -1, 0).getType()))
+                        water.getRelative(0, -1, 0).setType(Material.WATER);
                 }
             }
         }
@@ -156,7 +161,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(0, 0, 1).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, 1).getType()))
+                        water.getRelative(0, 0, 1).setType(Material.WATER);
                 }
             }
         }
@@ -168,7 +174,8 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    water.getRelative(0, 0, -1).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, -1).getType()))
+                        water.getRelative(0, 0, -1).setType(Material.WATER);
                 }
             }
         }
