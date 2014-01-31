@@ -43,7 +43,7 @@ advanced-block-checks: true
 pedantic-block-checks: false
 
 # Make sure a player can only press signs so often.
-sign-click-timeout: 4
+sign-click-timeout: 10
 
 # The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.
 language: en_US
@@ -65,7 +65,7 @@ debug-flags: []
 easter-eggs: true
 
 # Random numbers are much more random, with a small cost to CPU usage.
-realistic-randoms: true
+realistic-randoms: false
 
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
@@ -81,7 +81,7 @@ common:
         enable-in-player-chat: false
 circuits:
     ics:
-        enable: true
+        enable: false
         cache: true
         max-radius: 10
         allow-short-hand: true
@@ -97,13 +97,13 @@ circuits:
         glowstone-enabled: false
         glowstone-off-block: GLASS
     pipes:
-        enable: true
+        enable: false
         allow-diagonal: false
         insulator-block: WOOL
         stack-per-move: true
         require-sign: false
     jukebox:
-        enable: true
+        enable: false
 mechanics:
     ai:
         enable: false
@@ -115,10 +115,10 @@ mechanics:
         attack-passive-enable:
         - Zombie
     ammeter:
-        enable: true
+        enable: false
         item: COAL
     area:
-        enable: true
+        enable: false
         allow-redstone: true
         use-schematics: true
         shorten-long-names: true
@@ -137,7 +137,7 @@ mechanics:
         enable: false
         falling-ladders: true
     better-pistons:
-        enable: true
+        enable: false
         crushers: true
         crushers-kill-mobs: false
         crusher-blacklist:
@@ -154,11 +154,11 @@ mechanics:
         - BEDROCK
         max-distance: 12
     bookcase:
-        enable: true
+        enable: false
         read-when-sneaking: false
         read-when-holding-block: false
     bridge:
-        enable: true
+        enable: false
         allow-redstone: true
         max-length: 30
         max-width: 5
@@ -169,7 +169,7 @@ mechanics:
         - DOUBLE_STEP
         - WOOD_DOUBLE_STEP
     cauldron:
-        enable: true
+        enable: false
         spoons: true
     chair:
         enable: false
@@ -191,16 +191,16 @@ mechanics:
         max-distance: 3
         max-click-radius: 5
     chunk-anchor:
-        enable: true
+        enable: false
         enable-redstone: true
         check-chunks: true
     command-items:
         enable: false
     command-sign:
-        enable: true
+        enable: false
         allow-redstone: true
     cooking-pot:
-        enable: true
+        enable: false
         require-fuel: true
         cook-ores: false
         sign-click-open: true
@@ -209,7 +209,7 @@ mechanics:
     custom-crafting:
         enable: false
     dispenser-recipes:
-        enable: true
+        enable: false
         cannon-enable: true
         fan-enable: true
         fire-arrows-enable: true
@@ -219,7 +219,7 @@ mechanics:
         enable: false
         require-permissions: false
     door:
-        enable: true
+        enable: false
         allow-redstone: true
         max-length: 30
         max-width: 5
@@ -230,7 +230,7 @@ mechanics:
         - DOUBLE_STEP
         - WOOD_DOUBLE_STEP
     elevator:
-        enable: true
+        enable: false
         enable-buttons: true
         allow-looping: false
         smooth-movement: false
@@ -244,7 +244,7 @@ mechanics:
         - SNOW_BLOCK
         - ICE
     gate:
-        enable: true
+        enable: false
         allow-redstone: true
         limit-columns: true
         max-columns: 14
@@ -269,28 +269,28 @@ mechanics:
         drop-rates: {}
         custom-mob-skins: {}
     hidden-switch:
-        enable: true
+        enable: false
         any-side: true
     legacy-cauldron:
-        enable: true
+        enable: false
         block: STONE
     lightstone:
-        enable: true
+        enable: false
         item: GLOWSTONE_DUST
     light-switch:
-        enable: true
+        enable: false
         max-range: 10
         max-lights: 20
     map-changer:
-        enable: true
+        enable: false
     marquee:
-        enable: true
+        enable: false
     paintings:
-        enable: true
+        enable: false
     payment:
-        enable: true
+        enable: false
     sign-copy:
-        enable: true
+        enable: false
         item: INK_SACK:0
     snow:
         enable: false
@@ -320,7 +320,7 @@ mechanics:
         circular-radius: true
         require-redstone: false
     teleporter:
-        enable: true
+        enable: false
         require-sign: false
         max-range: 0
     tree-lopper:
@@ -340,7 +340,7 @@ mechanics:
         place-saplings: false
         break-leaves: false
     xp-storer:
-        enable: true
+        enable: false
         block: MOB_SPAWNER
         require-sneaking-state: 'no'
 vehicles:
@@ -350,40 +350,40 @@ vehicles:
             time-in-ticks: 20
         mechanisms:
             station:
-                enable: true
+                enable: false
                 block: OBSIDIAN:0
             sorter:
-                enable: true
+                enable: false
                 block: NETHERRACK:0
             ejector:
-                enable: true
+                enable: false
                 block: IRON_BLOCK:0
             deposit:
-                enable: true
+                enable: false
                 block: IRON_ORE:0
             teleport:
-                enable: true
+                enable: false
                 block: EMERALD_BLOCK:0
             elevator:
-                enable: true
+                enable: false
                 block: NETHER_BRICK:0
             messager:
-                enable: true
+                enable: false
                 block: ENDER_STONE:0
             reverse:
-                enable: true
+                enable: false
                 block: WOOL:0
             max-speed:
-                enable: true
+                enable: false
                 block: COAL_BLOCK:0
             speed-modifier:
-                enable: true
+                enable: false
                 max-boost-block: GOLD_BLOCK:0
                 25x-boost-block: GOLD_ORE:0
                 50x-slow-block: SOUL_SAND:0
                 20x-slow-block: GRAVEL:0
             dispenser:
-                enable: true
+                enable: false
                 block: EMERALD_ORE:0
                 spawn-infront: false
                 check-for-carts: true
