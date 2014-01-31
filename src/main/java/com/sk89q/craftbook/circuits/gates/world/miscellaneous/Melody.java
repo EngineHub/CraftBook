@@ -132,7 +132,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
         }
 
-        if(player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore()) {
+        if(player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore() || !player.getJNote().isPlaying()) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
             } catch (MidiUnavailableException e) {
@@ -145,19 +145,18 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         try {
+            if(player.getSequencer() == null) return;
             if (chip.getInput(0)) {
-                if(player.isPlaying() && player.getSequencer() != null) {
-                    for (Player player : getServer().getOnlinePlayers()) {
-                        if (area != null && !area.isWithinArea(player.getLocation())) {
-                            if(this.player.getJNote().isPlaying(player.getName()))
-                                this.player.stop(player.getName());
-                            continue;
-                        } else if(!this.player.getJNote().isPlaying(player.getName())) {
-                            this.player.play(player.getName());
-                            player.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
+                if(player.isPlaying()) {
+                    for (Player pp : getServer().getOnlinePlayers()) {
+                        if (player.isPlaying(pp.getName()) && !area.isWithinArea(pp.getLocation())) {
+                            player.stop(pp.getName());
+                        } else if(!player.isPlaying(pp.getName())) {
+                            player.play(pp.getName());
+                            pp.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
                     }
-                } else if(!player.isPlaying())
+                } else if(!player.hasPlayedBefore())
                     Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
             } else if (!chip.getInput(0) && !forceStart) {
                 player.setPlaying(false);
@@ -185,6 +184,10 @@ public class Melody extends AbstractSelfTriggeredIC {
             toPlay = new LinkedList<String>();
         }
 
+        public synchronized boolean isPlaying(String player) {
+            return !toStop.contains(player) && (toPlay.contains(player) || jNote.isPlaying(player));
+        }
+
         public synchronized void stop(String player) {
             toStop.add(player);
         }
@@ -202,7 +205,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         public boolean hasPlayedBefore() {
-            return hasPlayedBefore;
+            return hasPlayedBefore && sequencer.hasPlayedBefore();
         }
 
         @Override
