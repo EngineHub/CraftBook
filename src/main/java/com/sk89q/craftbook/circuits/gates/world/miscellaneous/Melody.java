@@ -123,7 +123,7 @@ public class Melody extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (file == null || !file.exists()) {
-            CraftBookPlugin.logDebugMessage("Midi file not found!", "midi");
+            CraftBookPlugin.logDebugMessage("Midi file not found in melody IC: " + midiName, "midi");
             return;
         }
 
@@ -132,7 +132,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
         }
 
-        if(player == null || player.getSequencer() == null) {
+        if(player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore()) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
             } catch (MidiUnavailableException e) {
@@ -174,7 +174,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         private JingleNoteManager jNote;
         private MidiJingleSequencer sequencer;
-        private boolean isPlaying;
+        private boolean isPlaying, hasPlayedBefore;
 
         private final List<String> toStop, toPlay;
 
@@ -201,9 +201,14 @@ public class Melody extends AbstractSelfTriggeredIC {
             isPlaying = playing;
         }
 
+        public boolean hasPlayedBefore() {
+            return hasPlayedBefore;
+        }
+
         @Override
         public void run () {
             isPlaying = true;
+            hasPlayedBefore = true;
 
             for(String player : toStop)
                 jNote.stop(player);
