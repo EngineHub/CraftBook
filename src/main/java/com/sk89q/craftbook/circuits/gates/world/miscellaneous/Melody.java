@@ -230,7 +230,8 @@ public class Melody extends AbstractSelfTriggeredIC {
                 }
             }
 
-            sequencer.stop();
+            if(sequencer != null)
+                sequencer.stop();
             jNote.stopAll();
             sequencer = null;
         }
