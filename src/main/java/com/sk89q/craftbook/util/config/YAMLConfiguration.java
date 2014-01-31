@@ -51,7 +51,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // IC Configuration Listener.
         config.setComment("circuits.ics.enable", "Enables IC mechanics.");
-        ICEnabled = config.getBoolean("circuits.ics.enable", true);
+        ICEnabled = config.getBoolean("circuits.ics.enable", false);
 
         config.setComment("circuits.ics.cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
         ICCached = config.getBoolean("circuits.ics.cache", true);
@@ -97,7 +97,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Pipes Configuration Listener
         config.setComment("circuits.pipes.enable", "Enables the pipe mechanic.");
-        pipesEnabled = config.getBoolean("circuits.pipes.enable", true);
+        pipesEnabled = config.getBoolean("circuits.pipes.enable", false);
 
         config.setComment("circuits.pipes.allow-diagonal", "Allow pipes to work diagonally. Required for insulators to work.");
         pipesDiagonal = config.getBoolean("circuits.pipes.allow-diagonal", false);
@@ -113,7 +113,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Redstone Jukebox Configuration Listener
         config.setComment("circuits.jukebox.enable", "Enables the redstone jukebox mechanic.");
-        jukeboxEnabled = config.getBoolean("circuits.jukebox.enable", true);
+        jukeboxEnabled = config.getBoolean("circuits.jukebox.enable", false);
 
         /* Mechanism Configuration */
 
@@ -133,7 +133,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Ammeter Configuration Listener
         config.setComment("mechanics.ammeter.enable", "Enables the ammeter tool.");
-        ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", true);
+        ammeterEnabled = config.getBoolean("mechanics.ammeter.enable", false);
 
         config.setComment("mechanics.ammeter.item", "Set the item that is the ammeter tool.");
         ammeterItem = new ItemInfo(config.getString("mechanics.ammeter.item", "COAL"));
@@ -141,7 +141,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Area Configuration Listener
         config.setComment("mechanics.area.enable", "Enables Toggle Areas.");
-        areaEnabled = config.getBoolean("mechanics.area.enable", true);
+        areaEnabled = config.getBoolean("mechanics.area.enable", false);
 
         config.setComment("mechanics.area.allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
         areaAllowRedstone = config.getBoolean("mechanics.area.allow-redstone", true);
@@ -189,7 +189,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Better Pistons Configuration Listener
         config.setComment("mechanics.better-pistons.enable", "Enables BetterPistons Mechanics. (This must be enabled for any sub-mechanic to work)");
-        pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", true);
+        pistonsEnabled = config.getBoolean("mechanics.better-pistons.enable", false);
 
         config.setComment("mechanics.better-pistons.crushers", "Enables BetterPistons Crusher Mechanic.");
         pistonsCrusher = config.getBoolean("mechanics.better-pistons.crushers", true);
@@ -221,7 +221,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Bookcase Configuration Listener
         config.setComment("mechanics.bookcase.enable", "Enable readable bookshelves.");
-        bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", true);
+        bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", false);
 
         config.setComment("mechanics.bookcase.read-when-sneaking", "Enable reading while sneaking.");
         bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
@@ -232,7 +232,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Bridge Configuration Listener
         config.setComment("mechanics.bridge.enable", "Enable bridges.");
-        bridgeEnabled = config.getBoolean("mechanics.bridge.enable", true);
+        bridgeEnabled = config.getBoolean("mechanics.bridge.enable", false);
 
         config.setComment("mechanics.bridge.allow-redstone", "Enable bridges via redstone.");
         bridgeAllowRedstone = config.getBoolean("mechanics.bridge.allow-redstone", true);
@@ -249,7 +249,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Cauldron Configuration Listener
         config.setComment("mechanics.cauldron.enable", "Enable the cauldron mechanic.");
-        cauldronEnabled = config.getBoolean("mechanics.cauldron.enable", true);
+        cauldronEnabled = config.getBoolean("mechanics.cauldron.enable", false);
 
         config.setComment("mechanics.cauldron.spoons", "Require spoons to cook cauldron recipes.");
         cauldronUseSpoons = config.getBoolean("mechanics.cauldron.spoons", true);
@@ -283,7 +283,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Chunk Anchor Configuration Listener
         config.setComment("mechanics.chunk-anchor.enable", "Enable chunk anchors.");
-        chunkAnchorEnabled = config.getBoolean("mechanics.chunk-anchor.enable", true);
+        chunkAnchorEnabled = config.getBoolean("mechanics.chunk-anchor.enable", false);
 
         config.setComment("mechanics.chunk-anchor.enable-redstone", "Enable toggling with redstone.");
         chunkAnchorRedstone = config.getBoolean("mechanics.chunk-anchor.enable-redstone", true);
@@ -299,7 +299,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Command Sign Configuration Listener
         config.setComment("mechanics.command-sign.enable", "Enable command signs.");
-        commandSignEnabled = config.getBoolean("mechanics.command-sign.enable", true);
+        commandSignEnabled = config.getBoolean("mechanics.command-sign.enable", false);
 
         config.setComment("mechanics.command-sign.allow-redstone", "Enable CommandSigns via redstone.");
         commandSignAllowRedstone = config.getBoolean("mechanics.command-sign.allow-redstone", true);
@@ -307,7 +307,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Cooking Pot Configuration Listener
         config.setComment("mechanics.cooking-pot.enable", "Enable cooking pots.");
-        cookingPotEnabled = config.getBoolean("mechanics.cooking-pot.enable", true);
+        cookingPotEnabled = config.getBoolean("mechanics.cooking-pot.enable", false);
 
         config.setComment("mechanics.cooking-pot.require-fuel", "Require fuel to cook.");
         cookingPotFuel = config.getBoolean("mechanics.cooking-pot.require-fuel", true);
@@ -332,7 +332,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Custom Dispensing Configuration Listener
         config.setComment("mechanics.dispenser-recipes.enable", "Enables Dispenser Recipes.");
-        customDispensingEnabled = config.getBoolean("mechanics.dispenser-recipes.enable", true);
+        customDispensingEnabled = config.getBoolean("mechanics.dispenser-recipes.enable", false);
 
         config.setComment("mechanics.dispenser-recipes.cannon-enable", "Enables Cannon Dispenser Recipe.");
         customDispensingCannon = config.getBoolean("mechanics.dispenser-recipes.cannon-enable", true);
@@ -360,7 +360,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Door Configuration Listener
         config.setComment("mechanics.door.enable", "Enables Doors.");
-        doorEnabled = config.getBoolean("mechanics.door.enable", true);
+        doorEnabled = config.getBoolean("mechanics.door.enable", false);
 
         config.setComment("mechanics.door.allow-redstone", "Allow doors to be toggled via redstone.");
         doorAllowRedstone = config.getBoolean("mechanics.door.allow-redstone", true);
@@ -377,7 +377,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Elevator Configuration Listener
         config.setComment("mechanics.elevator.enable", "Enables the Elevator mechanic.");
-        elevatorEnabled = config.getBoolean("mechanics.elevator.enable", true);
+        elevatorEnabled = config.getBoolean("mechanics.elevator.enable", false);
 
         config.setComment("mechanics.elevator.enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
         elevatorButtonEnabled = config.getBoolean("mechanics.elevator.enable-buttons", true);
@@ -402,7 +402,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Gate Configuration Listener
         config.setComment("mechanics.gate.enable", "Enables the gate mechanic.");
-        gateEnabled = config.getBoolean("mechanics.gate.enable", true);
+        gateEnabled = config.getBoolean("mechanics.gate.enable", false);
 
         config.setComment("mechanics.gate.allow-redstone", "Allows the gate mechanic to be toggled via redstone.");
         gateAllowRedstone = config.getBoolean("mechanics.gate.allow-redstone", true);
@@ -470,7 +470,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Hidden Switch Configuration Listener
         config.setComment("mechanics.hidden-switch.enable", "Enables the Hidden Switch mechanic.");
-        hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", true);
+        hiddenSwitchEnabled = config.getBoolean("mechanics.hidden-switch.enable", false);
 
         config.setComment("mechanics.hidden-switch.any-side", "Allows the Hidden Switch to be activated from any side of the block.");
         hiddenSwitchAnyside = config.getBoolean("mechanics.hidden-switch.any-side", true);
@@ -478,7 +478,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Legacy Cauldron Configuration Listener
         config.setComment("mechanics.legacy-cauldron.enable", "Enables the Legacy Cauldron mechanic.");
-        legacyCauldronEnabled = config.getBoolean("mechanics.legacy-cauldron.enable", true);
+        legacyCauldronEnabled = config.getBoolean("mechanics.legacy-cauldron.enable", false);
 
         config.setComment("mechanics.legacy-cauldron.block", "The block to use as the casing for the legacy cauldron.");
         legacyCauldronBlock = new ItemInfo(config.getString("mechanics.legacy-cauldron.block", "STONE"));
@@ -486,7 +486,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Lightstone Configuration Listener
         config.setComment("mechanics.lightstone.enable", "Enables the LightStone mechanic.");
-        lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", true);
+        lightstoneEnabled = config.getBoolean("mechanics.lightstone.enable", false);
 
         config.setComment("mechanics.lightstone.item", "The item that the lightstone mechanic uses.");
         lightstoneItem = new ItemInfo(config.getString("mechanics.lightstone.item", "GLOWSTONE_DUST"));
@@ -494,7 +494,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Light Switch Configuration Listener
         config.setComment("mechanics.light-switch.enable", "Enables the Light Switch mechanic.");
-        lightSwitchEnabled = config.getBoolean("mechanics.light-switch.enable", true);
+        lightSwitchEnabled = config.getBoolean("mechanics.light-switch.enable", false);
 
         config.setComment("mechanics.light-switch.max-range", "The maximum range that the mechanic searches for lights in.");
         lightSwitchMaxRange = config.getInt("mechanics.light-switch.max-range", 10);
@@ -505,27 +505,27 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Map Changer Configuration Listener
         config.setComment("mechanics.map-changer.enable", "Enables the Map Changer mechanic.");
-        mapChangerEnabled = config.getBoolean("mechanics.map-changer.enable", true);
+        mapChangerEnabled = config.getBoolean("mechanics.map-changer.enable", false);
 
 
         // Marquee Configuration Listener
         config.setComment("mechanics.marquee.enable", "Enables the Marquee mechanic.");
-        marqueeEnabled = config.getBoolean("mechanics.marquee.enable", true);
+        marqueeEnabled = config.getBoolean("mechanics.marquee.enable", false);
 
 
         // Painting Switcher Configuration Listener
         config.setComment("mechanics.paintings.enable", "Enables the Painting Switcher mechanic.");
-        paintingsEnabled = config.getBoolean("mechanics.paintings.enable", true);
+        paintingsEnabled = config.getBoolean("mechanics.paintings.enable", false);
 
 
         // Payment Configuration Listener
         config.setComment("mechanics.payment.enable", "Enables the Payment mechanic.");
-        paymentEnabled = config.getBoolean("mechanics.payment.enable", true);
+        paymentEnabled = config.getBoolean("mechanics.payment.enable", false);
 
 
         // SignCopy Configuration Listener
         config.setComment("mechanics.sign-copy.enable", "Enables the Sign Copy mechanic.");
-        signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", true);
+        signCopyEnabled = config.getBoolean("mechanics.sign-copy.enable", false);
 
         config.setComment("mechanics.sign-copy.item", "The item the Sign Copy mechanic uses.");
         signCopyItem = new ItemInfo(config.getString("mechanics.sign-copy.item", "INK_SACK:0"));
@@ -591,7 +591,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Teleporter Configuration Listener
         config.setComment("mechanics.teleporter.enable", "Enables the Teleporter mechanic.");
-        teleporterEnabled = config.getBoolean("mechanics.teleporter.enable", true);
+        teleporterEnabled = config.getBoolean("mechanics.teleporter.enable", false);
 
         config.setComment("mechanics.teleporter.require-sign", "Require a sign to be at the destination of the teleportation.");
         teleporterRequireSign = config.getBoolean("mechanics.teleporter.require-sign", false);
@@ -628,7 +628,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // XPStorer Configuration Listener
         config.setComment("mechanics.xp-storer.enable", "Enable the XP Storer mechanic.");
-        xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", true);
+        xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", false);
 
         config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
         xpStorerBlock = new ItemInfo(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
@@ -650,7 +650,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Station Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.station.enable", "Enables the Minecart Station Mechanic.");
-        minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", true);
+        minecartStationEnabled = config.getBoolean("vehicles.minecart.mechanisms.station.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.station.block", "Sets the block that is the base of the station mechanic.");
         minecartStationBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.station.block", "OBSIDIAN:0"));
@@ -658,7 +658,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Sorter Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.sorter.enable", "Enables the Minecart Sorter Mechanic.");
-        minecartSorterEnabled = config.getBoolean("vehicles.minecart.mechanisms.sorter.enable", true);
+        minecartSorterEnabled = config.getBoolean("vehicles.minecart.mechanisms.sorter.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.sorter.block", "Sets the block that is the base of the sorter mechanic.");
         minecartSorterBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.sorter.block", "NETHERRACK:0"));
@@ -666,7 +666,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Ejector Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.ejector.enable", "Enables the Minecart Ejector Mechanic.");
-        minecartEjectorEnabled = config.getBoolean("vehicles.minecart.mechanisms.ejector.enable", true);
+        minecartEjectorEnabled = config.getBoolean("vehicles.minecart.mechanisms.ejector.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.ejector.block", "Sets the block that is the base of the ejector mechanic.");
         minecartEjectorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.ejector.block", "IRON_BLOCK:0"));
@@ -674,7 +674,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Deposit Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.deposit.enable", "Enables the Minecart Deposit Mechanic.");
-        minecartDepositEnabled = config.getBoolean("vehicles.minecart.mechanisms.deposit.enable", true);
+        minecartDepositEnabled = config.getBoolean("vehicles.minecart.mechanisms.deposit.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.deposit.block", "Sets the block that is the base of the deposit mechanic.");
         minecartDepositBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.deposit.block", "IRON_ORE:0"));
@@ -682,7 +682,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Teleport Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.teleport.enable", "Enables the Minecart Teleport Mechanic.");
-        minecartTeleportEnabled = config.getBoolean("vehicles.minecart.mechanisms.teleport.enable", true);
+        minecartTeleportEnabled = config.getBoolean("vehicles.minecart.mechanisms.teleport.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.teleport.block", "Sets the block that is the base of the teleport mechanic.");
         minecartTeleportBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.teleport.block", "EMERALD_BLOCK:0"));
@@ -690,7 +690,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Lift Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.elevator.enable", "Enables the Minecart Elevator Mechanic.");
-        minecartElevatorEnabled = config.getBoolean("vehicles.minecart.mechanisms.elevator.enable", true);
+        minecartElevatorEnabled = config.getBoolean("vehicles.minecart.mechanisms.elevator.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.elevator.block", "Sets the block that is the base of the elevator mechanic.");
         minecartElevatorBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.elevator.block", "NETHER_BRICK:0"));
@@ -698,7 +698,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Messager Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.messager.enable", "Enables the Minecart Messager Mechanic.");
-        minecartMessagerEnabled = config.getBoolean("vehicles.minecart.mechanisms.messager.enable", true);
+        minecartMessagerEnabled = config.getBoolean("vehicles.minecart.mechanisms.messager.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.messager.block", "Sets the block that is the base of the messager mechanic.");
         minecartMessagerBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.messager.block", "ENDER_STONE:0"));
@@ -706,7 +706,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Reverse Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.reverse.enable", "Enables the Minecart Reverse Mechanic.");
-        minecartReverseEnabled = config.getBoolean("vehicles.minecart.mechanisms.reverse.enable", true);
+        minecartReverseEnabled = config.getBoolean("vehicles.minecart.mechanisms.reverse.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.reverse.block", "Sets the block that is the base of the reverse mechanic.");
         minecartReverseBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.reverse.block", "WOOL:0"));
@@ -714,7 +714,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart MaxSpeed Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.max-speed.enable", "Enables the Minecart Max Speed Mechanic.");
-        minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", true);
+        minecartMaxSpeedEnabled = config.getBoolean("vehicles.minecart.mechanisms.max-speed.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.max-speed.block", "Sets the block that is the base of the max speed mechanic.");
         minecartMaxSpeedBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.max-speed.block", "COAL_BLOCK:0"));
@@ -722,7 +722,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart SpeedMod Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.speed-modifier.enable", "Enables the Minecart Speed Modifier Block Mechanic.");
-        minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", true);
+        minecartSpeedModEnabled = config.getBoolean("vehicles.minecart.mechanisms.speed-modifier.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "Sets the block that is the base of the max boost block.");
         minecartSpeedModMaxBoostBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.speed-modifier.max-boost-block", "GOLD_BLOCK:0"));
@@ -739,7 +739,7 @@ public class YAMLConfiguration extends LocalConfiguration {
 
         // Vehicles Minecart Dispenser Configuration Listener
         config.setComment("vehicles.minecart.mechanisms.dispenser.enable", "Enables the Minecart Dispenser Mechanic.");
-        minecartDispenserEnabled = config.getBoolean("vehicles.minecart.mechanisms.dispenser.enable", true);
+        minecartDispenserEnabled = config.getBoolean("vehicles.minecart.mechanisms.dispenser.enable", false);
 
         config.setComment("vehicles.minecart.mechanisms.dispenser.block", "Sets the block that is the base of the dispenser mechanic.");
         minecartDispenserBlock = new ItemInfo(config.getString("vehicles.minecart.mechanisms.dispenser.block", "EMERALD_ORE:0"));

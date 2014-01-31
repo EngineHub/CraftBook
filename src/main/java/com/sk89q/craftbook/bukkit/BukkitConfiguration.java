@@ -105,7 +105,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         pedanticBlockChecks = config.getBoolean("pedantic-block-checks", false);
 
         config.setComment("sign-click-timeout", "Make sure a player can only press signs so often.");
-        signClickTimeout = config.getInt("sign-click-timeout", 4);
+        signClickTimeout = config.getInt("sign-click-timeout", 10);
 
         config.setComment("language", "The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.");
         language = config.getString("language", "en_US");
@@ -126,7 +126,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         easterEggs = config.getBoolean("easter-eggs", true);
 
         config.setComment("realistic-randoms", "Random numbers are much more random, with a small cost to CPU usage.");
-        realisticRandoms = config.getBoolean("realistic-randoms", true);
+        realisticRandoms = config.getBoolean("realistic-randoms", false);
 
         config.setComment("show-permission-messages", "Show messages when a player does not have permission to do something.");
         showPermissionMessages = config.getBoolean("show-permission-messages", true);
