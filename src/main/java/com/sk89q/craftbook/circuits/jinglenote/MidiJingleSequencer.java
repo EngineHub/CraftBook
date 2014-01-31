@@ -97,8 +97,11 @@ public class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
-            if(sequencer.getSequence() == null)
+            if(sequencer == null || sequencer.getSequence() == null) {
+                playedBefore = true;
+                running = false; //This will set most things to properly dispose of it now.
                 return;
+            }
             if (!sequencer.isOpen()) {
                 sequencer.open();
             }
@@ -150,8 +153,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
-            }
-            catch(Exception e){
+            } catch(Exception e){
                 BukkitUtil.printStacktrace(e);
             }
 

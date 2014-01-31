@@ -185,11 +185,11 @@ public class Melody extends AbstractSelfTriggeredIC {
             toPlay = new LinkedList<String>();
         }
 
-        public void stop(String player) {
+        public synchronized void stop(String player) {
             toStop.add(player);
         }
 
-        public void play(String player) {
+        public synchronized void play(String player) {
             toPlay.add(player);
         }
 
@@ -210,20 +210,24 @@ public class Melody extends AbstractSelfTriggeredIC {
             isPlaying = true;
             hasPlayedBefore = true;
 
-            for(String player : toStop)
-                jNote.stop(player);
-            toStop.clear();
-            for(String player : toPlay)
-                jNote.play(player, sequencer, area);
-            toPlay.clear();
-
-            while(isPlaying) {
+            synchronized(this) {
                 for(String player : toStop)
                     jNote.stop(player);
                 toStop.clear();
                 for(String player : toPlay)
                     jNote.play(player, sequencer, area);
                 toPlay.clear();
+            }
+
+            while(isPlaying) {
+                synchronized(this) {
+                    for(String player : toStop)
+                        jNote.stop(player);
+                    toStop.clear();
+                    for(String player : toPlay)
+                        jNote.play(player, sequencer, area);
+                    toPlay.clear();
+                }
                 try {
                     Thread.sleep(10L);
                 } catch (InterruptedException e) {
