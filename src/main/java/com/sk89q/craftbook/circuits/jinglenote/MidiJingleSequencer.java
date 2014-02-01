@@ -98,8 +98,6 @@ public class MidiJingleSequencer implements JingleSequencer {
 
         try {
             if(sequencer == null || sequencer.getSequence() == null) {
-                playedBefore = true;
-                running = false; //This will set most things to properly dispose of it now.
                 return;
             }
             if (!sequencer.isOpen()) {

@@ -2,9 +2,9 @@ package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -127,11 +127,6 @@ public class Melody extends AbstractSelfTriggeredIC {
             return;
         }
 
-        try {
-            if (player.isPlaying() && forceStart) return;
-        } catch (Exception ignored) {
-        }
-
         if(player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore() || !player.getJNote().isPlaying()) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
@@ -145,7 +140,6 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         try {
-            if(player.getSequencer() == null) return;
             if (chip.getInput(0)) {
                 if(player.isPlaying()) {
                     for (Player pp : getServer().getOnlinePlayers()) {
@@ -175,17 +169,19 @@ public class Melody extends AbstractSelfTriggeredIC {
         private MidiJingleSequencer sequencer;
         private boolean isPlaying, hasPlayedBefore;
 
-        private final List<String> toStop, toPlay;
+        private final Set<String> toStop, toPlay;
 
         public MelodyPlayer(MidiJingleSequencer sequencer) {
             this.sequencer = sequencer;
             jNote = new JingleNoteManager();
-            toStop = new LinkedList<String>();
-            toPlay = new LinkedList<String>();
+            toStop = new HashSet<String>();
+            toPlay = new HashSet<String>();
+            hasPlayedBefore = false;
+            isPlaying = false;
         }
 
         public synchronized boolean isPlaying(String player) {
-            return !toStop.contains(player) && (toPlay.contains(player) || jNote.isPlaying(player));
+            return isPlaying() && !toStop.contains(player) && (toPlay.contains(player) || jNote.isPlaying(player));
         }
 
         public synchronized void stop(String player) {
@@ -236,7 +232,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(sequencer == null || !sequencer.isPlaying() && sequencer.hasPlayedBefore()) {
+                if(sequencer == null || !sequencer.isPlaying()) {
                     isPlaying = false;
                     break;
                 }
