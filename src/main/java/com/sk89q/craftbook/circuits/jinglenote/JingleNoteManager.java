@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-
 import com.sk89q.craftbook.circuits.jinglenote.bukkit.BukkitJingleNotePlayer;
 import com.sk89q.craftbook.util.SearchArea;
 
@@ -28,7 +26,7 @@ public class JingleNoteManager {
 
     public boolean isPlaying(String player) {
 
-        return instances.containsKey(player) && instances.get(player).isPlaying() && Bukkit.getPlayerExact(player) != null;
+        return instances.containsKey(player) && instances.get(player).isPlaying();
     }
 
     public boolean isPlaying() {

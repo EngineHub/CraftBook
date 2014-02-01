@@ -665,8 +665,8 @@ public class Snow extends AbstractCraftBookMechanic {
                     BlockState state = snow.getRelative(0, -1, 0).getState();
                     state.setType(Material.ICE);
                     if(ProtectionUtil.canBlockForm(state.getBlock(), state))
-                        snow.getRelative(0, -1, 0).setTypeId(Material.ICE.getId(), false);
-                } else snow.getRelative(0, -1, 0).setTypeId(Material.AIR.getId(), false);
+                        snow.getRelative(0, -1, 0).setType(Material.ICE);
+                } else snow.getRelative(0, -1, 0).setType(Material.AIR);
             } else if(snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
                 return true; //Still return true, pretend it's actually succeeded.
             }

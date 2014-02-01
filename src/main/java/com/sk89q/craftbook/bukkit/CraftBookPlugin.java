@@ -83,6 +83,7 @@ import com.sk89q.craftbook.mech.Marquee;
 import com.sk89q.craftbook.mech.PaintingSwitch;
 import com.sk89q.craftbook.mech.Payment;
 import com.sk89q.craftbook.mech.SignCopier;
+import com.sk89q.craftbook.mech.Snow;
 import com.sk89q.craftbook.mech.Sponge;
 import com.sk89q.craftbook.mech.Teleporter;
 import com.sk89q.craftbook.mech.TreeLopper;
@@ -375,10 +376,7 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.commandItemsEnabled) mechanics.add(new CommandItems());
             if (config.customCraftingEnabled) mechanics.add(new CustomCrafting());
             if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
-            if (config.snowEnable) {
-                //mechanics.add(new Snow());
-                getLogger().warning("Snow mechanic is disabled in this version!");
-            }
+            if (config.snowEnable) mechanics.add(new Snow());
             if (config.customDropEnabled) mechanics.add(new CustomDrops());
             if (config.aiEnabled) mechanics.add(new AIMechanic());
             if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
