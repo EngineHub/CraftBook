@@ -383,6 +383,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
         switch(id.getType()) {
 
+            case AIR:
             case WOOD_STAIRS:
             case BRICK_STAIRS:
             case SMOOTH_STAIRS:
@@ -409,7 +410,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 return false;
             default:
                 if(!CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
-                return true;
+                return !isReplacable(id);
         }
     }
 
@@ -614,10 +615,12 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(from != null && block.getLocation().getBlockX() == from.getBlockX() && block.getLocation().getBlockY() == from.getBlockY() && block.getLocation().getBlockZ() == from.getBlockZ()) continue;
                 if(!isReplacable(block)) continue;
                 if(queue.contains(new SnowBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ()))) continue;
-                if(block.getType() == Material.SNOW && block.getData() >= snow.getData() && dir != BlockFace.DOWN && dir != BlockFace.UP) {
+                if(block.getType() == Material.SNOW && snow.getType() == Material.SNOW && block.getData() >= snow.getData() && dir != BlockFace.DOWN && dir != BlockFace.UP) {
                     if(block.getData() > snow.getData()+1) {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                     }
+                    continue;
+                } else if (isReplacable(block) && snow.getType() == Material.SNOW && snow.getData() == 0 && dir != BlockFace.DOWN && dir != BlockFace.UP && canLandOn(block.getRelative(0, -1, 0)) && CraftBookPlugin.inst().getRandom().nextInt(10) != 0) {
                     continue;
                 }
 
