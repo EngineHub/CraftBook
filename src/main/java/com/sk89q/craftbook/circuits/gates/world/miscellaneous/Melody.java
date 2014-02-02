@@ -145,7 +145,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                     for (Player pp : getServer().getOnlinePlayers()) {
                         if (player.isPlaying(pp.getName()) && !area.isWithinArea(pp.getLocation())) {
                             player.stop(pp.getName());
-                        } else if(!player.isPlaying(pp.getName())) {
+                        } else if(!player.isPlaying(pp.getName()) && area.isWithinArea(pp.getLocation())) {
                             player.play(pp.getName());
                             pp.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
@@ -178,22 +178,29 @@ public class Melody extends AbstractSelfTriggeredIC {
             toPlay = new HashSet<String>();
             hasPlayedBefore = false;
             isPlaying = false;
+            CraftBookPlugin.logDebugMessage("Constructing new player instance.", "ic-mc1270");
         }
 
-        public synchronized boolean isPlaying(String player) {
-            return isPlaying() && !toStop.contains(player) && (toPlay.contains(player) || jNote.isPlaying(player));
+        public boolean isPlaying(String player) {
+            return isPlaying() && (toPlay.contains(player) || jNote.isPlaying(player));
         }
 
-        public synchronized void stop(String player) {
+        public void stop(String player) {
             toStop.add(player);
+            toPlay.remove(player);
+            CraftBookPlugin.logDebugMessage("Removing " + player + " from melody IC.", "ic-mc1270");
         }
 
-        public synchronized void play(String player) {
+        public void play(String player) {
             toPlay.add(player);
+            toStop.remove(player);
+            CraftBookPlugin.logDebugMessage("Adding " + player + " to melody IC.", "ic-mc1270");
+            if(!hasPlayedBefore)
+                hasPlayedBefore = true;
         }
 
-        public synchronized boolean isPlaying() {
-            return isPlaying && !toPlay.isEmpty();
+        public boolean isPlaying() {
+            return isPlaying || !toPlay.isEmpty() || jNote.isPlaying();
         }
 
         public void setPlaying(boolean playing) {
@@ -208,24 +215,17 @@ public class Melody extends AbstractSelfTriggeredIC {
         public void run () {
             try {
                 isPlaying = true;
-                hasPlayedBefore = true;
-
-                synchronized(this) {
-                    for(String player : toStop)
-                        jNote.stop(player);
-                    toStop.clear();
-                    for(String player : toPlay)
-                        jNote.play(player, sequencer, area);
-                    toPlay.clear();
-                }
 
                 while(isPlaying) {
                     synchronized(this) {
                         for(String player : toStop)
                             jNote.stop(player);
                         toStop.clear();
-                        for(String player : toPlay)
+                        for(String player : toPlay) {
                             jNote.play(player, sequencer, area);
+                            if(!hasPlayedBefore)
+                                hasPlayedBefore = true;
+                        }
                         toPlay.clear();
                     }
                     try {
@@ -233,7 +233,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if(sequencer == null || !sequencer.isPlaying()) {
+                    if(sequencer == null || (!sequencer.isPlaying() || toPlay.isEmpty() && !jNote.isPlaying()) && sequencer.hasPlayedBefore()) {
                         isPlaying = false;
                         break;
                     }

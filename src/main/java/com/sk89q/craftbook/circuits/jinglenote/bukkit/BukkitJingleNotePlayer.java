@@ -34,6 +34,17 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
         p.playSound(p.getLocation(), toSound(note.getInstrument()), note.getVelocity(), note.getNote());
     }
 
+    @Override
+    public boolean isPlaying() {
+
+        if (p == null || !p.isOnline())
+            p = Bukkit.getPlayerExact(player);
+
+        if(p == null || !p.isOnline() || !area.isWithinArea(p.getLocation())) return false;
+
+        return super.isPlaying();
+    }
+
     public Sound toSound(Instrument instrument) {
 
         switch(instrument) {

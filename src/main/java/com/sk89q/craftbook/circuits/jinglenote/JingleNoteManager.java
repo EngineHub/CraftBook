@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.jinglenote.bukkit.BukkitJingleNotePlayer;
 import com.sk89q.craftbook.util.SearchArea;
 
@@ -45,6 +46,8 @@ public class JingleNoteManager {
         if (instances.containsKey(player)) {
             stop(player);
         }
+
+        CraftBookPlugin.logDebugMessage("Playing sequencer for player: " + player, "midi");
 
         JingleNotePlayer notePlayer = new BukkitJingleNotePlayer(player, sequencer, area);
         Thread thread = new Thread(notePlayer);
