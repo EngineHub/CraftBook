@@ -522,9 +522,9 @@ public class Snow extends AbstractCraftBookMechanic {
             if(!skip) {
                 Block highest = chunk.getWorld().getHighestBlockAt(chunk.getBlock(0, 0, 0).getX() + CraftBookPlugin.inst().getRandom().nextInt(16), chunk.getBlock(0, 0, 0).getZ() + CraftBookPlugin.inst().getRandom().nextInt(16));
 
-                if(highest.getType() == Material.SNOW || highest.getType() == Material.SNOW_BLOCK || isReplacable(highest)) {
+                if(highest.getType() == Material.SNOW || highest.getType() == Material.SNOW_BLOCK || highest.getType() == Material.ICE || isReplacable(highest)) {
 
-                    if(highest.getWorld().hasStorm()) {
+                    if(highest.getWorld().hasStorm() && highest.getType() != Material.ICE) {
                         if(highest.getTemperature() < 0.15) {
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                         }
@@ -712,6 +712,12 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         public boolean decreaseSnow(Block snow, boolean disperse) {
+
+            if(snow.getType() == Material.ICE) {
+                snow.setType(Material.WATER);
+                return true;
+            }
+
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK)
                 return false;
 
