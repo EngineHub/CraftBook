@@ -192,8 +192,8 @@ public class Melody extends AbstractSelfTriggeredIC {
             toPlay.add(player);
         }
 
-        public boolean isPlaying() {
-            return isPlaying;
+        public synchronized boolean isPlaying() {
+            return isPlaying && !toPlay.isEmpty();
         }
 
         public void setPlaying(boolean playing) {
@@ -206,19 +206,10 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         @Override
         public void run () {
-            isPlaying = true;
-            hasPlayedBefore = true;
+            try {
+                isPlaying = true;
+                hasPlayedBefore = true;
 
-            synchronized(this) {
-                for(String player : toStop)
-                    jNote.stop(player);
-                toStop.clear();
-                for(String player : toPlay)
-                    jNote.play(player, sequencer, area);
-                toPlay.clear();
-            }
-
-            while(isPlaying) {
                 synchronized(this) {
                     for(String player : toStop)
                         jNote.stop(player);
@@ -227,21 +218,40 @@ public class Melody extends AbstractSelfTriggeredIC {
                         jNote.play(player, sequencer, area);
                     toPlay.clear();
                 }
-                try {
-                    Thread.sleep(10L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(sequencer == null || !sequencer.isPlaying()) {
-                    isPlaying = false;
-                    break;
-                }
-            }
 
-            if(sequencer != null)
-                sequencer.stop();
-            jNote.stopAll();
-            sequencer = null;
+                while(isPlaying) {
+                    synchronized(this) {
+                        for(String player : toStop)
+                            jNote.stop(player);
+                        toStop.clear();
+                        for(String player : toPlay)
+                            jNote.play(player, sequencer, area);
+                        toPlay.clear();
+                    }
+                    try {
+                        Thread.sleep(10L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(sequencer == null || !sequencer.isPlaying()) {
+                        isPlaying = false;
+                        break;
+                    }
+                }
+
+            } catch(Throwable t) {
+                t.printStackTrace();
+            } finally {
+                if(sequencer != null)
+                    sequencer.stop();
+                jNote.stopAll();
+                sequencer = null;
+                synchronized(this) {
+                    toPlay.clear();
+                    toStop.clear();
+                }
+                isPlaying = false;
+            }
         }
 
         public JingleNoteManager getJNote() {
