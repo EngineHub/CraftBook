@@ -18,13 +18,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockVector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
@@ -38,22 +42,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
  */
 public class Snow extends AbstractCraftBookMechanic {
 
-    /*private Map<Location, BukkitTask> tasks;
-
-    @Override
-    public boolean enable() {
-        tasks = new HashMap<Location, BukkitTask>();
-
-        return true;
-    }
-
-    @Override
-    public void disable() {
-        for(BukkitTask task : tasks.values())
-            task.cancel();
-        tasks = null;
-    }
-
+    /*
     @EventHandler(priority = EventPriority.HIGH)
     public void onSnowballHit(ProjectileHitEvent event) {
 
@@ -107,26 +96,6 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(b.getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
                 lowerData(b);
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockForm(final BlockFormEvent event) {
-
-        if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
-        if (event.getNewState().getType() == Material.SNOW) {
-            Block block = event.getBlock();
-            pile(block);
-        }
-    }
-
-    public void pile(Block block) {
-
-        if (block.getType() != Material.SNOW_BLOCK && block.getType() != Material.SNOW) {
-            Location blockLoc = block.getLocation().subtract(0, 1, 0);
-            if (block.getWorld().getBlockAt(blockLoc).getType() == Material.SNOW_BLOCK && !CraftBookPlugin.inst().getConfiguration().snowHighPiles || block.getWorld().getBlockAt(blockLoc).getType() == Material.SNOW)
-                return;
-            schedule(block.getLocation());
         }
     }
 
@@ -367,16 +336,6 @@ public class Snow extends AbstractCraftBookMechanic {
         setBlockDataWithNotify(block, newData);
 
         return true;
-    }
-
-    public void setBlockDataWithNotify(Block block, byte data) {
-
-        block.setTypeIdAndData(block.getTypeId(), data, false);
-        for (Player p : block.getWorld().getPlayers()) {
-            if (p.getWorld() != block.getWorld()) continue;
-            if (LocationUtil.getDistanceSquared(p.getLocation(), block.getLocation()) < CraftBookPlugin.inst().getServer().getViewDistance() * 16 * CraftBookPlugin.inst().getServer().getViewDistance() * 16)
-                p.sendBlockChange(block.getLocation(), block.getType(), data);
-        }
     }*/
 
     public boolean canLandOn(Block id) {
@@ -445,6 +404,36 @@ public class Snow extends AbstractCraftBookMechanic {
         //CraftBookPlugin.inst().getConfiguration().snowRealistic = false;
 
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerMove(PlayerMoveEvent event) {
+
+        if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
+        if(!EventUtil.passesFilter(event))
+            return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (!player.hasPermission("craftbook.mech.snow.trample")) return;
+
+        if(CraftBookPlugin.inst().getConfiguration().snowSlowdown && event.getTo().getBlock().getType() == Material.SNOW) {
+            if(event.getTo().getBlock().getData() > 4)
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
+            else if(event.getTo().getBlock().getData() > 0)
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1), true);
+        }
+
+        if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
+            return;
+
+        if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+            Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
+            if (b.getType() == Material.SNOW) {
+                if(b.getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
+                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
