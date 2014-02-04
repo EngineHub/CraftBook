@@ -127,7 +127,7 @@ public class Melody extends AbstractSelfTriggeredIC {
             return;
         }
 
-        if((chip.getInput(0) || loop) && player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore()) {
+        if((chip.getInput(0) || loop) && player == null || !player.isValid()) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
             } catch (MidiUnavailableException e) {
@@ -254,12 +254,8 @@ public class Melody extends AbstractSelfTriggeredIC {
             }
         }
 
-        public JingleNoteManager getJNote() {
-            return jNote;
-        }
-
-        public MidiJingleSequencer getSequencer() {
-            return sequencer;
+        public boolean isValid() {
+            return sequencer == null || !isPlaying() && hasPlayedBefore();
         }
     }
 

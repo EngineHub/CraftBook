@@ -2,7 +2,7 @@ package com.sk89q.craftbook.common.st;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Vector;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -24,7 +24,7 @@ public class SelfTriggeringManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private final Collection<BlockWorldVector> thinkingMechanics = new HashSet<BlockWorldVector>();
+    private final Collection<BlockWorldVector> thinkingMechanics = new Vector<BlockWorldVector>();
 
     public void registerSelfTrigger(Chunk chunk) {
         try {
