@@ -127,7 +127,7 @@ public class Melody extends AbstractSelfTriggeredIC {
             return;
         }
 
-        if(player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore()) {
+        if((chip.getInput(0) || loop) && player == null || player.getSequencer() == null || !player.isPlaying() && player.hasPlayedBefore()) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
             } catch (MidiUnavailableException e) {

@@ -51,6 +51,8 @@ public class SelfTriggeringManager {
 
     public void unregisterSelfTrigger(Location location, UnregisterReason reason) {
 
+        if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
+
         BlockWorldVector vec = BukkitUtil.toWorldVector(location);
         if(!thinkingMechanics.contains(vec)) return;
         SelfTriggerUnregisterEvent event = new SelfTriggerUnregisterEvent(location.getBlock(), reason);

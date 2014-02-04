@@ -63,55 +63,6 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerMove(PlayerMoveEvent event) {
-
-        if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
-
-        if (!event.getFrom().getWorld().getName().equalsIgnoreCase(event.getTo().getWorld().getName())) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.snow.trample")) return;
-
-        if(CraftBookPlugin.inst().getConfiguration().snowSlowdown && event.getTo().getBlock().getType() == Material.SNOW) {
-
-            if(event.getTo().getBlock().getData() > 0x5)
-                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
-            else if(event.getTo().getBlock().getData() > 0x2)
-                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1), true);
-        }
-
-        if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && event.getPlayer().getVelocity().getY() >= 0D)
-            return;
-        if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
-            Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
-            if (b.getType() == Material.SNOW) {
-                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
-                if(b.getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
-                lowerData(b);
-            }
-
-            b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation().subtract(0, 1, 0));
-            if (b.getType() == Material.SNOW) {
-                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
-                if(b.getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
-                lowerData(b);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockPhysics(final BlockPhysicsEvent event) {
-
-        if (!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
-        if (event.getBlock().getType() == Material.SNOW) {
-            Block block = event.getBlock();
-
-            if (CraftBookPlugin.inst().getConfiguration().snowRealistic && event.getBlock().getData() > 0x0) disperse(event.getBlock(), true, 0);
-
-            if (event.getBlock().getWorld().hasStorm()) pile(block);
-        }
-    }
-
     public void schedule(Location loc) {
 
         if (tasks.containsKey(loc)) return;
