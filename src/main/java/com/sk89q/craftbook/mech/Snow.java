@@ -14,10 +14,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -352,9 +355,29 @@ public class Snow extends AbstractCraftBookMechanic {
             }
         }
 
-        //CraftBookPlugin.inst().getConfiguration().snowRealistic = false;
-
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSnowballHit(ProjectileHitEvent event) {
+
+        if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
+        if(!EventUtil.passesFilter(event))
+            return;
+        if (event.getEntity() instanceof Snowball) {
+
+            Block block = event.getEntity().getLocation().getBlock();
+            if (event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player) {
+
+                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
+                    return;
+                }
+
+                LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
+                if (!player.hasPermission("craftbook.mech.snow.place")) return;
+            }
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(block, 1));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
