@@ -365,24 +365,25 @@ public class Snow extends AbstractCraftBookMechanic {
             return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.snow.trample")) return;
 
-        if(CraftBookPlugin.inst().getConfiguration().snowSlowdown && event.getTo().getBlock().getType() == Material.SNOW) {
-            if(event.getTo().getBlock().getData() > 4)
-                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2), true);
-            else if(event.getTo().getBlock().getData() > 0)
-                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1), true);
-        }
+        if (event.getTo().getBlock().getType() == Material.SNOW) {
 
-        if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
-            return;
+            if(CraftBookPlugin.inst().getConfiguration().snowSlowdown) {
+                if(event.getTo().getBlock().getData() > 4)
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2), true);
+                else if(event.getTo().getBlock().getData() > 0)
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1), true);
+            }
 
-        if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
-            Block b = event.getPlayer().getWorld().getBlockAt(event.getPlayer().getLocation());
-            if (b.getType() == Material.SNOW) {
-                if(b.getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
+            if (!player.hasPermission("craftbook.mech.snow.trample")) return;
+
+            if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
+                return;
+
+            if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+                if(event.getTo().getBlock().getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
                 if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1));
             }
         }
     }
@@ -668,7 +669,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             byte data = (byte) (snow.getData()-1);
             if(snow.getType() == Material.SNOW && snow.getData() == 0x0)
-                snow.setType(Material.AIR);
+                snow.setTypeId(Material.AIR.getId(), false);
             else if(snow.getType() == Material.SNOW_BLOCK)
                 snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, false);
             else
