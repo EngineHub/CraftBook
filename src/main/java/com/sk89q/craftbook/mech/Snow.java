@@ -560,9 +560,10 @@ public class Snow extends AbstractCraftBookMechanic {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                     }
                     continue;
-                } else if (isReplacable(block) && snow.getType() == Material.SNOW && snow.getData() == 0 && dir != BlockFace.DOWN && dir != BlockFace.UP && canLandOn(block.getRelative(0, -1, 0)) && CraftBookPlugin.inst().getRandom().nextInt(10) != 0) {
-                    continue;
                 }
+
+                if (isReplacable(block) && snow.getType() == Material.SNOW && (snow.getData() == 0 || block.getType() == Material.SNOW && block.getData() == snow.getData() - 1) && dir != BlockFace.DOWN && dir != BlockFace.UP && canLandOn(block.getRelative(0, -1, 0)) && CraftBookPlugin.inst().getRandom().nextInt(10) != 0)
+                    continue;
 
                 int diff = 0;
                 if(block.getType() == Material.SNOW) {
@@ -570,7 +571,7 @@ public class Snow extends AbstractCraftBookMechanic {
                         continue;
                     diff = snow.getData() - block.getData();
                 } else
-                    diff = 100;
+                    diff = block.getType() == Material.AIR ? 100 : 99;
                 if(diff > bestDiff || dir == BlockFace.DOWN) {
                     best = dir;
                     bestDiff = diff;
@@ -634,7 +635,7 @@ public class Snow extends AbstractCraftBookMechanic {
                         }
                     }
                     if(allowed) {
-                        snow.setTypeId(Material.SNOW_BLOCK.getId(), false);
+                        snow.setType(Material.SNOW_BLOCK);
                         if(disperse)
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                         return true;
@@ -667,7 +668,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             byte data = (byte) (snow.getData()-1);
             if(snow.getType() == Material.SNOW && snow.getData() == 0x0)
-                snow.setTypeId(Material.AIR.getId(), false);
+                snow.setType(Material.AIR);
             else if(snow.getType() == Material.SNOW_BLOCK)
                 snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, false);
             else
