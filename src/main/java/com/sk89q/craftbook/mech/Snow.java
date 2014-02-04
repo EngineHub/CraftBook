@@ -380,7 +380,7 @@ public class Snow extends AbstractCraftBookMechanic {
             if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
                 return;
 
-            if (CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+            if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
                 if(event.getTo().getBlock().getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
                 if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
                 Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1));
@@ -470,6 +470,8 @@ public class Snow extends AbstractCraftBookMechanic {
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                         }
                     } else if(meltMode) {
+                        if(highest.getType() == Material.SNOW && CraftBookPlugin.inst().getConfiguration().snowMeltPartial)
+                            if(highest.getData() == 0) return;
                         if(highest.getTemperature() > 0.05)
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, -1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
                     }
