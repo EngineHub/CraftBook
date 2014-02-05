@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.common.LanguageManager;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -15,7 +14,7 @@ public class GenerateDefaultLanguage extends ExternalUtilityBase {
     @Override
     public void generate () {
 
-        File language = new File(CraftBookPlugin.inst().getDataFolder(), "en_US.yml");
+        File language = new File(getGenerationFolder(), "en_US.yml");
 
         if(!language.exists()) {
             try {

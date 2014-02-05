@@ -51,6 +51,12 @@ public class Monostable extends AbstractSelfTriggeredIC {
     }
 
     @Override
+    public boolean isAlwaysST() {
+
+        return true;
+    }
+
+    @Override
     public void trigger(ChipState chip) {
 
         String setting = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
@@ -95,6 +101,12 @@ public class Monostable extends AbstractSelfTriggeredIC {
         public IC create(ChangedSign sign) {
 
             return new Monostable(getServer(), sign, this);
+        }
+
+        @Override
+        public String getShortDescription() {
+
+            return "Outputs a pulse for a set amount of time on high.";
         }
 
         @Override

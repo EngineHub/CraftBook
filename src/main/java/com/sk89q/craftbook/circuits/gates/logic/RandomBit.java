@@ -127,6 +127,12 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String getShortDescription() {
+
+            return "Randomly sets the output on high.";
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"Min Outputs:Max Outputs", null};
