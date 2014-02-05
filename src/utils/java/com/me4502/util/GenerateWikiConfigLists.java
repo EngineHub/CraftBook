@@ -4,46 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
-import java.util.logging.Logger;
 
-import com.sk89q.craftbook.bukkit.BukkitConfiguration;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class GenerateWikiConfigLists {
-
-    public static void main(String[] args) {
-
-        if(!new File("config.yml").exists()) {
-            try {
-                new File("config.yml").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            new File("config.yml").delete();
-            try {
-                new File("config.yml").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(new File("config.yml"), true, YAMLFormat.EXTENDED), Logger.getLogger(Logger.GLOBAL_LOGGER_NAME));
-        config.load();
-
-        File configFolder = new File("configs/");
-        configFolder.mkdir();
-
-        missingComments = 0;
-        try {
-            createConfigSectionFile(configFolder, config.config, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(missingComments + " Comments Are Missing");
-    }
+public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
     public static void createConfigSectionFile(File folder, YAMLProcessor config, String path) throws IOException {
 
@@ -98,4 +65,20 @@ public class GenerateWikiConfigLists {
     }
 
     static int missingComments = 0;
+
+    @Override
+    public void generate () {
+
+        File configFolder = new File("configs/");
+        configFolder.mkdir();
+
+        missingComments = 0;
+        try {
+            createConfigSectionFile(configFolder, CraftBookPlugin.inst().getConfiguration().config, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(missingComments + " Comments Are Missing");
+    }
 }

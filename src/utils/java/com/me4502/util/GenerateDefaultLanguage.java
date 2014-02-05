@@ -4,29 +4,34 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.common.LanguageManager;
+import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class GenerateDefaultLanguage {
+public class GenerateDefaultLanguage extends ExternalUtilityBase {
 
-    public static void main(String[] args) {
+    @Override
+    public void generate () {
 
-        if(!new File("en_US.yml").exists()) {
+        File language = new File(CraftBookPlugin.inst().getDataFolder(), "en_US.yml");
+
+        if(!language.exists()) {
             try {
-                new File("en_US.yml").createNewFile();
+                language.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            new File("en_US.yml").delete();
+            language.delete();
             try {
-                new File("en_US.yml").createNewFile();
+                language.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        YAMLProcessor proc = new YAMLProcessor(new File("en_US.yml"), true, YAMLFormat.EXTENDED);
+        YAMLProcessor proc = new YAMLProcessor(language, true, YAMLFormat.EXTENDED);
         try {
             proc.load();
         } catch (IOException e) {

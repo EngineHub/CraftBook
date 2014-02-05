@@ -208,6 +208,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public CraftBookPlugin() {
 
+        super();
         // Set the instance
         instance = this;
     }
