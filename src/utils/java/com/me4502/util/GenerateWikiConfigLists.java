@@ -69,7 +69,7 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
     @Override
     public void generate () {
 
-        File configFolder = new File("configs/");
+        File configFolder = new File(getGenerationFolder(), "configs/");
         configFolder.mkdir();
 
         missingComments = 0;
