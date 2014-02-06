@@ -329,7 +329,18 @@ public class CraftBookPlugin extends JavaPlugin {
                         event.setLine(i, fixed);
                 }
             }
+
+            @EventHandler(priority = EventPriority.HIGH)
+            public void playerJoin(PlayerJoinEvent event) {
+                if(mechanics.isEmpty() && event.getPlayer().isOp()) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing!");
+                }
+            }
         }, this);
+
+        if(mechanics.isEmpty()) {
+            getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing!");
+        }
     }
 
     public boolean updateAvailable = false;
