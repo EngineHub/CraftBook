@@ -1,3 +1,23 @@
+3.8.2
+* Fixed an error involving a null sequencer in the Melody IC.
+* Heavily tweaked Melody IC. It now has been tested under many circumstances and worked 100%.
+* Fixed sponge replacing blocks it shouldn't be.
+* Fixed snow randomly moving around.
+* Fixed melt mode of snow not melting ice.
++ Re-Added snow slowdown and trampling.
+* Fixed Melody IC looping when it shouldn't be.
+* Tweaked the self triggering algorithms, they should be slightly faster in massive setups.
+* Fixed snow moving around in higher stacks.
+* Fixed snow not taking empty blocks at a higher priority.
++ Added an option for snow to only partially melt.
+* Increased chances of snow being trampled.
++ Re-Added snow being placed by snowballs.
+* Fixed snow not dispersing when a (slab?) of snow is placed.
++ Added an external utility system. This is for developer use only.
+* Fixed Monostable not always being Self Triggered.
+* Fixed Legacy Cauldron not forcing an inventory update.
++ Added warnings for when no mechanics are enabled.
+
 3.8.1
 * Fixed an error with improved cauldrons
 * Only disable a mechanic if it successfully loaded.

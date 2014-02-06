@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util.developer;
 
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -9,7 +10,11 @@ public class ExternalUtilityManager {
 
     public static void performExternalUtility(String name) throws Exception {
 
-        URLClassLoader loader = new URLClassLoader(new URL[]{new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/")}, CraftBookPlugin.class.getClassLoader());
+        URL[] url = new URL[2];
+        url[0] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/");
+        url[1] = new URL("file://" + new File(CraftBookPlugin.inst().getDataFolder(), "developer").getAbsolutePath() + "/");
+
+        URLClassLoader loader = new URLClassLoader(url, CraftBookPlugin.class.getClassLoader());
         Class<?> base = loader.loadClass(name);
         if(ExternalUtilityBase.class.isAssignableFrom(base))
             base.newInstance();

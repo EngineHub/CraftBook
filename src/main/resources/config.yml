@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.2
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -314,6 +314,7 @@ mechanics:
         falldown-animation-speed: 5
         freeze-water: false
         melt-in-sunlight: false
+        partial-melt-only: false
     sponge:
         enable: false
         radius: 5
