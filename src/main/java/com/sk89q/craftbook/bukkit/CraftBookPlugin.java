@@ -244,8 +244,6 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        System.gc();
-
         ItemSyntax.plugin = this;
 
         plugins = new CompanionPlugins();
@@ -310,8 +308,6 @@ public class CraftBookPlugin extends JavaPlugin {
         // Let's start the show
         setupCraftBook();
         registerGlobalEvents();
-
-        System.gc();
 
         getServer().getPluginManager().registerEvents(new Listener() {
 
