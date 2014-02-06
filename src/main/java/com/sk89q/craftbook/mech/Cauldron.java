@@ -222,6 +222,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
                     world.dropItem(p.getLocation(), i.getValue());
                 }
             }
+            p.updateInventory();
             // Didn't find a recipe
         } else {
             player.printError("mech.cauldron.legacy-not-a-recipe");
