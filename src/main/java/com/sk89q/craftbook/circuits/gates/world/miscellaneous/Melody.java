@@ -108,6 +108,11 @@ public class Melody extends AbstractSelfTriggeredIC {
             }
         }
 
+        if (file == null || !file.exists()) {
+            CraftBookPlugin.logDebugMessage("Midi file not found in melody IC: " + midiName, "midi");
+            return;
+        }
+
         try {
             player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
         } catch (MidiUnavailableException e) {
