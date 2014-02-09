@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mech.items;
 
 import org.bukkit.event.Event;
 
+import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 
 /**
@@ -9,11 +10,13 @@ import com.sk89q.craftbook.util.RegexUtil;
  */
 public class CommandItemAction {
 
+    protected String name;
     protected ActionType type;
     protected String value;
     protected ActionRunStage stage;
 
-    public CommandItemAction(ActionType type, String value, ActionRunStage stage) {
+    public CommandItemAction(String name, ActionType type, String value, ActionRunStage stage) {
+        this.name = name;
         this.type = type;
         this.value = value;
         this.stage = stage;
@@ -24,7 +27,8 @@ public class CommandItemAction {
      */
     public static enum ActionType {
 
-        SETVAR;
+        SETVAR,
+        ISVAR;
     }
 
     /**
@@ -47,9 +51,16 @@ public class CommandItemAction {
 
         switch(type) {
             case SETVAR:
-                String[] parts = RegexUtil.EQUALS_PATTERN.split(value,2);
-                String[] varBits = RegexUtil.PIPE_PATTERN.split(parts[0],2);
+                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String snamespace = VariableManager.instance.getNamespace(svarParts[0]);
+                String svar = VariableManager.instance.getVariableName(svarParts[0]);
+                VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
                 return true;
+            case ISVAR:
+                String[] isparts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String isnamespace = VariableManager.instance.getNamespace(isparts[0]);
+                String isvar = VariableManager.instance.getVariableName(isparts[0]);
+                return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
             default:
                 return true;
         }

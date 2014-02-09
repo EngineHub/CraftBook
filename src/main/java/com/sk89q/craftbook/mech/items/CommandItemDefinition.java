@@ -97,7 +97,7 @@ public class CommandItemDefinition {
             String acValue = config.getString(ac + ".value");
             ActionRunStage acStage = ActionRunStage.valueOf(config.getString(ac + ".run-stage"));
 
-            actionList.add(new CommandItemAction(acType, acValue, acStage));
+            actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
         }
 
         return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]));
@@ -123,6 +123,14 @@ public class CommandItemDefinition {
         config.setProperty(path + ".consume-self", consumeSelf);
         config.setProperty(path + ".require-sneaking-state", requireSneaking.name());
         config.setProperty(path + ".keep-on-death", keepOnDeath);
+
+        config.addNode(path + ".actions");
+        for(CommandItemAction ac : actions) {
+            config.addNode(path + ".actions." + ac.name);
+            config.setProperty(path + ".actions." + ac.name + ".type", ac.type.name());
+            config.setProperty(path + ".actions." + ac.name + ".value", ac.value);
+            config.setProperty(path + ".actions." + ac.name + ".run-stage", ac.stage.name());
+        }
     }
 
     public enum CommandType {
