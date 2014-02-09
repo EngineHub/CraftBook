@@ -424,10 +424,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
             PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
             att.setPermission("*", true);
             boolean wasOp = player.isOp();
-            player.setOp(true);
+            if(!wasOp)
+                player.setOp(true);
             Bukkit.dispatchCommand(player, command);
             att.remove();
-            player.setOp(wasOp);
+            if(!wasOp)
+                player.setOp(wasOp);
         }
     }
 }

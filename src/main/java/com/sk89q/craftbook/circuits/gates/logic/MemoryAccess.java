@@ -55,7 +55,7 @@ public class MemoryAccess extends AbstractIC {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
             String line = br.readLine();
             for (int i = 0; i < chip.getOutputCount(); i++) {
-                if(line.length() < i+1)
+                if(line == null || line.length() < i+1)
                     chip.setOutput(i, false);
                 else
                     chip.setOutput(i, line.charAt(i) == '1');
