@@ -257,11 +257,7 @@ public class CommandItemCommands {
         }
     }
 
-    private static class RequireSneakingPrompt extends FixedSetPrompt {
-
-        public RequireSneakingPrompt() {
-            super(EnumUtil.getStringArrayFromEnum(TernaryState.class));
-        }
+    private static class RequireSneakingPrompt extends StringPrompt {
 
         @Override
         public String getPromptText (ConversationContext context) {
@@ -269,8 +265,7 @@ public class CommandItemCommands {
         }
 
         @Override
-        protected Prompt acceptValidatedInput (ConversationContext context, String input) {
-
+        public Prompt acceptInput (ConversationContext context, String input) {
             context.setSessionData("require-sneaking", TernaryState.getFromString(input));
             return new DelayPrompt();
         }
