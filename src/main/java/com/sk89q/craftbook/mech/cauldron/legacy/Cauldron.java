@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.cauldron.legacy;
 
 // $Id$
 /*

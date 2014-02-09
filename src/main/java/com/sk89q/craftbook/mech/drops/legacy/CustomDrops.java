@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mech;
+package com.sk89q.craftbook.mech.drops.legacy;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;

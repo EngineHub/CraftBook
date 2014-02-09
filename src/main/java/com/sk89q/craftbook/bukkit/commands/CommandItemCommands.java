@@ -23,10 +23,11 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mech.CommandItems;
-import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition;
-import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.ClickType;
-import com.sk89q.craftbook.mech.CommandItems.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.mech.items.ClickType;
+import com.sk89q.craftbook.mech.items.CommandItemAction;
+import com.sk89q.craftbook.mech.items.CommandItemDefinition;
+import com.sk89q.craftbook.mech.items.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.mech.items.CommandItems;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
@@ -152,7 +153,7 @@ public class CommandItemCommands {
     private static class RunAsPrompt extends FixedSetPrompt {
 
         public RunAsPrompt() {
-            super(EnumUtil.getStringArrayFromEnum(CommandItems.CommandItemDefinition.CommandType.class));
+            super(EnumUtil.getStringArrayFromEnum(CommandItemDefinition.CommandType.class));
         }
 
         @Override
@@ -163,7 +164,7 @@ public class CommandItemCommands {
         @Override
         protected Prompt acceptValidatedInput (ConversationContext context, String input) {
 
-            context.setSessionData("run-as", CommandItems.CommandItemDefinition.CommandType.valueOf(input));
+            context.setSessionData("run-as", CommandItemDefinition.CommandType.valueOf(input));
             return new EventPrompt();
         }
     }
@@ -171,7 +172,7 @@ public class CommandItemCommands {
     private static class EventPrompt extends FixedSetPrompt {
 
         public EventPrompt() {
-            super(EnumUtil.getStringArrayFromEnum(CommandItems.CommandItemDefinition.ClickType.class));
+            super(EnumUtil.getStringArrayFromEnum(ClickType.class));
         }
 
         @Override
@@ -182,7 +183,7 @@ public class CommandItemCommands {
         @Override
         protected Prompt acceptValidatedInput (ConversationContext context, String input) {
 
-            context.setSessionData("click-type", CommandItems.CommandItemDefinition.ClickType.valueOf(input));
+            context.setSessionData("click-type", ClickType.valueOf(input));
             return new PermissionNodePromp();
         }
     }
@@ -359,7 +360,8 @@ public class CommandItemCommands {
                 boolean consumeSelf = (Boolean) context.getSessionData("consume-self");
                 TernaryState requireSneaking = (TernaryState) context.getSessionData("require-sneaking");
                 boolean keepOnDeath = (Boolean) context.getSessionData("keep-on-death");
-                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath);
+                List<CommandItemAction> actions = new ArrayList<CommandItemAction>();
+                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actions.toArray(new CommandItemAction[actions.size()]));
                 CommandItems.INSTANCE.addDefinition(def);
                 CommandItems.INSTANCE.save();
                 return ChatColor.YELLOW + "Successfully added CommandItem: " + name;
