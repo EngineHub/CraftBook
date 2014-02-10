@@ -44,10 +44,17 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
  */
 public class LightSwitch extends AbstractCraftBookMechanic {
 
+    @Override
+    public boolean enable() {
+
+        recentLightToggles = new HistoryHashMap<Location, Long>(20);
+        return true;
+    }
+
     /**
      * Store a list of recent light toggles to prevent spamming. Someone clever can just use two signs though.
      */
-    private static final HistoryHashMap<Location, Long> recentLightToggles = new HistoryHashMap<Location, Long>(20);
+    private HistoryHashMap<Location, Long> recentLightToggles;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {

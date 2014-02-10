@@ -1,11 +1,10 @@
-package com.sk89q.craftbook.util.config;
+package com.sk89q.craftbook.common.variables;
 
 import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.common.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLProcessor;

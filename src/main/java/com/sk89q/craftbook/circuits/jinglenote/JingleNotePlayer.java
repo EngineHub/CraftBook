@@ -57,7 +57,7 @@ public abstract class JingleNotePlayer implements Runnable {
 
     public boolean isPlaying() {
 
-        return sequencer != null && sequencer.isPlaying() && !sequencer.getPlayers().isEmpty() ;
+        return sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore()) && !sequencer.getPlayers().isEmpty() ;
     }
 
     public String getPlayer() {

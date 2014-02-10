@@ -10,7 +10,7 @@ import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-import com.sk89q.craftbook.common.VariableManager;
+import com.sk89q.craftbook.common.variables.VariableManager;
 
 public class CHFunctions {
 

@@ -176,7 +176,6 @@ import com.sk89q.craftbook.circuits.ic.families.FamilyVIVO;
 import com.sk89q.craftbook.circuits.plc.PlcFactory;
 import com.sk89q.craftbook.circuits.plc.lang.Perlstone;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.config.YAMLICConfiguration;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -196,7 +195,7 @@ public class ICManager {
     public static final ICFamily familyVIVO = new FamilyVIVO();
     public static final ICFamily familySI5O = new FamilySI5O();
 
-    private YAMLICConfiguration icConfiguration;
+    private ICConfiguration icConfiguration;
 
     private File romFolder;
     private File midiFolder;
@@ -214,7 +213,7 @@ public class ICManager {
 
     public void enable() {
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), "ic-config.yml");
-        icConfiguration = new YAMLICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
         midiFolder = new File(CraftBookPlugin.inst().getDataFolder(), "midi/");
         new File(midiFolder, "playlists").mkdirs();

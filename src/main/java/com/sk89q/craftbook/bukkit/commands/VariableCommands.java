@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.common.VariableManager;
+import com.sk89q.craftbook.common.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;

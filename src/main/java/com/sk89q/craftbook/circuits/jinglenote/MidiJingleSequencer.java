@@ -173,6 +173,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void stop() {
 
+        if(!running) return;
         CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer. (Stop called)", "midi");
         if (sequencer != null && sequencer.isOpen()) {
             try {

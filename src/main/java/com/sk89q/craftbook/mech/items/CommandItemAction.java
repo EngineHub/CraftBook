@@ -2,7 +2,7 @@ package com.sk89q.craftbook.mech.items;
 
 import org.bukkit.event.Event;
 
-import com.sk89q.craftbook.common.VariableManager;
+import com.sk89q.craftbook.common.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 
 /**

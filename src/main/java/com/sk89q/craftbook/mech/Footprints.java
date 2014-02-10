@@ -21,9 +21,7 @@ import com.sk89q.craftbook.util.ItemInfo;
 
 public class Footprints extends AbstractCraftBookMechanic {
 
-    private static boolean disabled = false;
-
-    public Set<String> footsteps = new HashSet<String>();
+    public Set<String> footsteps;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(final PlayerMoveEvent event) {
@@ -33,7 +31,6 @@ public class Footprints extends AbstractCraftBookMechanic {
         if(event.getFrom().getX() == event.getTo().getX() && event.getFrom().getZ() == event.getTo().getZ())
             return;
 
-        if (disabled) return;
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
@@ -90,7 +87,6 @@ public class Footprints extends AbstractCraftBookMechanic {
                 }, event.getPlayer().isSprinting() ? 7 : 10);
             } catch (Throwable e) {
                 CraftBookPlugin.logger().warning("Footprints do not work without ProtocolLib!");
-                disabled = true;
                 return;
             }
         }
@@ -99,13 +95,15 @@ public class Footprints extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
-        if (CraftBookPlugin.plugins.hasProtocolLib()) return true;
-        else CraftBookPlugin.inst().getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
+        if (CraftBookPlugin.plugins.hasProtocolLib()) {
+            footsteps = new HashSet<String>();
+            return true;
+        } else CraftBookPlugin.inst().getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
         return false;
     }
 
     @Override
     public void disable () {
-        footsteps.clear();
+        footsteps = null;
     }
 }

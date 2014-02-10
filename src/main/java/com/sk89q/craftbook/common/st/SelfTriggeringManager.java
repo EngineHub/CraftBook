@@ -51,7 +51,7 @@ public class SelfTriggeringManager {
 
     public void unregisterSelfTrigger(Location location, UnregisterReason reason) {
 
-        if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
 
         BlockWorldVector vec = BukkitUtil.toWorldVector(location);
         if(!thinkingMechanics.contains(vec)) return;
@@ -65,7 +65,7 @@ public class SelfTriggeringManager {
 
     public void unregisterSelfTrigger(Chunk chunk) {
 
-        if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
 
         if(hasChanged || registeredLocations == null) {
             synchronized (this) {
@@ -94,7 +94,7 @@ public class SelfTriggeringManager {
      */
     public void think() {
 
-        if(thinkingMechanics.size() == 0) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
 
         if(hasChanged || registeredLocations == null) {
             synchronized (this) {

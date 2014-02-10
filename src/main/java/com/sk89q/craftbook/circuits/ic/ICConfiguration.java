@@ -1,20 +1,17 @@
-package com.sk89q.craftbook.util.config;
+package com.sk89q.craftbook.circuits.ic;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
-import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class YAMLICConfiguration extends LocalConfiguration {
+public class ICConfiguration extends LocalConfiguration {
 
     protected final YAMLProcessor config;
     protected final Logger logger;
 
-    public YAMLICConfiguration(YAMLProcessor config, Logger logger) {
+    public ICConfiguration(YAMLProcessor config, Logger logger) {
 
         this.config = config;
         this.logger = logger;
