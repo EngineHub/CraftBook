@@ -91,14 +91,15 @@ public class CommandItemDefinition {
 
         List<CommandItemAction> actionList = new ArrayList<CommandItemAction>();
 
-        for(String ac : config.getKeys(path + ".actions")) {
+        if(config.getKeys(path + ".actions") != null)
+            for(String ac : config.getKeys(path + ".actions")) {
 
-            ActionType acType = ActionType.valueOf(config.getString(ac + ".type"));
-            String acValue = config.getString(ac + ".value");
-            ActionRunStage acStage = ActionRunStage.valueOf(config.getString(ac + ".run-stage"));
+                ActionType acType = ActionType.valueOf(config.getString(ac + ".type"));
+                String acValue = config.getString(ac + ".value");
+                ActionRunStage acStage = ActionRunStage.valueOf(config.getString(ac + ".run-stage"));
 
-            actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
-        }
+                actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
+            }
 
         return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]));
     }
