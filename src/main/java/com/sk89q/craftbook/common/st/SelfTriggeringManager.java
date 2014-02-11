@@ -25,7 +25,7 @@ public class SelfTriggeringManager {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private final Collection<BlockWorldVector> thinkingMechanics = new Vector<BlockWorldVector>();
+    private final Collection<BlockWorldVector> thinkingMechanics = new Vector<BlockWorldVector>(32,5);
 
     public void registerSelfTrigger(Chunk chunk) {
         try {
