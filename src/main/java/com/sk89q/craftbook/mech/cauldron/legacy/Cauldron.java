@@ -217,7 +217,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
 
             // Give results
             for (ItemInfo id : recipe.getResults()) {
-                HashMap<Integer, ItemStack> map = p.getInventory().addItem(new ItemStack(id.getType(), id.getData()));
+                HashMap<Integer, ItemStack> map = p.getInventory().addItem(new ItemStack(id.getType(), 1, (short) id.getData()));
                 for (Entry<Integer, ItemStack> i : map.entrySet()) {
                     world.dropItem(p.getLocation(), i.getValue());
                 }
