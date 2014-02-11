@@ -10,6 +10,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -29,6 +30,7 @@ public class SelfTriggeringManager {
     public void registerSelfTrigger(Chunk chunk) {
         try {
             for(BlockState state : chunk.getTileEntities()) {
+                if(!(state instanceof Sign)) continue;
                 Block block = state.getBlock();
                 if(thinkingMechanics.contains(BukkitUtil.toWorldVector(block.getLocation()))) continue;
                 SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
