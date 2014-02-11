@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 
 public abstract class CustomDropDefinition {
 
@@ -44,7 +45,8 @@ public abstract class CustomDropDefinition {
                 stack.setAmount(amount);
             }
 
-            ndrops.add(stack);
+            if(ItemUtil.isStackValid(stack))
+                ndrops.add(stack);
         }
 
         return ndrops.toArray(new ItemStack[ndrops.size()]);

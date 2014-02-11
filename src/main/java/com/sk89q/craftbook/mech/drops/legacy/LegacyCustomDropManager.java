@@ -42,7 +42,7 @@ import com.sk89q.craftbook.util.RegexUtil;
  *
  * @author Lymia
  */
-public final class CustomDropManager {
+public final class LegacyCustomDropManager {
 
     public static final int BLOCK_ID_COUNT = 256;
     public static final int DATA_VALUE_COUNT = 127;
@@ -50,7 +50,7 @@ public final class CustomDropManager {
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
     private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
 
-    public CustomDropManager(File source) {
+    public LegacyCustomDropManager(File source) {
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(),
                 "custom-block-drops.txt"), "custom-block-drops.txt");

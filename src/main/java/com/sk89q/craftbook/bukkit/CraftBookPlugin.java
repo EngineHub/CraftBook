@@ -92,7 +92,8 @@ import com.sk89q.craftbook.mech.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mech.cauldron.legacy.Cauldron;
 import com.sk89q.craftbook.mech.crafting.CustomCrafting;
 import com.sk89q.craftbook.mech.dispenser.DispenserRecipes;
-import com.sk89q.craftbook.mech.drops.legacy.CustomDrops;
+import com.sk89q.craftbook.mech.drops.CustomDrops;
+import com.sk89q.craftbook.mech.drops.legacy.LegacyCustomDrops;
 import com.sk89q.craftbook.mech.items.CommandItemDefinition;
 import com.sk89q.craftbook.mech.items.CommandItems;
 import com.sk89q.craftbook.util.CompatabilityUtil;
@@ -385,7 +386,10 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.customCraftingEnabled) mechanics.add(new CustomCrafting());
             if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
             if (config.snowEnable) mechanics.add(new Snow());
-            if (config.customDropEnabled) mechanics.add(new CustomDrops());
+            if (config.customDropEnabled) {
+                mechanics.add(new LegacyCustomDrops());
+                mechanics.add(new CustomDrops());
+            }
             if (config.aiEnabled) mechanics.add(new AIMechanic());
             if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());
             if (config.physicsEnabled) mechanics.add(new BetterPhysics());

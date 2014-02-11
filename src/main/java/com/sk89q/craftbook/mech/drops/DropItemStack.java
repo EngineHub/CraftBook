@@ -14,7 +14,6 @@ public class DropItemStack {
     }
 
     public ItemStack getStack() {
-
         return stack;
     }
 

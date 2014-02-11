@@ -325,6 +325,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().enableVehicles) return;
         if (!EventUtil.passesFilter(event))
             return;
 
@@ -349,6 +350,7 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().enableVehicles) return;
         if (!EventUtil.passesFilter(event))
             return;
 

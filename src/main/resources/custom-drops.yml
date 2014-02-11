@@ -1,0 +1,25 @@
+custom-drops:
+  #This definition will drop the bookshelf when you break it, instead of just books.
+  exampleblock:
+    block: "BOOKSHELF"
+    drops:
+      Bookshelf:
+        item: "BOOKSHELF*1"
+    type: block
+    append: false
+  #This definition will drop 0-2 possessed stone 5% of the time, and 1-6 Quartz shards 30% of the time when a pig is killed. It doesn't replace current drops.
+  exampleentity:
+    entity-type: "PIG"
+    drops:
+      PossessedStone:
+        item: "STONE|Possessed Stone"
+        chance: 5
+        minimum-amount: 0
+        maximum-amount: 2
+      QuartzShard:
+        item: "QUARTZ|Quartz Shard|&6A small shard of quarts!"
+        chance: 30
+        minimum-amount: 1
+        maximum-amount: 6
+    type: entity
+    append: true

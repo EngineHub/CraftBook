@@ -17,9 +17,10 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 
-public class CustomDrops extends AbstractCraftBookMechanic {
+@Deprecated
+public class LegacyCustomDrops extends AbstractCraftBookMechanic {
 
-    public CustomDropManager customDrops;
+    public LegacyCustomDropManager customDrops;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
@@ -35,15 +36,15 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         int id = event.getBlock().getTypeId();
         byte data = event.getBlock().getData();
 
-        CustomDropManager.CustomItemDrop drop = customDrops.getBlockDrops(id);
+        LegacyCustomDropManager.CustomItemDrop drop = customDrops.getBlockDrops(id);
 
         if (drop != null) {
-            CustomDropManager.DropDefinition[] drops = drop.getDrop(data);
+            LegacyCustomDropManager.DropDefinition[] drops = drop.getDrop(data);
             if (drops != null) {
                 Location l = event.getBlock().getLocation();
                 World w = event.getBlock().getWorld();
                 // Add the custom drops
-                for (CustomDropManager.DropDefinition dropDefinition : drops) {
+                for (LegacyCustomDropManager.DropDefinition dropDefinition : drops) {
                     ItemStack stack = dropDefinition.getItemStack();
                     if (ItemUtil.isStackValid(stack))
                         w.dropItemNaturally(l, stack);
@@ -65,14 +66,14 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             return;
         EntityType entityType = event.getEntityType();
         if (entityType == null || !entityType.isAlive() || entityType.equals(EntityType.PLAYER)) return;
-        CustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(event.getEntity());
+        LegacyCustomDropManager.DropDefinition[] drops = customDrops.getMobDrop(event.getEntity());
         if (drops != null) {
             if (!drops[0].append) {
                 event.getDrops().clear();
                 ((ExperienceOrb) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(event.getDroppedExp());
             }
             // Add the custom drops
-            for (CustomDropManager.DropDefinition dropDefinition : drops) {
+            for (LegacyCustomDropManager.DropDefinition dropDefinition : drops) {
                 ItemStack stack = dropDefinition.getItemStack();
                 if (ItemUtil.isStackValid(stack))
                     event.getDrops().add(stack);
@@ -82,7 +83,10 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable () {
-        customDrops = new CustomDropManager(CraftBookPlugin.inst().getDataFolder());
+
+        CraftBookPlugin.logger().warning("The LegacyCustomDrops feature is deprecated and may be removed in the future! Please convert your existing recipes to the new system!");
+
+        customDrops = new LegacyCustomDropManager(CraftBookPlugin.inst().getDataFolder());
         return true;
     }
 

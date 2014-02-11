@@ -94,9 +94,9 @@ public class CommandItemDefinition {
         if(config.getKeys(path + ".actions") != null)
             for(String ac : config.getKeys(path + ".actions")) {
 
-                ActionType acType = ActionType.valueOf(config.getString(ac + ".type"));
-                String acValue = config.getString(ac + ".value");
-                ActionRunStage acStage = ActionRunStage.valueOf(config.getString(ac + ".run-stage"));
+                ActionType acType = ActionType.valueOf(config.getString(path + "." + ac + ".type"));
+                String acValue = config.getString(path + "." + ac + ".value");
+                ActionRunStage acStage = ActionRunStage.valueOf(config.getString(path + "." + ac + ".run-stage"));
 
                 actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
             }
