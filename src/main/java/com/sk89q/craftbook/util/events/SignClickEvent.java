@@ -17,8 +17,12 @@ public class SignClickEvent extends PlayerInteractEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
+    private final ChangedSign sign;
+
     public SignClickEvent (Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
         super(who, action, item, clickedBlock, clickedFace);
+
+        sign = BukkitUtil.toChangedSign(getClickedBlock());
     }
 
     @Override
@@ -31,7 +35,7 @@ public class SignClickEvent extends PlayerInteractEvent {
     }
 
     public ChangedSign getSign() {
-        return BukkitUtil.toChangedSign(getClickedBlock());
+        return sign;
     }
 
     public LocalPlayer getWrappedPlayer() {
