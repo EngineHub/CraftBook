@@ -1,3 +1,16 @@
+3.8.3
+* Fixed Melody IC not checking for file existance on first load.
++ Added CommandItemActions subsystem to CommandItems. More info + features shortly. (Currently only SETVAR and ISVAR)
+* Fixed the sneaking option in the ingame CommandItems creator requiring a specific line of text, instead of standard input.
+* Fixed Memory Access IC with a null line.
+* Refactored some mechanics, and moved code around to places that more suited it.
+* Fixed many Melody bugs.
+* Fixed Legacy Cauldron seeing data as amount.
++ Added a new CustomDrops system. This system currently supports exactly what the old system supported. More features will come soon. (LegacyCustomDrops will be removed in the future)
+* Many performance improvements.
+* Lower the amount of SelfTriggerPingEvent's that occur.
+* Fixed placing redstone causing blocks not triggering most mechanics.
+
 3.8.2
 * Fixed an error involving a null sequencer in the Melody IC.
 * Heavily tweaked Melody IC. It now has been tested under many circumstances and worked 100%.

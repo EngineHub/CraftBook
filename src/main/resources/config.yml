@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.2
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.3
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -186,6 +186,7 @@ mechanics:
         - BIRCH_WOOD_STAIRS
         - JUNGLE_WOOD_STAIRS
         - QUARTZ_STAIRS
+        - ACACIA_STAIRS
         face-correct-direction: true
         require-sign: false
         max-distance: 3
