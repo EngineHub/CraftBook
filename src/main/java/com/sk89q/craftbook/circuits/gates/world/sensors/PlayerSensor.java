@@ -75,7 +75,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
     protected boolean isDetected() {
 
         if (!nameLine.isEmpty() && type == PlayerType.NAME) {
-            Player p = Bukkit.getPlayer(nameLine);
+            Player p = Bukkit.getPlayerExact(nameLine);
             if (p != null && area.isWithinArea(p.getLocation())) return true;
         }
 
