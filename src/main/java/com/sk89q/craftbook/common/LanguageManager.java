@@ -234,6 +234,8 @@ public class LanguageManager {
 
         put("mech.pay.create","Pay Created!");
         put("mech.pay.success","Payment Successful! You paid: ");
+        put("mech.pay.not-enough-money", "Payment Failed! You don't have enough money.");
+        put("mech.pay.failed-to-pay", "Payment Failed! The money failed to be exchanged.");
 
         put("mech.pistons.crush.created","Piston Crush Mechanic Created!");
         put("mech.pistons.supersticky.created","Piston Super-Sticky Mechanic Created!");
