@@ -283,9 +283,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         final Object[] icData = setupIC(event.getBlock(), true);
 
-        if(icData == null) return;
-
-        if((IC) icData[2] instanceof SelfTriggeredIC) {
+        if(icData != null && (IC) icData[2] instanceof SelfTriggeredIC) {
             event.setHandled(true);
             ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitUtil.toWorldVector(event.getBlock()), ((IC) icData[2]).getSign());
             ((SelfTriggeredIC) icData[2]).think(chipState);
