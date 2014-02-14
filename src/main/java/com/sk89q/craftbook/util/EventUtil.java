@@ -16,7 +16,7 @@ public class EventUtil {
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
+        if(CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
         Long time = ignoredEvents.get(ev);
 
