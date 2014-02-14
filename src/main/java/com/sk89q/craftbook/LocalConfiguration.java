@@ -96,6 +96,7 @@ public abstract class LocalConfiguration {
     // Mechanics - Cauldron
     public boolean cauldronEnabled;
     public boolean cauldronUseSpoons;
+    public boolean cauldronAllowRedstone;
     // Mechanics - Chair
     public boolean chairEnabled;
     public boolean chairAllowHeldBlock;

@@ -21,9 +21,11 @@ import org.bukkit.material.Cauldron;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -61,52 +63,72 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!isCauldron(event.getClickedBlock())) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.cauldron.use")) {
+
+        if(performCauldron(event.getClickedBlock(), player))
+            event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRedstoneUpdate(SourcedBlockRedstoneEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().cauldronAllowRedstone) return;
+
+        if(!EventUtil.passesFilter(event)) return;
+
+        if(!isCauldron(event.getBlock())) return;
+
+        performCauldron(event.getBlock(), null);
+    }
+
+    public boolean performCauldron(Block block, LocalPlayer player) {
+
+        if (player != null && !player.hasPermission("craftbook.mech.cauldron.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
-            return;
+            return false;
         }
         try {
-            Collection<Item> items = getItems(event.getClickedBlock());
+            Collection<Item> items = getItems(block);
             ImprovedCauldronCookbook.Recipe recipe = recipes.getRecipe(CauldronItemStack.convert(items));
 
             // lets check permissions for that recipe
-            if (!player.hasPermission("craftbook.mech.cauldron.recipe.*")
+            if (player != null && !player.hasPermission("craftbook.mech.cauldron.recipe.*")
                     && !player.hasPermission("craftbook.mech.cauldron.recipe." + recipe.getId())) {
                 player.printError("mech.cauldron.permissions");
-                return;
+                return false;
             }
 
-            if (!CraftBookPlugin.inst().getConfiguration().cauldronUseSpoons) {
-                cook(event.getClickedBlock(), recipe, items);
-                player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
-                event.getClickedBlock().getWorld().createExplosion(event.getClickedBlock().getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-                event.setCancelled(true);
-            } else { // Spoons
-                if (event.getPlayer().getItemInHand() == null) return;
-                if (isItemSpoon(event.getPlayer().getItemInHand().getType())) {
-                    double chance = getSpoonChance(event.getPlayer().getItemInHand(), recipe.getChance());
+            if (!CraftBookPlugin.inst().getConfiguration().cauldronUseSpoons || player == null && CraftBookPlugin.inst().getConfiguration().cauldronAllowRedstone) {
+                cook(block, recipe, items);
+                if(player != null) player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+                block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                return true;
+            } else if(player != null) { // Spoons
+                if (isItemSpoon(player.getHeldItemInfo().getType())) {
+                    double chance = getSpoonChance(((BukkitPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
                     double ran = CraftBookPlugin.inst().getRandom().nextDouble();
-                    event.getPlayer().getItemInHand().setDurability((short) (event.getPlayer().getItemInHand().getDurability() - (short) 1));
+                    ((BukkitPlayer) player).getPlayer().getItemInHand().setDurability((short) (((BukkitPlayer) player).getPlayer().getItemInHand().getDurability() - (short) 1));
                     if (chance <= ran) {
-                        cook(event.getClickedBlock(), recipe, items);
+                        cook(block, recipe, items);
                         player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());
-                        event.getClickedBlock().getWorld().createExplosion(event.getClickedBlock().getRelative(BlockFace.UP).getLocation(), 0.0F, false);
-                        event.setCancelled(true);
+                        block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
+                        return true;
                     } else {
                         player.print("mech.cauldron.stir");
                     }
                 }
             }
         } catch (UnknownRecipeException e) {
-            player.printError(e.getMessage());
+            if(player != null) player.printError(e.getMessage());
         }
+
+        return false;
     }
 
     public boolean isItemSpoon(Material id) {

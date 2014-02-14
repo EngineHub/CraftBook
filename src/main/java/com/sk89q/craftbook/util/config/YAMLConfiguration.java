@@ -254,6 +254,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.cauldron.spoons", "Require spoons to cook cauldron recipes.");
         cauldronUseSpoons = config.getBoolean("mechanics.cauldron.spoons", true);
 
+        config.setComment("mechanics.cauldron.enable-redstone", "Allows use of cauldrons via redstone.");
+        cauldronAllowRedstone = config.getBoolean("mechanics.cauldron.enable-redstone", false);
+
 
         // Chair Configuration Listener
         config.setComment("mechanics.chair.enable", "Enable chair mechanic.");
