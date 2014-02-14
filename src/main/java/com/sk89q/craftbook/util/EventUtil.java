@@ -16,9 +16,12 @@ public class EventUtil {
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
-        if(!ignoredEvents.containsKey(ev.toString())) return false;
+        if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
         Long time = ignoredEvents.get(ev.toString());
+
+        if(time == null) return false;
+
         if(System.currentTimeMillis() - time.longValue() > 1000*3)
             ignoredEvents.remove(ev.toString());
 
@@ -28,6 +31,8 @@ public class EventUtil {
     private static int lastGarbageCollect = 0;
 
     public static void ignoreEvent(Event ev) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
 
         if(++lastGarbageCollect > 100)
             garbageCollectEvents();
