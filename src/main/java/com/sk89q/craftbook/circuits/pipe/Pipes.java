@@ -409,6 +409,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             Bukkit.getPluginManager().callEvent(fEvent);
 
             leftovers = fEvent.getItems();
+            items.clear();
 
             if (!leftovers.isEmpty()) {
                 for (ItemStack item : leftovers) {
