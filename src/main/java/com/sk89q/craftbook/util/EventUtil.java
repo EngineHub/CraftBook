@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.util;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,18 +12,18 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class EventUtil {
 
-    private static final Map<String, Long> ignoredEvents = new HashMap<String, Long>();
+    private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
         if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
-        Long time = ignoredEvents.get(ev.toString());
+        Long time = ignoredEvents.get(ev);
 
         if(time == null) return false;
 
         if(System.currentTimeMillis() - time.longValue() > 1000*3)
-            ignoredEvents.remove(ev.toString());
+            ignoredEvents.remove(ev);
 
         return true;
     }
@@ -36,17 +36,17 @@ public class EventUtil {
 
         if(++lastGarbageCollect > 100)
             garbageCollectEvents();
-        ignoredEvents.put(ev.toString(), System.currentTimeMillis());
+        ignoredEvents.put(ev, System.currentTimeMillis());
     }
 
     public static void garbageCollectEvents() {
 
         lastGarbageCollect = 0;
-        Iterator<Entry<String, Long>> iter = ignoredEvents.entrySet().iterator();
+        Iterator<Entry<Event, Long>> iter = ignoredEvents.entrySet().iterator();
 
         while(iter.hasNext()) {
 
-            Entry<String, Long> bit = iter.next();
+            Entry<Event, Long> bit = iter.next();
 
             if(System.currentTimeMillis() - bit.getValue().longValue() > 1000*5)
                 iter.remove();
