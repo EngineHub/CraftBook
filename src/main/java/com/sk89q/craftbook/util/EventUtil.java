@@ -9,12 +9,15 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 
 public class EventUtil {
 
     private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 
     public static boolean shouldIgnoreEvent(Event ev) {
+
+        if(ev instanceof SelfTriggerThinkEvent) return false;
 
         if(CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
