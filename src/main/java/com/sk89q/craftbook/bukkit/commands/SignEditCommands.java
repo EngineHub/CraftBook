@@ -21,6 +21,9 @@ public class SignEditCommands {
     @Command(aliases = {"edit"}, desc = "Edits the copied sign.", usage = "<Line> <Text>", min = 1, max = 2)
     public void editSign(CommandContext context, CommandSender sender) throws CommandException {
 
+        if(SignCopier.signs == null)
+            throw new FastCommandException("SignCopier mechanic is not enabled!");
+
         if(!(sender instanceof Player))
             throw new FastCommandException("This command can only be performed by a player!");
 
