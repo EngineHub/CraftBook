@@ -543,7 +543,7 @@ public class Gate extends AbstractCraftBookMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(3));
-            if(other != null) {
+            if(other != null && other.getLine(0).equals(s.getLine(0))) {
                 try {
                     curBlocks += Integer.parseInt(other.getLine(3));
                     setBlocks(s, curBlocks);
