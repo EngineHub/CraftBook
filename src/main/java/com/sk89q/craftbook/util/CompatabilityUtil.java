@@ -6,6 +6,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.sk89q.craftbook.util.compat.AntiCheatCompatability;
 import com.sk89q.craftbook.util.compat.CraftBookCompatability;
 import com.sk89q.craftbook.util.compat.NoCheatPlusCompatability;
 
@@ -24,6 +25,8 @@ public class CompatabilityUtil {
     public static void init() {
         if(Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null)
             compatChecks.add(new NoCheatPlusCompatability());
+        if(Bukkit.getPluginManager().getPlugin("AntiCheat") != null)
+            compatChecks.add(new AntiCheatCompatability());
     }
 
     public static void disableInterferences(Player player) {
