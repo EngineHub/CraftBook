@@ -44,6 +44,10 @@
             <id>vault repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>gravity-repo</id>
+            <url>http://repo.gravitydevelopment.net/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -100,6 +104,12 @@
 	       <artifactId>ncpcore</artifactId>
 	       <version>static</version>
 	    </dependency>
+        <dependency>
+            <groupId>net.gravitydevelopment.anticheat</groupId>
+            <artifactId>AntiCheat</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <distributionManagement>
         <site>
