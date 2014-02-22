@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -131,5 +132,26 @@ public class BlockUtil {
         }
 
         return drops.toArray(new ItemStack[drops.size()]);
+    }
+
+    public static Block[] getTouchingBlocks(Block block) {
+
+        List<Block> blocks = new ArrayList<Block>();
+        for(BlockFace face : LocationUtil.getDirectFaces())
+            blocks.add(block.getRelative(face));
+
+        return blocks.toArray(new Block[blocks.size()]);
+    }
+
+    public static Block[] getIndirectlyTouchingBlocks(Block block) {
+
+        List<Block> blocks = new ArrayList<Block>();
+        for(int x = -1; x < 2; x++)
+            for(int y = -1; y < 2; y++)
+                for(int z = -1; z < 2; z++)
+                    if(!(x == 0 && y == 0 & z == 0))
+                        blocks.add(block.getRelative(x,y,z));
+
+        return blocks.toArray(new Block[blocks.size()]);
     }
 }

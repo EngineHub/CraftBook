@@ -19,6 +19,7 @@ import org.bukkit.material.Tree;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -59,7 +60,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             hasPlanted = true;
 
         TreeSpecies species = null;
-        if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
+        if(CraftBookPlugin.inst().getConfiguration().treeLopperPlaceSapling && usedBlock.getState().getData() instanceof Tree && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
         usedBlock.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
@@ -76,10 +77,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             hasPlanted = true;
         }
 
-        for(BlockFace face : CraftBookPlugin.inst().getConfiguration().treeLopperAllowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(visitedLocations.contains(usedBlock.getRelative(face).getLocation())) continue;
-            if(canBreakBlock(originalBlock, usedBlock.getRelative(face)))
-                if(searchBlock(event, usedBlock.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
+        for(Block block : CraftBookPlugin.inst().getConfiguration().treeLopperAllowDiagonals ? BlockUtil.getTouchingBlocks(usedBlock) : BlockUtil.getIndirectlyTouchingBlocks(usedBlock)) {
+            if(visitedLocations.contains(block.getLocation())) continue;
+            if(canBreakBlock(originalBlock, block))
+                if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, hasPlanted)) {
                     ItemStack heldItem = event.getPlayer().getItemInHand();
                     if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getType()) > 0) {
                         heldItem.setDurability((short) (heldItem.getDurability() + 1));
