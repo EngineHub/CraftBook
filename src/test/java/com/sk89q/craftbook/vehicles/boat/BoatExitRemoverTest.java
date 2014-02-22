@@ -70,14 +70,14 @@ public class BoatExitRemoverTest {
 
         CraftBookPlugin.setInstance(plugin);
 
-        rem.new BoatRemover(event).run();
+        rem.new BoatRemover(null, boat).run();
 
         LivingEntity player = mock(LivingEntity.class);
 
         when(player.getLocation()).thenReturn(location);
         when(event.getExited()).thenReturn(player);
 
-        rem.new BoatRemover(event).run();
+        rem.new BoatRemover(player, boat).run();
 
         player = mock(Player.class);
 
@@ -90,10 +90,10 @@ public class BoatExitRemoverTest {
 
         when(((Player) player).getInventory()).thenReturn((PlayerInventory) inv);
 
-        rem.new BoatRemover(event).run();
+        rem.new BoatRemover(player, boat).run();
 
         when(inv.addItem(Mockito.<ItemStack[]>any())).thenReturn(new HashMap<Integer, ItemStack>());
-        rem.new BoatRemover(event).run();
+        rem.new BoatRemover(player, boat).run();
 
         verify(boat, Mockito.times(4)).remove();
         verify(world, Mockito.times(3)).dropItemNaturally(Mockito.eq(location), Mockito.<ItemStack>any());

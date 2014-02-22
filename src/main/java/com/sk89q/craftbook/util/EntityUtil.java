@@ -83,6 +83,8 @@ public class EntityUtil {
 
         if(ent instanceof Damageable)
             ((Damageable) ent).damage(((Damageable) ent).getHealth());
+        else if(ent instanceof Minecart)
+            ((Minecart) ent).setDamage(41);
         else
             ent.remove();
     }

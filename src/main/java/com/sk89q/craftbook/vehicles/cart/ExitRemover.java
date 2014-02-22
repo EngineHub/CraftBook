@@ -30,7 +30,9 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
             @Override
             public void run () {
+
                 if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
+
                 if(CraftBookPlugin.inst().getConfiguration().minecartRemoveOnExitGiveItem) {
 
                     ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
