@@ -54,6 +54,7 @@ public class BoatExitRemoverTest {
         when(location.getWorld()).thenReturn(world);
 
         when(boat.getLocation()).thenReturn(location);
+        when(boat.isValid()).thenReturn(true);
 
         when(event.getVehicle()).thenReturn(boat);
 
