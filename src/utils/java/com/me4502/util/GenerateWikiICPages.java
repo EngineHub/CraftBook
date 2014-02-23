@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ChipState;
@@ -24,6 +25,9 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
             File file = new File(getGenerationFolder(), "IC-Pages/");
             if(!file.exists())
                 file.mkdir();
+
+            BlockState oldState = Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).getState();
+            Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.WALL_SIGN);
 
             for(RegisteredICFactory ric : ICManager.inst().getICList()) {
 
@@ -49,8 +53,6 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 writer.println("=== Input ===");
                 int pins = 0;
 
-                Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.WALL_SIGN);
-
                 ChipState state = ric.getFamilies()[0].detect(BukkitUtil.toWorldVector(Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0)), BukkitUtil.toChangedSign(Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0)));
 
                 for(String pin : ric.getFactory().getPinDescription(state)) {
@@ -58,7 +60,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     if(pins == state.getInputCount())
                         writer.println("=== Output ===");
 
-                    writer.println("# " + pin);
+                    writer.println("# " + (pin == null ? "Nothing" : pin));
 
                     pins++;
                 }
@@ -69,6 +71,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.print("[[Category:" + family.getName() + "]]");
                 writer.close();
             }
+
+            oldState.update(true);
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {

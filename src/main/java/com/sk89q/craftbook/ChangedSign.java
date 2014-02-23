@@ -176,7 +176,7 @@ public class ChangedSign {
             if(((ChangedSign) o).getRawData() != getRawData())
                 return false;
             for(int i = 0; i < 4; i++)
-                if(!((ChangedSign) o).getLine(i).equals(getLine(i)))
+                if(!((ChangedSign) o).sign.getLine(i).equals(sign.getLine(i)))
                     return false;
             if(((ChangedSign) o).getX() != getX())
                 return false;
