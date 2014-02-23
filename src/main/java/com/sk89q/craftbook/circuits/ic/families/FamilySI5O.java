@@ -107,4 +107,9 @@ public class FamilySI5O extends AbstractICFamily {
         }
 
     }
+
+    @Override
+    public String getName () {
+        return "SI5O";
+    }
 }

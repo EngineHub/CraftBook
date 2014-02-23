@@ -73,6 +73,9 @@ public interface ICFactory {
     /**
      * Get a long description, to be used for wiki generation.
      * 
+     * This description must fit the guidelines of MediaWiki syntax,
+     * as it is built to work on a wiki running MediaWiki.
+     * 
      * @return a long description of the IC's usage.
      */
     public String getLongDescription();
@@ -83,6 +86,15 @@ public interface ICFactory {
      * @return array of lines 3 and 4
      */
     public String[] getLineHelp();
+
+    /**
+     * Get description of the function of each pin of the IC.
+     * 
+     * @param state The {@link ChipState} that the pins are attached to.
+     * 
+     * @return array of each pin in order.
+     */
+    public String[] getPinDescription(ChipState state);
 
     /**
      * Unloads the IC Factory.

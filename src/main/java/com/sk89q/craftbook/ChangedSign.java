@@ -22,10 +22,7 @@ public class ChangedSign {
 
     public ChangedSign(Sign sign, String[] lines, LocalPlayer player) {
 
-        Validate.notNull(sign);
-
-        this.sign = sign;
-        this.lines = lines;
+        this(sign, lines);
 
         if(lines != null) {
             for(int i = 0; i < 4; i++) {

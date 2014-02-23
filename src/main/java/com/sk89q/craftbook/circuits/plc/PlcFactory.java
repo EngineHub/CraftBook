@@ -21,6 +21,7 @@ import org.bukkit.Server;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
@@ -88,6 +89,12 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public String getLongDescription () {
 
         return "A Programmable Logic Chip is an IC that uses a language known as Perlstone to allow for custom logic to be written and ran.";
+    }
+
+    @Override
+    public String[] getPinDescription(ChipState state) {
+
+        return new String[state.getInputCount() + state.getOutputCount()];
     }
 
     @Override

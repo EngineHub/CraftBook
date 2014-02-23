@@ -111,4 +111,8 @@ public class Family3I5O extends AbstractICFamily {
 
     }
 
+    @Override
+    public String getName () {
+        return "3I5O";
+    }
 }

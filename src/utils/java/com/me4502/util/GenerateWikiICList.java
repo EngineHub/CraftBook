@@ -3,9 +3,7 @@ package com.me4502.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -20,8 +18,6 @@ public class GenerateWikiICList extends ExternalUtilityBase {
     @Override
     public void generate () {
         try {
-            CraftBookPlugin.inst().getConfiguration().ICsDisabled = new ArrayList<String>();
-
             File file = new File(getGenerationFolder(), "ICList.txt");
             if(!file.exists())
                 file.createNewFile();

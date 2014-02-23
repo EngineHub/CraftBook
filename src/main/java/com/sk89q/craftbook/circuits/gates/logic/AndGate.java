@@ -66,5 +66,34 @@ public class AndGate extends SimpleAnyInputLogicGate {
 
             return "Outputs high if all inputs are high.";
         }
+
+        @Override
+        public String getLongDescription() {
+
+            return "{| class='wiki-table' style='float: right; clear: both'" +
+                    "! A !! B !! C !! Output" +
+                    "|-" +
+                    "| 0 || 0 || 0 || 0" +
+                    "|-" +
+                    "| 0 || 0 || 1 || 0" +
+                    "|-" +
+                    "| 0 || 1 || 1 || 0" +
+                    "|-" +
+                    "| 0 || 1 || 0 || 0" +
+                    "|-" +
+                    "| 1 || 1 || 0 || 0" +
+                    "|-" +
+                    "| 1 || 0 || 0 || 0" +
+                    "|-" +
+                    "| 1 || 0 || 1 || 0" +
+                    "|-" +
+                    "| 1 || 1 || 1 || 1" +
+                    "|}" +
+
+                    "The '''MC3002''' outputs a high if and only if all three inputs are high." +
+                    "As of Craftbook alpha 3 or equivalent, any combination of inputs is valid and all 3 are not needed." +
+
+                    "Equivalent [[../Perlstone/]] script: <code>ABC&&r</code>";
+        }
     }
 }

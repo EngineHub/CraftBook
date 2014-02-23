@@ -78,6 +78,12 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
+    public String[] getPinDescription(ChipState state) {
+
+        return new String[state.getInputCount() + state.getOutputCount()];
+    }
+
+    @Override
     public void unload() {
 
         if(this instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
