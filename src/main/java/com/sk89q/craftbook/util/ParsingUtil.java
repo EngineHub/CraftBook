@@ -54,7 +54,7 @@ public class ParsingUtil {
 
     public static String parseVariables(String line, CommandSender player) {
 
-        if(CraftBookPlugin.inst() == null || VariableManager.instance == null)
+        if(CraftBookPlugin.inst() == null || VariableManager.instance == null || VariableManager.instance.getVariableStore().isEmpty())
             return line;
 
         CraftBookPlugin.logDebugMessage("Attempting to parse variables. Input line: " + line, "variables.line-parsing");
