@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -400,15 +401,15 @@ public class CommandItems extends AbstractCraftBookMechanic {
             return;
 
         if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
-            command = command.replace("@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+            command = StringUtils.replace(command, "@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
         if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
-            command = command.replace("@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
+            command = StringUtils.replace(command, "@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
         if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
-            command = command.replace("@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
+            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
         if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e"))
-            command = command.replace("@e", ((EntityEvent) event).getEntityType().getName());
+            command = StringUtils.replace(command, "@e", ((EntityEvent) event).getEntityType().getName());
         if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
-            command = command.replace("@m", ((AsyncPlayerChatEvent) event).getMessage());
+            command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
 
         command = ParsingUtil.parseLine(command, player);
         if(comdef.type == CommandType.CONSOLE)

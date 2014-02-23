@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -153,8 +154,8 @@ public class Area extends AbstractCraftBookMechanic {
         try {
             World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);
 
             CuboidCopy copy;
 
@@ -210,8 +211,8 @@ public class Area extends AbstractCraftBookMechanic {
         try {
             World world = BukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);
 
             CuboidCopy copy;
 
@@ -286,7 +287,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
-        sign.setLine(toToggleOff, sign.getLine(toToggleOff).replace("-", ""));
+        sign.setLine(toToggleOff, StringUtils.replace(sign.getLine(toToggleOff), "-", ""));
         sign.setLine(toToggleOn, "-" + sign.getLine(toToggleOn) + "-");
         sign.update(false);
     }

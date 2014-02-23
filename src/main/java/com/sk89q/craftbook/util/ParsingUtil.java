@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,8 +34,8 @@ public class ParsingUtil {
 
     public static String parsePlayerTags(String line, Player player) {
 
-        line = line.replace("@p", player.getName());
-        line = line.replace("@p.l", player.getLocation().getX() + ":" + player.getLocation().getY() + ":" + player.getLocation().getZ());
+        line = StringUtils.replace(line, "@p", player.getName());
+        line = StringUtils.replace(line, "@p.l", player.getLocation().getX() + ":" + player.getLocation().getY() + ":" + player.getLocation().getZ());
 
         return line;
     }
@@ -83,10 +84,10 @@ public class ParsingUtil {
 
             for(Entry<Tuple2<String, String>, String> bit : VariableManager.instance.getVariableStore().entrySet()) {
                 if(bit.getKey().b.equalsIgnoreCase(key) && bit.getKey().a.equalsIgnoreCase(value))
-                    line = line.replace("%" + var + "%", bit.getValue());
+                    line = StringUtils.replace(line, "%" + var + "%", bit.getValue());
             }
         }
 
-        return line.replace("\\%", "%");
+        return StringUtils.replace(line, "\\%", "%");
     }
 }

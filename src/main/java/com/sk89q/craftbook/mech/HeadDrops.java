@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -181,7 +182,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             }
 
             if(type != null)
-                meta.setDisplayName(ChatColor.RESET + type.getName().replace("_", " ") + " Head");
+                meta.setDisplayName(ChatColor.RESET + StringUtils.replace(type.getName(), "_", " ") + " Head");
             else
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
 

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -77,7 +78,7 @@ public class LanguageManager {
             } else {
                 String trans = message;
                 for(Entry<String, String> tran : defaultMessages.entrySet()) {
-                    trans = trans.replace(tran.getKey(), tran.getValue());
+                    trans = StringUtils.replace(trans, tran.getKey(), tran.getValue());
                 }
                 return trans;
             }
@@ -99,7 +100,7 @@ public class LanguageManager {
                 for(String tran : languageData.getMap().keySet()) {
                     String trand = defaultMessages.get(tran) != null ? languageData.getString(tran, defaultMessages.get(tran)) : languageData.getString(tran);
                     if(tran == null || trand == null) continue;
-                    trans = trans.replace(tran, trand);
+                    trans = StringUtils.replace(trans, tran, trand);
                 }
                 return trans;
             }

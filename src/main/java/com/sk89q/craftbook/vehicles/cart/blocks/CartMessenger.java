@@ -2,6 +2,7 @@ package com.sk89q.craftbook.vehicles.cart.blocks;
 
 import java.util.ArrayList;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -65,7 +66,7 @@ public class CartMessenger extends CartBlockMechanism {
             }
 
             for (String mes : messages) {
-                if (stack) mes = mes.replace("+", "");
+                if (stack) mes = StringUtils.replace(mes, "+", "");
                 p.sendMessage(mes);
             }
         }

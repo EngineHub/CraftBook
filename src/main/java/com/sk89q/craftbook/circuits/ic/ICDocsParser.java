@@ -2,6 +2,7 @@ package com.sk89q.craftbook.circuits.ic;
 
 import java.util.Locale;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -42,7 +43,7 @@ public class ICDocsParser {
             } else {
                 player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.inst().getWikiDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.getWikiDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }
@@ -52,9 +53,9 @@ public class ICDocsParser {
         if(line.contains("+o"))
             line = ChatColor.GRAY + line + " (Optional)";
 
-        line = line.replace("{", ChatColor.GRAY + "");
-        line = line.replace("}", ChatColor.YELLOW + "");
+        line = StringUtils.replace(line, "{", ChatColor.GRAY + "");
+        line = StringUtils.replace(line, "}", ChatColor.YELLOW + "");
 
-        return line.replace("+o", "");
+        return StringUtils.replace(line, "+o", "");
     }
 }

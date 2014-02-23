@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.variables;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -80,7 +81,7 @@ public class NumericModifier extends AbstractIC {
 
             String val = String.valueOf(currentValue);
             if (val.endsWith(".0"))
-                val = val.replace(".0", "");
+                val = StringUtils.replace(val, ".0", "");
 
             String var,key;
             var = VariableManager.instance.getVariableName(variable);

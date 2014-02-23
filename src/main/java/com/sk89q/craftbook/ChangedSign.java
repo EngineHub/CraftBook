@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.lang.Validate;
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
@@ -39,7 +40,7 @@ public class ChangedSign {
                         key = "global";
 
                     if(player != null && !VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), key, var, "use"))
-                        setLine(i,line.replace("%" + key + "|" + var + "%", ""));
+                        setLine(i, StringUtils.replace(line, "%" + key + "|" + var + "%", ""));
                 }
             }
         }

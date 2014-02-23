@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.tools.ant.util.StringUtils;
+
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -51,7 +53,7 @@ public class GenerateWikiICList extends ExternalUtilityBase {
                 for(ICFamily fam : ric.getFamilies()) {
                     if(!family.isEmpty())
                         family = family + " ";
-                    family = family + "[[../IC families/#" + fam.getClass().getSimpleName().replace("Family", "") + "|" + fam.getClass().getSimpleName().replace("Family", "") + "]]";
+                    family = family + "[[../IC families/#" + StringUtils.replace(fam.getClass().getSimpleName(), "Family", "") + "|" + StringUtils.replace(fam.getClass().getSimpleName(), "Family", "") + "]]";
                 }
 
                 IC ic = ric.getFactory().create(null);

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -94,7 +95,7 @@ public class CopyManager {
      */
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
 
-        area = area.replace("-", "") + getFileSuffix();
+        area = StringUtils.replace(area, "-", "") + getFileSuffix();
         File file = new File(dataFolder, "areas/" + namespace);
         return new File(file, area).exists();
     }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -72,7 +73,7 @@ public class SearchArea {
             if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return new SearchArea();
 
-            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
+            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(StringUtils.replace(line, "r:", ""));
             if(reg == null)
                 return new SearchArea();
 
@@ -96,7 +97,7 @@ public class SearchArea {
             if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return false;
 
-            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(line.replace("r:", ""));
+            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(StringUtils.replace(line, "r:", ""));
             if(reg == null)
                 return false;
 

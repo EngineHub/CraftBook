@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -133,7 +134,7 @@ public final class LegacyCustomDropManager {
                             throw new CustomDropParseException(prelude + "-> not found");
                         }
 
-                        String itemsSource = split[0].replace("+", "").trim();
+                        String itemsSource = StringUtils.replace(split[0], "+", "").trim();
                         String targetDrops = split[1].trim();
                         if (itemsSource.length() == 0 || targetDrops.length() == 0) {
                             reader.close();

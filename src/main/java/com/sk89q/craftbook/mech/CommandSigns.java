@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -89,7 +90,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
     public void runCommandSign(ChangedSign sign, LocalPlayer player) {
 
-        String command = sign.getLine(2).replace("/", "") + sign.getLine(3);
+        String command = StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3);
 
         while(BlockUtil.areBlocksIdentical(BukkitUtil.toBlock(sign), BukkitUtil.toBlock(sign).getRelative(0, -1, 0))) {
 

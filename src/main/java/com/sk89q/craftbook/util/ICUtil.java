@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.util;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -101,7 +102,7 @@ public class ICUtil {
             if(sign.getLine(i).contains("[off]")) {
 
                 if(CraftBookPlugin.plugins.getWorldEdit() == null) {
-                    sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                    sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
                     if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
@@ -121,17 +122,17 @@ public class ICUtil {
 
                                 x = Double.toString(offset.getX());
                                 if (x.endsWith(".0"))
-                                    x = x.replace(".0", "");
+                                    x = StringUtils.replace(x, ".0", "");
 
                                 y = Double.toString(offset.getY());
                                 if (y.endsWith(".0"))
-                                    y = y.replace(".0", "");
+                                    y = StringUtils.replace(y, ".0", "");
 
                                 z = Double.toString(offset.getZ());
                                 if (z.endsWith(".0"))
-                                    z = z.replace(".0", "");
+                                    z = StringUtils.replace(z, ".0", "");
 
-                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
                             } else if (selector instanceof SphereRegionSelector) {
 
                                 Vector centre = ((SphereRegionSelector)selector).getRegion().getCenter();
@@ -142,19 +143,19 @@ public class ICUtil {
 
                                 x = Double.toString(offset.getX());
                                 if (x.endsWith(".0"))
-                                    x = x.replace(".0", "");
+                                    x = StringUtils.replace(x, ".0", "");
 
                                 y = Double.toString(offset.getY());
                                 if (y.endsWith(".0"))
-                                    y = y.replace(".0", "");
+                                    y = StringUtils.replace(y, ".0", "");
 
                                 z = Double.toString(offset.getZ());
                                 if (z.endsWith(".0"))
-                                    z = z.replace(".0", "");
+                                    z = StringUtils.replace(z, ".0", "");
 
-                                sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
                             } else { // Unsupported.
-                                sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                                 player.printError("worldedit.ic.unsupported");
                             }
                         }
@@ -170,7 +171,7 @@ public class ICUtil {
             if(sign.getLine(i).contains("[rad]")) {
 
                 if(CraftBookPlugin.plugins.getWorldEdit() == null) {
-                    sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
+                    sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
 
@@ -185,17 +186,17 @@ public class ICUtil {
 
                                 x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX())/2);
                                 if (x.endsWith(".0"))
-                                    x = x.replace(".0", "");
+                                    x = StringUtils.replace(x, ".0", "");
 
                                 y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY())/2);
                                 if (y.endsWith(".0"))
-                                    y = y.replace(".0", "");
+                                    y = StringUtils.replace(y, ".0", "");
 
                                 z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ())/2);
                                 if (z.endsWith(".0"))
-                                    z = z.replace(".0", "");
+                                    z = StringUtils.replace(z, ".0", "");
 
-                                sign.setLine(i, sign.getLine(i).replace("[rad]", x + "," + y + "," + z));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x + "," + y + "," + z));
                             } else if (selector instanceof SphereRegionSelector) {
 
                                 String x;
@@ -204,11 +205,11 @@ public class ICUtil {
 
                                 x = Double.toString(amounts);
                                 if (x.endsWith(".0"))
-                                    x = x.replace(".0", "");
+                                    x = StringUtils.replace(x, ".0", "");
 
-                                sign.setLine(i, sign.getLine(i).replace("[rad]", x));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x));
                             } else { // Unsupported.
-                                sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
+                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
                                 player.printError("worldedit.ic.unsupported");
                             }
                         }
@@ -227,7 +228,7 @@ public class ICUtil {
 
     public static Vector parseUnsafeBlockLocation(String line) throws NumberFormatException, ArrayIndexOutOfBoundsException {
 
-        line = line.replace("!", "").replace("^", "").replace("&", "");
+        line = StringUtils.replace(StringUtils.replace(StringUtils.replace(line, "!", ""), "^", ""), "&", "");
         int offsetX = 0, offsetY = 0, offsetZ = 0;
 
         if (line.contains("="))
@@ -299,7 +300,7 @@ public class ICUtil {
         try {
             String line = sign.getLine(i);
             String[] strings;
-            line = line.replace("!", "").replace("^", "").replace("&", "");
+            line = StringUtils.replace(StringUtils.replace(StringUtils.replace(line, "!", ""), "^", ""), "&", "");
             if (line.contains("=")) {
                 String[] split = RegexUtil.EQUALS_PATTERN.split(line, 2);
                 if(RegexUtil.COMMA_PATTERN.split(split[0]).length > 1) {
