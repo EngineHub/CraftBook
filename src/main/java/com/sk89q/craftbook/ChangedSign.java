@@ -103,6 +103,11 @@ public class ChangedSign {
         return ParsingUtil.parseLine(lines[index], null);
     }
 
+    public String getRawLine(int index) throws IndexOutOfBoundsException {
+
+        return lines[index];
+    }
+
     public void setLine(int index, String line) throws IndexOutOfBoundsException {
 
         lines[index] = line;
@@ -176,7 +181,7 @@ public class ChangedSign {
             if(((ChangedSign) o).getRawData() != getRawData())
                 return false;
             for(int i = 0; i < 4; i++)
-                if(!((ChangedSign) o).sign.getLine(i).equals(sign.getLine(i)))
+                if(!((ChangedSign) o).getRawLine(i).equals(getRawLine(i)))
                     return false;
             if(((ChangedSign) o).getX() != getX())
                 return false;
