@@ -1,3 +1,15 @@
+3.8.4
++ Added messages to payment mechanic to show transaction errors.
++ Added redstone support to Improved Cauldrons.
++ Added AntiCheat Compatability.
+* Performance improvements for sign related clicks.
+* Performance improvements in all events.
+* Fixed a pipe dupe bug.
+* Fixed /sign erroring when not enabled, instead of saying it is not enabled.
+* Fixed gates transmutating types between signs.
+* Fixed potential dupe bug caused by other plugins handling boat removals.
+* Fixed diagonals with TreeLopper.
+
 3.8.3
 * Fixed Melody IC not checking for file existance on first load.
 + Added CommandItemActions subsystem to CommandItems. More info + features shortly. (Currently only SETVAR and ISVAR)
