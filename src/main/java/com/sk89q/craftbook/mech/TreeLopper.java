@@ -78,6 +78,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
 
         for(Block block : CraftBookPlugin.inst().getConfiguration().treeLopperAllowDiagonals ? BlockUtil.getTouchingBlocks(usedBlock) : BlockUtil.getIndirectlyTouchingBlocks(usedBlock)) {
+            if(block == null) continue; //Top of map, etc.
             if(visitedLocations.contains(block.getLocation())) continue;
             if(canBreakBlock(originalBlock, block))
                 if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, hasPlanted)) {

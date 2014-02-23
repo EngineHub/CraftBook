@@ -271,11 +271,23 @@ public final class LocationUtil {
         return radiusEntities.toArray(new Player[radiusEntities.size()]);
     }
 
+    /**
+     * Gets an array of {@link BlockFace} that are direct.
+     * 
+     * @return The array of {@link BlockFace}
+     */
     public static BlockFace[] getDirectFaces() {
 
         return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
     }
 
+    /**
+     * Gets an array of {@link BlockFace} that are indirect.
+     * 
+     * Note: This is only indirect along the X and Z axis due to bukkit constraints.
+     * 
+     * @return The array of {@link BlockFace}
+     */
     public static BlockFace[] getIndirectFaces() {
 
         return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST};
