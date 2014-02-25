@@ -19,7 +19,7 @@ package com.sk89q.craftbook.circuits.ic;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

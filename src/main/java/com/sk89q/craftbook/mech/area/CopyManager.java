@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.lang.Validate;
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 

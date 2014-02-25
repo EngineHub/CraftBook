@@ -2,7 +2,7 @@ package com.sk89q.craftbook.circuits.ic;
 
 import java.util.Locale;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

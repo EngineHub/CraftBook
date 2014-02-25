@@ -10,7 +10,7 @@ import java.util.Set;
 
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 

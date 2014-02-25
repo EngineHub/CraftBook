@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.variables;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;

@@ -52,7 +52,7 @@ public class RecipeManager extends LocalConfiguration {
         config.setHeader(
                 "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
                 "# For more information on setting up custom recipes, see the wiki:",
-                "# " + CraftBookPlugin.inst().getWikiDomain() + "/Custom_crafting",
+                "# " + CraftBookPlugin.getWikiDomain() + "/Custom_crafting",
                 "",
                 "");
 
@@ -80,7 +80,7 @@ public class RecipeManager extends LocalConfiguration {
         config.setHeader(
                 "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
                 "# For more information on setting up custom recipes, see the wiki:",
-                "# " + CraftBookPlugin.inst().getWikiDomain() + "/Custom_crafting",
+                "# " + CraftBookPlugin.getWikiDomain() + "/Custom_crafting",
                 "",
                 "");
 

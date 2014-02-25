@@ -2,7 +2,7 @@ package com.sk89q.craftbook.vehicles.cart.blocks;
 
 import java.util.ArrayList;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 

@@ -3,7 +3,7 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
