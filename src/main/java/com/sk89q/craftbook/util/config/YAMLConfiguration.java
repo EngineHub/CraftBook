@@ -792,6 +792,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("vehicles.minecart.remove-entities.remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
         minecartRemoveEntitiesOtherCarts = config.getBoolean("vehicles.minecart.remove-entities.remove-other-minecarts", false);
 
+        config.setComment("vehicles.minecart.remove-entities.allow-empty-carts", "Allows the cart to be empty.");
+        minecartRemoveEntitiesEmpty = config.getBoolean("vehicles.minecart.remove-entities.allow-empty-carts", false);
+
 
         // Vehicles Minecart Vision Steering Listener
         config.setComment("vehicles.minecart.vision-steering.enable", "Enables the Vision Steering mechanic.");

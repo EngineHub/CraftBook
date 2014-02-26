@@ -26,7 +26,7 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         if (!CraftBookPlugin.inst().getConfiguration().minecartRemoveEntitiesOtherCarts && (event.getEntity() instanceof Minecart || event.getEntity().isInsideVehicle()))
             return;
 
-        if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty())
+        if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !CraftBookPlugin.inst().getConfiguration().minecartRemoveEntitiesEmpty)
             return;
 
         if (event.getEntity() instanceof LivingEntity) {

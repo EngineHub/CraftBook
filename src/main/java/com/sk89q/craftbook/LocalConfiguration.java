@@ -288,6 +288,7 @@ public abstract class LocalConfiguration {
     // Vehicles - Minecart Remove Entities Options
     public boolean minecartRemoveEntitiesEnabled;
     public boolean minecartRemoveEntitiesOtherCarts;
+    public boolean minecartRemoveEntitiesEmpty;
     // Vehicles - Minecart Vision Steering Options
     public boolean minecartVisionSteeringEnabled;
     public int minecartVisionSteeringMinimumSensitivity;
