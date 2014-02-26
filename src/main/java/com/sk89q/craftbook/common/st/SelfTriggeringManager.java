@@ -36,7 +36,7 @@ public class SelfTriggeringManager {
                 SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
                 Bukkit.getServer().getPluginManager().callEvent(event);
             }
-        } catch (NullPointerException e) {
+        } catch (Throwable e) {
             Bukkit.getLogger().warning("A corrupt tile entity was found in the chunk: (x:" + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.");
             if(CraftBookPlugin.inst().getConfiguration().debugMode)
                 BukkitUtil.printStacktrace(e);

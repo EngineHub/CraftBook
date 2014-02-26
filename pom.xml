@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>5.5.8-SNAPSHOT</version>
+            <version>5.5.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
@@ -277,6 +277,93 @@
 				    <downloadJavadocs>true</downloadJavadocs>
 			    </configuration>
 		    </plugin>
+		    
+		    <!-- Leave this alone! Compile-time checks so that your extension works. -->
+			<plugin>
+			    <groupId>org.bsc.maven</groupId>
+			    <artifactId>maven-processor-plugin</artifactId>
+			    <version>2.2.4</version>
+			 
+			    <executions>
+			        <execution>
+			            <id>process</id>
+			            <phase>process-classes</phase>
+			 
+			            <goals>
+			                <goal>process</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			 
+			    <configuration>
+			        <outputDirectory>src/main/generated</outputDirectory>
+			 
+			        <processors>
+			            <processor>com.laytonsmith.core.extensions.ExtensionAnnotationProcessor</processor>
+			        </processors>
+			    </configuration>
+			</plugin>
+			 
+			<!-- Leave this alone! Run-time extension loading speedup. -->
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>exec-maven-plugin</artifactId>
+			    <version>1.2.1</version>
+			 
+			    <executions>
+			        <execution>
+			            <id>cache-annotations</id>
+			            <phase>process-classes</phase>
+			            <goals>
+			                <goal>java</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			 
+			    <configuration>
+			        <mainClass>com.laytonsmith.PureUtilities.ClassLoading.Annotations.CacheAnnotations</mainClass>
+			 
+			        <arguments>
+			            <argument>${basedir}/target/classes</argument>
+			            <argument>${basedir}/target/classes</argument>
+			        </arguments>
+			    </configuration>
+			</plugin>
         </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									org.codehaus.mojo
+        								</groupId>
+        								<artifactId>
+        									exec-maven-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.2.1,)
+        								</versionRange>
+        								<goals>
+        									<goal>java</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
 </project>
