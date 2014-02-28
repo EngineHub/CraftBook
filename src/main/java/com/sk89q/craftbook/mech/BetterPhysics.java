@@ -21,7 +21,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
+        if(FallingLadders.isValid(event.getBlock()))
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
@@ -30,7 +30,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
+        if(FallingLadders.isValid(event.getBlock()))
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
@@ -40,7 +40,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
+        if(FallingLadders.isValid(event.getBlock()))
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
@@ -53,10 +53,15 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
             this.ladder = ladder;
         }
 
+        public static boolean isValid(Block block) {
+
+            return block.getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders && block.getRelative(0, -1, 0).getType() == Material.AIR;
+        }
+
         @Override
         public void run () {
-            if(ladder.getRelative(0, -1, 0).getType() != Material.AIR)
-                return;
+
+            if(!isValid(ladder)) return;
             ladder.getWorld().spawnFallingBlock(ladder.getLocation(), ladder.getType(), ladder.getData());
             ladder.setTypeId(Material.AIR.getId(), false);
         }
