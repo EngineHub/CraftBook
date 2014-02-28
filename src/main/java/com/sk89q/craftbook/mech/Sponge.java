@@ -29,9 +29,9 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(event.getBlock().getType() != Material.WATER && event.getBlock().getType() != Material.STATIONARY_WATER) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         for (int cx = -radius; cx <= radius; cx++) {
             for (int cy = -radius; cy <= radius; cy++) {
@@ -51,9 +51,9 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(event.getBlock().getType() != Material.SPONGE) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
@@ -63,9 +63,9 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(event.getBlock().getType() != Material.SPONGE) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
@@ -75,10 +75,10 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(!CraftBookPlugin.inst().getConfiguration().spongeRedstone) return;
-        if(event.getBlock().getType() == Material.SPONGE) return;
+        if(event.getBlock().getType() != Material.SPONGE) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(!event.isOn())
             addWater(event.getBlock());
