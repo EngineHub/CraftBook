@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.variables;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -42,7 +43,7 @@ public class NumericModifier extends AbstractIC {
 
         try {
             variable = getLine(2);
-            function = Function.valueOf(getLine(3).split(":")[0]);
+            function = Function.parseFunction(getLine(3).split(":")[0]);
             amount = Double.parseDouble(getLine(3).split(":")[1]);
         } catch(Exception ignored) {}
     }
@@ -75,6 +76,9 @@ public class NumericModifier extends AbstractIC {
                 case SUBTRACT:
                     currentValue -= amount;
                     break;
+                case MOD:
+                    currentValue %= amount;
+                    break;
                 default:
                     break;
             }
@@ -96,7 +100,26 @@ public class NumericModifier extends AbstractIC {
 
     private enum Function {
 
-        ADD,SUBTRACT,MULTIPLY,DIVIDE;
+        ADD("+"),SUBTRACT("-"),MULTIPLY("*","x"),DIVIDE("/"),MOD("%");
+
+        String[] mini;
+
+        Function(String ... mini) {
+            this.mini = mini;
+        }
+
+        public static Function parseFunction(String text) {
+
+            for(Function func : values()) {
+                if(func.name().equalsIgnoreCase(text))
+                    return func;
+                for(String min : func.mini)
+                    if(min.equalsIgnoreCase(text))
+                        return func;
+            }
+
+            return null;
+        }
     }
 
     public static class Factory extends AbstractICFactory {
@@ -116,6 +139,23 @@ public class NumericModifier extends AbstractIC {
         public String getShortDescription() {
 
             return "Modifies a variable using the specified function.";
+        }
+
+        @Override
+        public String getLongDescription() {
+
+            return "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations. \n\n" +
+                    "== Functions ==\n" +
+                    "{|\n" +
+                    "! Name\n" +
+                    "! Symbol\n" +
+                    "! Function\n" +
+                    "|-\n" +
+                    "| Add || + || Adds the inputted value to the variable.\n" +
+                    "| Subtract || - || Subtracts the inputted value from the variable.\n" +
+                    "| Multiply || * OR x || Multiplies the inputted value by the variable.\n" +
+                    "| Divide || / || Divides the inputted value by the variable.\n" +
+                    "| Mod || % || Performs modulo by the inputted value on the variable.\n";
         }
 
         @Override
@@ -146,7 +186,7 @@ public class NumericModifier extends AbstractIC {
                 } else
                     if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
                         throw new ICVerificationException("Unknown Variable!");
-                Function.valueOf(sign.getLine(3).split(":")[0]);
+                Validate.notNull(Function.parseFunction(sign.getLine(3).split(":")[0]));
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
             } catch(NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
