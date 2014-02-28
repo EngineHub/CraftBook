@@ -28,8 +28,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if(event.getBlock().getType() == Material.LADDER && CraftBookPlugin.inst().getConfiguration().physicsLadders)
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));

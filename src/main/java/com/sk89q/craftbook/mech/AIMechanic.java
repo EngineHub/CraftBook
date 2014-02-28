@@ -23,10 +23,9 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
+
+        if (!EventUtil.passesFilter(event)) return;
 
         if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled)) {
             if(event.getTarget() != null) return;
@@ -73,10 +72,9 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
+
+        if (!EventUtil.passesFilter(event)) return;
 
         if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)) {
             int amount = 0;

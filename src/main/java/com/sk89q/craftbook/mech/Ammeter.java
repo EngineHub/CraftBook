@@ -38,11 +38,10 @@ public class Ammeter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(!BlockType.canTransferRedstone(event.getClickedBlock().getTypeId()) && !BlockType.isRedstoneSource(event.getClickedBlock().getTypeId())) return;
+
+        if (!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!CraftBookPlugin.inst().getConfiguration().ammeterItem.equals(player.getHeldItemInfo())) return;

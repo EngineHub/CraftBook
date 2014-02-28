@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,15 +10,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 
 public class EventUtil {
 
     private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 
+    static String[] ignoredEventTypes = new String[0];
+
     public static boolean shouldIgnoreEvent(Event ev) {
 
-        if(ev instanceof SelfTriggerThinkEvent) return false;
+        if(!shouldIgnoreEventType(ev.getClass().getSimpleName())) return false;
 
         if(CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
@@ -37,9 +39,20 @@ public class EventUtil {
 
         if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
 
+        if(!shouldIgnoreEventType(ev.getClass().getSimpleName()))
+            ignoredEventTypes = Arrays.asList(ignoredEventTypes, ev.getClass().getSimpleName()).toArray(new String[ignoredEventTypes.length + 1]);
+
         if(++lastGarbageCollect > 100)
             garbageCollectEvents();
         ignoredEvents.put(ev, System.currentTimeMillis());
+    }
+
+    private static boolean shouldIgnoreEventType(String type) {
+
+        for(String ev : ignoredEventTypes)
+            if(ev.equalsIgnoreCase(type))
+                return true;
+        return false;
     }
 
     public static void garbageCollectEvents() {
