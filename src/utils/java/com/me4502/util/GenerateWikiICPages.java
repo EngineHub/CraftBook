@@ -15,6 +15,7 @@ import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.craftbook.circuits.ic.families.FamilyAISO;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 
 public class GenerateWikiICPages extends ExternalUtilityBase {
@@ -40,16 +41,20 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println("{{" + family.getName() + "|id=" + ric.getId() + "|name=" + ic.getTitle() + "}}");
                 }
 
-                writer.println(ric.getFactory().getLongDescription());
+                for(String line : RegexUtil.NEW_LINE_PATTERN.split(ric.getFactory().getLongDescription()))
+                    writer.println(line);
 
+                writer.println();
                 writer.println("== Sign parameters ==");
                 writer.println("# " + ic.getSignTitle());
                 writer.println("# [" + ric.getId() + "]");
                 for(String line : ric.getFactory().getLineHelp())
                     writer.println("# " + (line == null ? "Blank" : line));
 
+                writer.println();
                 writer.println("== Pins ==");
 
+                writer.println();
                 writer.println("=== Input ===");
                 int pins = 0;
 
@@ -57,8 +62,10 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                 for(String pin : ric.getFactory().getPinDescription(state)) {
 
-                    if(pins == state.getInputCount())
+                    if(pins == state.getInputCount()) {
+                        writer.println();
                         writer.println("=== Output ===");
+                    }
 
                     writer.println("# " + (pin == null ? "Nothing" : pin));
 

@@ -27,4 +27,5 @@ public class RegexUtil {
     public static final Pattern PLC_NAME_PATTERN = Pattern.compile("[-_a-z0-9]+", Pattern.CASE_INSENSITIVE);
     public static final Pattern VARIABLE_KEY_PATTERN = Pattern.compile("[a-z_]+", Pattern.CASE_INSENSITIVE);
     public static final Pattern VARIABLE_VALUE_PATTERN = Pattern.compile("[a-z0-9.,:;_]+", Pattern.CASE_INSENSITIVE);
+    public static final Pattern NEW_LINE_PATTERN = Pattern.compile("\\r?\\n");
 }

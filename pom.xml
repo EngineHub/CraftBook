@@ -279,7 +279,7 @@
 		    </plugin>
 		    
 		    <!-- Leave this alone! Compile-time checks so that your extension works. -->
-			<plugin>
+			<!--<plugin>
 			    <groupId>org.bsc.maven</groupId>
 			    <artifactId>maven-processor-plugin</artifactId>
 			    <version>2.2.4</version>
@@ -302,10 +302,10 @@
 			            <processor>com.laytonsmith.core.extensions.ExtensionAnnotationProcessor</processor>
 			        </processors>
 			    </configuration>
-			</plugin>
+			</plugin> -->
 			 
 			<!-- Leave this alone! Run-time extension loading speedup. -->
-			<plugin>
+			<!--<plugin>
 			    <groupId>org.codehaus.mojo</groupId>
 			    <artifactId>exec-maven-plugin</artifactId>
 			    <version>1.2.1</version>
@@ -328,7 +328,7 @@
 			            <argument>${basedir}/target/classes</argument>
 			        </arguments>
 			    </configuration>
-			</plugin>
+			</plugin>-->
         </plugins>
         <pluginManagement>
         	<plugins>
