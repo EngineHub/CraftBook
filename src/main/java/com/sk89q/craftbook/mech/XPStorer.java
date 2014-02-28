@@ -17,11 +17,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(!CraftBookPlugin.inst().getConfiguration().xpStorerBlock.isSame(event.getClickedBlock())) return;
+
+        if (!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 

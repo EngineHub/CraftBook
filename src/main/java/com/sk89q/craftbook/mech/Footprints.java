@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -53,7 +54,7 @@ public class Footprints extends AbstractCraftBookMechanic {
                 return;
 
             try {
-                PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(63);
+                PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.WORLD_PARTICLES);
                 packet.getStrings().write(0, "footstep");
                 packet.getFloat().write(0, (float) event.getPlayer().getLocation().getX())
                 .write(1, (float) (event.getPlayer().getLocation().getY() + yOffset))

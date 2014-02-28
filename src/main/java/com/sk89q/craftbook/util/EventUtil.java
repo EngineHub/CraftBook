@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
@@ -82,7 +83,8 @@ public class EventUtil {
 
         if(CraftBookPlugin.inst() != null && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
             if(event instanceof Cancellable && ((Cancellable) event).isCancelled())
-                return false;
+                if(!(event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getClickedBlock() == null))
+                    return false;
         }
 
         if(EventUtil.shouldIgnoreEvent(event)) return false;
