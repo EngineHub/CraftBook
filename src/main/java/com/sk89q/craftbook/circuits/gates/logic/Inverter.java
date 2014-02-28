@@ -68,5 +68,14 @@ public class Inverter extends AbstractIC {
 
             return "Invert a redstone signal.";
         }
+
+        @Override
+        public String getLongDescription() {
+
+            return "The '''MC1001''' inverts the input state.\n\n" +
+                    "Equivalent [[../Perlstone/]] script: <code>A!r</code>\n\n" +
+                    "== Uses ==\n" +
+                    "* Inverting a signal state.\n";
+        }
     }
 }

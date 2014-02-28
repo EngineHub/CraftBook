@@ -144,18 +144,32 @@ public class NumericModifier extends AbstractIC {
         @Override
         public String getLongDescription() {
 
-            return "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations. \n\n" +
+            return "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions). \n\n" +
                     "== Functions ==\n" +
-                    "{|\n" +
+                    "{| class=\"wiki-table sortable\"\n" +
                     "! Name\n" +
                     "! Symbol\n" +
                     "! Function\n" +
                     "|-\n" +
                     "| Add || + || Adds the inputted value to the variable.\n" +
+                    "|-\n" +
                     "| Subtract || - || Subtracts the inputted value from the variable.\n" +
+                    "|-\n" +
                     "| Multiply || * OR x || Multiplies the inputted value by the variable.\n" +
+                    "|-\n" +
                     "| Divide || / || Divides the inputted value by the variable.\n" +
-                    "| Mod || % || Performs modulo by the inputted value on the variable.\n";
+                    "|-\n" +
+                    "| Mod || % || Performs modulo by the inputted value on the variable.\n" +
+                    "|}\n";
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "High on success"//Outputs
+            };
         }
 
         @Override

@@ -50,7 +50,7 @@ public class ToggleFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (risingEdge && chip.getInput(0) || !risingEdge && !chip.getInput(0)) {
+        if (risingEdge == chip.getInput(0)) {
             chip.setOutput(0, !chip.getOutput(0));
         }
     }
@@ -74,7 +74,7 @@ public class ToggleFlipFlop extends AbstractIC {
         @Override
         public String getShortDescription() {
 
-            return "Toggles output on input.";
+            return "Toggles output on " + (risingEdge ? "high." : "low.");
         }
     }
 }
