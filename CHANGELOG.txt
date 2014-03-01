@@ -1,3 +1,16 @@
+3.8.5 (1st March)
++ Added a utility to automatically generate IC wiki pages
++ Added an option to minecart remove entities that allows for empty carts
++ Added MOD and symbol (+,-,*,/,%) support to VAR100
+* Performance improvements in sign validation
+* Performance improvements in Variables
+* Performance improvements in BetterPhysics
+* Major performance improvements across the entire plugin
+* Fixed chunk-error related issues causing the plugin to not start
+* Fixed the world not being shown in chunk-error related warnings
+* Fixed Sponge redstone mode
+* Fixed a bug involving clicking air that was caused by a bug in bukkit, through a workaround
+
 3.8.4
 + Added messages to payment mechanic to show transaction errors.
 + Added redstone support to Improved Cauldrons.
