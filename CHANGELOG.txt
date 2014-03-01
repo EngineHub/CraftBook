@@ -1,3 +1,6 @@
+3.8.5r1 (1st March)
+* Fixed an error that occured for a small portion of people
+
 3.8.5 (1st March)
 + Added a utility to automatically generate IC wiki pages
 + Added an option to minecart remove entities that allows for empty carts
