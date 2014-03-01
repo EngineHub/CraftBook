@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
@@ -40,8 +42,13 @@ public class EventUtil {
 
         if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
 
-        if(!shouldIgnoreEventType(ev.getClass().getSimpleName()))
-            ignoredEventTypes = Arrays.asList(ignoredEventTypes, ev.getClass().getSimpleName()).toArray(new String[ignoredEventTypes.length + 1]);
+        if(!shouldIgnoreEventType(ev.getClass().getSimpleName())) {
+            List<String> evs = new ArrayList<String>();
+            if(ignoredEventTypes.length > 0)
+                evs.addAll(Arrays.asList(ignoredEventTypes));
+            evs.add(ev.getClass().getSimpleName());
+            ignoredEventTypes = evs.toArray(new String[evs.size()]);
+        }
 
         if(++lastGarbageCollect > 100)
             garbageCollectEvents();
