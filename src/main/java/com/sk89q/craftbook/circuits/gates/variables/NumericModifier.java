@@ -15,7 +15,6 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.common.variables.VariableManager;
-import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 
 public class NumericModifier extends AbstractIC {
@@ -57,7 +56,11 @@ public class NumericModifier extends AbstractIC {
         }
 
         try {
-            double currentValue = Double.parseDouble(ParsingUtil.parseVariables(variable, null));
+            String var,key;
+            var = VariableManager.instance.getVariableName(variable);
+            key = VariableManager.instance.getNamespace(variable);
+
+            double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
 
             switch(function) {
                 case ADD:
@@ -87,14 +90,10 @@ public class NumericModifier extends AbstractIC {
             if (val.endsWith(".0"))
                 val = StringUtils.replace(val, ".0", "");
 
-            String var,key;
-            var = VariableManager.instance.getVariableName(variable);
-            key = VariableManager.instance.getNamespace(variable);
-
             VariableManager.instance.setVariable(var, key, val);
             chip.setOutput(0, true);
             return;
-        } catch(Exception ignored){}
+        } catch(NumberFormatException ignored){}
         chip.setOutput(0, false);
     }
 
