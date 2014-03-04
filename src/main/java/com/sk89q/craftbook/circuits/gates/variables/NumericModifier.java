@@ -50,50 +50,53 @@ public class NumericModifier extends AbstractIC {
     @Override
     public void trigger (ChipState chip) {
 
-        if(function == null) {
-            chip.setOutput(0, false);
-            return;
-        }
-
-        try {
-            String var,key;
-            var = VariableManager.instance.getVariableName(variable);
-            key = VariableManager.instance.getNamespace(variable);
-
-            double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
-
-            switch(function) {
-                case ADD:
-                    currentValue += amount;
-                    break;
-                case DIVIDE:
-                    if(amount == 0) {
-                        chip.setOutput(0, false);
-                        return;
-                    }
-                    currentValue /= amount;
-                    break;
-                case MULTIPLY:
-                    currentValue *= amount;
-                    break;
-                case SUBTRACT:
-                    currentValue -= amount;
-                    break;
-                case MOD:
-                    currentValue %= amount;
-                    break;
-                default:
-                    break;
+        if(chip.getInput(0)) {
+            if(function == null) {
+                chip.setOutput(0, false);
+                return;
             }
 
-            String val = String.valueOf(currentValue);
-            if (val.endsWith(".0"))
-                val = StringUtils.replace(val, ".0", "");
+            try {
+                String var,key;
+                var = VariableManager.instance.getVariableName(variable);
+                key = VariableManager.instance.getNamespace(variable);
 
-            VariableManager.instance.setVariable(var, key, val);
-            chip.setOutput(0, true);
-            return;
-        } catch(NumberFormatException ignored){}
+                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
+
+                switch(function) {
+                    case ADD:
+                        currentValue += amount;
+                        break;
+                    case DIVIDE:
+                        if(amount == 0) {
+                            chip.setOutput(0, false);
+                            return;
+                        }
+                        currentValue /= amount;
+                        break;
+                    case MULTIPLY:
+                        currentValue *= amount;
+                        break;
+                    case SUBTRACT:
+                        currentValue -= amount;
+                        break;
+                    case MOD:
+                        currentValue %= amount;
+                        break;
+                    default:
+                        break;
+                }
+
+                String val = String.valueOf(currentValue);
+                if (val.endsWith(".0"))
+                    val = StringUtils.replace(val, ".0", "");
+
+                VariableManager.instance.setVariable(var, key, val);
+                chip.setOutput(0, true);
+                return;
+            } catch(NumberFormatException ignored){}
+        }
+
         chip.setOutput(0, false);
     }
 
