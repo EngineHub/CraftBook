@@ -102,10 +102,12 @@ public class Sponge extends AbstractCraftBookMechanic {
 
     public void addWater(Block block) {
 
+        int cx,cy,cz;
+
         // The negative x edge
-        int cx = block.getX() - radius - 1;
-        for (int cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
-            for (int cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
+        cx = block.getX() - radius - 1;
+        for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
+            for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
@@ -117,8 +119,8 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         // The positive x edge
         cx = block.getX() + radius + 1;
-        for (int cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
-            for (int cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
+        for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
+            for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
@@ -129,7 +131,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         }
 
         // The negative y edge
-        int cy = block.getY() - radius - 1;
+        /*cy = block.getY() - radius - 1;
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
             for (int cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
@@ -139,12 +141,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                         water.getRelative(0, 1, 0).setType(Material.WATER);
                 }
             }
-        }
+        }*/
 
         // The positive y edge
         cy = block.getY() + radius + 1;
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
-            for (int cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
+            for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
@@ -155,7 +157,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         }
 
         // The negative z edge
-        int cz = block.getZ() - radius - 1;
+        cz = block.getZ() - radius - 1;
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
             for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
