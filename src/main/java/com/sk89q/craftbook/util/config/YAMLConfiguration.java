@@ -257,6 +257,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.cauldron.enable-redstone", "Allows use of cauldrons via redstone.");
         cauldronAllowRedstone = config.getBoolean("mechanics.cauldron.enable-redstone", false);
 
+        config.setComment("mechanics.cauldron.item-tracking", "Tracks items and forces them to to tracked by the cauldron. Fixes mc bugs by holding item in place.");
+        cauldronItemTracking = config.getBoolean("mechanics.cauldron.item-tracking", false);
+
 
         // Chair Configuration Listener
         config.setComment("mechanics.chair.enable", "Enable chair mechanic.");

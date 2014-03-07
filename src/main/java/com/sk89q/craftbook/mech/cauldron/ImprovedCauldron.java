@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,14 +16,18 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Cauldron;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -84,6 +89,88 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         if(!isCauldron(event.getBlock())) return;
 
         performCauldron(event.getBlock(), null);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onItemDrop(final PlayerDropItemEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().cauldronItemTracking) return;
+
+        if(!event.getPlayer().hasPermission("craftbook.mech.cauldron.use")) return; //If they can't use cauldrons, don't track it.
+        if(!EventUtil.passesFilter(event)) return;
+
+        new ItemTracker(event.getItemDrop()).runTaskTimer(CraftBookPlugin.inst(), 1L, 1L);
+    }
+
+    public class ItemTracker extends BukkitRunnable {
+
+        private Location lastLocation;
+        private Item item;
+
+        public ItemTracker(Item item) {
+
+            //Set it to some absurd value.
+            lastLocation = new Location(item.getLocation().getWorld(), Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+            this.item = item;
+        }
+
+        @Override
+        public void run () {
+
+            if(item == null) {
+                cancel();
+                return;
+            }
+
+            trackCauldronItem(item);
+
+            if (lastLocation.equals(item.getLocation()))
+                cancel();
+        }
+    }
+
+    public boolean trackCauldronItem(Item item) {
+
+        Block cauldron = null;
+        if(isCauldron(item.getLocation().getBlock()))
+            cauldron = item.getLocation().getBlock();
+        else if(isCauldron(item.getLocation().getBlock().getRelative(BlockFace.DOWN)))
+            cauldron = item.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        else
+            return false;
+
+        new CauldronItemTracker(cauldron, item).runTaskTimer(CraftBookPlugin.inst(), 1L, 1L);
+
+        return true;
+    }
+
+    public class CauldronItemTracker extends BukkitRunnable {
+
+        private Item item;
+        private Block block;
+
+        public CauldronItemTracker(Block block, Item item) {
+
+            this.item = item;
+            this.block = block;
+        }
+
+        @Override
+        public void run () {
+
+            if(item == null) {
+                cancel();
+                return;
+            }
+
+            if(!isCauldron(block)) {
+                cancel();
+                return;
+            }
+
+            item.teleport(BlockUtil.getBlockCentre(block).add(0, 0.5, 0));
+            item.setVelocity(new Vector(0,0.01,0));
+        }
     }
 
     public boolean performCauldron(Block block, LocalPlayer player) {
