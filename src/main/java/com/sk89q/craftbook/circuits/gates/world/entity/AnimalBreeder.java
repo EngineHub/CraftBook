@@ -132,6 +132,8 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
+                        if(entity instanceof Sheep && animal instanceof Sheep)
+                            ((Sheep) animal).setColor(((Sheep) entity).getColor());
                         return true;
                     }
                 }
