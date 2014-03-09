@@ -66,9 +66,9 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public String getLongDescription() {
+    public String[] getLongDescription() {
 
-        return "Missing Description";
+        return new String[]{"Missing Description"};
     }
 
     @Override

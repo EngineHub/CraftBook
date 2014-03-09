@@ -70,12 +70,16 @@ public class Repeater extends AbstractIC {
         }
 
         @Override
-        public String getLongDescription() {
+        public String[] getLongDescription() {
 
-            return "The '''MC1000''' repeats a state from input to output terminals.\n\n" +
-                    "Equivalent [[../Perlstone/]] script: <code>Ar</code>\n\n" +
-                    "== Uses ==\n" +
-                    "* Prolonging a redstone circuit over more than 15 fields.\n";
+            return new String[]{
+                    "The '''MC1000''' repeats a state from input to output terminals.",
+                    "",
+                    "Equivalent [[../Perlstone/]] script: <code>Ar</code>",
+                    "",
+                    "== Uses ==",
+                    "* Prolonging a redstone circuit over more than 15 fields."
+            };
         }
     }
 }

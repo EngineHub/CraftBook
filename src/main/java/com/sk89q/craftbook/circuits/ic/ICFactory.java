@@ -76,9 +76,9 @@ public interface ICFactory {
      * This description must fit the guidelines of MediaWiki syntax,
      * as it is built to work on a wiki running MediaWiki.
      * 
-     * @return a long description of the IC's usage.
+     * @return an array containing each line of the long description of the IC's usage.
      */
-    public String getLongDescription();
+    public String[] getLongDescription();
 
     /**
      * Get line-by-line help.

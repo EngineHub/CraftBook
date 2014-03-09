@@ -70,12 +70,16 @@ public class Inverter extends AbstractIC {
         }
 
         @Override
-        public String getLongDescription() {
+        public String[] getLongDescription() {
 
-            return "The '''MC1001''' inverts the input state.\n\n" +
-                    "Equivalent [[../Perlstone/]] script: <code>A!r</code>\n\n" +
-                    "== Uses ==\n" +
-                    "* Inverting a signal state.\n";
+            return new String[]{
+                    "The '''MC1001''' inverts the input state.",
+                    "",
+                    "Equivalent [[../Perlstone/]] script: <code>A!r</code>",
+                    "",
+                    "== Uses ==",
+                    "* Inverting a signal state."
+            };
         }
     }
 }

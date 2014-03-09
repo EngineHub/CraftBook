@@ -118,9 +118,10 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public String getLongDescription() {
+        public String[] getLongDescription() {
 
-            return "The Cultivator IC tills dirt and grass around the IC within the area designated on line 3, using the hoes in the above chest.";
+            //TODO
+            return new String[]{"The Cultivator IC tills dirt and grass around the IC within the area designated on line 3, using the hoes in the above chest."};
         }
 
         @Override

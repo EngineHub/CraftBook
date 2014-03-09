@@ -144,25 +144,28 @@ public class NumericModifier extends AbstractIC {
         }
 
         @Override
-        public String getLongDescription() {
+        public String[] getLongDescription() {
 
-            return "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions). \n\n" +
-                    "== Functions ==\n" +
-                    "{| class=\"wiki-table sortable\"\n" +
-                    "! Name\n" +
-                    "! Symbol\n" +
-                    "! Function\n" +
-                    "|-\n" +
-                    "| Add || + || Adds the inputted value to the variable.\n" +
-                    "|-\n" +
-                    "| Subtract || - || Subtracts the inputted value from the variable.\n" +
-                    "|-\n" +
-                    "| Multiply || * OR x || Multiplies the inputted value by the variable.\n" +
-                    "|-\n" +
-                    "| Divide || / || Divides the inputted value by the variable.\n" +
-                    "|-\n" +
-                    "| Mod || % || Performs modulo by the inputted value on the variable.\n" +
-                    "|}\n";
+            return new String[]{
+                    "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions).",
+                    "",
+                    "== Functions ==" ,
+                    "{| class=\"wiki-table sortable\"",
+                    "! Name",
+                    "! Symbol",
+                    "! Function",
+                    "|-",
+                    "| Add || + || Adds the inputted value to the variable.",
+                    "|-",
+                    "| Subtract || - || Subtracts the inputted value from the variable.",
+                    "|-",
+                    "| Multiply || * OR x || Multiplies the inputted value by the variable.",
+                    "|-",
+                    "| Divide || / || Divides the inputted value by the variable.",
+                    "|-",
+                    "| Mod || % || Performs modulo by the inputted value on the variable.",
+                    "|}"
+            };
         }
 
         @Override

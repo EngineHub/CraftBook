@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
@@ -15,7 +16,6 @@ import com.sk89q.craftbook.circuits.ic.ICFamily;
 import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
 import com.sk89q.craftbook.circuits.ic.families.FamilyAISO;
-import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 
 public class GenerateWikiICPages extends ExternalUtilityBase {
@@ -41,7 +41,10 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println("{{" + family.getName() + "|id=" + ric.getId() + "|name=" + ic.getTitle() + "}}");
                 }
 
-                for(String line : RegexUtil.NEW_LINE_PATTERN.split(ric.getFactory().getLongDescription()))
+                if(ric.getFactory().getLongDescription() == null || ric.getFactory().getLongDescription().length == 0 || ric.getFactory().getLongDescription()[0].equals("Missing Description"))
+                    CraftBookPlugin.logger().info("Missing Long Description for: " + ric.getId());
+
+                for(String line : ric.getFactory().getLongDescription())
                     writer.println(line);
 
                 writer.println();
@@ -68,6 +71,9 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     }
 
                     writer.println("# " + (pin == null ? "Nothing" : pin));
+
+                    if(pin == null)
+                        CraftBookPlugin.logger().info("Missing pin: " + pins + " for IC: " + ric.getId());
 
                     pins++;
                 }

@@ -86,9 +86,10 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public String getLongDescription () {
+    public String[] getLongDescription () {
 
-        return "A Programmable Logic Chip is an IC that uses a language known as Perlstone to allow for custom logic to be written and ran.";
+        //TODO
+        return new String[]{"A Programmable Logic Chip is an IC that uses a language known as Perlstone to allow for custom logic to be written and ran."};
     }
 
     @Override

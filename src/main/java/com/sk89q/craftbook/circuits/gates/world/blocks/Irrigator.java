@@ -115,9 +115,10 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public String getLongDescription() {
+        public String[] getLongDescription() {
 
-            return "The Irrigator IC uses either water blocks or water buckets from the chest above it, and irrigates a block of farmland in the radius specified by line 3. Each farmland block requires either 1 bucket of water or 1 water block to become fully irrigated.";
+            //TODO
+            return new String[]{"The Irrigator IC uses either water blocks or water buckets from the chest above it, and irrigates a block of farmland in the radius specified by line 3. Each farmland block requires either 1 bucket of water or 1 water block to become fully irrigated."};
         }
 
         @Override
