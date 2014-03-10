@@ -56,7 +56,8 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        check();
+        if(!chip.getInput(0))
+            check();
     }
 
     public void check() {
