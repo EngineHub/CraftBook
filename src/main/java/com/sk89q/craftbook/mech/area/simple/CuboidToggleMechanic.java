@@ -45,7 +45,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         for (Vector bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             Material oldType = b.getType();
-            if (b.getType() == base.getType() || BlockUtil.isBlockReplacable(b.getType())) {
+            if (BlockUtil.areBlocksIdentical(b, base) || BlockUtil.isBlockReplacable(b.getType())) {
                 b.setType(Material.AIR);
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                     if (oldType == base.getType()) {
