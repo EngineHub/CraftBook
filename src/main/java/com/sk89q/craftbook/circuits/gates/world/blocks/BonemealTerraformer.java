@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -8,7 +7,7 @@ import org.bukkit.Server;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -20,6 +19,7 @@ import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.blocks.BlockID;
 
@@ -189,11 +189,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public boolean consumeBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        if (chest.getType() == Material.CHEST) {
-            Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(Material.INK_SACK, 1,(short) 15));
-            if (over.isEmpty()) return true;
-        }
+        if (InventoryUtil.doesBlockHaveInventory(chest))
+            return InventoryUtil.removeItemsFromInventory((InventoryHolder)chest.getState(), new ItemStack(Material.INK_SACK, 1,(short) 15));
 
         return false;
     }
@@ -201,11 +198,9 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public boolean refundBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        if (chest.getType() == Material.CHEST) {
-            Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().addItem(new ItemStack(Material.INK_SACK, 1, (short) 15));
-            if (over.isEmpty()) return true;
-        }
+
+        if (InventoryUtil.doesBlockHaveInventory(chest))
+            return InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), new ItemStack(Material.INK_SACK, 1,(short) 15)).isEmpty();
 
         return false;
     }

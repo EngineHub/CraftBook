@@ -96,10 +96,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     public boolean canBreakBlock(ItemInfo originalBlock, Block toBreak) {
 
-        if(originalBlock.getType() == Material.LOG && toBreak.getType() == Material.LEAVES && CraftBookPlugin.inst().getConfiguration().treeLopperBreakLeaves) {
+        if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && CraftBookPlugin.inst().getConfiguration().treeLopperBreakLeaves) {
             if(!CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData)
                 return true;
-            MaterialData nw = new MaterialData(toBreak.getType(), toBreak.getData());
+            MaterialData nw = toBreak.getState().getData();
             if(nw instanceof Tree)
                 if(((Tree) nw).getSpecies() == ((Tree) originalBlock.getMaterialData()).getSpecies()) return true;
         }

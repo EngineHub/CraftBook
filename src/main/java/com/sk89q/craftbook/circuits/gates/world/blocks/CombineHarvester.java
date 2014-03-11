@@ -126,6 +126,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(block.getType() == Material.MELON_BLOCK || block.getType() == Material.PUMPKIN)
             return true;
 
+        if(block.getType() == Material.LOG || block.getType() == Material.LOG_2)
+            return true;
+
         return false;
     }
 

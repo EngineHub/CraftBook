@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
@@ -189,5 +190,26 @@ public class InventoryUtil {
     public static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
 
         return slot == null || ItemUtil.areItemsIdentical(stack, slot) && stack.getAmount() + slot.getAmount() <= stack.getMaxStackSize();
+    }
+
+    /**
+     * Checks whether the block has an inventory.
+     * 
+     * @param block The block.
+     * @return If it has an inventory.
+     */
+    public static boolean doesBlockHaveInventory(Block block) {
+
+        switch(block.getType()) {
+            case CHEST:
+            case TRAPPED_CHEST:
+            case DROPPER:
+            case DISPENSER:
+            case FURNACE:
+            case BREWING_STAND:
+                return true;
+            default:
+                return false;
+        }
     }
 }
