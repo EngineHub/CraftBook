@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech.items;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
 import com.sk89q.craftbook.common.variables.VariableManager;
@@ -45,22 +46,24 @@ public class CommandItemAction {
      * 
      * @param definition The {@link CommandItemDefinition} that is calling this action.
      * @param event The {@link Event} that the {@link CommandItemDefinition} was triggered by.
+     * @param player The {@link Player} that the {@link CommandItemDefinition} was triggered by.
+     * 
      * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link CommandItemDefinition} to not run.
      */
-    public boolean runAction(CommandItemDefinition definition, Event event) {
+    public boolean runAction(CommandItemDefinition definition, Event event, Player player) {
 
         switch(type) {
             case SETVAR:
                 String[] svarParts = RegexUtil.EQUALS_PATTERN.split(value,2);
                 String snamespace = VariableManager.instance.getNamespace(svarParts[0]);
                 String svar = VariableManager.instance.getVariableName(svarParts[0]);
-                VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
+                VariableManager.instance.setVariable(svar, snamespace, CommandItems.INSTANCE.parseLine(svarParts[1], event, player));
                 return true;
             case ISVAR:
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(value,2);
                 String isnamespace = VariableManager.instance.getNamespace(isparts[0]);
                 String isvar = VariableManager.instance.getVariableName(isparts[0]);
-                return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
+                return VariableManager.instance.getVariable(isvar, isnamespace).equals(CommandItems.INSTANCE.parseLine(isparts[1], event, player));
             default:
                 return true;
         }

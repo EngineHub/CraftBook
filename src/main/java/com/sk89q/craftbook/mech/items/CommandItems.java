@@ -362,7 +362,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                 for(CommandItemAction action : comdef.actions)
                     if(action.stage == ActionRunStage.BEFORE)
-                        if(!action.runAction(comdef, event))
+                        if(!action.runAction(comdef, event, player))
                             break current;
 
                 for(String command : comdef.commands)
@@ -370,7 +370,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                 for(CommandItemAction action : comdef.actions)
                     if(action.stage == ActionRunStage.AFTER)
-                        action.runAction(comdef, event);
+                        action.runAction(comdef, event, player);
 
                 if(comdef.cooldown > 0 && !lplayer.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
                     cooldownPeriods.put(new Tuple2<String, String>(lplayer.getName(), comdef.name), comdef.cooldown);
@@ -397,21 +397,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(command == null || command.trim().isEmpty())
             return;
 
-        if(command.contains("@d") && !(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player) && !(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player))
-            return;
+        command = parseLine(command, event, player);
 
-        if(event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
-            command = StringUtils.replace(command, "@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
-        if(event instanceof PlayerInteractEntityEvent && ((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
-            command = StringUtils.replace(command, "@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
-        if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null)
-            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
-        if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e"))
-            command = StringUtils.replace(command, "@e", ((EntityEvent) event).getEntityType().getName());
-        if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
-            command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
-
-        command = ParsingUtil.parseLine(command, player);
         if(comdef.type == CommandType.CONSOLE)
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         else if (comdef.type == CommandType.PLAYER)
@@ -427,5 +414,49 @@ public class CommandItems extends AbstractCraftBookMechanic {
             if(!wasOp)
                 player.setOp(wasOp);
         }
+    }
+
+    public String parseLine(String command, Event event, Player player) {
+
+        if(event instanceof EntityDamageByEntityEvent) {
+            command = StringUtils.replace(command, "@d.x", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getX()));
+            command = StringUtils.replace(command, "@d.y", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getY()));
+            command = StringUtils.replace(command, "@d.z", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getZ()));
+            command = StringUtils.replace(command, "@d.l", ((EntityDamageByEntityEvent) event).getEntity().getLocation().toString());
+            if(((EntityDamageByEntityEvent) event).getEntity() instanceof Player)
+                command = StringUtils.replace(command, "@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+            else
+                command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getType().name());
+        }
+        if(event instanceof PlayerInteractEntityEvent) {
+            command = StringUtils.replace(command, "@d.x", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getX()));
+            command = StringUtils.replace(command, "@d.y", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getY()));
+            command = StringUtils.replace(command, "@d.z", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getZ()));
+            command = StringUtils.replace(command, "@d.l", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().toString());
+            if(((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player)
+                command = StringUtils.replace(command, "@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
+            else
+                command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
+        }
+        if(event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null) {
+            command = StringUtils.replace(command, "@b.x", String.valueOf(((BlockEvent) event).getBlock().getX()));
+            command = StringUtils.replace(command, "@b.y", String.valueOf(((BlockEvent) event).getBlock().getY()));
+            command = StringUtils.replace(command, "@b.z", String.valueOf(((BlockEvent) event).getBlock().getZ()));
+            command = StringUtils.replace(command, "@b.l", ((BlockEvent) event).getBlock().getLocation().toString());
+            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
+        }
+        if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e")) {
+            command = StringUtils.replace(command, "@e.x", String.valueOf(((EntityEvent) event).getEntity().getLocation().getX()));
+            command = StringUtils.replace(command, "@e.y", String.valueOf(((EntityEvent) event).getEntity().getLocation().getY()));
+            command = StringUtils.replace(command, "@e.z", String.valueOf(((EntityEvent) event).getEntity().getLocation().getZ()));
+            command = StringUtils.replace(command, "@e.l", ((EntityEvent) event).getEntity().getLocation().toString());
+            command = StringUtils.replace(command, "@e", ((EntityEvent) event).getEntityType().getName());
+        }
+        if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
+            command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
+
+        command = ParsingUtil.parseLine(command, player);
+
+        return command;
     }
 }

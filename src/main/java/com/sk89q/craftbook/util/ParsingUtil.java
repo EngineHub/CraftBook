@@ -34,8 +34,8 @@ public class ParsingUtil {
 
     public static String parsePlayerTags(String line, Player player) {
 
-        line = StringUtils.replace(line, "@p", player.getName());
         line = StringUtils.replace(line, "@p.l", player.getLocation().getX() + ":" + player.getLocation().getY() + ":" + player.getLocation().getZ());
+        line = StringUtils.replace(line, "@p", player.getName());
 
         return line;
     }
