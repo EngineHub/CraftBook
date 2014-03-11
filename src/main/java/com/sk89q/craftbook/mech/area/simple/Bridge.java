@@ -105,7 +105,7 @@ public class Bridge extends CuboidToggleMechanic {
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
                 if (event.getPlayer().getItemInHand() != null)
-                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType()) {
+                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType() && getBlockBase(event.getClickedBlock()).getData() == event.getPlayer().getItemInHand().getData().getData()) {
 
                         if (!player.hasPermission("craftbook.mech.bridge.restock")) {
                             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
