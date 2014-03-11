@@ -14,6 +14,8 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.PlayerType;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.craftbook.util.Tuple2;
 
@@ -41,11 +43,17 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     }
 
     SearchArea area;
+    PlayerType type;
+    String typeData;
 
     @Override
     public void load() {
 
-        band = getLine(2);
+        band = RegexUtil.PIPE_PATTERN.split(getLine(2))[0];
+        if(getLine(2).contains("|")) {
+            type = PlayerType.getFromChar(RegexUtil.PIPE_PATTERN.split(getLine(2))[1].charAt(0));
+            typeData = RegexUtil.COLON_PATTERN.split(RegexUtil.PIPE_PATTERN.split(getLine(2))[1])[1];
+        }
         area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(3));
     }
 
@@ -69,6 +77,9 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
         for (Player e : area.getPlayersInArea()) {
             if (e == null || !e.isValid() || e.isDead())
+                continue;
+
+            if(type != null && !type.doesPlayerPass(e, typeData))
                 continue;
 
             if (closest == null) closest = e;
@@ -136,7 +147,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"frequency name", "radius=x:y:z offset"};
+            return new String[] {"frequency name|PlayerType", "radius=x:y:z offset"};
         }
     }
 }
