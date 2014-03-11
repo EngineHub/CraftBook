@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.mech.items;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
+import com.sk89q.craftbook.circuits.gates.variables.NumericModifier.MathFunction;
 import com.sk89q.craftbook.common.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 
@@ -29,6 +31,7 @@ public class CommandItemAction {
     public static enum ActionType {
 
         SETVAR,
+        MATHVAR,
         ISVAR;
     }
 
@@ -58,6 +61,25 @@ public class CommandItemAction {
                 String snamespace = VariableManager.instance.getNamespace(svarParts[0]);
                 String svar = VariableManager.instance.getVariableName(svarParts[0]);
                 VariableManager.instance.setVariable(svar, snamespace, CommandItems.INSTANCE.parseLine(svarParts[1], event, player));
+                return true;
+            case MATHVAR:
+                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String mnamespace = VariableManager.instance.getNamespace(mvarParts[0]);
+                String mvar = VariableManager.instance.getVariableName(mvarParts[0]);
+
+                String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
+                MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
+
+                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(mvar,mnamespace));
+                double amount = Double.parseDouble(mathFunctionParts[1]);
+
+                currentValue = func.parseNumber(currentValue, amount);
+
+                String val = String.valueOf(currentValue);
+                if (val.endsWith(".0"))
+                    val = StringUtils.replace(val, ".0", "");
+
+                VariableManager.instance.setVariable(mvar, mnamespace, CommandItems.INSTANCE.parseLine(val, event, player));
                 return true;
             case ISVAR:
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(value,2);

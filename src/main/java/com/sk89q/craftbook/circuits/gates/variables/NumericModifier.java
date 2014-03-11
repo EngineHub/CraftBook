@@ -33,7 +33,7 @@ public class NumericModifier extends AbstractIC {
         return "VAR MODIFIER";
     }
 
-    Function function;
+    MathFunction function;
     String variable;
     double amount;
 
@@ -42,7 +42,7 @@ public class NumericModifier extends AbstractIC {
 
         try {
             variable = getLine(2);
-            function = Function.parseFunction(getLine(3).split(":")[0]);
+            function = MathFunction.parseFunction(getLine(3).split(":")[0]);
             amount = Double.parseDouble(getLine(3).split(":")[1]);
         } catch(Exception ignored) {}
     }
@@ -63,29 +63,7 @@ public class NumericModifier extends AbstractIC {
 
                 double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
 
-                switch(function) {
-                    case ADD:
-                        currentValue += amount;
-                        break;
-                    case DIVIDE:
-                        if(amount == 0) {
-                            chip.setOutput(0, false);
-                            return;
-                        }
-                        currentValue /= amount;
-                        break;
-                    case MULTIPLY:
-                        currentValue *= amount;
-                        break;
-                    case SUBTRACT:
-                        currentValue -= amount;
-                        break;
-                    case MOD:
-                        currentValue %= amount;
-                        break;
-                    default:
-                        break;
-                }
+                currentValue = function.parseNumber(currentValue, amount);
 
                 String val = String.valueOf(currentValue);
                 if (val.endsWith(".0"))
@@ -100,19 +78,19 @@ public class NumericModifier extends AbstractIC {
         chip.setOutput(0, false);
     }
 
-    private enum Function {
+    public enum MathFunction {
 
         ADD("+"),SUBTRACT("-"),MULTIPLY("*","x"),DIVIDE("/"),MOD("%");
 
         String[] mini;
 
-        Function(String ... mini) {
+        MathFunction(String ... mini) {
             this.mini = mini;
         }
 
-        public static Function parseFunction(String text) {
+        public static MathFunction parseFunction(String text) {
 
-            for(Function func : values()) {
+            for(MathFunction func : values()) {
                 if(func.name().equalsIgnoreCase(text))
                     return func;
                 for(String min : func.mini)
@@ -121,6 +99,33 @@ public class NumericModifier extends AbstractIC {
             }
 
             return null;
+        }
+
+        public double parseNumber(double initial, double amount) {
+            switch(this) {
+                case ADD:
+                    initial += amount;
+                    break;
+                case DIVIDE:
+                    if(amount == 0) {
+                        return initial;
+                    }
+                    initial /= amount;
+                    break;
+                case MULTIPLY:
+                    initial *= amount;
+                    break;
+                case SUBTRACT:
+                    initial -= amount;
+                    break;
+                case MOD:
+                    initial %= amount;
+                    break;
+                default:
+                    break;
+            }
+
+            return initial;
         }
     }
 
@@ -205,7 +210,7 @@ public class NumericModifier extends AbstractIC {
                 } else
                     if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
                         throw new ICVerificationException("Unknown Variable!");
-                Validate.notNull(Function.parseFunction(sign.getLine(3).split(":")[0]));
+                Validate.notNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
             } catch(NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
