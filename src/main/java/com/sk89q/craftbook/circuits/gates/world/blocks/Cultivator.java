@@ -54,6 +54,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
+        if(state.getInput(0)) return;
+
         for(int i = 0; i < 10; i++)
             state.setOutput(0, cultivate());
     }

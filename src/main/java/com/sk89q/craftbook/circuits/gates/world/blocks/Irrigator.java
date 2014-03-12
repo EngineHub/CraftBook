@@ -54,6 +54,8 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
+        if(chip.getInput(0)) return;
+
         for(int i = 0; i < 10; i++)
             chip.setOutput(0, irrigate());
     }
