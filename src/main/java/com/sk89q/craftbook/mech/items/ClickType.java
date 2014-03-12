@@ -18,8 +18,9 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public enum ClickType {
 
-    CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,
-    ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH,PLAYER_CHAT;
+    CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,CLICK_LEFT_BLOCK,CLICK_RIGHT_BLOCK,CLICK_EITHER_BLOCK,CLICK_LEFT_AIR,CLICK_RIGHT_AIR,CLICK_EITHER_AIR,
+    ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_EITHER,ANY,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,
+    ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH,PLAYER_CHAT;
 
     public boolean doesPassType(Event event) {
 
@@ -38,6 +39,18 @@ public enum ClickType {
                 return event instanceof PlayerInteractEvent && (((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK);
             case CLICK_RIGHT:
                 return event instanceof PlayerInteractEvent && (((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK);
+            case CLICK_EITHER_BLOCK:
+                return event instanceof PlayerInteractEvent && (((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK);
+            case CLICK_LEFT_BLOCK:
+                return event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_BLOCK;
+            case CLICK_RIGHT_BLOCK:
+                return event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_BLOCK;
+            case CLICK_EITHER_AIR:
+                return event instanceof PlayerInteractEvent && (((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR || ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR);
+            case CLICK_LEFT_AIR:
+                return event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getAction() == Action.LEFT_CLICK_AIR;
+            case CLICK_RIGHT_AIR:
+                return event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getAction() == Action.RIGHT_CLICK_AIR;
             case ENTITY_ARROW:
                 return event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile;
             case ENTITY_EITHER:
