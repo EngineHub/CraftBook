@@ -51,6 +51,9 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
     @Override
     public void think (ChipState chip) {
+
+        if(chip.getInput(0)) return;
+
         chip.setOutput(0, collect());
     }
 
