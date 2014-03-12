@@ -38,6 +38,9 @@ public class ParsingUtil {
         line = StringUtils.replace(line, "@p.x", String.valueOf(player.getLocation().getX()));
         line = StringUtils.replace(line, "@p.y", String.valueOf(player.getLocation().getY()));
         line = StringUtils.replace(line, "@p.z", String.valueOf(player.getLocation().getZ()));
+        line = StringUtils.replace(line, "@p.bx", String.valueOf(player.getLocation().getBlockX()));
+        line = StringUtils.replace(line, "@p.by", String.valueOf(player.getLocation().getBlockY()));
+        line = StringUtils.replace(line, "@p.bz", String.valueOf(player.getLocation().getBlockZ()));
         line = StringUtils.replace(line, "@p", player.getName());
 
         return line;
