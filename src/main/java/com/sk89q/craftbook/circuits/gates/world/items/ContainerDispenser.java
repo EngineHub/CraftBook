@@ -162,7 +162,17 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                 BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), stack);
             return true;
         } else {
-            for (ItemStack it : over.values()) {
+
+            BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+            Block pipe = getBackBlock().getRelative(back);
+
+            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(over.values()), getBackBlock());
+            Bukkit.getPluginManager().callEvent(event);
+
+            if(!event.isValid())
+                return true;
+
+            for (ItemStack it : event.getItems()) {
 
                 if (item.getAmount() - it.getAmount() < 1) continue;
                 BukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getType(), item.getAmount() - it.getAmount(), it.getDurability()));
