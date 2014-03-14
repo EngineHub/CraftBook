@@ -62,6 +62,7 @@ public class SelfTriggeringManager {
         if(!event.isCancelled()) {
             hasChanged = true;
             thinkingMechanics.remove(vec);
+            CraftBookPlugin.logDebugMessage("Unregistered ST at: " + vec.toString() + " for reason: " + reason.name(), "st.unregister");
         }
     }
 
@@ -115,7 +116,7 @@ public class SelfTriggeringManager {
                 SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(loc.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
                 if(!event.isHandled()) {
-                    unregisterSelfTrigger(loc, UnregisterReason.UNKNOWN);
+                    unregisterSelfTrigger(loc, UnregisterReason.NOT_HANDLED);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
                 CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());

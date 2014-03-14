@@ -44,6 +44,6 @@ public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellabl
 
     public enum UnregisterReason {
 
-        UNLOAD,BREAK,ERROR,UNKNOWN;
+        UNLOAD,BREAK,ERROR,NOT_HANDLED,UNKNOWN;
     }
 }
