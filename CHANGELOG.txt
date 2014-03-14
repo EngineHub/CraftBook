@@ -1,3 +1,20 @@
+3.8.6
++ Added a cauldron item tracking option. Makes the items stay above the cauldron.
++ Added pipe support to ContainerDispenser.
++ Added an off mode to ST versions of many ICs (TeleportReciever, Farming ICs, Ranged Collectors)
++ Added PlayerType data to TeleportTransmitter.
++ Added @#.x, @#.y, @#.z, @#.bx, @#.by, @#.bz and @#.l
++ Added MATHVAR CommandItem Action, works the same way as VAR100 but with CommandItems.
++ Added Log support to CombineHarvester IC.
++ Added CLICK_#_BLOCK and CLICK_#_AIR CommandItem events.
++ Added BLOCK_PROJECTILE event to CommandItems. Is called when a projectile hits a block.
+* Fixed Bonemeal Terraformer not working with anything but chests.
+* Fixed VAR100 (Numeric Modifier)
+* Fixed VAR100 working on both high and low.
+* Experimental. Disable the upper half of the sponge water re-adding.
+* Fixed AnimalBreeder not copying sheep colours over.
+* Fixed bridge/door transmutation bugs.
+
 3.8.5r1 (1st March)
 * Fixed an error that occured for a small portion of people
 

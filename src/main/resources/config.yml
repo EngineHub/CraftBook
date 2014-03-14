@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.5
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.6
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -172,6 +172,7 @@ mechanics:
         enable: false
         spoons: true
         enable-redstone: false
+        item-tracking: false
     chair:
         enable: false
         allow-holding-blocks: false
