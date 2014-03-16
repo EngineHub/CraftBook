@@ -335,7 +335,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
 
-        if (!EventUtil.passesFilter(event))
+        if (event != null && !EventUtil.passesFilter(event))
             return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
