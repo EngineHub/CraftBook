@@ -116,7 +116,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
 
-        if(definitions.size() > 0)
+        if(definitions.size() > 0) {
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override
@@ -142,6 +142,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     }
                 }
             }, 1, 20);
+        }
 
         if(CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items") == null)
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<String>>());
@@ -356,7 +357,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 }
 
                 if(cooldownPeriods.containsKey(new Tuple2<String, String>(lplayer.getName(), comdef.name))) {
-                    lplayer.printError(lplayer.translate("mech.command-items.wait") + " " + cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)) + " " + lplayer.translate("mech.command-items.wait-seconds"));
+                    if(def.clickType != ClickType.PASSIVE)
+                        lplayer.printError(lplayer.translate("mech.command-items.wait") + " " + cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)) + " " + lplayer.translate("mech.command-items.wait-seconds"));
                     break current;
                 }
 
