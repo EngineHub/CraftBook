@@ -132,6 +132,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         else
                             iterator.remove();
                     }
+                }
+            }, 1, 20);
+            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
+
+                @Override
+                public void run () {
 
                     for(Player player : Bukkit.getOnlinePlayers()) {
                         if(player.getItemInHand() != null)
@@ -141,7 +147,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                                 performCommandItems(stack, player, null);
                     }
                 }
-            }, 1, 20);
+            }, 10, 10);
         }
 
         if(CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items") == null)
