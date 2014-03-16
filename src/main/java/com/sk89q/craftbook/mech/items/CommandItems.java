@@ -132,6 +132,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         else
                             iterator.remove();
                     }
+
+                    for(Player player : Bukkit.getOnlinePlayers()) {
+                        if(player.getItemInHand() != null)
+                            performCommandItems(player.getItemInHand(), player, null);
+                        for(ItemStack stack : player.getInventory().getArmorContents())
+                            if(stack != null)
+                                performCommandItems(stack, player, null);
+                    }
                 }
             }, 1, 20);
 
