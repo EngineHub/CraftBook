@@ -49,21 +49,23 @@ public class Snow extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        for(World world : Bukkit.getWorlds()) {
-            for(Chunk chunk : world.getLoadedChunks()) {
-                boolean isChunkUseful = false;
-                for(int x = 0; x < 16; x++) {
-                    for(int z = 0; z < 16; z++) {
-                        if(chunk.getBlock(x, world.getMaxHeight()-1, z).getTemperature() < 0.15) {
-                            isChunkUseful = true;
-                            break;
+        if(CraftBookPlugin.inst().getConfiguration().snowMeltSunlight || CraftBookPlugin.inst().getConfiguration().snowPiling || CraftBookPlugin.inst().getConfiguration().snowRealistic) {
+            for(World world : Bukkit.getWorlds()) {
+                for(Chunk chunk : world.getLoadedChunks()) {
+                    boolean isChunkUseful = false;
+                    for(int x = 0; x < 16; x++) {
+                        for(int z = 0; z < 16; z++) {
+                            if(chunk.getBlock(x, world.getMaxHeight()-1, z).getTemperature() < 0.15) {
+                                isChunkUseful = true;
+                                break;
+                            }
                         }
                     }
+
+                    if(!isChunkUseful) continue;
+
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowChunkHandler(chunk), getRandomDelay() * 20L);
                 }
-
-                if(!isChunkUseful) continue;
-
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowChunkHandler(chunk), getRandomDelay() * 20L);
             }
         }
 
@@ -116,8 +118,10 @@ public class Snow extends AbstractCraftBookMechanic {
     public void onSnowballHit(ProjectileHitEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
+
         if(!EventUtil.passesFilter(event))
             return;
+
         if (event.getEntity() instanceof Snowball) {
 
             Block block = event.getEntity().getLocation().getBlock();
@@ -140,6 +144,9 @@ public class Snow extends AbstractCraftBookMechanic {
         if (!CraftBookPlugin.inst().getConfiguration().snowRealistic) return;
         if(event.getBlock().getType() != Material.SNOW) return;
 
+        if(!EventUtil.passesFilter(event))
+            return;
+
         Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0));
     }
 
@@ -147,6 +154,7 @@ public class Snow extends AbstractCraftBookMechanic {
     public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
+
         if(!EventUtil.passesFilter(event))
             return;
 
@@ -177,9 +185,11 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event))
-            return;
         if(event.getBlock().getType() == Material.SNOW) {
+
+            if(!EventUtil.passesFilter(event))
+                return;
+
             event.setCancelled(true);
             event.getBlock().setTypeId(Material.AIR.getId(), false);
             for(ItemStack stack : BlockUtil.getBlockDrops(event.getBlock(), event.getPlayer().getItemInHand()))
@@ -195,6 +205,8 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().snowRealistic) return;
+
         if(!EventUtil.passesFilter(event))
             return;
         if((event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK) && CraftBookPlugin.inst().getRandom().nextInt(10) == 0)
@@ -204,10 +216,10 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
+
         if(!EventUtil.passesFilter(event))
             return;
-
-        if(!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
 
         boolean isChunkUseful = false;
 
