@@ -379,6 +379,7 @@ public class ItemUtil {
             case CACTUS:
                 return new ItemStack(Material.INK_SACK, 1, (short) 2);
             case LOG:
+            case LOG_2:
                 return new ItemStack(Material.COAL, 1, (short) 1);
             case IRON_ORE:
                 return new ItemStack(Material.IRON_INGOT);
@@ -417,6 +418,9 @@ public class ItemUtil {
             case COAL:
             case COAL_BLOCK:
             case LOG:
+            case LOG_2:
+            case LEAVES:
+            case LEAVES_2:
             case WOOD:
             case WOOD_STEP:
             case SAPLING:

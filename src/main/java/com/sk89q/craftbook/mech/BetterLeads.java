@@ -89,7 +89,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsStopTarget) return;
+        if(!CraftBookPlugin.inst().getConfiguration().leadsStopTarget && !CraftBookPlugin.inst().getConfiguration().leadsMobRepellant) return;
         if(!(event.getEntity() instanceof Monster)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed()) return;
         if(!(event.getTarget() instanceof Player)) return;
@@ -98,14 +98,14 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if(player.hasPermission("craftbook.mech.leads.ignore-target")) {
+        if(CraftBookPlugin.inst().getConfiguration().leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
             if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
                 event.setTarget(null);
                 event.setCancelled(true);
             }
         }
 
-        if(player.hasPermission("craftbook.mech.leads.mob-repel")) {
+        if(CraftBookPlugin.inst().getConfiguration().leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
             for(Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
                 if(ent.getType() != event.getEntity().getType())
                     continue;
