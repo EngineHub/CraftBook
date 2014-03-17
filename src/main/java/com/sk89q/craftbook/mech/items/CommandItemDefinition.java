@@ -43,6 +43,11 @@ public class CommandItemDefinition {
         return stack;
     }
 
+    public String getName() {
+
+        return name;
+    }
+
     public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath, CommandItemAction[] actions) {
 
         this.name = name;

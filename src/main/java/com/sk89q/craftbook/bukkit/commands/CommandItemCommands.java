@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.BooleanPrompt;
 import org.bukkit.conversations.Conversable;
@@ -71,6 +73,34 @@ public class CommandItemCommands {
             throw new CommandException("Invalid CommandItem!");
         if(!player.getInventory().addItem(def.getItem()).isEmpty())
             throw new CommandException("Failed to add item to inventory!");
+
+        sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
+    }
+
+    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
+    public void spawnItem(CommandContext context, CommandSender sender) throws CommandException {
+
+        if(CommandItems.INSTANCE == null)
+            throw new CommandException("CommandItems are not enabled!");
+
+        if(!sender.hasPermission("craftbook.mech.commanditems.spawn" + context.getString(0)))
+            throw new CommandPermissionsException();
+
+        CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(context.getString(0));
+        if(def == null)
+            throw new CommandException("Invalid CommandItem!");
+
+        World world = null;
+        if(context.hasFlag('w'))
+            world = Bukkit.getWorld(context.getFlag('w'));
+        else if(sender instanceof Player)
+            world = ((Player) sender).getWorld();
+        else
+            throw new CommandException("Either a player or world is required!");
+
+        world.dropItem(new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)), def.getItem());
+
+        sender.sendMessage(ChatColor.YELLOW + "Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)).toString());
     }
 
     private ConversationFactory conversationFactory;
