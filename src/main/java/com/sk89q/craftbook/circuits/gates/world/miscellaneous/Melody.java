@@ -59,7 +59,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
     @Override
     public void unload() {
-        if(player.isPlaying())
+        if(player != null && player.isPlaying())
             player.setPlaying(false);
     }
 
