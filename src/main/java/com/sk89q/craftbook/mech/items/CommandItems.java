@@ -384,20 +384,35 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         break current;
                     }
                 }
-                if(def.consumables.length > 0) {
-                    if(!player.getInventory().removeItem(def.consumables).isEmpty()) {
+
+                for(ItemStack stack : def.consumables) {
+
+                    boolean found = false;
+
+                    for(ItemStack tStack : player.getInventory().getContents()) {
+                        if(ItemUtil.areItemsIdentical(stack, tStack)) {
+                            found = true;
+                            ItemStack toRemove = tStack.clone();
+                            toRemove.setAmount(stack.getAmount());
+                            player.getInventory().removeItem(toRemove);
+                            break;
+                        }
+                    }
+
+                    if(!found) {
                         lplayer.printError("mech.command-items.out-of-sync");
                         break current;
-                    } else
-                        player.updateInventory();
+                    }
                 }
+
                 if(def.consumeSelf) {
                     if(player.getItemInHand().getAmount() > 1)
                         player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
                     else
                         player.setItemInHand(null);
-                    player.updateInventory();
                 }
+
+                player.updateInventory();
 
                 for(CommandItemAction action : comdef.actions)
                     if(action.stage == ActionRunStage.BEFORE)
