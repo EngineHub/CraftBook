@@ -62,7 +62,9 @@ public class AreaCommands {
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
             personal = false;
-        } else if (!player.hasPermission("craftbook.mech.area.save.self")) throw new CommandPermissionsException();
+            throw new CommandException("You do not have permission to use this namespace.");
+        } else if (!player.hasPermission("craftbook.mech.area.save.self"))
+            throw new CommandPermissionsException();
 
         if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
             namespace = namespace.substring(0, 14);
@@ -154,6 +156,7 @@ public class AreaCommands {
         } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
             namespace = "";
         } else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
+        else throw new CommandException("You do not have permission to use this namespace.");
 
         if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
@@ -286,6 +289,7 @@ public class AreaCommands {
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n'))) {
             namespace = context.getFlag('n');
         } else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
+        else throw new CommandException("You do not have permission to use this namespace.");
 
         if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
