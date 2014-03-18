@@ -224,7 +224,7 @@ public class YAMLConfiguration extends LocalConfiguration {
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", false);
 
         config.setComment("mechanics.bookcase.read-when-sneaking", "Enable reading while sneaking.");
-        bookcaseReadWhenSneaking = config.getBoolean("mechanics.bookcase.read-when-sneaking", false);
+        bookcaseReadWhenSneaking = TernaryState.getFromString(config.getString("mechanics.bookcase.read-when-sneaking", "no"));
 
         config.setComment("mechanics.bookcase.read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
         bookcaseReadHoldingBlock = config.getBoolean("mechanics.bookcase.read-when-holding-block", false);

@@ -117,13 +117,13 @@ public class Bookcase extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event))
-            return;
-
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
-        if (event.getPlayer().isSneaking() != CraftBookPlugin.inst().getConfiguration().bookcaseReadWhenSneaking) return;
+        if (!CraftBookPlugin.inst().getConfiguration().bookcaseReadWhenSneaking.doesPass(event.getPlayer().isSneaking())) return;
+
+        if (!EventUtil.passesFilter(event))
+            return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.bookshelf.use")) {
