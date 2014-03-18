@@ -315,6 +315,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.cooking-pot.enable", "Enable cooking pots.");
         cookingPotEnabled = config.getBoolean("mechanics.cooking-pot.enable", false);
 
+        config.setComment("mechanics.cooking-pot.allow-redstone", "Allows for redstone to be used as a fuel source.");
+        cookingPotAllowRedstone = config.getBoolean("mechanics.cooking-pot.allow-redstone", true);
+
         config.setComment("mechanics.cooking-pot.require-fuel", "Require fuel to cook.");
         cookingPotFuel = config.getBoolean("mechanics.cooking-pot.require-fuel", true);
 

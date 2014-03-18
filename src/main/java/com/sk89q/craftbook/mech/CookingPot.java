@@ -214,9 +214,11 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if(!CraftBookPlugin.inst().getConfiguration().cookingPotAllowRedstone) return;
 
         if(!SignUtil.isSign(event.getBlock())) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 

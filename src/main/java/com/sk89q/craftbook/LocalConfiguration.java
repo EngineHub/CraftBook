@@ -118,6 +118,7 @@ public abstract class LocalConfiguration {
     public boolean commandSignAllowRedstone;
     // Mechanics - Cooking Pot
     public boolean cookingPotEnabled;
+    public boolean cookingPotAllowRedstone;
     public boolean cookingPotFuel;
     public boolean cookingPotOres;
     public boolean cookingPotSignOpen;
