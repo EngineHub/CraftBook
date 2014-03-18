@@ -155,8 +155,8 @@ public class AreaCommands {
             namespace = "";
         } else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
-            namespace = namespace.substring(0, 14);
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+            namespace = namespace.substring(0, 15);
 
         int page = 1;
         try {
@@ -287,8 +287,8 @@ public class AreaCommands {
             namespace = context.getFlag('n');
         } else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
-            namespace = namespace.substring(0, 14);
+        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+            namespace = namespace.substring(0, 15);
 
         boolean deleteAll = false;
         if (context.argsLength() > 0 && !context.hasFlag('a')) {
