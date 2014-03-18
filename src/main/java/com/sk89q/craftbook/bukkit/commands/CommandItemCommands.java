@@ -77,7 +77,7 @@ public class CommandItemCommands {
         sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
     }
 
-    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
+    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
     public void spawnItem(CommandContext context, CommandSender sender) throws CommandException {
 
         if(CommandItems.INSTANCE == null)
