@@ -369,7 +369,17 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 }
 
                 for(ItemStack stack : def.consumables) {
-                    if(!player.getInventory().containsAtLeast(stack, stack.getAmount())) {
+
+                    boolean found = false;
+
+                    for(ItemStack tStack : player.getInventory().getContents()) {
+                        if(ItemUtil.areItemsIdentical(stack, tStack)) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) {
                         lplayer.printError(lplayer.translate("mech.command-items.need") + " " + stack.getAmount() + " " + stack.getType().name() + " " + lplayer.translate("mech.command-items.need-use"));
                         break current;
                     }
