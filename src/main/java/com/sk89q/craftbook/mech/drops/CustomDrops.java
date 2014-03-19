@@ -24,6 +24,7 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -94,12 +95,15 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event))
-            return;
-
         if (CraftBookPlugin.inst().getConfiguration().customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
+            return;
+
+        if(!EventUtil.passesFilter(event))
+            return;
+
+        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), true))
             return;
 
         for(CustomDropDefinition def : definitions) {
