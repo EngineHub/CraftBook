@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -40,10 +41,15 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), RegexUtil.AMPERSAND_PATTERN.split(getSign().getLine(2))[0]);
+        if(getSign().getLine(2).contains("&")) {
+            getSign().setLine(2, StringUtils.replace(getSign().getLine(2), "&", "="));
+            getSign().update(false);
+        }
+
+        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
 
         try {
-            damage = Integer.parseInt(RegexUtil.AMPERSAND_PATTERN.split(getSign().getLine(2))[1]);
+            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
         } catch (Exception ignored) {
             damage = 2;
         }
@@ -97,7 +103,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea&damage", "Player Criteria"};
+            return new String[] {"SearchArea=damage", "Player Criteria"};
         }
     }
 }
