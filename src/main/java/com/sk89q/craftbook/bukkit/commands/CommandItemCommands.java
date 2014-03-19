@@ -98,7 +98,11 @@ public class CommandItemCommands {
         else
             throw new CommandException("Either a player or world is required!");
 
-        world.dropItem(new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)), def.getItem());
+        ItemStack stack = def.getItem().clone();
+
+        stack.setAmount(1);
+
+        world.dropItem(new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)), stack);
 
         sender.sendMessage(ChatColor.YELLOW + "Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)).toString());
     }
