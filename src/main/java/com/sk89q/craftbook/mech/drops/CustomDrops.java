@@ -103,7 +103,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event))
             return;
 
-        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), true))
+        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
             return;
 
         for(CustomDropDefinition def : definitions) {
