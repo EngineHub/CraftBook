@@ -24,7 +24,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     public static VariableManager instance;
 
     /**
-     * Stores the variables used in VariableStore.
+     * Stores the variables used in VariableStore ((Variable, Namespace), Value).
      */
     protected HashMap<Tuple2<String, String>, String> variableStore;
 

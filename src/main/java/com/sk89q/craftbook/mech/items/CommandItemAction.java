@@ -55,22 +55,27 @@ public class CommandItemAction {
      */
     public boolean runAction(CommandItemDefinition definition, Event event, Player player) {
 
+        String newVal = CommandItems.INSTANCE.parseLine(value, event, player);
+
         switch(type) {
             case SETVAR:
-                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
                 String snamespace = VariableManager.instance.getNamespace(svarParts[0]);
                 String svar = VariableManager.instance.getVariableName(svarParts[0]);
-                VariableManager.instance.setVariable(svar, snamespace, CommandItems.INSTANCE.parseLine(svarParts[1], event, player));
+                VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
                 return true;
             case MATHVAR:
-                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
                 String mnamespace = VariableManager.instance.getNamespace(mvarParts[0]);
                 String mvar = VariableManager.instance.getVariableName(mvarParts[0]);
 
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
 
-                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(mvar,mnamespace));
+                String cur = VariableManager.instance.getVariable(mvar,mnamespace);
+                if(cur == null || cur.isEmpty()) cur = "0";
+
+                double currentValue = Double.parseDouble(cur);
                 double amount = Double.parseDouble(mathFunctionParts[1]);
 
                 currentValue = func.parseNumber(currentValue, amount);
@@ -79,13 +84,13 @@ public class CommandItemAction {
                 if (val.endsWith(".0"))
                     val = StringUtils.replace(val, ".0", "");
 
-                VariableManager.instance.setVariable(mvar, mnamespace, CommandItems.INSTANCE.parseLine(val, event, player));
+                VariableManager.instance.setVariable(mvar, mnamespace, val);
                 return true;
             case ISVAR:
-                String[] isparts = RegexUtil.EQUALS_PATTERN.split(value,2);
+                String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
                 String isnamespace = VariableManager.instance.getNamespace(isparts[0]);
                 String isvar = VariableManager.instance.getVariableName(isparts[0]);
-                return VariableManager.instance.getVariable(isvar, isnamespace).equals(CommandItems.INSTANCE.parseLine(isparts[1], event, player));
+                return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
             default:
                 return true;
         }

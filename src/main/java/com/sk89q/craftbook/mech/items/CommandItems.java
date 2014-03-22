@@ -472,6 +472,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     public String parseLine(String command, Event event, Player player) {
 
+        if(command == null) return null;
+
         if(event instanceof EntityDamageByEntityEvent) {
             command = StringUtils.replace(command, "@d.x", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getX()));
             command = StringUtils.replace(command, "@d.y", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getY()));
@@ -530,7 +532,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
             command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
 
-        command = ParsingUtil.parseLine(command, player);
+        command = ParsingUtil.parsePlayerTags(command, player);
+        command = ParsingUtil.parseVariables(command, null);
 
         return command;
     }
