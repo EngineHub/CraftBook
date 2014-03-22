@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech.items;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
@@ -20,7 +21,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 public enum ClickType {
 
     CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,CLICK_LEFT_BLOCK,CLICK_RIGHT_BLOCK,CLICK_EITHER_BLOCK,CLICK_LEFT_AIR,CLICK_RIGHT_AIR,CLICK_EITHER_AIR,
-    ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_PROJECTILE,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_PROJECTILE,BLOCK_EITHER,ANY,ITEM_CONSUME,
+    ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_PROJECTILE,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_PROJECTILE_AIR,BLOCK_PROJECTILE_BLOCK,BLOCK_PROJECTILE_EITHER,BLOCK_EITHER,ANY,ITEM_CONSUME,
     ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,PLAYER_DEATH,PLAYER_CHAT,PASSIVE;
 
     public boolean doesPassType(Event event) {
@@ -34,8 +35,12 @@ public enum ClickType {
                 return event instanceof BlockBreakEvent;
             case BLOCK_PLACE:
                 return event instanceof BlockPlaceEvent;
-            case BLOCK_PROJECTILE:
+            case BLOCK_PROJECTILE_EITHER:
                 return event instanceof ProjectileHitEvent;
+            case BLOCK_PROJECTILE_AIR:
+                return event instanceof ProjectileHitEvent && ((ProjectileHitEvent) event).getEntity().getLocation().getBlock().getType() == Material.AIR;
+            case BLOCK_PROJECTILE_BLOCK:
+                return event instanceof ProjectileHitEvent && ((ProjectileHitEvent) event).getEntity().getLocation().getBlock().getType() != Material.AIR;
             case BLOCK_EITHER:
                 return event instanceof BlockBreakEvent || event instanceof BlockPlaceEvent;
             case CLICK_EITHER:
