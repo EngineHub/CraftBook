@@ -42,6 +42,8 @@ public class CircuitCommands {
         @Command (aliases = {"ic","circuit"}, desc = "Information for a specific IC", usage = "<ic> (Further arguments depend on IC)", min = 1)
         public void icCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if(args.getString(0).equalsIgnoreCase("list")) {
 
                 String list = "";
@@ -71,8 +73,10 @@ public class CircuitCommands {
 
         @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's",
                 usage = "<ic>", min = 1, max = 1)
-        public void docsCmd(CommandContext args, CommandSender sender) {
+        public void docsCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             ICDocsParser.generateICDocs(player, args.getString(0));
@@ -80,8 +84,10 @@ public class CircuitCommands {
 
         @Command(aliases = {"list"}, desc = "List available IC's",
                 flags = "p:", usage = "[-p page]", min = 0, max = 0)
-        public void listCmd(CommandContext args, CommandSender sender) {
+        public void listCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             char[] ar = null;
@@ -114,8 +120,10 @@ public class CircuitCommands {
 
         @Command(aliases = {"search"}, desc = "Search available IC's with names",
                 flags = "p:", usage = "[-p page] <name>", min = 1, max = 1)
-        public void searchCmd(CommandContext args, CommandSender sender) {
+        public void searchCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             char[] ar = null;
@@ -149,8 +157,10 @@ public class CircuitCommands {
 
         @Command(aliases = {"midis"}, desc = "List MIDI's available for Melody IC",
                 flags = "p:", usage = "[-p page]", min = 0, max = 0)
-        public void midiListCmd(CommandContext args, CommandSender sender) {
+        public void midiListCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             List<String> lines = new ArrayList<String>();
@@ -198,8 +208,10 @@ public class CircuitCommands {
 
         @Command(aliases = {"fireworks"}, desc = "List Fireworks available for PFD IC",
                 flags = "p:", usage = "[-p page]", min = 0, max = 0)
-        public void fireworkListCmd(CommandContext args, CommandSender sender) {
+        public void fireworkListCmd(CommandContext args, CommandSender sender) throws CommandException {
 
+            if(ICManager.inst() == null)
+                throw new CommandException("ICs are not enabled!");
             if (!(sender instanceof Player)) return;
             Player player = (Player) sender;
             List<String> lines = new ArrayList<String>();
