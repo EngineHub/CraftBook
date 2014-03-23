@@ -55,7 +55,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
             for(World world : tickedWorlds) {
                 for(Chunk chunk : world.getLoadedChunks()) {
-                    for(int i = 0; i < 50; i++) {
+                    for(int i = 0; i < 16; i++) {
                         Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
                         if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
