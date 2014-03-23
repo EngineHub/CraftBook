@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
 
@@ -36,6 +37,8 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(final BlockBreakEvent event) {
+
+        if (!EventUtil.passesFilter(event)) return;
 
         if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x3) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
