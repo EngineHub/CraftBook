@@ -1,4 +1,25 @@
-3.8.6
+3.8.7 (23rd March)
++ Added Passive CommandItem event.
++ Added a command to spawn a CommandItem at a location.
++ Added an option to turn off redstone support for Cooking Pots.
++ Added support for ternary states in the bookshelve sneaking options.
++ Added @#.w tags to get world name.
++ Added BLOCK_PROJECTILE_EITHER, BLOCK_PROJECTILE_AIR, BLOCK_PROJECTILE_BLOCK CommandItem events instead of BLOCK_PROJECTILE.
++ Added BetterPlants Mechanic. (Currently just Fern Farming)
+* Fixed CommandItem Actions.
+* Fixed IC Commands erroring when ICs are disabled.
+* Fixed some variable namespaces not working in CommandItems.
+* Fixed PlayerTrap IC getting mixed up with colours due to & character.
+* Fixed CommandItem consumables with custom item metadata.
+* Fixed ToggleArea commands defaulting to users namespace when it should display an error.
+* Fixed ToggleArea namespace shortening not working in some of the commands.
+* Fixed the BetterLeads Mob Repellant option being ignored.
+* Fixed parts of snow code running when they weren't needed to run.
+* Fixed the new logs in 1.7 not working with most CraftBook item movement mechanics.
+* Fixed an error caused by unloading of an incorrectly initialized Melody IC.
+* Fixed issues where ICs would cause other Self-Triggering mechanics to unload.
+
+3.8.6 (14th March)
 + Added a cauldron item tracking option. Makes the items stay above the cauldron.
 + Added pipe support to ContainerDispenser.
 + Added an off mode to ST versions of many ICs (TeleportReciever, Farming ICs, Ranged Collectors)

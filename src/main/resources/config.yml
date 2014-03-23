@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.6
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.7
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -153,9 +153,12 @@ mechanics:
         - OBSIDIAN
         - BEDROCK
         max-distance: 12
+    better-plants:
+        enable: false
+        fern-farming: true
     bookcase:
         enable: false
-        read-when-sneaking: false
+        read-when-sneaking: 'no'
         read-when-holding-block: false
     bridge:
         enable: false
@@ -204,6 +207,7 @@ mechanics:
         allow-redstone: true
     cooking-pot:
         enable: false
+        allow-redstone: true
         require-fuel: true
         cook-ores: false
         sign-click-open: true
