@@ -219,6 +219,14 @@ public class YAMLConfiguration extends LocalConfiguration {
         pistonMaxDistance = config.getInt("mechanics.better-pistons.max-distance", 12);
 
 
+        // Better Plants Configuration Listener
+        config.setComment("mechanics.better-plants.enable", "Enables BetterPlants Mechanics. (This must be enabled for any sub-mechanic to work)");
+        betterPlantsEnabled = config.getBoolean("mechanics.better-plants.enable", false);
+
+        config.setComment("mechanics.better-plants.fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
+        betterPlantsFernFarming = config.getBoolean("mechanics.better-plants.fern-farming", true);
+
+
         // Bookcase Configuration Listener
         config.setComment("mechanics.bookcase.enable", "Enable readable bookshelves.");
         bookcaseEnabled = config.getBoolean("mechanics.bookcase.enable", false);

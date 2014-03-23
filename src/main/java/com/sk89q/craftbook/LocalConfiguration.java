@@ -83,6 +83,9 @@ public abstract class LocalConfiguration {
     public List<ItemInfo> pistonsMovementBlacklist;
     public boolean pistonsBounce;
     public List<ItemInfo> pistonsBounceBlacklist;
+    // Mechanics - BetterPlants
+    public boolean betterPlantsEnabled;
+    public boolean betterPlantsFernFarming;
     // Mechanics - Bookcase
     public boolean bookcaseEnabled;
     public boolean bookcaseReadHoldingBlock;

@@ -63,6 +63,7 @@ import com.sk89q.craftbook.mech.Ammeter;
 import com.sk89q.craftbook.mech.BetterLeads;
 import com.sk89q.craftbook.mech.BetterPhysics;
 import com.sk89q.craftbook.mech.BetterPistons;
+import com.sk89q.craftbook.mech.BetterPlants;
 import com.sk89q.craftbook.mech.Bookcase;
 import com.sk89q.craftbook.mech.Chair;
 import com.sk89q.craftbook.mech.ChunkAnchor;
@@ -418,6 +419,7 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.pistonsEnabled) mechanics.add(new BetterPistons());
             if (config.cookingPotEnabled) mechanics.add(new CookingPot());
             if (config.spongeEnabled) mechanics.add(new Sponge());
+            if (config.betterPlantsEnabled) mechanics.add(new BetterPlants());
 
             if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
             if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
