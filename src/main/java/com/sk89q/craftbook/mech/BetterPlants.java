@@ -26,7 +26,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(final BlockBreakEvent event) {
 
-        if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8) {
+        if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x2) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
