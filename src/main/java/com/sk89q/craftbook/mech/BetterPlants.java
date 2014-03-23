@@ -58,13 +58,11 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
             for(World world : tickedWorlds) {
                 for(Chunk chunk : world.getLoadedChunks()) {
-                    for(int i = 0; i < 16; i++) {
-                        Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
+                    Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
-                        if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
-                            block.setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 3, false);
-                            block.getRelative(0, 1, 0).setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 11, false);
-                        }
+                    if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
+                        block.setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 3, false);
+                        block.getRelative(0, 1, 0).setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 11, false);
                     }
                 }
             }
