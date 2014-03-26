@@ -47,7 +47,7 @@ public class CommandItemCommands {
 
     //private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:", usage = "[-p player] <CommandItem Name>", min = 1)
+    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name>", min = 1)
     public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
 
         Player player = null;
@@ -71,13 +71,19 @@ public class CommandItemCommands {
         CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(context.getString(0));
         if(def == null)
             throw new CommandException("Invalid CommandItem!");
-        if(!player.getInventory().addItem(def.getItem()).isEmpty())
+
+        ItemStack stack = ItemUtil.makeItemValid(def.getItem().clone());
+        if(context.hasFlag('a'))
+            stack.setAmount(stack.getAmount() * context.getFlagInteger('a', 1));
+
+        if(!player.getInventory().addItem(stack).isEmpty())
             throw new CommandException("Failed to add item to inventory!");
 
-        sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
+        if(!context.hasFlag('s'))
+            sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
     }
 
-    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
+    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:a:s", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
     public void spawnItem(CommandContext context, CommandSender sender) throws CommandException {
 
         if(CommandItems.INSTANCE == null)
@@ -100,11 +106,14 @@ public class CommandItemCommands {
 
         ItemStack stack = def.getItem().clone();
 
-        stack.setAmount(1);
+        stack = ItemUtil.makeItemValid(stack);
+        if(context.hasFlag('a'))
+            stack.setAmount(stack.getAmount() * context.getFlagInteger('a', 1));
 
         world.dropItem(new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)), stack);
 
-        sender.sendMessage(ChatColor.YELLOW + "Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)).toString());
+        if(!context.hasFlag('s'))
+            sender.sendMessage(ChatColor.YELLOW + "Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)).toString());
     }
 
     private ConversationFactory conversationFactory;
