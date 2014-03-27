@@ -423,14 +423,14 @@ public class Pipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event){
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if (event.getBlock().getType() == Material.PISTON_STICKY_BASE) {
 
             ChangedSign sign = getSignOnPiston(event.getBlock());
 
             if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                 return;
+
+            if(!EventUtil.passesFilter(event)) return;
 
             startPipe(event.getBlock(), new ArrayList<ItemStack>(), false);
         }
@@ -439,14 +439,14 @@ public class Pipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeRequest(PipeRequestEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if (event.getBlock().getType() == Material.PISTON_STICKY_BASE) {
 
             ChangedSign sign = getSignOnPiston(event.getBlock());
 
             if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
                 return;
+
+            if(!EventUtil.passesFilter(event)) return;
 
             startPipe(event.getBlock(), event.getItems(), true);
         }

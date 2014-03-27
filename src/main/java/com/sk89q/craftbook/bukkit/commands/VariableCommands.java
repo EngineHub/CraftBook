@@ -397,18 +397,18 @@ public class VariableCommands {
      * Checks a players ability to interact with variables.
      * 
      * @param sender The one who is attempting to interact.
-     * @param key The namespace
+     * @param namespace The namespace
      * @param var The variable
      * @param action The action
      * @return true if allowed.
      */
-    public static boolean hasVariablePermission(CommandSender sender, String key, String var, String action) {
+    public static boolean hasVariablePermission(CommandSender sender, String namespace, String var, String action) {
 
-        if(key.equalsIgnoreCase(sender.getName()))
+        if(namespace.equalsIgnoreCase(sender.getName()))
             if(sender.hasPermission("craftbook.variables." + action + ".self") || sender.hasPermission("craftbook.variables." + action + ".self." + var))
                 return true;
 
-        if(!sender.hasPermission("craftbook.variables." + action + "") && !sender.hasPermission("craftbook.variables." + action + "." + key) && !sender.hasPermission("craftbook.variables." + action + "." + key + "." + var))
+        if(!sender.hasPermission("craftbook.variables." + action + "") && !sender.hasPermission("craftbook.variables." + action + "." + namespace) && !sender.hasPermission("craftbook.variables." + action + "." + namespace + "." + var))
             return false;
 
         return true;

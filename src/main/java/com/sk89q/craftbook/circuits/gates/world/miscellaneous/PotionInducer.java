@@ -81,19 +81,19 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
 
         //Converter.
         boolean converting = false;
-        if(getLine(3).toLowerCase().endsWith("p") && (!getLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=p" : "p"));
-            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+        if(getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
+            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
-        if(getLine(3).toLowerCase().endsWith("m") && (!getLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=m" : "m"));
-            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+        if(getRawLine(3).toLowerCase().endsWith("m") && (!getRawLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=m" : "m"));
+            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
-        if(getLine(3).toLowerCase().endsWith("p") && (!getLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getLine(2) + (!getLine(2).contains("=") ? "=p" : "p"));
-            getSign().setLine(3, getLine(3).substring(0, getLine(3).length() - 1));
+        if(getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
+            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
+            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
         if(converting)
