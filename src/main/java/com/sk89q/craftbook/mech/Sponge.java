@@ -31,6 +31,8 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(event.getBlock().getType() != Material.WATER && event.getBlock().getType() != Material.STATIONARY_WATER) return;
 
+        if(!BlockUtil.isBlockReplacable(event.getToBlock().getType())) return;
+
         if(!EventUtil.passesFilter(event)) return;
 
         for (int cx = -radius; cx <= radius; cx++) {
@@ -53,9 +55,9 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         removeWater(event.getBlock());
     }
@@ -65,9 +67,9 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         addWater(event.getBlock());
     }
@@ -77,6 +79,8 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(!CraftBookPlugin.inst().getConfiguration().spongeRedstone) return;
         if(event.getBlock().getType() != Material.SPONGE) return;
+
+        if(event.isMinor()) return;
 
         if(!EventUtil.passesFilter(event)) return;
 
