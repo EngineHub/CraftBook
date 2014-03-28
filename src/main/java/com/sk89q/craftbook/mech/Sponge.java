@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mech;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -115,8 +116,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(1, 0, 0).getType()))
-                        water.getRelative(1, 0, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(1, 0, 0).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(1, 0, 0));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(1, 0, 0).setType(Material.WATER);
+                    }
                 }
             }
         }
@@ -128,8 +133,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(-1, 0, 0).getType()))
-                        water.getRelative(-1, 0, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(-1, 0, 0).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(-1, 0, 0));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(-1, 0, 0).setType(Material.WATER);
+                    }
                 }
             }
         }
@@ -141,8 +150,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 1, 0).getType()))
-                        water.getRelative(0, 1, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 1, 0).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, 1, 0));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(0, 1, 0).setType(Material.WATER);
+                    }
                 }
             }
         }*/
@@ -154,8 +167,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(0, -1, 0).getType()))
-                        water.getRelative(0, -1, 0).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, -1, 0).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, -1, 0));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(0, -1, 0).setType(Material.WATER);
+                    }
                 }
             }
         }
@@ -167,8 +184,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, 1).getType()))
-                        water.getRelative(0, 0, 1).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, 1).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, 0, 1));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(0, 0, 1).setType(Material.WATER);
+                    }
                 }
             }
         }
@@ -180,8 +201,12 @@ public class Sponge extends AbstractCraftBookMechanic {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
                 if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
-                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, -1).getType()))
-                        water.getRelative(0, 0, -1).setType(Material.WATER);
+                    if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, -1).getType())) {
+                        BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, 0, -1));
+                        Bukkit.getPluginManager().callEvent(event);
+                        if(!event.isCancelled())
+                            water.getRelative(0, 0, -1).setType(Material.WATER);
+                    }
                 }
             }
         }
