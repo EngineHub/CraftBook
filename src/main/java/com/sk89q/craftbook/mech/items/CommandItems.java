@@ -235,7 +235,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(((Player) event.getEntity().getShooter()).getItemInHand() == null)
             return;
 
-        performCommandItems(((Player) event.getEntity().getShooter()).getItemInHand(), (Player) event.getEntity().getShooter(), event);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+            @Override
+            public void run () {
+                performCommandItems(((Player) event.getEntity().getShooter()).getItemInHand(), (Player) event.getEntity().getShooter(), event);
+            }
+        }, 10L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
