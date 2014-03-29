@@ -6,8 +6,8 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public abstract class ExternalUtilityBase {
 
-    public ExternalUtilityBase() {
-        generate();
+    public ExternalUtilityBase(String[] args) {
+        generate(args);
     }
 
     public File getGenerationFolder() {
@@ -16,5 +16,5 @@ public abstract class ExternalUtilityBase {
         return genFile;
     }
 
-    public abstract void generate();
+    public abstract void generate(String[] args);
 }

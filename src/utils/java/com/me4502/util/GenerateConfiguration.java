@@ -11,8 +11,12 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class GenerateConfiguration extends ExternalUtilityBase {
 
+    public GenerateConfiguration (String[] args) {
+        super(args);
+    }
+
     @Override
-    public void generate () {
+    public void generate(String[] args) {
 
         File file = new File(getGenerationFolder(), "config.yml");
         if(!file.exists()) {

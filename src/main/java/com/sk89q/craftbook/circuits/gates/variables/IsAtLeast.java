@@ -80,9 +80,28 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''VAR170''' IC checks a numerical variable against an amount listed on the sign.",
+                    "If the variable on the sign has a value greater than that listed on the sign, the IC will output high."
+
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Checks if a variable is at least...";
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "High if variable is at least"//Outputs
+            };
         }
 
         @Override

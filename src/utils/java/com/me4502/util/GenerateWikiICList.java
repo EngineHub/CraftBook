@@ -17,8 +17,12 @@ import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 
 public class GenerateWikiICList extends ExternalUtilityBase {
 
+    public GenerateWikiICList (String[] args) {
+        super(args);
+    }
+
     @Override
-    public void generate () {
+    public void generate(String[] args) {
         try {
             File file = new File(getGenerationFolder(), "ICList.txt");
             if(!file.exists())

@@ -146,7 +146,7 @@ public class TopLevelCommands {
 
             if(args.argsLength() > 1 && args.getString(0).equalsIgnoreCase("util")) {
                 try {
-                    ExternalUtilityManager.performExternalUtility(args.getString(1));
+                    ExternalUtilityManager.performExternalUtility(args.getString(1), args.getSlice(1));
                     sender.sendMessage(ChatColor.YELLOW + "Performed utility successfully!");
                 } catch (Exception e) {
                     e.printStackTrace();

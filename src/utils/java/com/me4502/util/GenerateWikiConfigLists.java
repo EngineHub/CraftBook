@@ -12,6 +12,10 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
+    public GenerateWikiConfigLists (String[] args) {
+        super(args);
+    }
+
     public static void createConfigSectionFile(File folder, YAMLProcessor config, String path) throws IOException {
 
         String fpath = path;
@@ -67,7 +71,7 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
     static int missingComments = 0;
 
     @Override
-    public void generate () {
+    public void generate(String[] args) {
 
         File configFolder = new File(getGenerationFolder(), "configs/");
         configFolder.mkdir();

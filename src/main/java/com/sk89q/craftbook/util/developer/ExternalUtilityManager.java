@@ -8,7 +8,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class ExternalUtilityManager {
 
-    public static void performExternalUtility(String name) throws Exception {
+    public static void performExternalUtility(String name, String[] args) throws Exception {
 
         URL[] url = new URL[2];
         url[0] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/");
@@ -17,7 +17,7 @@ public class ExternalUtilityManager {
         URLClassLoader loader = new URLClassLoader(url, CraftBookPlugin.class.getClassLoader());
         Class<?> base = loader.loadClass(name);
         if(ExternalUtilityBase.class.isAssignableFrom(base))
-            base.newInstance();
+            base.getConstructors()[0].newInstance(new Object[]{args});
         else
             throw new ClassNotFoundException("Class found, but was wrong type!");
     }

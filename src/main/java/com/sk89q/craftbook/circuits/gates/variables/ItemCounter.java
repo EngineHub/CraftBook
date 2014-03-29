@@ -95,9 +95,27 @@ public class ItemCounter extends AbstractIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''VAR200''' IC searches a chest and counts the amounts of all items that match the last line of the sign. ",
+                    "The counted amount is then added to the variable listed on the 3rd line.",
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Adds to a variable the amount of items of a type counted.";
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "High if found item"//Outputs
+            };
         }
 
         @Override

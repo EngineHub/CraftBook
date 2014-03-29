@@ -8,7 +8,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ICConfiguration extends LocalConfiguration {
 
-    protected final YAMLProcessor config;
+    public final YAMLProcessor config;
     protected final Logger logger;
 
     public ICConfiguration(YAMLProcessor config, Logger logger) {

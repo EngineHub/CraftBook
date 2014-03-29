@@ -11,8 +11,12 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class GenerateDefaultLanguage extends ExternalUtilityBase {
 
+    public GenerateDefaultLanguage (String[] args) {
+        super(args);
+    }
+
     @Override
-    public void generate () {
+    public void generate(String[] args) {
 
         File language = new File(getGenerationFolder(), "en_US.yml");
 

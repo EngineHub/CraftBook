@@ -240,7 +240,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             public void run () {
                 performCommandItems(((Player) event.getEntity().getShooter()).getItemInHand(), (Player) event.getEntity().getShooter(), event);
             }
-        }, 10L);
+        }, 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
