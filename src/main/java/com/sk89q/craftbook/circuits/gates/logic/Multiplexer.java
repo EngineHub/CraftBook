@@ -34,8 +34,8 @@ public class Multiplexer extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        boolean swapper = chip.get(2);
-        chip.set(3, swapper ? chip.get(0) : chip.get(1));
+        boolean swapper = chip.getInput(2);
+        chip.setOutput(0, swapper ? chip.getInput(0) : chip.getInput(1));
     }
 
     public static class Factory extends AbstractICFactory {
@@ -43,6 +43,17 @@ public class Multiplexer extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Value to Carry if Input 3 High",//Inputs
+                    "Value to Carry if Input 3 Low",
+                    "Swaps between Input 1 and 2",
+                    "Carried Value"//Outputs
+            };
         }
 
         @Override

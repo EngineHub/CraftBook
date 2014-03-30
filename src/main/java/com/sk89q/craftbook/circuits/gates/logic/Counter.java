@@ -67,33 +67,29 @@ public class Counter extends AbstractIC {
         }
 
         int oldVal = curVal;
-        try {
-            // If clock input triggered
-            if (chip.getInput(0)) {
-                if (curVal == resetVal) { // If we've gotten to 0, reset if infinite mode
-                    if (inf) {
-                        curVal = 0;
-                    }
-                } else {
-                    curVal++;
+        // If clock input triggered
+        if (chip.getInput(0)) {
+            if (curVal == resetVal) { // If we've gotten to 0, reset if infinite mode
+                if (inf) {
+                    curVal = 0;
                 }
-
-                // Set output to high if we're at 0, otherwise low
-                chip.setOutput(0, curVal == resetVal);
-                // If reset input triggered, reset counter value
-            } else if (chip.getInput(1)) {
-                curVal = 0;
-                chip.setOutput(0, false);
+            } else {
+                curVal++;
             }
-        } catch (Exception ignored) {
+
+            // Set output to high if we're at 0, otherwise low
+            chip.setOutput(0, curVal == resetVal);
+            // If reset input triggered, reset counter value
+        } else if (chip.getInput(1)) {
+            curVal = 0;
+            chip.setOutput(0, false);
         }
 
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal) {
             getSign().setLine(3, String.valueOf(curVal));
+            getSign().update(false);
         }
-
-        getSign().update(false);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -113,6 +109,17 @@ public class Counter extends AbstractIC {
         public String getShortDescription() {
 
             return "Increments on redstone signal, outputs high when reset.";
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Reset Counter",
+                    "Nothing",
+                    "High on Counter Complete"//Outputs
+            };
         }
 
         @Override

@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -47,13 +47,13 @@ public class RsNorFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.get(1) || chip.get(2)) {
-            chip.set(3, false);
+        if (chip.getInput(1) || chip.getInput(2)) {
+            chip.setOutput(0, false);
             return;
         }
 
-        if (chip.get(0)) {
-            chip.set(3, true);
+        if (chip.getInput(0)) {
+            chip.setOutput(0, true);
         }
 
     }
@@ -63,6 +63,17 @@ public class RsNorFlipFlop extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Set Output 0 to High",//Inputs
+                    "Reset Output 0 to Low",
+                    "Reset Output 0 to Low",
+                    "Output",//Outputs
+            };
         }
 
         @Override

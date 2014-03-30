@@ -34,14 +34,14 @@ public class RsNandLatch extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        boolean set = !chip.get(0);
-        boolean reset = !chip.get(1);
+        boolean set = !chip.getInput(0);
+        boolean reset = !chip.getInput(1);
         if (!set && !reset) {
-            chip.set(3, true);
+            chip.setOutput(0, true);
         } else if (!set && reset) {
-            chip.set(3, true);
+            chip.setOutput(0, true);
         } else if (!reset) {
-            chip.set(3, false);
+            chip.setOutput(0, false);
         }
     }
 
@@ -50,6 +50,17 @@ public class RsNandLatch extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Set",//Inputs
+                    "Reset",
+                    "Nothing",
+                    "Output",//Outputs
+            };
         }
 
         @Override

@@ -20,6 +20,7 @@ import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
+import com.sk89q.craftbook.circuits.ic.ChipState;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 
@@ -59,6 +60,17 @@ public class NandGate extends SimpleAnyInputLogicGate {
         public IC create(ChangedSign sign) {
 
             return new NandGate(getServer(), sign, this);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Input",//Inputs
+                    "Input",
+                    "Input",
+                    "High if one or more inputs are high, but not all are high",//Outputs
+            };
         }
 
         @Override

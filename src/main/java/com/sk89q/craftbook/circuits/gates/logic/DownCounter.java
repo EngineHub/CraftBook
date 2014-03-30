@@ -127,6 +127,17 @@ public class DownCounter extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Reset Counter",
+                    "Nothing",
+                    "High on Counter Complete"//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"start ticks:(Optional)INF", "current ticks"};

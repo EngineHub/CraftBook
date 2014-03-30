@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -52,7 +52,7 @@ public class TimeControlAdvanced extends AbstractIC {
         if (chip.isTriggered(0) && chip.getInput(0)) {
             int time;
 
-            if (chip.get(1)) {
+            if (chip.getInput(1)) {
                 time = 24 * 1000;
             } else {
                 time = (0 - 8 + 24) * 1000;
@@ -67,6 +67,17 @@ public class TimeControlAdvanced extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Day on Low, Night on High",
+                    "Nothing",
+                    "Nothing"//Outputs
+            };
         }
 
         @Override

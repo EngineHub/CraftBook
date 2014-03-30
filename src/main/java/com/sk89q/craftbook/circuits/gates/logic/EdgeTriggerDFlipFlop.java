@@ -7,7 +7,7 @@
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-  * warranty of MERCHANTABILITY or
+ * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
@@ -47,10 +47,10 @@ public class EdgeTriggerDFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.get(2)) {
-            chip.set(3, false);
-        } else if (chip.get(1) && chip.isTriggered(1)) {
-            chip.set(3, chip.get(0));
+        if (chip.getInput(2)) {
+            chip.setOutput(0, false);
+        } else if (chip.getInput(1) && chip.isTriggered(1)) {
+            chip.setOutput(0, chip.getInput(0));
         }
 
     }
@@ -60,6 +60,17 @@ public class EdgeTriggerDFlipFlop extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Carries over to Output 1",//Inputs
+                    "Sets Output 1 to Input 1",
+                    "Sets Output 1 to Low.",
+                    "Carried Value"//Outputs
+            };
         }
 
         @Override

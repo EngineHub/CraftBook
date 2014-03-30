@@ -34,12 +34,12 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.get(0)) {
-            chip.set(3, chip.get(1));
+        if (chip.getInput(0)) {
+            chip.setOutput(0, chip.getInput(1));
         }
 
-        if (chip.get(2)) {
-            chip.set(3, false);
+        if (chip.getInput(2)) {
+            chip.setOutput(0, false);
         }
     }
 
@@ -48,6 +48,17 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Sets Output to Input 2",//Inputs
+                    "Carries over to Output 1",
+                    "Sets Output 1 to Low.",
+                    "Carried Value"//Outputs
+            };
         }
 
         @Override

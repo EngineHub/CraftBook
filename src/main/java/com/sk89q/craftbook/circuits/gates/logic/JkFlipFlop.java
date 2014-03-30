@@ -37,15 +37,15 @@ public class JkFlipFlop extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        boolean j = chip.get(1); // Set
-        boolean k = chip.get(2); // Reset
-        if (chip.isTriggered(0) && !chip.get(0)) {
+        boolean j = chip.getInput(1); // Set
+        boolean k = chip.getInput(2); // Reset
+        if (chip.isTriggered(0) && !chip.getInput(0)) {
             if (j && k) {
-                chip.set(3, !chip.get(3));
+                chip.setOutput(0, !chip.getOutput(0));
             } else if (j && !k) {
-                chip.set(3, true);
+                chip.setOutput(0, true);
             } else if (k) {
-                chip.set(3, false);
+                chip.setOutput(0, false);
             }
         }
     }
@@ -55,6 +55,17 @@ public class JkFlipFlop extends AbstractIC {
         public Factory(Server server) {
 
             super(server);
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Set",
+                    "Reset",
+                    "Output = Same if J and K = 0, 1 if J = 1, 0 if K = 1, and continuously toggling states if J and K = 1",//Outputs
+            };
         }
 
         @Override

@@ -83,6 +83,17 @@ public class CombinationLock extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Combination Bit 1",//Inputs
+                    "Combination Bit 2",
+                    "Combination Bit 3",
+                    "High on Correct Combination"//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"Combination. X = On, O = Off (XOX)", null};
