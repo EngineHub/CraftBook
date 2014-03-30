@@ -50,6 +50,19 @@ public class HalfSubtractor extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Nothing",//Inputs
+                    "Bit to subtract from (minuend)",
+                    "Bit to subtract (subtrahend)",
+                    "Difference",//Outputs
+                    "Borrow",
+                    "Borrow (Same as Output 2)"
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new HalfSubtractor(getServer(), sign, this);

@@ -50,6 +50,19 @@ public class HalfAdder extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Nothing",//Inputs
+                    "First bit to add",
+                    "Second bit to add",
+                    "Sum",//Outputs
+                    "Carry",
+                    "Carry (Same as Output 2)"
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new HalfAdder(getServer(), sign, this);

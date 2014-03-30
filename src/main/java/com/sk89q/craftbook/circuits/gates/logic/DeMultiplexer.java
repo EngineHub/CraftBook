@@ -42,6 +42,19 @@ public class DeMultiplexer extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Swaps between Output 2 and 3",//Inputs
+                    "Value to carry",
+                    "Nothing",
+                    "Nothing",//Outputs
+                    "Output if Input 1 Low",
+                    "Output if Input 1 High"
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new DeMultiplexer(getServer(), sign, this);

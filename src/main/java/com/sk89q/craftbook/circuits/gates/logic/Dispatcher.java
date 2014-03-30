@@ -58,6 +58,19 @@ public class Dispatcher extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Output Value",//Inputs
+                    "Output Left",
+                    "Output Right",
+                    "Nothing",//Outputs
+                    "Value if should output Left",
+                    "Value if should output Right"
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Send middle signal out high sides.";

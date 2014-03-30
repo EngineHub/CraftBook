@@ -101,6 +101,15 @@ public class WeatherControl extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Set weather state",//Inputs
+                    "Input 1"//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"rain duration", "thunder duration"};

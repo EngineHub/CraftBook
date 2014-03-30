@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -59,6 +61,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
             int missingComments = 0;
 
+            Set<String> missingDocuments = new HashSet<String>();
+
             for(RegisteredICFactory ric : ICManager.inst().getICList()) {
 
                 PrintWriter writer = new PrintWriter(new File(file, ric.getId() + ".txt"), "UTF-8");
@@ -70,8 +74,10 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println("{{" + family.getName() + "|id=" + ric.getId() + "|name=" + ic.getTitle() + "}}");
                 }
 
-                if(ric.getFactory().getLongDescription() == null || ric.getFactory().getLongDescription().length == 0 || ric.getFactory().getLongDescription()[0].equals("Missing Description"))
+                if(ric.getFactory().getLongDescription() == null || ric.getFactory().getLongDescription().length == 0 || ric.getFactory().getLongDescription()[0].equals("Missing Description")) {
                     CraftBookPlugin.logger().info("Missing Long Description for: " + ric.getId());
+                    missingDocuments.add(ric.getId());
+                }
 
                 for(String line : ric.getFactory().getLongDescription())
                     writer.println(line);
@@ -101,8 +107,10 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                     writer.println("# " + (pin == null ? "Nothing" : pin));
 
-                    if(pin == null)
+                    if(pin == null) {
                         CraftBookPlugin.logger().info("Missing pin: " + pins + " for IC: " + ric.getId());
+                        missingDocuments.add(ric.getId());
+                    }
 
                     pins++;
                 }
@@ -129,6 +137,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                             if(comment == null) {
                                 System.out.println("[WARNING] Key " + path + "." + key + " is missing a comment!");
                                 missingComments++;
+                                missingDocuments.add(ric.getId());
                                 comment = "";
                             }
                             if(!comment.trim().isEmpty()) comment = comment.trim().substring(2);
@@ -154,6 +163,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 for(RegisteredICFactory ric : ICManager.inst().getICList()) {
                     if(toUpload.contains("all") || toUpload.contains(ric.getId())) {
 
+                        if(missingDocuments.contains(ric.getId())) continue; //Ignore this, bad docs.
                         //TODO wiki auto upload.
                     }
                 }

@@ -95,7 +95,12 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public String[] getPinDescription(ChipState state) {
 
-        return new String[state.getInputCount() + state.getOutputCount()];
+        String[] pins = new String[state.getInputCount() + state.getOutputCount()];
+
+        for(int i = 0; i < pins.length; i++)
+            pins[i] = "Programmable Pin";
+
+        return pins;
     }
 
     @Override

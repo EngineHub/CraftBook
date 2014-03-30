@@ -71,6 +71,17 @@ public class MemorySetter extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Bit to set 1",//Inputs
+                    "Bit to set 2",
+                    "Bit to set 3",
+                    "Nothing"//Outputs
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new MemorySetter(getServer(), sign, this);

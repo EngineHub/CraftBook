@@ -127,6 +127,19 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            String[] pins = new String[state.getInputCount() + state.getOutputCount()];
+
+            pins[0] = "Trigger IC";
+
+            for(int i = 1; i < pins.length; i++)
+                pins[i] = "Random Output";
+
+            return pins;
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Randomly sets the output on high.";

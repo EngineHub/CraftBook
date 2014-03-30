@@ -57,6 +57,15 @@ public class RainSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "High if raining"//Outputs
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Outputs high if it is raining.";

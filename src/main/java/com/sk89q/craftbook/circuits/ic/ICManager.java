@@ -594,7 +594,7 @@ public class ICManager {
         registerIC("MC4110", "half subtr", new HalfSubtractor.Factory(server), family3I3O);
         registerIC("MC4200", "dispatcher", new Dispatcher.Factory(server), family3I3O);
 
-        // SI5O's
+        // SI5Os
         registerIC("MC6020", "random 5", new Random5Bit.Factory(server), familySI5O);
 
         // PLCs
@@ -610,9 +610,11 @@ public class ICManager {
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
 
         //Variable ICs
-        registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO, familyAISO);
-        registerIC("VAR170", "at least", new IsAtLeast.Factory(server), familySISO, familyAISO);
-        registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO, familyAISO);
+        if(CraftBookPlugin.inst().getConfiguration().variablesEnabled) {
+            registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO, familyAISO);
+            registerIC("VAR170", "at least", new IsAtLeast.Factory(server), familySISO, familyAISO);
+            registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO, familyAISO);
+        }
     }
 
     public String getSearchID(Player p, String search) {

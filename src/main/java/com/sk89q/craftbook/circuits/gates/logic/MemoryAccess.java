@@ -75,6 +75,17 @@ public class MemoryAccess extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Bit 1 State",//Outputs
+                    "Bit 2 State",
+                    "Bit 3 State"
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new MemoryAccess(getServer(), sign, this);
