@@ -73,6 +73,15 @@ public class LowDelayer extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Delayed Output",//Outputs
+            };
+        }
+
+        @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {

@@ -32,12 +32,14 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     private Lang lang;
     private boolean selfTriggered;
     private Server s;
+    private String id;
 
-    public PlcFactory(Server s, Lang lang, boolean selfTriggered) {
+    public PlcFactory(Server s, Lang lang, boolean selfTriggered, String id) {
 
         this.s = s;
         this.lang = lang;
         this.selfTriggered = selfTriggered;
+        this.id = id;
     }
 
     @Override
@@ -65,12 +67,9 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
         // Do nothing
     }
 
-    public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT,
-    Lang> fromLang(Server s, Lang lang,
+    public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered, String id) {
 
-            boolean selfTriggered) {
-
-        return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered);
+        return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered, id);
     }
 
     @Override
@@ -88,8 +87,29 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public String[] getLongDescription () {
 
-        //TODO
-        return new String[]{"A Programmable Logic Chip is an IC that uses a language known as Perlstone to allow for custom logic to be written and ran."};
+        //TODO MC5001
+        if(id.equalsIgnoreCase("MC5000")) {
+            return new String[] {
+                    "The '''MC5000''' is a [[../Perlstone/]]-powered programmable logic chip. Because it is of the VIVO family, it has a variable number of inputs and outputs, giving you the choice of either 3-1 or 1-3 for the number of inputs and outputs, respectively.",
+                    "",
+                    "== Construction ==",
+                    "",
+                    "=== Sign Method ===",
+                    "Code for the MC5000 is to be put in signs anywhere above or below the IC sign. The top most sign must contain '''[Code Block]''' on the second line of the sign and code then starts on signs below, and ends on the first non-sign block, or the IC sign. No code goes on the actual IC sign. If multiple '''[Code Block]''' signs exist, the topmost one will be used. Code is to be written in [[../Perlstone/]].",
+                    "",
+                    "[[File:MC5000.png|center]]",
+                    "",
+                    "=== Book Method ===",
+                    "Alternatively, as of version 3.3, code for the MC5000 can be placed in a chest directly above or below the IC sign. There must only be one book in the chest. If there is both a chest above the IC, and one below it, only the one above it will be searched.",
+                    "",
+                    "[[File:Altmc5000.png|center]]",
+                    "",
+                    "== Execution ==",
+                    "",
+                    "The first three functions of the PerlStone code is called, and their return values are put into the respective outputs, if they exist. Note that they will be called even if the outputs do not exist."
+            };
+        }
+        return new String[]{"Missing Description"};
     }
 
     @Override

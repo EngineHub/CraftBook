@@ -232,6 +232,15 @@ public class Pulser extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Pulse Output",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]"};

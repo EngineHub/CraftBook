@@ -98,6 +98,15 @@ public class Delayer extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Delayed Output",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"seconds", "true to use ticks:true to continue on low"};

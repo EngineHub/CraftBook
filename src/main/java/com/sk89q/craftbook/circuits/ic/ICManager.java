@@ -598,8 +598,8 @@ public class ICManager {
         registerIC("MC6020", "random 5", new Random5Bit.Factory(server), familySI5O);
 
         // PLCs
-        registerIC("MC5000", "perlstone", PlcFactory.fromLang(server, new Perlstone(), false), familyVIVO);
-        registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false), family3I3O);
+        registerIC("MC5000", "perlstone", PlcFactory.fromLang(server, new Perlstone(), false, "MC5000"), familyVIVO);
+        registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false, "MC5001"), family3I3O);
 
         // Xtra ICs
         // SISOs

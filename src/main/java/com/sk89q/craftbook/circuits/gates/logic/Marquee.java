@@ -118,6 +118,17 @@ public class Marquee extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Output 1",//Outputs
+                    "Output 2",
+                    "Output 3",
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"next pin to set", null};
