@@ -83,6 +83,9 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                 IC ic = ric.getFactory().create(null);
 
+                writer.println("{{Smaller|[[../Integrated_circuits#IC_Types_List|< Return to ICs]]}}");
+                writer.println();
+
                 for(ICFamily family : ric.getFamilies()) {
                     if(family instanceof FamilyAISO) continue;
                     writer.println("{{" + family.getName() + "|id=" + ric.getId() + "|name=" + ic.getTitle() + "}}");
@@ -100,8 +103,12 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 writer.println("== Sign parameters ==");
                 writer.println("# " + ic.getSignTitle());
                 writer.println("# [" + ric.getId() + "]");
-                for(String line : ric.getFactory().getLineHelp())
-                    writer.println("# " + (line == null ? "Blank" : line));
+                for(String line : ric.getFactory().getLineHelp()) {
+                    if(line == null) line = "Blank";
+                    if(line.equalsIgnoreCase("SearchArea")) line = "../Search_Area|Search Area";
+                    if(line.equalsIgnoreCase("ItemSyntax")) line = "../Item_Syntax|Item Syntax";
+                    writer.println("# " + line);
+                }
 
                 writer.println();
                 writer.println("== Pins ==");

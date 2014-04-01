@@ -119,14 +119,16 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            //TODO
-            return new String[]{"The Irrigator IC uses either water blocks or water buckets from the chest above it, and irrigates a block of farmland in the radius specified by line 3. Each farmland block requires either 1 bucket of water or 1 water block to become fully irrigated."};
+            return new String[]{
+                    "The '''MC1238''' irrigates soil in the selected search area with water found in the chest above the IC.",
+                    "This IC is part of the Farming IC family, and can be used to make a fully automated farm."
+            };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z offset", null};
+            return new String[] {"+oSearchArea", null};
         }
 
         @Override

@@ -122,14 +122,20 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            //TODO
-            return new String[]{"The Cultivator IC tills dirt and grass around the IC within the area designated on line 3, using the hoes in the above chest."};
+            return new String[]{
+                    "The '''MC1235''' tills farmland in the alloted radius using a hoe placed inside the above chest.",
+                    "This IC is part of the Farming IC family, and can be used to make a fully automated farm.",
+                    "",
+                    "== Video example ==",
+                    "",
+                    "<div style=\"text-align: center\">{{#ev:youtube|GnMfQtTAZZc|480}}</div>"
+            };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z offset", null};
+            return new String[] {"+oSearchArea", null};
         }
 
         @Override
