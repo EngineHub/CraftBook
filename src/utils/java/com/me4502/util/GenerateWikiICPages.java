@@ -83,7 +83,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                 IC ic = ric.getFactory().create(null);
 
-                writer.println("{{Smaller|[[../Integrated_circuits#IC_Types_List|< Return to ICs]]}}");
+                writer.println("[[../Integrated_circuits#IC_Types_List|< Return to ICs]]");
                 writer.println();
 
                 for(ICFamily family : ric.getFamilies()) {
@@ -193,7 +193,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     int amount = 0;
 
                     for(RegisteredICFactory ric : ICManager.inst().getICList()) {
-                        if(toUpload.contains("all") || toUpload.contains(ric.getId())) {
+                        if(toUpload.contains("ALL") || toUpload.contains(ric.getId())) {
 
                             if(missingDocuments.contains(ric.getId())) continue; //Ignore this, bad docs.
 
