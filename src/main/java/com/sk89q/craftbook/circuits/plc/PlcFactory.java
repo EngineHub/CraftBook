@@ -81,7 +81,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public String[] getLineHelp() {
 
-        return new String[] {"", ""};
+        return new String[] {"PLC ID", "Shared Access ID"};
     }
 
     @Override

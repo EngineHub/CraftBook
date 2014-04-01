@@ -1,17 +1,24 @@
 package com.me4502.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
+import org.wikipedia.Wiki;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -33,6 +40,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
         super(args);
     }
 
+    String username, password;
+
     @Override
     public void generate(String[] args) {
         try {
@@ -41,8 +50,13 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
             List<String> toUpload = new ArrayList<String>();
 
             for(String arg : args) {
+
                 if(arg.equalsIgnoreCase("upload"))
                     upload = true;
+                else if(arg.startsWith("u:"))
+                    username = arg.substring(2);
+                else if(arg.startsWith("p:"))
+                    password = arg.substring(2);
                 else if(upload)
                     toUpload.add(arg.toUpperCase());
             }
@@ -160,12 +174,49 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
             oldState.update(true);
 
             if(upload) {
-                for(RegisteredICFactory ric : ICManager.inst().getICList()) {
-                    if(toUpload.contains("all") || toUpload.contains(ric.getId())) {
 
-                        if(missingDocuments.contains(ric.getId())) continue; //Ignore this, bad docs.
-                        //TODO wiki auto upload.
+                Wiki wiki = new Wiki("wiki.sk89q.com");
+                wiki.setMaxLag(0);
+                wiki.setThrottle(5000);
+                wiki.setResolveRedirects(true);
+
+                try {
+                    wiki.login(username, password);
+
+                    int amount = 0;
+
+                    for(RegisteredICFactory ric : ICManager.inst().getICList()) {
+                        if(toUpload.contains("all") || toUpload.contains(ric.getId())) {
+
+                            if(missingDocuments.contains(ric.getId())) continue; //Ignore this, bad docs.
+
+                            StringBuilder builder = new StringBuilder();
+
+                            BufferedReader reader = new BufferedReader(new FileReader(new File(file, ric.getId() + ".txt")));
+
+                            String line = null;
+
+                            while((line = reader.readLine()) != null) {
+                                builder.append(line);
+                                builder.append("\n");
+                            }
+
+                            reader.close();
+
+                            wiki.edit("CraftBook/" + ric.getId(), builder.toString(), "Automated update of '" + ric.getId() + "' by " + username);
+
+                            Bukkit.getLogger().info("Uploaded: " + ric.getId());
+
+                            amount++;
+                        }
                     }
+
+                    Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
+                } catch (FailedLoginException e) {
+                    Bukkit.getLogger().warning("Failed to login to wiki!");
+                } catch (LoginException e) {
+                    e.printStackTrace();
+                    Bukkit.getLogger().warning("Failed to login to wiki!");
                 }
             }
         } catch (SecurityException e) {
@@ -173,5 +224,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Bukkit.getLogger().info(Arrays.toString(args));
     }
 }
