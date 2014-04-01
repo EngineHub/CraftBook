@@ -7004,6 +7004,8 @@ public class Wiki implements Serializable
      */
     protected void log(Level level, String method, String text)
     {
+        if(true) return;
+
         Logger logger = Logger.getLogger("wiki");
         logger.logp(level, "Wiki", method, "[{0}] {1}", new Object[] { domain, text });
     }
@@ -7016,6 +7018,8 @@ public class Wiki implements Serializable
      */
     protected void logurl(String url, String method)
     {
+        if(true) return;
+
         Logger logger = Logger.getLogger("wiki");
         logger.logp(Level.INFO, "Wiki", method, "Fetching URL {0}", url);
     }

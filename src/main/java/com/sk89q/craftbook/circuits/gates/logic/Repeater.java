@@ -70,6 +70,15 @@ public class Repeater extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Same as Input",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLongDescription() {
 
             return new String[]{

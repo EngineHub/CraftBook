@@ -81,6 +81,15 @@ public class ServerTimeModulus extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Output is world time is odd",//Outputs
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Outputs high if time is odd.";

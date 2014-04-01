@@ -20,4 +20,17 @@ public interface CommandIC {
      * @return the amount of arguments required.
      */
     public int getMinCommandArgs();
+
+    /**
+     * Gives information on each command.
+     * 
+     * First dimension of the array is the command, each element is another command.
+     * The second dimension contains each piece of data about the command.
+     *  0 - Syntax
+     *  1 - Permissions
+     *  2 - Description
+     * 
+     * @return The command information
+     */
+    public String[][] getCommandInformation();
 }

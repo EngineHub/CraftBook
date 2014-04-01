@@ -115,6 +115,15 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "Same as Input",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
             return new String[] {"wireless band", "user"};
@@ -187,6 +196,27 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public int getMinCommandArgs () {
             return 2;
+        }
+
+        @Override
+        public String[][] getCommandInformation () {
+            return new String[][] {
+                    new String[] {
+                            "get <band>",
+                            "none",
+                            "Gets the value of the wireless band."
+                    },
+                    new String[] {
+                            "set <band> <value>",
+                            "none",
+                            "Sets the value of the wireless band."
+                    },
+                    new String[] {
+                            "toggle <band>",
+                            "none",
+                            "Toggles the value of the wireless band."
+                    }
+            };
         }
     }
 }

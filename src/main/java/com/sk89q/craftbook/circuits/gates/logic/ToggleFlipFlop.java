@@ -72,6 +72,15 @@ public class ToggleFlipFlop extends AbstractIC {
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC on " + (risingEdge ? "high" : "low"),//Inputs
+                    "Output",//Outputs
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Toggles output on " + (risingEdge ? "high." : "low.");

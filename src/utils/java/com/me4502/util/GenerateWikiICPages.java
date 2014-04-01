@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import org.wikipedia.Wiki;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.CommandIC;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICConfiguration;
@@ -136,9 +136,10 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     pins++;
                 }
 
+                writer.println();
+
                 if(ric.getFactory() instanceof ConfigurableIC) {
 
-                    writer.println();
                     writer.println("== Configuration ==");
                     writer.println();
                     writer.println("{| class=\"wiki-table sortable\"");
@@ -167,9 +168,29 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     }
 
                     writer.println("|}");
+                    writer.println();
                 }
 
-                writer.println();
+                if(ric.getFactory() instanceof CommandIC) {
+
+                    writer.println("== Commands ==");
+                    writer.println();
+
+                    writer.println("{| class=\"wiki-table\"");
+                    writer.println("! Command");
+                    writer.println("! Permission");
+                    writer.println("! Description");
+                    for(String[] bits : ((CommandIC) ric.getFactory()).getCommandInformation()) {
+                        writer.println("|-");
+                        writer.println("| /ic ic " + ric.getId().toLowerCase() + " " + bits[0]);
+                        for(int i = 1; i < bits.length; i++)
+                            writer.println("| " + bits[i]);
+                    }
+                    writer.println("|}");
+                    writer.println();
+                }
+
+
                 writer.print("[[Category:IC]]");
                 for(ICFamily family : ric.getFamilies())
                     writer.print("[[Category:" + family.getName() + "]]");
@@ -182,20 +203,32 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
             if(upload) {
 
+                Bukkit.getLogger().info("Starting Upload");
                 Wiki wiki = new Wiki("wiki.sk89q.com");
                 wiki.setMaxLag(0);
                 wiki.setThrottle(5000);
                 wiki.setResolveRedirects(true);
 
                 try {
+                    Bukkit.getLogger().info("Logging In");
                     wiki.login(username, password);
+                    Bukkit.getLogger().info("Logged in Successfully!");
 
                     int amount = 0;
+                    String failed = "";
 
                     for(RegisteredICFactory ric : ICManager.inst().getICList()) {
                         if(toUpload.contains("ALL") || toUpload.contains(ric.getId())) {
 
-                            if(missingDocuments.contains(ric.getId())) continue; //Ignore this, bad docs.
+                            if(missingDocuments.contains(ric.getId())) {
+                                if(failed.length() == 0)
+                                    failed = ric.getId();
+                                else
+                                    failed = failed + "," + ric.getId();
+                                continue; //Ignore this, bad docs.
+                            }
+
+                            Bukkit.getLogger().info("Uploading " + ric.getId() + "...");
 
                             StringBuilder builder = new StringBuilder();
 
@@ -219,6 +252,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     }
 
                     Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
+                    if(failed.length() > 0)
+                        Bukkit.getLogger().warning("Failed to upload ICs: " + failed);
                 } catch (FailedLoginException e) {
                     Bukkit.getLogger().warning("Failed to login to wiki!");
                 } catch (LoginException e) {
@@ -231,7 +266,5 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Bukkit.getLogger().info(Arrays.toString(args));
     }
 }
