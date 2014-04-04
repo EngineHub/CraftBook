@@ -576,11 +576,16 @@ public class Gate extends AbstractCraftBookMechanic {
         private final Block block;
         private final boolean smallSearchSize;
 
+        private int minY = -1, maxY = -1;
+        private int remainingColumnHeight;
+
         public GateColumn(ChangedSign sign, Block block, boolean smallSearchSize) {
 
             this.sign = sign;
             this.block = block;
             this.smallSearchSize = smallSearchSize;
+
+            remainingColumnHeight = CraftBookPlugin.inst().getConfiguration().gateColumnHeight;
         }
 
         public Block getStartingPoint() {
@@ -595,24 +600,36 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public int getStartingY() {
 
-            int curY = block.getY();
-            int maxY = Math.min(block.getWorld().getMaxHeight(), block.getY() + CraftBookPlugin.inst().getConfiguration().gateColumnHeight);
-            for (int y1 = block.getY() + 1; y1 <= maxY; y1++) {
-                if (isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y1, block.getZ())), true))
-                    curY = y1;
-                else
-                    break;
+            if(maxY == -1) {
+                for (int y1 = block.getY() + 1; y1 <= Math.min(block.getWorld().getMaxHeight()-1, block.getY() + CraftBookPlugin.inst().getConfiguration().gateColumnHeight); y1++) {
+                    if(remainingColumnHeight <= 0) break;
+                    if (isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y1, block.getZ())), true)) {
+                        maxY = y1;
+                        remainingColumnHeight --;
+                    } else
+                        break;
+                }
+
+                if(maxY == -1) maxY = block.getWorld().getMaxHeight()-1;
             }
 
-            return curY;
+            return maxY;
         }
 
         public int getEndingY() {
 
-            int minY = Math.max(0, block.getY() - CraftBookPlugin.inst().getConfiguration().gateColumnHeight);
-            for (int y = block.getY(); y >= minY; y--)
-                if (!canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ()))) return y + 1;
-            return 0;
+            if(minY == -1) {
+                for (int y = block.getY(); y >= Math.max(0, block.getY() - CraftBookPlugin.inst().getConfiguration().gateColumnHeight); y--) {
+                    if(remainingColumnHeight <= 0) break;
+                    if (!canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ()))) {
+                        minY = y+1;
+                        remainingColumnHeight --;
+                    }
+                }
+                if(minY == -1) minY = 0;
+            }
+
+            return minY;
         }
 
         public int getX() {
