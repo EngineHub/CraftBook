@@ -100,12 +100,13 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && CraftBookPlugin.inst().getConfiguration().treeLopperBreakLeaves) {
             MaterialData nw = toBreak.getState().getData();
-            if(CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData && (!(nw instanceof Tree) || ((Tree) nw).getSpecies() != ((Tree) originalBlock.getMaterialData()).getSpecies()))
-                return false;
+            Tree old = new Tree(originalBlock.getMaterialData().getItemType(), (byte) originalBlock.getData());
+            if(!(nw instanceof Tree) || !(old instanceof Tree)) return false;
+            if(CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData && ((Tree) nw).getSpecies() != old.getSpecies()) return false;
+        } else {
+            if(toBreak.getType() != originalBlock.getType()) return false;
+            if(CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData && toBreak.getData() != originalBlock.getData()) return false;
         }
-
-        if(toBreak.getType() != originalBlock.getType()) return false;
-        if(CraftBookPlugin.inst().getConfiguration().treeLopperEnforceData && toBreak.getData() != originalBlock.getData()) return false;
 
         if(!ProtectionUtil.canBuild(player, toBreak, false)) {
             CraftBookPlugin.inst().wrapPlayer(player).printError("area.break-permissions");
