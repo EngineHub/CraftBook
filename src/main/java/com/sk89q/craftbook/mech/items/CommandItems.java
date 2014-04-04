@@ -94,6 +94,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
+            CraftBookPlugin.logger().severe("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             BukkitUtil.printStacktrace(e);
             return false;
         }

@@ -9,7 +9,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public enum PlayerType {
 
-    NAME('p'), GROUP('g'), PERMISSION_NODE('n'), TEAM('t'), ALL('a');
+    NAME('p'), UUID('u'), GROUP('g'), PERMISSION_NODE('n'), TEAM('t'), ALL('a');
 
     private PlayerType(char prefix) {
 
@@ -32,6 +32,8 @@ public enum PlayerType {
                 return CraftBookPlugin.inst().inGroup(player, line);
             case NAME:
                 return player.getName().toLowerCase(Locale.ENGLISH).startsWith(line.toLowerCase(Locale.ENGLISH));
+            case UUID:
+                return player.getUniqueId().toString().toUpperCase(Locale.ENGLISH).startsWith(line.toUpperCase(Locale.ENGLISH));
             case PERMISSION_NODE:
                 return player.hasPermission(line);
             case TEAM:

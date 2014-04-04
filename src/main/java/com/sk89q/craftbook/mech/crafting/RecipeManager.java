@@ -46,6 +46,7 @@ public class RecipeManager extends LocalConfiguration {
         try {
             config.load();
         } catch (IOException e) {
+            CraftBookPlugin.logger().severe("Corrupt Custom Crafting crafting-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
