@@ -72,6 +72,19 @@ public class ToggleFlipFlop extends AbstractIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''" + (risingEdge ? "MC1017" : "MC1018") + "''' is a toggle flip flop that toggles its output state between low and high whenever the input (the \"clock\") changes from "  + (risingEdge ? "low to high." : "high to low"),
+                    "",
+                    "Equivalent [[../Perlstone/]] script: <code>"  + (risingEdge ? "Lp1AdSp1.0100[Lp0!dSp0r]Lp0r" : "Lp1AdSp1.0010[Lp0!dSp0r]Lp0r") + "</code>",
+                    "",
+                    "== Uses ==",
+                    "* Connect two buttons to this IC to have the buttons toggle a door when used."
+            };
+        }
+
+        @Override
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {

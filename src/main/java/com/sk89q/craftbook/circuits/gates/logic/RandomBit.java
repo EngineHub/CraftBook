@@ -127,6 +127,14 @@ public class RandomBit extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC1020''' generates a random state whenever the input (the \"clock\") goes from low to high."
+            };
+        }
+
+        @Override
         public String[] getPinDescription(ChipState state) {
 
             String[] pins = new String[state.getInputCount() + state.getOutputCount()];

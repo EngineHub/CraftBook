@@ -49,6 +49,14 @@ public class Random3Bit extends RandomBit {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC2020''' generates 3 random bits whenever the input (the \"clock\") goes from low to high."
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new Random3Bit(getServer(), sign, this);

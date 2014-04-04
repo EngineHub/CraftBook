@@ -33,6 +33,14 @@ public class Random5Bit extends RandomBit {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC6020''' generates 5 random bits whenever the input (the \"clock\") goes from low to high."
+            };
+        }
+
+        @Override
         public IC create(ChangedSign sign) {
 
             return new Random5Bit(getServer(), sign, this);
