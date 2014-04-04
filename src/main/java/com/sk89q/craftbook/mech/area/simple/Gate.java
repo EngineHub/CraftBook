@@ -601,7 +601,8 @@ public class Gate extends AbstractCraftBookMechanic {
         public int getStartingY() {
 
             if(maxY == -1) {
-                for (int y1 = block.getY() + 1; y1 <= Math.min(block.getWorld().getMaxHeight()-1, block.getY() + CraftBookPlugin.inst().getConfiguration().gateColumnHeight); y1++) {
+                int max = Math.min(block.getWorld().getMaxHeight()-1, block.getY() + remainingColumnHeight);
+                for (int y1 = block.getY() + 1; y1 <= max; y1++) {
                     if(remainingColumnHeight <= 0) break;
                     if (isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y1, block.getZ())), true)) {
                         maxY = y1;
@@ -610,7 +611,7 @@ public class Gate extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                if(maxY == -1) maxY = block.getWorld().getMaxHeight()-1;
+                if(maxY == -1) maxY = block.getY();
             }
 
             return maxY;
@@ -619,14 +620,16 @@ public class Gate extends AbstractCraftBookMechanic {
         public int getEndingY() {
 
             if(minY == -1) {
-                for (int y = block.getY(); y >= Math.max(0, block.getY() - CraftBookPlugin.inst().getConfiguration().gateColumnHeight); y--) {
+                int min = Math.max(0, block.getY() - remainingColumnHeight);
+                for (int y = block.getY(); y >= min; y--) {
                     if(remainingColumnHeight <= 0) break;
-                    if (!canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ()))) {
-                        minY = y+1;
+                    if (canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ())) || isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y, block.getZ())), true)) {
+                        minY = y;
                         remainingColumnHeight --;
-                    }
+                    } else
+                        break;
                 }
-                if(minY == -1) minY = 0;
+                if(minY == -1) minY = block.getY();
             }
 
             return minY;
