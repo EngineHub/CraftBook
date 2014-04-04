@@ -1,3 +1,20 @@
+3.8.8 (4th April)
++ Added an amount flag to CommandItems give/spawn commands.
++ Added a silence flag to CommandItems give/spawn commands.
++ Added a UUID option for ICs that use the PlayerType syntax. (Eg MC1272)
+* Fixed BetterPlants working in certain protected areas.
+* Fixed BetterPlants being insanely fast.
+* Fixed TreeLoppers break leaves feature.
+* Fixed TreeLopper not obeying world protection in certain areas.
+* Fixed namespace related issues with area commands.
+* Fixed PotionInducer IC erasing variables on syntax conversion.
+* Fixed sponge not obeying protection or other sponge blocks on destroy.
+* Fixed BLOCK_PROJECTILE CommandItem events being off.
+* Fixed Variable ICs being enabled when variables weren't.
+* Fixed the IC disable method not being called.
+* Fixed gate max-column-height being very inconsistent.
+* Improved sponge performance.
+
 3.8.7 (23rd March)
 + Added Passive CommandItem event.
 + Added a command to spawn a CommandItem at a location.
