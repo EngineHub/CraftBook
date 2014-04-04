@@ -70,6 +70,12 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         this.manager = manager;
     }
 
+    @Override
+    public void disable() {
+        
+        this.manager.disable();
+    }
+    
     public Object[] setupIC(Block block, boolean create) {
 
         // if we're not looking at a wall sign, it can't be an IC.
