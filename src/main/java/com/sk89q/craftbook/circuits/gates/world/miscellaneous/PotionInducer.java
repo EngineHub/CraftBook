@@ -125,7 +125,8 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        state.setOutput(0, induce());
+        if(!state.getInput(0))
+            state.setOutput(0, induce());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
