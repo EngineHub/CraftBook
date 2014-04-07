@@ -17,8 +17,11 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(!CraftBookPlugin.inst().getConfiguration().xpStorerBlock.isSame(event.getClickedBlock())) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return;
+
+        if(CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
+        else if(CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR)
+            if(!CraftBookPlugin.inst().getConfiguration().xpStorerBlock.isSame(event.getClickedBlock())) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -26,6 +29,17 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if (!CraftBookPlugin.inst().getConfiguration().xpStorerSneaking.doesPass(player.isSneaking()) || event.getPlayer().getLevel() < 1)
             return;
+
+        int max = -1;
+
+        if(CraftBookPlugin.inst().getConfiguration().xpStorerRequireBottle) {
+            if(player.getHeldItemInfo().getType() != Material.GLASS_BOTTLE) {
+                player.printError("mech.xp-storer.bottle");
+                return;
+            }
+
+            max = event.getPlayer().getItemInHand().getAmount();
+        }
 
         if(!player.hasPermission("craftbook.mech.xpstore.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -42,6 +56,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int xp = 0;
 
         float pcnt = event.getPlayer().getExp();
+        int level = event.getPlayer().getLevel();
+
         event.getPlayer().setExp(0);
         xp += (int)(event.getPlayer().getExpToLevel()*pcnt);
 
@@ -50,15 +66,43 @@ public class XPStorer extends AbstractCraftBookMechanic {
             xp += event.getPlayer().getExpToLevel();
         }
 
-        if (xp < 16) {
-            event.getPlayer().giveExp(xp);
+        event.getPlayer().setLevel(level);
+        event.getPlayer().setExp(pcnt);
+
+        if (xp < CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle) {
+            player.print("mech.xp-storer.not-enough-xp");
             return;
         }
 
-        event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(Material.EXP_BOTTLE, xp / 16));
+        int bottleCount = (int) Math.min(max, Math.floor(xp / CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle));
+
+        event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
+        event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(Material.EXP_BOTTLE, bottleCount));
 
         event.getPlayer().setLevel(0);
         event.getPlayer().setExp(0);
+
+        float levelPercentage = 0;
+
+        int remainingXP = xp - bottleCount*CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle;
+
+        do {
+            levelPercentage = (float)remainingXP / event.getPlayer().getExpToLevel();
+
+            if(levelPercentage > 1) {
+                remainingXP -= event.getPlayer().getExpToLevel();
+                event.getPlayer().setLevel(event.getPlayer().getLevel() + 1);
+            } else if(levelPercentage == 1) {
+                event.getPlayer().setLevel(event.getPlayer().getLevel() + 1);
+                event.getPlayer().setExp(0f);
+                remainingXP = 0;
+            } else {
+                event.getPlayer().setExp(levelPercentage);
+                remainingXP = 0;
+            }
+        } while(levelPercentage > 1);
+
+        player.print("mech.xp-storer.success");
 
         event.setCancelled(true);
     }

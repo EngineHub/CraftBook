@@ -650,6 +650,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.xp-storer.enable", "Enable the XP Storer mechanic.");
         xpStorerEnabled = config.getBoolean("mechanics.xp-storer.enable", false);
 
+        config.setComment("mechanics.xp-storer.require-bottle", "Requires the player to be holding a glass bottle to use.");
+        xpStorerRequireBottle = config.getBoolean("mechanics.xp-storer.require-bottle", false);
+
+        config.setComment("mechanics.xp-storer.xp-per-bottle", "Sets the amount of XP points required per each bottle.");
+        xpStorerPerBottle = config.getInt("mechanics.xp-storer.xp-per-bottle", 16);
+
         config.setComment("mechanics.xp-storer.block", "The block that is an XP Spawner.");
         xpStorerBlock = new ItemInfo(config.getString("mechanics.xp-storer.block", "MOB_SPAWNER"));
 

@@ -235,6 +235,8 @@ public abstract class LocalConfiguration {
     public boolean treeLopperBreakLeaves;
     // Mechanics - XPStorer
     public boolean xpStorerEnabled;
+    public boolean xpStorerRequireBottle;
+    public int xpStorerPerBottle;
     public ItemInfo xpStorerBlock;
     public TernaryState xpStorerSneaking;
 

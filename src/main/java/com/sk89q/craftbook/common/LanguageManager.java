@@ -254,6 +254,10 @@ public class LanguageManager {
         put("mech.teleport.invalidcoords", "The entered coordinates are invalid!");
         put("mech.teleport.obstruct","Your destination is obstructed!");
 
+        put("mech.xp-storer.bottle", "You need a bottle to perform this mechanic!");
+        put("mech.xp-storer.success", "You package your experience into a bottle!");
+        put("mech.xp-storer.not-enough-xp", "You do not have enough experience to fill a bottle!");
+
 
         put("circuits.pipes.create","Pipe created!");
 
