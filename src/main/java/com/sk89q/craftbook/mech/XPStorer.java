@@ -47,7 +47,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+        if(event.getClickedBlock() != null && !ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
@@ -77,7 +77,11 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int bottleCount = (int) Math.min(max, Math.floor(xp / CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle));
 
         event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
-        event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(Material.EXP_BOTTLE, bottleCount));
+        if(event.getClickedBlock() == null)
+            for(ItemStack leftOver : event.getPlayer().getInventory().addItem(new ItemStack(Material.EXP_BOTTLE, bottleCount)).values())
+                event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), leftOver);
+        else
+            event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(Material.EXP_BOTTLE, bottleCount));
 
         event.getPlayer().setLevel(0);
         event.getPlayer().setExp(0);
