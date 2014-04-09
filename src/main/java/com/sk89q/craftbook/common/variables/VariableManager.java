@@ -3,17 +3,23 @@ package com.sk89q.craftbook.common.variables;
 import java.io.File;
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -136,5 +142,29 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         if(CraftBookPlugin.inst().getConfiguration().variablesCommandBlockOverride)
             event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
+    }
+
+    @EventHandler
+    public void onSelfTriggerPing(SelfTriggerPingEvent event) {
+
+        if(SignUtil.isSign(event.getBlock())) {
+
+            ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+
+            int i = 0;
+
+            for(String line : sign.getLines()) {
+                for(String var : ParsingUtil.getPossibleVariables(line)) {
+                    String namespace = getNamespace(var);
+                    if(namespace.equals("global")) continue;
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(namespace);
+                    if(player.hasPlayedBefore())
+                        line = StringUtils.replace(line, var, var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId())));
+                }
+                sign.setLine(i++, line);
+            }
+
+            sign.update(false);
+        }
     }
 }
