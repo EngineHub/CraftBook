@@ -6,7 +6,7 @@ import org.bukkit.event.block.BlockEvent;
 
 public class SelfTriggerPingEvent extends BlockEvent {
 
-    public SelfTriggerPingEvent (Block theBlock) {
+    public SelfTriggerPingEvent(Block theBlock) {
         super(theBlock);
     }
 

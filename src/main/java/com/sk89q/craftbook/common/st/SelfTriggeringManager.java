@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
@@ -31,9 +30,8 @@ public class SelfTriggeringManager {
         try {
             for(BlockState state : chunk.getTileEntities()) {
                 if(!(state instanceof Sign)) continue;
-                Block block = state.getBlock();
-                if(thinkingMechanics.contains(BukkitUtil.toWorldVector(block.getLocation()))) continue;
-                SelfTriggerPingEvent event = new SelfTriggerPingEvent(block);
+                if(thinkingMechanics.contains(BukkitUtil.toWorldVector(state.getLocation()))) continue;
+                SelfTriggerPingEvent event = new SelfTriggerPingEvent(state.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
             }
         } catch (Throwable e) {

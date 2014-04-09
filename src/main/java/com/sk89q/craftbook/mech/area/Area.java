@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -21,6 +23,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.data.DataException;
@@ -126,7 +129,29 @@ public class Area extends AbstractCraftBookMechanic {
 
     private boolean isValidArea(ChangedSign sign) {
 
-        return isValidArea(sign.getLine(0).trim(), sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
+        String namespace = sign.getLine(0).trim();
+
+        OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
+        if(player.hasPlayedBefore()) {
+            String originalNamespace = namespace;
+            namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
+            CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
+            sign.setLine(0, namespace);
+        }
+
+        return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onSelfTriggerPing(SelfTriggerPingEvent event) {
+
+        if(SignUtil.isSign(event.getBlock())) {
+            ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+            if(sign.getLine(1).equals("[Area]")) {
+                isValidArea(sign); //Perform a conversion,
+                sign.update(false);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)

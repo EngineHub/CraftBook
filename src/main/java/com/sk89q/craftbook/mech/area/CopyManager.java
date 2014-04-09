@@ -88,6 +88,24 @@ public class CopyManager {
     }
 
     /**
+     * Renames a namespace.
+     * 
+     * @param originalName The old name.
+     * @param newName The new name. (Post rename)
+     */
+    public static void renameNamespace(File dataFolder, String originalName, String newName) {
+
+        File oldDir = new File(dataFolder, "areas/" + originalName);
+        File newDir = new File(dataFolder, "areas/" + newName);
+        if (oldDir.isDirectory()) {
+            oldDir.renameTo(newDir);
+        } else {
+            oldDir.mkdir();
+            oldDir.renameTo(newDir);
+        }
+    }
+
+    /**
      * Checks if the area and namespace exists.
      *
      * @param namespace to check
