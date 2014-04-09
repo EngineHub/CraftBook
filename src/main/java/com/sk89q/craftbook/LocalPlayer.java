@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook;
 
+import java.util.UUID;
+
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.worldedit.Location;
@@ -38,6 +40,10 @@ public interface LocalPlayer {
     public boolean hasPermission(String perm);
 
     public String getName();
+
+    public UUID getUniqueId();
+
+    public String getCraftBookId();
 
     public Location getPosition();
 

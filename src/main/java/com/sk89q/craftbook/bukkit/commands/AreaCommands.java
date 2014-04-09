@@ -56,7 +56,7 @@ public class AreaCommands {
         LocalPlayer player = plugin.wrapPlayer((Player) sender);
 
         String id;
-        String namespace = player.getName();
+        String namespace = player.getCraftBookId();
         boolean personal = true;
 
         if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
@@ -148,7 +148,7 @@ public class AreaCommands {
         if (!(sender instanceof Player)) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) sender);
 
-        String namespace = "~" + player.getName();
+        String namespace = "~" + player.getCraftBookId();
 
         // get the namespace from the flag (if set)
         if (context.hasFlag('n')) {
@@ -282,7 +282,7 @@ public class AreaCommands {
         if (!(sender instanceof Player)) return;
         LocalPlayer player = plugin.wrapPlayer((Player) sender);
 
-        String namespace = "~" + player.getName();
+        String namespace = "~" + player.getCraftBookId();
         String areaId = null;
 
 

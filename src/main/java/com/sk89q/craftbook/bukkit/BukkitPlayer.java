@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -144,5 +146,15 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void setSneaking (boolean state) {
         player.setSneaking(state);
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return player.getUniqueId();
+    }
+
+    @Override
+    public String getCraftBookId() {
+        return CraftBookPlugin.inst().getUUIDMappings().getCBID(getUniqueId());
     }
 }

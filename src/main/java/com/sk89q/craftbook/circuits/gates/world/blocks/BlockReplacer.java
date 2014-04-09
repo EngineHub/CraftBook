@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -71,7 +71,7 @@ public class BlockReplacer extends AbstractIC {
         physics = data.length <= 2 || data[2].equalsIgnoreCase("1");
     }
 
-    public boolean replaceBlocks(final boolean on, final Block block, final List<Location> traversedBlocks) {
+    public boolean replaceBlocks(final boolean on, final Block block, final Set<Location> traversedBlocks) {
 
         if(traversedBlocks.size() > 15000)
             return true;
@@ -107,7 +107,8 @@ public class BlockReplacer extends AbstractIC {
                             replaceBlocks(on, b, traversedBlocks);
                         }
                     }, delay);
-                }
+                } else
+                    continue;
             }
         }
 
@@ -124,7 +125,7 @@ public class BlockReplacer extends AbstractIC {
         else if (block.getTypeId() == offId && (offData == -1 || offData == block.getData()))
             if(on)
                 block.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
-        List<Location> traversedBlocks = new ArrayList<Location>();
+        Set<Location> traversedBlocks = new HashSet<Location>();
         traversedBlocks.add(block.getLocation());
         return replaceBlocks(on, block, traversedBlocks);
     }

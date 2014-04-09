@@ -41,11 +41,13 @@ public class Area extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
+        String cbid = player.getCraftBookId();
+
         if (event.getLine(0).trim().isEmpty()) {
-            if (CraftBookPlugin.inst().getConfiguration().areaShortenNames && player.getName().length() > 14)
-                event.setLine(0, ("~" + player.getName()).substring(0, 14));
+            if (CraftBookPlugin.inst().getConfiguration().areaShortenNames && cbid.length() > 14)
+                event.setLine(0, ("~" + cbid).substring(0, 14));
             else
-                event.setLine(0, "~" + player.getName());
+                event.setLine(0, "~" + cbid);
         }
 
         if (event.getLine(1).equalsIgnoreCase("[Area]")) {

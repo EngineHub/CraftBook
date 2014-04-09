@@ -55,6 +55,7 @@ import com.sk89q.craftbook.circuits.ic.ICManager;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.pipe.Pipes;
 import com.sk89q.craftbook.common.LanguageManager;
+import com.sk89q.craftbook.common.UUIDMappings;
 import com.sk89q.craftbook.common.st.MechanicClock;
 import com.sk89q.craftbook.common.st.SelfTriggeringManager;
 import com.sk89q.craftbook.common.variables.VariableManager;
@@ -195,6 +196,11 @@ public class CraftBookPlugin extends JavaPlugin {
     protected PersistentStorage persistentStorage;
 
     /**
+     * The UUID Mappings for CraftBook.
+     */
+    protected UUIDMappings uuidMappings;
+
+    /**
      * List of common mechanics.
      */
     private List<CraftBookMechanic> mechanics;
@@ -241,6 +247,16 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
+     * Retrieve the UUID Mappings system of CraftBook.
+     * 
+     * @return The UUID Mappings System.
+     */
+    public UUIDMappings getUUIDMappings() {
+
+        return uuidMappings;
+    }
+
+    /**
      * Called on plugin enable.
      */
     @Override
@@ -272,6 +288,9 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(persistentStorage != null)
             persistentStorage.open();
+
+        uuidMappings = new UUIDMappings();
+        uuidMappings.enable();
 
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();
@@ -680,6 +699,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(hasPersistentStorage())
             getPersistentStorage().close();
+
+        uuidMappings.disable();
     }
 
     /**
