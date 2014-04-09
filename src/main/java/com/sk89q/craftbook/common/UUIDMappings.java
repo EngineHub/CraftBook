@@ -107,14 +107,14 @@ public class UUIDMappings {
 
                     results = statement.executeQuery();
 
-                    if(results.next()) {
+                    if(!results.next()) {
                         foundOne = true;
                     } else
                         continue;
 
                     PreparedStatement insertStatement = db.prepareStatement("INSERT INTO mappings VALUES(?,?)");
-                    insertStatement.setString(1, cbId);
-                    insertStatement.setString(2, uuid.toString());
+                    insertStatement.setString(1, uuid.toString());
+                    insertStatement.setString(2, cbId);
 
                     insertStatement.executeUpdate();
                 }
