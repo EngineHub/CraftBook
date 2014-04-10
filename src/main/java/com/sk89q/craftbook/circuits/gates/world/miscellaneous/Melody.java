@@ -259,13 +259,35 @@ public class Melody extends AbstractSelfTriggeredIC {
         @Override
         public String getShortDescription() {
 
-            return "Plays a MIDI.";
+            return "Plays the MIDI file entered on the sign.";
+        }
+
+        @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC1270''' will play a MIDI file listed on the IC in a specified area, or globally. It can be set to loop, or for the input to only play the MIDI file and not turn it off.",
+                    "",
+                    "This IC is one of the MIDI playing ICs, and can only play a single MIDI file, if you would like to play a playlist see [[../MC1273|The Jukebox IC]]",
+                    "",
+                    "MIDI files are stored in the CraftBook MIDI folder, which is inside the 'plugins/CraftBook' folder. This folder is only generated when ICs are enabled, so if you are missing the folder that is why.",
+                    "In the main plugin configuration, there is an option to enable percussion. Some percussion instruments will still be played when this is disabled, but the seperate percussion portion of the MIDI file will not be read."
+            };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"MIDI name", "Radius;LOOP;START"};
+            return new String[] {"MIDI name", "SearchArea;LOOP;START"};
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[]{
+                    "Play/Stop the MIDI", //Inputs
+                    "High if currently playing" //Outputs
+            };
         }
     }
 }
