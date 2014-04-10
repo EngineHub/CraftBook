@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.common.variables;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map.Entry;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -11,6 +13,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class VariableConfiguration {
@@ -44,7 +47,13 @@ public class VariableConfiguration {
             else if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
                 if(player.hasPlayedBefore()) {
-                    keys[0] = CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
+                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));
+                    try {
+                        UUID uuid = fetcher.call().get(player.getName());
+                        keys[0] = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     shouldSave = true;
                 }
             }

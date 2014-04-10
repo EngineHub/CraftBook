@@ -20,8 +20,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +44,7 @@ import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.PersistentDataIC;
+import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -64,9 +67,15 @@ public class WirelessTransmitter extends AbstractIC {
             if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(band);
                 if(player.hasPlayedBefore()) {
-                    band = CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
-                    getSign().setLine(3, band);
-                    getSign().update(false);
+                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(band));
+                    try {
+                        UUID uuid = fetcher.call().get(band);
+                        band = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
+                        getSign().setLine(3, band);
+                        getSign().update(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             band = band + getSign().getLine(3);

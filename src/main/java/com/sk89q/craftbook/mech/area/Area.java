@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.mech.area;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -135,9 +138,15 @@ public class Area extends AbstractCraftBookMechanic {
             OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
             if(player.hasPlayedBefore()) {
                 String originalNamespace = namespace;
-                namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
-                CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
-                sign.setLine(0, namespace);
+                UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));
+                try {
+                    UUID uuid = fetcher.call().get(player.getName());
+                    namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
+                    CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
+                    sign.setLine(0, namespace);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 

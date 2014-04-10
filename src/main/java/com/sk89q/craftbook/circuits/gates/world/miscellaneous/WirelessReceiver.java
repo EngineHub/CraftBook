@@ -16,6 +16,9 @@
 
 package com.sk89q.craftbook.circuits.gates.world.miscellaneous;
 
+import java.util.Arrays;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -31,6 +34,7 @@ import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessReceiver extends AbstractSelfTriggeredIC {
@@ -50,9 +54,15 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
             if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(band);
                 if(player.hasPlayedBefore()) {
-                    band = CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
-                    getSign().setLine(3, band);
-                    getSign().update(false);
+                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(band));
+                    try {
+                        UUID uuid = fetcher.call().get(band);
+                        band = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
+                        getSign().setLine(3, band);
+                        getSign().update(false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             band = band + getSign().getLine(3);
