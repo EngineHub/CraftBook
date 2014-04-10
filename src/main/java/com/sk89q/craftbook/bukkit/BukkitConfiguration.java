@@ -28,6 +28,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
     public boolean pedanticBlockChecks;
     public boolean showPermissionMessages;
     public long signClickTimeout;
+    public boolean convertNamesToCBID;
 
     public boolean updateNotifier;
     public boolean easterEggs;
@@ -133,6 +134,9 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
         config.setComment("persistent-storage-type", "PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY");
         persistentStorageType = config.getString("persistent-storage-type", "YAML");
+
+        config.setComment("convert-names-to-cbids", "Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.");
+        convertNamesToCBID = config.getBoolean("convert-names-to-cbids", true);
 
         super.load();
     }

@@ -60,10 +60,7 @@ public class ServerTimeModulus extends AbstractIC {
      */
     private boolean isServerTimeOdd() {
 
-        long time = BukkitUtil.toSign(getSign()).getBlock().getWorld().getTime() % 2;
-        if (time < 0) {
-            time += 2;
-        }
+        long time = Math.abs(BukkitUtil.toSign(getSign()).getBlock().getWorld().getTime()) % 2;
         return time == 1;
     }
 
@@ -78,6 +75,15 @@ public class ServerTimeModulus extends AbstractIC {
         public IC create(ChangedSign sign) {
 
             return new ServerTimeModulus(getServer(), sign, this);
+        }
+
+        @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC1025''' outputs whether the world time is either odd or even based on the application of the modulus of two on the server time.",
+                    "If the server time is even, a low will be outputted. If the server time is odd, a high will be outputted."
+            };
         }
 
         @Override

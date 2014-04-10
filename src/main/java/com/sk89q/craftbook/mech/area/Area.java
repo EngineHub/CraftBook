@@ -131,12 +131,14 @@ public class Area extends AbstractCraftBookMechanic {
 
         String namespace = sign.getLine(0).trim();
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
-        if(player.hasPlayedBefore()) {
-            String originalNamespace = namespace;
-            namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
-            CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
-            sign.setLine(0, namespace);
+        if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
+            if(player.hasPlayedBefore()) {
+                String originalNamespace = namespace;
+                namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
+                CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
+                sign.setLine(0, namespace);
+            }
         }
 
         return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));

@@ -41,7 +41,7 @@ public class VariableConfiguration {
             String[] keys = RegexUtil.PIPE_PATTERN.split(key, 2);
             if(keys.length == 1)
                 keys = new String[]{"global",key};
-            else {
+            else if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
                 if(player.hasPlayedBefore()) {
                     keys[0] = CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());

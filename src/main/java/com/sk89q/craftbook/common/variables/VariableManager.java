@@ -147,6 +147,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     @EventHandler
     public void onSelfTriggerPing(SelfTriggerPingEvent event) {
 
+        if(!CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) return;
         if(SignUtil.isSign(event.getBlock())) {
 
             ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());

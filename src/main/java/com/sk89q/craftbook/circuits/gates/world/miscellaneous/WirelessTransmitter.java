@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
@@ -37,6 +39,7 @@ import com.sk89q.craftbook.circuits.ic.CommandIC;
 import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
+import com.sk89q.craftbook.circuits.ic.ICMechanic;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.ic.PersistentDataIC;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -57,8 +60,17 @@ public class WirelessTransmitter extends AbstractIC {
     public void load() {
 
         band = getSign().getLine(2);
-        if (!getLine(3).trim().isEmpty())
+        if (!getLine(3).trim().isEmpty()) {
+            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(band);
+                if(player.hasPlayedBefore()) {
+                    band = CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId());
+                    getSign().setLine(3, band);
+                    getSign().update(false);
+                }
+            }
             band = band + getSign().getLine(3);
+        }
     }
 
     @Override
@@ -132,8 +144,9 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
 
-            if (requirename) sign.setLine(3, player.getName());
-            else if (!sign.getLine(3).isEmpty()) sign.setLine(3, player.getName());
+            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))) sign.setLine(3, player.getCraftBookId());
+            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")) sign.setLine(3, player.getCraftBookId());
+            sign.update(false);
         }
 
         @Override
