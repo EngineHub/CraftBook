@@ -97,12 +97,12 @@ public class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
         try {
-            if(sequencer == null || sequencer.getSequence() == null) {
+            if(sequencer == null || sequencer.getSequence() == null)
                 return;
-            }
-            if (!sequencer.isOpen()) {
+
+            if (!sequencer.isOpen())
                 sequencer.open();
-            }
+
             sequencer.getTransmitter().setReceiver(new Receiver() {
 
                 @Override
@@ -174,12 +174,14 @@ public class MidiJingleSequencer implements JingleSequencer {
     public void stop() {
 
         if(!running) return;
+        players.clear();
         CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer. (Stop called)", "midi");
-        if (sequencer != null && sequencer.isOpen()) {
+        if (sequencer != null) {
             try {
                 if(sequencer.isRunning())
                     sequencer.stop();
-                sequencer.close();
+                if(sequencer.isOpen())
+                    sequencer.close();
                 sequencer = null;
             } catch(Exception e){}
         }

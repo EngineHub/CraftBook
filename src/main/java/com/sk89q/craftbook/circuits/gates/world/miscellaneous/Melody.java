@@ -115,7 +115,8 @@ public class Melody extends AbstractSelfTriggeredIC {
             return;
         }
 
-        if((loop && player != null || chip.isTriggered(0) && chip.getInput(0)) && (player == null || !player.isValid())) {
+        if(player == null || !player.isValid() || loop && !player.isPlaying() && chip.getInput(0)) {
+
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
                 Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
@@ -140,8 +141,6 @@ public class Melody extends AbstractSelfTriggeredIC {
                         pp.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                     }
                 }
-            } else  {
-                CraftBookPlugin.logDebugMessage("Player is not playing but should be!", "midi");
             }
         } else if (!chip.getInput(0) && !forceStart) {
             player.setPlaying(false);
@@ -154,7 +153,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         private JingleNoteManager jNote;
         private MidiJingleSequencer sequencer;
-        private boolean isPlaying, hasPlayedBefore;
+        private boolean isPlaying;
 
         private final Set<String> toStop, toPlay;
 
@@ -163,7 +162,6 @@ public class Melody extends AbstractSelfTriggeredIC {
             jNote = new JingleNoteManager();
             toStop = new HashSet<String>();
             toPlay = new HashSet<String>();
-            hasPlayedBefore = false;
             isPlaying = false;
             CraftBookPlugin.logDebugMessage("Constructing new player instance.", "ic-mc1270");
         }
@@ -185,23 +183,17 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         public boolean isPlaying() {
-            return isPlaying || !toPlay.isEmpty() || jNote.isPlaying() || sequencer != null && sequencer.isPlaying();
+            return isPlaying && (!toPlay.isEmpty() || jNote.isPlaying() || sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore()));
         }
 
         public void setPlaying(boolean playing) {
             isPlaying = playing;
-
-        }
-
-        public boolean hasPlayedBefore() {
-            return hasPlayedBefore;
         }
 
         @Override
         public void run () {
             try {
                 isPlaying = true;
-                hasPlayedBefore = true;
                 CraftBookPlugin.logDebugMessage("Starting run of player instance.", "ic-mc1270");
 
                 while(isPlaying) {
@@ -238,7 +230,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         public boolean isValid() {
             if(sequencer == null) return false;
-            if(!isPlaying()) return !hasPlayedBefore();
+            if(!isPlaying()) return !sequencer.hasPlayedBefore();
             return true;
         }
     }

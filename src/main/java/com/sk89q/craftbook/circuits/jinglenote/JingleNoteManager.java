@@ -36,7 +36,8 @@ public class JingleNoteManager {
         Iterator<String> iter = instances.keySet().iterator();
         while(iter.hasNext()) {
             String ent = iter.next();
-            if(!isPlaying(ent)) iter.remove();
+            if(!isPlaying(ent))
+                stop(ent);
         }
         return !instances.isEmpty();
     }

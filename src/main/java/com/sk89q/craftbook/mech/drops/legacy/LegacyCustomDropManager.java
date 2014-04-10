@@ -53,22 +53,22 @@ public final class LegacyCustomDropManager {
 
     public LegacyCustomDropManager(File source) {
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(),
-                "custom-block-drops.txt"), "custom-block-drops.txt");
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(),
-                "custom-mob-drops.txt"), "custom-mob-drops.txt");
+        //CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-block-drops.txt"), "custom-block-drops.txt");
+        //CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-mob-drops.txt"), "custom-mob-drops.txt");
 
         File blockDefinitions = new File(source, "custom-block-drops.txt");
         File mobDefinitions = new File(source, "custom-mob-drops.txt");
 
-        try {
-            loadDropDefinitions(blockDefinitions, false);
-        } catch (CustomDropParseException e) {
-            CraftBookPlugin.logger().log(Level.WARNING, "Custom block drop definitions failed to parse", e);
-        } catch (IOException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Unknown IO error while loading custom block drop definitions", e);
-        } catch (Exception e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Unknown exception while loading custom block drop definitions", e);
+        if (blockDefinitions.exists()) {
+            try {
+                loadDropDefinitions(blockDefinitions, false);
+            } catch (CustomDropParseException e) {
+                CraftBookPlugin.logger().log(Level.WARNING, "Custom block drop definitions failed to parse", e);
+            } catch (IOException e) {
+                CraftBookPlugin.logger().log(Level.SEVERE, "Unknown IO error while loading custom block drop definitions", e);
+            } catch (Exception e) {
+                CraftBookPlugin.logger().log(Level.SEVERE, "Unknown exception while loading custom block drop definitions", e);
+            }
         }
 
         if (mobDefinitions.exists()) {
