@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -105,8 +106,12 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 writer.println("# [" + ric.getId() + "]");
                 for(String line : ric.getFactory().getLineHelp()) {
                     if(line == null) line = "Blank";
-                    if(line.equalsIgnoreCase("SearchArea")) line = "../Search_Area|Search Area";
-                    if(line.equalsIgnoreCase("ItemSyntax")) line = "../Item_Syntax|Item Syntax";
+
+                    if(line.contains("{") && line.contains("}")) line = StringUtils.replace(StringUtils.replace(line, "}", "</span>''"), "{", "''<span style='color:#808080'>"); //Optional Syntax.
+
+                    if(line.contains("SearchArea")) line = StringUtils.replace(line, "SearchArea", "[[../Search_Area|Search Area]]");
+                    if(line.contains("ItemSyntax")) line = StringUtils.replace(line, "ItemSyntax", "[[../Item_Syntax|Item Syntax]]");
+                    if(line.contains("PlayerType")) line = StringUtils.replace(line, "PlayerType", "[[../Player_Type|Player Type]]");
                     writer.println("# " + line);
                 }
 
