@@ -61,12 +61,13 @@ public class Melody extends AbstractSelfTriggeredIC {
     public void unload() {
         if(player != null && player.isPlaying())
             player.setPlaying(false);
+        player = null;
     }
 
     SearchArea area;
     File file;
     String midiName;
-    boolean forceStart, loop;
+    boolean forceStart, loop, hasRun;
 
     MelodyPlayer player;
 
@@ -115,11 +116,10 @@ public class Melody extends AbstractSelfTriggeredIC {
             return;
         }
 
-        if(player == null || !player.isValid() || loop && !player.isPlaying() && chip.getInput(0)) {
-
+        if(player == null || !player.isValid() && (loop || chip.isTriggered(0) && chip.getInput(0))) {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
+                hasRun = false;
             } catch (MidiUnavailableException e) {
                 e.printStackTrace();
             } catch (InvalidMidiDataException e) {
@@ -132,13 +132,17 @@ public class Melody extends AbstractSelfTriggeredIC {
         if(player == null) return;
 
         if (chip.getInput(0)) {
-            if(player.isPlaying()) {
+            if(player.isPlaying() || !hasRun) {
                 for (Player pp : getServer().getOnlinePlayers()) {
                     if (player.isPlaying(pp.getName()) && !area.isWithinArea(pp.getLocation())) {
                         player.stop(pp.getName());
                     } else if(!player.isPlaying(pp.getName()) && area.isWithinArea(pp.getLocation())) {
                         player.play(pp.getName());
                         pp.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
+                        if(!hasRun) {
+                            Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
+                            hasRun = true;
+                        }
                     }
                 }
             }
@@ -171,19 +175,22 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         public void stop(String player) {
+
             toStop.add(player);
             toPlay.remove(player);
             CraftBookPlugin.logDebugMessage("Removing " + player + " from melody IC.", "ic-mc1270");
         }
 
         public void play(String player) {
+
+            if(jNote.isPlaying(player) || toPlay.contains(player)) return;
             toPlay.add(player);
             toStop.remove(player);
             CraftBookPlugin.logDebugMessage("Adding " + player + " to melody IC.", "ic-mc1270");
         }
 
         public boolean isPlaying() {
-            return isPlaying && (!toPlay.isEmpty() || jNote.isPlaying() || sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore()));
+            return isPlaying && /*(!toPlay.isEmpty() || jNote.isPlaying() ||*/ sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore())/*)*/;
         }
 
         public void setPlaying(boolean playing) {
@@ -204,11 +211,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                         jNote.play(player, sequencer, area);
                     }
                     toPlay.clear();
-                    try {
-                        Thread.sleep(10L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     if(!isValid() || !isPlaying() && sequencer.hasPlayedBefore()) {
                         isPlaying = false;
                         break;
@@ -230,7 +233,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         public boolean isValid() {
             if(sequencer == null) return false;
-            if(!isPlaying()) return !sequencer.hasPlayedBefore();
+            if(!sequencer.isPlaying() && sequencer.hasPlayedBefore() && isPlaying) return false;
             return true;
         }
     }

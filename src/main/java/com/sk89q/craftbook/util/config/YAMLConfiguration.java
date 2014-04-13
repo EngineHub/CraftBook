@@ -892,6 +892,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         minecartPlaceAnywhereEnable = config.getBoolean("vehicles.minecart.place-anywhere.enable", false);
 
 
+        // Vehicles Minecart Temporary Cart Listener
+        config.setComment("vehicles.minecart.temporary-cart.enable", "Enables the Temporary Cart mechanic.");
+        minecartTemporaryCartEnable = config.getBoolean("vehicles.minecart.temporary-cart.enable", false);
+
+
         // Vehicles - Boat Drops Listener
         config.setComment("vehicles.boat.drops.enable", "Enables the Boat Drops Mechanic.");
         boatDropsEnabled = config.getBoolean("vehicles.boat.drops.enable", false);

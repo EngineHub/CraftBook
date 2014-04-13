@@ -21,10 +21,15 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(final VehicleExitEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if (!(event.getVehicle() instanceof RideableMinecart)) return;
         if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
+
+        if(!EventUtil.passesFilter(event)) return;
+
+        if(CraftBookPlugin.inst().isMechanicEnabled(TemporaryCart.class)) {
+            if(((TemporaryCart) CraftBookPlugin.inst().getMechanic(TemporaryCart.class)).getMinecarts().contains(event.getVehicle()))
+                return;
+        }
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 

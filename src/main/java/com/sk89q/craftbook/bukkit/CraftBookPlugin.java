@@ -121,6 +121,7 @@ import com.sk89q.craftbook.vehicles.cart.MoreRails;
 import com.sk89q.craftbook.vehicles.cart.NoCollide;
 import com.sk89q.craftbook.vehicles.cart.PlaceAnywhere;
 import com.sk89q.craftbook.vehicles.cart.RailPlacer;
+import com.sk89q.craftbook.vehicles.cart.TemporaryCart;
 import com.sk89q.craftbook.vehicles.cart.VisionSteering;
 import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockManager;
 import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockMechanism;
@@ -244,6 +245,26 @@ public class CraftBookPlugin extends JavaPlugin {
     public List<CraftBookMechanic> getMechanics() {
 
         return mechanics;
+    }
+
+    public boolean isMechanicEnabled(Class<? extends CraftBookMechanic> clazz) {
+
+        for(CraftBookMechanic mech : mechanics) {
+            if(mech.getClass().equals(clazz))
+                return true;
+        }
+
+        return false;
+    }
+
+    public CraftBookMechanic getMechanic(Class<? extends CraftBookMechanic> clazz) {
+
+        for(CraftBookMechanic mech : mechanics) {
+            if(mech.getClass().equals(clazz))
+                return mech;
+        }
+
+        return null;
     }
 
     /**
@@ -502,6 +523,7 @@ public class CraftBookPlugin extends JavaPlugin {
             if(config.minecartEmptySlowdownStopperEnable) mechanics.add(new EmptySlowdown());
             if(config.minecartNoCollideEnable) mechanics.add(new NoCollide());
             if(config.minecartPlaceAnywhereEnable) mechanics.add(new PlaceAnywhere());
+            if(config.minecartTemporaryCartEnable) mechanics.add(new TemporaryCart());
 
             if(config.boatRemoveEntitiesEnabled) mechanics.add(new RemoveEntities());
             if(config.boatNoCrashEnabled) mechanics.add(new Uncrashable());

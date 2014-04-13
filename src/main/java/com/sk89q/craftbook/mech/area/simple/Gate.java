@@ -464,41 +464,44 @@ public class Gate extends AbstractCraftBookMechanic {
 
         ItemInfo gateBlock = null;
 
-        if (sign != null && !sign.getLine(0).isEmpty()) {
-            try {
-                return new ItemInfo(sign.getLine(0));
-            } catch (Exception ignored) {
+        if (sign != null) {
+            if(!sign.getLine(0).isEmpty()) {
+                try {
+                    return new ItemInfo(sign.getLine(0));
+                } catch (Exception ignored) {
+                }
             }
-        }
-        int x = sign.getX();
-        int y = sign.getY();
-        int z = sign.getZ();
 
-        if (smallSearchSize) {
-            for (int x1 = x - 1; x1 <= x + 1; x1++) {
-                for (int y1 = y - 2; y1 <= y + 1; y1++) {
-                    for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                        if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize) != null) {
-                            gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize));
+            int x = sign.getX();
+            int y = sign.getY();
+            int z = sign.getZ();
+
+            if (smallSearchSize) {
+                for (int x1 = x - 1; x1 <= x + 1; x1++) {
+                    for (int y1 = y - 2; y1 <= y + 1; y1++) {
+                        for (int z1 = z - 1; z1 <= z + 1; z1++) {
+                            if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize) != null) {
+                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize));
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
+                    for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
+                        for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
+                            if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize) != null) {
+                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize));
+                            }
                         }
                     }
                 }
             }
-        } else {
-            for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
-                for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
-                    for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
-                        if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize) != null) {
-                            gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize));
-                        }
-                    }
-                }
-            }
-        }
 
-        if(CraftBookPlugin.inst().getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
-            sign.setLine(0, gateBlock.toString());
-            sign.update(false);
+            if(CraftBookPlugin.inst().getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
+                sign.setLine(0, gateBlock.toString());
+                sign.update(false);
+            }
         }
 
         return gateBlock;

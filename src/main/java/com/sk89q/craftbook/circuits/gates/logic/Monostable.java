@@ -67,6 +67,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
 
             chip.setOutput(0, true);
             getSign().setLine(3, setting.substring(0, colon));
+            getSign().update(false);
         }
     }
 
@@ -88,6 +89,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
         }
 
         getSign().setLine(3, Integer.toString(tick));
+        getSign().update(false);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -135,8 +137,8 @@ public class Monostable extends AbstractSelfTriggeredIC {
                 throw new ICVerificationException("Invalid number format");
             }
 
-            ticks = Math.max(ticks, 10);
-            ticks = Math.min(ticks, 50);
+            ticks = Math.max(ticks, 2);
+            ticks = Math.min(ticks, 150);
 
             sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
             sign.setLine(3, "0");

@@ -6,7 +6,6 @@
 package com.sk89q.craftbook.circuits.jinglenote;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -32,13 +31,13 @@ public class JingleNoteManager {
 
     public boolean isPlaying() {
 
-        if(instances.isEmpty()) return false;
+        /*if(instances.isEmpty()) return false;
         Iterator<String> iter = instances.keySet().iterator();
         while(iter.hasNext()) {
             String ent = iter.next();
             if(!isPlaying(ent))
                 stop(ent);
-        }
+        }*/
         return !instances.isEmpty();
     }
 
