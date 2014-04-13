@@ -115,8 +115,10 @@ public abstract class PersistentStorage {
 
         if(type.equalsIgnoreCase("YAML"))
             return new YAMLPersistentStorage();
-        if(type.equalsIgnoreCase("DUMMY"))
+        else if(type.equalsIgnoreCase("DUMMY"))
             return new DummyPersistentStorage();
+        else if(type.equalsIgnoreCase("SQLite"))
+            return new SQLitePersistentStorage();
         else
             return null;
     }
