@@ -151,7 +151,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             }, 10, 10);
         }
 
-        if(CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items") == null)
+        if(!CraftBookPlugin.inst().getPersistentStorage().has("command-items.death-items"))
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<String>>());
 
         return true;

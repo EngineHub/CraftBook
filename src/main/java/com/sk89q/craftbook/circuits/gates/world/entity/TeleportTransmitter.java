@@ -178,7 +178,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
             if(!(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
 
-            CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list", TeleportTransmitter.lastKnownLocations.keySet());
+            CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list", new HashSet<String>(TeleportTransmitter.lastKnownLocations.keySet()));
 
             for(Entry<String, Location> locations : TeleportTransmitter.lastKnownLocations.entrySet()) {
 
