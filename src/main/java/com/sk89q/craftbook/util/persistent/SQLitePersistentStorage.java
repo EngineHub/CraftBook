@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class SQLitePersistentStorage extends PersistentStorage {
@@ -199,21 +197,19 @@ public class SQLitePersistentStorage extends PersistentStorage {
         return data;
     }
 
-    /** Read the object from Base64 string. */
     private static Object fromString(String s) throws IOException, ClassNotFoundException {
-        byte [] data = Base64Coder.decode( s );
+        byte[] data = s.getBytes();
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
         Object o  = ois.readObject();
         ois.close();
         return o;
     }
 
-    /** Write the object to a Base64 string. */
     private static String toString(Serializable o) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(Base64Coder.encode(baos.toByteArray()));
+        return new String(baos.toByteArray());
     }
 }
