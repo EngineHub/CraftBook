@@ -16,11 +16,7 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -342,17 +338,7 @@ public class ICManager {
             longRegistered.put(toRegister, id);
         }
 
-        if(factory instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
-            try {
-                if(((PersistentDataIC) factory).getStorageFile().exists())
-                    ((PersistentDataIC) factory).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) factory).getStorageFile())));
-            } catch (FileNotFoundException e) {
-                BukkitUtil.printStacktrace(e);
-            } catch (IOException e) {
-                CraftBookPlugin.logger().severe("An invalid ic save file was found!");
-                BukkitUtil.printStacktrace(e);
-            }
-        }
+        factory.load();
 
         return true;
     }

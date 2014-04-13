@@ -16,8 +16,10 @@
 
 package com.sk89q.craftbook.circuits.ic;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.bukkit.Server;
 
@@ -84,18 +86,22 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public void unload() {
-
+    public void load() {
         if(this instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
             try {
-                ((PersistentDataIC)this).getStorageFile().getParentFile().mkdirs();
-                if(!((PersistentDataIC)this).getStorageFile().exists())
-                    ((PersistentDataIC)this).getStorageFile().createNewFile();
-                ((PersistentDataIC)this).savePersistentData(new DataOutputStream(new FileOutputStream(((PersistentDataIC)this).getStorageFile())));
-            } catch(Exception e){
-                CraftBookPlugin.logger().severe("Failed to save persistent IC data at " + ((PersistentDataIC)this).getStorageFile().getName());
+                if(((PersistentDataIC) this).getStorageFile().exists())
+                    ((PersistentDataIC) this).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) this).getStorageFile())));
+            } catch (FileNotFoundException e) {
+                BukkitUtil.printStacktrace(e);
+            } catch (IOException e) {
+                CraftBookPlugin.logger().severe("An invalid ic save file was found!");
                 BukkitUtil.printStacktrace(e);
             }
         }
+    }
+
+    @Override
+    public void unload() {
+
     }
 }

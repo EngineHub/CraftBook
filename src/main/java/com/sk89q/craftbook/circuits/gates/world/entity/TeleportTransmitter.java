@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.world.entity;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -27,6 +28,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     }
 
     protected static final HistoryHashMap<String, Tuple2<Long, String>> memory = new HistoryHashMap<String, Tuple2<Long, String>>(50);
+    protected static HistoryHashMap<String, Location> lastKnownLocation = new HistoryHashMap<String, Location>(50);
 
     protected String band;
 

@@ -5,6 +5,10 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @deprecated Use PersistentStorage instead in constructor/unload methods of IC Factories.
+ */
+@Deprecated
 public interface PersistentDataIC {
 
     /**

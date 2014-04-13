@@ -97,6 +97,11 @@ public interface ICFactory {
     public String[] getPinDescription(ChipState state);
 
     /**
+     * Called on load to load extra information.
+     */
+    public void load();
+
+    /**
      * Unloads the IC Factory.
      */
     public void unload();

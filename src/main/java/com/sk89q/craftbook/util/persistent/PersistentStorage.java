@@ -43,6 +43,14 @@ public abstract class PersistentStorage {
     public abstract void set(String location, Object data);
 
     /**
+     * Returns whether the storage medium contains a value.
+     * 
+     * @param location The location to check for data at, with '.'s seperating heirarchy.
+     * @return Whether or not the data exists.
+     */
+    public abstract boolean has(String location);
+
+    /**
      * Determines whether this storage method is usable.
      * 
      * @return If it is usable.

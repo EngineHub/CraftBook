@@ -167,25 +167,33 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public void loadPersistentData (DataInputStream stream) throws IOException {
 
-            memory.clear();
             int length = stream.readInt();
             for(int i = 0; i < length; i++)
                 memory.add(stream.readUTF());
             stream.close();
+            getStorageFile().delete();
         }
 
         @Override
         public void savePersistentData (DataOutputStream stream) throws IOException {
-            stream.writeInt(memory.size());
-            for(String band : memory) {
-                stream.writeUTF(band);
-            }
-            stream.close();
         }
 
         @Override
         public File getStorageFile () {
             return new File(CraftBookPlugin.inst().getDataFolder(), "wireless-bands.dat");
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void load() {
+            if(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage() && CraftBookPlugin.inst().getPersistentStorage().has("wireless-ic-states"))
+                WirelessTransmitter.memory.addAll((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("wireless-ic-states"));
+        }
+
+        @Override
+        public void unload() {
+            if(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage())
+                CraftBookPlugin.inst().getPersistentStorage().set("wireless-ic-states", memory);
         }
 
         @Override
