@@ -126,4 +126,9 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public void unload () {
     }
+
+    @Override
+    public void load () {
+
+    }
 }

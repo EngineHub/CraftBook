@@ -30,7 +30,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
 
         try {
             processor.load();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             BukkitUtil.printStacktrace(e);
             CraftBookPlugin.logger().warning("Persistant Data Corrupt! Data will be reset!");
         }
@@ -41,7 +41,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
             processor.clear();
             try {
                 processor.load();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 BukkitUtil.printStacktrace(e);
                 CraftBookPlugin.logger().warning("Persistant Data Corrupt! Data will be reset!");
             }
@@ -65,6 +65,11 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public void set (String location, Object data) {
         processor.setProperty(location, data);
+    }
+
+    @Override
+    public boolean has (String location) {
+        return processor.getProperty(location) != null;
     }
 
     @Override

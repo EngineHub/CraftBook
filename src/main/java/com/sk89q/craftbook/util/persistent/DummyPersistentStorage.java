@@ -33,6 +33,11 @@ public class DummyPersistentStorage extends PersistentStorage {
     }
 
     @Override
+    public boolean has(String location) {
+        return map.containsKey(location);
+    }
+
+    @Override
     public boolean isValid () {
         return true;
     }

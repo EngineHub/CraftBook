@@ -77,6 +77,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
 
         p.teleport(block.getLocation().add(0.5, 0.5, 0.5));
         CraftBookPlugin.inst().wrapPlayer(p).print(welcome);
+        TeleportTransmitter.lastKnownLocations.put(band, block.getLocation());
     }
 
     public static class Factory extends AbstractICFactory {
