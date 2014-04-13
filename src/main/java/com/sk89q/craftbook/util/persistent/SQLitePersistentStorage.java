@@ -30,12 +30,12 @@ public class SQLitePersistentStorage extends PersistentStorage {
             db = DriverManager.getConnection("jdbc:sqlite:plugins/CraftBook/persistance.db");
 
             DatabaseMetaData dbm = db.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "persistent-data", null);
+            ResultSet tables = dbm.getTables(null, null, "PersistentData", null);
 
             if(tables.next()) //We already have something in this table, don't create it!
                 return;
             else {
-                String createTable = "CREATE TABLE persistent-data (KEY VARCHAR(255) PRIMARY KEY, VALUE TEXT, TYPE VARCHAR(16))";
+                String createTable = "CREATE TABLE PersistentData (KEY VARCHAR(255) PRIMARY KEY, VALUE TEXT, TYPE VARCHAR(16))";
                 try {
                     Statement state = db.createStatement();
                     state.executeUpdate(createTable);
@@ -67,7 +67,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public Object get (String location) {
 
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM persistent-data WHERE KEY = ?");
+            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, location);
             ResultSet results = statement.executeQuery();
 
@@ -94,7 +94,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public void set (String location, Object data) {
 
         try {
-            PreparedStatement statement = db.prepareStatement("INSERT INTO persistent-data VALUES(?,?,?)");
+            PreparedStatement statement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?,?)");
             statement.setString(1, location);
             statement.setObject(2, data);
             String dataType = null;
@@ -121,7 +121,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public boolean has (String location) {
 
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM persistent-data WHERE KEY = ?");
+            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, location);
             ResultSet results = statement.executeQuery();
 
@@ -146,12 +146,12 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public int getVersion () {
 
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM persistent-data WHERE KEY = ?");
+            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, "VERSION");
             ResultSet results = statement.executeQuery();
 
             if(!results.next()) {
-                statement = db.prepareStatement("INSERT INTO persistent-data VALUES(?,?,?)");
+                statement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?,?)");
                 statement.setString(1, "VERSION");
                 statement.setInt(2, getCurrentVersion());
                 statement.setString(3, "INTEGER");
@@ -180,7 +180,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
 
         try {
             if(replace)
-                db.prepareStatement("DELETE FROM persistent-data").execute();
+                db.prepareStatement("DELETE FROM PersistentData").execute();
             for(Entry<String, Object> dat : data.entrySet())
                 set(dat.getKey(), dat.getValue());
         } catch (SQLException e) {
@@ -194,7 +194,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         Map<String, Object> data = new HashMap<String, Object>();
 
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM persistent-data");
+            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData");
             ResultSet results = statement.executeQuery();
             while(results.next()) {
                 data.put(results.getString(1), results.getObject(2));
