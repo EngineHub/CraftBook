@@ -245,9 +245,4 @@ public class StringJingleSequencer implements JingleSequencer {
     public Set<JingleNotePlayer> getPlayers () {
         return players;
     }
-
-    @Override
-    public boolean isPlaying (JingleNotePlayer player) {
-        return players.contains(player);
-    }
 }

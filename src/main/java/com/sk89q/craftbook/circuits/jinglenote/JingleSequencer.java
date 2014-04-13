@@ -23,8 +23,6 @@ public interface JingleSequencer {
 
     public boolean isPlaying();
 
-    public boolean isPlaying(JingleNotePlayer player);
-
     public boolean hasPlayedBefore();
 
     public void play(JingleNotePlayer player);

@@ -21,15 +21,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
     @Override
     public void play (Note note)  {
 
-        if(note == null) return;
-
-        if (p == null || !p.isOnline())
-            p = Bukkit.getPlayerExact(player);
-
-        if (p == null || !p.isOnline())
-            return;
-
-        if(area != null) if(!area.isWithinArea(p.getLocation())) return;
+        if(!isPlaying()) return;
 
         p.playSound(p.getLocation(), toSound(note.getInstrument()), note.getVelocity(), note.getNote());
     }
@@ -40,7 +32,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
         if (p == null || !p.isOnline())
             p = Bukkit.getPlayerExact(player);
 
-        if(p == null || !p.isOnline() || !area.isWithinArea(p.getLocation())) return false;
+        if(p == null || !p.isOnline() || area != null && !area.isWithinArea(p.getLocation())) return false;
 
         return super.isPlaying();
     }

@@ -45,8 +45,6 @@ public abstract class JingleNotePlayer implements Runnable {
             while(isPlaying()){
                 Thread.sleep(10L);
             }
-
-            Thread.sleep(500L);
         } catch (InterruptedException e) {
             BukkitUtil.printStacktrace(e);
         } finally {
@@ -57,7 +55,7 @@ public abstract class JingleNotePlayer implements Runnable {
 
     public boolean isPlaying() {
 
-        return sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore()) && !sequencer.getPlayers().isEmpty() ;
+        return sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore());
     }
 
     public String getPlayer() {

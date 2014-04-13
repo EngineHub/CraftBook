@@ -233,7 +233,7 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         public boolean isValid() {
             if(sequencer == null) return false;
-            if(!sequencer.isPlaying() && sequencer.hasPlayedBefore() && isPlaying) return false;
+            if(!sequencer.isPlaying() && sequencer.hasPlayedBefore()) return false;
             return true;
         }
     }

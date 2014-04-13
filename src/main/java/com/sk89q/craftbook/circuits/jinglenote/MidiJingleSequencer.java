@@ -109,7 +109,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                 public void send(MidiMessage message, long timeStamp) {
 
                     if(players.isEmpty()) {
-                        stop();
+                        running = false;
                         return;
                     }
 
@@ -138,7 +138,7 @@ public class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void close() {
-                    stop();
+                    running = false;
                 }
             });
 
@@ -154,19 +154,8 @@ public class MidiJingleSequencer implements JingleSequencer {
             } catch(Exception e){
                 BukkitUtil.printStacktrace(e);
             }
-
-            while (sequencer != null && sequencer.isRunning()) {
-                if(players.isEmpty()) break;
-                Thread.sleep(10L);
-            }
-
-            for(JingleNotePlayer player : players)
-                CraftBookPlugin.logDebugMessage("Closing midi sequencer: " + player.player, "midi");
-            stop();
         } catch (MidiUnavailableException e) {
             BukkitUtil.printStacktrace(e);
-        } finally {
-            stop();
         }
     }
 
@@ -274,10 +263,5 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public Set<JingleNotePlayer> getPlayers () {
         return players;
-    }
-
-    @Override
-    public boolean isPlaying (JingleNotePlayer player) {
-        return players.contains(player);
     }
 }
