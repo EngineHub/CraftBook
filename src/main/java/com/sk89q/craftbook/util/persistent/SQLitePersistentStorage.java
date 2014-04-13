@@ -98,7 +98,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         }
 
         try {
-            PreparedStatement statement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?)");
+            PreparedStatement statement = db.prepareStatement("INSERT OR REPLACE INTO PersistentData VALUES(?,?)");
             statement.setString(1, location);
             statement.setObject(2, toString((Serializable) data));
 
