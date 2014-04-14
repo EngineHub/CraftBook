@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.8
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.9a
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -70,8 +70,11 @@ realistic-randoms: false
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
 
-# PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY
+# PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite
 persistent-storage-type: YAML
+
+# Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.
+convert-names-to-cbids: true
 common:
     variables:
         enable: true
@@ -349,6 +352,8 @@ mechanics:
         break-leaves: false
     xp-storer:
         enable: false
+        require-bottle: false
+        xp-per-bottle: 16
         block: MOB_SPAWNER
         require-sneaking-state: 'no'
 vehicles:
@@ -437,6 +442,8 @@ vehicles:
             empty-carts: true
             full-carts: false
         place-anywhere:
+            enable: false
+        temporary-cart:
             enable: false
     boat:
         drops:

@@ -1,3 +1,21 @@
+3.8.9 Alpha 1 (14th April)
++ Added support for UUIDs. CraftBook now has an internal ID system called 'CBIDs'. This is viewable by other plugins as an API, and is a way of referencing UUIDs on signs.
++ Added converting of Names to CBIDs (CraftBook UUID Mappings) WARNING! MAKE A BACKUP BEFORE USING THIS, IT IS IRREVERSIBLE.
++ Added CBID PlayerType argument.
++ Added the ability for Potion Inducer to be turned off with a lever.
++ Added an option for XP Storer to require a glass bottle.
++ Added an option to change the amount of XP required per bottle for XP Storer.
++ Added the option for air to be set as XP Storer block, removing the need to right click a block. (Just right clicking air, with glass bottle if configured to)
++ Added TemporaryCart mechanic.
++ Added 'Last Known Locations' to Teleport ICs. Allows for ICs to cache locations and load the chunks.
++ Added SQLite PersistentStorage type.
++ Added Loaded Mechanics List to CB Report.
+* Fixed the Melody IC being odd in many cases, and having a lot of redundant code.
+* Updated for 1.7.8
+* Tweaked Monostable IC bounds, and fixed it with caching.
+* Retired PersistentDataIC and use PersistentStorage instead. ICs auto convert.
+* Fixed the 'no enabled mechanics' warning not occuring due to default enabled mechanics.
+
 3.8.8 (4th April)
 + Added an amount flag to CommandItems give/spawn commands.
 + Added a silence flag to CommandItems give/spawn commands.
