@@ -46,6 +46,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(player.isHoldingBlock() || player.isInsideVehicle() || player.isSneaking()) return;
+        if(player.getHeldItemInfo().getType().name().contains("MINECART")) return;
 
         if(!EventUtil.passesFilter(event))
             return;
