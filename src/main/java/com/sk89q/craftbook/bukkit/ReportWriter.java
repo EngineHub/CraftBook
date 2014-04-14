@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
+import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICManager;
@@ -176,6 +177,16 @@ public class ReportWriter {
         int i = CraftBookPlugin.inst().getMechanics().size();
         log.put("Mechanics Loaded", "%d", i);
         log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
+
+        append(log);
+        appendln();
+
+        appendHeader("Loaded Mechanics");
+
+        log = new LogListBlock();
+
+        for(CraftBookMechanic mech : CraftBookPlugin.inst().getMechanics())
+            log.put(mech.getClass().getSimpleName(), mech.getClass().getPackage().toString());
 
         append(log);
         appendln();

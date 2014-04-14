@@ -370,14 +370,38 @@ public class CraftBookPlugin extends JavaPlugin {
 
             @EventHandler(priority = EventPriority.HIGH)
             public void playerJoin(PlayerJoinEvent event) {
-                if(mechanics.isEmpty() && event.getPlayer().isOp()) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing!");
+
+                if(!event.getPlayer().isOp()) return;
+
+                boolean foundAMech = false;
+
+                for(CraftBookMechanic mech : getMechanics())
+                    if(!(mech instanceof VariableManager) && !(mech instanceof CartBlockManager)) {
+                        foundAMech = true;
+                        break;
+                    }
+
+                if(!foundAMech) {
+                    event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
                 }
             }
         }, this);
 
-        if(mechanics.isEmpty()) {
-            getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing!");
+        boolean foundAMech = false;
+
+        for(CraftBookMechanic mech : getMechanics())
+            if(!(mech instanceof VariableManager) && !(mech instanceof CartBlockManager)) {
+                foundAMech = true;
+                break;
+            }
+
+        if(!foundAMech) {
+            Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+                @Override
+                public void run () {
+                    getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
+                }
+            }, 20L, 20*60*5);
         }
     }
 
