@@ -3,8 +3,6 @@ package com.sk89q.craftbook.util.persistent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -16,6 +14,10 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
@@ -92,7 +94,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     @Override
     public void set (String location, Object data) {
 
-        if(!(data instanceof Serializable)) {
+        if(!(data instanceof Serializable) && !(data instanceof ConfigurationSerializable)) {
             CraftBookPlugin.logger().warning("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
             return;
         }
@@ -100,7 +102,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         try {
             PreparedStatement statement = db.prepareStatement("INSERT OR REPLACE INTO PersistentData VALUES(?,?)");
             statement.setString(1, location);
-            statement.setObject(2, toString((Serializable) data));
+            statement.setObject(2, toString(data));
 
             statement.executeUpdate();
         } catch(SQLException e) {
@@ -199,15 +201,15 @@ public class SQLitePersistentStorage extends PersistentStorage {
 
     private static Object fromString(String s) throws IOException, ClassNotFoundException {
         byte[] data = s.getBytes();
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+        BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
         Object o  = ois.readObject();
         ois.close();
         return o;
     }
 
-    private static String toString(Serializable o) throws IOException {
+    private static String toString(Object o) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        BukkitObjectOutputStream oos = new BukkitObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
         return new String(baos.toByteArray());
