@@ -257,7 +257,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     addChair(p, getChair(p).b); // For any new players.
 
                     if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
-                        p.setHealth(Math.min(p.getHealth() + 1, p.getMaxHealth()));
+                        p.setHealth(Math.min(p.getHealth() + CraftBookPlugin.inst().getConfiguration().chairHealAmount, p.getMaxHealth()));
                     if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }

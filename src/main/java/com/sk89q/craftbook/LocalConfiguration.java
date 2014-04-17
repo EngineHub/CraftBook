@@ -105,6 +105,7 @@ public abstract class LocalConfiguration {
     public boolean chairEnabled;
     public boolean chairAllowHeldBlock;
     public boolean chairHealth;
+    public double chairHealAmount;
     public List<ItemInfo> chairBlocks;
     public boolean chairFacing;
     public boolean chairRequireSign;

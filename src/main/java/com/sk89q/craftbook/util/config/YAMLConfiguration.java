@@ -276,8 +276,11 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.chair.allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
         chairAllowHeldBlock = config.getBoolean("mechanics.chair.allow-holding-blocks", false);
 
-        config.setComment("mechanics.chair.regen-health", "Regenerate health when sitting down.");
+        config.setComment("mechanics.chair.regen-health", "Regenerate health passively when sitting down.");
         chairHealth = config.getBoolean("mechanics.chair.regen-health", true);
+
+        config.setComment("mechanics.chair.regen-health-amount", "The amount of health regenerated passively. (Can be decimal)");
+        chairHealAmount = config.getDouble("mechanics.chair.regen-health-amount", 1);
 
         config.setComment("mechanics.chair.blocks", "A list of blocks that can be sat on.");
         chairBlocks = ItemInfo.parseListFromString(config.getStringList("mechanics.chair.blocks", Arrays.asList("WOOD_STAIRS", "COBBLESTONE_STAIRS", "BRICK_STAIRS", "SMOOTH_STAIRS", "NETHER_BRICK_STAIRS", "SANDSTONE_STAIRS", "SPRUCE_WOOD_STAIRS", "BIRCH_WOOD_STAIRS", "JUNGLE_WOOD_STAIRS", "QUARTZ_STAIRS", "ACACIA_STAIRS")));
