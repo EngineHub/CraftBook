@@ -74,20 +74,17 @@ public class Melody extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        try {
-            if(getLine(3).toUpperCase().endsWith(":START")) getSign().setLine(3, getLine(3).replace(":START", ";START"));
-            if(getLine(3).toUpperCase().endsWith(":LOOP")) getSign().setLine(3, getLine(3).replace(":LOOP", ";LOOP"));
+        if(getLine(3).toUpperCase().contains(":START")) getSign().setLine(3, getLine(3).toUpperCase().replace(":START", ";START"));
+        if(getLine(3).toUpperCase().contains(":LOOP")) getSign().setLine(3, getLine(3).toUpperCase().replace(":LOOP", ";LOOP"));
 
-            String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
+        String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
 
-            if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), split[0]);
-            else area = SearchArea.createEmptyArea();
+        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), split[0]);
+        else area = SearchArea.createEmptyArea();
 
-            for(int i = 1; i < split.length; i++) {
-                if(split[i].toUpperCase(Locale.ENGLISH).contains("START")) forceStart = true;
-                if(split[i].toUpperCase(Locale.ENGLISH).contains("LOOP")) loop = true;
-            }
-        } catch (Exception ignored) {
+        for(int i = 1; i < split.length; i++) {
+            if(split[i].toUpperCase(Locale.ENGLISH).contains("START")) forceStart = true;
+            else if(split[i].toUpperCase(Locale.ENGLISH).contains("LOOP")) loop = true;
         }
 
         midiName = getSign().getLine(2);
@@ -96,7 +93,8 @@ public class Melody extends AbstractSelfTriggeredIC {
                 new File(ICManager.inst().getMidiFolder(), midiName),
                 new File(ICManager.inst().getMidiFolder(), midiName + ".mid"),
                 new File(ICManager.inst().getMidiFolder(), midiName + ".midi"),
-                new File("midi", midiName), new File("midi", midiName + ".mid"),
+                new File("midi", midiName),
+                new File("midi", midiName + ".mid"),
                 new File("midi", midiName + ".midi"),
         };
 

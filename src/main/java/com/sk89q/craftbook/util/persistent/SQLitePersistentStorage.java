@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util.persistent;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -32,9 +33,14 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     public void createConnection() {
+        File file = new File(CraftBookPlugin.inst().getDataFolder(), "persistance.db");
+        if(file.exists()) {
+            file.renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "persistence.db"));
+            file.delete();
+        }
         try {
             Class.forName("org.sqlite.JDBC");
-            db = DriverManager.getConnection("jdbc:sqlite:plugins/CraftBook/persistance.db");
+            db = DriverManager.getConnection("jdbc:sqlite:plugins/CraftBook/persistence.db");
 
             DatabaseMetaData dbm = db.getMetaData();
             ResultSet tables = dbm.getTables(null, null, "PersistentData", null);
