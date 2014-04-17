@@ -148,6 +148,8 @@ public abstract class LocalConfiguration {
     public List<ItemInfo> doorBlocks;
     // Mechanics - Elevator
     public boolean elevatorEnabled;
+    public boolean elevatorAllowRedstone;
+    public int elevatorRedstoneRadius;
     public boolean elevatorButtonEnabled;
     public boolean elevatorLoop;
     public boolean elevatorSlowMove;

@@ -399,6 +399,12 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.elevator.enable", "Enables the Elevator mechanic.");
         elevatorEnabled = config.getBoolean("mechanics.elevator.enable", false);
 
+        config.setComment("mechanics.elevator.allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
+        elevatorAllowRedstone = config.getBoolean("mechanics.elevator.allow-redstone", false);
+
+        config.setComment("mechanics.elevator.enable-buttons", "The radius that elevators will look for players in when triggered by redstone.");
+        elevatorRedstoneRadius = config.getInt("mechanics.elevator.redstone-player-search-radius", 3);
+
         config.setComment("mechanics.elevator.enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
         elevatorButtonEnabled = config.getBoolean("mechanics.elevator.enable-buttons", true);
 
