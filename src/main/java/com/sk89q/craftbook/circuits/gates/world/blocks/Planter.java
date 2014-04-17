@@ -1,14 +1,26 @@
 package com.sk89q.craftbook.circuits.gates.world.blocks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.CocoaPlant;
+import org.bukkit.material.Dye;
+import org.bukkit.material.Tree;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
@@ -19,7 +31,6 @@ import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
@@ -79,7 +90,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     public boolean plant() {
 
-        if (item != null && !plantableItem(item.getType())) return false;
+        if (item != null && !plantableItem(item)) return false;
 
         if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST || getBackBlock().getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
 
@@ -87,7 +98,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             for (ItemStack it : c.getInventory().getContents()) {
 
                 if (!ItemUtil.isStackValid(it)) continue;
-                if (!plantableItem(it.getType())) continue;
+                if (!plantableItem(it)) continue;
 
                 if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
 
@@ -95,8 +106,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                 if ((b = searchBlocks(it)) != null) {
                     if (c.getInventory().removeItem(new ItemStack(it.getType(), 1, it.getDurability())).isEmpty()) {
-                        b.setTypeIdAndData(getBlockByItem(it.getType()).getId(), (byte) it.getDurability(), true);
-                        return true;
+                        return plantBlockAt(it, b);
                     } else
                         continue;
                 }
@@ -115,8 +125,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                     Block b = null;
                     if ((b = searchBlocks(stack)) != null) {
                         if (ItemUtil.takeFromItemEntity(itemEnt, 1)) {
-                            b.setTypeIdAndData(getBlockByItem(stack.getType()).getId(), stack.getData().getData(), true);
-                            return true;
+                            return plantBlockAt(stack, b);
                         }
                     }
                 }
@@ -130,18 +139,18 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if (b == null || b.getType() != Material.AIR) return null;
+        if (b == null || b.getType() != Material.AIR)
+            return null;
 
-        if (itemPlantableOnBlock(stack.getType(), b.getRelative(0, -1, 0).getType())) {
-
+        if (itemPlantableAtBlock(stack, b))
             return b;
-        }
+
         return null;
     }
 
-    protected boolean plantableItem(Material itemId) {
+    protected boolean plantableItem(ItemStack item) {
 
-        switch (itemId) {
+        switch (item.getType()) {
             case SAPLING:
             case SEEDS:
             case NETHER_STALK:
@@ -156,56 +165,84 @@ public class Planter extends AbstractSelfTriggeredIC {
             case BROWN_MUSHROOM:
             case WATER_LILY:
                 return true;
+            case INK_SACK:
+                return ((Dye)item.getData()).getColor() == DyeColor.BROWN;
             default:
                 return false;
         }
     }
 
-    protected boolean itemPlantableOnBlock(Material itemId, Material blockId) {
+    protected boolean itemPlantableAtBlock(ItemStack item, Block block) {
 
-        switch (itemId) {
+        switch (item.getType()) {
             case SAPLING:
             case RED_ROSE:
             case YELLOW_FLOWER:
-                return blockId == Material.DIRT || blockId == Material.GRASS;
+                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS;
             case SEEDS:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
             case POTATO_ITEM:
             case CARROT_ITEM:
-                return blockId == Material.SOIL;
+                return block.getRelative(0, -1, 0).getType() == Material.SOIL;
             case NETHER_STALK:
-                return blockId == Material.SOUL_SAND;
+                return block.getRelative(0, -1, 0).getType() == Material.SOUL_SAND;
             case CACTUS:
-                return blockId == Material.SAND;
+                return block.getRelative(0, -1, 0).getType() == Material.SAND;
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
-                return !BlockType.canPassThrough(blockId.getId());
+                return block.getRelative(0, -1, 0).getType().isSolid();
             case WATER_LILY:
-                return blockId == Material.WATER || blockId == Material.STATIONARY_WATER;
+                return block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER;
+            case INK_SACK:
+                if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
+                BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+                for(BlockFace face : faces) {
+                    if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE)
+                        return true;
+                }
+                return false;
             default:
                 break;
         }
         return false;
     }
 
-    protected Material getBlockByItem(Material itemId) {
+    protected boolean plantBlockAt(ItemStack item, Block block) {
 
-        switch (itemId) {
+        switch (item.getType()) {
             case SEEDS:
-                return Material.CROPS;
+                block.setType(Material.CROPS);
+                return true;
             case MELON_SEEDS:
-                return Material.MELON_STEM;
+                block.setType(Material.MELON_STEM);
+                return true;
             case PUMPKIN_SEEDS:
-                return Material.PUMPKIN_STEM;
+                block.setType(Material.PUMPKIN_STEM);
+                return true;
             case NETHER_STALK:
-                return Material.NETHER_WARTS;
+                block.setType(Material.NETHER_WARTS);
+                return true;
             case POTATO_ITEM:
-                return Material.POTATO;
+                block.setType(Material.POTATO);
+                return true;
             case CARROT_ITEM:
-                return Material.CARROT;
+                block.setType(Material.CARROT);
+                return true;
+            case INK_SACK:
+                if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
+                List<BlockFace> faces = new ArrayList<BlockFace>(Arrays.asList(new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH}));
+                Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
+                for(BlockFace face : faces) {
+                    if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE) {
+                        block.setType(Material.COCOA);
+                        ((CocoaPlant)block.getState().getData()).setFacingDirection(face);
+                        return true;
+                    }
+                }
+                return false;
             default:
-                return itemId;
+                return false;
         }
     }
 
