@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -96,7 +97,7 @@ public class ItemSyntax {
             }
         }
 
-        return builder.toString();
+        return StringUtils.replace(builder.toString(), "\u00A7", "&");
     }
 
     /**
