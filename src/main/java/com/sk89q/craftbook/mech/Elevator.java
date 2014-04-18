@@ -186,7 +186,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), CraftBookPlugin.inst().getConfiguration().elevatorRedstoneRadius)) {
 
             LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
-            if(flyingPlayers.contains(localPlayer.getName())) {
+            if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getName())) {
                 localPlayer.printError("mech.lift.busy");
                 continue;
             }
@@ -227,7 +227,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
         Block destination = findDestination(localPlayer, dir, shift, event.getClickedBlock());
 
-        if(flyingPlayers.contains(localPlayer.getName())) {
+        if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getName())) {
             localPlayer.printError("mech.lift.busy");
             return;
         }
