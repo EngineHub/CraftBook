@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -143,7 +142,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(CraftBookPlugin.inst().getConfiguration().headDropsShowNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
                 player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + " " + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
-                skull.setPlayer(Bukkit.getOfflinePlayer(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName()));
+                skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
                 skull.update();
             }
         }
@@ -163,7 +162,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             Skull skull = (Skull)event.getBlock().getState();
             if(!skull.hasOwner())
                 return;
-            String playerName = ChatColor.stripColor(skull.getPlayer().getName());
+            String playerName = ChatColor.stripColor(skull.getOwner());
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             EntityType type = MobSkullType.getEntityType(playerName);
