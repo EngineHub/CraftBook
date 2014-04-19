@@ -1,28 +1,18 @@
 package com.sk89q.craftbook.mech.drops.legacy;
 
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
+import java.io.File;
+
+import org.bukkit.Bukkit;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
 
 @Deprecated
 public class LegacyCustomDrops extends AbstractCraftBookMechanic {
 
     public LegacyCustomDropManager customDrops;
 
-    @EventHandler(priority = EventPriority.HIGH)
+    /*@EventHandler(priority = EventPriority.HIGH)
     public void handleCustomBlockDrops(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event))
@@ -79,14 +69,28 @@ public class LegacyCustomDrops extends AbstractCraftBookMechanic {
                     event.getDrops().add(stack);
             }
         }
-    }
+    }*/
 
     @Override
     public boolean enable () {
 
-        CraftBookPlugin.logger().warning("The LegacyCustomDrops feature is deprecated and may be removed in the future! Please convert your existing recipes to the new system!");
+        final File blockDefinitions = new File(CraftBookPlugin.inst().getDataFolder(), "custom-block-drops.txt");
+        final File mobDefinitions = new File(CraftBookPlugin.inst().getDataFolder(), "custom-mob-drops.txt");
 
-        customDrops = new LegacyCustomDropManager(CraftBookPlugin.inst().getDataFolder());
+        if(!blockDefinitions.exists() && !mobDefinitions.exists()) return true;
+
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+
+            @Override
+            public void run () {
+                customDrops = new LegacyCustomDropManager(CraftBookPlugin.inst().getDataFolder());
+                if(blockDefinitions.exists())
+                    blockDefinitions.delete();
+                if(mobDefinitions.exists())
+                    mobDefinitions.delete();
+            }
+
+        }, 10L);
         return true;
     }
 

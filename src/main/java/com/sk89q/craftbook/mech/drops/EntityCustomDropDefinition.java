@@ -11,8 +11,8 @@ public class EntityCustomDropDefinition extends CustomDropDefinition {
     /**
      * Instantiate an Entity-Type CustomDrop.
      */
-    public EntityCustomDropDefinition(List<DropItemStack> drops, EntityType entityType) {
-        super(drops);
+    public EntityCustomDropDefinition(String name, List<DropItemStack> drops, EntityType entityType) {
+        super(name, drops);
         this.entityType = entityType;
     }
 

@@ -42,6 +42,15 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
 
+        load();
+
+        return true;
+    }
+
+    public boolean load() {
+
+        definitions.clear();
+
         try {
             config.load();
         } catch (IOException e) {
@@ -63,6 +72,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 DropItemStack stack = new DropItemStack(item);
 
+                stack.setName(drop);
+
                 stack.setChance(config.getInt("custom-drops." + key + ".drops." + drop + ".chance", 100));
                 stack.setMinimum(config.getInt("custom-drops." + key + ".drops." + drop + ".minimum-amount", -1));
                 stack.setMaximum(config.getInt("custom-drops." + key + ".drops." + drop + ".maximum-amount", -1));
@@ -75,12 +86,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 EntityType ent = EntityType.valueOf(config.getString("custom-drops." + key + ".entity-type"));
 
-                def = new EntityCustomDropDefinition(drops, ent);
+                def = new EntityCustomDropDefinition(key, drops, ent);
             } else if(type.equalsIgnoreCase("block")) {
 
-                ItemInfo data = new ItemInfo(ItemSyntax.getItem(config.getString("custom-drops." + key + ".block")));
+                ItemInfo data = new ItemInfo(config.getString("custom-drops." + key + ".block"));
 
-                def = new BlockCustomDropDefinition(drops, data);
+                def = new BlockCustomDropDefinition(key, drops, data);
             }
 
             if(def != null) {
@@ -90,6 +101,43 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         }
 
         return true;
+    }
+
+    public void save() {
+
+        for(CustomDropDefinition def : definitions) {
+
+            config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
+
+            int i = 0;
+            for(DropItemStack stack : def.getDrops()) {
+
+                String stackName = stack.getName();
+                if(stackName == null)
+                    stackName = "Drop" + i++;
+
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".item", ItemSyntax.getStringFromItem(stack.getStack()));
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".chance", stack.getChance());
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".minimum-amount", stack.getMinimum());
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".maximum-amount", stack.getMaximum());
+            }
+
+            if(def instanceof EntityCustomDropDefinition) {
+                config.setProperty("custom-drops." + def.getName() + ".type", "ENTITY");
+                config.setProperty("custom-drops." + def.getName() + ".entity-type", ((EntityCustomDropDefinition) def).getEntityType().name());
+            } else if(def instanceof BlockCustomDropDefinition) {
+                config.setProperty("custom-drops." + def.getName() + ".type", "BLOCK");
+                config.setProperty("custom-drops." + def.getName() + ".block", ((BlockCustomDropDefinition) def).getBlockType().toString());
+            }
+        }
+
+        config.save();
+    }
+
+    public void addDefinition(CustomDropDefinition definition) {
+
+        definitions.add(definition);
+        save();
     }
 
     @EventHandler(priority = EventPriority.HIGH)

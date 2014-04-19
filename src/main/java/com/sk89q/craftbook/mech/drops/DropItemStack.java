@@ -6,8 +6,9 @@ public class DropItemStack {
 
     private ItemStack stack;
 
-    private int chance = 100;
+    private double chance = 100;
     private int minA = -1, maxA = -1;
+    private String name;
 
     public DropItemStack(ItemStack stack) {
         this.stack = stack;
@@ -17,12 +18,12 @@ public class DropItemStack {
         return stack;
     }
 
-    public void setChance(int chance) {
+    public void setChance(double chance) {
 
         this.chance = chance;
     }
 
-    public int getChance() {
+    public double getChance() {
 
         return chance;
     }
@@ -45,5 +46,15 @@ public class DropItemStack {
     public int getMaximum() {
 
         return maxA;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
     }
 }

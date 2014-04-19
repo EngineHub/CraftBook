@@ -11,11 +11,13 @@ import com.sk89q.craftbook.util.ItemUtil;
 public abstract class CustomDropDefinition {
 
     private DropItemStack[] drops;
+    private String name;
 
     private boolean append;
 
-    public CustomDropDefinition(List<DropItemStack> drops) {
+    public CustomDropDefinition(String name, List<DropItemStack> drops) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
+        this.name = name;
     }
 
     public void setAppend(boolean append) {
@@ -50,5 +52,10 @@ public abstract class CustomDropDefinition {
         }
 
         return ndrops.toArray(new ItemStack[ndrops.size()]);
+    }
+
+    public String getName() {
+
+        return name;
     }
 }

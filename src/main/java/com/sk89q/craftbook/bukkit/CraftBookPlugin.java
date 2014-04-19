@@ -456,8 +456,8 @@ public class CraftBookPlugin extends JavaPlugin {
             if (config.customDispensingEnabled) mechanics.add(new DispenserRecipes());
             if (config.snowEnable) mechanics.add(new Snow());
             if (config.customDropEnabled) {
-                mechanics.add(new LegacyCustomDrops());
                 mechanics.add(new CustomDrops());
+                mechanics.add(new LegacyCustomDrops());
             }
             if (config.aiEnabled) mechanics.add(new AIMechanic());
             if (config.paintingsEnabled) mechanics.add(new PaintingSwitch());

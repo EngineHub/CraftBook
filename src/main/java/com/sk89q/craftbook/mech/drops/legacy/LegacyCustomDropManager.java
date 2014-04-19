@@ -25,15 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mech.drops.BlockCustomDropDefinition;
+import com.sk89q.craftbook.mech.drops.CustomDrops;
+import com.sk89q.craftbook.mech.drops.DropItemStack;
+import com.sk89q.craftbook.mech.drops.EntityCustomDropDefinition;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -96,6 +103,8 @@ public final class LegacyCustomDropManager {
             return mobDropDefinitions.get(ChatColor.translateAlternateColorCodes('&', (mob.getType().name() + "|" + mob.getCustomName()).toLowerCase(Locale.ENGLISH)));
         return mobDropDefinitions.get(mob.getType().name().toLowerCase(Locale.ENGLISH));
     }
+
+    int converted = 0;
 
     public void loadDropDefinitions(File file, boolean isMobDrop) throws IOException {
 
@@ -160,6 +169,8 @@ public final class LegacyCustomDropManager {
                             }
                             CustomItemDrop drop = blockDropDefinitions[sourceId];
 
+                            int data = 0;
+
                             if (split.length == 1) {
                                 if (drop.defaultDrop != null) {
                                     reader.close();
@@ -167,7 +178,7 @@ public final class LegacyCustomDropManager {
                                 }
                                 drop.defaultDrop = drops;
                             } else {
-                                int data = Integer.parseInt(split[1]);
+                                data = Integer.parseInt(split[1]);
                                 if (data >= DATA_VALUE_COUNT || data < 0) {
                                     reader.close();
                                     throw new CustomDropParseException(prelude + "block data value out of range");
@@ -178,6 +189,25 @@ public final class LegacyCustomDropManager {
                                 }
                                 drop.drops[data] = drops;
                             }
+
+                            List<DropItemStack> stacks = new ArrayList<DropItemStack>();
+
+                            boolean append = false;
+
+                            for(DropDefinition dd : drops) {
+                                DropItemStack nstack = new DropItemStack(dd.stack);
+                                nstack.setChance(dd.chance);
+                                nstack.setMaximum(dd.countMax);
+                                nstack.setMinimum(dd.countMin);
+                                stacks.add(nstack);
+                                if(dd.append)
+                                    append = true;
+                            }
+
+                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, new ItemInfo(sourceId, data));
+                            converted.setAppend(append);
+
+                            ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);
                         } else {
                             itemsSource = ChatColor.translateAlternateColorCodes('&', itemsSource.toLowerCase(Locale.ENGLISH));
                             if (mobDropDefinitions.containsKey(itemsSource)) {
@@ -192,6 +222,28 @@ public final class LegacyCustomDropManager {
 
                     if (isMobDrop) {
                         this.mobDropDefinitions = mobDropDefinitions;
+
+                        for(Entry<String, DropDefinition[]> def : mobDropDefinitions.entrySet()) {
+
+                            List<DropItemStack> stacks = new ArrayList<DropItemStack>();
+
+                            boolean append = false;
+
+                            for(DropDefinition dd : def.getValue()) {
+                                DropItemStack nstack = new DropItemStack(dd.stack);
+                                nstack.setChance(dd.chance);
+                                nstack.setMaximum(dd.countMax);
+                                nstack.setMinimum(dd.countMin);
+                                stacks.add(nstack);
+                                if(dd.append)
+                                    append = true;
+                            }
+
+                            EntityCustomDropDefinition converted = new EntityCustomDropDefinition(def.getKey().toUpperCase() + "" + this.converted++, stacks, EntityType.valueOf(def.getKey().toUpperCase()));
+                            converted.setAppend(append);
+
+                            ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);
+                        }
                     } else {
                         this.blockDropDefinitions = blockDropDefinitions;
                     }
@@ -299,12 +351,6 @@ public final class LegacyCustomDropManager {
             ItemStack stack = this.stack.clone();
             stack.setAmount(countMin == countMax ? countMin : countMin + CraftBookPlugin.inst().getRandom().nextInt(countMax - countMin + 1));
             return stack;
-        }
-
-        public ItemStack[] getItemStacks() {
-
-            // TODO return item stacks with random quantities of the drop to add a more realistic feel
-            return null;
         }
     }
 }

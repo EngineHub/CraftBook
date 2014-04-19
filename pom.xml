@@ -158,9 +158,7 @@
                     <include>command-items.yml</include>
                     <include>crafting-recipes.yml</include>
                     <include>custom-drops.yml</include>
-                    <include>custom-block-drops.txt</include>
                     <include>custom-ics.txt</include>
-                    <include>custom-mob-drops.txt</include>
                 </includes>
             </resource>
             <resource>

@@ -11,8 +11,8 @@ public class BlockCustomDropDefinition extends CustomDropDefinition {
     /**
      * Instantiate a Block-Type CustomDrop.
      */
-    public BlockCustomDropDefinition(List<DropItemStack> drops, ItemInfo blockData) {
-        super(drops);
+    public BlockCustomDropDefinition(String name, List<DropItemStack> drops, ItemInfo blockData) {
+        super(name, drops);
 
         this.blockData = blockData;
     }
