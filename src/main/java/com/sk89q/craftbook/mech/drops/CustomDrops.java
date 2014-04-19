@@ -162,7 +162,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if(!def.getAppend()) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
-                ((ExperienceOrb) event.getBlock().getWorld().spawnEntity(BlockUtil.getBlockCentre(event.getBlock()), EntityType.EXPERIENCE_ORB)).setExperience(event.getExpToDrop());
+                if(event.getExpToDrop() > 0)
+                    ((ExperienceOrb) event.getBlock().getWorld().spawnEntity(BlockUtil.getBlockCentre(event.getBlock()), EntityType.EXPERIENCE_ORB)).setExperience(event.getExpToDrop());
             }
 
             for(ItemStack stack : def.getRandomDrops()) {
@@ -184,7 +185,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!def.getAppend()) {
                 event.getDrops().clear();
-                ((ExperienceOrb) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(event.getDroppedExp());
+                if(event.getDroppedExp() > 0)
+                    ((ExperienceOrb) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(event.getDroppedExp());
             }
 
             for(ItemStack stack : def.getRandomDrops()) {
