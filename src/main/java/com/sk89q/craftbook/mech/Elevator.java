@@ -181,7 +181,9 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
 
         BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
-        Block destination = findDestination(null, dir, shift, event.getBlock());
+        Block destination = findDestination(dir, shift, event.getBlock());
+
+        if(destination == null) return;
 
         for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), CraftBookPlugin.inst().getConfiguration().elevatorRedstoneRadius)) {
 
@@ -225,7 +227,12 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
 
         BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
-        Block destination = findDestination(localPlayer, dir, shift, event.getClickedBlock());
+        Block destination = findDestination(dir, shift, event.getClickedBlock());
+
+        if(destination == null) {
+            localPlayer.printError("mech.lift.no-destination");
+            return;
+        }
 
         if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getName())) {
             localPlayer.printError("mech.lift.busy");
@@ -250,14 +257,13 @@ public class Elevator extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    public Block findDestination(LocalPlayer localPlayer, Direction dir, BlockFace shift, Block clickedBlock) {
+    public Block findDestination(Direction dir, BlockFace shift, Block clickedBlock) {
 
         // find destination sign
         int f = dir == Direction.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
         Block destination = clickedBlock;
         // heading up from top or down from bottom
         if (destination.getY() == f) {
-            if(localPlayer != null) localPlayer.printError("mech.lift.no-destination");
             return null;
         }
         boolean loopd = false;
@@ -268,7 +274,6 @@ public class Elevator extends AbstractCraftBookMechanic {
                 break; // found it!
 
             if (destination.getY() == clickedBlock.getY()) {
-                if(localPlayer != null) localPlayer.printError("mech.lift.no-destination");
                 return null;
             }
             if (CraftBookPlugin.inst().getConfiguration().elevatorLoop && !loopd) {
@@ -285,11 +290,9 @@ public class Elevator extends AbstractCraftBookMechanic {
                 }
             } else {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) {
-                    if(localPlayer != null) localPlayer.printError("mech.lift.no-destination");
                     return null;
                 }
                 else if (destination.getY() == 0) {
-                    if(localPlayer != null) localPlayer.printError("mech.lift.no-destination");
                     return null;
                 }
             }
