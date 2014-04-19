@@ -19,6 +19,7 @@ package com.sk89q.craftbook.mech;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -62,10 +63,12 @@ import com.sk89q.worldedit.blocks.BlockType;
  */
 public class Elevator extends AbstractCraftBookMechanic {
 
+    public HashSet<UUID> flyingPlayers;
+
     @Override
     public boolean enable() {
         if(CraftBookPlugin.inst().getConfiguration().elevatorSlowMove)
-            flyingPlayers = new HashSet<String>();
+            flyingPlayers = new HashSet<UUID>();
         return true;
     }
 
@@ -73,7 +76,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     public void disable() {
 
         if(flyingPlayers != null) {
-            Iterator<String> it = flyingPlayers.iterator();
+            Iterator<UUID> it = flyingPlayers.iterator();
             while(it.hasNext()) {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
                 if(!op.isOnline()) {
@@ -94,7 +97,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if(!CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) return;
         if(!(event.getEntity() instanceof Player)) return;
-        if(!flyingPlayers.contains(((Player) event.getEntity()).getName())) return;
+        if(!flyingPlayers.contains(event.getEntity().getUniqueId())) return;
         if(event instanceof EntityDamageByEntityEvent) return;
 
         event.setCancelled(true);
@@ -105,10 +108,10 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if(!CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) return;
         //Clean up mechanics that store players that we don't want anymore.
-        Iterator<String> it = flyingPlayers.iterator();
+        Iterator<UUID> it = flyingPlayers.iterator();
         while(it.hasNext()) {
-            String p = it.next();
-            if(event.getPlayer().getName().equalsIgnoreCase(p)) {
+            UUID p = it.next();
+            if(event.getPlayer().getUniqueId().equals(p)) {
                 event.getPlayer().setFlying(false);
                 event.getPlayer().setAllowFlight(event.getPlayer().getGameMode() == GameMode.CREATIVE);
                 it.remove();
@@ -188,7 +191,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), CraftBookPlugin.inst().getConfiguration().elevatorRedstoneRadius)) {
 
             LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
-            if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getName())) {
+            if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
                 localPlayer.printError("mech.lift.busy");
                 continue;
             }
@@ -234,7 +237,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getName())) {
+        if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
             localPlayer.printError("mech.lift.busy");
             return;
         }
@@ -338,8 +341,6 @@ public class Elevator extends AbstractCraftBookMechanic {
         teleportPlayer(player, floor, destination, shift);
     }
 
-    public HashSet<String> flyingPlayers;
-
     public void teleportPlayer(final LocalPlayer player, final Block floor, final Block destination, final BlockFace shift) {
 
         final Location newLocation = BukkitUtil.toLocation(player.getPosition());
@@ -358,8 +359,8 @@ public class Elevator extends AbstractCraftBookMechanic {
                         return;
                     }
                     Player p = op.getPlayer();
-                    if(!flyingPlayers.contains(p.getName()))
-                        flyingPlayers.add(p.getName());
+                    if(!flyingPlayers.contains(p.getUniqueId()))
+                        flyingPlayers.add(p.getUniqueId());
                     p.setAllowFlight(true);
                     p.setFlying(true);
                     p.setFallDistance(0f);
@@ -374,7 +375,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         cancel();
-                        flyingPlayers.remove(p.getName());
+                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
@@ -383,7 +384,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                         p.setFlying(false);
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         cancel();
-                        flyingPlayers.remove(p.getName());
+                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
@@ -400,7 +401,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         teleportFinish(player, destination, shift);
                         cancel();
-                        flyingPlayers.remove(p.getName());
+                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
