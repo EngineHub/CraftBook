@@ -210,6 +210,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(!CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled) return;
         if(SignUtil.isSign(event.getClickedBlock())) return;
 
@@ -219,12 +220,11 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
     public void onCommonClick(PlayerInteractEvent event) {
-
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         if (!EventUtil.passesFilter(event))
             return;

@@ -65,6 +65,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(SignUtil.isSign(event.getClickedBlock())) return;
 
         onCommonClick(event);
@@ -73,6 +74,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
@@ -80,8 +82,6 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event))
             return;
-
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
