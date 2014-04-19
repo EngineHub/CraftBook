@@ -52,6 +52,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -208,6 +209,20 @@ public class Elevator extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled) return;
+        if(SignUtil.isSign(event.getClickedBlock())) return;
+
+        onCommonClick(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRightClick(SignClickEvent event) {
+
+        onCommonClick(event);
+    }
+
+    public void onCommonClick(PlayerInteractEvent event) {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 

@@ -353,6 +353,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new Listener() {
 
+            /* Bukkit Bug Fixes */
+
             @EventHandler(priority = EventPriority.LOWEST)
             public void signChange(SignChangeEvent event) {
                 for(int i = 0; i < event.getLines().length; i++) {
@@ -367,6 +369,8 @@ public class CraftBookPlugin extends JavaPlugin {
                         event.setLine(i, fixed);
                 }
             }
+
+            /* Alerts */
 
             @EventHandler(priority = EventPriority.HIGH)
             public void playerJoin(PlayerJoinEvent event) {

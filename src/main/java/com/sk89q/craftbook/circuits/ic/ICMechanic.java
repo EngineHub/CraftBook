@@ -72,10 +72,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
-        
-        this.manager.disable();
+
+        manager.disable();
     }
-    
+
     public Object[] setupIC(Block block, boolean create) {
 
         // if we're not looking at a wall sign, it can't be an IC.
@@ -236,9 +236,9 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         if(ICManager.isCachedIC(event.getClickedBlock().getLocation()) && event.getPlayer().isSneaking()) {
             ICManager.getCachedIC(event.getClickedBlock().getLocation()).unload();

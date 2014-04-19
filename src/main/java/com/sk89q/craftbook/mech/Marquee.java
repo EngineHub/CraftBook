@@ -26,9 +26,10 @@ public class Marquee extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignClick(SignClickEvent event) {
 
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
         if(!EventUtil.passesFilter(event)) return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ChangedSign sign = event.getSign();
         if(!sign.getLine(1).equals("[Marquee]")) return;
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());

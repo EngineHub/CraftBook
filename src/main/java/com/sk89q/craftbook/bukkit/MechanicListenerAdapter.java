@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -75,7 +77,20 @@ public class MechanicListenerAdapter implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getClickedBlock() != null && SignUtil.isSign(event.getClickedBlock())) {
+        Block block = null;
+        Action action = null;
+        if(event.getAction() == Action.RIGHT_CLICK_AIR) {
+            block = event.getPlayer().getTargetBlock(null, 5);
+            if(block != null && block.getType() != Material.AIR)
+                action = Action.RIGHT_CLICK_BLOCK;
+            else
+                action = Action.RIGHT_CLICK_AIR;
+        } else {
+            block = event.getClickedBlock();
+            action = event.getAction();
+        }
+
+        if(block != null && SignUtil.isSign(block)) {
             if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
                 if(signClickTimer.contains(event.getPlayer().getName())) {
                     return;
@@ -89,7 +104,7 @@ public class MechanicListenerAdapter implements Listener {
                     }, CraftBookPlugin.inst().getConfiguration().signClickTimeout);
                 }
             }
-            SignClickEvent ev = new SignClickEvent(event.getPlayer(), event.getAction(), event.getItem(), event.getClickedBlock(), event.getBlockFace());
+            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if(ev.isCancelled())
                 event.setCancelled(true);

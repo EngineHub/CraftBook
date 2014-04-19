@@ -21,6 +21,7 @@ import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -63,6 +64,19 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+
+        if(SignUtil.isSign(event.getClickedBlock())) return;
+
+        onCommonClick(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRightClick(SignClickEvent event) {
+
+        onCommonClick(event);
+    }
+
+    public void onCommonClick(PlayerInteractEvent event) {
 
         if (!EventUtil.passesFilter(event))
             return;
