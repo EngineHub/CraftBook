@@ -30,7 +30,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!CraftBookPlugin.inst().getConfiguration().xpStorerSneaking.doesPass(player.isSneaking()) || event.getPlayer().getLevel() < 1)
             return;
 
-        int max = -1;
+        int max = Integer.MAX_VALUE;
 
         if(CraftBookPlugin.inst().getConfiguration().xpStorerRequireBottle) {
             if(player.getHeldItemInfo().getType() != Material.GLASS_BOTTLE && CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR) {
