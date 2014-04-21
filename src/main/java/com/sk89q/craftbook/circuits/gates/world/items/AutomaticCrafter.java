@@ -110,19 +110,25 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             return false;
         }
 
+        List<ItemStack> items = new ArrayList<ItemStack>();
+
         ItemStack[] replace = new ItemStack[9];
         for (int i = 0; i < disp.getInventory().getContents().length; i++) {
             if (disp.getInventory().getContents()[i] == null) {
                 continue;
             }
             replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
+
+            if(replace[i].getType() == Material.WATER_BUCKET || replace[i].getType() == Material.LAVA_BUCKET || replace[i].getType() == Material.MILK_BUCKET)
+                items.add(new ItemStack(Material.BUCKET, 1));
+
             replace[i].setAmount(replace[i].getAmount() - 1);
         }
         disp.getInventory().clear();
 
         CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getType().name() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
 
-        List<ItemStack> items = new ArrayList<ItemStack>();
+
         items.add(result);
 
         Block pipe = ((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing());
