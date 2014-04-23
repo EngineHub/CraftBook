@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -261,7 +260,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     private static Object fromString(String s) throws IOException, ClassNotFoundException {
-        byte[] data = s.getBytes(Charset.forName("UTF-8"));
+        byte[] data = s.getBytes();
         BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
         Object o  = ois.readObject();
         ois.close();
@@ -273,6 +272,6 @@ public class SQLitePersistentStorage extends PersistentStorage {
         BukkitObjectOutputStream oos = new BukkitObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(baos.toByteArray(), Charset.forName("UTF-8"));
+        return new String(baos.toByteArray());
     }
 }
