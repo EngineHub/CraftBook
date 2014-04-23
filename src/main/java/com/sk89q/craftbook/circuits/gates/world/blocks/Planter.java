@@ -11,6 +11,7 @@ import org.bukkit.Server;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -236,7 +237,9 @@ public class Planter extends AbstractSelfTriggeredIC {
                 for(BlockFace face : faces) {
                     if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE) {
                         block.setType(Material.COCOA);
-                        ((CocoaPlant)block.getState().getData()).setFacingDirection(face);
+                        BlockState state = block.getState();
+                        ((CocoaPlant)state.getData()).setFacingDirection(face);
+                        state.update();
                         return true;
                     }
                 }

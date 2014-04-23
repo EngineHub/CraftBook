@@ -364,15 +364,14 @@ public class MechanicListenerAdapter implements Listener {
         if(event.getVehicle() instanceof Minecart) {
             try {
                 Minecart cart = (Minecart) event.getVehicle();
-                CartMechanismBlocks cmb;
-                cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
+                CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
                 cmb.setFromBlock(event.getFrom().getBlock());
                 Location from = event.getFrom();
                 Location to = event.getTo();
                 if(LocationUtil.getDistanceSquared(from, to) > 2*2) //Further than max distance
                     return;
-                boolean crossesBlockBoundary = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
-                CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, crossesBlockBoundary);
+                boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
+                CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, minor);
                 CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             } catch (InvalidMechanismException ignored) {
             }

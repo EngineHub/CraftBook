@@ -29,9 +29,7 @@ public class CartBooster extends CartBlockMechanism {
 
         // speed up or down
         Vector newVelocity;
-        if (multiplier > 1) {
-            newVelocity = event.getVehicle().getVelocity().multiply(multiplier);
-        } else if (multiplier < 1) {
+        if (multiplier != 1) {
             newVelocity = event.getVehicle().getVelocity().multiply(multiplier);
         } else return;
         // go
