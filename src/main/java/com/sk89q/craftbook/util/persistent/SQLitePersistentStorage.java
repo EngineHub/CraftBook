@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -76,13 +77,38 @@ public class SQLitePersistentStorage extends PersistentStorage {
         return "SQLite";
     }
 
+    private void close(ResultSet results) {
+
+        if(results != null) {
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void close(PreparedStatement statement) {
+
+        if(statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public Object get (String location) {
 
+        PreparedStatement statement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
+            statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, location);
-            ResultSet results = statement.executeQuery();
+            results = statement.executeQuery();
 
             if(!results.next()) return null;
 
@@ -93,6 +119,9 @@ public class SQLitePersistentStorage extends PersistentStorage {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            close(results);
+            close(statement);
         }
         return null;
     }
@@ -105,8 +134,10 @@ public class SQLitePersistentStorage extends PersistentStorage {
             return;
         }
 
+        PreparedStatement statement = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("INSERT OR REPLACE INTO PersistentData VALUES(?,?)");
+            statement = db.prepareStatement("INSERT OR REPLACE INTO PersistentData VALUES(?,?)");
             statement.setString(1, location);
             statement.setObject(2, toString(data));
 
@@ -115,20 +146,28 @@ public class SQLitePersistentStorage extends PersistentStorage {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
         }
     }
 
     @Override
     public boolean has (String location) {
 
+        PreparedStatement statement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
+            statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, location);
-            ResultSet results = statement.executeQuery();
+            results = statement.executeQuery();
 
             return results.next();
         } catch(SQLException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
+            close(results);
         }
         return false;
     }
@@ -146,20 +185,30 @@ public class SQLitePersistentStorage extends PersistentStorage {
     @Override
     public int getVersion () {
 
+        PreparedStatement statement = null;
+        PreparedStatement insertStatement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
+            statement = db.prepareStatement("SELECT * FROM PersistentData WHERE KEY = ?");
             statement.setString(1, "VERSION");
-            ResultSet results = statement.executeQuery();
+            results = statement.executeQuery();
 
             if(!results.next()) {
-                statement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?)");
-                statement.setString(1, "VERSION");
-                statement.setInt(2, getCurrentVersion());
+                insertStatement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?)");
+                insertStatement.setString(1, "VERSION");
+                insertStatement.setInt(2, getCurrentVersion());
+
+                insertStatement.executeUpdate();
             } else {
                 return results.getInt(2);
             }
         } catch(SQLException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
+            close(insertStatement);
+            close(results);
         }
 
         return getCurrentVersion();
@@ -193,20 +242,26 @@ public class SQLitePersistentStorage extends PersistentStorage {
 
         Map<String, Object> data = new HashMap<String, Object>();
 
+        PreparedStatement statement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT * FROM PersistentData");
-            ResultSet results = statement.executeQuery();
+            statement = db.prepareStatement("SELECT * FROM PersistentData");
+            results = statement.executeQuery();
             while(results.next()) {
                 data.put(results.getString(1), results.getObject(2));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
+            close(results);
         }
         return data;
     }
 
     private static Object fromString(String s) throws IOException, ClassNotFoundException {
-        byte[] data = s.getBytes();
+        byte[] data = s.getBytes(Charset.forName("UTF-8"));
         BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
         Object o  = ois.readObject();
         ois.close();
@@ -218,6 +273,6 @@ public class SQLitePersistentStorage extends PersistentStorage {
         BukkitObjectOutputStream oos = new BukkitObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(baos.toByteArray());
+        return new String(baos.toByteArray(), Charset.forName("UTF-8"));
     }
 }

@@ -46,6 +46,28 @@ public class UUIDMappings {
         catch(Exception e) {}
     }
 
+    private void close(ResultSet results) {
+
+        if(results != null) {
+            try {
+                results.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void close(PreparedStatement statement) {
+
+        if(statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Gets the UUID based on a CraftBook ID.
      * 
@@ -56,11 +78,14 @@ public class UUIDMappings {
 
         UUID uuid = null;
 
+        PreparedStatement statement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT UUID FROM mappings WHERE CBID = ?");
+            statement = db.prepareStatement("SELECT UUID FROM mappings WHERE CBID = ?");
             statement.setString(1, cbID);
 
-            ResultSet results = statement.executeQuery();
+            results = statement.executeQuery();
 
             if(!results.next())
                 return uuid;
@@ -68,6 +93,9 @@ public class UUIDMappings {
             uuid = UUID.fromString(results.getString(1));
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
+            close(results);
         }
 
         return uuid;
@@ -83,11 +111,15 @@ public class UUIDMappings {
 
         String cbId = null;
 
+        PreparedStatement statement = null;
+        PreparedStatement insertStatement = null;
+        ResultSet results = null;
+
         try {
-            PreparedStatement statement = db.prepareStatement("SELECT CBID FROM mappings WHERE UUID = ?");
+            statement = db.prepareStatement("SELECT CBID FROM mappings WHERE UUID = ?");
             statement.setString(1, uuid.toString());
 
-            ResultSet results = statement.executeQuery();
+            results = statement.executeQuery();
 
             if(!results.next()) {
 
@@ -105,6 +137,7 @@ public class UUIDMappings {
                     statement = db.prepareStatement("SELECT UUID FROM mappings WHERE CBID = ?");
                     statement.setString(1, cbId);
 
+                    close(results);
                     results = statement.executeQuery();
 
                     if(!results.next()) {
@@ -112,7 +145,7 @@ public class UUIDMappings {
                     } else
                         continue;
 
-                    PreparedStatement insertStatement = db.prepareStatement("INSERT INTO mappings VALUES(?,?)");
+                    insertStatement = db.prepareStatement("INSERT INTO mappings VALUES(?,?)");
                     insertStatement.setString(1, uuid.toString());
                     insertStatement.setString(2, cbId);
 
@@ -125,6 +158,10 @@ public class UUIDMappings {
             cbId = results.getString(1);
         } catch(SQLException e) {
             e.printStackTrace();
+        } finally {
+            close(statement);
+            close(insertStatement);
+            close(results);
         }
 
         return cbId;
