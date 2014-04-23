@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.circuits.gates.logic;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.bukkit.Server;
@@ -46,16 +47,21 @@ public class MemorySetter extends AbstractIC {
     public void load() {
 
         f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
+        if (!f.exists())  {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                BukkitUtil.printStacktrace(e);
+            }
+        }
     }
 
     public boolean setMemory(ChipState chip) {
 
         try {
-            if (!f.exists()) {
-                f.createNewFile();
-            }
             PrintWriter pw = new PrintWriter(f, "UTF-8");
-            for (int i = 0; i < chip.getInputCount(); i++) { pw.print(chip.getInput(i) ? "1" : "0"); }
+            for (int i = 0; i < chip.getInputCount(); i++)
+                pw.print(chip.getInput(i) ? "1" : "0");
             pw.close();
         } catch (Exception e) {
             BukkitUtil.printStacktrace(e);
@@ -71,6 +77,17 @@ public class MemorySetter extends AbstractIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[] {
+                    "The '''MC3300''' sets memory that can be read by the ([[../MC3301/]]) set to access the same file.",
+                    "",
+                    "This IC writes to a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
+                    "This file can be accessed by other services to allow for external programs to interact with redstone."
+            };
+        }
+
+        @Override
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
@@ -79,6 +96,12 @@ public class MemorySetter extends AbstractIC {
                     "Bit to set 3",
                     "Nothing"//Outputs
             };
+        }
+
+        @Override
+        public String getShortDescription() {
+
+            return "Sets the memory state for a file for usage in the MemorySetter/Access IC group.";
         }
 
         @Override

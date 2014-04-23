@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.logic;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.bukkit.Server;
@@ -44,14 +45,24 @@ public class MemoryAccess extends AbstractIC {
         }
     }
 
+    File f;
+
+    @Override
+    public void load() {
+
+        f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
+        if (!f.exists())  {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                BukkitUtil.printStacktrace(e);
+            }
+        }
+    }
+
     public boolean readMemory(ChipState chip) {
 
         try {
-            File f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
-            if (!f.exists()) {
-                f.createNewFile();
-                return false;
-            }
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
             String line = br.readLine();
             for (int i = 0; i < chip.getOutputCount(); i++) {
@@ -75,6 +86,17 @@ public class MemoryAccess extends AbstractIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[] {
+                    "The '''MC3301''' gets memory that can be set by the ([[../MC3301/]]) set to access the same file.",
+                    "",
+                    "This IC reads from a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
+                    "This file can be accessed by other services to allow for external programs to interact with redstone."
+            };
+        }
+
+        @Override
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
@@ -83,6 +105,12 @@ public class MemoryAccess extends AbstractIC {
                     "Bit 2 State",
                     "Bit 3 State"
             };
+        }
+
+        @Override
+        public String getShortDescription() {
+
+            return "Gets the memory state from a file for usage in the MemorySetter/Access IC group.";
         }
 
         @Override
