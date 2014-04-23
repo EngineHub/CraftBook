@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -223,6 +223,92 @@ public class ItemUtil {
         return false;
     }
 
+    public static boolean isValidItemMeta(ItemMeta meta) {
+
+        if(meta.hasDisplayName())
+            if(!meta.getDisplayName().equals("$IGNORE"))
+                return true;
+
+        if(meta.hasLore())
+            for(String lore : meta.getLore())
+                if(!lore.equals("$IGNORE"))
+                    return true;
+
+        if(meta.hasEnchants())
+            return true;
+
+        return false;
+    }
+
+    public static boolean areItemMetaIdentical(ItemMeta meta, ItemMeta meta2) {
+
+        //Display Names
+        String displayName1 = null;
+        if(meta.hasDisplayName())
+            displayName1 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta.getDisplayName().trim()));
+        else
+            displayName1 = "$IGNORE";
+
+        String displayName2 = null;
+        if(meta2.hasDisplayName())
+            displayName2 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta2.getDisplayName().trim()));
+        else
+            displayName2 = "$IGNORE";
+
+        if(!displayName1.equals(displayName2)) {
+            if(!displayName1.equals("$IGNORE") && !displayName2.equals("$IGNORE"))
+                return false;
+        }
+        CraftBookPlugin.logDebugMessage("Display names are the same", "item-checks.meta.names");
+
+        //Lore
+        List<String> lore1 = new ArrayList<String>();
+        if(meta.hasLore())
+            for(String lore : meta.getLore())
+                lore1.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
+
+        List<String> lore2 = new ArrayList<String>();
+        if(meta2.hasLore())
+            for(String lore : meta2.getLore())
+                lore2.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
+
+        if(lore1.size() != lore2.size())
+            return false;
+        CraftBookPlugin.logDebugMessage("Has same lore lengths", "item-checks.meta.lores");
+
+        for(int i = 0; i < lore1.size(); i++) {
+            if(lore1.get(i).contains("$IGNORE") || lore2.get(i).contains("$IGNORE")) continue; //Ignore this line.
+            if(!lore1.get(i).equals(lore2.get(i)))
+                return false;
+        }
+
+        CraftBookPlugin.logDebugMessage("Lore is the same", "item-checks.meta.lores");
+
+        //Enchants
+        List<Enchantment> ench1 = new ArrayList<Enchantment>();
+        if(meta.hasEnchants())
+            ench1.addAll(meta.getEnchants().keySet());
+
+        List<Enchantment> ench2 = new ArrayList<Enchantment>();
+        if(meta2.hasEnchants())
+            ench2.addAll(meta2.getEnchants().keySet());
+
+        if(ench1.size() != ench2.size())
+            return false;
+        CraftBookPlugin.logDebugMessage("Has same enchantment lengths", "item-checks.meta.enchants");
+
+        for(Enchantment ench : ench1) {
+            if(!ench2.contains(ench))
+                return false;
+            if(meta.getEnchantLevel(ench) != meta2.getEnchantLevel(ench))
+                return false;
+        }
+
+        CraftBookPlugin.logDebugMessage("Enchants are the same", "item-checks.meta.enchants");
+
+        return true;
+    }
+
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if(!isStackValid(item) || !isStackValid(item2)) {
@@ -233,59 +319,19 @@ public class ItemUtil {
             if(!areBaseItemsIdentical(item,item2))
                 return false;
             CraftBookPlugin.logDebugMessage("The items are basically identical", "item-checks");
-            if(item.hasItemMeta() != item2.hasItemMeta())
-                return false;
+
+            if(item.hasItemMeta() != item2.hasItemMeta()) {
+                if(item.hasItemMeta() && isValidItemMeta(item.getItemMeta())) return false;
+                else if(item2.hasItemMeta() && isValidItemMeta(item2.getItemMeta())) return false;
+            }
+
             CraftBookPlugin.logDebugMessage("Both share the existance of metadata", "item-checks");
             if(item.hasItemMeta()) {
                 CraftBookPlugin.logDebugMessage("Both have metadata", "item-checks.meta");
-                if(item.getItemMeta().hasDisplayName() == item2.getItemMeta().hasDisplayName()) {
-                    CraftBookPlugin.logDebugMessage("Both have names", "item-checks.meta.names");
-                    if(item.getItemMeta().hasDisplayName()) {
-                        CraftBookPlugin.logDebugMessage("ItemStack1 Display Name: " + item.getItemMeta().getDisplayName() + ". ItemStack2 Display Name: " + item2.getItemMeta().getDisplayName(), "item-checks.meta.names");
-                        if(!item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE") && !ChatColor.translateAlternateColorCodes('&', stripResetChar(StringUtils.replace(item.getItemMeta().getDisplayName().trim(), "'", ""))).equals(ChatColor.translateAlternateColorCodes('&', stripResetChar(StringUtils.replace(item2.getItemMeta().getDisplayName().trim(), "'", "")))))
-                            return false;
-                        CraftBookPlugin.logDebugMessage("Items share display names", "item-checks.meta.names");
-                    }
-                } else {
-                    if(!(item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")) && !(item2.getItemMeta().hasDisplayName() && item2.getItemMeta().getDisplayName().equalsIgnoreCase("$IGNORE")))
-                        return false;
-                }
-                if(item.getItemMeta().hasLore() == item2.getItemMeta().hasLore()) {
-                    CraftBookPlugin.logDebugMessage("Both have lore", "item-checks.meta.lores");
-                    if(item.getItemMeta().hasLore()) {
-                        if(item.getItemMeta().getLore().size() != item2.getItemMeta().getLore().size())
-                            return false;
-                        for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
-                            CraftBookPlugin.logDebugMessage("ItemStack1 Lore: " + item.getItemMeta().getLore().get(i) + ". ItemStack2 Lore: " + item2.getItemMeta().getLore().get(i), "item-checks.meta.lores");
-                            if(!item.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !item2.getItemMeta().getLore().get(i).equalsIgnoreCase("$IGNORE") && !ChatColor.translateAlternateColorCodes('&', StringUtils.replace(stripResetChar(item.getItemMeta().getLore().get(i).trim()), "'", "")).equals(ChatColor.translateAlternateColorCodes('&', StringUtils.replace(stripResetChar(item2.getItemMeta().getLore().get(i).trim()), "'", ""))))
-                                return false;
-                            CraftBookPlugin.logDebugMessage("Items share same lore", "item-checks.meta.lores");
-                        }
-                    }
-                } else {
-                    if(!(item.getItemMeta().hasLore() && item.getItemMeta().getLore().size() == 1 && item.getItemMeta().getLore().get(0).equalsIgnoreCase("$IGNORE")))
-                        if(!(item2.getItemMeta().hasLore() && item2.getItemMeta().getLore().size() == 1 && item2.getItemMeta().getLore().get(0).equalsIgnoreCase("$IGNORE")))
-                            return false;
-                }
-                if(item.getItemMeta().hasEnchants() == item2.getItemMeta().hasEnchants()) {
-                    CraftBookPlugin.logDebugMessage("Both share enchant existance", "item-checks.meta.enchants");
-                    if(item.getItemMeta().hasEnchants()) {
-                        if(item.getItemMeta().getEnchants().size() != item2.getItemMeta().getEnchants().size())
-                            return false;
-                        for(Enchantment ench : item.getItemMeta().getEnchants().keySet()) {
-
-                            if(!item2.getItemMeta().getEnchants().containsKey(ench)) {
-                                CraftBookPlugin.logDebugMessage("Item2 does not have enchantment: " + ench.getName(), "item-checks.meta.enchants");
-                                return false;
-                            }
-                            CraftBookPlugin.logDebugMessage("Enchant Name: " + ench.getName() + " ItemStack1 level " + item.getItemMeta().getEnchants().get(ench) + " ItemStack2 level " + item2.getItemMeta().getEnchants().get(ench), "item-checks.meta.enchants");
-                            if(item.getItemMeta().getEnchantLevel(ench) != item2.getItemMeta().getEnchantLevel(ench))
-                                return false;
-                            CraftBookPlugin.logDebugMessage("Items share enchantment: " + ench.getName(), "item-checks.meta.enchants");
-                        }
-                    }
-                } else
+                if(!areItemMetaIdentical(item.getItemMeta(), item2.getItemMeta())) {
+                    CraftBookPlugin.logDebugMessage("Metadata is different", "item-checks.meta");
                     return false;
+                }
             }
 
             CraftBookPlugin.logDebugMessage("Items are identical", "item-checks");

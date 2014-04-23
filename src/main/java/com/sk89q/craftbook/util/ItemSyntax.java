@@ -178,8 +178,8 @@ public class ItemSyntax {
         if(nameLoreSplit.length > 1) {
 
             ItemMeta meta = rVal.getItemMeta();
-            if(!nameLoreSplit[1].equalsIgnoreCase("$IGNORE"))
-                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
+            //if(!nameLoreSplit[1].equalsIgnoreCase("$IGNORE"))
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
             if(nameLoreSplit.length > 2) {
 
                 List<String> lore = new ArrayList<String>();
