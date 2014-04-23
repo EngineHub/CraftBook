@@ -123,15 +123,35 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC1111''' receives the state in a particular ''band'' or ''network'' when the clock input goes from low to high.",
+                    "The corresponding transmitter is the [[../MC1110/]] IC.",
+                    "",
+                    "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Recieves signal from wireless transmitter.";
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "State of Wireless Band",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
-            return new String[] {"wireless band", "user"};
+            return new String[] {"Wireless Band", "Player's CBID (Automatic)"};
         }
 
         @Override
@@ -145,6 +165,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
+            config.setComment(path + "per-player", "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
             requirename = config.getBoolean(path + "per-player", false);
         }
     }

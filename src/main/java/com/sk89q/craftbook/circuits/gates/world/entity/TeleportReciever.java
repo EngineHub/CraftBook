@@ -49,7 +49,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            check();
+            chip.setOutput(0, check());
         }
     }
 
@@ -57,18 +57,18 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
     public void think(ChipState chip) {
 
         if(!chip.getInput(0))
-            check();
+            chip.setOutput(0, check());
     }
 
-    public void check() {
+    public boolean check() {
 
         Tuple2<Long, String> val = TeleportTransmitter.getValue(band);
-        if (val == null) return;
+        if (val == null) return false;
 
-        Player p = Bukkit.getServer().getPlayer(val.b);
+        Player p = Bukkit.getServer().getPlayerExact(val.b);
 
         if (p == null || !p.isOnline()) {
-            return;
+            return false;
         }
 
         Block block = getBackBlock();
@@ -78,6 +78,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         p.teleport(block.getLocation().add(0.5, 0.5, 0.5));
         CraftBookPlugin.inst().wrapPlayer(p).print(welcome);
         TeleportTransmitter.lastKnownLocations.put(band, block.getLocation());
+        return true;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -94,15 +95,32 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[] {
+                    "The '''MC1113''' will teleport a player from a corresponding [[../MC1112/]] IC on a redstone signal."
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Reciever for the teleportation network.";
         }
 
         @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC (When ST, disables IC when high)",//Inputs
+                    "High on successful teleport",//Outputs
+            };
+        }
+
+        @Override
         public String[] getLineHelp() {
 
-            return new String[] {"frequency name", "+owelcome text"};
+            return new String[] {"Frequency", "+oWelcome Text"};
         }
     }
 }

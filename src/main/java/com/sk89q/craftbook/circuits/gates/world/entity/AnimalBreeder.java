@@ -199,7 +199,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z offset", null};
+            return new String[] {"+oSearchArea", null};
         }
     }
 }

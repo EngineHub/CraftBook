@@ -123,8 +123,8 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "radius=x:y:z offset, or r:regionname for WorldGuard regions",
-                    "p:playername, g:permgroup or n:permnode"
+                    "SearchArea",
+                    "PlayerType"
             };
         }
     }

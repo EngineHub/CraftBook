@@ -136,7 +136,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "radius=x:y:z offset",
+                    "+oSearchArea",
                     "item=minPlayers:inHand:slot"
             };
         }

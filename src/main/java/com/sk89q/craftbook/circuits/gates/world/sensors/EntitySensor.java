@@ -150,7 +150,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z offset", "Entity Types{(>=|==|>)minimum}"};
+            return new String[] {"SearchArea", "Entity Types{(>=|==|>)minimum}"};
         }
     }
 }

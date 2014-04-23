@@ -103,7 +103,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea=damage", "Player Criteria"};
+            return new String[] {"SearchArea=damage", "PlayerType"};
         }
     }
 }

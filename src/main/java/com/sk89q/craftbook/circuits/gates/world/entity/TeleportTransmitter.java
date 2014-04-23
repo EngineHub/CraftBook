@@ -69,17 +69,17 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0))
-            sendPlayer();
+            chip.setOutput(0, sendPlayer());
     }
 
     @Override
     public void think (ChipState chip) {
 
         if (chip.getInput(0))
-            sendPlayer();
+            chip.setOutput(0, sendPlayer());
     }
 
-    public void sendPlayer() {
+    public boolean sendPlayer() {
 
         Player closest = null;
 
@@ -98,6 +98,9 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             lastKnownLocations.get(band).getChunk().load();
         if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
             closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon (3s)!");
+        else
+            return true;
+        return false;
     }
 
     public static Tuple2<Long, String> getValue(String band) {
@@ -142,9 +145,27 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[] {
+                    "The '''MC1112''' teleports a player located within IC's radius to a receiver ([[../MC1113/]]) tuned to the same ''frequency''.",
+                    "This IC requires the recieving chunk to be loaded for the initial teleport, future teleports should not require the chunk to be loaded."
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Transmitter for the teleportation network.";
+        }
+
+        @Override
+        public String[] getPinDescription(ChipState state) {
+
+            return new String[] {
+                    "Trigger IC",//Inputs
+                    "High on successful teleport queue",//Outputs
+            };
         }
 
         @Override
@@ -191,7 +212,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"frequency name|PlayerType", "radius=x:y:z offset"};
+            return new String[] {"Frequency|PlayerType", "SearchArea"};
         }
     }
 }

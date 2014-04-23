@@ -130,6 +130,17 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
+        public String[] getLongDescription() {
+
+            return new String[]{
+                    "The '''MC1110''' transmits the input value to a particular named ''band'' or ''network''.",
+                    "To receive the value of the transmitter, use [[../MC1111/]].",
+                    "",
+                    "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
+            };
+        }
+
+        @Override
         public String getShortDescription() {
 
             return "Transmits wireless signal to wireless recievers.";
@@ -147,7 +158,7 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"wireless band", "user"};
+            return new String[] {"Wireless Band", "Player's CBID (Automatic)"};
         }
 
         @Override
@@ -161,6 +172,7 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
+            config.setComment(path + "per-player", "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
             requirename = config.getBoolean(path + "per-player", false);
         }
 
