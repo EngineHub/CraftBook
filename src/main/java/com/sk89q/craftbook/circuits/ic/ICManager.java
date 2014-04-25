@@ -93,8 +93,7 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.LiquidFlood;
 import com.sk89q.craftbook.circuits.gates.world.blocks.MultipleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Planter;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Pump;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAbove;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelow;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAdmin;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockChest;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBridge;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
@@ -466,8 +465,8 @@ public class ICManager {
         registerIC("MC1202", "c dispense", new ContainerDispenser.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1203", "strike", new LightningSummon.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1204", "trap", new EntityTrap.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1205", "set above", new SetBlockAbove.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1206", "set below", new SetBlockBelow.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1205", "set above", new SetBlockAdmin.Factory(server, true), familySISO, familyAISO); // Restricted
+        registerIC("MC1206", "set below", new SetBlockAdmin.Factory(server, false), familySISO, familyAISO); // Restricted
         registerIC("MC1207", "flex set", new FlexibleSetBlock.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1208", "mult set", new MultipleSetBlock.Factory(server), familySISO, familyAISO);
         registerIC("MC1209", "collector", new ContainerCollector.Factory(server), familySISO, familyAISO);
