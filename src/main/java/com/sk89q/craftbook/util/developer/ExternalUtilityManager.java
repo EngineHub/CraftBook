@@ -10,9 +10,15 @@ public class ExternalUtilityManager {
 
     public static void performExternalUtility(String name, String[] args) throws Exception {
 
-        URL[] url = new URL[2];
-        url[0] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/");
+        URL[] url = new URL[3];
+        /*url[0] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/");
         url[1] = new URL("file://" + new File(CraftBookPlugin.inst().getDataFolder(), "developer").getAbsolutePath() + "/");
+        url[2] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/" + name);
+        url[3] = new URL("file://" + new File(CraftBookPlugin.inst().getDataFolder(), "developer").getAbsolutePath() + "/" + name);*/
+
+        url[0] = new File(CraftBookPlugin.inst().getDataFolder(), "developer").toURI().toURL();
+        url[1] = new File(CraftBookPlugin.inst().getDataFolder(), "developer/").toURI().toURL();
+        url[2] = CraftBookPlugin.inst().getDataFolder().toURI().toURL();
 
         URLClassLoader loader = new URLClassLoader(url, CraftBookPlugin.class.getClassLoader());
         Class<?> base = loader.loadClass(name);

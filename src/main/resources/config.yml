@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.9a
+# CraftBook Configuration for Bukkit. Generated for version: 3.8.9
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -183,6 +183,7 @@ mechanics:
         enable: false
         allow-holding-blocks: false
         regen-health: true
+        regen-health-amount: 1.0
         blocks:
         - WOOD_STAIRS
         - COBBLESTONE_STAIRS
@@ -241,6 +242,8 @@ mechanics:
         - WOOD_DOUBLE_STEP
     elevator:
         enable: false
+        allow-redstone: false
+        redstone-player-search-radius: 3
         enable-buttons: true
         allow-looping: false
         smooth-movement: false

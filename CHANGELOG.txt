@@ -1,3 +1,23 @@
+3.8.9 (24th April)
++ Added an option to specify the amount of health to regain when being healed by a chair.
++ Added cocoa support to Planter IC.
++ Added redstone support to elevators.
++ Added a converter for LegacyCustomDrops.
++ Added support for the teleporter ICs to output high on success.
+* Fixed AutoCrafter consuming buckets.
+* Fixed the XP noise occuring whenever an entity was killed with Custom Drops.
+* Fixed CraftBook erroring when trying to convert a variable without a namespace set.
+* Fixed XP Storer providing free XP.
+* Fixed a few slow elevator bugs.
+* Fixed ItemSyntax outputting section signs instead of ampersands.
+* Fixed persistent storage files being mispelt.
+* Updated to 1.7.9
+* Fixed a few elevator lag issues on 1.7.8/1.7.9
+* Fixed some right clicks not working 100% correctly due to a bug in bukkit.
+* Slightly optimized MC3300 and MC3301.
+* Fixed some SQL statements not being closed, causing a potential memory leak.
+* Fixed the 'Item Checks' not being 100% accurate in some cases.
+
 3.8.9 Alpha 1 (14th April)
 + Added support for UUIDs. CraftBook now has an internal ID system called 'CBIDs'. This is viewable by other plugins as an API, and is a way of referencing UUIDs on signs.
 + Added converting of Names to CBIDs (CraftBook UUID Mappings) WARNING! MAKE A BACKUP BEFORE USING THIS, IT IS IRREVERSIBLE.
