@@ -132,7 +132,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
-            blacklist = ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blacklist)));
+            blacklist.addAll(ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blacklist))));
         }
     }
 }

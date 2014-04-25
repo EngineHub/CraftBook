@@ -3,6 +3,7 @@ package com.sk89q.craftbook.circuits.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -19,22 +20,21 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.circuits.ic.AbstractICFactory;
 import com.sk89q.craftbook.circuits.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.circuits.ic.ChipState;
+import com.sk89q.craftbook.circuits.ic.ConfigurableIC;
 import com.sk89q.craftbook.circuits.ic.IC;
 import com.sk89q.craftbook.circuits.ic.ICFactory;
 import com.sk89q.craftbook.circuits.ic.ICVerificationException;
 import com.sk89q.craftbook.circuits.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BlockBreaker extends AbstractSelfTriggeredIC {
 
-    boolean above;
-
-    public BlockBreaker(Server server, ChangedSign block, boolean above, ICFactory factory) {
+    public BlockBreaker(Server server, ChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
-        this.above = above;
     }
 
     @Override
@@ -65,20 +65,12 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     Block broken, chest;
 
-    int id;
-    byte data;
+    ItemInfo item;
 
     @Override
     public void load() {
 
-        try {
-            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
-            id = Integer.parseInt(split[0]);
-            try {
-                data = Byte.parseByte(split[1]);
-            } catch(Exception ignored){}
-        } catch (Exception ignored) {
-        }
+        item = new ItemInfo(getLine(2));
     }
 
     public boolean breakBlock() {
@@ -87,7 +79,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
             Block bl = getBackBlock();
 
-            if (above) {
+            if (((Factory)getFactory()).above) {
                 chest = bl.getRelative(0, 1, 0);
                 broken = bl.getRelative(0, -1, 0);
             } else {
@@ -100,12 +92,12 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         if (chest != null && chest.getState() instanceof InventoryHolder)
             hasChest = true;
 
-        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.BEDROCK || broken.getType() == Material.PISTON_MOVING_PIECE)
+        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.PISTON_MOVING_PIECE || ((Factory)getFactory()).blockBlacklist.contains(new ItemInfo(broken)))
             return false;
 
-        if (id > 0 && id != broken.getTypeId()) return false;
+        if (item.getType() != broken.getType()) return false;
 
-        if (data > 0 && data != broken.getData()) return false;
+        if (item.getData() > 0 && item.getData() != broken.getData()) return false;
 
         for (ItemStack stack : BlockUtil.getBlockDrops(broken, null)) {
 
@@ -145,9 +137,14 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), item);
     }
 
-    public static class Factory extends AbstractICFactory {
+    public static class Factory extends AbstractICFactory implements ConfigurableIC {
 
         boolean above;
+
+        @SuppressWarnings("serial")
+        public List<ItemInfo> blockBlacklist = new ArrayList<ItemInfo>(){{
+            add(new ItemInfo(Material.BEDROCK, -1));
+        }};
 
         public Factory(Server server, boolean above) {
 
@@ -158,38 +155,38 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public IC create(ChangedSign sign) {
 
-            return new BlockBreaker(getServer(), sign, above, this);
+            return new BlockBreaker(getServer(), sign, this);
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             if(!sign.getLine(2).trim().isEmpty()) {
-                try {
-                    String[] split = RegexUtil.COLON_PATTERN.split(sign.getLine(2));
-                    Integer.parseInt(split[0]);
-                    try {
-                        if(split.length > 1)
-                            Byte.parseByte(split[1]);
-                    } catch(Exception e){
-                        throw new ICVerificationException("Data must be a number!");
-                    }
-                } catch (Exception ignored) {
-                    throw new ICVerificationException("ID must be a number!");
-                }
+                ItemInfo item = new ItemInfo(sign.getLine(2));
+                if(item.getType() == null)
+                    throw new ICVerificationException("An invalid block was provided on line 2!");
+                if(blockBlacklist.contains(item))
+                    throw new ICVerificationException("A blacklisted block was provided on line 2!");
             }
         }
 
         @Override
         public String getShortDescription() {
 
-            return "Breaks blocks above/below block sign is on.";
+            return "Breaks blocks " + (above ? "above" : "below") + " block sign is on.";
         }
 
         @Override
         public String[] getLineHelp() {
 
             return new String[] {"+oBlock ID:Data", null};
+        }
+
+        @Override
+        public void addConfiguration (YAMLProcessor config, String path) {
+
+            config.setComment(path + "blacklist", "Stops the IC from breaking the listed blocks.");
+            blockBlacklist.addAll(ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blockBlacklist))));
         }
     }
 }

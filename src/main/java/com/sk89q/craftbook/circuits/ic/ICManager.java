@@ -94,9 +94,8 @@ import com.sk89q.craftbook.circuits.gates.world.blocks.MultipleSetBlock;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Planter;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Pump;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAbove;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockAboveChest;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelow;
-import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockBelowChest;
+import com.sk89q.craftbook.circuits.gates.world.blocks.SetBlockChest;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetBridge;
 import com.sk89q.craftbook.circuits.gates.world.blocks.SetDoor;
 import com.sk89q.craftbook.circuits.gates.world.blocks.Spigot;
@@ -477,8 +476,8 @@ public class ICManager {
         registerIC("MC1212", "set door", new SetDoor.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1213", "sound", new SoundEffect.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1214", "range coll", new RangedCollector.Factory(server), familySISO, familyAISO);
-        registerIC("MC1215", "set a chest", new SetBlockAboveChest.Factory(server), familySISO, familyAISO); // Restricted
-        registerIC("MC1216", "set b chest", new SetBlockBelowChest.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1215", "set a chest", new SetBlockChest.Factory(server, true), familySISO, familyAISO);
+        registerIC("MC1216", "set b chest", new SetBlockChest.Factory(server, false), familySISO, familyAISO);
         registerIC("MC1217", "pot induce", new PotionInducer.Factory(server), familySISO, familyAISO);
         registerIC("MC1218", "block launch", new BlockLauncher.Factory(server), familySISO, familyAISO);
         registerIC("MC1219", "auto craft", new AutomaticCrafter.Factory(server), familySISO, familyAISO);

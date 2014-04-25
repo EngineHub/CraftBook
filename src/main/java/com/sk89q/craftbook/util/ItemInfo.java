@@ -36,7 +36,10 @@ public class ItemInfo {
 
     public ItemInfo(ItemStack item) {
 
-        data = item.getData();
+        if(item == null)
+            data = new MaterialData(-1,(byte) -1);
+        else
+            data = item.getData();
     }
 
     @Deprecated
@@ -47,6 +50,7 @@ public class ItemInfo {
 
     public Material getType() {
 
+        if(data.getItemTypeId() < 0) return null;
         return data.getItemType();
     }
 
