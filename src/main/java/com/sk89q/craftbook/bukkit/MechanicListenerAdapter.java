@@ -80,11 +80,15 @@ public class MechanicListenerAdapter implements Listener {
         Block block = null;
         Action action = null;
         if(event.getAction() == Action.RIGHT_CLICK_AIR) {
-            block = event.getPlayer().getTargetBlock(null, 5);
-            if(block != null && block.getType() != Material.AIR)
-                action = Action.RIGHT_CLICK_BLOCK;
-            else
-                action = Action.RIGHT_CLICK_AIR;
+            try {
+                block = event.getPlayer().getTargetBlock(null, 5);
+                if(block != null && block.getType() != Material.AIR)
+                    action = Action.RIGHT_CLICK_BLOCK;
+                else
+                    action = Action.RIGHT_CLICK_AIR;
+            } catch(Exception e) {
+                //Bukkit randomly errors. Catch the error.
+            }
         } else {
             block = event.getClickedBlock();
             action = event.getAction();
