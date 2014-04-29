@@ -742,15 +742,19 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        languageManager.close();
-        for(CraftBookMechanic mech : mechanics)
-            mech.disable();
-        mechanics = null;
+        if(languageManager != null)
+            languageManager.close();
+        if(mechanics != null) {
+            for(CraftBookMechanic mech : mechanics)
+                mech.disable();
+            mechanics = null;
+        }
 
         if(hasPersistentStorage())
             getPersistentStorage().close();
 
-        uuidMappings.disable();
+        if(uuidMappings != null)
+            uuidMappings.disable();
     }
 
     /**
