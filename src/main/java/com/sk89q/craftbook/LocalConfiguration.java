@@ -101,6 +101,7 @@ public abstract class LocalConfiguration {
     public boolean cauldronUseSpoons;
     public boolean cauldronAllowRedstone;
     public boolean cauldronItemTracking;
+    public boolean cauldronRequireSign;
     // Mechanics - Chair
     public boolean chairEnabled;
     public boolean chairAllowHeldBlock;

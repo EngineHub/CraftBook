@@ -160,6 +160,7 @@ public class LanguageManager {
         put("mech.bridge.material","Bridge must be made entirely out of the same material!");
         put("mech.bridge.other-sign","Bridge sign required on other side (or it was too far away).");
 
+        put("mech.cauldron.create","Cauldron Created!");
         put("mech.cauldron.too-small","Cauldron is too small!");
         put("mech.cauldron.leaky","Cauldron has a leak!");
         put("mech.cauldron.no-lava","Cauldron lacks lava!");

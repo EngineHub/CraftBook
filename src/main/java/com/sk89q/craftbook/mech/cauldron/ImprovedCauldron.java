@@ -16,6 +16,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,12 +25,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -58,10 +62,47 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         instance = null;
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
+
+        if (!event.getLine(1).equalsIgnoreCase("[Cauldron]")) return;
+
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if (!player.hasPermission("craftbook.mech.cauldron")) {
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                player.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
+        }
+
+        event.setLine(1, "[Cauldron]");
+        player.print("mech.cauldron.create");
+    }
+
     private boolean isCauldron(Block block) {
 
-        if (block.getType() == Material.CAULDRON && block.getRelative(BlockFace.DOWN).getType() == Material.FIRE)
+        if (block.getType() == Material.CAULDRON && block.getRelative(BlockFace.DOWN).getType() == Material.FIRE) {
+            if(CraftBookPlugin.inst().getConfiguration().cauldronRequireSign) {
+                BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
+                boolean found = false;
+                for(BlockFace face : faces) {
+                    Block sign = block.getRelative(face);
+                    if(sign.getType() == Material.WALL_SIGN) {
+                        ChangedSign s = BukkitUtil.toChangedSign(sign);
+                        if(s.getLine(1).equals("[Cauldron]")) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if(!found)
+                    return false;
+            }
             return ((Cauldron) block.getState().getData()).isFull();
+        }
         return false;
     }
 

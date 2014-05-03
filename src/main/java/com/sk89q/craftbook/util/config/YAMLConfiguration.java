@@ -268,6 +268,9 @@ public class YAMLConfiguration extends LocalConfiguration {
         config.setComment("mechanics.cauldron.item-tracking", "Tracks items and forces them to to tracked by the cauldron. Fixes mc bugs by holding item in place.");
         cauldronItemTracking = config.getBoolean("mechanics.cauldron.item-tracking", false);
 
+        config.setComment("mechanics.cauldron.require-sign", "Requires a [Cauldron] sign to be on the side of a cauldron. Useful for requiring creation permissions.");
+        cauldronRequireSign = config.getBoolean("mechanics.cauldron.require-sign", false);
+
 
         // Chair Configuration Listener
         config.setComment("mechanics.chair.enable", "Enable chair mechanic.");
