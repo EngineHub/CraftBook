@@ -429,6 +429,10 @@ public class ItemUtil {
                 return new ItemStack(Material.COAL, 1, (short) 1);
             case IRON_ORE:
                 return new ItemStack(Material.IRON_INGOT);
+            case COAL_ORE:
+                return new ItemStack(Material.COAL);
+            case LAPIS_ORE:
+                return new ItemStack(Material.INK_SACK, 4, (short) 4);
             case REDSTONE_ORE:
                 return new ItemStack(Material.REDSTONE, 4);
             case EMERALD_ORE:
