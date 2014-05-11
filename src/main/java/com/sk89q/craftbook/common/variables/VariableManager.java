@@ -161,9 +161,10 @@ public class VariableManager extends AbstractCraftBookMechanic {
                 for(String var : ParsingUtil.getPossibleVariables(line)) {
                     String namespace = getNamespace(var);
                     if(namespace == null || namespace.isEmpty() || namespace.equals("global")) continue;
+                    if(CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace) != null) continue;
                     OfflinePlayer player = Bukkit.getOfflinePlayer(namespace);
                     if(player.hasPlayedBefore()) {
-                        UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));
+                        UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(namespace));
                         try {
                             UUID uuid = fetcher.call().get(player.getName());
                             line = StringUtils.replace(line, var, var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid)));

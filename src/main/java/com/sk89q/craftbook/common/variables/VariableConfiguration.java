@@ -45,6 +45,7 @@ public class VariableConfiguration {
             if(keys.length == 1)
                 keys = new String[]{"global",key};
             else if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
+                if(CraftBookPlugin.inst().getUUIDMappings().getUUID(keys[0]) != null) continue;
                 OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
                 if(player.hasPlayedBefore()) {
                     UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));

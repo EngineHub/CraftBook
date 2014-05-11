@@ -51,7 +51,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
+            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(band) == null) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(band);
                 if(player.hasPlayedBefore()) {
                     UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(band));

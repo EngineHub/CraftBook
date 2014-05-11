@@ -134,7 +134,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         String namespace = sign.getLine(0).trim();
 
-        if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
+        if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace.replace("~", "")) == null) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
             if(player.hasPlayedBefore()) {
                 String originalNamespace = namespace;
