@@ -1,16 +1,16 @@
 package com.sk89q.craftbook.mech;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.UUID;
 
 import org.bukkit.Art;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -27,15 +27,15 @@ import com.sk89q.craftbook.util.ProtectionUtil;
  */
 public class PaintingSwitch extends AbstractCraftBookMechanic {
 
-    Map<Painting, String> paintings = new WeakHashMap<Painting, String>();
-    Map<String, WeakReference<Painting>> players = new HashMap<String, WeakReference<Painting>>();
+    Map<Painting, UUID> paintings = new HashMap<Painting, UUID>();
+    Map<UUID, Painting> players = new HashMap<UUID, Painting>();
 
     public boolean isBeingEdited(Painting paint) {
 
-        String player = paintings.get(paint);
+        UUID player = paintings.get(paint);
         if (player != null && players.get(player) != null) {
-            Player p = CraftBookPlugin.inst().getServer().getPlayerExact(player);
-            return p != null && !p.isDead();
+            Player p = CraftBookPlugin.inst().getServer().getPlayer(player);
+            return p != null && LocationUtil.isWithinSphericalRadius(paint.getLocation(), p.getLocation(), 5);
         }
         return false;
     }
@@ -49,23 +49,26 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             if (!CraftBookPlugin.inst().getConfiguration().paintingsEnabled) return;
             Painting paint = (Painting) event.getRightClicked();
+
             if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.printError("mech.use-permissions");
                 return;
             }
-            if(!ProtectionUtil.canUse(event.getPlayer(), paint.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) {
+
+            if(!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.printError("area.use-permissions");
                 return;
             }
+
             if (!isBeingEdited(paint)) {
-                paintings.put(paint, player.getName());
-                players.put(player.getName(), new WeakReference<Painting>(paint));
+                paintings.put(paint, player.getUniqueId());
+                players.put(player.getUniqueId(), paint);
                 player.print("mech.painting.editing");
-            } else if (paintings.get(paint).equalsIgnoreCase(player.getName())) {
+            } else if (paintings.get(paint).equals(player.getUniqueId())) {
                 paintings.remove(paint);
-                players.remove(player.getName());
+                players.remove(player.getUniqueId());
                 player.print("mech.painting.stop");
             } else if (isBeingEdited(paint)) {
                 player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
@@ -82,9 +85,12 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
         if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-        if (players.get(player.getName()) == null || players.get(player.getName()).get() == null|| players.get(player.getName()).get().isDead() || !players.get(player.getName()).get().isValid())
+
+        if (players.get(player.getUniqueId()) == null)
             return;
+
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
             isForwards = true;
@@ -97,11 +103,11 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
             isForwards = true;
         }
         Art[] art = Art.values().clone();
-        Painting paint = players.get(player.getName()).get();
+        Painting paint = players.get(player.getUniqueId());
         if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
-            Painting p = players.remove(event.getPlayer().getName()).get();
+            player.printError("mech.painting.range");
+            Painting p = players.remove(event.getPlayer().getUniqueId());
             if (p != null) {
-                player.printError("mech.painting.range");
                 paintings.remove(p);
             }
 
@@ -122,16 +128,29 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
                 break;
             }
         }
-        paintings.put(paint, player.getName());
-        players.put(player.getName(), new WeakReference<Painting>(paint));
+        paintings.put(paint, player.getUniqueId());
+        players.put(player.getUniqueId(), paint);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
-        WeakReference<Painting> p = players.remove(event.getPlayer().getName());
-        if (p != null) {
-            paintings.remove(p.get());
+        Painting p = players.remove(event.getPlayer().getUniqueId());
+        if (p != null)
+            paintings.remove(p);
+    }
+
+    @EventHandler
+    public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
+
+        if(event.getEntity() instanceof Painting) {
+
+            UUID uuid = paintings.remove(event.getEntity());
+
+            if(uuid != null) {
+                CraftBookPlugin.inst().wrapPlayer(Bukkit.getPlayer(uuid)).print("mech.painting.stop");
+                players.remove(uuid);
+            }
         }
     }
 
