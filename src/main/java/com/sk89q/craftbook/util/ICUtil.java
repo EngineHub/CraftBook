@@ -229,17 +229,17 @@ public class ICUtil {
     public static Vector parseUnsafeBlockLocation(String line) throws NumberFormatException, ArrayIndexOutOfBoundsException {
 
         line = StringUtils.replace(StringUtils.replace(StringUtils.replace(line, "!", ""), "^", ""), "&", "");
-        int offsetX = 0, offsetY = 0, offsetZ = 0;
+        double offsetX = 0, offsetY = 0, offsetZ = 0;
 
         if (line.contains("="))
             line = RegexUtil.EQUALS_PATTERN.split(line)[1];
         String[] split = RegexUtil.COLON_PATTERN.split(line);
         if (split.length > 1) {
-            offsetX = Integer.parseInt(split[0]);
-            offsetY = Integer.parseInt(split[1]);
-            offsetZ = Integer.parseInt(split[2]);
+            offsetX = Double.parseDouble(split[0]);
+            offsetY = Double.parseDouble(split[1]);
+            offsetZ = Double.parseDouble(split[2]);
         } else
-            offsetY = Integer.parseInt(line);
+            offsetY = Double.parseDouble(line);
 
         return new Vector(offsetX, offsetY, offsetZ);
     }
@@ -306,19 +306,19 @@ public class ICUtil {
                 if(RegexUtil.COMMA_PATTERN.split(split[0]).length > 1) {
 
                     String[] rads = RegexUtil.COMMA_PATTERN.split(split[0]);
-                    Integer.parseInt(rads[0]);
-                    Integer.parseInt(rads[1]);
-                    Integer.parseInt(rads[2]);
+                    Double.parseDouble(rads[0]);
+                    Double.parseDouble(rads[1]);
+                    Double.parseDouble(rads[2]);
                 } else
-                    Integer.parseInt(split[0]);
+                    Double.parseDouble(split[0]);
                 strings = RegexUtil.COLON_PATTERN.split(split[1], 3);
             } else
                 strings = RegexUtil.COLON_PATTERN.split(line);
             if (strings.length > 1) {
-                Integer.parseInt(strings[1]);
-                Integer.parseInt(strings[2]);
+                Double.parseDouble(strings[1]);
+                Double.parseDouble(strings[2]);
             }
-            Integer.parseInt(strings[0]);
+            Double.parseDouble(strings[0]);
         } catch (Exception e) {
             throw new ICVerificationException("Wrong syntax! Needs to be: radius=x:y:z or radius=y or y");
         }
