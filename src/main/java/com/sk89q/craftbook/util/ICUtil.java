@@ -353,7 +353,7 @@ public class ICUtil {
             return new Vector(x,y,z);
         }
         else {
-            double r = Integer.parseInt(radians[0]);
+            double r = Double.parseDouble(radians[0]);
             r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
             return new Vector(r,r,r);
         }
