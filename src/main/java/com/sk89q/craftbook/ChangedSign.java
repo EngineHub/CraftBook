@@ -3,12 +3,13 @@ package com.sk89q.craftbook;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.VariableCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
@@ -25,7 +26,7 @@ public class ChangedSign {
 
         this(sign, lines);
 
-        if(lines != null) {
+        if(lines != null && CraftBookPlugin.inst().getConfiguration().variablesEnabled) {
             for(int i = 0; i < 4; i++) {
 
                 String line = lines[i];
@@ -216,6 +217,8 @@ public class ChangedSign {
     }
 
     public boolean hasVariable(String var) {
+
+        if(!CraftBookPlugin.inst().getConfiguration().variablesEnabled) return false;
 
         var = var.toLowerCase(Locale.ENGLISH);
         return lines[0].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[1].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[2].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[3].toLowerCase(Locale.ENGLISH).contains("%" + var + "%");

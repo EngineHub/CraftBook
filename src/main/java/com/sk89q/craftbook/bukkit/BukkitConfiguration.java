@@ -66,7 +66,8 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
                 "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
-                "",
+                "#",
+                "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
 
         config.setComment("enable-circuits", "If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.");

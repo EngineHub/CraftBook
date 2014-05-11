@@ -112,8 +112,4 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     public boolean enable () {
         return CraftBookPlugin.inst().getConfiguration().aiVisionEnabled.size() > 0 && CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled.size() > 0 && CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled.size() > 0;
     }
-
-    @Override
-    public void disable () {
-    }
 }
