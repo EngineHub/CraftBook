@@ -25,7 +25,7 @@ public abstract class LocalConfiguration {
     public boolean ICEnabled;
     public boolean ICCached;
     public boolean ICShortHandEnabled;
-    public int ICMaxRange;
+    public double ICMaxRange;
     public List<String> ICsDisabled;
     public boolean ICKeepLoaded;
     public LocationCheckType ICdefaultCoordinate;

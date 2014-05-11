@@ -15,7 +15,7 @@ public class VerifyUtil {
      * @param maxradius The maximum possible radius
      * @return The new fixed radius.
      */
-    public static int verifyRadius(int radius, int maxradius) {
+    public static double verifyRadius(double radius, double maxradius) {
 
         return Math.max(0, Math.min(maxradius, radius));
     }

@@ -347,13 +347,13 @@ public class ICUtil {
     public static Vector parseUnsafeRadius(String line) throws NumberFormatException {
         String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
         if(radians.length > 1) {
-            int x = VerifyUtil.verifyRadius(Integer.parseInt(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-            int y = VerifyUtil.verifyRadius(Integer.parseInt(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-            int z = VerifyUtil.verifyRadius(Integer.parseInt(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            double x = VerifyUtil.verifyRadius(Double.parseDouble(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            double y = VerifyUtil.verifyRadius(Double.parseDouble(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            double z = VerifyUtil.verifyRadius(Double.parseDouble(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
             return new Vector(x,y,z);
         }
         else {
-            int r = Integer.parseInt(radians[0]);
+            double r = Integer.parseInt(radians[0]);
             r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
             return new Vector(r,r,r);
         }

@@ -18,7 +18,7 @@ public class VerifyUtilTest {
     @Test
     public void testVerifyRadius() {
 
-        int rad = VerifyUtil.verifyRadius(7, 15);
+        double rad = VerifyUtil.verifyRadius(7, 15);
         assertTrue(rad == 7);
         rad = VerifyUtil.verifyRadius(20, 15);
         assertTrue(rad == 15);
