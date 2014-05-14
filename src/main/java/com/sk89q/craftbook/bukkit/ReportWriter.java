@@ -17,12 +17,12 @@ import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalConfiguration;
-import com.sk89q.craftbook.circuits.ic.IC;
-import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.mech.crafting.CraftingItemStack;
-import com.sk89q.craftbook.mech.crafting.RecipeManager;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.Recipe;
-import com.sk89q.craftbook.mech.crafting.RecipeManager.RecipeType;
+import com.sk89q.craftbook.mechanics.crafting.CraftingItemStack;
+import com.sk89q.craftbook.mechanics.crafting.RecipeManager;
+import com.sk89q.craftbook.mechanics.crafting.RecipeManager.Recipe;
+import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.LogListBlock;
 
 /**

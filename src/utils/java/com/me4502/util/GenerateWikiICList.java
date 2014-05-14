@@ -6,13 +6,13 @@ import java.io.PrintWriter;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.sk89q.craftbook.circuits.ic.IC;
-import com.sk89q.craftbook.circuits.ic.ICFamily;
-import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
-import com.sk89q.craftbook.circuits.ic.RestrictedIC;
-import com.sk89q.craftbook.circuits.ic.SelfTriggeredIC;
-import com.sk89q.craftbook.circuits.plc.PlcFactory;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFamily;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
+import com.sk89q.craftbook.mechanics.ic.RegisteredICFactory;
+import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
+import com.sk89q.craftbook.mechanics.ic.SelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.plc.PlcFactory;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 
 public class GenerateWikiICList extends ExternalUtilityBase {

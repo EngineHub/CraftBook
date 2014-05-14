@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.sk89q.craftbook.mechanics.boat.LandBoats;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Boat.class, VehicleCreateEvent.class, LandBoats.class})
 public class LandBoatsTest {

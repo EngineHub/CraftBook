@@ -14,10 +14,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class BukkitConfiguration extends YAMLConfiguration {
 
-    public boolean enableCircuits;
-    public boolean enableMechanisms;
-    public boolean enableVehicles;
-
     public boolean noOpPermissions;
     public boolean indirectRedstone;
     public boolean useBlockDistance;
@@ -69,15 +65,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "#",
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
-
-        config.setComment("enable-circuits", "If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.");
-        enableCircuits = config.getBoolean("enable-circuits", true);
-
-        config.setComment("enable-mechanisms", "If this is set to false, all mechanics will be disabled, and mechanism configuration will not do anything.");
-        enableMechanisms = config.getBoolean("enable-mechanisms", true);
-
-        config.setComment("enable-vehicles", "If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.");
-        enableVehicles = config.getBoolean("enable-vehicles", true);
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);

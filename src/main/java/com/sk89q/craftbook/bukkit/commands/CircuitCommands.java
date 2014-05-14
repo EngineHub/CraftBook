@@ -12,10 +12,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.circuits.ic.CommandIC;
-import com.sk89q.craftbook.circuits.ic.ICDocsParser;
-import com.sk89q.craftbook.circuits.ic.ICManager;
-import com.sk89q.craftbook.circuits.ic.RegisteredICFactory;
+import com.sk89q.craftbook.mechanics.ic.CommandIC;
+import com.sk89q.craftbook.mechanics.ic.ICDocsParser;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
+import com.sk89q.craftbook.mechanics.ic.RegisteredICFactory;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
