@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mechanics.ic.gates.variables;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
-import org.bukkit.block.BlockState;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,6 +16,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -51,12 +51,11 @@ public class ItemCounter extends AbstractIC {
     public void trigger (ChipState chip) {
 
         if(chip.getInput(0)) {
-            BlockState state = getBackBlock().getRelative(0, 1, 0).getState();
 
             int amount = 0;
 
-            if(state instanceof InventoryHolder) {
-                InventoryHolder chest = (InventoryHolder) state;
+            if(InventoryUtil.doesBlockHaveInventory(getBackBlock().getRelative(0, 1, 0))) {
+                InventoryHolder chest = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
                 for(ItemStack stack : chest.getInventory().getContents()) {
                     if(!ItemUtil.isStackValid(stack)) continue;
                     if(item == null || ItemUtil.areItemsIdentical(stack, item)) {

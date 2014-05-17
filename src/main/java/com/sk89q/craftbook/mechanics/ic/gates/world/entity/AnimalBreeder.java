@@ -95,7 +95,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
             lastEntity = new HashMap<EntityType, Entity>();
         InventoryHolder inv = null;
 
-        if(chest.getState() instanceof InventoryHolder)
+        if(InventoryUtil.doesBlockHaveInventory(chest))
             inv = (InventoryHolder) chest.getState();
 
         if(inv == null)

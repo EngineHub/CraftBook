@@ -16,6 +16,7 @@ import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -62,7 +63,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
         int y = b.getY() + 1;
         int z = b.getZ();
         Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
-        if (bl.getState() instanceof InventoryHolder) {
+        if (InventoryUtil.doesBlockHaveInventory(bl)) {
             InventoryHolder c = (InventoryHolder) bl.getState();
             for (int i = 0; i < c.getInventory().getSize(); i++) {
                 ItemStack it = c.getInventory().getItem(i);

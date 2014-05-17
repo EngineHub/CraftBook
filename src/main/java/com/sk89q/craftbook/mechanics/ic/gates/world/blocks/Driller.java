@@ -23,6 +23,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -58,7 +59,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         Block center = getBackBlock().getRelative(0, -1, 0);
         InventoryHolder holder = null;
 
-        if (center.getRelative(0, 2, 0).getState() instanceof InventoryHolder) {
+        if (InventoryUtil.doesBlockHaveInventory(center.getRelative(0, 2, 0))) {
             holder = (InventoryHolder) center.getRelative(0, 2, 0).getState();
         }
 

@@ -65,7 +65,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             PistonBaseMaterial pis = (PistonBaseMaterial) SignUtil.getBackBlock(event.getBlock()).getState().getData();
             Block off = SignUtil.getBackBlock(event.getBlock()).getRelative(pis.getFacing());
-            if(off.getState() instanceof InventoryHolder) {
+            if(InventoryUtil.doesBlockHaveInventory(off)) {
                 if(!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
                     if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                         player.printError("area.use-permission");
@@ -208,7 +208,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 List<ItemStack> newItems = new ArrayList<ItemStack>();
 
                 Block fac = bl.getRelative(p.getFacing());
-                if (fac.getState() instanceof InventoryHolder) {
+                if (InventoryUtil.doesBlockHaveInventory(fac)) {
                     newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
                 } else if(fac.getType() == Material.JUKEBOX) {
                     Jukebox juke = (Jukebox) fac.getState();

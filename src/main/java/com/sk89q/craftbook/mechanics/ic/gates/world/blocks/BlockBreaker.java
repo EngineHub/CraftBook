@@ -26,6 +26,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -89,7 +90,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         }
 
         boolean hasChest = false;
-        if (chest != null && chest.getState() instanceof InventoryHolder)
+        if (chest != null && InventoryUtil.doesBlockHaveInventory(chest))
             hasChest = true;
 
         if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.PISTON_MOVING_PIECE || ((Factory)getFactory()).blockBlacklist.contains(new ItemInfo(broken)))

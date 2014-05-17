@@ -14,6 +14,7 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 
@@ -76,7 +77,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
 
     public boolean sense() {
 
-        if (offset.getState() instanceof InventoryHolder) {
+        if (InventoryUtil.doesBlockHaveInventory(offset)) {
 
             InventoryHolder inv = (InventoryHolder) offset.getState();
             int amount = 0;

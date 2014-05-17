@@ -22,6 +22,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -71,7 +72,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
 
     public boolean stock() {
 
-        if (offset.getBlock().getState() instanceof InventoryHolder) {
+        if (InventoryUtil.doesBlockHaveInventory(offset.getBlock())) {
 
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);

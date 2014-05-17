@@ -108,7 +108,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
             return true;
         }
 
-        if(!(chest.getState() instanceof InventoryHolder))
+        if(!InventoryUtil.doesBlockHaveInventory(chest))
             return false;
 
         // Add the items to a container, and destroy them.
