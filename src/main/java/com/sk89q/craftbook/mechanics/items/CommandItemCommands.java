@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.items.ClickType;
-import com.sk89q.craftbook.mechanics.items.CommandItemAction;
-import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
-import com.sk89q.craftbook.mechanics.items.CommandItems;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;

@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.variables;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;

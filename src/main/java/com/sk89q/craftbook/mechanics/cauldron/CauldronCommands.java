@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.cauldron;
 
 import java.io.File;
 
@@ -6,8 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron;
-import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldronCookbook;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;

@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
@@ -23,6 +24,8 @@ public class CartStation extends CartBlockMechanism {
 
     public CartStation (ItemInfo material) {
         super(material);
+
+        CraftBookPlugin.inst().registerCommands(StationCommands.class);
     }
 
     @EventHandler

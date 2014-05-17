@@ -42,10 +42,7 @@ import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
-import com.sk89q.craftbook.bukkit.commands.CircuitCommands;
-import com.sk89q.craftbook.bukkit.commands.MechanismCommands;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
-import com.sk89q.craftbook.bukkit.commands.VehicleCommands;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.AIMechanic;
 import com.sk89q.craftbook.mechanics.Ammeter;
@@ -73,7 +70,6 @@ import com.sk89q.craftbook.mechanics.Netherrack;
 import com.sk89q.craftbook.mechanics.PaintingSwitch;
 import com.sk89q.craftbook.mechanics.Payment;
 import com.sk89q.craftbook.mechanics.RedstoneJukebox;
-import com.sk89q.craftbook.mechanics.SignCopier;
 import com.sk89q.craftbook.mechanics.Snow;
 import com.sk89q.craftbook.mechanics.Sponge;
 import com.sk89q.craftbook.mechanics.Teleporter;
@@ -127,6 +123,7 @@ import com.sk89q.craftbook.mechanics.minecart.blocks.CartSorter;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartStation;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartTeleporter;
 import com.sk89q.craftbook.mechanics.pipe.Pipes;
+import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
 import com.sk89q.craftbook.mechanics.st.MechanicClock;
 import com.sk89q.craftbook.mechanics.st.SelfTriggeringManager;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
@@ -446,8 +443,7 @@ public class CraftBookPlugin extends JavaPlugin {
         // VariableStore
         if(config.variablesEnabled) mechanics.add(new VariableManager());
 
-        logDebugMessage("Initializing Mechanisms!", "startup.mechanisms");
-        registerCommands(MechanismCommands.class);
+        logDebugMessage("Initializing Mechanisms!", "startup");
 
         if (config.commandItemsEnabled) mechanics.add(new CommandItems());
         if (config.customCraftingEnabled) mechanics.add(new CustomCrafting());
@@ -490,8 +486,6 @@ public class CraftBookPlugin extends JavaPlugin {
         if (config.chairEnabled) try {mechanics.add(new Chair()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Chairs. Make sure you have ProtocolLib!");}
         if (config.footprintsEnabled) try {mechanics.add(new Footprints()); } catch(Throwable e){getLogger().warning("Failed to initialize mechanic: Footprints. Make sure you have ProtocolLib!");}
         if (config.paymentEnabled) if(CraftBookPlugin.plugins.getEconomy() != null) mechanics.add(new Payment()); else getLogger().warning("Failed to initialize mechanic: Payment. Make sure you have Vault!");
-        logDebugMessage("Initializing Circuits!", "startup.circuits");
-        registerCommands(CircuitCommands.class);
 
         if (config.jukeboxEnabled) mechanics.add(new RedstoneJukebox());
         if (config.glowstoneEnabled) mechanics.add(new GlowStone());
@@ -502,8 +496,6 @@ public class CraftBookPlugin extends JavaPlugin {
             mechanics.add(new ICMechanic(new ICManager()));
             ICManager.inst().enable();
         }
-        logDebugMessage("Initializing Vehicles!", "startup.vehicles");
-        registerCommands(VehicleCommands.class);
 
         mechanics.add(new CartBlockManager());
 

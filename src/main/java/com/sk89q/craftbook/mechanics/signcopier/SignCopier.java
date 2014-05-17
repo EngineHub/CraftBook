@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mechanics;
+package com.sk89q.craftbook.mechanics.signcopier;
 
 import java.util.HashMap;
 import java.util.Map;

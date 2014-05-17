@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,9 +8,9 @@ import com.sk89q.craftbook.mechanics.minecart.StationManager;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 
-public class VehicleCommands {
+public class StationCommands {
 
-    public VehicleCommands(CraftBookPlugin plugin) {
+    public StationCommands(CraftBookPlugin plugin) {
 
     }
 

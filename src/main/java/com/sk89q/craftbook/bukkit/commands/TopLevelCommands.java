@@ -11,6 +11,13 @@ import com.sk89q.craftbook.bukkit.ReportWriter;
 import com.sk89q.craftbook.bukkit.Updater;
 import com.sk89q.craftbook.bukkit.Updater.UpdateResult;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.area.AreaCommands;
+import com.sk89q.craftbook.mechanics.cauldron.CauldronCommands;
+import com.sk89q.craftbook.mechanics.crafting.RecipeCommands;
+import com.sk89q.craftbook.mechanics.ic.ICCommands;
+import com.sk89q.craftbook.mechanics.items.CommandItemCommands;
+import com.sk89q.craftbook.mechanics.signcopier.SignEditCommands;
+import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.util.PastebinPoster;
 import com.sk89q.craftbook.util.PastebinPoster.PasteCallback;
 import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
@@ -33,6 +40,38 @@ public class TopLevelCommands {
     @NestedCommand(Commands.class)
     public void craftBookCmds(CommandContext context, CommandSender sender) {
 
+    }
+
+    @Command(aliases = {"area", "togglearea"}, desc = "Commands to manage Craftbook Areas")
+    @NestedCommand(AreaCommands.class)
+    public void area(CommandContext context, CommandSender sender) {
+    }
+
+    @Command(aliases = {"recp", "recps"}, desc = "Commands to manage Craftbook Custom Recipes")
+    @NestedCommand(RecipeCommands.class)
+    public void recipe(CommandContext context, CommandSender sender) {
+
+    }
+
+    @Command(aliases = {"comitems", "commanditems", "citems", "commanditem"}, desc = "Commands to manage Craftbook Command Items")
+    @NestedCommand(CommandItemCommands.class)
+    public void commandItems(CommandContext context, CommandSender sender) {
+    }
+
+    @Command(aliases = {"cauldron"}, desc = "Commands to manage the Craftbook Cauldron")
+    @NestedCommand(CauldronCommands.class)
+    public void cauldron(CommandContext context, CommandSender sender) {
+
+    }
+
+    @Command(aliases = {"sign", "signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
+    @NestedCommand(SignEditCommands.class)
+    public void signedit(CommandContext context, CommandSender sender) {
+    }
+
+    @Command(aliases = {"ic","circuit"}, desc = "Commands to manage Craftbook IC's")
+    @NestedCommand(ICCommands.class)
+    public void icCmd(CommandContext context, CommandSender sender) {
     }
 
     public static class Commands {

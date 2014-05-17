@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.area;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -18,11 +18,6 @@ import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.area.Area;
-import com.sk89q.craftbook.mechanics.area.CopyManager;
-import com.sk89q.craftbook.mechanics.area.CuboidCopy;
-import com.sk89q.craftbook.mechanics.area.FlatCuboidCopy;
-import com.sk89q.craftbook.mechanics.area.MCEditCuboidCopy;
 import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.minecraft.util.commands.Command;

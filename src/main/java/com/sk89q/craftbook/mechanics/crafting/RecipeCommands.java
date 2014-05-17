@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.bukkit.commands;
+package com.sk89q.craftbook.mechanics.crafting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.crafting.CraftingItemStack;
-import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
-import com.sk89q.craftbook.mechanics.crafting.RecipeManager;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.minecraft.util.commands.Command;
