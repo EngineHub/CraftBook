@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 
-import com.sk89q.craftbook.mechanics.LanguageManager;
+import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;

@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mechanics.st;
+package com.sk89q.craftbook.core.st;
 
 import java.util.ArrayList;
 import java.util.Collection;

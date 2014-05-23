@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.st;
+package com.sk89q.craftbook.core.st;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 

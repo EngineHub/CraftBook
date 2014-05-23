@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mechanics.commandhelper;
+package com.sk89q.craftbook.core.commandhelper;
 
 import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
