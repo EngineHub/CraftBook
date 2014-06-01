@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +15,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class BukkitConfiguration extends YAMLConfiguration {
 
-    public boolean enableCircuits;
-    public boolean enableMechanisms;
-    public boolean enableVehicles;
+    public List<String> enabledMechanics;
 
     public boolean noOpPermissions;
     public boolean indirectRedstone;
@@ -58,6 +57,17 @@ public class BukkitConfiguration extends YAMLConfiguration {
             BukkitUtil.printStacktrace(e);
         }
 
+        if(config.getNode("mechanics") != null) {
+
+            new File(CraftBookPlugin.inst().getDataFolder(), "config.yml").renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml.old"));
+            CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml"), "config.yml");
+            try {
+                config.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         config.setWriteDefaults(true);
 
         config.setHeader(
@@ -70,14 +80,18 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
 
-        config.setComment("enable-circuits", "If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.");
-        enableCircuits = config.getBoolean("enable-circuits", true);
+        config.setComment("enabled-mechanics", "List of mechanics to enable! If they aren't in this list, the server won't load them!");
+        enabledMechanics = config.getStringList("enabled-mechanics", Arrays.asList("Variables"));
 
-        config.setComment("enable-mechanisms", "If this is set to false, all mechanics will be disabled, and mechanism configuration will not do anything.");
-        enableMechanisms = config.getBoolean("enable-mechanisms", true);
+        List<String> disabledMechanics = new ArrayList<String>();
 
-        config.setComment("enable-vehicles", "If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.");
-        enableVehicles = config.getBoolean("enable-vehicles", true);
+        for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
+            if(!enabledMechanics.contains(mech))
+                disabledMechanics.add(mech);
+        }
+
+        config.setComment("disabled-mechanics", "A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.");
+        config.getStringList("disabled-mechanics", disabledMechanics);
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);

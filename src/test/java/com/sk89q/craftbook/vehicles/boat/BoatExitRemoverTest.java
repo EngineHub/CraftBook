@@ -27,6 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.boat.ExitRemover;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Boat.class, VehicleExitEvent.class, ExitRemover.class})
@@ -67,7 +68,7 @@ public class BoatExitRemoverTest {
         BukkitConfiguration config = mock(BukkitConfiguration.class);
 
         when(plugin.getConfiguration()).thenReturn(config);
-        config.boatRemoveOnExitGiveItem = true;
+        rem.giveItem = true;
 
         CraftBookPlugin.setInstance(plugin);
 

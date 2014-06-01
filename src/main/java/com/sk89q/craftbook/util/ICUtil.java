@@ -28,7 +28,8 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.circuits.ic.ICVerificationException;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
@@ -282,12 +283,12 @@ public class ICUtil {
 
     public static Block parseBlockLocation(ChangedSign sign, int lPos) {
 
-        return parseBlockLocation(sign, lPos, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate);
+        return parseBlockLocation(sign, lPos, ICMechanic.instance.defaultCoordinates);
     }
 
     public static Block parseBlockLocation(ChangedSign sign) {
 
-        return parseBlockLocation(sign, 2, CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate);
+        return parseBlockLocation(sign, 2, ICMechanic.instance.defaultCoordinates);
     }
 
     public static void verifySignSyntax(ChangedSign sign) throws ICVerificationException {
@@ -347,14 +348,14 @@ public class ICUtil {
     public static Vector parseUnsafeRadius(String line) throws NumberFormatException {
         String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
         if(radians.length > 1) {
-            double x = VerifyUtil.verifyRadius(Double.parseDouble(radians[0]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-            double y = VerifyUtil.verifyRadius(Double.parseDouble(radians[1]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
-            double z = VerifyUtil.verifyRadius(Double.parseDouble(radians[2]), CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            double x = VerifyUtil.verifyRadius(Double.parseDouble(radians[0]), ICMechanic.instance.maxRange);
+            double y = VerifyUtil.verifyRadius(Double.parseDouble(radians[1]), ICMechanic.instance.maxRange);
+            double z = VerifyUtil.verifyRadius(Double.parseDouble(radians[2]), ICMechanic.instance.maxRange);
             return new Vector(x,y,z);
         }
         else {
             double r = Double.parseDouble(radians[0]);
-            r = VerifyUtil.verifyRadius(r, CraftBookPlugin.inst().getConfiguration().ICMaxRange);
+            r = VerifyUtil.verifyRadius(r, ICMechanic.instance.maxRange);
             return new Vector(r,r,r);
         }
     }

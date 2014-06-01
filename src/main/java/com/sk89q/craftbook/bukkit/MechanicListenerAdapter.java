@@ -43,6 +43,11 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -50,11 +55,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.vehicles.cart.blocks.CartBlockMechanism;
-import com.sk89q.craftbook.vehicles.cart.blocks.CartMechanismBlocks;
-import com.sk89q.craftbook.vehicles.cart.events.CartBlockEnterEvent;
-import com.sk89q.craftbook.vehicles.cart.events.CartBlockImpactEvent;
-import com.sk89q.craftbook.vehicles.cart.events.CartBlockRedstoneEvent;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.WorldVector;
@@ -338,7 +338,7 @@ public class MechanicListenerAdapter implements Listener {
     protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = sourceBlock.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-        if(block.getLocation().equals(sourceBlock.getLocation())) //The same block, don't run.
+        if(BukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
             return;
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
 
@@ -361,7 +361,6 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().enableVehicles) return;
         if (!EventUtil.passesFilter(event))
             return;
 
@@ -385,7 +384,6 @@ public class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().enableVehicles) return;
         if (!EventUtil.passesFilter(event))
             return;
 

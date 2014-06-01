@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -84,7 +85,7 @@ public class SearchArea {
             Location offset = SignUtil.getBackBlock(block).getLocation();
             Vector radius = ICUtil.parseRadius(locationParts[0]);
             if(locationParts.length > 1)
-                offset = ICUtil.parseBlockLocation(BukkitUtil.toChangedSign(block), locationParts[1], CraftBookPlugin.inst().getConfiguration().ICdefaultCoordinate).getLocation();
+                offset = ICUtil.parseBlockLocation(BukkitUtil.toChangedSign(block), locationParts[1], ICMechanic.instance.defaultCoordinates).getLocation();
 
             return new SearchArea(offset, radius);
         }

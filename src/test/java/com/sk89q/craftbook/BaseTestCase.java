@@ -10,7 +10,7 @@ import org.mockito.stubbing.Answer;
 
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.common.LanguageManager;
+import com.sk89q.craftbook.core.LanguageManager;
 
 public class BaseTestCase {
 

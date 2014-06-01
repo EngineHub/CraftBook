@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.minecart.MoreRails;
 
 public class RailUtil {
 
@@ -52,10 +52,10 @@ public class RailUtil {
 
     public static boolean isTrack(Material id) {
 
-        if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsPressurePlate)
+        if (MoreRails.instance != null && MoreRails.instance.pressurePlate)
             if (id == Material.STONE_PLATE || id == Material.WOOD_PLATE || id == Material.IRON_PLATE || id == Material.GOLD_PLATE)
                 return true;
-        if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
+        if (MoreRails.instance != null && MoreRails.instance.ladder)
             if (id == Material.LADDER || id == Material.VINE)
                 return true;
 

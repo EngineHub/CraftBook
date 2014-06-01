@@ -1,0 +1,292 @@
+mechanics:
+    AI:
+        vision-enable:
+        - Zombie
+        - PigZombie
+        crit-bow-enable:
+        - Skeleton
+        attack-passive-enable:
+        - Zombie
+    Ammeter:
+        item: COAL
+    BetterLeads:
+        stop-mob-target: false
+        owner-unleash-only: false
+        hitch-persists: false
+        mob-repel: false
+        allowed-mobs:
+        - ZOMBIE
+        - SPIDER
+    BetterPhysics:
+        falling-ladders: true
+    BetterPistons:
+        crushers: true
+        crushers-kill-mobs: false
+        crusher-blacklist:
+        - OBSIDIAN
+        - BEDROCK
+        super-sticky: true
+        super-push: true
+        movement-blacklist:
+        - OBSIDIAN
+        - BEDROCK
+        bounce: true
+        bounce-blacklist:
+        - OBSIDIAN
+        - BEDROCK
+        max-distance: 12
+    BetterPlants:
+        fern-farming: true
+    BoatExitRemover:
+        give-item: false
+    BoatRemoveEntities:
+        remove-other-boats: false
+    BoatSpeedModifiers:
+        max-speed: 0.4
+        unnoccupied-deceleration: -1.0
+        occupied-deceleration: 0.2
+    Bookcase:
+        read-when-sneaking: 'no'
+        read-when-holding-block: false
+    Bridge:
+        allow-redstone: true
+        max-length: 30
+        max-width: 5
+        blocks:
+        - COBBLESTONE
+        - WOOD
+        - GLASS
+        - DOUBLE_STEP
+        - WOOD_DOUBLE_STEP
+    Cauldron:
+        spoons: true
+        enable-redstone: false
+        item-tracking: false
+        require-sign: false
+    Chairs:
+        allow-holding-blocks: false
+        regen-health: true
+        regen-health-amount: 1.0
+        blocks:
+        - WOOD_STAIRS
+        - COBBLESTONE_STAIRS
+        - BRICK_STAIRS
+        - SMOOTH_STAIRS
+        - NETHER_BRICK_STAIRS
+        - SANDSTONE_STAIRS
+        - SPRUCE_WOOD_STAIRS
+        - BIRCH_WOOD_STAIRS
+        - JUNGLE_WOOD_STAIRS
+        - QUARTZ_STAIRS
+        - ACACIA_STAIRS
+        face-correct-direction: true
+        require-sign: false
+        max-distance: 3
+        max-click-radius: 5
+    ChunkAnchor:
+        enable-redstone: true
+        check-chunks: true
+    CommandSigns:
+        allow-redstone: true
+    CookingPot:
+        allow-redstone: true
+        require-fuel: true
+        cook-ores: false
+        sign-click-open: true
+        take-buckets: false
+        super-fast-cooking: false
+    CustomDrops:
+        require-permissions: false
+    DispenserRecipes:
+        cannon-enable: true
+        fan-enable: true
+        fire-arrows-enable: true
+        snow-shooter-enable: true
+        xp-shooter-enable: true
+    Door:
+        allow-redstone: true
+        max-length: 30
+        max-width: 5
+        blocks:
+        - COBBLESTONE
+        - WOOD
+        - GLASS
+        - DOUBLE_STEP
+        - WOOD_DOUBLE_STEP
+    Elevator:
+        allow-redstone: false
+        redstone-player-search-radius: 3
+        enable-buttons: true
+        allow-looping: false
+        smooth-movement: false
+        smooth-movement-speed: 0.5
+    Footprints:
+        blocks:
+        - DIRT
+        - SAND
+        - SNOW
+        - SNOW_BLOCK
+        - ICE
+    Gate:
+        allow-redstone: true
+        limit-columns: true
+        max-columns: 14
+        blocks:
+        - FENCE
+        - IRON_FENCE
+        - THIN_GLASS
+        - NETHER_FENCE
+        enforce-type: true
+        max-column-height: 12
+        gate-search-radius: 3
+    Glowstone:
+        glowstone-off-block: GLASS
+    HeadDrops:
+        drop-mob-heads: true
+        drop-player-heads: true
+        require-player-killed: true
+        drop-head-when-mined: true
+        override-natural-head-drops: false
+        drop-rate: 0.05
+        looting-rate-modifier: 0.05
+        show-name-right-click: true
+        drop-rates: {}
+        custom-mob-skins: {}
+    HiddenSwitch:
+        any-side: true
+    ICs:
+        cache: true
+        max-radius: 10.0
+        allow-short-hand: true
+        keep-loaded: false
+        disallowed-ics: []
+        default-coordinate-system: RELATIVE
+        save-persistent-data: true
+        midi-use-percussion: false
+        break-on-error: false
+    LegacyCauldron:
+        block: STONE
+    LightStone:
+        item: GLOWSTONE_DUST
+    LightSwitch:
+        max-range: 10
+        max-lights: 20
+    MinecartBooster:
+        max-boost-block: GOLD_BLOCK:0
+        25x-boost-block: GOLD_ORE:0
+        50x-slow-block: SOUL_SAND:0
+        20x-slow-block: GRAVEL:0
+    MinecartConstantSpeed:
+        speed: 0.5
+    MinecartDecay:
+        time-in-ticks: 20
+    MinecartDeposit:
+        block: IRON_ORE:0
+    MinecartDispenser:
+        block: EMERALD_ORE:0
+        spawn-infront: false
+        check-for-carts: true
+        propel-cart: false
+    MinecartEjector:
+        block: IRON_BLOCK:0
+    MinecartElevator:
+        block: NETHER_BRICK:0
+    MinecartExitRemover:
+        give-item: false
+    MinecartFallModifier:
+        vertical-fall-speed: 0.9
+        horizontal-fall-speed: 1.1
+    MinecartMaxSpeed:
+        block: COAL_BLOCK:0
+    MinecartMessenger:
+        block: ENDER_STONE:0
+    MinecartMoreRails:
+        pressure-plate-intersection: false
+        ladder-vertical-rail: false
+        ladder-vertical-rail-velocity: 0.5
+    MinecartNoCollide:
+        empty-carts: true
+        full-carts: false
+    MinecartRemoveEntities:
+        remove-other-minecarts: false
+        allow-empty-carts: false
+    MinecartReverser:
+        block: WOOL:0
+    MinecartSorter:
+        block: NETHERRACK:0
+    MinecartSpeedModifiers:
+        max-speed: 0.4
+        off-rail-speed: 0.0
+    MinecartStation:
+        block: OBSIDIAN:0
+    MinecartTeleporter:
+        block: EMERALD_BLOCK:0
+    MinecartVisionSteering:
+        minimum-sensitivity: 3
+    Pipes:
+        allow-diagonal: false
+        insulator-block: WOOL
+        stack-per-move: true
+        require-sign: false
+    SignCopier:
+        item: INK_SACK:0
+    Snow:
+        piling: false
+        trample: false
+        partial-trample-only: false
+        jump-trample: false
+        place: false
+        slowdown: false
+        realistic: false
+        high-piling: false
+        max-pile-height: 3
+        replacable-blocks:
+        - DEAD_BUSH
+        - LONG_GRASS
+        - YELLOW_FLOWER
+        - RED_ROSE
+        - BROWN_MUSHROOM
+        - RED_MUSHROOM
+        - FIRE
+        falldown-animation-speed: 5
+        freeze-water: false
+        melt-in-sunlight: false
+        partial-melt-only: false
+    Sponge:
+        radius: 5
+        circular-radius: true
+        require-redstone: false
+    Teleporter:
+        require-sign: false
+        max-range: 0
+    ToggleArea:
+        allow-redstone: true
+        use-schematics: true
+        shorten-long-names: true
+        max-size: 5000
+        max-per-user: 30
+    TreeLopper:
+        block-list:
+        - LOG
+        - LOG_2
+        tool-list:
+        - IRON_AXE
+        - WOOD_AXE
+        - STONE_AXE
+        - DIAMOND_AXE
+        - GOLD_AXE
+        max-size: 30
+        allow-diagonals: false
+        enforce-data: false
+        place-saplings: false
+        break-leaves: false
+    Variables:
+        default-to-global: false
+        enable-in-console: false
+        enable-in-player-commands: false
+        enable-in-player-chat: false
+    XPStorer:
+        require-bottle: false
+        xp-per-bottle: 16
+        block: MOB_SPAWNER
+        require-sneaking-state: 'no'
