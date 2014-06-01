@@ -83,6 +83,10 @@ import com.sk89q.craftbook.mechanics.area.Area;
 import com.sk89q.craftbook.mechanics.area.simple.Bridge;
 import com.sk89q.craftbook.mechanics.area.simple.Door;
 import com.sk89q.craftbook.mechanics.area.simple.Gate;
+import com.sk89q.craftbook.mechanics.boat.Drops;
+import com.sk89q.craftbook.mechanics.boat.LandBoats;
+import com.sk89q.craftbook.mechanics.boat.Uncrashable;
+import com.sk89q.craftbook.mechanics.boat.WaterPlaceOnly;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron;
 import com.sk89q.craftbook.mechanics.cauldron.legacy.Cauldron;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
@@ -92,6 +96,30 @@ import com.sk89q.craftbook.mechanics.drops.legacy.LegacyCustomDrops;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
 import com.sk89q.craftbook.mechanics.items.CommandItems;
+import com.sk89q.craftbook.mechanics.minecart.CollisionEntry;
+import com.sk89q.craftbook.mechanics.minecart.ConstantSpeed;
+import com.sk89q.craftbook.mechanics.minecart.EmptyDecay;
+import com.sk89q.craftbook.mechanics.minecart.EmptySlowdown;
+import com.sk89q.craftbook.mechanics.minecart.FallModifier;
+import com.sk89q.craftbook.mechanics.minecart.ItemPickup;
+import com.sk89q.craftbook.mechanics.minecart.MobBlocker;
+import com.sk89q.craftbook.mechanics.minecart.MoreRails;
+import com.sk89q.craftbook.mechanics.minecart.NoCollide;
+import com.sk89q.craftbook.mechanics.minecart.PlaceAnywhere;
+import com.sk89q.craftbook.mechanics.minecart.RailPlacer;
+import com.sk89q.craftbook.mechanics.minecart.TemporaryCart;
+import com.sk89q.craftbook.mechanics.minecart.VisionSteering;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartBooster;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartDeposit;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartDispenser;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartEjector;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartLift;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartMaxSpeed;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartMessenger;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartReverser;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartSorter;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartStation;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartTeleporter;
 import com.sk89q.craftbook.mechanics.pipe.Pipes;
 import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
@@ -226,6 +254,41 @@ public class CraftBookPlugin extends JavaPlugin {
         availableMechanics.put("JackOLantern", JackOLantern.class);
         availableMechanics.put("Pipes", Pipes.class);
         availableMechanics.put("ICs", ICMechanic.class);
+        availableMechanics.put("MinecartBooster", CartBooster.class);
+        availableMechanics.put("MinecartReverser", CartReverser.class);
+        availableMechanics.put("MinecartSorter", CartSorter.class);
+        availableMechanics.put("MinecartStation", CartStation.class);
+        availableMechanics.put("MinecartEjector", CartEjector.class);
+        availableMechanics.put("MinecartDeposit", CartDeposit.class);
+        availableMechanics.put("MinecartTeleporter", CartTeleporter.class);
+        availableMechanics.put("MinecartElevator", CartLift.class);
+        availableMechanics.put("MinecartDispenser", CartDispenser.class);
+        availableMechanics.put("MinecartMessenger", CartMessenger.class);
+        availableMechanics.put("MinecartMaxSpeed", CartMaxSpeed.class);
+        availableMechanics.put("MinecartMoreRails", MoreRails.class);
+        availableMechanics.put("MinecartRemoveEntities", com.sk89q.craftbook.mechanics.minecart.RemoveEntities.class);
+        availableMechanics.put("MinecartVisionSteering", VisionSteering.class);
+        availableMechanics.put("MinecartDecay", EmptyDecay.class);
+        availableMechanics.put("MinecartMobBlocker", MobBlocker.class);
+        availableMechanics.put("MinecartExitRemover", com.sk89q.craftbook.mechanics.minecart.ExitRemover.class);
+        availableMechanics.put("MinecartCollisionEntry", CollisionEntry.class);
+        availableMechanics.put("MinecartItemPickup", ItemPickup.class);
+        availableMechanics.put("MinecartFallModifier", FallModifier.class);
+        availableMechanics.put("MinecartConstantSpeed", ConstantSpeed.class);
+        availableMechanics.put("MinecartRailPlacer", RailPlacer.class);
+        availableMechanics.put("MinecartSpeedModifiers", com.sk89q.craftbook.mechanics.minecart.SpeedModifiers.class);
+        availableMechanics.put("MinecartEmptySlowdown", EmptySlowdown.class);
+        availableMechanics.put("MinecartRailPlacer", RailPlacer.class);
+        availableMechanics.put("MinecartNoCollide", NoCollide.class);
+        availableMechanics.put("MinecartPlaceAnywhere", PlaceAnywhere.class);
+        availableMechanics.put("MinecartTemporaryCart", TemporaryCart.class);
+        availableMechanics.put("BoatRemoveEntities", com.sk89q.craftbook.mechanics.boat.RemoveEntities.class);
+        availableMechanics.put("BoatUncrashable", Uncrashable.class);
+        availableMechanics.put("BoatDrops", Drops.class);
+        availableMechanics.put("BoatSpeedModifiers", com.sk89q.craftbook.mechanics.boat.SpeedModifiers.class);
+        availableMechanics.put("LandBoats", LandBoats.class);
+        availableMechanics.put("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class);
+        availableMechanics.put("BoatWaterPlaceOnly", WaterPlaceOnly.class);
     }
 
     /**
@@ -462,57 +525,36 @@ public class CraftBookPlugin extends JavaPlugin {
 
         logDebugMessage("Initializing Mechanisms!", "startup");
 
-        /*XXX
-         * if(config.minecartSpeedModEnabled) mechanics.add(new CartBooster());
-        if(config.minecartReverseEnabled) mechanics.add(new CartReverser());
-        if(config.minecartSorterEnabled) mechanics.add(new CartSorter());
-        if(config.minecartStationEnabled) mechanics.add(new CartStation());
-        if(config.minecartEjectorEnabled) mechanics.add(new CartEjector());
-        if(config.minecartDepositEnabled) mechanics.add(new CartDeposit());
-        if(config.minecartTeleportEnabled) mechanics.add(new CartTeleporter());
-        if(config.minecartElevatorEnabled) mechanics.add(new CartLift());
-        if(config.minecartDispenserEnabled) mechanics.add(new CartDispenser());
-        if(config.minecartMessagerEnabled) mechanics.add(new CartMessenger());
-        if(config.minecartMaxSpeedEnabled) mechanics.add(new CartMaxSpeed());
+        YAMLProcessor processor = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
 
-        if(config.minecartMoreRailsEnabled) mechanics.add(new MoreRails());
-        if(config.minecartRemoveEntitiesEnabled) mechanics.add(new com.sk89q.craftbook.mechanics.minecart.RemoveEntities());
-        if(config.minecartVisionSteeringEnabled) mechanics.add(new VisionSteering());
-        if(config.minecartDecayEnabled) mechanics.add(new EmptyDecay());
-        if(config.minecartBlockMobEntryEnabled) mechanics.add(new MobBlocker());
-        if(config.minecartRemoveOnExitEnabled) mechanics.add(new com.sk89q.craftbook.mechanics.minecart.ExitRemover());
-        if(config.minecartCollisionEntryEnabled) mechanics.add(new CollisionEntry());
-        if(config.minecartItemPickupEnabled) mechanics.add(new ItemPickup());
-        if(config.minecartFallModifierEnabled) mechanics.add(new FallModifier());
-        if(config.minecartConstantSpeedEnable) mechanics.add(new ConstantSpeed());
-        if(config.minecartRailPlacerEnable) mechanics.add(new RailPlacer());
-        if(config.minecartSpeedModifierEnable) mechanics.add(new com.sk89q.craftbook.mechanics.minecart.SpeedModifiers());
-        if(config.minecartEmptySlowdownStopperEnable) mechanics.add(new EmptySlowdown());
-        if(config.minecartNoCollideEnable) mechanics.add(new NoCollide());
-        if(config.minecartPlaceAnywhereEnable) mechanics.add(new PlaceAnywhere());
-        if(config.minecartTemporaryCartEnable) mechanics.add(new TemporaryCart());
+        for(String enabled : config.enabledMechanics) {
 
-        if(config.boatRemoveEntitiesEnabled) mechanics.add(new RemoveEntities());
-        if(config.boatNoCrashEnabled) mechanics.add(new Uncrashable());
-        if(config.boatDropsEnabled) mechanics.add(new Drops());
-        if(config.boatSpeedModifierEnable) mechanics.add(new SpeedModifiers());
-        if(config.boatLandBoatsEnable) mechanics.add(new LandBoats());
-        if(config.boatRemoveOnExitEnabled) mechanics.add(new ExitRemover());
-        if(config.boatWaterPlaceOnly) mechanics.add(new WaterPlaceOnly());*/
+            Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(enabled);
+            try {
+                if(mechClass != null) {
+
+                    CraftBookMechanic mech = mechClass.newInstance();
+                    mech.loadConfiguration(processor, "mechanics." + enabled + ".");
+                    mechanics.add(mech);
+                }
+            } catch (Throwable t) {
+                getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
+            }
+        }
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
             try {
                 if(!mech.enable()) {
-                    getLogger().warning("Failed to initialize mechanic: " + mech.getClass().getSimpleName());
+                    getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
                     mech.disable();
                     iter.remove();
                     continue;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
             } catch(Throwable t) {
-                getLogger().log(Level.WARNING, "Failed to initialize mechanic: " + mech.getClass().getSimpleName(), t);
+                getLogger().log(Level.WARNING, "Failed to enable mechanic: " + mech.getClass().getSimpleName(), t);
             }
         }
 

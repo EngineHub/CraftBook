@@ -1,19 +1,96 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.8.9
+# CraftBook Configuration for Bukkit. Generated for version: 3.9 Beta 1
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
 # http://wiki.sk89q.com/wiki/CraftBook/Usage
+#
+# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!
 
 
+# List of mechanics to enable! If they aren't in this list, the server won't load them!
+enabled-mechanics:
+- Variables
 
-# If this is set to false, all circuit mechanics will be disabled, and circuit configuration will not do anything.
-enable-circuits: true
-
-# If this is set to false, all mechanics will be disabled, and mechanism configuration will not do anything.
-enable-mechanisms: true
-
-# If this is set to false, all vehicles mechanics will be disabled, and vehicle configuration will not do anything.
-enable-vehicles: true
+# A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.
+disabled-mechanics:
+- MinecartVisionSteering
+- MinecartEmptySlowdown
+- SignCopier
+- BoatRemoveEntities
+- Snow
+- MinecartMaxSpeed
+- MinecartReverser
+- Pay
+- Netherrack
+- MinecartRemoveEntities
+- MinecartDeposit
+- BoatDrops
+- MinecartExitRemover
+- JackOLantern
+- MinecartMobBlocker
+- MinecartFallModifier
+- ICs
+- Ammeter
+- BoatSpeedModifiers
+- BoatExitRemover
+- AI
+- CustomDrops
+- MapChanger
+- LegacyCustomDrops
+- HeadDrops
+- MinecartEjector
+- TreeLopper
+- Glowstone
+- LightStone
+- LegacyCauldron
+- MinecartCollisionEntry
+- Footprints
+- Bridge
+- PaintingSwitcher
+- BetterPhysics
+- Marquee
+- MinecartDispenser
+- BetterPlants
+- HiddenSwitch
+- Gate
+- MinecartBooster
+- BetterLeads
+- MinecartDecay
+- CustomCrafting
+- Chairs
+- Elevator
+- BoatWaterPlaceOnly
+- CookingPot
+- MinecartSpeedModifiers
+- MinecartTemporaryCart
+- XPStorer
+- MinecartSorter
+- MinecartPlaceAnywhere
+- ToggleArea
+- MinecartTeleporter
+- CommandSigns
+- BetterPistons
+- DispenserRecipes
+- MinecartItemPickup
+- Jukebox
+- LandBoats
+- Bookcase
+- MinecartStation
+- Teleporter
+- MinecartMessenger
+- MinecartElevator
+- Door
+- MinecartMoreRails
+- MinecartConstantSpeed
+- LightSwitch
+- MinecartNoCollide
+- Cauldron
+- BoatUncrashable
+- MinecartRailPlacer
+- ChunkAnchor
+- CommandItems
+- Sponge
+- Pipes
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2
@@ -75,396 +152,3 @@ persistent-storage-type: YAML
 
 # Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.
 convert-names-to-cbids: true
-common:
-    variables:
-        enable: true
-        default-to-global: false
-        enable-in-commandblocks: false
-        enable-in-player-commands: false
-        enable-in-player-chat: false
-circuits:
-    ics:
-        enable: false
-        cache: true
-        max-radius: 10
-        allow-short-hand: true
-        keep-loaded: false
-        disallowed-ics: []
-        default-coordinate-system: RELATIVE
-        save-persistent-data: true
-        midi-use-percussion: false
-        break-on-error: false
-    wiring:
-        netherrack-enabled: false
-        pumpkins-enabled: false
-        glowstone-enabled: false
-        glowstone-off-block: GLASS
-    pipes:
-        enable: false
-        allow-diagonal: false
-        insulator-block: WOOL
-        stack-per-move: true
-        require-sign: false
-    jukebox:
-        enable: false
-mechanics:
-    ai:
-        enable: false
-        vision-enable:
-        - Zombie
-        - PigZombie
-        crit-bow-enable:
-        - Skeleton
-        attack-passive-enable:
-        - Zombie
-    ammeter:
-        enable: false
-        item: COAL
-    area:
-        enable: false
-        allow-redstone: true
-        use-schematics: true
-        shorten-long-names: true
-        max-size: 5000
-        max-per-user: 30
-    better-leads:
-        enable: false
-        stop-mob-target: false
-        owner-unleash-only: false
-        hitch-persists: false
-        mob-repel: false
-        allowed-mobs:
-        - ZOMBIE
-        - SPIDER
-    better-physics:
-        enable: false
-        falling-ladders: true
-    better-pistons:
-        enable: false
-        crushers: true
-        crushers-kill-mobs: false
-        crusher-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        super-sticky: true
-        super-push: true
-        movement-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        bounce: true
-        bounce-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        max-distance: 12
-    better-plants:
-        enable: false
-        fern-farming: true
-    bookcase:
-        enable: false
-        read-when-sneaking: 'no'
-        read-when-holding-block: false
-    bridge:
-        enable: false
-        allow-redstone: true
-        max-length: 30
-        max-width: 5
-        blocks:
-        - COBBLESTONE
-        - WOOD
-        - GLASS
-        - DOUBLE_STEP
-        - WOOD_DOUBLE_STEP
-    cauldron:
-        enable: false
-        spoons: true
-        enable-redstone: false
-        item-tracking: false
-    chair:
-        enable: false
-        allow-holding-blocks: false
-        regen-health: true
-        regen-health-amount: 1.0
-        blocks:
-        - WOOD_STAIRS
-        - COBBLESTONE_STAIRS
-        - BRICK_STAIRS
-        - SMOOTH_STAIRS
-        - NETHER_BRICK_STAIRS
-        - SANDSTONE_STAIRS
-        - SPRUCE_WOOD_STAIRS
-        - BIRCH_WOOD_STAIRS
-        - JUNGLE_WOOD_STAIRS
-        - QUARTZ_STAIRS
-        - ACACIA_STAIRS
-        face-correct-direction: true
-        require-sign: false
-        max-distance: 3
-        max-click-radius: 5
-    chunk-anchor:
-        enable: false
-        enable-redstone: true
-        check-chunks: true
-    command-items:
-        enable: false
-    command-sign:
-        enable: false
-        allow-redstone: true
-    cooking-pot:
-        enable: false
-        allow-redstone: true
-        require-fuel: true
-        cook-ores: false
-        sign-click-open: true
-        take-buckets: false
-        super-fast-cooking: false
-    custom-crafting:
-        enable: false
-    dispenser-recipes:
-        enable: false
-        cannon-enable: true
-        fan-enable: true
-        fire-arrows-enable: true
-        snow-shooter-enable: true
-        xp-shooter-enable: true
-    custom-drops:
-        enable: false
-        require-permissions: false
-    door:
-        enable: false
-        allow-redstone: true
-        max-length: 30
-        max-width: 5
-        blocks:
-        - COBBLESTONE
-        - WOOD
-        - GLASS
-        - DOUBLE_STEP
-        - WOOD_DOUBLE_STEP
-    elevator:
-        enable: false
-        allow-redstone: false
-        redstone-player-search-radius: 3
-        enable-buttons: true
-        allow-looping: false
-        smooth-movement: false
-        smooth-movement-speed: 0.5
-    footprints:
-        enable: false
-        blocks:
-        - DIRT
-        - SAND
-        - SNOW
-        - SNOW_BLOCK
-        - ICE
-    gate:
-        enable: false
-        allow-redstone: true
-        limit-columns: true
-        max-columns: 14
-        blocks:
-        - FENCE
-        - IRON_FENCE
-        - THIN_GLASS
-        - NETHER_FENCE
-        enforce-type: true
-        max-column-height: 12
-        gate-search-radius: 3
-    head-drops:
-        enable: false
-        drop-mob-heads: true
-        drop-player-heads: true
-        require-player-killed: true
-        drop-head-when-mined: true
-        override-natural-head-drops: false
-        drop-rate: 0.05
-        looting-rate-modifier: 0.05
-        show-name-right-click: true
-        drop-rates: {}
-        custom-mob-skins: {}
-    hidden-switch:
-        enable: false
-        any-side: true
-    legacy-cauldron:
-        enable: false
-        block: STONE
-    lightstone:
-        enable: false
-        item: GLOWSTONE_DUST
-    light-switch:
-        enable: false
-        max-range: 10
-        max-lights: 20
-    map-changer:
-        enable: false
-    marquee:
-        enable: false
-    paintings:
-        enable: false
-    payment:
-        enable: false
-    sign-copy:
-        enable: false
-        item: INK_SACK:0
-    snow:
-        enable: false
-        piling: false
-        trample: false
-        partial-trample-only: false
-        jump-trample: false
-        place: false
-        slowdown: false
-        realistic: false
-        high-piling: false
-        max-pile-height: 3
-        replacable-blocks:
-        - DEAD_BUSH
-        - LONG_GRASS
-        - YELLOW_FLOWER
-        - RED_ROSE
-        - BROWN_MUSHROOM
-        - RED_MUSHROOM
-        - FIRE
-        falldown-animation-speed: 5
-        freeze-water: false
-        melt-in-sunlight: false
-        partial-melt-only: false
-    sponge:
-        enable: false
-        radius: 5
-        circular-radius: true
-        require-redstone: false
-    teleporter:
-        enable: false
-        require-sign: false
-        max-range: 0
-    tree-lopper:
-        enable: false
-        block-list:
-        - LOG
-        - LOG_2
-        tool-list:
-        - IRON_AXE
-        - WOOD_AXE
-        - STONE_AXE
-        - DIAMOND_AXE
-        - GOLD_AXE
-        max-size: 30
-        allow-diagonals: false
-        enforce-data: false
-        place-saplings: false
-        break-leaves: false
-    xp-storer:
-        enable: false
-        require-bottle: false
-        xp-per-bottle: 16
-        block: MOB_SPAWNER
-        require-sneaking-state: 'no'
-vehicles:
-    minecart:
-        decay-when-empty:
-            enable: false
-            time-in-ticks: 20
-        mechanisms:
-            station:
-                enable: false
-                block: OBSIDIAN:0
-            sorter:
-                enable: false
-                block: NETHERRACK:0
-            ejector:
-                enable: false
-                block: IRON_BLOCK:0
-            deposit:
-                enable: false
-                block: IRON_ORE:0
-            teleport:
-                enable: false
-                block: EMERALD_BLOCK:0
-            elevator:
-                enable: false
-                block: NETHER_BRICK:0
-            messager:
-                enable: false
-                block: ENDER_STONE:0
-            reverse:
-                enable: false
-                block: WOOL:0
-            max-speed:
-                enable: false
-                block: COAL_BLOCK:0
-            speed-modifier:
-                enable: false
-                max-boost-block: GOLD_BLOCK:0
-                25x-boost-block: GOLD_ORE:0
-                50x-slow-block: SOUL_SAND:0
-                20x-slow-block: GRAVEL:0
-            dispenser:
-                enable: false
-                block: EMERALD_ORE:0
-                spawn-infront: false
-                check-for-carts: true
-                propel-cart: false
-        fall-speed:
-            enable: false
-            vertical-fall-speed: 0.9
-            horizontal-fall-speed: 1.1
-        more-rails:
-            enable: false
-            pressure-plate-intersection: false
-            ladder-vertical-rail: false
-            ladder-vertical-rail-velocity: 0.5
-        remove-entities:
-            enable: false
-            remove-other-minecarts: false
-            allow-empty-carts: false
-        vision-steering:
-            enable: false
-            minimum-sensitivity: 3
-        block-mob-entry:
-            enable: false
-        remove-on-exit:
-            enable: false
-            give-item: false
-        collision-entry:
-            enable: false
-        item-pickup:
-            enable: false
-        constant-speed:
-            enable: false
-            speed: 0.5
-        rail-placer:
-            enable: false
-        speed-modifiers:
-            enable: false
-            max-speed: 0.4
-            off-rail-speed: 0.0
-        empty-slowdown-stopper:
-            enable: false
-        no-collide:
-            enable: false
-            empty-carts: true
-            full-carts: false
-        place-anywhere:
-            enable: false
-        temporary-cart:
-            enable: false
-    boat:
-        drops:
-            enable: false
-        remove-on-exit:
-            enable: false
-            give-item: false
-        land-boats:
-            enable: false
-        remove-entities:
-            enable: false
-            remove-other-boats: false
-        speed-modifiers:
-            enable: false
-            max-speed: 0.4
-            unnoccupied-deceleration: -1.0
-            occupied-deceleration: 0.2
-        uncrashable:
-            enable: false
-        water-place-only:
-            enable: false

@@ -14,6 +14,8 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class BukkitConfiguration extends YAMLConfiguration {
 
+    public List<String> enabledMechanics;
+
     public boolean noOpPermissions;
     public boolean indirectRedstone;
     public boolean useBlockDistance;
@@ -65,6 +67,19 @@ public class BukkitConfiguration extends YAMLConfiguration {
                 "#",
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
+
+        config.setComment("enabled-mechanics", "List of mechanics to enable! If they aren't in this list, the server won't load them!");
+        enabledMechanics = config.getStringList("enabled-mechanics", Arrays.asList("Variables"));
+
+        List<String> disabledMechanics = new ArrayList<String>();
+
+        for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
+            if(!enabledMechanics.contains(mech))
+                disabledMechanics.add(mech);
+        }
+
+        config.setComment("disabled-mechanics", "A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.");
+        config.getStringList("disabled-mechanics", disabledMechanics);
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
