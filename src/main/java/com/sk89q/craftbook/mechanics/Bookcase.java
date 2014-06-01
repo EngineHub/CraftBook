@@ -37,6 +37,8 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.TernaryState;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
@@ -120,7 +122,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().bookcaseReadWhenSneaking.doesPass(event.getPlayer().isSneaking())) return;
+        if (!bookcaseReadWhenSneaking.doesPass(event.getPlayer().isSneaking())) return;
 
         if (!EventUtil.passesFilter(event))
             return;
@@ -138,7 +140,21 @@ public class Bookcase extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (CraftBookPlugin.inst().getConfiguration().bookcaseReadHoldingBlock || !player.isHoldingBlock())
+        if (bookcaseReadHoldingBlock || !player.isHoldingBlock())
             read(player);
+    }
+
+    boolean bookcaseReadHoldingBlock;
+    TernaryState bookcaseReadWhenSneaking;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+
+        config.setComment(path + "read-when-sneaking", "Enable reading while sneaking.");
+        bookcaseReadWhenSneaking = TernaryState.getFromString(config.getString(path + "read-when-sneaking", "no"));
+
+        config.setComment(path + "read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
+        bookcaseReadHoldingBlock = config.getBoolean(path + "read-when-holding-block", false);
     }
 }

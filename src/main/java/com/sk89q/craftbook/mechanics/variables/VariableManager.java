@@ -129,21 +129,21 @@ public class VariableManager extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
-        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
+        if(playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
             event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 
-        if(CraftBookPlugin.inst().getConfiguration().variablesPlayerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
+        if(playerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
             event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
     }
 
     @EventHandler
     public void onConsoleCommandPreprocess(ServerCommandEvent event) {
 
-        if(CraftBookPlugin.inst().getConfiguration().variablesCommandBlockOverride)
+        if(consoleOverride)
             event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
     }
 
@@ -178,5 +178,26 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
             sign.update(false);
         }
+    }
+
+    boolean defaultToGlobal;
+    boolean consoleOverride;
+    boolean playerCommandOverride;
+    boolean playerChatOverride;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
+        defaultToGlobal = config.getBoolean(path + "default-to-global", false);
+
+        config.setComment(path + "enable-in-console", "Allows variables to work on the Console.");
+        consoleOverride = config.getBoolean(path + "enable-in-console", false);
+
+        config.setComment(path + "enable-in-player-commands", "Allows variables to work in any command a player performs.");
+        playerCommandOverride = config.getBoolean(path + "enable-in-player-commands", false);
+
+        config.setComment(path + "enable-in-player-chat", "Allow variables to work in player chat.");
+        playerChatOverride = config.getBoolean(path + "enable-in-player-chat", false);
     }
 }

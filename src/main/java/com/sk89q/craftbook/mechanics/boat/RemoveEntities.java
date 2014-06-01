@@ -9,8 +9,8 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class RemoveEntities extends AbstractCraftBookMechanic {
 
@@ -21,7 +21,7 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
 
         if (!(event.getVehicle() instanceof Boat))
             return;
-        if (!CraftBookPlugin.inst().getConfiguration().boatRemoveEntitiesOtherBoats && (event.getEntity() instanceof Boat || event.getEntity().isInsideVehicle()))
+        if (!removeOtherBoats && (event.getEntity() instanceof Boat || event.getEntity().isInsideVehicle()))
             return;
 
         if (event.getVehicle().isEmpty())
@@ -45,5 +45,14 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         event.setPickupCancelled(true);
         event.setCollisionCancelled(true);
         return;
+    }
+
+    boolean removeOtherBoats;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "remove-other-boats", "Allows the remove entities boats to remove other boats.");
+        removeOtherBoats = config.getBoolean(path + "remove-other-boats", false);
     }
 }

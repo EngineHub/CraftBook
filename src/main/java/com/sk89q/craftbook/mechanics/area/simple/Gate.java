@@ -16,7 +16,9 @@
 
 package com.sk89q.craftbook.mechanics.area.simple;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.GameMode;
@@ -41,6 +43,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -89,9 +92,9 @@ public class Gate extends AbstractCraftBookMechanic {
             }
         } else {
             // Toggle nearby gates
-            for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
-                for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
-                    for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
+            for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
+                for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+                    for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
                         if (recurseColumn(player, BukkitUtil.toChangedSign(block), block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, smallSearchSize)) {
                             foundGate = true;
                         }
@@ -118,7 +121,7 @@ public class Gate extends AbstractCraftBookMechanic {
      */
     private boolean recurseColumn(LocalPlayer player, ChangedSign sign, Block block, Set<GateColumn> visitedColumns, Boolean close, boolean smallSearchSize) {
 
-        if (CraftBookPlugin.inst().getConfiguration().gateLimitColumns && visitedColumns.size() > CraftBookPlugin.inst().getConfiguration().gateColumnLimit)
+        if (limitColumns && visitedColumns.size() > columnLimit)
             return false;
 
         if (!isValidGateBlock(sign, smallSearchSize, new ItemInfo(block), true)) return false;
@@ -303,7 +306,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().gateAllowRedstone) return;
+        if (!allowRedstone) return;
 
         if (event.isMinor()) return;
 
@@ -380,7 +383,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public boolean isValidGateBlock(ItemInfo block) {
 
-        return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
+        return blocks.contains(block);
     }
 
     /**
@@ -406,12 +409,12 @@ public class Gate extends AbstractCraftBookMechanic {
                     if(type == null || type.getType() == Material.AIR)
                         return block.equals(type);
                 }
-                return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
+                return blocks.contains(block);
             }
         } else if(check && (type = getGateBlock(sign, smallSearchSize)) != null)
             return block.equals(type);
         else
-            return CraftBookPlugin.inst().getConfiguration().gateBlocks.contains(block);
+            return blocks.contains(block);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -487,9 +490,9 @@ public class Gate extends AbstractCraftBookMechanic {
                     }
                 }
             } else {
-                for (int x1 = x - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1 <= x + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; x1++) {
-                    for (int y1 = y - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; y1 <= y + CraftBookPlugin.inst().getConfiguration().gateSearchRadius*2; y1++) {
-                        for (int z1 = z - CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1 <= z + CraftBookPlugin.inst().getConfiguration().gateSearchRadius; z1++) {
+                for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
+                    for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+                        for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
                             if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize) != null) {
                                 gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), smallSearchSize));
                             }
@@ -498,7 +501,7 @@ public class Gate extends AbstractCraftBookMechanic {
                 }
             }
 
-            if(CraftBookPlugin.inst().getConfiguration().gateEnforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
+            if(enforceType && gateBlock != null && gateBlock.getType() != Material.AIR && sign != null) {
                 sign.setLine(0, gateBlock.toString());
                 sign.update(false);
             }
@@ -588,7 +591,7 @@ public class Gate extends AbstractCraftBookMechanic {
             this.block = block;
             this.smallSearchSize = smallSearchSize;
 
-            remainingColumnHeight = CraftBookPlugin.inst().getConfiguration().gateColumnHeight;
+            remainingColumnHeight = columnHeight;
         }
 
         public Block getStartingPoint() {
@@ -665,5 +668,38 @@ public class Gate extends AbstractCraftBookMechanic {
             // Constants correspond to glibc's lcg algorithm parameters
             return (getX() * 1103515245 + 12345 ^ getZ() * 1103515245 + 12345) * 1103515245 + 12345;
         }
+    }
+
+    boolean allowRedstone;
+    boolean limitColumns;
+    int columnLimit;
+    List<ItemInfo> blocks;
+    boolean enforceType;
+    int columnHeight;
+    int searchRadius;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Allows the gate mechanic to be toggled via redstone.");
+        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+
+        config.setComment(path + "limit-columns", "Limit the amount of columns a gate can toggle.");
+        limitColumns = config.getBoolean(path + "limit-columns", true);
+
+        config.setComment(path + "max-columns", "If limit-columns is enabled, the maximum number of columns that a gate can toggle.");
+        columnLimit = config.getInt(path + "max-columns", 14);
+
+        config.setComment(path + "blocks", "The list of blocks that a gate can use.");
+        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("FENCE", "IRON_FENCE", "THIN_GLASS", "NETHER_FENCE")));
+
+        config.setComment(path + "enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
+        enforceType = config.getBoolean(path + "enforce-type", true);
+
+        config.setComment(path + "max-column-height", "The max height of a column.");
+        columnHeight = config.getInt(path + "max-column-height", 12);
+
+        config.setComment(path + "gate-search-radius", "The radius around the sign the gate checks for fences in. Note: This is doubled upwards.");
+        searchRadius = config.getInt(path + "gate-search-radius", 3);
     }
 }

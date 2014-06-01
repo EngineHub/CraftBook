@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
@@ -38,6 +40,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ICUtil;
+import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
@@ -46,6 +49,7 @@ import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic,
@@ -59,6 +63,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
      * Manager of ICs.
      */
     protected final ICManager manager;
+    public static ICMechanic instance;
 
     //protected final String id;
     //protected final ICFamily family;
@@ -68,6 +73,14 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public ICMechanic(ICManager manager) {
 
         this.manager = manager;
+        instance = this;
+    }
+
+    @Override
+    public boolean enable() {
+
+        ICManager.inst().enable();
+        return true;
     }
 
     @Override
@@ -118,7 +131,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         String id = matcher.group(1);
 
-        if(CraftBookPlugin.inst().getConfiguration().ICsDisabled.contains(id.toLowerCase()) || CraftBookPlugin.inst().getConfiguration().ICsDisabled.contains(id)) return null; //This IC is disabled.
+        if(disabledICs.contains(id.toLowerCase()) || disabledICs.contains(id)) return null; //This IC is disabled.
         // after this point, we don't return null if we can't make an IC: we throw shit,
         // because it SHOULD be an IC and can't possibly be any other kind of mechanic.
 
@@ -269,13 +282,13 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(icData != null) {
             if(event.getReason() == UnregisterReason.ERROR) {
-                if(CraftBookPlugin.inst().getConfiguration().ICBreakOnError) {
+                if(breakOnError) {
                     ((IC) icData[2]).unload();
                     event.getBlock().breakNaturally();
                     return;
                 }
             }
-            if(CraftBookPlugin.inst().getConfiguration().ICKeepLoaded) {
+            if(keepLoaded) {
                 event.setCancelled(true);
                 return;
             }
@@ -460,7 +473,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             });
 
             return;
-        } else if (CraftBookPlugin.inst().getConfiguration().ICShortHandEnabled && event.getLine(0).startsWith("=")) {
+        } else if (shortHand && event.getLine(0).startsWith("=")) {
             String id = event.getLine(0).substring(1);
 
             boolean st = id.toLowerCase(Locale.ENGLISH).endsWith(" st");
@@ -520,5 +533,46 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
     public static boolean hasSafePermissions(LocalPlayer player, ICFactory factory, String id) {
         return player.hasPermission("craftbook.ic.safe." + id.toLowerCase(Locale.ENGLISH));
+    }
+
+    public boolean cache;
+    public boolean shortHand;
+    public double maxRange;
+    public List<String> disabledICs;
+    public boolean keepLoaded;
+    public LocationCheckType defaultCoordinates;
+    public boolean savePersistentData;
+    public boolean usePercussionMidi;
+    public boolean breakOnError;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment("circuits.ics.cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
+        cache = config.getBoolean("circuits.ics.cache", true);
+
+        config.setComment("circuits.ics.max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
+        maxRange = config.getDouble("circuits.ics.max-radius", 10);
+
+        config.setComment("circuits.ics.allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
+        shortHand = config.getBoolean("circuits.ics.allow-short-hand", true);
+
+        config.setComment("circuits.ics.keep-loaded", "Keep any chunk with an ST IC in it loaded.");
+        keepLoaded = config.getBoolean("circuits.ics.keep-loaded", false);
+
+        config.setComment("circuits.ics.disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
+        disabledICs = config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>());
+
+        config.setComment("circuits.ics.default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
+        defaultCoordinates = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
+
+        config.setComment("circuits.ics.save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
+        savePersistentData = config.getBoolean("circuits.ics.save-persistent-data", true);
+
+        config.setComment("circuits.ics.midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
+        usePercussionMidi = config.getBoolean("circuits.ics.midi-use-percussion", false);
+
+        config.setComment("circuits.ics.break-on-error", "Break the IC sign when an error occurs from that specific IC.");
+        breakOnError = config.getBoolean("circuits.ics.break-on-error", false);
     }
 }

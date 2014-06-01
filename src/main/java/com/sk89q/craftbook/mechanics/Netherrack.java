@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -87,5 +88,10 @@ public class Netherrack extends AbstractCraftBookMechanic {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

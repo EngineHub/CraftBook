@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class RailPlacer extends AbstractCraftBookMechanic {
@@ -25,5 +26,10 @@ public class RailPlacer extends AbstractCraftBookMechanic {
             if(((StorageMinecart)event.getVehicle()).getInventory().removeItem(new ItemStack(Material.RAILS, 1)).isEmpty())
                 event.getTo().getBlock().setType(Material.RAILS);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

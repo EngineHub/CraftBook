@@ -34,6 +34,7 @@ import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
@@ -114,15 +115,15 @@ public class LightSwitch extends AbstractCraftBookMechanic {
 
         // check if this looks at all like something we're interested in first
         if (!SignUtil.isSign(block)) return false;
-        int radius = Math.min(10, CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange);
-        int maximum = Math.min(CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights, 20);
+        int radius = Math.min(10, maxRange);
+        int maximum = Math.min(maxLights, 20);
         ChangedSign sign = BukkitUtil.toChangedSign(block);
         try {
-            radius = Math.min(Integer.parseInt(sign.getLine(2)), CraftBookPlugin.inst().getConfiguration().lightSwitchMaxRange);
+            radius = Math.min(Integer.parseInt(sign.getLine(2)), maxRange);
         } catch (Exception ignored) {
         }
         try {
-            maximum = Math.min(Integer.parseInt(sign.getLine(3)), CraftBookPlugin.inst().getConfiguration().lightSwitchMaxLights);
+            maximum = Math.min(Integer.parseInt(sign.getLine(3)), maxLights);
         } catch (Exception ignored) {
         }
 
@@ -167,5 +168,18 @@ public class LightSwitch extends AbstractCraftBookMechanic {
             return true;
         }
         return false;
+    }
+
+    int maxRange;
+    int maxLights;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "max-range", "The maximum range that the mechanic searches for lights in.");
+        maxRange = config.getInt(path + "max-range", 10);
+
+        config.setComment(path + "max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
+        maxLights = config.getInt(path + "max-lights", 20);
     }
 }

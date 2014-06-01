@@ -23,6 +23,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class HiddenSwitch extends AbstractCraftBookMechanic {
 
@@ -57,7 +58,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
         ChangedSign s = null;
         Block testBlock = null;
-        if(CraftBookPlugin.inst().getConfiguration().hiddenSwitchAnyside) {
+        if(anyside) {
 
             for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
@@ -175,5 +176,14 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, 1 * 20L);
             }
         }
+    }
+
+    boolean anyside;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "any-side", "Allows the Hidden Switch to be activated from any side of the block.");
+        anyside = config.getBoolean(path + "any-side", true);
     }
 }

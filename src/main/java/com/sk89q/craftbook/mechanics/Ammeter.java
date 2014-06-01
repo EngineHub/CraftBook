@@ -27,7 +27,9 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -44,7 +46,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!CraftBookPlugin.inst().getConfiguration().ammeterItem.equals(player.getHeldItemInfo())) return;
+        if(!item.equals(player.getHeldItemInfo())) return;
         if(!player.hasPermission("craftbook.mech.ammeter.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -118,5 +120,14 @@ public class Ammeter extends AbstractCraftBookMechanic {
             line.append("|");
         line.append(ChatColor.YELLOW).append("]");
         return line.toString();
+    }
+
+    ItemInfo item;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "item", "Set the item that is the ammeter tool.");
+        item = new ItemInfo(config.getString(path + "item", "COAL"));
     }
 }

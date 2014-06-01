@@ -1,17 +1,27 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
+import java.util.Locale;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their logic at interation time (like
@@ -23,15 +33,11 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
  */
 public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
-    protected final ItemInfo material;
+    protected ItemInfo material;
 
     public ItemInfo getMaterial() {
 
         return material;
-    }
-
-    public CartBlockMechanism(ItemInfo material) {
-        this.material = material;
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
@@ -123,6 +129,49 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 return (Minecart) ent;
         }
         return null;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onSignChange(SignChangeEvent event) {
+
+        if(!EventUtil.passesFilter(event)) return;
+
+        Block block = event.getBlock();
+        String[] lines = event.getLines();
+        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        try {
+            if (getApplicableSigns() == null || getApplicableSigns().length == 0) return;
+            boolean found = false;
+            String lineFound = null;
+            int lineNum = 1;
+            for (String sign : getApplicableSigns()) {
+                if (lines[1].equalsIgnoreCase("[" + sign + "]")) {
+                    found = true;
+                    lineFound = sign;
+                    lineNum = 1;
+                    break;
+                } else if (getName().equalsIgnoreCase("messager") && lines[0].equalsIgnoreCase("[" + sign + "]")) {
+                    found = true;
+                    lineFound = sign;
+                    lineNum = 0;
+                    break;
+                }
+            }
+            if (!found) return;
+            if (!verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines, player), player)) {
+                block.breakNaturally();
+                event.setCancelled(true);
+                return;
+            }
+            player.checkPermission("craftbook.vehicles." + getName().toLowerCase(Locale.ENGLISH));
+            event.setLine(lineNum, "[" + lineFound + "]");
+            player.print(getName() + " Created!");
+        } catch (InsufficientPermissionsException e) {
+            player.printError("vehicles.create-permission");
+            block.breakNaturally();
+            event.setCancelled(true);
+        }
     }
 
     public abstract String getName();

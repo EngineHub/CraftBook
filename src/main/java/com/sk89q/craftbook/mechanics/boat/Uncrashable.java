@@ -8,6 +8,7 @@ import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Uncrashable extends AbstractCraftBookMechanic {
 
@@ -22,5 +23,10 @@ public class Uncrashable extends AbstractCraftBookMechanic {
             event.getVehicle().setVelocity(new Vector(0, 0, 0));
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

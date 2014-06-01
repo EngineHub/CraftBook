@@ -54,6 +54,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -68,7 +69,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-        if(CraftBookPlugin.inst().getConfiguration().elevatorSlowMove)
+        if(elevatorSlowMove)
             flyingPlayers = new HashSet<UUID>();
         return true;
     }
@@ -96,7 +97,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) return;
+        if(!elevatorSlowMove) return;
         if(!(event.getEntity() instanceof Player)) return;
         if(!flyingPlayers.contains(event.getEntity().getUniqueId())) return;
         if(event instanceof EntityDamageByEntityEvent) return;
@@ -107,7 +108,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) return;
+        if(!elevatorSlowMove) return;
         //Clean up mechanics that store players that we don't want anymore.
         Iterator<UUID> it = flyingPlayers.iterator();
         while(it.hasNext()) {
@@ -167,7 +168,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().elevatorAllowRedstone || event.isMinor() || !event.isOn())
+        if(!elevatorAllowRedstone || event.isMinor() || !event.isOn())
             return;
 
         if (!EventUtil.passesFilter(event))
@@ -189,7 +190,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if(destination == null) return;
 
-        for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), CraftBookPlugin.inst().getConfiguration().elevatorRedstoneRadius)) {
+        for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
 
             LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
             if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
@@ -211,7 +212,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(!CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled) return;
+        if(!elevatorButtonEnabled) return;
         if(SignUtil.isSign(event.getClickedBlock())) return;
 
         onCommonClick(event);
@@ -294,7 +295,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (destination.getY() == clickedBlock.getY()) {
                 return null;
             }
-            if (CraftBookPlugin.inst().getConfiguration().elevatorLoop && !loopd) {
+            if (elevatorLoop && !loopd) {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) { // hit the top of the world
                     org.bukkit.Location low = destination.getLocation();
                     low.setY(0);
@@ -361,7 +362,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         final Location newLocation = BukkitUtil.toLocation(player.getPosition());
         newLocation.setY(floor.getY() + 1);
 
-        if(CraftBookPlugin.inst().getConfiguration().elevatorSlowMove) {
+        if(elevatorSlowMove) {
 
             final Location lastLocation = BukkitUtil.toLocation(player.getPosition());
 
@@ -380,7 +381,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                     p.setFlying(true);
                     p.setFallDistance(0f);
                     p.setNoDamageTicks(2);
-                    double speed = CraftBookPlugin.inst().getConfiguration().elevatorMoveSpeed;
+                    double speed = elevatorMoveSpeed;
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
@@ -464,7 +465,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
+    public boolean isValidLift(ChangedSign start, ChangedSign stop) {
 
         if (start == null || stop == null) return true;
         if (start.getLine(2).toLowerCase(Locale.ENGLISH).startsWith("to:")) {
@@ -477,10 +478,10 @@ public class Elevator extends AbstractCraftBookMechanic {
         } else return true;
     }
 
-    private static Elevator.Direction isLift(Block block) {
+    private Elevator.Direction isLift(Block block) {
 
         if (!SignUtil.isSign(block)) {
-            if (CraftBookPlugin.inst().getConfiguration().elevatorButtonEnabled && (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON)) {
+            if (elevatorButtonEnabled && (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON)) {
                 Button b = (Button) block.getState().getData();
                 if(b == null || b.getAttachedFace() == null)
                     return Direction.NONE;
@@ -503,5 +504,35 @@ public class Elevator extends AbstractCraftBookMechanic {
         if (sign.getLine(1).equalsIgnoreCase("[Lift Down]")) return Direction.DOWN;
         if (sign.getLine(1).equalsIgnoreCase("[Lift]")) return Direction.RECV;
         return Direction.NONE;
+    }
+
+    boolean elevatorAllowRedstone;
+    int elevatorRedstoneRadius;
+    boolean elevatorButtonEnabled;
+    boolean elevatorLoop;
+    boolean elevatorSlowMove;
+    double elevatorMoveSpeed;
+
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
+        elevatorAllowRedstone = config.getBoolean(path + "allow-redstone", false);
+
+        config.setComment(path + "redstone-player-search-radius", "The radius that elevators will look for players in when triggered by redstone.");
+        elevatorRedstoneRadius = config.getInt(path + "redstone-player-search-radius", 3);
+
+        config.setComment(path + "enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
+        elevatorButtonEnabled = config.getBoolean(path + "enable-buttons", true);
+
+        config.setComment(path + "allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
+        elevatorLoop = config.getBoolean(path + "allow-looping", false);
+
+        config.setComment(path + "smooth-movement", "Causes the elevator to slowly move the player between floors instead of instantly.");
+        elevatorSlowMove = config.getBoolean(path + "smooth-movement", false);
+
+        config.setComment(path + "smooth-movement-speed", "The speed at which players move from floor to floor when smooth movement is enabled.");
+        elevatorMoveSpeed = config.getDouble(path + "smooth-movement-speed", 0.5);
     }
 }

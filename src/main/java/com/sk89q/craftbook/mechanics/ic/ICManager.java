@@ -169,6 +169,7 @@ import com.sk89q.craftbook.mechanics.ic.gates.world.weather.WeatherControlAdvanc
 import com.sk89q.craftbook.mechanics.ic.gates.world.weather.WeatherFaker;
 import com.sk89q.craftbook.mechanics.ic.plc.PlcFactory;
 import com.sk89q.craftbook.mechanics.ic.plc.lang.Perlstone;
+import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -277,7 +278,7 @@ public class ICManager {
      */
     public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
-        for(String ic : CraftBookPlugin.inst().getConfiguration().ICsDisabled)
+        for(String ic : ICMechanic.instance.disabledICs)
             if(ic.equalsIgnoreCase(name))
                 return false;
         return register(name, longName, factory, families);
@@ -387,7 +388,7 @@ public class ICManager {
      */
     public static void addCachedIC(Location pt, IC ic) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().ICCached) return;
+        if (!ICMechanic.instance.cache) return;
         if(cachedICs.containsKey(pt)) return;
         CraftBookPlugin.logDebugMessage("Caching IC at: " + pt.toString(), "ic-cache");
         cachedICs.put(pt, ic);
@@ -594,7 +595,7 @@ public class ICManager {
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
 
         //Variable ICs
-        if(CraftBookPlugin.inst().getConfiguration().variablesEnabled) {
+        if(VariableManager.instance != null) {
             registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO, familyAISO);
             registerIC("VAR170", "at least", new IsAtLeast.Factory(server), familySISO, familyAISO);
             registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO, familyAISO);

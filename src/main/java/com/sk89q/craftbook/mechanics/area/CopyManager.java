@@ -243,6 +243,6 @@ public class CopyManager {
 
     private static String getFileSuffix() {
 
-        return plugin.getConfiguration().areaUseSchematics ? ".schematic" : ".cbcopy";
+        return Area.instance.useSchematics ? ".schematic" : ".cbcopy";
     }
 }

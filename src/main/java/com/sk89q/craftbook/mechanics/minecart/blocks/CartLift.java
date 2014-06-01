@@ -12,12 +12,9 @@ import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartLift extends CartBlockMechanism {
-
-    public CartLift (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -72,5 +69,12 @@ public class CartLift extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"CartLift Up", "CartLift Down", "CartLift"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the elevator mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "NETHER_BRICK:0"));
     }
 }

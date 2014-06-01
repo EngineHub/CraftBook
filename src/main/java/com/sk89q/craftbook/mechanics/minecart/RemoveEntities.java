@@ -10,8 +10,8 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class RemoveEntities extends AbstractCraftBookMechanic {
 
@@ -23,10 +23,10 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         if (!(event.getVehicle() instanceof Minecart))
             return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().minecartRemoveEntitiesOtherCarts && (event.getEntity() instanceof Minecart || event.getEntity().isInsideVehicle()))
+        if (!otherCarts && (event.getEntity() instanceof Minecart || event.getEntity().isInsideVehicle()))
             return;
 
-        if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !CraftBookPlugin.inst().getConfiguration().minecartRemoveEntitiesEmpty)
+        if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !empty)
             return;
 
         if (event.getEntity() instanceof LivingEntity) {
@@ -46,5 +46,18 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         event.setCancelled(true);
         event.setPickupCancelled(true);
         event.setCollisionCancelled(true);
+    }
+
+    boolean otherCarts;
+    boolean empty;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment("vehicles.minecart.remove-entities.remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
+        otherCarts = config.getBoolean("vehicles.minecart.remove-entities.remove-other-minecarts", false);
+
+        config.setComment("vehicles.minecart.remove-entities.allow-empty-carts", "Allows the cart to be empty.");
+        empty = config.getBoolean("vehicles.minecart.remove-entities.allow-empty-carts", false);
     }
 }

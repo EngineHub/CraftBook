@@ -9,6 +9,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class MobBlocker extends AbstractCraftBookMechanic {
 
@@ -26,5 +27,10 @@ public class MobBlocker extends AbstractCraftBookMechanic {
 
         if(!(event.getEntered() instanceof Player))
             event.setCancelled(true);
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

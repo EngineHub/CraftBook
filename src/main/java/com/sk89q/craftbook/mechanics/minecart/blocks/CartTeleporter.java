@@ -11,12 +11,9 @@ import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartTeleporter extends CartBlockMechanism {
-
-    public CartTeleporter (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -84,5 +81,12 @@ public class CartTeleporter extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Teleport"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the teleport mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "EMERALD_BLOCK:0"));
     }
 }

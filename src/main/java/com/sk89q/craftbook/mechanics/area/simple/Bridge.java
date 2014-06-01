@@ -16,6 +16,9 @@
 
 package com.sk89q.craftbook.mechanics.area.simple;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,6 +42,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -145,7 +149,7 @@ public class Bridge extends CuboidToggleMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().bridgeAllowRedstone) return;
+        if (!allowRedstone) return;
         if (event.isMinor()) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
@@ -166,16 +170,16 @@ public class Bridge extends CuboidToggleMechanic {
     @Override
     public Block getBlockBase(Block trigger) throws InvalidMechanismException {
         Block proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-        if (trigger.getY() < trigger.getWorld().getMaxHeight()-1 && CraftBookPlugin.inst().getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
+        if (trigger.getY() < trigger.getWorld().getMaxHeight()-1 && blocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter; // On Top
 
         // If we've reached this point nothing was found on the top, check the bottom
         proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-        if (trigger.getY() > 0 && CraftBookPlugin.inst().getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
+        if (trigger.getY() > 0 && blocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter; // it's below
 
         proximalBaseCenter = trigger.getRelative(SignUtil.getBack(trigger));
-        if (CraftBookPlugin.inst().getConfiguration().bridgeBlocks.contains(new ItemInfo(proximalBaseCenter)))
+        if (blocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter; // it's behind
         else throw new InvalidMechanismException("mech.bridge.unusable");
     }
@@ -185,7 +189,7 @@ public class Bridge extends CuboidToggleMechanic {
 
         BlockFace dir = SignUtil.getFacing(trigger);
         Block farSide = trigger.getRelative(dir);
-        for (int i = 0; i <= CraftBookPlugin.inst().getConfiguration().bridgeMaxLength; i++) {
+        for (int i = 0; i <= maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
             // since we're allowed to have settings.maxLength toggle blocks,
@@ -212,12 +216,12 @@ public class Bridge extends CuboidToggleMechanic {
         ChangedSign sign = BukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
-            left = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(sign.getLine(2))));
+            left = Math.max(0, Math.min(maxWidth, Integer.parseInt(sign.getLine(2))));
         } catch (Exception e) {
             left = 1;
         }
         try {
-            right = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().bridgeMaxWidth, Integer.parseInt(sign.getLine(3))));
+            right = Math.max(0, Math.min(maxWidth, Integer.parseInt(sign.getLine(3))));
         } catch (Exception e) {
             right = 1;
         }
@@ -284,5 +288,26 @@ public class Bridge extends CuboidToggleMechanic {
     @Override
     public boolean isApplicableSign(String line) {
         return line.equals("[Bridge]");
+    }
+
+    boolean allowRedstone;
+    int maxLength;
+    int maxWidth;
+    List<ItemInfo> blocks;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Enable bridges via redstone.");
+        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+
+        config.setComment(path + "max-length", "Max length of a bridge.");
+        maxLength = config.getInt(path + "max-length", 30);
+
+        config.setComment(path + "max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side.");
+        maxWidth = config.getInt(path + "max-width", 5);
+
+        config.setComment(path + "blocks", "Blocks bridges can use.");
+        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("COBBLESTONE", "WOOD", "GLASS", "DOUBLE_STEP", "WOOD_DOUBLE_STEP")));
     }
 }

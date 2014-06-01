@@ -25,6 +25,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
@@ -67,5 +68,10 @@ public class JackOLantern extends AbstractCraftBookMechanic {
 
         if (event.getBlock().getType() == Material.JACK_O_LANTERN && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

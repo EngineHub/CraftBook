@@ -8,19 +8,10 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class FallModifier extends AbstractCraftBookMechanic {
-
-    Vector fallSpeed;
-
-    @Override
-    public boolean enable() {
-
-        fallSpeed = new Vector(CraftBookPlugin.inst().getConfiguration().minecartFallHorizontalSpeed, CraftBookPlugin.inst().getConfiguration().minecartFallVerticalSpeed, CraftBookPlugin.inst().getConfiguration().minecartFallHorizontalSpeed);
-        return true;
-    }
 
     @Override
     public void disable() {
@@ -45,5 +36,21 @@ public class FallModifier extends AbstractCraftBookMechanic {
         if (!(event.getVehicle() instanceof Minecart)) return;
 
         ((Minecart) event.getVehicle()).setFlyingVelocityMod(fallSpeed);
+    }
+
+    double verticalSpeed;
+    double horizontalSpeed;
+    Vector fallSpeed;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "vertical-fall-speed", "Sets the vertical fall speed of the minecart");
+        verticalSpeed = config.getDouble(path + "vertical-fall-speed", 0.9D);
+
+        config.setComment(path + "horizontal-fall-speed", "Sets the horizontal fall speed of the minecart");
+        horizontalSpeed = config.getDouble(path + "horizontal-fall-speed", 1.1D);
+
+        fallSpeed = new Vector(horizontalSpeed, verticalSpeed, horizontalSpeed);
     }
 }

@@ -87,7 +87,7 @@ public abstract class AbstractICFactory implements ICFactory {
 
     @Override
     public void load() {
-        if(this instanceof PersistentDataIC && CraftBookPlugin.inst().getConfiguration().ICSavePersistentData) {
+        if(this instanceof PersistentDataIC && ICMechanic.instance.savePersistentData) {
             try {
                 if(((PersistentDataIC) this).getStorageFile().exists())
                     ((PersistentDataIC) this).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) this).getStorageFile())));

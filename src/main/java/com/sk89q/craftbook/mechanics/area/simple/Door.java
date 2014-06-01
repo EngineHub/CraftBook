@@ -16,6 +16,9 @@ package com.sk89q.craftbook.mechanics.area.simple;
  * see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,6 +42,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
@@ -146,7 +150,7 @@ public class Door extends CuboidToggleMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().bridgeAllowRedstone) return;
+        if (!allowRedstone) return;
         if (event.isMinor()) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
@@ -227,7 +231,7 @@ public class Door extends CuboidToggleMechanic {
         } else if (sign.getLine(1).equals("[Door Down]")) {
             otherSide = trigger.getRelative(BlockFace.DOWN);
         }
-        for (int i = 0; i <= CraftBookPlugin.inst().getConfiguration().doorMaxLength; i++) {
+        for (int i = 0; i <= maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
             // since we're allowed to have settings.maxLength toggle blocks,
@@ -264,7 +268,7 @@ public class Door extends CuboidToggleMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
         } else throw new InvalidMechanismException("Sign is incorrectly made.");
 
-        if (CraftBookPlugin.inst().getConfiguration().doorBlocks.contains(new ItemInfo(proximalBaseCenter)))
+        if (blocks.contains(new ItemInfo(proximalBaseCenter)))
             return proximalBaseCenter;
         else throw new InvalidMechanismException("mech.door.unusable");
     }
@@ -276,12 +280,12 @@ public class Door extends CuboidToggleMechanic {
         ChangedSign sign = BukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
-            left = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().doorMaxWidth, Integer.parseInt(sign.getLine(2))));
+            left = Math.max(0, Math.min(maxWidth, Integer.parseInt(sign.getLine(2))));
         } catch (Exception e) {
             left = 1;
         }
         try {
-            right = Math.max(0, Math.min(CraftBookPlugin.inst().getConfiguration().doorMaxWidth, Integer.parseInt(sign.getLine(3))));
+            right = Math.max(0, Math.min(maxWidth, Integer.parseInt(sign.getLine(3))));
         } catch (Exception e) {
             right = 1;
         }
@@ -309,5 +313,26 @@ public class Door extends CuboidToggleMechanic {
     @Override
     public boolean isApplicableSign(String line) {
         return line.equals("[Door Up]") || line.equals("[Door Down]");
+    }
+
+    boolean allowRedstone;
+    int maxLength;
+    int maxWidth;
+    List<ItemInfo> blocks;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Allow doors to be toggled via redstone.");
+        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+
+        config.setComment(path + "max-length", "The maximum length(height) of a door.");
+        maxLength = config.getInt(path + "max-length", 30);
+
+        config.setComment(path + "max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side");
+        maxWidth = config.getInt(path + "max-width", 5);
+
+        config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
+        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("COBBLESTONE", "WOOD", "GLASS", "DOUBLE_STEP", "WOOD_DOUBLE_STEP")));
     }
 }

@@ -401,4 +401,9 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         return false;
     }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+    }
 }

@@ -40,6 +40,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockID;
 
 /**
@@ -51,7 +52,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 @Deprecated
 public class Cauldron extends AbstractCraftBookMechanic {
 
-    public static boolean isACauldron(Block block) {
+    public boolean isACauldron(Block block) {
 
         Material below = block.getRelative(0, -1, 0).getType();
         Material below2 = block.getRelative(0, -2, 0).getType();
@@ -60,7 +61,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
         Block s2 = block.getRelative(0, 0, 1);
         Block s4 = block.getRelative(0, 0, -1);
 
-        ItemInfo blockItem = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockItem = cauldronBlock;
 
         // stop strange lava ids
         if (below == Material.STATIONARY_LAVA)
@@ -127,7 +128,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
 
         Player p = ((BukkitPlayer)player).getPlayer();
 
-        ItemInfo blockItem = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockItem = cauldronBlock;
 
         // Used to store cauldron blocks -- walls are counted
         Map<Location, ItemInfo> visited = new HashMap<Location, ItemInfo>();
@@ -246,7 +247,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
      */
     public void findCauldronContents(LocalPlayer player, World world, Block block, int minY, int maxY, Map<Location, ItemInfo> visited) {
 
-        ItemInfo blockID = CraftBookPlugin.inst().getConfiguration().legacyCauldronBlock;
+        ItemInfo blockID = cauldronBlock;
 
         // Don't want to go too low or high
         if (block.getY() < minY) return;
@@ -304,5 +305,14 @@ public class Cauldron extends AbstractCraftBookMechanic {
     private Block recurse(int x, int y, int z, Block block) {
 
         return block.getRelative(x, y, z);
+    }
+
+    public ItemInfo cauldronBlock;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "The block to use as the casing for the legacy cauldron.");
+        cauldronBlock = new ItemInfo(config.getString(path + "block", "STONE"));
     }
 }

@@ -32,7 +32,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -59,7 +59,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -85,7 +85,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -107,7 +107,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -144,7 +144,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -171,7 +171,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -198,7 +198,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -232,7 +232,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -271,7 +271,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -310,7 +310,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))
@@ -349,7 +349,7 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!plugin.getConfiguration().variablesDefaultGlobal && sender instanceof Player)
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
         if(context.hasFlag('n'))

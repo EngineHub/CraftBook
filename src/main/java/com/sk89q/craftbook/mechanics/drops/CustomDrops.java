@@ -145,7 +145,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (CraftBookPlugin.inst().getConfiguration().customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
+        if (customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
 
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
             return;
@@ -195,5 +195,14 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), stack);
             }
         }
+    }
+
+    boolean customDropPermissions;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "require-permissions", "Require a permission node to get custom drops.");
+        customDropPermissions = config.getBoolean(path + "require-permissions", false);
     }
 }

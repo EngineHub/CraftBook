@@ -20,16 +20,13 @@ import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
-/*
+/**
  * @contributor LordEnki
  */
 
 public class CartSorter extends CartBlockMechanism {
-
-    public CartSorter (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -215,5 +212,12 @@ public class CartSorter extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Sort"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the sorter mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "NETHERRACK:0"));
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 @Deprecated
 public class LegacyCustomDrops extends AbstractCraftBookMechanic {
@@ -97,5 +98,10 @@ public class LegacyCustomDrops extends AbstractCraftBookMechanic {
     @Override
     public void disable () {
         customDrops = null;
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

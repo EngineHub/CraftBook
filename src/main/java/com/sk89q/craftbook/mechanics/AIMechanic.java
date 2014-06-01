@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Difficulty;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
@@ -27,7 +29,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled)) {
+        if(isEntityEnabled(event.getEntity(), attackPassiveEnabled)) {
             if(event.getTarget() != null) return;
             if(!(event.getEntity() instanceof LivingEntity)) return;
             for(Entity ent : event.getEntity().getNearbyEntities(15D, 15D, 15D)) {
@@ -43,7 +45,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
             }
         }
 
-        if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiVisionEnabled)) {
+        if(isEntityEnabled(event.getEntity(), visionEnabled)) {
             if(event.getTarget() == null) return;
             Difficulty diff = event.getEntity().getWorld().getDifficulty();
 
@@ -76,7 +78,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(isEntityEnabled(event.getEntity(), CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled)) {
+        if(isEntityEnabled(event.getEntity(), critBowEnabled)) {
             int amount = 0;
             switch(event.getEntity().getWorld().getDifficulty()) {
                 case EASY:
@@ -110,6 +112,23 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable () {
-        return CraftBookPlugin.inst().getConfiguration().aiVisionEnabled.size() > 0 && CraftBookPlugin.inst().getConfiguration().aiAttackPassiveEnabled.size() > 0 && CraftBookPlugin.inst().getConfiguration().aiCritBowEnabled.size() > 0;
+        return visionEnabled.size() > 0 && attackPassiveEnabled.size() > 0 && critBowEnabled.size() > 0;
+    }
+
+    List<String> visionEnabled;
+    List<String> critBowEnabled;
+    List<String> attackPassiveEnabled;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "vision-enable", "The list of entities to enable vision AI mechanics for.");
+        visionEnabled = config.getStringList(path + "vision-enable", Arrays.asList("Zombie","PigZombie"));
+
+        config.setComment(path + "crit-bow-enable", "The list of entities to enable bow critical AI mechanics for.");
+        critBowEnabled = config.getStringList(path + "crit-bow-enable", Arrays.asList("Skeleton"));
+
+        config.setComment(path + "attack-passive-enable", "The list of entities to enable attack passive AI mechanics for.");
+        attackPassiveEnabled = config.getStringList(path + "attack-passive-enable", Arrays.asList("Zombie"));
     }
 }

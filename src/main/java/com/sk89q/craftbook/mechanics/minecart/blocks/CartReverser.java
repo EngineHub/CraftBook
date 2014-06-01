@@ -9,12 +9,9 @@ import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartReverser extends CartBlockMechanism {
-
-    public CartReverser (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -71,5 +68,12 @@ public class CartReverser extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"reverse"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the reverse mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "WOOL:0"));
     }
 }

@@ -548,4 +548,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         return command;
     }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+    }
 }

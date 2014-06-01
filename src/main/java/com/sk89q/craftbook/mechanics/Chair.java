@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +37,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
 
 
@@ -112,7 +114,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
             if (found) break;
 
-            if(block.getLocation().distanceSquared(original.getLocation()) > Math.pow(CraftBookPlugin.inst().getConfiguration().chairMaxDistance, 2)) continue;
+            if(block.getLocation().distanceSquared(original.getLocation()) > Math.pow(chairMaxDistance, 2)) continue;
 
             if (SignUtil.isSign(otherBlock) && SignUtil.getFront(otherBlock) == face) {
                 found = true;
@@ -163,7 +165,7 @@ public class Chair extends AbstractCraftBookMechanic {
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getClickedBlock() == null || !CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
+        if (event.getClickedBlock() == null || !chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
             return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
@@ -171,8 +173,8 @@ public class Chair extends AbstractCraftBookMechanic {
         Player player = event.getPlayer();
 
         // Now everything looks good, continue;
-        if (CraftBookPlugin.inst().getConfiguration().chairAllowHeldBlock || !lplayer.isHoldingBlock() && lplayer.getHeldItemInfo().getType() != Material.SIGN || lplayer.getHeldItemInfo().getType() == Material.AIR) {
-            if (CraftBookPlugin.inst().getConfiguration().chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>(), event.getClickedBlock()))
+        if (chairAllowHeldBlock || !lplayer.isHoldingBlock() && lplayer.getHeldItemInfo().getType() != Material.SIGN || lplayer.getHeldItemInfo().getType() == Material.AIR) {
+            if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -185,7 +187,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if(event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(CraftBookPlugin.inst().getConfiguration().chairMaxClickRadius, 2)) {
+            if(event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(chairMaxClickRadius, 2)) {
                 lplayer.printError("mech.chairs.too-far");
                 return;
             }
@@ -205,7 +207,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
                 Location chairLoc = event.getClickedBlock().getLocation().add(0.5,0,0.5);
 
-                if(CraftBookPlugin.inst().getConfiguration().chairFacing && event.getClickedBlock().getState().getData() instanceof Directional) {
+                if(chairFacing && event.getClickedBlock().getState().getData() instanceof Directional) {
 
                     BlockFace direction = ((Directional) event.getClickedBlock().getState().getData()).getFacing();
 
@@ -251,13 +253,13 @@ public class Chair extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                if (!CraftBookPlugin.inst().getConfiguration().chairBlocks.contains(new ItemInfo(getChair(p).b)) || !p.getWorld().equals(getChair(p).b.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).b.getLocation()) > 1.5)
+                if (!chairBlocks.contains(new ItemInfo(getChair(p).b)) || !p.getWorld().equals(getChair(p).b.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).b.getLocation()) > 1.5)
                     removeChair(p);
                 else {
                     addChair(p, getChair(p).b); // For any new players.
 
-                    if (CraftBookPlugin.inst().getConfiguration().chairHealth && p.getHealth() < p.getMaxHealth())
-                        p.setHealth(Math.min(p.getHealth() + CraftBookPlugin.inst().getConfiguration().chairHealAmount, p.getMaxHealth()));
+                    if (chairHealth && p.getHealth() < p.getMaxHealth())
+                        p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getMaxHealth()));
                     if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }
@@ -323,5 +325,42 @@ public class Chair extends AbstractCraftBookMechanic {
             ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
         } catch(Throwable e) {
         }
+    }
+
+    boolean chairAllowHeldBlock;
+    boolean chairHealth;
+    double chairHealAmount;
+    List<ItemInfo> chairBlocks;
+    boolean chairFacing;
+    boolean chairRequireSign;
+    int chairMaxDistance;
+    int chairMaxClickRadius;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
+        chairAllowHeldBlock = config.getBoolean(path + "allow-holding-blocks", false);
+
+        config.setComment(path + "regen-health", "Regenerate health passively when sitting down.");
+        chairHealth = config.getBoolean(path + "regen-health", true);
+
+        config.setComment(path + "regen-health-amount", "The amount of health regenerated passively. (Can be decimal)");
+        chairHealAmount = config.getDouble(path + "regen-health-amount", 1);
+
+        config.setComment(path + "blocks", "A list of blocks that can be sat on.");
+        chairBlocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("WOOD_STAIRS", "COBBLESTONE_STAIRS", "BRICK_STAIRS", "SMOOTH_STAIRS", "NETHER_BRICK_STAIRS", "SANDSTONE_STAIRS", "SPRUCE_WOOD_STAIRS", "BIRCH_WOOD_STAIRS", "JUNGLE_WOOD_STAIRS", "QUARTZ_STAIRS", "ACACIA_STAIRS")));
+
+        config.setComment(path + "face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
+        chairFacing = config.getBoolean(path + "face-correct-direction", true);
+
+        config.setComment(path + "require-sign", "Require a sign to be attached to the chair in order to work!");
+        chairRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "max-distance", "The maximum distance between the click point and the sign. (When require sign is on)");
+        chairMaxDistance = config.getInt(path + "max-distance", 3);
+
+        config.setComment(path + "max-click-radius", "The maximum distance the player can be from the sign.");
+        chairMaxClickRadius = config.getInt(path + "max-click-radius", 5);
     }
 }

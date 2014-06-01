@@ -29,6 +29,7 @@ import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.data.DataException;
 
 /**
@@ -37,6 +38,15 @@ import com.sk89q.worldedit.data.DataException;
  * @author Me4502, Sk89q, Silthus
  */
 public class Area extends AbstractCraftBookMechanic {
+
+    protected static Area instance;
+
+    @Override
+    public boolean enable() {
+
+        instance = this;
+        return true;
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
@@ -50,7 +60,7 @@ public class Area extends AbstractCraftBookMechanic {
         String cbid = player.getCraftBookId();
 
         if (event.getLine(0).trim().isEmpty()) {
-            if (CraftBookPlugin.inst().getConfiguration().areaShortenNames && cbid.length() > 14)
+            if (shortenNames && cbid.length() > 14)
                 event.setLine(0, ("~" + cbid).substring(0, 14));
             else
                 event.setLine(0, "~" + cbid);
@@ -170,7 +180,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!CraftBookPlugin.inst().getConfiguration().areaAllowRedstone) return;
+        if (!allowRedstone) return;
         if (!SignUtil.isSign(event.getBlock())) return;
 
         boolean save = false;
@@ -331,5 +341,30 @@ public class Area extends AbstractCraftBookMechanic {
         sign.setLine(toToggleOff, StringUtils.replace(sign.getLine(toToggleOff), "-", ""));
         sign.setLine(toToggleOn, "-" + sign.getLine(toToggleOn) + "-");
         sign.update(false);
+    }
+
+    boolean allowRedstone;
+    boolean useSchematics;
+    boolean shortenNames;
+    int maxAreaSize;
+    int maxAreasPerUser;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
+        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+
+        config.setComment(path + "use-schematics", "Use MCEdit Schematics for saving areas. This allows support of all blocks and chest/sign data.");
+        useSchematics = config.getBoolean(path + "use-schematics", true);
+
+        config.setComment(path + "shorten-long-names", "If this is enabled, namespaces too long to fit on signs will be shortened.");
+        shortenNames = config.getBoolean(path + "shorten-long-names", true);
+
+        config.setComment(path + "max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
+        maxAreaSize = config.getInt(path + "max-size", 5000);
+
+        config.setComment(path + "max-per-user", "Sets the max amount of ToggleAreas that can be within one namespace.");
+        maxAreasPerUser = config.getInt(path + "max-per-user", 30);
     }
 }

@@ -10,7 +10,10 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.TernaryState;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class XPStorer extends AbstractCraftBookMechanic {
 
@@ -19,21 +22,21 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return;
 
-        if(CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
-        else if(CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR)
-            if(!CraftBookPlugin.inst().getConfiguration().xpStorerBlock.isSame(event.getClickedBlock())) return;
+        if(block.getType() != Material.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
+        else if(block.getType() != Material.AIR)
+            if(!block.isSame(event.getClickedBlock())) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!CraftBookPlugin.inst().getConfiguration().xpStorerSneaking.doesPass(player.isSneaking()) || event.getPlayer().getLevel() < 1)
+        if (!sneakingState.doesPass(player.isSneaking()) || event.getPlayer().getLevel() < 1)
             return;
 
         int max = Integer.MAX_VALUE;
 
-        if(CraftBookPlugin.inst().getConfiguration().xpStorerRequireBottle) {
-            if(player.getHeldItemInfo().getType() != Material.GLASS_BOTTLE && CraftBookPlugin.inst().getConfiguration().xpStorerBlock.getType() != Material.AIR) {
+        if(requireBottle) {
+            if(player.getHeldItemInfo().getType() != Material.GLASS_BOTTLE && block.getType() != Material.AIR) {
                 player.printError("mech.xp-storer.bottle");
                 return;
             }
@@ -69,12 +72,12 @@ public class XPStorer extends AbstractCraftBookMechanic {
         event.getPlayer().setLevel(level);
         event.getPlayer().setExp(pcnt);
 
-        if (xp < CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle) {
+        if (xp < xpPerBottle) {
             player.print("mech.xp-storer.not-enough-xp");
             return;
         }
 
-        int bottleCount = (int) Math.min(max, Math.floor(xp / CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle));
+        int bottleCount = (int) Math.min(max, Math.floor(xp / xpPerBottle));
 
         event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
         if(event.getClickedBlock() == null)
@@ -88,7 +91,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         float levelPercentage = 0;
 
-        int remainingXP = xp - bottleCount*CraftBookPlugin.inst().getConfiguration().xpStorerPerBottle;
+        int remainingXP = xp - bottleCount*xpPerBottle;
 
         do {
             levelPercentage = (float)remainingXP / event.getPlayer().getExpToLevel();
@@ -109,5 +112,26 @@ public class XPStorer extends AbstractCraftBookMechanic {
         player.print("mech.xp-storer.success");
 
         event.setCancelled(true);
+    }
+
+    boolean requireBottle;
+    int xpPerBottle;
+    ItemInfo block;
+    TernaryState sneakingState;
+
+    @Override
+    public void loadConfiguration(YAMLProcessor config, String path) {
+
+        config.setComment(path + "require-bottle", "Requires the player to be holding a glass bottle to use.");
+        requireBottle = config.getBoolean(path + "require-bottle", false);
+
+        config.setComment(path + "xp-per-bottle", "Sets the amount of XP points required per each bottle.");
+        xpPerBottle = config.getInt(path + "xp-per-bottle", 16);
+
+        config.setComment(path + "block", "The block that is an XP Storer.");
+        block = new ItemInfo(config.getString(path + "block", "MOB_SPAWNER"));
+
+        config.setComment(path + "require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
+        sneakingState = TernaryState.getFromString(config.getString(path + "require-sneaking-state", "no"));
     }
 }

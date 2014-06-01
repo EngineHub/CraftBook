@@ -15,6 +15,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Marquee extends AbstractCraftBookMechanic {
 
@@ -81,5 +82,10 @@ public class Marquee extends AbstractCraftBookMechanic {
         }
 
         event.setLine(1, "[Marquee]");
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

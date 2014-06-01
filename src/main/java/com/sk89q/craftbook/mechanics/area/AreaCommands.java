@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
@@ -42,7 +41,6 @@ public class AreaCommands {
     }
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
-    private LocalConfiguration config = plugin.getConfiguration();
 
     @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id>", flags = "n:", min = 1)
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
@@ -61,7 +59,7 @@ public class AreaCommands {
         } else if (!player.hasPermission("craftbook.mech.area.save.self"))
             throw new CommandPermissionsException();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 14)
+        if (Area.instance.shortenNames && namespace.length() > 14)
             namespace = namespace.substring(0, 14);
 
         if (!CopyManager.isValidNamespace(namespace))
@@ -90,19 +88,19 @@ public class AreaCommands {
             Vector size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
-            if (config.areaMaxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()
-                    > config.areaMaxAreaSize) {
-                throw new CommandException("Area is larger than allowed " + config.areaMaxAreaSize + " blocks.");
+            if (Area.instance.maxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()
+                    > Area.instance.maxAreaSize) {
+                throw new CommandException("Area is larger than allowed " + Area.instance.maxAreaSize + " blocks.");
             }
 
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
-            if (config.areaMaxAreaPerUser >= 0 && !namespace.equals("global")) {
+            if (Area.instance.maxAreasPerUser >= 0 && !namespace.equals("global")) {
                 int count = copyManager.meetsQuota(world, namespace, id,
-                        config.areaMaxAreaPerUser);
+                        Area.instance.maxAreasPerUser);
 
                 if (count > -1) {
-                    throw new CommandException("You are limited to " + config.areaMaxAreaPerUser + " toggle area(s). "
+                    throw new CommandException("You are limited to " + Area.instance.maxAreasPerUser + " toggle area(s). "
                             + "You have " + count + " areas.");
                 }
             }
@@ -110,7 +108,7 @@ public class AreaCommands {
             // Copy
             CuboidCopy copy;
 
-            if (config.areaUseSchematics) {
+            if (Area.instance.useSchematics) {
                 copy = new MCEditCuboidCopy(min, size, world);
             } else {
                 copy = new FlatCuboidCopy(min, size, world);
@@ -154,7 +152,7 @@ public class AreaCommands {
             namespace = "";
         } else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+        if (Area.instance.shortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
 
         int page = 1;
@@ -184,7 +182,7 @@ public class AreaCommands {
             @Override
             public boolean accept(File dir, String name) {
 
-                return config.areaUseSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
+                return Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
             }
         };
 
@@ -288,7 +286,7 @@ public class AreaCommands {
             namespace = context.getFlag('n');
         } else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
 
-        if (plugin.getConfiguration().areaShortenNames && namespace.length() > 15)
+        if (Area.instance.shortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
 
         boolean deleteAll = false;
@@ -299,7 +297,7 @@ public class AreaCommands {
         } else throw new CommandException("You need to define an area or -a to delete all areas.");
 
         // add the area suffix
-        areaId = areaId + (config.areaUseSchematics ? ".schematic" : ".cbcopy");
+        areaId = areaId + (Area.instance.useSchematics ? ".schematic" : ".cbcopy");
 
         File areas = null;
         try {
@@ -332,7 +330,7 @@ public class AreaCommands {
             @Override
             public boolean accept(File dir, String name) {
 
-                return config.areaUseSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
+                return Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
             }
         };
 

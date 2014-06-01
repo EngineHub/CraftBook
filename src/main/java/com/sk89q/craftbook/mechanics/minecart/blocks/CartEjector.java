@@ -8,13 +8,10 @@ import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class CartEjector extends CartBlockMechanism {
-
-    public CartEjector (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -60,5 +57,12 @@ public class CartEjector extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Eject"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the ejector mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "IRON_BLOCK:0"));
     }
 }

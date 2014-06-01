@@ -22,9 +22,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -41,13 +42,13 @@ public class GlowStone extends AbstractCraftBookMechanic {
         if(event.isMinor())
             return;
 
-        if(!CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
+        if(!offBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
 
         if(event.isOn() == (event.getBlock().getType() == Material.GLOWSTONE))
             return;
 
-        event.getBlock().setType(event.isOn() ? Material.GLOWSTONE : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getType());
-        event.getBlock().setData((byte) (event.isOn() ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData() == -1 ? event.getBlock().getData() : CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.getData()));
+        event.getBlock().setType(event.isOn() ? Material.GLOWSTONE : offBlock.getType());
+        event.getBlock().setData((byte) (event.isOn() ? event.getBlock().getData() : offBlock.getData() == -1 ? event.getBlock().getData() : offBlock.getData()));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -55,9 +56,18 @@ public class GlowStone extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!CraftBookPlugin.inst().getConfiguration().glowstoneOffBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
+        if(!offBlock.isSame(event.getBlock()) && event.getBlock().getType() != Material.GLOWSTONE) return;
 
         if (event.getBlock().getType() == Material.GLOWSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);
+    }
+
+    ItemInfo offBlock;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
+        offBlock = new ItemInfo(config.getString(path + "glowstone-off-block", "GLASS"));
     }
 }

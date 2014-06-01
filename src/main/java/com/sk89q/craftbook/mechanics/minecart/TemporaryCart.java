@@ -17,6 +17,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class TemporaryCart extends AbstractCraftBookMechanic {
 
@@ -78,5 +79,10 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
                 event.getVehicle().remove();
             }
         }, 2L);
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class LandBoats extends AbstractCraftBookMechanic {
 
@@ -18,5 +19,10 @@ public class LandBoats extends AbstractCraftBookMechanic {
         if (!(event.getVehicle() instanceof Boat)) return;
 
         ((Boat) event.getVehicle()).setWorkOnLand(true);
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

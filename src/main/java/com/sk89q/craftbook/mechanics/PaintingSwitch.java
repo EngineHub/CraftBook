@@ -21,6 +21,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author Me4502
@@ -47,7 +48,6 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
 
         if (event.getRightClicked() instanceof Painting) {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-            if (!CraftBookPlugin.inst().getConfiguration().paintingsEnabled) return;
             Painting paint = (Painting) event.getRightClicked();
 
             if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
@@ -158,5 +158,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     public void disable () {
         paintings.clear();
         players.clear();
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

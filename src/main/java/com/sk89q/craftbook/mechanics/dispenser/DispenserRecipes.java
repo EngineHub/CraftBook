@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author Me4502
@@ -30,11 +30,11 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
 
         instance = this;
         recipes = new HashSet<Recipe>();
-        if(CraftBookPlugin.inst().getConfiguration().customDispensingXPShooter) addRecipe(new XPShooter());
-        if(CraftBookPlugin.inst().getConfiguration().customDispensingSnowShooter) addRecipe(new SnowShooter());
-        if(CraftBookPlugin.inst().getConfiguration().customDispensingFireArrows) addRecipe(new FireArrows());
-        if(CraftBookPlugin.inst().getConfiguration().customDispensingFan) addRecipe(new Fan());
-        if(CraftBookPlugin.inst().getConfiguration().customDispensingCannon) addRecipe(new Cannon());
+        if(xpShooterEnable) addRecipe(new XPShooter());
+        if(snowShooterEnable) addRecipe(new SnowShooter());
+        if(fireArrowsEnable) addRecipe(new FireArrows());
+        if(fanEnable) addRecipe(new Fan());
+        if(cannonEnable) addRecipe(new Cannon());
 
         return recipes.size() > 0;
     }
@@ -114,5 +114,30 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         if (recipes.contains(recipe)) return false;
         recipes.add(recipe);
         return true;
+    }
+
+    boolean cannonEnable;
+    boolean fanEnable;
+    boolean fireArrowsEnable;
+    boolean snowShooterEnable;
+    boolean xpShooterEnable;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "cannon-enable", "Enables Cannon Dispenser Recipe.");
+        cannonEnable = config.getBoolean(path + "cannon-enable", true);
+
+        config.setComment(path + "fan-enable", "Enables Fan Dispenser Recipe.");
+        fanEnable = config.getBoolean(path + "fan-enable", true);
+
+        config.setComment(path + "fire-arrows-enable", "Enables Fire Arrows Dispenser Recipe.");
+        fireArrowsEnable = config.getBoolean(path + "fire-arrows-enable", true);
+
+        config.setComment(path + "snow-shooter-enable", "Enables Snow Shooter Dispenser Recipe.");
+        snowShooterEnable = config.getBoolean(path + "snow-shooter-enable", true);
+
+        config.setComment(path + "xp-shooter-enable", "Enables XP Shooter Dispenser Recipe.");
+        xpShooterEnable = config.getBoolean(path + "xp-shooter-enable", true);
     }
 }

@@ -68,7 +68,7 @@ public class BoatExitRemoverTest {
         BukkitConfiguration config = mock(BukkitConfiguration.class);
 
         when(plugin.getConfiguration()).thenReturn(config);
-        config.boatRemoveOnExitGiveItem = true;
+        rem.giveItem = true;
 
         CraftBookPlugin.setInstance(plugin);
 

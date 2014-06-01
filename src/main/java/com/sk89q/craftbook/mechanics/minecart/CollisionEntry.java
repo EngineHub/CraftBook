@@ -8,6 +8,7 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CollisionEntry extends AbstractCraftBookMechanic {
 
@@ -24,5 +25,10 @@ public class CollisionEntry extends AbstractCraftBookMechanic {
             event.setCollisionCancelled(true);
             return;
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

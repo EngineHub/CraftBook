@@ -14,6 +14,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class MapChanger extends AbstractCraftBookMechanic {
 
@@ -70,5 +71,10 @@ public class MapChanger extends AbstractCraftBookMechanic {
             }
             event.getPlayer().getItemInHand().setDurability(id);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

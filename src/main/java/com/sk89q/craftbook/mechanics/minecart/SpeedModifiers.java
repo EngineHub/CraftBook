@@ -7,8 +7,8 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class SpeedModifiers extends AbstractCraftBookMechanic {
 
@@ -19,9 +19,22 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 
-        if (CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail > 0)
-            ((Minecart) event.getVehicle()).setDerailedVelocityMod(new Vector(CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail, CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail, CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierOffRail));
-        if(CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierMaxSpeed != 1)
-            ((Minecart) event.getVehicle()).setMaxSpeed(((Minecart) event.getVehicle()).getMaxSpeed() * CraftBookPlugin.inst().getConfiguration().minecartSpeedModifierMaxSpeed);
+        if (offRail > 0)
+            ((Minecart) event.getVehicle()).setDerailedVelocityMod(new Vector(offRail, offRail, offRail));
+        if(maxSpeed != 1)
+            ((Minecart) event.getVehicle()).setMaxSpeed(((Minecart) event.getVehicle()).getMaxSpeed() * maxSpeed);
+    }
+
+    double maxSpeed;
+    double offRail;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "max-speed", "Sets the max speed of carts. Normal max speed speed is 0.4D");
+        maxSpeed = config.getDouble(path + "max-speed", 0.4);
+
+        config.setComment(path + "off-rail-speed", "Sets the off-rail speed modifier of carts. 0 is none.");
+        offRail = config.getDouble(path + "off-rail-speed", 0);
     }
 }

@@ -38,6 +38,7 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -49,7 +50,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        if(CraftBookPlugin.inst().getConfiguration().snowMeltSunlight || CraftBookPlugin.inst().getConfiguration().snowPiling || CraftBookPlugin.inst().getConfiguration().snowRealistic) {
+        if(meltSunlight || piling || realistic) {
             for(World world : Bukkit.getWorlds()) {
                 for(Chunk chunk : world.getLoadedChunks()) {
                     boolean isChunkUseful = false;
@@ -102,7 +103,7 @@ public class Snow extends AbstractCraftBookMechanic {
             case AIR:
                 return false;
             default:
-                if(!CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
+                if(!freezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
                 return !isReplacable(id);
         }
     }
@@ -111,13 +112,13 @@ public class Snow extends AbstractCraftBookMechanic {
 
         if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) return false;
         if(BlockUtil.isBlockReplacable(block.getType())) return true;
-        return CraftBookPlugin.inst().getConfiguration().snowRealisticReplacables.contains(new ItemInfo(block));
+        return realisticReplacables.contains(new ItemInfo(block));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSnowballHit(ProjectileHitEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().snowPlace) return;
+        if (!place) return;
 
         if(!EventUtil.passesFilter(event))
             return;
@@ -141,7 +142,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().snowRealistic) return;
+        if (!realistic) return;
         if(event.getBlock().getType() != Material.SNOW) return;
 
         if(!EventUtil.passesFilter(event))
@@ -153,7 +154,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().snowTrample) return;
+        if (!trample) return;
 
         if(!EventUtil.passesFilter(event))
             return;
@@ -162,7 +163,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
         if (event.getTo().getBlock().getType() == Material.SNOW) {
 
-            if(CraftBookPlugin.inst().getConfiguration().snowSlowdown) {
+            if(slowdown) {
                 if(event.getTo().getBlock().getData() > 4)
                     event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2), true);
                 else if(event.getTo().getBlock().getData() > 0)
@@ -171,11 +172,11 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if (!player.hasPermission("craftbook.mech.snow.trample")) return;
 
-            if (CraftBookPlugin.inst().getConfiguration().snowJumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
+            if (jumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
                 return;
 
             if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
-                if(event.getTo().getBlock().getData() == 0x0 && CraftBookPlugin.inst().getConfiguration().snowPartialTrample) return;
+                if(event.getTo().getBlock().getData() == 0x0 && partialTrample) return;
                 if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
                 Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1));
             }
@@ -195,9 +196,9 @@ public class Snow extends AbstractCraftBookMechanic {
             for(ItemStack stack : BlockUtil.getBlockDrops(event.getBlock(), event.getPlayer().getItemInHand()))
                 event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), stack);
 
-            if(CraftBookPlugin.inst().getConfiguration().snowRealistic) {
+            if(realistic) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
-                for(BlockFace dir : faces) Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock().getRelative(dir), 0, event.getBlock().getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                for(BlockFace dir : faces) Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock().getRelative(dir), 0, event.getBlock().getLocation().toVector().toBlockVector()), fallAnimationSpeed);
             }
         }
     }
@@ -205,18 +206,18 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPhysicsUpdate(BlockPhysicsEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().snowRealistic) return;
+        if(!realistic) return;
 
         if(!EventUtil.passesFilter(event))
             return;
         if((event.getBlock().getType() == Material.SNOW || event.getBlock().getType() == Material.SNOW_BLOCK) && CraftBookPlugin.inst().getRandom().nextInt(10) == 0)
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(event.getBlock(), 0), fallAnimationSpeed);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().snowPiling) return;
+        if(!piling) return;
 
         if(!EventUtil.passesFilter(event))
             return;
@@ -255,7 +256,7 @@ public class Snow extends AbstractCraftBookMechanic {
             //    skip = true;
 
             boolean meltMode = false;
-            if(!chunk.getWorld().hasStorm() && CraftBookPlugin.inst().getConfiguration().snowMeltSunlight)
+            if(!chunk.getWorld().hasStorm() && meltSunlight)
                 meltMode = true;
 
             if(!skip) {
@@ -265,13 +266,13 @@ public class Snow extends AbstractCraftBookMechanic {
 
                     if(highest.getWorld().hasStorm() && highest.getType() != Material.ICE) {
                         if(highest.getTemperature() < 0.15) {
-                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), fallAnimationSpeed);
                         }
                     } else if(meltMode) {
-                        if(highest.getType() == Material.SNOW && CraftBookPlugin.inst().getConfiguration().snowMeltPartial)
+                        if(highest.getType() == Material.SNOW && meltPartial)
                             if(highest.getData() == 0) return;
                         if(highest.getTemperature() > 0.05)
-                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, -1), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, -1), fallAnimationSpeed);
                     }
                 }
             }
@@ -316,27 +317,27 @@ public class Snow extends AbstractCraftBookMechanic {
             queue.remove(snowblock);
 
             if(amount == 0) {
-                if(CraftBookPlugin.inst().getConfiguration().snowRealistic)
+                if(realistic)
                     if(!disperse(block) && !canLandOn(block.getRelative(0, -1, 0)))
                         decreaseSnow(block, false);
             } else if (amount < 0) { // Odd edge case.
                 if(decreaseSnow(block, true))
                     amount++;
                 if(amount < 0)
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), fallAnimationSpeed);
                 return;
             } else {
-                if(increaseSnow(block, CraftBookPlugin.inst().getConfiguration().snowRealistic))
+                if(increaseSnow(block, realistic))
                     amount--;
                 if(amount > 0)
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, amount), fallAnimationSpeed);
                 return;
             }
         }
 
         public boolean disperse(Block snow) {
 
-            if(!CraftBookPlugin.inst().getConfiguration().snowRealistic) return false;
+            if(!realistic) return false;
 
             List<BlockFace> faces = new LinkedList<BlockFace>(Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST));
 
@@ -358,7 +359,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(queue.contains(new SnowBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ()))) continue;
                 if(block.getType() == Material.SNOW && snow.getType() == Material.SNOW && block.getData() >= snow.getData() && dir != BlockFace.DOWN && dir != BlockFace.UP) {
                     if(block.getData() > snow.getData()+1) {
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(block, 0, snow.getLocation().toVector().toBlockVector()), fallAnimationSpeed);
                     }
                     continue;
                 }
@@ -405,7 +406,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return increaseSnow(snow.getRelative(0,-1,0), disperse);
             }
 
-            if (CraftBookPlugin.inst().getConfiguration().snowFreezeWater && (snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER)) {
+            if (freezeWater && (snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER)) {
                 if(snow.getRelative(0, -1, 0).getData() == 0) {
                     BlockState state = snow.getRelative(0, -1, 0).getState();
                     state.setType(Material.ICE);
@@ -420,16 +421,16 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(isReplacable(snow)) {
                     snow.setTypeIdAndData(Material.SNOW.getId(), (byte) 0, false);
                     if(disperse)
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), fallAnimationSpeed);
                     return true;
                 } else
                     return false;
             }
             byte data = (byte) (snow.getData()+1);
             if(data > 0x6) {
-                if(CraftBookPlugin.inst().getConfiguration().snowHighPiles) {
+                if(pileHigh) {
                     boolean allowed = false;
-                    for(int i = 0; i < CraftBookPlugin.inst().getConfiguration().snowMaxPileHeight+1; i++) {
+                    for(int i = 0; i < maxPileHeight+1; i++) {
                         if(snow.getRelative(0,-i,0).getType() != Material.SNOW_BLOCK) {
                             allowed = true;
                             break;
@@ -438,7 +439,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     if(allowed) {
                         snow.setType(Material.SNOW_BLOCK);
                         if(disperse)
-                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), fallAnimationSpeed);
                         return true;
                     } else
                         return false;
@@ -448,7 +449,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 snow.setData(data, false);
 
             if(disperse)
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), fallAnimationSpeed);
 
             return true;
         }
@@ -475,9 +476,9 @@ public class Snow extends AbstractCraftBookMechanic {
             else
                 snow.setData(data, false);
 
-            if(disperse && CraftBookPlugin.inst().getConfiguration().snowRealistic) {
+            if(disperse && realistic) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
-                for(BlockFace dir : faces) Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow.getRelative(dir), 0, snow.getLocation().toVector().toBlockVector()), CraftBookPlugin.inst().getConfiguration().snowFallAnimationSpeed);
+                for(BlockFace dir : faces) Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow.getRelative(dir), 0, snow.getLocation().toVector().toBlockVector()), fallAnimationSpeed);
             }
 
             return true;
@@ -510,5 +511,66 @@ public class Snow extends AbstractCraftBookMechanic {
             // Constants correspond to glibc's lcg algorithm parameters
             return (worldname.hashCode() * 1103515245 + 12345 ^ x * 1103515245 + 12345 ^ y * 1103515245 + 12345 ^ z * 1103515245 + 12345) * 1103515245 + 12345;
         }
+    }
+
+    boolean piling;
+    boolean trample;
+    boolean partialTrample;
+    boolean place;
+    boolean slowdown;
+    boolean realistic;
+    boolean pileHigh;
+    int maxPileHeight;
+    boolean jumpTrample;
+    List<ItemInfo> realisticReplacables;
+    int fallAnimationSpeed;
+    boolean freezeWater;
+    boolean meltSunlight;
+    boolean meltPartial;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "piling", "Enables the piling feature of the Snow mechanic.");
+        piling = config.getBoolean(path + "piling", false);
+
+        config.setComment(path + "trample", "Enables the trampling feature of the Snow mechanic.");
+        trample = config.getBoolean(path + "trample", false);
+
+        config.setComment(path + "partial-trample-only", "If trampling is enabled, only trample it down to the smallest snow.");
+        partialTrample = config.getBoolean(path + "partial-trample-only", false);
+
+        config.setComment(path + "jump-trample", "Require jumping to trample snow.");
+        jumpTrample = config.getBoolean(path + "jump-trample", false);
+
+        config.setComment(path + "place", "Allow snowballs to create snow when they land.");
+        place = config.getBoolean(path + "place", false);
+
+        config.setComment(path + "slowdown", "Slows down entities as they walk through thick snow.");
+        slowdown = config.getBoolean(path + "slowdown", false);
+
+        config.setComment(path + "realistic", "Realistically move snow around, creating an 'avalanche' or 'mound' effect.");
+        realistic = config.getBoolean(path + "realistic", false);
+
+        config.setComment(path + "high-piling", "Allow piling above the 1 block height.");
+        pileHigh = config.getBoolean(path + "high-piling", false);
+
+        config.setComment(path + "max-pile-height", "The maximum piling height of high piling snow.");
+        maxPileHeight = config.getInt(path + "max-pile-height", 3);
+
+        config.setComment(path + "replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
+        realisticReplacables = ItemInfo.parseListFromString(config.getStringList(path + "replacable-blocks", Arrays.asList("DEAD_BUSH", "LONG_GRASS", "YELLOW_FLOWER", "RED_ROSE", "BROWN_MUSHROOM", "RED_MUSHROOM", "FIRE")));
+
+        config.setComment(path + "falldown-animation-speed", "The fall animation speed of realistic snow.");
+        fallAnimationSpeed = config.getInt(path + "falldown-animation-speed", 5);
+
+        config.setComment(path + "freeze-water", "Should snow freeze water?");
+        freezeWater = config.getBoolean(path + "freeze-water", false);
+
+        config.setComment(path + "melt-in-sunlight", "Enables snow to melt in sunlight.");
+        meltSunlight = config.getBoolean(path + "melt-in-sunlight", false);
+
+        config.setComment(path + "partial-melt-only", "If melt in sunlight is enabled, only melt it down to the smallest snow.");
+        meltPartial = config.getBoolean(path + "partial-melt-only", false);
     }
 }

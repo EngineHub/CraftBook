@@ -17,6 +17,7 @@ import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)
@@ -111,5 +112,10 @@ public class Payment extends AbstractCraftBookMechanic {
 
             ICUtil.setState(block, false, source);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

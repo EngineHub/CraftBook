@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.mechanics;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -19,6 +21,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Footprints extends AbstractCraftBookMechanic {
 
@@ -45,7 +48,7 @@ public class Footprints extends AbstractCraftBookMechanic {
         } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
             return;
 
-        if(CraftBookPlugin.inst().getConfiguration().footprintsBlocks.contains(new ItemInfo(below))) {
+        if(blocks.contains(new ItemInfo(below))) {
 
             if(footsteps.contains(event.getPlayer().getName()))
                 return;
@@ -106,5 +109,14 @@ public class Footprints extends AbstractCraftBookMechanic {
     @Override
     public void disable () {
         footsteps = null;
+    }
+
+    List<ItemInfo> blocks;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "blocks", "The list of blocks that footprints appear on.");
+        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("DIRT", "SAND", "SNOW", "SNOW_BLOCK", "ICE")));
     }
 }

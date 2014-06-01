@@ -22,6 +22,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
@@ -159,7 +160,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
             }
         }
 
-        if (CraftBookPlugin.inst().getConfiguration().teleporterRequireSign) {
+        if (requireSign) {
             Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
             if (SignUtil.isSign(location)) {
                 if (!checkTeleportSign(player, location)) {
@@ -207,8 +208,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
             subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2, floor.getZ() + 0.5));
             ((BukkitPlayer)player).getPlayer().getVehicle().teleport(BukkitUtil.toLocation(subspaceRift));
         }
-        if (CraftBookPlugin.inst().getConfiguration().teleporterMaxRange > 0)
-            if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > CraftBookPlugin.inst().getConfiguration().teleporterMaxRange * CraftBookPlugin.inst().getConfiguration().teleporterMaxRange) {
+        if (maxRange > 0)
+            if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > maxRange * maxRange) {
                 player.print("mech.teleport.range");
                 return;
             }
@@ -232,5 +233,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         return true;
+    }
+
+    boolean requireSign;
+    int maxRange;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "require-sign", "Require a sign to be at the destination of the teleportation.");
+        requireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
+        maxRange = config.getInt(path + "max-range", 0);
     }
 }

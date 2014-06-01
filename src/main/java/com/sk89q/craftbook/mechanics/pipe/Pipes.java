@@ -28,12 +28,12 @@ import org.bukkit.material.PistonBaseMaterial;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -42,6 +42,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
@@ -106,8 +107,6 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     public void searchNearbyPipes(Block block, Set<Location> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions) {
 
-        BukkitConfiguration config = CraftBookPlugin.inst().getConfiguration();
-
         LinkedList<Block> searchQueue = new LinkedList<Block>();
 
         //Enumerate the search queue.
@@ -118,31 +117,31 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if(items.isEmpty())
                         return;
 
-                    if (!config.pipesDiagonal) {
+                    if (!pipesDiagonal) {
                         if (x != 0 && y != 0) continue;
                         if (x != 0 && z != 0) continue;
                         if (y != 0 && z != 0) continue;
                     } else {
 
                         if (Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z) && Math.abs(y) == Math.abs(z)) {
-                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && config.pipeInsulator.isSame(block.getRelative(0, y, 0))
-                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && pipeInsulator.isSame(block.getRelative(0, y, 0))
+                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(y)) {
-                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && config.pipeInsulator.isSame(block.getRelative(0, y, 0))) {
+                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && pipeInsulator.isSame(block.getRelative(0, y, 0))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(z)) {
-                            if (config.pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
+                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         } else if (Math.abs(y) == Math.abs(z)) {
-                            if (config.pipeInsulator.isSame(block.getRelative(0, y, 0))
-                                    && config.pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.isSame(block.getRelative(0, y, 0))
+                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
                                 continue;
                             }
                         }
@@ -326,7 +325,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     items.add(stack);
                     ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
-                    if (CraftBookPlugin.inst().getConfiguration().pipeStackPerPull)
+                    if (pipeStackPerPull)
                         break;
                 }
 
@@ -427,7 +426,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             ChangedSign sign = getSignOnPiston(event.getBlock());
 
-            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+            if (pipeRequireSign && sign == null)
                 return;
 
             if(!EventUtil.passesFilter(event)) return;
@@ -443,12 +442,33 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             ChangedSign sign = getSignOnPiston(event.getBlock());
 
-            if (CraftBookPlugin.inst().getConfiguration().pipeRequireSign && sign == null)
+            if (pipeRequireSign && sign == null)
                 return;
 
             if(!EventUtil.passesFilter(event)) return;
 
             startPipe(event.getBlock(), event.getItems(), true);
         }
+    }
+
+    boolean pipesDiagonal;
+    ItemInfo pipeInsulator;
+    boolean pipeStackPerPull;
+    boolean pipeRequireSign;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-diagonal", "Allow pipes to work diagonally. Required for insulators to work.");
+        pipesDiagonal = config.getBoolean(path + "allow-diagonal", false);
+
+        config.setComment(path + "insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
+        pipeInsulator = new ItemInfo(config.getString(path + "insulator-block", "WOOL"));
+
+        config.setComment(path + "stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
+        pipeStackPerPull = config.getBoolean(path + "stack-per-move", true);
+
+        config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
+        pipeRequireSign = config.getBoolean(path + "require-sign", false);
     }
 }

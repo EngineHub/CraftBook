@@ -11,12 +11,9 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartMessenger extends CartBlockMechanism {
-
-    public CartMessenger (ItemInfo material) {
-        super(material);
-    }
 
     CraftBookPlugin plugin = CraftBookPlugin.inst();
 
@@ -82,5 +79,12 @@ public class CartMessenger extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Print"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the messager mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "ENDER_STONE:0"));
     }
 }

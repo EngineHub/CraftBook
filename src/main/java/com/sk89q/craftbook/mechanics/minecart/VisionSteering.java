@@ -7,9 +7,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class VisionSteering extends AbstractCraftBookMechanic {
 
@@ -24,7 +24,7 @@ public class VisionSteering extends AbstractCraftBookMechanic {
         if(!(event.getPlayer().getVehicle() instanceof Minecart))
             return;
 
-        if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < CraftBookPlugin.inst().getConfiguration().minecartVisionSteeringMinimumSensitivity)
+        if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < minimumSensitivity)
             return;
 
         if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
@@ -36,5 +36,14 @@ public class VisionSteering extends AbstractCraftBookMechanic {
         direction = direction.multiply(event.getPlayer().getVehicle().getVelocity().length());
         direction.setY(event.getPlayer().getVehicle().getVelocity().getY());
         event.getPlayer().getVehicle().setVelocity(direction);
+    }
+
+    public int minimumSensitivity;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "minimum-sensitivity", "Sets the sensitivity of Vision Steering.");
+        minimumSensitivity = config.getInt(path + "minimum-sensitivity", 3);
     }
 }

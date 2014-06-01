@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class PlaceAnywhere extends AbstractCraftBookMechanic {
 
@@ -37,5 +38,10 @@ public class PlaceAnywhere extends AbstractCraftBookMechanic {
             }
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Drops extends AbstractCraftBookMechanic {
 
@@ -25,5 +26,10 @@ public class Drops extends AbstractCraftBookMechanic {
             boat.remove();
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

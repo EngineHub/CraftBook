@@ -23,6 +23,7 @@ import javax.sound.midi.ShortMessage;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 
 /**
  * A sequencer that reads MIDI files.
@@ -126,7 +127,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                         int n = msg.getData1();
                         if (chan == 9) { // Percussion
                             // Sounds like utter crap
-                            if(CraftBookPlugin.inst().getConfiguration().ICMidiUsePercussion)
+                            if(ICMechanic.instance.usePercussionMidi)
                                 for(JingleNotePlayer player : players)
                                     player.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
                         } else {

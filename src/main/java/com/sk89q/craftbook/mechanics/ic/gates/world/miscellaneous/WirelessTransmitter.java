@@ -200,13 +200,13 @@ public class WirelessTransmitter extends AbstractIC {
         public void load() {
             super.load();
 
-            if(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage() && CraftBookPlugin.inst().getPersistentStorage().has("wireless-ic-states"))
+            if(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage() && CraftBookPlugin.inst().getPersistentStorage().has("wireless-ic-states"))
                 WirelessTransmitter.memory.addAll((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("wireless-ic-states"));
         }
 
         @Override
         public void unload() {
-            if(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage())
+            if(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())
                 CraftBookPlugin.inst().getPersistentStorage().set("wireless-ic-states", memory);
         }
 

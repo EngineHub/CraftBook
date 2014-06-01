@@ -27,7 +27,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.sk89q.craftbook.BaseTestCase;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.TreeLopper;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.worldedit.blocks.ItemID;
 
@@ -62,11 +61,11 @@ public class TreeLopperTest extends BaseTestCase {
         when(block.getData()).thenReturn((byte) 0);
         when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
 
-        getConfig().treeLopperBlocks = new ArrayList<ItemInfo>();
-        getConfig().treeLopperBlocks.add(new ItemInfo(Material.LOG, 0));
+        lopper.enabledBlocks = new ArrayList<ItemInfo>();
+        lopper.enabledBlocks.add(new ItemInfo(Material.LOG, 0));
 
-        getConfig().treeLopperItems = new ArrayList<ItemInfo>();
-        getConfig().treeLopperItems.add(new ItemInfo(Material.DIAMOND_AXE, -1));
+        lopper.enabledItems = new ArrayList<ItemInfo>();
+        lopper.enabledItems.add(new ItemInfo(Material.DIAMOND_AXE, -1));
 
         getConfig().showPermissionMessages = true;
 

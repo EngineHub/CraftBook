@@ -18,6 +18,7 @@ import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -179,7 +180,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void load() {
 
-            if(!(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
+            if(!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
 
             if(CraftBookPlugin.inst().getPersistentStorage().has("teleport-ic-locations.list")) {
 
@@ -197,7 +198,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void unload() {
 
-            if(!(CraftBookPlugin.inst().getConfiguration().ICSavePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
+            if(!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
 
             CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list", new HashSet<String>(TeleportTransmitter.lastKnownLocations.keySet()));
 

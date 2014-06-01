@@ -27,6 +27,7 @@ import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CookingPot extends AbstractCraftBookMechanic {
 
@@ -48,7 +49,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         event.setLine(1, "[Cook]");
         event.setLine(2, "0");
-        event.setLine(3, CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? "0" : "1");
+        event.setLine(3, cookingPotFuel ? "0" : "1");
         player.print("mech.cook.create");
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
@@ -97,7 +98,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
             if (fire.getType() == Material.FIRE) {
                 Chest chest = (Chest) cb.getState();
                 List<ItemStack> items;
-                if(CraftBookPlugin.inst().getConfiguration().cookingPotOres)
+                if(cookingPotOres)
                     items = ItemUtil.getRawMaterials(chest.getInventory());
                 else
                     items = ItemUtil.getRawFood(chest.getInventory());
@@ -105,7 +106,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 if(items.size() == 0) return;
 
                 if(lastTick < 500) {
-                    lastTick = CraftBookPlugin.inst().getConfiguration().cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
+                    lastTick = cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
                     if(getMultiplier(sign) > 0)
                         decreaseMultiplier(sign, 1);
                 }
@@ -115,7 +116,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                         if (!ItemUtil.isStackValid(i)) continue;
                         ItemStack cooked = ItemUtil.getCookedResult(i);
                         if (cooked == null) {
-                            if (CraftBookPlugin.inst().getConfiguration().cookingPotOres)
+                            if (cookingPotOres)
                                 cooked = ItemUtil.getSmeletedResult(i);
                             if (cooked == null) continue;
                         }
@@ -178,11 +179,11 @@ public class CookingPot extends AbstractCraftBookMechanic {
                     } else {
                         player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
                     }
-                    if(itemID == Material.LAVA_BUCKET && !CraftBookPlugin.inst().getConfiguration().cookingPotDestroyBuckets)
+                    if(itemID == Material.LAVA_BUCKET && !cookingPotDestroyBuckets)
                         player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                     p.print("mech.cook.add-fuel");
                     event.setCancelled(true);
-                } else if (CraftBookPlugin.inst().getConfiguration().cookingPotSignOpen) {
+                } else if (cookingPotSignOpen) {
                     player.openInventory(((Chest) cb.getState()).getBlockInventory());
                     event.setCancelled(true);
                 }
@@ -214,7 +215,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().cookingPotAllowRedstone) return;
+        if(!cookingPotAllowRedstone) return;
 
         if(!SignUtil.isSign(event.getBlock())) return;
 
@@ -235,7 +236,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
     public void setMultiplier(ChangedSign sign, int amount) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().cookingPotFuel)
+        if(!cookingPotFuel)
             amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
     }
@@ -256,10 +257,10 @@ public class CookingPot extends AbstractCraftBookMechanic {
         try {
             multiplier = Integer.parseInt(sign.getLine(3).trim());
         } catch (Exception e) {
-            multiplier = CraftBookPlugin.inst().getConfiguration().cookingPotFuel ? 0 : 1;
+            multiplier = cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
         }
-        if (multiplier <= 0 && !CraftBookPlugin.inst().getConfiguration().cookingPotFuel) return 1;
+        if (multiplier <= 0 && !cookingPotFuel) return 1;
         return Math.max(0, multiplier);
     }
 
@@ -286,5 +287,34 @@ public class CookingPot extends AbstractCraftBookMechanic {
             for (Ingredients in : values()) { if (in.id == id) return in.mult; }
             return 0;
         }
+    }
+
+    boolean cookingPotAllowRedstone;
+    boolean cookingPotFuel;
+    boolean cookingPotOres;
+    boolean cookingPotSignOpen;
+    boolean cookingPotDestroyBuckets;
+    boolean cookingPotSuperFast;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Allows for redstone to be used as a fuel source.");
+        cookingPotAllowRedstone = config.getBoolean(path + "allow-redstone", true);
+
+        config.setComment(path + "require-fuel", "Require fuel to cook.");
+        cookingPotFuel = config.getBoolean(path + "require-fuel", true);
+
+        config.setComment(path + "cook-ores", "Allows the cooking pot to cook ores and other smeltable items.");
+        cookingPotOres = config.getBoolean(path + "cook-ores", false);
+
+        config.setComment(path + "sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
+        cookingPotSignOpen = config.getBoolean(path + "sign-click-open", true);
+
+        config.setComment(path + "take-buckets", "When enabled, lava buckets being used as fuel will consume the bucket.");
+        cookingPotDestroyBuckets = config.getBoolean(path + "take-buckets", false);
+
+        config.setComment(path + "super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
+        cookingPotSuperFast = config.getBoolean(path + "super-fast-cooking", false);
     }
 }

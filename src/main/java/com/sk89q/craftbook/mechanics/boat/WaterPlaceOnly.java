@@ -9,6 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WaterPlaceOnly extends AbstractCraftBookMechanic {
 
@@ -30,5 +31,10 @@ public class WaterPlaceOnly extends AbstractCraftBookMechanic {
     private boolean isWater(Block b) {
 
         return b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER;
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
     }
 }

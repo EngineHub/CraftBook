@@ -19,13 +19,15 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartStation extends CartBlockMechanism {
 
-    public CartStation (ItemInfo material) {
-        super(material);
+    @Override
+    public boolean enable() {
 
         CraftBookPlugin.inst().registerCommands(StationCommands.class);
+        return true;
     }
 
     @EventHandler
@@ -130,5 +132,12 @@ public class CartStation extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"station"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the station mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "OBSIDIAN:0"));
     }
 }

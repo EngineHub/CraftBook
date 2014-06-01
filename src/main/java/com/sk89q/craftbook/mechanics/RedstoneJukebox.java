@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class RedstoneJukebox extends AbstractCraftBookMechanic {
 
@@ -22,5 +23,9 @@ public class RedstoneJukebox extends AbstractCraftBookMechanic {
         } else
             juke.setPlaying(juke.getPlaying());
         juke.update();
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
     }
 }

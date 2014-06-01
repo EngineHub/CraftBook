@@ -85,7 +85,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     private boolean isCauldron(Block block) {
 
         if (block.getType() == Material.CAULDRON && block.getRelative(BlockFace.DOWN).getType() == Material.FIRE) {
-            if(CraftBookPlugin.inst().getConfiguration().cauldronRequireSign) {
+            if(requireSign) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
                 boolean found = false;
                 for(BlockFace face : faces) {
@@ -123,7 +123,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneUpdate(SourcedBlockRedstoneEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().cauldronAllowRedstone) return;
+        if(!allowRedstone) return;
 
         if(!EventUtil.passesFilter(event)) return;
 
@@ -135,7 +135,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemDrop(final PlayerDropItemEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().cauldronItemTracking) return;
+        if(!itemTracking) return;
 
         if(!event.getPlayer().hasPermission("craftbook.mech.cauldron.use")) return; //If they can't use cauldrons, don't track it.
         if(!EventUtil.passesFilter(event)) return;
@@ -232,7 +232,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return false;
             }
 
-            if (!CraftBookPlugin.inst().getConfiguration().cauldronUseSpoons || player == null && CraftBookPlugin.inst().getConfiguration().cauldronAllowRedstone) {
+            if (!useSpoons || player == null && allowRedstone) {
                 cook(block, recipe, items);
                 if(player != null) player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
                 block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
@@ -339,5 +339,26 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
             super(message);
         }
+    }
+
+    boolean useSpoons;
+    boolean allowRedstone;
+    boolean itemTracking;
+    boolean requireSign;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "spoons", "Require spoons to cook cauldron recipes.");
+        useSpoons = config.getBoolean(path + "spoons", true);
+
+        config.setComment(path + "enable-redstone", "Allows use of cauldrons via redstone.");
+        allowRedstone = config.getBoolean(path + "enable-redstone", false);
+
+        config.setComment(path + "item-tracking", "Tracks items and forces them to to tracked by the cauldron. Fixes mc bugs by holding item in place.");
+        itemTracking = config.getBoolean(path + "item-tracking", false);
+
+        config.setComment(path + "require-sign", "Requires a [Cauldron] sign to be on the side of a cauldron. Useful for requiring creation permissions.");
+        requireSign = config.getBoolean(path + "require-sign", false);
     }
 }

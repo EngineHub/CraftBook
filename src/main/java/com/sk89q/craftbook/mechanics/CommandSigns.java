@@ -20,6 +20,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CommandSigns extends AbstractCraftBookMechanic {
 
@@ -74,10 +75,10 @@ public class CommandSigns extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
-        if (!event.isOn() || event.isMinor() || !CraftBookPlugin.inst().getConfiguration().commandSignAllowRedstone || !SignUtil.isSign(event.getBlock()))
+        if (!event.isOn() || event.isMinor() || !allowRedstone || !SignUtil.isSign(event.getBlock()))
             return;
+
+        if(!EventUtil.passesFilter(event)) return;
 
         ChangedSign s = BukkitUtil.toChangedSign(event.getBlock());
 
@@ -107,5 +108,14 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         command = ParsingUtil.parseLine(command, player == null ? null : ((BukkitPlayer) player).getPlayer());
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+    }
+
+    boolean allowRedstone;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "allow-redstone", "Enable CommandSigns via redstone.");
+        allowRedstone = config.getBoolean(path + "allow-redstone", true);
     }
 }

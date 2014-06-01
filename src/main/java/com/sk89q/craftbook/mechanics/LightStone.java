@@ -27,7 +27,9 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * This allows users to Right-click to check the light level.
@@ -43,7 +45,7 @@ public class LightStone extends AbstractCraftBookMechanic {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!CraftBookPlugin.inst().getConfiguration().lightstoneItem.equals(player.getHeldItemInfo())) return;
+        if(!item.equals(player.getHeldItemInfo())) return;
         if(!player.hasPermission("craftbook.mech.lightstone.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -73,5 +75,14 @@ public class LightStone extends AbstractCraftBookMechanic {
         for (int i = data; i < 15; i++)
             line.append("|");
         return line.toString();
+    }
+
+    public ItemInfo item;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "item", "The item that the lightstone mechanic uses.");
+        item = new ItemInfo(config.getString(path + "item", "GLOWSTONE_DUST"));
     }
 }

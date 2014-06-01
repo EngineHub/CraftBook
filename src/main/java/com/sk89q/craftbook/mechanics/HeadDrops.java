@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,17 +32,26 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
+
+    protected static HeadDrops instance;
+
+    @Override
+    public boolean enable() {
+
+        instance = this;
+        return true;
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;
-        if(CraftBookPlugin.inst().getConfiguration().headDropsPlayerKillOnly && event.getEntity().getKiller() == null) return;
+        if(playerKillsOnly && event.getEntity().getKiller() == null) return;
         if(event.getEntityType() == null) return;
 
         if(event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
@@ -55,12 +65,12 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         else
             typeName = typeName.toUpperCase();
 
-        double chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsDropRate);
-        if(CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.containsKey(typeName))
-            chance = Math.min(1, CraftBookPlugin.inst().getConfiguration().headDropsCustomDropRate.get(typeName));
+        double chance = Math.min(1, dropRate);
+        if(customDropRates.containsKey(typeName))
+            chance = Math.min(1, customDropRates.get(typeName));
 
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
-            chance = Math.min(1, chance + CraftBookPlugin.inst().getConfiguration().headDropsLootingRateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
+            chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
 
         if(CraftBookPlugin.inst().getRandom().nextDouble() > chance)
             return;
@@ -70,7 +80,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         switch(event.getEntityType()) {
 
             case PLAYER:
-                if(!CraftBookPlugin.inst().getConfiguration().headDropsPlayers)
+                if(!enablePlayers)
                     return;
                 String playerName = ((Player) event.getEntity()).getName();
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
@@ -80,31 +90,31 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 toDrop.setItemMeta(meta);
                 break;
             case ZOMBIE:
-                if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
+                if(!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)2);
                 break;
             case CREEPER:
-                if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
+                if(!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)4);
                 break;
             case SKELETON:
-                if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
+                if(!enableMobs)
                     return;
-                if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !CraftBookPlugin.inst().getConfiguration().headDropsDropOverrideNatural)
+                if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !overrideNatural)
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
                 break;
             default:
-                if(!CraftBookPlugin.inst().getConfiguration().headDropsMobs)
+                if(!enableMobs)
                     return;
                 MobSkullType type = MobSkullType.getFromEntityType(event.getEntityType());
                 String mobName = null;
                 if(type != null)
                     mobName = type.getPlayerName();
-                if(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.containsKey(typeName))
-                    mobName = CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(typeName);
+                if(customSkins.containsKey(typeName))
+                    mobName = customSkins.get(typeName);
                 if(mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
@@ -139,7 +149,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            if(CraftBookPlugin.inst().getConfiguration().headDropsShowNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
+            if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
                 player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + " " + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
                 skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
@@ -151,8 +161,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().headDropsEnabled) return;
-        if(!CraftBookPlugin.inst().getConfiguration().headDropsMiningDrops) return;
+        if(!miningDrops) return;
         if(!EventUtil.passesFilter(event))
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
@@ -171,9 +180,9 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setOwner(playerName);
 
-            if(type != null && !CraftBookPlugin.inst().getConfiguration().headDropsMobs)
+            if(type != null && !enableMobs)
                 return;
-            if(type == null && !CraftBookPlugin.inst().getConfiguration().headDropsPlayers)
+            if(type == null && !enablePlayers)
                 return;
 
             if(!event.getPlayer().hasPermission("craftbook.mech.headdrops.break")) {
@@ -261,10 +270,62 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 return null;
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(CraftBookPlugin.inst().getConfiguration().headDropsCustomSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
+                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
                     return EntityType.valueOf(type.name());
 
             return null;
         }
+    }
+
+    boolean enableMobs;
+    boolean enablePlayers;
+    boolean playerKillsOnly;
+    boolean miningDrops;
+    boolean overrideNatural;
+    double dropRate;
+    double rateModifier;
+    boolean showNameClick;
+    HashMap<String, Double> customDropRates;
+    HashMap<String, String> customSkins;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
+        enableMobs = config.getBoolean(path + "drop-mob-heads", true);
+
+        config.setComment(path + "drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
+        enablePlayers = config.getBoolean(path + "drop-player-heads", true);
+
+        config.setComment(path + "require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
+        playerKillsOnly = config.getBoolean(path + "require-player-killed", true);
+
+        config.setComment(path + "drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
+        miningDrops = config.getBoolean(path + "drop-head-when-mined", true);
+
+        config.setComment(path + "override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
+        overrideNatural = config.getBoolean(path + "override-natural-head-drops", false);
+
+        config.setComment(path + "drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
+        dropRate = config.getDouble(path + "drop-rate", 0.05);
+
+        config.setComment(path + "looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
+        rateModifier = config.getDouble(path + "looting-rate-modifier", 0.05);
+
+        config.setComment(path + "show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
+        showNameClick = config.getBoolean(path + "show-name-right-click", true);
+
+        customDropRates = new HashMap<String, Double>();
+        if(config.getKeys(path + "drop-rates") != null) {
+            for(String key : config.getKeys(path + "drop-rates"))
+                customDropRates.put(key.toUpperCase(), config.getDouble(path + "drop-rates." + key));
+        } else
+            config.addNode(path + "drop-rates");
+        customSkins = new HashMap<String, String>();
+        if(config.getKeys(path + "custom-mob-skins") != null) {
+            for(String key : config.getKeys(path + "custom-mob-skins"))
+                customSkins.put(key.toUpperCase(), config.getString(path + "custom-mob-skins." + key));
+        } else
+            config.addNode(path + "custom-mob-skins");
     }
 }

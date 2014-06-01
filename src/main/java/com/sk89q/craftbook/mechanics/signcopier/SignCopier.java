@@ -14,8 +14,10 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class SignCopier extends AbstractCraftBookMechanic {
 
@@ -41,7 +43,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!player.getHeldItemInfo().equals(CraftBookPlugin.inst().getConfiguration().signCopyItem)) return;
+        if (!player.getHeldItemInfo().equals(item)) return;
 
         if (!player.hasPermission("craftbook.mech.signcopy.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -78,5 +80,14 @@ public class SignCopier extends AbstractCraftBookMechanic {
                 event.setCancelled(true);
             }
         }
+    }
+
+    ItemInfo item;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "item", "The item the Sign Copy mechanic uses.");
+        item = new ItemInfo(config.getString(path + "item", "INK_SACK:0"));
     }
 }

@@ -20,6 +20,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
 
@@ -29,10 +30,10 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         for(World world : Bukkit.getWorlds())
             tickedWorlds.add(world);
 
-        if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming)
+        if(fernFarming)
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
 
-        return CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming; //Only enable if a mech is enabled
+        return fernFarming; //Only enable if a mech is enabled
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -40,7 +41,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x3) {
+        if(fernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x3) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
@@ -60,7 +61,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                 for(Chunk chunk : world.getLoadedChunks()) {
                     Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
-                    if(CraftBookPlugin.inst().getConfiguration().betterPlantsFernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
+                    if(fernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
                         block.setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 3, false);
                         block.getRelative(0, 1, 0).setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 11, false);
                     }
@@ -80,5 +81,14 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     public void onWorldUnload(WorldUnloadEvent event) {
 
         tickedWorlds.remove(event.getWorld());
+    }
+
+    boolean fernFarming;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
+        fernFarming = config.getBoolean(path + "fern-farming", true);
     }
 }

@@ -1,6 +1,8 @@
 package com.sk89q.craftbook.mechanics;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -35,8 +37,18 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BetterPistons extends AbstractCraftBookMechanic {
+
+    protected static BetterPistons instance;
+
+    @Override
+    public boolean enable() {
+
+        instance = this;
+        return true;
+    }
 
     /**
      * Check to see if the sign is a valid and enabled sign
@@ -169,7 +181,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         //piston.setPowered(false);
 
-        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherInstaKill) {
+        if (pistonsCrusherInstaKill) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                 if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                     EntityUtil.killEntity(ent);
@@ -177,7 +189,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             }
         }
 
-        if (CraftBookPlugin.inst().getConfiguration().pistonsCrusherBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
+        if (pistonsCrusherBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
             return;
         }
         trigger.getRelative(piston.getFacing()).breakNaturally();
@@ -196,7 +208,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
 
         Vector vel = new Vector(piston.getFacing().getModX(), piston.getFacing().getModY(), piston.getFacing().getModZ()).multiply(mult);
-        if (trigger.getRelative(piston.getFacing()).getType() == Material.AIR || trigger.getRelative(piston.getFacing()).getState() != null && InventoryUtil.doesBlockHaveInventory(trigger.getRelative(piston.getFacing())) || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_EXTENSION || CraftBookPlugin.inst().getConfiguration().pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
+        if (trigger.getRelative(piston.getFacing()).getType() == Material.AIR || trigger.getRelative(piston.getFacing()).getState() != null && InventoryUtil.doesBlockHaveInventory(trigger.getRelative(piston.getFacing())) || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_EXTENSION || pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                 if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                     ent.setVelocity(ent.getVelocity().add(vel));
@@ -227,7 +239,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
             final boolean air = signState.getLine(3).equalsIgnoreCase("AIR");
 
-            block = Math.min(CraftBookPlugin.inst().getConfiguration().pistonMaxDistance, block);
+            block = Math.min(pistonMaxDistance, block);
 
             final int fblock = block;
 
@@ -275,7 +287,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             } catch (Exception ignored) {
             }
 
-            block = Math.min(CraftBookPlugin.inst().getConfiguration().pistonMaxDistance, block);
+            block = Math.min(pistonMaxDistance, block);
 
             final int fblock = block;
 
@@ -352,7 +364,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         if (block.getState() instanceof DoubleChest) return false;
 
-        if(CraftBookPlugin.inst().getConfiguration().pistonsMovementBlacklist.contains(new ItemInfo(block)))
+        if(pistonsMovementBlacklist.contains(new ItemInfo(block)))
             return false;
 
         switch (block.getType()) {
@@ -364,25 +376,65 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    public static enum Types {
+    public enum Types {
 
         CRUSH, SUPERSTICKY, BOUNCE, SUPERPUSH;
 
         public static boolean isEnabled(Types type) {
 
-            if (!CraftBookPlugin.inst().getConfiguration().pistonsEnabled) return false;
             switch (type) {
                 case CRUSH:
-                    return CraftBookPlugin.inst().getConfiguration().pistonsCrusher;
+                    return instance.pistonsCrusher;
                 case SUPERSTICKY:
-                    return CraftBookPlugin.inst().getConfiguration().pistonsSuperSticky;
+                    return instance.pistonsSuperSticky;
                 case BOUNCE:
-                    return CraftBookPlugin.inst().getConfiguration().pistonsBounce;
+                    return instance.pistonsBounce;
                 case SUPERPUSH:
-                    return CraftBookPlugin.inst().getConfiguration().pistonsSuperPush;
+                    return instance.pistonsSuperPush;
                 default:
-                    return CraftBookPlugin.inst().getConfiguration().pistonsEnabled;
+                    return false;
             }
         }
+    }
+
+    int pistonMaxDistance;
+    boolean pistonsCrusher;
+    boolean pistonsCrusherInstaKill;
+    List<ItemInfo> pistonsCrusherBlacklist;
+    boolean pistonsSuperPush;
+    boolean pistonsSuperSticky;
+    List<ItemInfo> pistonsMovementBlacklist;
+    boolean pistonsBounce;
+    List<ItemInfo> pistonsBounceBlacklist;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "crushers", "Enables BetterPistons Crusher Mechanic.");
+        pistonsCrusher = config.getBoolean(path + "crushers", true);
+
+        config.setComment(path + "crushers-kill-mobs", "Causes crushers to kill mobs as well as break blocks. This includes players.");
+        pistonsCrusherInstaKill = config.getBoolean(path + "crushers-kill-mobs", false);
+
+        config.setComment(path + "crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
+        pistonsCrusherBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "crusher-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
+
+        config.setComment(path + "super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
+        pistonsSuperSticky = config.getBoolean(path + "super-sticky", true);
+
+        config.setComment(path + "super-push", "Enables BetterPistons SuperPush Mechanic.");
+        pistonsSuperPush = config.getBoolean(path + "super-push", true);
+
+        config.setComment(path + "movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
+        pistonsMovementBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "movement-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
+
+        config.setComment(path + "bounce", "Enables BetterPistons Bounce Mechanic.");
+        pistonsBounce = config.getBoolean(path + "bounce", true);
+
+        config.setComment(path + "bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
+        pistonsBounceBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "bounce-blacklist", Arrays.asList("OBSIDIAN", "BEDROCK")));
+
+        config.setComment(path + "max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
+        pistonMaxDistance = config.getInt(path + "max-distance", 12);
     }
 }

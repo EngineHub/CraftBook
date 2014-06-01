@@ -14,6 +14,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ExitRemover extends AbstractCraftBookMechanic {
 
@@ -42,7 +43,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
             if(!boat.isValid() || boat.isDead()) return;
 
-            if(CraftBookPlugin.inst().getConfiguration().boatRemoveOnExitGiveItem) {
+            if(giveItem) {
                 ItemStack stack = new ItemStack(Material.BOAT, 1);
 
                 if(player instanceof Player) {
@@ -55,5 +56,14 @@ public class ExitRemover extends AbstractCraftBookMechanic {
             }
             EntityUtil.killEntity(boat);
         }
+    }
+
+    public boolean giveItem;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "give-item", "Sets whether to give the player the item back or not.");
+        giveItem = config.getBoolean(path + "give-item", false);
     }
 }

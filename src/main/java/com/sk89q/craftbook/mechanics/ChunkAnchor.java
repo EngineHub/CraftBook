@@ -16,6 +16,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ChunkAnchor extends AbstractCraftBookMechanic {
 
@@ -33,7 +34,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(CraftBookPlugin.inst().getConfiguration().chunkAnchorCheck) {
+        if(checkChunks) {
             for(BlockState state : event.getBlock().getChunk().getTileEntities()) {
                 if(state instanceof Sign) {
                     Sign s = (Sign) state;
@@ -55,7 +56,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
+        if(!allowRedstone) return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             ChangedSign sign = BukkitUtil.toChangedSign(block);
@@ -88,7 +89,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             }
 
             if (!foundSign) return;
-            if (!isOn && CraftBookPlugin.inst().getConfiguration().chunkAnchorRedstone) return;
+            if (!isOn && allowRedstone) return;
             event.setCancelled(true);
             CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
 
@@ -103,5 +104,18 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             if(CraftBookPlugin.inst().getConfiguration().debugMode)
                 BukkitUtil.printStacktrace(t);
         }
+    }
+
+    boolean allowRedstone;
+    boolean checkChunks;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "enable-redstone", "Enable toggling with redstone.");
+        allowRedstone = config.getBoolean(path + "enable-redstone", true);
+
+        config.setComment(path + "check-chunks", "On creation, check the chunk for already existing chunk anchors.");
+        checkChunks = config.getBoolean(path + "check-chunks", true);
     }
 }

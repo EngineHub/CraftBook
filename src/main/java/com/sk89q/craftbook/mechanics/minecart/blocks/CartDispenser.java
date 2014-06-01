@@ -17,7 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import com.sk89q.craftbook.util.EntityUtil;
@@ -25,6 +24,7 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
@@ -54,10 +54,6 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
  * @author hash
  */
 public class CartDispenser extends CartBlockMechanism {
-
-    public CartDispenser (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onCartImpact(CartBlockImpactEvent event) {
@@ -169,12 +165,12 @@ public class CartDispenser extends CartBlockMechanism {
 
         Location location = BukkitUtil.center(blocks.rail.getLocation());
 
-        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserLegacy) {
+        if(minecartDispenserLegacy) {
             BlockFace direction =  SignUtil.getFront(blocks.sign).getOppositeFace();
             location = blocks.rail.getRelative(direction).getLocation();
         }
 
-        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
+        if(minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
             return;
 
         if (inv != null) {
@@ -196,7 +192,7 @@ public class CartDispenser extends CartBlockMechanism {
             }
         }
         Minecart cart = blocks.rail.getWorld().spawn(location, type.toClass());
-        if(CraftBookPlugin.inst().getConfiguration().minecartDispenserPropel) {
+        if(minecartDispenserPropel) {
             BlockFace dir = SignUtil.getBack(blocks.sign);
             Vector vel = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
             cart.setVelocity(vel.normalize());
@@ -243,5 +239,25 @@ public class CartDispenser extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Dispenser"};
+    }
+
+    boolean minecartDispenserLegacy;
+    boolean minecartDispenserAntiSpam;
+    boolean minecartDispenserPropel;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the dispenser mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "EMERALD_ORE:0"));
+
+        config.setComment(path + "spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
+        minecartDispenserLegacy = config.getBoolean(path + "spawn-infront", false);
+
+        config.setComment(path + "check-for-carts", "Sets whether or not the mechanic checks for existing carts before spawning a new one.");
+        minecartDispenserAntiSpam = config.getBoolean(path + "check-for-carts", true);
+
+        config.setComment(path + "propel-cart", "Sets whether or not the dispenser propels carts that it spawns.");
+        minecartDispenserPropel = config.getBoolean(path + "propel-cart", false);
     }
 }

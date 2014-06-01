@@ -15,6 +15,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ExitRemover extends AbstractCraftBookMechanic {
 
@@ -38,7 +39,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
                 if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
 
-                if(CraftBookPlugin.inst().getConfiguration().minecartRemoveOnExitGiveItem) {
+                if(giveItem) {
 
                     ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
 
@@ -51,5 +52,14 @@ public class ExitRemover extends AbstractCraftBookMechanic {
                 EntityUtil.killEntity(event.getVehicle());
             }
         }, 2L);
+    }
+
+    boolean giveItem;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "give-item", "Sets whether to give the player the item back or not.");
+        giveItem = config.getBoolean(path + "give-item", false);
     }
 }

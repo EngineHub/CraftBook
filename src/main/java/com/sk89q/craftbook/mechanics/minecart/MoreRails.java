@@ -11,12 +11,21 @@ import org.bukkit.material.Vine;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 
 public class MoreRails extends AbstractCraftBookMechanic {
+
+    public static MoreRails instance;
+
+    @Override
+    public boolean enable() {
+
+        instance = this;
+        return true;
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
@@ -25,14 +34,14 @@ public class MoreRails extends AbstractCraftBookMechanic {
 
         if (!(event.getVehicle() instanceof Minecart)) return;
 
-        if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsPressurePlate)
+        if (pressurePlate)
             if (event.getTo().getBlock().getType() == Material.STONE_PLATE || event.getTo().getBlock().getType() == Material.WOOD_PLATE || event.getTo().getBlock().getType() == Material.GOLD_PLATE || event.getTo().getBlock().getType() == Material.IRON_PLATE)
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
 
-        if (CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadder)
+        if (ladder)
             if (event.getTo().getBlock().getType() == Material.LADDER) {
                 Attachable ladder = (Attachable) event.getTo().getBlock().getState().getData();
-                Vector velocity = new Vector(0,CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ());
+                Vector velocity = new Vector(0,ladderVerticalVelocity,((Attachable) event.getTo().getBlock().getState().getData()).getAttachedFace().getModZ());
                 if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
                     double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
                     velocity.setX(velocity.getX() / length);
@@ -51,7 +60,7 @@ public class MoreRails extends AbstractCraftBookMechanic {
                     }
                 if(movementFace == BlockFace.SELF)
                     return;
-                Vector velocity = new Vector(0,CraftBookPlugin.inst().getConfiguration().minecartMoreRailsLadderVelocity,0);
+                Vector velocity = new Vector(0,ladderVerticalVelocity,0);
                 if(velocity.length() > ((Minecart) event.getVehicle()).getMaxSpeed()) {
                     double length = velocity.length()/((Minecart) event.getVehicle()).getMaxSpeed();
                     velocity.setX(velocity.getX() / length);
@@ -61,5 +70,22 @@ public class MoreRails extends AbstractCraftBookMechanic {
                 velocity.add(new Vector(movementFace.getModX(), 0, movementFace.getModZ()));
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
             }
+    }
+
+    public boolean ladder;
+    double ladderVerticalVelocity;
+    public boolean pressurePlate;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment("vehicles.minecart.more-rails.pressure-plate-intersection", "Enables the pressure plate as an intersection.");
+        pressurePlate = config.getBoolean("vehicles.minecart.more-rails.pressure-plate-intersection", false);
+
+        config.setComment("vehicles.minecart.more-rails.ladder-vertical-rail", "Enables the ladder as a vertical rail.");
+        ladder = config.getBoolean("vehicles.minecart.more-rails.ladder-vertical-rail", false);
+
+        config.setComment("vehicles.minecart.more-rails.ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
+        ladderVerticalVelocity = config.getDouble("vehicles.minecart.more-rails.ladder-vertical-rail-velocity", 0.5D);
     }
 }

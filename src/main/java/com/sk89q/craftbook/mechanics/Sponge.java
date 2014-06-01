@@ -10,22 +10,13 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Sponge extends AbstractCraftBookMechanic {
-
-    int radius;
-
-    @Override
-    public boolean enable() {
-
-        radius = CraftBookPlugin.inst().getConfiguration().spongeRadius;
-        return true;
-    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event) {
@@ -40,8 +31,8 @@ public class Sponge extends AbstractCraftBookMechanic {
             for (int cy = -radius; cy <= radius; cy++) {
                 for (int cz = -radius; cz <= radius; cz++) {
                     Block sponge = event.getToBlock().getRelative(cx, cy, cz);
-                    if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(sponge.getLocation(), event.getToBlock().getLocation(), radius)) continue;
-                    if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !sponge.isBlockIndirectlyPowered()) continue;
+                    if(circularRadius && !LocationUtil.isWithinSphericalRadius(sponge.getLocation(), event.getToBlock().getLocation(), radius)) continue;
+                    if(redstone && !sponge.isBlockIndirectlyPowered()) continue;
                     if(sponge.getType() == Material.SPONGE) {
                         event.setCancelled(true);
                         return;
@@ -56,7 +47,7 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
-        if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
+        if(redstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
         if(!EventUtil.passesFilter(event)) return;
 
@@ -68,7 +59,7 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(event.getBlock().getType() != Material.SPONGE) return;
 
-        if(CraftBookPlugin.inst().getConfiguration().spongeRedstone && !event.getBlock().isBlockIndirectlyPowered()) return;
+        if(redstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
         if(!EventUtil.passesFilter(event)) return;
 
@@ -78,7 +69,7 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().spongeRedstone) return;
+        if(!redstone) return;
         if(event.getBlock().getType() != Material.SPONGE) return;
 
         if(event.isMinor()) return;
@@ -96,7 +87,7 @@ public class Sponge extends AbstractCraftBookMechanic {
             for (int cy = -radius; cy <= radius; cy++) {
                 for (int cz = -radius; cz <= radius; cz++) {
                     Block water = block.getRelative(cx, cy, cz);
-                    if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius)) continue;
+                    if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius)) continue;
                     if(water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                         water.setType(Material.AIR);
                     }
@@ -114,7 +105,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
             for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
-                if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
+                if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                     if(BlockUtil.isBlockReplacable(water.getRelative(1, 0, 0).getType())) {
                         BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(1, 0, 0));
@@ -131,7 +122,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
             for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
-                if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
+                if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                     if(BlockUtil.isBlockReplacable(water.getRelative(-1, 0, 0).getType())) {
                         BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(-1, 0, 0));
@@ -165,7 +156,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
             for (cz = block.getZ() - radius - 1; cz <= block.getZ() + radius + 1; cz++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
-                if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
+                if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                     if(BlockUtil.isBlockReplacable(water.getRelative(0, -1, 0).getType())) {
                         BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, -1, 0));
@@ -182,7 +173,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
             for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
-                if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
+                if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                     if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, 1).getType())) {
                         BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, 0, 1));
@@ -199,7 +190,7 @@ public class Sponge extends AbstractCraftBookMechanic {
         for (cx = block.getX() - radius - 1; cx <= block.getX() + radius + 1; cx++) {
             for (cy = block.getY() - radius - 1; cy <= block.getY() + radius + 1; cy++) {
                 Block water = block.getWorld().getBlockAt(cx, cy, cz);
-                if(CraftBookPlugin.inst().getConfiguration().spongeCircleRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
+                if(circularRadius && !LocationUtil.isWithinSphericalRadius(water.getLocation(), block.getLocation(), radius+1.5)) continue;
                 if (water.getType() == Material.WATER || water.getType() == Material.STATIONARY_WATER) {
                     if(BlockUtil.isBlockReplacable(water.getRelative(0, 0, -1).getType())) {
                         BlockFromToEvent event = new BlockFromToEvent(water, water.getRelative(0, 0, -1));
@@ -210,5 +201,22 @@ public class Sponge extends AbstractCraftBookMechanic {
                 }
             }
         }
+    }
+
+    int radius;
+    boolean circularRadius;
+    boolean redstone;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "radius", "The maximum radius of the sponge.");
+        radius = config.getInt(path + "radius", 5);
+
+        config.setComment(path + "circular-radius", "Whether the radius should be circular or square.");
+        circularRadius = config.getBoolean(path + "circular-radius", true);
+
+        config.setComment(path + "require-redstone", "Whether to require redstone to suck up water or not.");
+        redstone = config.getBoolean(path + "require-redstone", false);
     }
 }

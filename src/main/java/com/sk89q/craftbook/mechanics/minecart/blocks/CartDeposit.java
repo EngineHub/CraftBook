@@ -20,12 +20,9 @@ import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CartDeposit extends CartBlockMechanism {
-
-    public CartDeposit (ItemInfo material) {
-        super(material);
-    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -229,5 +226,12 @@ public class CartDeposit extends CartBlockMechanism {
     public String[] getApplicableSigns() {
 
         return new String[] {"Collect", "Deposit"};
+    }
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "block", "Sets the block that is the base of the deposit mechanic.");
+        material = new ItemInfo(config.getString(path + "block", "IRON_ORE:0"));
     }
 }

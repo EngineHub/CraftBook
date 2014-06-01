@@ -1,5 +1,8 @@
 package com.sk89q.craftbook.mechanics;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -25,6 +28,7 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
@@ -49,7 +53,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
         boolean found = false;
-        for(String type : CraftBookPlugin.inst().getConfiguration().leadsAllowedMobs) {
+        for(String type : leadsAllowedMobs) {
             if(type.equalsIgnoreCase(typeName)) {
                 found = true;
                 break;
@@ -89,7 +93,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsStopTarget && !CraftBookPlugin.inst().getConfiguration().leadsMobRepellant) return;
+        if(!leadsStopTarget && !leadsMobRepellant) return;
         if(!(event.getEntity() instanceof Monster)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed()) return;
         if(!(event.getTarget() instanceof Player)) return;
@@ -98,14 +102,14 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if(CraftBookPlugin.inst().getConfiguration().leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
+        if(leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
             if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
                 event.setTarget(null);
                 event.setCancelled(true);
             }
         }
 
-        if(CraftBookPlugin.inst().getConfiguration().leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
+        if(leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
             for(Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
                 if(ent.getType() != event.getEntity().getType())
                     continue;
@@ -121,7 +125,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreakRandomly(final HangingBreakEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists) return;
+        if(!leadsHitchPersists) return;
         if(!(event.getEntity() instanceof LeashHitch)) return;
 
         if (!EventUtil.passesFilter(event)) return;
@@ -147,7 +151,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreak(final HangingBreakByEntityEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
+        if(!leadsHitchPersists && !leadsOwnerBreakOnly) return;
         if(!(event.getEntity() instanceof LeashHitch)) return;
         if(!(event.getRemover() instanceof Player)) return;
 
@@ -164,7 +168,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             if(ent instanceof Tameable)
                 if(!((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
                     isOwner = true;
-            if(isOwner || !(ent instanceof Tameable) || !CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+            if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
                 continue;
@@ -172,7 +176,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
                 amountConnected++;
         }
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsHitchPersists && amountConnected == 0) {
+        if(!leadsHitchPersists && amountConnected == 0) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
@@ -185,7 +189,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().leadsOwnerBreakOnly) return;
+        if(!leadsOwnerBreakOnly) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
         if(!(event.getEntity() instanceof Tameable)) return;
@@ -195,5 +199,30 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
             event.setCancelled(true);
+    }
+
+    boolean leadsStopTarget;
+    boolean leadsOwnerBreakOnly;
+    boolean leadsHitchPersists;
+    boolean leadsMobRepellant;
+    List<String> leadsAllowedMobs;
+
+    @Override
+    public void loadConfiguration (YAMLProcessor config, String path) {
+
+        config.setComment(path + "stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
+        leadsStopTarget = config.getBoolean(path + "stop-mob-target", false);
+
+        config.setComment(path + "owner-unleash-only", "Only allow the owner of tameable entities to unleash them from a leash hitch.");
+        leadsOwnerBreakOnly = config.getBoolean(path + "owner-unleash-only", false);
+
+        config.setComment(path + "hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
+        leadsHitchPersists = config.getBoolean(path + "hitch-persists", false);
+
+        config.setComment(path + "mob-repel", "If you have a mob tethered to you, mobs of that type will not target you.");
+        leadsMobRepellant = config.getBoolean(path + "mob-repel", false);
+
+        config.setComment(path + "allowed-mobs", "The list of mobs that can be tethered with a lead.");
+        leadsAllowedMobs = config.getStringList(path + "allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
     }
 }
