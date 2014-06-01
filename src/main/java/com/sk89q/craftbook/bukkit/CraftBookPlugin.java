@@ -314,7 +314,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "3820";
+        return "3825";
     }
 
     public static int getUpdaterID() {
