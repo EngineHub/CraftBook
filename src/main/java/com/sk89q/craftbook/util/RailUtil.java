@@ -52,10 +52,10 @@ public class RailUtil {
 
     public static boolean isTrack(Material id) {
 
-        if (MoreRails.instance.pressurePlate)
+        if (MoreRails.instance != null && MoreRails.instance.pressurePlate)
             if (id == Material.STONE_PLATE || id == Material.WOOD_PLATE || id == Material.IRON_PLATE || id == Material.GOLD_PLATE)
                 return true;
-        if (MoreRails.instance.ladder)
+        if (MoreRails.instance != null && MoreRails.instance.ladder)
             if (id == Material.LADDER || id == Material.VINE)
                 return true;
 

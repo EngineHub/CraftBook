@@ -70,9 +70,9 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     //protected final IC ic;
     //protected final BlockWorldVector pos;
 
-    public ICMechanic(ICManager manager) {
+    public ICMechanic() {
 
-        this.manager = manager;
+        manager = new ICManager();
         instance = this;
     }
 
@@ -548,31 +548,31 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
-        config.setComment("circuits.ics.cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
-        cache = config.getBoolean("circuits.ics.cache", true);
+        config.setComment(path + "cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
+        cache = config.getBoolean(path + "cache", true);
 
-        config.setComment("circuits.ics.max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
-        maxRange = config.getDouble("circuits.ics.max-radius", 10);
+        config.setComment(path + "max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
+        maxRange = config.getDouble(path + "max-radius", 10);
 
-        config.setComment("circuits.ics.allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
-        shortHand = config.getBoolean("circuits.ics.allow-short-hand", true);
+        config.setComment(path + "allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
+        shortHand = config.getBoolean(path + "allow-short-hand", true);
 
-        config.setComment("circuits.ics.keep-loaded", "Keep any chunk with an ST IC in it loaded.");
-        keepLoaded = config.getBoolean("circuits.ics.keep-loaded", false);
+        config.setComment(path + "keep-loaded", "Keep any chunk with an ST IC in it loaded.");
+        keepLoaded = config.getBoolean(path + "keep-loaded", false);
 
-        config.setComment("circuits.ics.disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
-        disabledICs = config.getStringList("circuits.ics.disallowed-ics", new ArrayList<String>());
+        config.setComment(path + "disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
+        disabledICs = config.getStringList(path + "disallowed-ics", new ArrayList<String>());
 
-        config.setComment("circuits.ics.default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
-        defaultCoordinates = LocationCheckType.getTypeFromName(config.getString("circuits.ics.default-coordinate-system", "RELATIVE"));
+        config.setComment(path + "default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
+        defaultCoordinates = LocationCheckType.getTypeFromName(config.getString(path + "default-coordinate-system", "RELATIVE"));
 
-        config.setComment("circuits.ics.save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
-        savePersistentData = config.getBoolean("circuits.ics.save-persistent-data", true);
+        config.setComment(path + "save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
+        savePersistentData = config.getBoolean(path + "save-persistent-data", true);
 
-        config.setComment("circuits.ics.midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
-        usePercussionMidi = config.getBoolean("circuits.ics.midi-use-percussion", false);
+        config.setComment(path + "midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
+        usePercussionMidi = config.getBoolean(path + "midi-use-percussion", false);
 
-        config.setComment("circuits.ics.break-on-error", "Break the IC sign when an error occurs from that specific IC.");
-        breakOnError = config.getBoolean("circuits.ics.break-on-error", false);
+        config.setComment(path + "break-on-error", "Break the IC sign when an error occurs from that specific IC.");
+        breakOnError = config.getBoolean(path + "break-on-error", false);
     }
 }

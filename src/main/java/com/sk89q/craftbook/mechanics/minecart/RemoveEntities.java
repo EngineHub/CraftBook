@@ -54,10 +54,10 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
-        config.setComment("vehicles.minecart.remove-entities.remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
-        otherCarts = config.getBoolean("vehicles.minecart.remove-entities.remove-other-minecarts", false);
+        config.setComment(path + "remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
+        otherCarts = config.getBoolean(path + "remove-other-minecarts", false);
 
-        config.setComment("vehicles.minecart.remove-entities.allow-empty-carts", "Allows the cart to be empty.");
-        empty = config.getBoolean("vehicles.minecart.remove-entities.allow-empty-carts", false);
+        config.setComment(path + "allow-empty-carts", "Allows the cart to be empty.");
+        empty = config.getBoolean(path + "allow-empty-carts", false);
     }
 }

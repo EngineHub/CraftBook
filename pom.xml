@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sk89q.craftbook</groupId>
     <artifactId>craftbook</artifactId>
-    <version>3.8-SNAPSHOT</version>
+    <version>3.9-SNAPSHOT</version>
     <name>CraftBook</name>
     <description>CraftBook adds fun mechanics and redstone-powered contraptions to Minecraft</description>
     <licenses>
@@ -152,6 +152,7 @@
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
                     <include>config.yml</include>
+                    <include>mechanisms.yml</include>
                     <include>books.txt</include>
                     <include>cauldron-recipes.txt</include>
                     <include>cauldron-recipes.yml</include>

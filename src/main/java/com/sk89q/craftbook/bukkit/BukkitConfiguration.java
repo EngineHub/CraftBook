@@ -1,4 +1,5 @@
 package com.sk89q.craftbook.bukkit;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,17 @@ public class BukkitConfiguration extends YAMLConfiguration {
         } catch (IOException e) {
             logger.severe("Error loading CraftBook configuration: " + e);
             BukkitUtil.printStacktrace(e);
+        }
+
+        if(config.getNode("mechanics") != null) {
+
+            new File(CraftBookPlugin.inst().getDataFolder(), "config.yml").renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml.old"));
+            CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml"), "config.yml");
+            try {
+                config.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         config.setWriteDefaults(true);

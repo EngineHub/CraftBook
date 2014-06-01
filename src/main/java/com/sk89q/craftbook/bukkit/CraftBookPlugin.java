@@ -304,7 +304,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getVersion() {
 
-        return "3.8.9";
+        return "3.9b1";
     }
 
     /**
@@ -314,7 +314,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "3803";
+        return "3820";
     }
 
     public static int getUpdaterID() {
@@ -525,7 +525,14 @@ public class CraftBookPlugin extends JavaPlugin {
 
         logDebugMessage("Initializing Mechanisms!", "startup");
 
+        createDefaultConfiguration(new File(getDataFolder(), "mechanisms.yml"), "mechanisms.yml");
         YAMLProcessor processor = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
+
+        try {
+            processor.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for(String enabled : config.enabledMechanics) {
 
@@ -541,6 +548,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
             }
         }
+
+        processor.save();
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {

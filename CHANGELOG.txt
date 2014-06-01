@@ -1,3 +1,16 @@
+3.9 Beta 1 (1st June)
++ Added a new system to enable/disable mechanics, and a seperate mechanisms.yml file to configure mechanics. (Note: You will need to redo your configs, this will save the old one as config.yml.old)
++ Added blacklists for BlockBreaker and SetBlock ICs.
++ Added an option to require signs for cauldrons.
++ Added coal and lapis ore to cooking pot.
++ Added the ability for IC ranges and offsets to have decimal values.
+* Optimized UUID to CBID conversions.
+* Optimized the plugin in general.
+* Fixed PaintingSwitcher on some versions of Java.
+* Fixed a randomly thrown bukkit error.
+* Fixed possible errors on disable.
+* Fixed a few performance issues with ST mechanics.
+
 3.8.9 (24th April)
 + Added an option to specify the amount of health to regain when being healed by a chair.
 + Added cocoa support to Planter IC.
