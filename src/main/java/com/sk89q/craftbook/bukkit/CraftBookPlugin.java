@@ -534,6 +534,16 @@ public class CraftBookPlugin extends JavaPlugin {
             e.printStackTrace();
         }
 
+        processor.setHeader(
+                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
+                "# This configuration will automatically add new configuration options for you,",
+                "# So there is no need to regenerate this configuration unless you need to.",
+                "# More information about these features are available at...",
+                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
+                "#",
+                "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
+                "");
+
         for(String enabled : config.enabledMechanics) {
 
             Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(enabled);
