@@ -91,7 +91,7 @@ public class BukkitConfiguration extends YAMLConfiguration {
         }
 
         config.setComment("disabled-mechanics", "A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.");
-        config.getStringList("disabled-mechanics", disabledMechanics);
+        config.setProperty("disabled-mechanics", disabledMechanics);
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
