@@ -16,12 +16,15 @@ public enum TernaryState {
     }
 
     public boolean doesPass(boolean bool) {
-        if(this == TRUE && bool)
-            return true;
-        if(this == FALSE && !bool)
-            return true;
-        if(this == NONE)
-            return true;
-        return false;
+        switch (this) {
+            case TRUE:
+                return bool;
+            case FALSE:
+                return !bool;
+            case NONE:
+                return true;
+            default:
+                return false;
+        }
     }
 }
