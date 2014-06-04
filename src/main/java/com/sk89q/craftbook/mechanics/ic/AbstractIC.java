@@ -57,32 +57,32 @@ public abstract class AbstractIC implements IC {
         return sign;
     }
 
-    protected Location getLocation() {
+    public Location getLocation() {
 
         return BukkitUtil.toSign(getSign()).getLocation();
     }
 
-    protected Block getBackBlock() {
+    public Block getBackBlock() {
 
         return SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
     }
 
-    protected String getLine(int line) {
+    public String getLine(int line) {
 
         return sign.getLine(line);
     }
 
-    protected String getRawLine(int line) {
+    public String getRawLine(int line) {
 
         return sign.getRawLine(line);
     }
 
-    protected ICFactory getFactory() {
+    public ICFactory getFactory() {
 
         return factory;
     }
 
-    protected CraftBookPlugin getPlugin() {
+    public CraftBookPlugin getPlugin() {
 
         return CraftBookPlugin.inst();
     }
