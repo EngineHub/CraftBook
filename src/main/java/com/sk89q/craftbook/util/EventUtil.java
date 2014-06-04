@@ -1,12 +1,7 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -18,11 +13,11 @@ public class EventUtil {
 
     private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 
-    static String[] ignoredEventTypes = new String[0];
+    private static Set<Class<?>> ignoredEventTypes = new HashSet<Class<?>>();
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
-        if(!shouldIgnoreEventType(ev.getClass().getSimpleName())) return false;
+        if(!shouldIgnoreEventType(ev.getClass())) return false;
 
         if(CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
 
@@ -40,27 +35,18 @@ public class EventUtil {
 
     public static void ignoreEvent(Event ev) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
+        if (!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
 
-        if(!shouldIgnoreEventType(ev.getClass().getSimpleName())) {
-            List<String> evs = new ArrayList<String>();
-            if(ignoredEventTypes.length > 0)
-                evs.addAll(Arrays.asList(ignoredEventTypes));
-            evs.add(ev.getClass().getSimpleName());
-            ignoredEventTypes = evs.toArray(new String[evs.size()]);
+        if (!shouldIgnoreEventType(ev.getClass())) {
+            ignoredEventTypes.add(ev.getClass());
         }
 
-        if(++lastGarbageCollect > 100)
-            garbageCollectEvents();
+        if (++lastGarbageCollect > 100) garbageCollectEvents();
         ignoredEvents.put(ev, System.currentTimeMillis());
     }
 
-    private static boolean shouldIgnoreEventType(String type) {
-
-        for(String ev : ignoredEventTypes)
-            if(ev.equalsIgnoreCase(type))
-                return true;
-        return false;
+    private static boolean shouldIgnoreEventType(Class<?> type) {
+        return ignoredEventTypes.contains(type);
     }
 
     public static void garbageCollectEvents() {
