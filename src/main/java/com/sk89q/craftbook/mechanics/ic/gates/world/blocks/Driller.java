@@ -45,53 +45,54 @@ public class Driller extends AbstractSelfTriggeredIC {
         if (CraftBookPlugin.inst().getRandom().nextInt(100) < 60) return false;
 
         Block center = getBackBlock().getRelative(0, -1, 0);
-        InventoryHolder holder = null;
+        ItemStack tool = null;
 
         if (InventoryUtil.doesBlockHaveInventory(center.getRelative(0, 2, 0))) {
-            holder = (InventoryHolder) center.getRelative(0, 2, 0).getState();
+            InventoryHolder holder = (InventoryHolder) center.getRelative(0, 2, 0).getState();
+            if (holder.getInventory().getItem(0) != null) {
+                tool = holder.getInventory().getItem(0);
+            }
         }
 
         boolean hasHadTrue;
 
         switch (CraftBookPlugin.inst().getRandom().nextInt(9)) {
             case 0:
-                hasHadTrue = drillLine(holder, center.getRelative(-1, 0, -1));
+                hasHadTrue = drillLine(tool, center.getRelative(-1, 0, -1));
                 break;
             case 1:
-                hasHadTrue = drillLine(holder, center.getRelative(-1, 0, 0));
+                hasHadTrue = drillLine(tool, center.getRelative(-1, 0, 0));
                 break;
             case 2:
-                hasHadTrue = drillLine(holder, center.getRelative(-1, 0, 1));
+                hasHadTrue = drillLine(tool, center.getRelative(-1, 0, 1));
                 break;
             case 3:
-                hasHadTrue = drillLine(holder, center.getRelative(0, 0, -1));
+                hasHadTrue = drillLine(tool, center.getRelative(0, 0, -1));
                 break;
             case 4:
-                hasHadTrue = drillLine(holder, center.getRelative(0, 0, 0));
+                hasHadTrue = drillLine(tool, center.getRelative(0, 0, 0));
                 break;
             case 5:
-                hasHadTrue = drillLine(holder, center.getRelative(0, 0, 1));
+                hasHadTrue = drillLine(tool, center.getRelative(0, 0, 1));
                 break;
             case 6:
-                hasHadTrue = drillLine(holder, center.getRelative(1, 0, -1));
+                hasHadTrue = drillLine(tool, center.getRelative(1, 0, -1));
                 break;
             case 7:
-                hasHadTrue = drillLine(holder, center.getRelative(1, 0, 0));
+                hasHadTrue = drillLine(tool, center.getRelative(1, 0, 0));
                 break;
             case 8:
-                hasHadTrue = drillLine(holder, center.getRelative(1, 0, 1));
+                hasHadTrue = drillLine(tool, center.getRelative(1, 0, 1));
                 break;
             default:
-                hasHadTrue = drillLine(holder, center.getRelative(0, 0, 0));
+                hasHadTrue = drillLine(tool, center.getRelative(0, 0, 0));
                 break;
         }
 
         return hasHadTrue;
     }
 
-    public boolean drillLine(InventoryHolder chest, Block blockToBreak) {
-
-        boolean hasChest = chest != null;
+    public boolean drillLine(ItemStack tool, Block blockToBreak) {
 
         Material brokenType = Material.AIR;
         while (brokenType == Material.AIR) {
@@ -103,10 +104,6 @@ public class Driller extends AbstractSelfTriggeredIC {
             if (!((Factory)getFactory()).breakNonNatural)
                 if (brokenType != Material.AIR && !BlockType.isNaturalTerrainBlock(brokenType.getId())) return false;
         }
-
-        ItemStack tool = null;
-        if(hasChest && chest.getInventory().getItem(0) != null)
-            tool = chest.getInventory().getItem(0);
 
         ICUtil.collectItem(this, new Vector(0, 2, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
 
