@@ -297,18 +297,17 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     @Override
                     public void run() {
                         for (int x = fblock + 2; x >= 1; x--) {
-                            final int i = x;
-                            if (trigger.equals(trigger.getRelative(piston.getFacing(), i)) || trigger.getRelative(piston.getFacing(), i).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), i).getType() == Material.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), i)))
+                            if (trigger.equals(trigger.getRelative(piston.getFacing(), x)) || trigger.getRelative(piston.getFacing(), x).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), x).getType() == Material.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), x)))
                                 continue;
-                            if (trigger.getRelative(piston.getFacing(), i + 1).getType() == Material.AIR) {
-                                for (Entity ent : trigger.getRelative(piston.getFacing(), i + 1).getChunk().getEntities()) {
+                            if (trigger.getRelative(piston.getFacing(), x + 1).getType() == Material.AIR) {
+                                for (Entity ent : trigger.getRelative(piston.getFacing(), x + 1).getChunk().getEntities()) {
 
-                                    if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i + 1))) {
+                                    if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), x + 1))) {
                                         ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                     }
                                 }
-                                if(copyData(trigger.getRelative(piston.getFacing(), i), trigger.getRelative(piston.getFacing(), i + 1)))
-                                    trigger.getRelative(piston.getFacing(), i).setType(Material.AIR);
+                                if(copyData(trigger.getRelative(piston.getFacing(), x), trigger.getRelative(piston.getFacing(), x + 1)))
+                                    trigger.getRelative(piston.getFacing(), x).setType(Material.AIR);
                             }
                         }
                     }

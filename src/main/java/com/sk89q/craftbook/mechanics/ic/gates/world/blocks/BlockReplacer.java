@@ -107,8 +107,7 @@ public class BlockReplacer extends AbstractIC {
                             replaceBlocks(on, b, traversedBlocks);
                         }
                     }, delay);
-                } else
-                    continue;
+                }
             }
         }
 

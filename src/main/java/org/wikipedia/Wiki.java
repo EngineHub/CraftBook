@@ -754,9 +754,7 @@ public class Wiki implements Serializable
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Wiki))
-            return false;
-        return domain.equals(((Wiki)obj).domain);
+        return obj instanceof Wiki && domain.equals(((Wiki) obj).domain);
     }
 
     /**
@@ -6191,9 +6189,7 @@ public class Wiki implements Serializable
         @Override
         public boolean equals(Object o)
         {
-            if (!(o instanceof Revision))
-                return false;
-            return toString().equals(o.toString());
+            return o instanceof Revision && toString().equals(o.toString());
         }
 
         /**
@@ -6944,9 +6940,7 @@ public class Wiki implements Serializable
             if (level.equals(FULL_PROTECTION))
                 return user.isAllowedTo("editprotected");
         }
-        if ((Boolean)protectionstate.get("cascade") == Boolean.TRUE) // can be null
-            return user.isAllowedTo("editprotected");
-        return true;
+        return protectionstate.get("cascade") != Boolean.TRUE || user.isAllowedTo("editprotected");
     }
 
     // cookie methods

@@ -100,7 +100,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
                 boolean changed = false;
                 if(on >= maxOn && maxOn >= 0)
                     state = false;
-                if(state && chip.getOutput(i) != true) {
+                if(state && !chip.getOutput(i)) {
                     chip.setOutput(i, state); //Only change if needed
                     changed = true;
                 }

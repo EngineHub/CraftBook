@@ -174,8 +174,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         }
 
         public boolean isShowRunning() {
-            if(show == null) return false;
-            return show.isRunning();
+            return show != null && show.isRunning();
         }
 
         public void stopShow() {
@@ -283,10 +282,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                         String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("duration ", ""));
                         duration = Float.parseFloat(bits[0]);
-                        if(bits.length > 1)
-                            preciseDuration = bits[1].equalsIgnoreCase("precise");
-                        else
-                            preciseDuration = false;
+                        preciseDuration = bits.length > 1 && bits[1].equalsIgnoreCase("precise");
                     } else if (line.startsWith("wait ")) {
 
                         FyrestoneInterpreter nshow = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);

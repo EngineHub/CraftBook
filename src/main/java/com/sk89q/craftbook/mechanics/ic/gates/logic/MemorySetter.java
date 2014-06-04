@@ -63,6 +63,7 @@ public class MemorySetter extends AbstractIC {
             for (int i = 0; i < chip.getInputCount(); i++)
                 pw.print(chip.getInput(i) ? "1" : "0");
             pw.close();
+            return true;
         } catch (Exception e) {
             BukkitUtil.printStacktrace(e);
         }

@@ -29,12 +29,11 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
     @Override
     public boolean isPlaying() {
 
-        if (p == null || !p.isOnline())
+        if (p == null || !p.isOnline()) {
             p = Bukkit.getPlayerExact(player);
+        }
+        return !(p == null || !p.isOnline() || area != null && !area.isWithinArea(p.getLocation())) && super.isPlaying();
 
-        if(p == null || !p.isOnline() || area != null && !area.isWithinArea(p.getLocation())) return false;
-
-        return super.isPlaying();
     }
 
     public Sound toSound(Instrument instrument) {

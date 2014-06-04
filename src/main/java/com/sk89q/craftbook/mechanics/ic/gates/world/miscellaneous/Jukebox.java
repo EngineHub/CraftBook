@@ -85,7 +85,6 @@ public class Jukebox extends AbstractSelfTriggeredIC {
                         players.remove(p.getName());
                         hasChanged = true;
                     }
-                    continue;
                 } else if (!players.containsKey(p.getName())) {
                     players.put(p.getName(), area);
                     hasChanged = true;

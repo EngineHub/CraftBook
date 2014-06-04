@@ -157,14 +157,14 @@ public class ItemUtil {
                     for(String s : recipe1.getShape())
                         for(char c : s.toCharArray())
                             for(Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
-                                if(entry.getKey().charValue() == c)
+                                if(entry.getKey() == c)
                                     stacks1.add(entry.getValue());
                     List<ItemStack> stacks2 = new ArrayList<ItemStack>();
 
                     for(String s : recipe2.getShape())
                         for(char c : s.toCharArray())
                             for(Entry<Character, ItemStack> entry : recipe2.getIngredientMap().entrySet())
-                                if(entry.getKey().charValue() == c)
+                                if(entry.getKey() == c)
                                     stacks2.add(entry.getValue());
 
                     if(stacks2.size() != stacks1.size()) {

@@ -212,9 +212,11 @@ public class ItemSyntax {
             for(int i = 1; i < advMetadataSplit.length; i++) {
                 String section = advMetadataSplit[i];
                 String[] bits = COLON_PATTERN.split(section, 2);
-                if(bits.length < 2)
-                    continue; //Invalid Bit.
-                else if(bits[0].equalsIgnoreCase("player") && meta instanceof SkullMeta)
+
+                //Invalid Bit check
+                if (bits.length < 2) continue;
+
+                if(bits[0].equalsIgnoreCase("player") && meta instanceof SkullMeta)
                     ((SkullMeta) meta).setOwner(bits[1]);
                 else if(bits[0].equalsIgnoreCase("author") && meta instanceof BookMeta)
                     ((BookMeta) meta).setAuthor(bits[1]);

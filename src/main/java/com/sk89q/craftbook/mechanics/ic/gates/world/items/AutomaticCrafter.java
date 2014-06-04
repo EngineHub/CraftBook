@@ -254,7 +254,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             return true;
         } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
-            List<ItemStack> ing = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(shape.getIngredientList()));
+            List<ItemStack> ing = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(shape.getIngredientList()));
             for (ItemStack it : inv.getContents()) {
                 if (!ItemUtil.isStackValid(it)) continue;
                 if(ing.isEmpty())
@@ -265,11 +265,11 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                         break;
                     ItemStack stack = ingIterator.next();
                     if (!ItemUtil.isStackValid(stack)) {
-                        ing.remove(stack);
+                        ingIterator.remove();
                         continue;
                     }
                     if (ItemUtil.areItemsIdentical(it, stack)) {
-                        ing.remove(stack);
+                        ingIterator.remove();
                         break;
                     }
                 }

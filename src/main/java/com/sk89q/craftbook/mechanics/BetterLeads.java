@@ -171,9 +171,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
-                continue;
-            } else
+            } else {
                 amountConnected++;
+            }
         }
 
         if(!leadsHitchPersists && amountConnected == 0) {
@@ -193,7 +193,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!(event.getEntity() instanceof LivingEntity)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
         if(!(event.getEntity() instanceof Tameable)) return;
-        if(!!((Tameable) event.getEntity()).isTamed()) return;
+        if(!!((Tameable) event.getEntity()).isTamed()) return; // TODO is this right?
 
         if (!EventUtil.passesFilter(event)) return;
 

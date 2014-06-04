@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.util;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(VerifyUtil.class)
@@ -37,7 +36,7 @@ public class VerifyUtilTest {
         list.add(mock(Object.class));
         list.add(null);
 
-        list = (List<Object>) VerifyUtil.<Object>withoutNulls(list);
+        list = (List<Object>) VerifyUtil.withoutNulls(list);
 
         assertTrue(!list.contains(null));
         assertTrue(list.size() == 5);

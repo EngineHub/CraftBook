@@ -100,8 +100,8 @@ public class Pulser extends AbstractIC {
 
     protected boolean getInput(ChipState chip) {
 
-        if(chip == null) return false; //Concurrency issue? idk.
-        return chip.getInput(0);
+        //Concurrency issue? idk.
+        return chip != null && chip.getInput(0);
     }
 
     protected void setOutput(ChipState chip, boolean on) {

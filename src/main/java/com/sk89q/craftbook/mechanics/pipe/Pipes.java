@@ -199,7 +199,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     pExceptions.removeAll(Collections.singleton(null));
                 }
 
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;
@@ -254,7 +254,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     pExceptions.removeAll(Collections.singleton(null));
                 }
 
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.<ItemStack>withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;

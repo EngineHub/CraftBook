@@ -86,12 +86,12 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
                     if(ItemUtil.areItemsIdentical(cont, item)) {
                         if(checkAmount) {
                             amount += cont.getAmount();
-                            if(amount >= item.getAmount())
+                            if(amount >= item.getAmount()) {
                                 return true;
-                            else
-                                continue;
-                        } else
+                            }
+                        } else {
                             return true;
+                        }
                     }
             }
             else

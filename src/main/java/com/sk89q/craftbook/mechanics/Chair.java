@@ -280,7 +280,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
                         Player player = e.getPlayer();
-                        if (e.getPacket().getBooleans().getValues().get(1).booleanValue())
+                        if (e.getPacket().getBooleans().getValues().get(1))
                             if(hasChair(player))
                                 removeChair(player);
                     }

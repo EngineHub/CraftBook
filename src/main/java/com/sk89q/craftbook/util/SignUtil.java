@@ -21,7 +21,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.SignChangeEvent;
 
-import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
@@ -419,10 +418,6 @@ public class SignUtil {
      * @return
      */
     public static boolean doesSignHaveText(Block sign, String text, int line) {
-
-        if(!isSign(sign)) return false;
-        ChangedSign signs = BukkitUtil.toChangedSign(sign);
-        if(!signs.getLine(line).equals(text)) return false;
-        return true;
+        return isSign(sign) && BukkitUtil.toChangedSign(sign).getLine(line).equals(text);
     }
 }

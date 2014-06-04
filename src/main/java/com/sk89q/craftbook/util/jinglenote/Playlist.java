@@ -181,7 +181,7 @@ public class Playlist {
                             BukkitUtil.printStacktrace(e);
                         }
 
-                        if(isPlaying() == false) {
+                        if(!isPlaying()) {
                             CraftBookPlugin.logDebugMessage("No longer playing! Stopping sequencer", "playlist");
                             sequencer.stop();
                             break;
@@ -204,7 +204,7 @@ public class Playlist {
                     continue;
 
                 while(getPlayers().isEmpty()) {
-                    if(isPlaying() == false) return;
+                    if(!isPlaying()) return;
                     try {
                         Thread.sleep(100L);
                     } catch (InterruptedException e) {

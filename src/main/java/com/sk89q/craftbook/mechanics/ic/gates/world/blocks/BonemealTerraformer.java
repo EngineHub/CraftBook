@@ -191,20 +191,15 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public boolean consumeBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        if (InventoryUtil.doesBlockHaveInventory(chest))
-            return InventoryUtil.removeItemsFromInventory((InventoryHolder)chest.getState(), new ItemStack(Material.INK_SACK, 1,(short) 15));
+        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(), new ItemStack(Material.INK_SACK, 1, (short) 15));
 
-        return false;
     }
 
     public boolean refundBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
+        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.addItemsToInventory((InventoryHolder) chest.getState(), new ItemStack(Material.INK_SACK, 1, (short) 15)).isEmpty();
 
-        if (InventoryUtil.doesBlockHaveInventory(chest))
-            return InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), new ItemStack(Material.INK_SACK, 1,(short) 15)).isEmpty();
-
-        return false;
     }
 
     public boolean isSameSapling(Block sapling, Block other) {

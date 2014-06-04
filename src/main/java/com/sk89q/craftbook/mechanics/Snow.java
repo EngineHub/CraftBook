@@ -103,8 +103,7 @@ public class Snow extends AbstractCraftBookMechanic {
             case AIR:
                 return false;
             default:
-                if(!freezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) return false;
-                return !isReplacable(id);
+                return !(!freezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) && !isReplacable(id);
         }
     }
 
@@ -502,14 +501,16 @@ public class Snow extends AbstractCraftBookMechanic {
         @Override
         public boolean equals(Object o) {
             if(!(o instanceof SnowBlock)) return false;
-            if(((SnowBlock)o).x == x && ((SnowBlock)o).y == y && ((SnowBlock)o).z == z) return ((SnowBlock)o).worldname.equals(worldname);
+            if (((SnowBlock)o).x == x && ((SnowBlock)o).y == y && ((SnowBlock)o).z == z) {
+                return Arrays.equals(((SnowBlock) o).worldname, worldname);
+            }
             return false;
         }
 
         @Override
         public int hashCode() {
             // Constants correspond to glibc's lcg algorithm parameters
-            return (worldname.hashCode() * 1103515245 + 12345 ^ x * 1103515245 + 12345 ^ y * 1103515245 + 12345 ^ z * 1103515245 + 12345) * 1103515245 + 12345;
+            return (Arrays.hashCode(worldname) * 1103515245 + 12345 ^ x * 1103515245 + 12345 ^ y * 1103515245 + 12345 ^ z * 1103515245 + 12345) * 1103515245 + 12345;
         }
     }
 

@@ -99,10 +99,8 @@ public class SearchArea {
                 return false;
 
             ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(StringUtils.replace(line, "r:", ""));
-            if(reg == null)
-                return false;
+            return reg != null;
 
-            return true;
         } else {
 
             String[] locationParts = RegexUtil.EQUALS_PATTERN.split(line);

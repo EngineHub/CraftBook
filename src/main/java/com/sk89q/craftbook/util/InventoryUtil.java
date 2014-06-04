@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -69,7 +70,7 @@ public class InventoryUtil {
                 leftovers.add(stack);
             }
         }
-        while(leftovers.remove(null)){}
+        leftovers.removeAll(Collections.singleton(null));
 
         furnace.update();
 

@@ -72,6 +72,7 @@ public class MemoryAccess extends AbstractIC {
                     chip.setOutput(i, line.charAt(i) == '1');
             }
             br.close();
+            return true;
         } catch (Exception e) {
             BukkitUtil.printStacktrace(e);
         }

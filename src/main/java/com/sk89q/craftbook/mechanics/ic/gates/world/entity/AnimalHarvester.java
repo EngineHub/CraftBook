@@ -15,11 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.SearchArea;
 
@@ -101,10 +97,8 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
             if(doesChestContain(Material.SHEARS)) {
 
                 Sheep sh = (Sheep) entity;
-                if(sh.isSheared())
-                    return false;
+                return !sh.isSheared();
 
-                return true;
             }
         }
 
@@ -180,7 +174,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         if (chest.getType() == Material.CHEST) {
 
             Chest c = (Chest) chest.getState();
-            c.getInventory().removeItem(new ItemStack(item, 1));
+            return c.getInventory().removeItem(new ItemStack(item, 1)).isEmpty();
         }
 
         return false;

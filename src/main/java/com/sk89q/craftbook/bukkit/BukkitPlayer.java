@@ -116,8 +116,7 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public boolean isHoldingBlock() {
 
-        if(getHeldItemType() == 0) return false;
-        return BlockType.fromID(getHeldItemType()) != null;
+        return getHeldItemType() != 0 && BlockType.fromID(getHeldItemType()) != null;
     }
 
     @Override

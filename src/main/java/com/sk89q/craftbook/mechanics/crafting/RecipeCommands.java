@@ -148,7 +148,7 @@ public class RecipeCommands {
             }
 
             try {
-                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, items, Arrays.<String>asList(shape), results.get(0), advancedData);
+                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, items, Arrays.asList(shape), results.get(0), advancedData);
                 RecipeManager.INSTANCE.addRecipe(recipe);
                 if (CustomCrafting.INSTANCE == null) {
                     player.printError("You do not have CustomCrafting enabled, or Java has bugged and unloaded it (Did you use /reload?)!");

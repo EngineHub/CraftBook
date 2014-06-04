@@ -98,13 +98,12 @@ public class Planter extends AbstractSelfTriggeredIC {
 
                 if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
 
-                Block b = null;
+                Block b;
 
                 if ((b = searchBlocks(it)) != null) {
                     if (c.getInventory().removeItem(new ItemStack(it.getType(), 1, it.getDurability())).isEmpty()) {
                         return plantBlockAt(it, b);
-                    } else
-                        continue;
+                    }
                 }
             }
         } else {

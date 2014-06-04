@@ -25,7 +25,7 @@ public class EventUtil {
 
         if(time == null) return false;
 
-        if(System.currentTimeMillis() - time.longValue() > 1000*3)
+        if(System.currentTimeMillis() - time > 1000*3)
             ignoredEvents.remove(ev);
 
         return true;
@@ -58,7 +58,7 @@ public class EventUtil {
 
             Entry<Event, Long> bit = iter.next();
 
-            if(System.currentTimeMillis() - bit.getValue().longValue() > 1000*5)
+            if(System.currentTimeMillis() - bit.getValue() > 1000*5)
                 iter.remove();
         }
     }
@@ -80,8 +80,6 @@ public class EventUtil {
                     return false;
         }
 
-        if(EventUtil.shouldIgnoreEvent(event)) return false;
-
-        return true;
+        return !EventUtil.shouldIgnoreEvent(event);
     }
 }

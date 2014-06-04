@@ -90,7 +90,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                 sh = new ShapedRecipe(r.getResult().getItemStack());
                 ((ShapedRecipe) sh).shape(r.getShape());
                 for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet())
-                    ((ShapedRecipe) sh).setIngredient(is.getValue().charValue(), is.getKey().getItemStack().getData());
+                    ((ShapedRecipe) sh).setIngredient(is.getValue(), is.getKey().getItemStack().getData());
             } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
                 sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getIngredients().toArray(new CraftingItemStack[r.getIngredients().size()])[0].getItemStack().getType());
                 for (CraftingItemStack is : r.getIngredients())
@@ -147,7 +147,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                         for(String s : recipe.getShape())
                             for(char c : s.toCharArray())
                                 for(Entry<CraftingItemStack, Character> entry : recipe.getShapedIngredients().entrySet())
-                                    if(entry.getValue().charValue() == c)
+                                    if(entry.getValue() == c)
                                         stacks.add(entry.getKey());
                         tests2 = stacks.toArray(new CraftingItemStack[stacks.size()]);
                     } else
@@ -173,8 +173,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                                     hasFailed = true;
                                     break thisrecipe;
                                 }
-                            } else
-                                continue;
+                            }
                         }
                     }
 
@@ -239,7 +238,6 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     break;
                 } else {
                     shouldCancel = true;
-                    continue;
                 }
             }
         }
@@ -280,8 +278,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                                 CraftBookPlugin.logDebugMessage("MetaData incorrect!", "advanced-data");
                                 throw new InvalidCraftingException("Unmet Item Meta");
                             }
-                        } else
-                            continue;
+                        }
                     }
 
                     if(!leftovers.isEmpty())

@@ -132,21 +132,20 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets the block located relative to the signs facing. That means that when the sign is attached to a block and
+     * Gets the block located relative to the signs front. That means that when the sign is attached to a block and
      * the player is looking at it it
      * will add the offsetX to left or right, offsetY is added up or down and offsetZ is added front or back.
      *
      * @param block   to get relative position from
-     * @param facing  to work with
+     * @param front   to work with
      * @param offsetX amount to move left(negative) or right(positive)
      * @param offsetY amount to move up(positive) or down(negative)
      * @param offsetZ amount to move back(negative) or front(positive)
      *
      * @return block located at the relative offset position
      */
-    public static Block getRelativeOffset(Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
+    public static Block getRelativeOffset(Block block, BlockFace front, int offsetX, int offsetY, int offsetZ) {
 
-        BlockFace front = facing;
         BlockFace back;
         BlockFace right;
         BlockFace left;

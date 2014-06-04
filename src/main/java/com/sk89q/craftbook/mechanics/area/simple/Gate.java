@@ -659,8 +659,7 @@ public class Gate extends AbstractCraftBookMechanic {
         @Override
         public boolean equals(Object o) {
 
-            if(!(o instanceof GateColumn)) return false;
-            return ((GateColumn) o).getX() == getX() && ((GateColumn) o).getZ() == getZ() && block.getWorld().getName().equals(((GateColumn) o).block.getWorld().getName());
+            return o instanceof GateColumn && ((GateColumn) o).getX() == getX() && ((GateColumn) o).getZ() == getZ() && block.getWorld().getName().equals(((GateColumn) o).block.getWorld().getName());
         }
 
         @Override

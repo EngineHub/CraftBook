@@ -69,11 +69,8 @@ public class Cauldron extends AbstractCraftBookMechanic {
         if (below2 == Material.STATIONARY_LAVA)
             below2 = Material.LAVA;
         // Preliminary check so we don't waste CPU cycles
-        if ((below == Material.LAVA || below2 == Material.LAVA) && (blockItem.isSame(s1) || blockItem.isSame(s2) || blockItem.isSame(s3) || blockItem.isSame(s4))) {
-            return true;
-        }
+        return (below == Material.LAVA || below2 == Material.LAVA) && (blockItem.isSame(s1) || blockItem.isSame(s2) || blockItem.isSame(s3) || blockItem.isSame(s4));
 
-        return false;
     }
 
     protected CauldronCookbook recipes;

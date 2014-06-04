@@ -52,7 +52,6 @@ public class Tune extends AbstractSelfTriggeredIC {
                     if (!area.isWithinArea(player.getLocation())) {
                         if(jNote.isPlaying(player.getName()))
                             jNote.stop(player.getName());
-                        continue;
                     } else if (!jNote.isPlaying(player.getName())) {
                         jNote.play(player.getName(), sequencer, area);
                     }
