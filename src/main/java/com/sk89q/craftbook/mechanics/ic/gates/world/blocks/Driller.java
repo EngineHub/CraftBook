@@ -13,6 +13,7 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
 
 public class Driller extends AbstractSelfTriggeredIC {
@@ -107,7 +108,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         if(hasChest && chest.getInventory().getItem(0) != null)
             tool = chest.getInventory().getItem(0);
 
-        ICUtil.collectItem(this, BlockUtil.getBlockDrops(blockToBreak, tool));
+        ICUtil.collectItem(this, new Vector(0, 2, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
 
         brokenType = blockToBreak.getType();
         blockToBreak.setType(Material.AIR);

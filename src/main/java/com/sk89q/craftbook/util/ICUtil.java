@@ -26,9 +26,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
 
@@ -371,7 +371,7 @@ public class ICUtil {
         }
     }
 
-    public static void collectItem(AbstractIC ic, ItemStack... items) {
+    public static void collectItem(AbstractIC ic, Vector offset, ItemStack... items) {
         Sign sign = BukkitUtil.toSign(ic.getSign());
         Block backB = ic.getBackBlock();
         BlockFace back = SignUtil.getBack(sign.getBlock());
@@ -387,9 +387,9 @@ public class ICUtil {
         Collection<ItemStack> results = event.getItems();
 
         // If there is a chest add the results to the chest
-        Block chest = backB.getRelative(0, 1, 0);
-        if (chest.getType() == Material.CHEST) {
-            Chest c = (Chest) chest.getState();
+        Block invHolder = backB.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
+        if (InventoryUtil.doesBlockHaveInventory(invHolder)) {
+            InventoryHolder c = (InventoryHolder) invHolder.getState();
             results = c.getInventory().addItem(results.toArray(new ItemStack[results.size()])).values();
         }
 

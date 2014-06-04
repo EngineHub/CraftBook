@@ -13,9 +13,9 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.Vector;
 
 public class BlockBreaker extends AbstractSelfTriggeredIC {
 
@@ -62,22 +62,16 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     public boolean breakBlock() {
 
-        if (chest == null || broken == null) {
+        if (broken == null) {
 
             Block bl = getBackBlock();
 
             if (((Factory)getFactory()).above) {
-                chest = bl.getRelative(0, 1, 0);
                 broken = bl.getRelative(0, -1, 0);
             } else {
-                chest = bl.getRelative(0, -1, 0);
                 broken = bl.getRelative(0, 1, 0);
             }
         }
-
-        boolean hasChest = false;
-        if (chest != null && InventoryUtil.doesBlockHaveInventory(chest))
-            hasChest = true;
 
         if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.PISTON_MOVING_PIECE || ((Factory)getFactory()).blockBlacklist.contains(new ItemInfo(broken)))
             return false;
@@ -86,7 +80,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         if (item.getData() > 0 && item.getData() != broken.getData()) return false;
 
-        ICUtil.collectItem(this, BlockUtil.getBlockDrops(broken, null));
+        ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
         broken.setType(Material.AIR);
 
         return true;

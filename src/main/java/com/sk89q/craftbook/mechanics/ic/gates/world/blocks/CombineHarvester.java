@@ -10,6 +10,7 @@ import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SearchArea;
+import com.sk89q.worldedit.Vector;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -60,7 +61,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(b == null) return false;
 
         if (harvestable(b)) {
-            ICUtil.collectItem(this, BlockUtil.getBlockDrops(b, null));
+            ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(b, null));
             b.setType(Material.AIR);
             return true;
         }
