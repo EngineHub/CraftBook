@@ -16,11 +16,20 @@
 
 package com.sk89q.craftbook.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -28,8 +37,10 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
@@ -357,6 +368,34 @@ public class ICUtil {
             double r = Double.parseDouble(radians[0]);
             r = VerifyUtil.verifyRadius(r, ICMechanic.instance.maxRange);
             return new Vector(r,r,r);
+        }
+    }
+
+    public static void collectItem(AbstractIC ic, ItemStack... items) {
+        Sign sign = BukkitUtil.toSign(ic.getSign());
+        Block backB = ic.getBackBlock();
+        BlockFace back = SignUtil.getBack(sign.getBlock());
+
+        Block pipe = backB.getRelative(back);
+
+        // Handle the event
+        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(items)), backB);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (!event.isValid()) return;
+
+        Collection<ItemStack> results = event.getItems();
+
+        // If there is a chest add the results to the chest
+        Block chest = backB.getRelative(0, 1, 0);
+        if (chest.getType() == Material.CHEST) {
+            Chest c = (Chest) chest.getState();
+            results = c.getInventory().addItem(results.toArray(new ItemStack[results.size()])).values();
+        }
+
+        // Drop whatever results were not added to the chest
+        for (ItemStack item : results) {
+            backB.getWorld().dropItemNaturally(sign.getLocation().add(0.5, 0, 0.5), item);
         }
     }
 
