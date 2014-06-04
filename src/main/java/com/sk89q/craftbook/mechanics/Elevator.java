@@ -375,7 +375,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                         return;
                     }
                     Player p = op.getPlayer();
-                    if(!flyingPlayers.contains(p.getUniqueId()))
+                    if(!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
                         flyingPlayers.add(p.getUniqueId());
                     p.setAllowFlight(true);
                     p.setFlying(true);
@@ -388,19 +388,23 @@ public class Elevator extends AbstractCraftBookMechanic {
                     if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
                         p.teleport(newLocation);
                         teleportFinish(player, destination, shift);
-                        p.setFlying(false);
-                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                        if(flyingPlayers.contains(p.getUniqueId())) {
+                            p.setFlying(false);
+                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                            flyingPlayers.remove(p.getUniqueId());
+                        }
                         cancel();
-                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
                     if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
                         player.print("mech.lift.leave");
-                        p.setFlying(false);
-                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                        if(flyingPlayers.contains(p.getUniqueId())) {
+                            p.setFlying(false);
+                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                            flyingPlayers.remove(p.getUniqueId());
+                        }
                         cancel();
-                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
@@ -413,11 +417,13 @@ public class Elevator extends AbstractCraftBookMechanic {
                         if(!BlockType.canPassThrough(p.getLocation().add(0, -1, 0).getBlock().getTypeId()))
                             p.teleport(p.getLocation().add(0, -speed, 0));
                     } else {
-                        p.setFlying(false);
-                        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                         teleportFinish(player, destination, shift);
+                        if(flyingPlayers.contains(p.getUniqueId())) {
+                            p.setFlying(false);
+                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+                            flyingPlayers.remove(p.getUniqueId());
+                        }
                         cancel();
-                        flyingPlayers.remove(p.getUniqueId());
                         return;
                     }
 
