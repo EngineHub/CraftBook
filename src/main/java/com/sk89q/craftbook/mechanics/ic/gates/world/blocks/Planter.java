@@ -23,12 +23,7 @@ import org.bukkit.material.Tree;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
@@ -213,7 +208,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         switch (item.getType()) {
             case SEEDS:
-                block.setType(Material.CROPS);
+                block.setTypeIdAndData(Material.CROPS.getId(), (byte) 0, true);
                 return true;
             case MELON_SEEDS:
                 block.setType(Material.MELON_STEM);
@@ -222,13 +217,13 @@ public class Planter extends AbstractSelfTriggeredIC {
                 block.setType(Material.PUMPKIN_STEM);
                 return true;
             case NETHER_STALK:
-                block.setType(Material.NETHER_WARTS);
+                block.setTypeIdAndData(Material.NETHER_WARTS.getId(), (byte) 0, true);
                 return true;
             case POTATO_ITEM:
-                block.setType(Material.POTATO);
+                block.setTypeIdAndData(Material.POTATO.getId(), (byte) 0, true);
                 return true;
             case CARROT_ITEM:
-                block.setType(Material.CARROT);
+                block.setTypeIdAndData(Material.CARROT.getId(), (byte) 0, true);
                 return true;
             case INK_SACK:
                 if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
@@ -236,7 +231,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
                 for(BlockFace face : faces) {
                     if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE) {
-                        block.setType(Material.COCOA);
+                        block.setTypeIdAndData(Material.COCOA.getId(), (byte) 0, true);
                         BlockState state = block.getState();
                         ((CocoaPlant)state.getData()).setFacingDirection(face);
                         state.update();
