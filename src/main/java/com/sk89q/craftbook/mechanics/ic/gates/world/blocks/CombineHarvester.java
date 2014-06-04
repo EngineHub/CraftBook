@@ -1,29 +1,15 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
+import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.SignUtil;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -74,35 +60,11 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(b == null) return false;
 
         if (harvestable(b)) {
-            collectDrops(BlockUtil.getBlockDrops(b, null));
+            ICUtil.collectItem(this, BlockUtil.getBlockDrops(b, null));
             b.setType(Material.AIR);
             return true;
         }
         return false;
-    }
-
-    public void collectDrops(ItemStack[] drops) {
-
-        BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-        Block pipe = getBackBlock().getRelative(back);
-
-        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(drops)), getBackBlock());
-        Bukkit.getPluginManager().callEvent(event);
-
-        if(!event.isValid()) return;
-
-        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST) {
-
-            Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
-            HashMap<Integer, ItemStack> leftovers = c.getInventory().addItem(event.getItems().toArray(new ItemStack[event.getItems().size()]));
-            for (ItemStack item : leftovers.values()) {
-                getBackBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
-            }
-        } else {
-            for (ItemStack item : event.getItems()) {
-                getBackBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getLocation().add(0.5, 0, 0.5), item);
-            }
-        }
     }
 
     public boolean harvestable(Block block) {

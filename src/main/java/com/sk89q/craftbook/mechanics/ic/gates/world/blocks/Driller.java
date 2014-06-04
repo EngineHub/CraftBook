@@ -1,30 +1,17 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
-import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
+import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
 
@@ -120,32 +107,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         if(hasChest && chest.getInventory().getItem(0) != null)
             tool = chest.getInventory().getItem(0);
 
-        for (ItemStack stack : BlockUtil.getBlockDrops(blockToBreak, tool)) {
-
-            List<ItemStack> toDrop = new ArrayList<ItemStack>();
-            toDrop.add(stack);
-
-            if (hasChest) {
-                toDrop = new ArrayList<ItemStack>(chest.getInventory().addItem(toDrop.toArray(new ItemStack[1])).values());
-            }
-
-            BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-            Block pipe = getBackBlock().getRelative(back);
-
-            PipeRequestEvent event = new PipeRequestEvent(pipe, toDrop, getBackBlock());
-            Bukkit.getPluginManager().callEvent(event);
-
-            if(!event.isValid())
-                continue;
-
-            toDrop = event.getItems();
-
-            if (!toDrop.isEmpty()) {
-                for (ItemStack d : toDrop) {
-                    BukkitUtil.toSign(getSign()).getBlock().getWorld().dropItemNaturally(BukkitUtil.toSign(getSign()).getBlock().getLocation().add(0.5, 0.5, 0.5), d);
-                }
-            }
-        }
+        ICUtil.collectItem(this, BlockUtil.getBlockDrops(blockToBreak, tool));
 
         brokenType = blockToBreak.getType();
         blockToBreak.setType(Material.AIR);
