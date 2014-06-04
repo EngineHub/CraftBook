@@ -68,32 +68,31 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     }
 
     public boolean harvestable(Block block) {
-
-        if((block.getType() == Material.CROPS || block.getType() == Material.CARROT || block.getType() == Material.POTATO) && block.getData() >= 0x7)
-            return true;
-
-        if(block.getType() == Material.CACTUS && block.getRelative(0, -1, 0).getType() == Material.CACTUS && block.getRelative(0, 1, 0).getType() != Material.CACTUS)
-            return true;
-
-        if(block.getType() == Material.SUGAR_CANE && block.getRelative(0, -1, 0).getType() == Material.SUGAR_CANE && block.getRelative(0, 1, 0).getType() != Material.SUGAR_CANE)
-            return true;
-
-        if(block.getType() == Material.VINE && block.getRelative(0, 1, 0).getType() == Material.VINE && block.getRelative(0, -1, 0).getType() != Material.VINE)
-            return true;
-
-        if(block.getType() == Material.COCOA && ((block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC))
-            return true;
-
-        if(block.getType() == Material.NETHER_WARTS && block.getData() >= 0x3)
-            return true;
-
-        if(block.getType() == Material.MELON_BLOCK || block.getType() == Material.PUMPKIN)
-            return true;
-
-        if(block.getType() == Material.LOG || block.getType() == Material.LOG_2)
-            return true;
-
-        return false;
+        Material above = block.getRelative(0, 1, 0).getType();
+        Material below = block.getRelative(0, -1, 0).getType();
+        switch (block.getType()) {
+            case CROPS:
+            case CARROT:
+            case POTATO:
+                return block.getData() >= 0x7;
+            case CACTUS:
+                return below == Material.CACTUS && above != Material.CACTUS;
+            case SUGAR_CANE_BLOCK:
+                return below == Material.SUGAR_CANE_BLOCK && above != Material.SUGAR_CANE_BLOCK;
+            case VINE:
+                return above == Material.VINE && below != Material.VINE;
+            case COCOA:
+                return (block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC;
+            case NETHER_WARTS:
+                return block.getData() >= 0x3;
+            case MELON_BLOCK:
+            case PUMPKIN:
+            case LOG:
+            case LOG_2:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static class Factory extends AbstractICFactory {
