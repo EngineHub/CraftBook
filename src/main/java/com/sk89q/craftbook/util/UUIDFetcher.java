@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         Map<String, UUID> uuidMap = new HashMap<String, UUID>();
         String body = buildBody(names);
         for (int i = 1; i < MAX_SEARCH; i++) {
-            HttpURLConnection connection = createConnection(i);
+            HttpURLConnection connection;
+            try {
+                connection = createConnection(i);
+            } catch (SocketTimeoutException ex) {
+                break;
+            }
             writeBody(connection, body);
             JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
             JSONArray array = (JSONArray) jsonObject.get("profiles");
@@ -67,6 +73,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         connection.setUseCaches(false);
         connection.setDoInput(true);
         connection.setDoOutput(true);
+        connection.setConnectTimeout(10000); // TODO this is rather generous, especially for MineCraft
         return connection;
     }
     @SuppressWarnings("unchecked")
