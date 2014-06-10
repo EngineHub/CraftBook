@@ -52,10 +52,11 @@ public class AreaCommands {
         String namespace = player.getCraftBookId();
         boolean personal = true;
 
-        if (context.hasFlag('n') && player.hasPermission("craftbook.mech.area.save." + context.getFlag('n'))) {
+        if (context.hasFlag('n')) {
+            if (!player.hasPermission("craftbook.mech.area.save." + context.getFlag('n')))
+                throw new CommandException("You do not have permission to use this namespace.");
             namespace = context.getFlag('n');
             personal = false;
-            throw new CommandException("You do not have permission to use this namespace.");
         } else if (!player.hasPermission("craftbook.mech.area.save.self"))
             throw new CommandPermissionsException();
 
