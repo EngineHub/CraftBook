@@ -17,6 +17,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.LoadPriority;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -199,5 +200,11 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         config.setComment(path + "enable-in-player-chat", "Allow variables to work in player chat.");
         playerChatOverride = config.getBoolean(path + "enable-in-player-chat", false);
+    }
+
+    @Override
+    public LoadPriority getLoadPriority() {
+
+        return LoadPriority.EARLY;
     }
 }

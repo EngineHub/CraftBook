@@ -12,12 +12,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -207,7 +207,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
 
     static {
-        availableMechanics = new HashMap<String, Class<? extends CraftBookMechanic>>();
+        availableMechanics = new TreeMap<String, Class<? extends CraftBookMechanic>>();
 
         availableMechanics.put("Variables", VariableManager.class);
         availableMechanics.put("CommandItems", CommandItems.class);

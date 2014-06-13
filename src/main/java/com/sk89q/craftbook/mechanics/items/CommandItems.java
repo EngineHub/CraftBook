@@ -48,6 +48,7 @@ import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LoadPriority;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -552,5 +553,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
+    }
+
+    @Override
+    public LoadPriority getLoadPriority() {
+
+        return LoadPriority.EARLY;
     }
 }
