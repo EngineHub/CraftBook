@@ -36,6 +36,9 @@ public class CommandItemDefinition {
 
     protected boolean keepOnDeath;
 
+    protected String missingConsumableMessage;
+    protected String cooldownMessage;
+
     protected CommandItemAction[] actions;
 
     public ItemStack getItem() {
@@ -48,7 +51,7 @@ public class CommandItemDefinition {
         return name;
     }
 
-    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath, CommandItemAction[] actions) {
+    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath, CommandItemAction[] actions, String missingConsumableMessage, String cooldownMessage) {
 
         this.name = name;
         this.stack = stack;
@@ -65,6 +68,8 @@ public class CommandItemDefinition {
         this.requireSneaking = requireSneaking;
         this.keepOnDeath = keepOnDeath;
         this.actions = actions;
+        this.missingConsumableMessage = missingConsumableMessage;
+        this.cooldownMessage = cooldownMessage;
     }
 
     public static CommandItemDefinition load(YAMLProcessor config, String path) {
@@ -106,7 +111,10 @@ public class CommandItemDefinition {
                 actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
             }
 
-        return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]));
+        String missingConsumableMessage = config.getString(path + ".consumable-message", "mech.command-items.need");
+        String cooldownMessage = config.getString(path + ".cooldown-message", "mech.command-items.wait");
+
+        return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]), missingConsumableMessage, cooldownMessage);
     }
 
     public void save(YAMLProcessor config, String path) {
@@ -137,6 +145,9 @@ public class CommandItemDefinition {
             config.setProperty(path + ".actions." + ac.name + ".value", ac.value);
             config.setProperty(path + ".actions." + ac.name + ".run-stage", ac.stage.name());
         }
+
+        config.setProperty(path + ".consumable-message", missingConsumableMessage);
+        config.setProperty(path + ".cooldown-message", cooldownMessage);
     }
 
     public enum CommandType {

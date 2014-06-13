@@ -180,10 +180,8 @@ public class LanguageManager {
         put("mech.command.create","Command Sign Created!");
 
         put("mech.command-items.out-of-sync", "Inventory became out of sync during usage of command-items!");
-        put("mech.command-items.wait", "You have to wait");
-        put("mech.command-items.wait-seconds", "seconds to use this again!");
-        put("mech.command-items.need", "You need");
-        put("mech.command-items.need-use", "to use this command!");
+        put("mech.command-items.wait", "You have to wait %time% seconds to use this again!");
+        put("mech.command-items.need", "You need %item% to use this command!");
 
         put("mech.cook.create","Cooking Pot Created!");
         put("mech.cook.ouch","Ouch! That was hot!");

@@ -369,8 +369,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 }
 
                 if(cooldownPeriods.containsKey(new Tuple2<String, String>(lplayer.getName(), comdef.name))) {
-                    if(def.clickType != ClickType.PASSIVE)
-                        lplayer.printError(lplayer.translate("mech.command-items.wait") + " " + cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)) + " " + lplayer.translate("mech.command-items.wait-seconds"));
+                    if(def.clickType != ClickType.PASSIVE && !def.cooldownMessage.isEmpty())
+                        lplayer.printError(lplayer.translate(def.cooldownMessage).replace("%time%", String.valueOf(cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)))));
                     break current;
                 }
 
@@ -385,8 +385,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         }
                     }
 
-                    if(!found) {
-                        lplayer.printError(lplayer.translate("mech.command-items.need") + " " + stack.getAmount() + " " + stack.getType().name() + " " + lplayer.translate("mech.command-items.need-use"));
+                    if(!found && !def.missingConsumableMessage.isEmpty()) {
+                        lplayer.printError(lplayer.translate(def.missingConsumableMessage).replace("%item%", stack.getAmount() + " " + stack.getType().name()));
                         break current;
                     }
                 }
