@@ -193,5 +193,17 @@ public class TopLevelCommands {
                 }
             }
         }
+
+        @Command(aliases = {"enable"}, desc = "Enable a mechanic")
+        @CommandPermissions({"craftbook.enable-mechanic"})
+        public void enable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+
+            if(args.argsLength() > 0) {
+                if(CraftBookPlugin.inst().enableMechanic(args.getString(0)))
+                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully enabled " + args.getString(0));
+                else
+                    sender.sendMessage(ChatColor.RED + "Failed to load " + args.getString(0));
+            }
+        }
     }
 }

@@ -503,6 +503,8 @@ public class CraftBookPlugin extends JavaPlugin {
         return updateAvailable;
     }
 
+    YAMLProcessor mechanismsConfig;
+
     /**
      * Register basic things to the plugin. For example, languages.
      */
@@ -526,15 +528,15 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Initializing Mechanisms!", "startup");
 
         createDefaultConfiguration(new File(getDataFolder(), "mechanisms.yml"), "mechanisms.yml");
-        YAMLProcessor processor = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
+        mechanismsConfig = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
 
         try {
-            processor.load();
+            mechanismsConfig.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        processor.setHeader(
+        mechanismsConfig.setHeader(
                 "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
@@ -551,7 +553,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 if(mechClass != null) {
 
                     CraftBookMechanic mech = mechClass.newInstance();
-                    mech.loadConfiguration(processor, "mechanics." + enabled + ".");
+                    mech.loadConfiguration(mechanismsConfig, "mechanics." + enabled + ".");
                     mechanics.add(mech);
                 }
             } catch (Throwable t) {
@@ -559,7 +561,7 @@ public class CraftBookPlugin extends JavaPlugin {
             }
         }
 
-        processor.save();
+        mechanismsConfig.save();
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
@@ -578,6 +580,56 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         setupSelfTriggered();
+    }
+
+    /**
+     * Enables the mechanic with the specified name.
+     * 
+     * @param string The name of the mechanic.
+     * @return If the mechanic could be found and enabled.
+     */
+    public boolean enableMechanic(String mechanic) {
+
+        try {
+            mechanismsConfig.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mechanismsConfig.setHeader(
+                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
+                "# This configuration will automatically add new configuration options for you,",
+                "# So there is no need to regenerate this configuration unless you need to.",
+                "# More information about these features are available at...",
+                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
+                "#",
+                "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
+                "");
+
+        Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
+        try {
+            if(mechClass != null) {
+
+                CraftBookMechanic mech = mechClass.newInstance();
+                mech.loadConfiguration(mechanismsConfig, "mechanics." + mechanic + ".");
+                mechanics.add(mech);
+
+                if(!mech.enable()) {
+                    getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
+                    mech.disable();
+                    return false;
+                }
+                getServer().getPluginManager().registerEvents(mech, this);
+            } else
+                return false;
+        } catch (Throwable t) {
+            getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanic, t);
+            return false;
+        }
+
+        mechanismsConfig.save();
+
+        return true;
     }
 
     /**
