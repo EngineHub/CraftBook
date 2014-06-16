@@ -379,9 +379,15 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                     boolean found = false;
 
+                    int amount = 0;
+
                     for(ItemStack tStack : player.getInventory().getContents()) {
                         if(ItemUtil.areItemsIdentical(stack, tStack)) {
-                            found = true;
+
+                            amount += tStack.getAmount();
+
+                            if(amount >=stack.getAmount())
+                                found = true;
                             break;
                         }
                     }
