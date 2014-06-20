@@ -41,7 +41,7 @@ public class CommandItemCommands {
         setupAddCommand(plugin);
     }
 
-    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name>", min = 1)
+    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name> [-a amount] [-s]", min = 1)
     public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
 
         Player player = null;
@@ -77,7 +77,7 @@ public class CommandItemCommands {
             sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
     }
 
-    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:a:s", usage = "<CommandItem Name> <x> <y> <z> [-w world]", min = 4)
+    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:a:s", usage = "<CommandItem Name> <x> <y> <z> [-w world] [-a amount] [-s]", min = 4)
     public void spawnItem(CommandContext context, CommandSender sender) throws CommandException {
 
         if(CommandItems.INSTANCE == null)
