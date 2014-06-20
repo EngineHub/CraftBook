@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
@@ -21,7 +20,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class RecipeManager extends LocalConfiguration {
+public class RecipeManager {
 
     public static RecipeManager INSTANCE;
     private Set<Recipe> recipes;
@@ -34,7 +33,6 @@ public class RecipeManager extends LocalConfiguration {
         load();
     }
 
-    @Override
     public void load() {
 
         recipes = new LinkedHashSet<Recipe>();

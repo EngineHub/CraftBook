@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.config.YAMLConfiguration;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * A CraftBook implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration}.
  */
-public class BukkitConfiguration extends YAMLConfiguration {
+public class BukkitConfiguration {
 
     public List<String> enabledMechanics;
 
@@ -42,12 +41,15 @@ public class BukkitConfiguration extends YAMLConfiguration {
 
     public String persistentStorageType;
 
+    public YAMLProcessor config;
+    public Logger logger;
+
     public BukkitConfiguration(YAMLProcessor config, Logger logger) {
 
-        super(config, logger);
+        this.config = config;
+        this.logger = logger;
     }
 
-    @Override
     public void load() {
 
         try {
@@ -153,6 +155,6 @@ public class BukkitConfiguration extends YAMLConfiguration {
         config.setComment("convert-names-to-cbids", "Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.");
         convertNamesToCBID = config.getBoolean("convert-names-to-cbids", true);
 
-        super.load();
+        config.save();
     }
 }

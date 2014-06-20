@@ -3,10 +3,9 @@ package com.sk89q.craftbook.mechanics.ic;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-public class ICConfiguration extends LocalConfiguration {
+public class ICConfiguration {
 
     public final YAMLProcessor config;
     protected final Logger logger;
@@ -17,7 +16,6 @@ public class ICConfiguration extends LocalConfiguration {
         this.logger = logger;
     }
 
-    @Override
     public void load () {
 
         try {

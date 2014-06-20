@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
@@ -19,7 +18,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 /**
  * @author Silthus
  */
-public class ImprovedCauldronCookbook extends LocalConfiguration {
+public class ImprovedCauldronCookbook {
 
     private Collection<Recipe> recipes;
     protected final YAMLProcessor config;
@@ -32,7 +31,6 @@ public class ImprovedCauldronCookbook extends LocalConfiguration {
         load();
     }
 
-    @Override
     public void load() {
 
         recipes = new ArrayList<Recipe>();

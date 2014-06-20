@@ -16,7 +16,6 @@ import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 import com.sk89q.craftbook.CraftBookMechanic;
-import com.sk89q.craftbook.LocalConfiguration;
 import com.sk89q.craftbook.mechanics.crafting.CraftingItemStack;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager.Recipe;
@@ -112,7 +111,7 @@ public class ReportWriter {
         LogListBlock log = new LogListBlock();
         LogListBlock configLog = log.putChild("Configuration");
 
-        Class<? extends LocalConfiguration> cls = config.getClass();
+        Class<? extends BukkitConfiguration> cls = config.getClass();
         for (Field field : cls.getFields()) {
             try {
                 if (field.getName().equalsIgnoreCase("config")) continue;
