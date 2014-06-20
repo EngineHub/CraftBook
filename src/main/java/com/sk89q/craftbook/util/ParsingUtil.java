@@ -92,7 +92,7 @@ public class ParsingUtil {
             CraftBookPlugin.logDebugMessage(var + " permissions granted!", "variables.line-parsing");
 
             for(Entry<Tuple2<String, String>, String> bit : VariableManager.instance.getVariableStore().entrySet()) {
-                if(bit.getKey().b.equalsIgnoreCase(key) && bit.getKey().a.equalsIgnoreCase(value))
+                if(bit.getKey().b.equals(key) && bit.getKey().a.equals(value))
                     line = StringUtils.replace(line, "%" + var + "%", bit.getValue());
             }
         }
