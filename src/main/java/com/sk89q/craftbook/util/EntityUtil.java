@@ -156,6 +156,8 @@ public class EntityUtil {
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("health")) {
             try {
                 double health = Double.parseDouble(data[1]);
+                if(((LivingEntity) ent).getMaxHealth() < health)
+                    ((LivingEntity) ent).setMaxHealth(health);
                 ((LivingEntity) ent).setHealth(health);
             } catch (Exception ignored) {
             }
