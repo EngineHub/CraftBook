@@ -629,6 +629,7 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         mechanismsConfig.save();
+        config.save();
 
         return true;
     }

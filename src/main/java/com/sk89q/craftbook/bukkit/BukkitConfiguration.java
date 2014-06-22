@@ -157,4 +157,20 @@ public class BukkitConfiguration {
 
         config.save();
     }
+
+    public void save() {
+
+        config.setProperty("enabled-mechanics", enabledMechanics);
+
+        List<String> disabledMechanics = new ArrayList<String>();
+
+        for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
+            if(!enabledMechanics.contains(mech))
+                disabledMechanics.add(mech);
+        }
+
+        config.setProperty("disabled-mechanics", disabledMechanics);
+
+        config.save();
+    }
 }
