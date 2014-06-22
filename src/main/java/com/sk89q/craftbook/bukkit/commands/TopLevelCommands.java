@@ -205,5 +205,17 @@ public class TopLevelCommands {
                     sender.sendMessage(ChatColor.RED + "Failed to load " + args.getString(0));
             }
         }
+
+        @Command(aliases = {"disable"}, desc = "Disable a mechanic")
+        @CommandPermissions({"craftbook.disable-mechanic"})
+        public void disable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+
+            if(args.argsLength() > 0) {
+                if(CraftBookPlugin.inst().disableMechanic(args.getString(0)))
+                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully disabled " + args.getString(0));
+                else
+                    sender.sendMessage(ChatColor.RED + "Failed to remove " + args.getString(0));
+            }
+        }
     }
 }

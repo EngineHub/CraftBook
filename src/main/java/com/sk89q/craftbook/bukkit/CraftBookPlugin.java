@@ -635,6 +635,35 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
+     * Disables the mechanic with the specified name.
+     * 
+     * @param string The name of the mechanic.
+     * @return If the mechanic could be found and disabled.
+     */
+    public boolean disableMechanic(String mechanic) {
+
+        Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
+
+        if(mechClass == null) return false;
+
+        boolean found = false;
+
+        for(CraftBookMechanic mech : mechanics) {
+            if(mech.getClass().equals(mechClass)) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) return false;
+
+        config.enabledMechanics.remove(mechanic);
+        config.save();
+
+        return true;
+    }
+
+    /**
      * Registers events used by the main CraftBook plugin. Also registers PluginMetrics
      */
     public void registerGlobalEvents() {
