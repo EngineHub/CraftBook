@@ -1,3 +1,20 @@
+3.9 Beta 2 (22nd June)
++ Added commands to enable and disable mechanics. (/cb enable, /cb disable)
++ Added load ordering to mechanics - Should fix CommandItems not being usable in crafting, etc.
++ Added ability to set custom commanditem cooldown and consumable messages.
++ Added a boat decay mechanic.
+* Major performance improvements plugin-wide.
+* General code cleanups.
+* Fixed the a and s flags for commanditem commands not showing in the descriptions.
+* Fixed the mob spawner ICs not being able to set high health values.
+* Fixed CommandItem consumables not taking amounts into consideration.
+* Fixed UUID Conversions capable of stalling the server for large amounts of time.
+* Fixed ToggleArea save to other namespace permissions.
+* Fixed a bug where combine harvesters and planters operating on the same tick could instantly grow full crops.
+* Fixed slow moving on elevators disabling /fly.
+* Fixed the mechanisms config file not containing the config header.
+* Fixed the disabled mechanics section of the config not updating itself.
+
 3.9 Beta 1 (1st June)
 + Added a new system to enable/disable mechanics, and a seperate mechanisms.yml file to configure mechanics. (Note: You will need to redo your configs, this will save the old one as config.yml.old)
 + Added blacklists for BlockBreaker and SetBlock ICs.
