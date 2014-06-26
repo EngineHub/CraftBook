@@ -2,6 +2,7 @@ package com.sk89q.craftbook.bukkit.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +46,7 @@ public class PlayerUtil {
      */
     public static List<Player> matchPlayerNames(String filter) {
 
-        Player[] players = CraftBookPlugin.inst().getServer().getOnlinePlayers();
+        Collection<? extends Player> players = CraftBookPlugin.inst().getServer().getOnlinePlayers();
         boolean useDisplayNames = true;
 
         filter = filter.toLowerCase(Locale.ENGLISH);
@@ -103,7 +104,7 @@ public class PlayerUtil {
      *
      * @throws CommandException
      */
-    protected static Iterable<Player> checkPlayerMatch(List<Player> players) throws CommandException {
+    protected static Iterable<? extends Player> checkPlayerMatch(Collection<? extends Player> players) throws CommandException {
         // Check to see if there were any matches
         if (players.isEmpty()) throw new CommandException("No players matched query.");
 
@@ -120,12 +121,12 @@ public class PlayerUtil {
      *
      * @throws CommandException no matches found
      */
-    public static Iterable<Player> matchPlayers(CommandSender source, String filter) throws CommandException {
+    public static Iterable<? extends Player> matchPlayers(CommandSender source, String filter) throws CommandException {
 
-        if (CraftBookPlugin.server().getOnlinePlayers().length == 0)
+        if (CraftBookPlugin.server().getOnlinePlayers().size() == 0)
             throw new CommandException("No players matched query.");
 
-        if (filter.equals("*")) return checkPlayerMatch(Arrays.asList(CraftBookPlugin.server().getOnlinePlayers()));
+        if (filter.equals("*")) return checkPlayerMatch(CraftBookPlugin.server().getOnlinePlayers());
 
         // Handle special hash tag groups
         if (filter.charAt(0) == '#') // Handle #world, which matches player of the same world as the
@@ -174,7 +175,7 @@ public class PlayerUtil {
      */
     public static Player matchPlayerExactly(CommandSender sender, String filter) throws CommandException {
 
-        Player[] players = CraftBookPlugin.server().getOnlinePlayers();
+        Collection<? extends Player> players = CraftBookPlugin.server().getOnlinePlayers();
         for (Player player : players) {
             if (player.getName().equalsIgnoreCase(filter) || player.getDisplayName().equalsIgnoreCase(filter))
                 return player;
@@ -195,7 +196,7 @@ public class PlayerUtil {
      */
     public static Player matchSinglePlayer(CommandSender sender, String filter) throws CommandException {
         // This will throw an exception if there are no matches
-        Iterator<Player> players = matchPlayers(sender, filter).iterator();
+        Iterator<? extends Player> players = matchPlayers(sender, filter).iterator();
 
         Player match = players.next();
 
