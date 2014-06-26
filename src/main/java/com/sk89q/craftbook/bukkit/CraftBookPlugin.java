@@ -537,6 +537,8 @@ public class CraftBookPlugin extends JavaPlugin {
             e.printStackTrace();
         }
 
+        mechanismsConfig.setWriteDefaults(true);
+
         mechanismsConfig.setHeader(
                 "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
                 "# This configuration will automatically add new configuration options for you,",
