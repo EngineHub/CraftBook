@@ -163,9 +163,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return;
             }
 
-            trackCauldronItem(item);
-
-            if (BukkitUtil.equals(lastLocation, item.getLocation()))
+            if (trackCauldronItem(item) || BukkitUtil.equals(lastLocation, item.getLocation()))
                 cancel();
         }
     }
