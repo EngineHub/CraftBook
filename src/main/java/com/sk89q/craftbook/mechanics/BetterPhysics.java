@@ -18,6 +18,13 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
 
     protected static BetterPhysics instance;
 
+    @Override
+    public boolean enable() {
+
+        instance = this;
+        return true;
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
 
