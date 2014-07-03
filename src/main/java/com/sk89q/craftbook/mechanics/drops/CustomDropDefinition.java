@@ -6,11 +6,13 @@ import java.util.List;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.util.ItemUtil;
 
 public abstract class CustomDropDefinition {
 
     private DropItemStack[] drops;
+    private DropReward[] extraRewards;
     private String name;
 
     private boolean append;
@@ -28,6 +30,12 @@ public abstract class CustomDropDefinition {
     public boolean getAppend() {
 
         return append;
+    }
+
+    public DropReward[] getRewards() {
+        if(extraRewards == null)
+            extraRewards = new DropReward[0];
+        return extraRewards;
     }
 
     public DropItemStack[] getDrops() {

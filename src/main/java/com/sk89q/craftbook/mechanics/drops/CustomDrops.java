@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -20,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
+import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -83,6 +86,26 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 drops.add(stack);
             }
 
+            List<DropReward> rewards = new ArrayList<DropReward>();
+
+            for(String reward : config.getKeys("custom-drops." + key + ".rewards")) {
+
+                String rewardType = config.getString("custom-drops." + key + ".rewards." + rewards + ".type");
+
+                DropReward dropReward = null;
+
+                if(rewardType.equalsIgnoreCase("money")) {
+
+                    double amount = config.getDouble("custom-drops." + key + ".rewards." + rewards + ".amount", 10);
+
+                    dropReward = new MonetaryDropReward(reward, amount);
+                }
+
+                if(dropReward == null) continue;
+
+                rewards.add(dropReward);
+            }
+
             CustomDropDefinition def = null;
             if(type.equalsIgnoreCase("entity") || type.equalsIgnoreCase("mob")) {
 
@@ -122,6 +145,13 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".chance", stack.getChance());
                 config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".minimum-amount", stack.getMinimum());
                 config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".maximum-amount", stack.getMaximum());
+            }
+
+            for(DropReward reward : def.getRewards()) {
+                if(reward instanceof MonetaryDropReward) {
+                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".type", "money");
+                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".amount", ((MonetaryDropReward) reward).getAmount());
+                }
             }
 
             if(def instanceof EntityCustomDropDefinition) {
@@ -171,6 +201,10 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             for(ItemStack stack : def.getRandomDrops()) {
                 event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), stack);
             }
+
+            for(DropReward reward : def.getRewards()) {
+                reward.giveReward(event.getPlayer());
+            }
         }
     }
 
@@ -193,6 +227,13 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             for(ItemStack stack : def.getRandomDrops()) {
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), stack);
+            }
+
+            Player killer = event.getEntity().getKiller();
+
+            for(DropReward reward : def.getRewards()) {
+                if(killer == null && reward.doesRequirePlayer()) continue;
+                reward.giveReward(killer);
             }
         }
     }
