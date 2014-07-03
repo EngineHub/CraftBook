@@ -17,8 +17,10 @@ public abstract class CustomDropDefinition {
 
     private boolean append;
 
-    public CustomDropDefinition(String name, List<DropItemStack> drops) {
+    public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
+        if(extraRewards != null)
+            this.extraRewards = extraRewards.toArray(new DropReward[extraRewards.size()]);
         this.name = name;
     }
 

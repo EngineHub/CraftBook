@@ -204,7 +204,7 @@ public final class LegacyCustomDropManager {
                                     append = true;
                             }
 
-                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, new ItemInfo(sourceId, data));
+                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, null, new ItemInfo(sourceId, data));
                             converted.setAppend(append);
 
                             ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);
@@ -239,7 +239,7 @@ public final class LegacyCustomDropManager {
                                     append = true;
                             }
 
-                            EntityCustomDropDefinition converted = new EntityCustomDropDefinition(def.getKey().toUpperCase() + "" + this.converted++, stacks, EntityType.valueOf(def.getKey().toUpperCase()));
+                            EntityCustomDropDefinition converted = new EntityCustomDropDefinition(def.getKey().toUpperCase() + "" + this.converted++, stacks, null, EntityType.valueOf(def.getKey().toUpperCase()));
                             converted.setAppend(append);
 
                             ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);

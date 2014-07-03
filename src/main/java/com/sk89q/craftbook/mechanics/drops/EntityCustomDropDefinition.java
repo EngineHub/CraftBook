@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.entity.EntityType;
 
+import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
+
 public class EntityCustomDropDefinition extends CustomDropDefinition {
 
     private EntityType entityType;
@@ -11,8 +13,8 @@ public class EntityCustomDropDefinition extends CustomDropDefinition {
     /**
      * Instantiate an Entity-Type CustomDrop.
      */
-    public EntityCustomDropDefinition(String name, List<DropItemStack> drops, EntityType entityType) {
-        super(name, drops);
+    public EntityCustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, EntityType entityType) {
+        super(name, drops, extraRewards);
         this.entityType = entityType;
     }
 

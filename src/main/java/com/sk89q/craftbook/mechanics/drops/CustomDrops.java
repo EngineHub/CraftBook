@@ -111,12 +111,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 EntityType ent = EntityType.valueOf(config.getString("custom-drops." + key + ".entity-type"));
 
-                def = new EntityCustomDropDefinition(key, drops, ent);
+                def = new EntityCustomDropDefinition(key, drops, rewards, ent);
             } else if(type.equalsIgnoreCase("block")) {
 
                 ItemInfo data = new ItemInfo(config.getString("custom-drops." + key + ".block"));
 
-                def = new BlockCustomDropDefinition(key, drops, data);
+                def = new BlockCustomDropDefinition(key, drops, rewards, data);
             }
 
             if(def != null) {
