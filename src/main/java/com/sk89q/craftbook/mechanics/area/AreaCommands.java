@@ -96,7 +96,7 @@ public class AreaCommands {
 
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
-            if (Area.instance.maxAreasPerUser >= 0 && !namespace.equals("global")) {
+            if (Area.instance.maxAreasPerUser >= 0 && !namespace.equals("global") && !player.hasPermission("craftbook.mech.area.bypass-limit")) {
                 int count = copyManager.meetsQuota(world, namespace, id,
                         Area.instance.maxAreasPerUser);
 
