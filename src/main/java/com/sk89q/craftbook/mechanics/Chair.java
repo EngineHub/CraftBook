@@ -203,6 +203,10 @@ public class Chair extends AbstractCraftBookMechanic {
 
                     lplayer.printError("mech.chairs.floating");
                     return;
+                } else if(!BlockType.canPassThrough(event.getClickedBlock().getRelative(0, 1, 0).getTypeId())) {
+
+                    lplayer.printError("mech.chairs.obstructed");
+                    return;
                 }
 
                 Location chairLoc = event.getClickedBlock().getLocation().add(0.5,0,0.5);
