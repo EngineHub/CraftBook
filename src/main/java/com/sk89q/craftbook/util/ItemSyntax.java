@@ -31,12 +31,12 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class ItemSyntax {
 
-    private static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);
-    private static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    private static final Pattern SEMICOLON_PATTERN = Pattern.compile(";", Pattern.LITERAL);
-    private static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    private static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
-    private static final Pattern FSLASH_PATTERN = Pattern.compile("/", Pattern.LITERAL);
+    private static final Pattern ASTERISK_PATTERN = Pattern.compile("(?:[^\\]([*]))");
+    private static final Pattern COLON_PATTERN = Pattern.compile("(?:[^\\](:))");
+    private static final Pattern SEMICOLON_PATTERN = Pattern.compile("(?:[^\\](;))");
+    private static final Pattern COMMA_PATTERN = Pattern.compile("(?:[^\\](,))");
+    private static final Pattern PIPE_PATTERN = Pattern.compile("(?:[^\\]([|]))");
+    private static final Pattern FSLASH_PATTERN = Pattern.compile("(?:[^\\]([/]))");
 
     /**
      * The plugin that stores this ItemSyntax reference. Only set this if you have a method: "public String parseItemSyntax(String item) {" in your plugin class.
