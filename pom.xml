@@ -68,12 +68,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.9-R0.3-SNAPSHOT</version>
+            <version>1.7.10-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.7.9-R0.3-SNAPSHOT</version>
+            <version>1.7.10-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -88,14 +88,14 @@
         <dependency>
 	        <groupId>org.powermock</groupId>
 	        <artifactId>powermock-module-junit4</artifactId>
-	        <version>1.4.9</version>
+	        <version>1.5.5</version>
 	        <type>jar</type>
 	        <scope>test</scope>
 	    </dependency>
 	    <dependency>
 	        <groupId>org.powermock</groupId>
 	        <artifactId>powermock-api-mockito</artifactId>
-	        <version>1.4.9</version>
+	        <version>1.5.5</version>
 	        <type>jar</type>
 	        <scope>test</scope>
 	    </dependency>
