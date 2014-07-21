@@ -24,6 +24,10 @@
     </properties>
     <repositories>
         <repository>
+            <id>Apache</id>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
