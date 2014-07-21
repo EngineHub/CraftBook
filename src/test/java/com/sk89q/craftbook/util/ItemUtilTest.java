@@ -20,7 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ItemUtil.class)
+@PrepareForTest({ItemUtil.class, ItemSyntax.class})
 public class ItemUtilTest {
 
     @Test

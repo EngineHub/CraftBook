@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
@@ -31,12 +32,12 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class ItemSyntax {
 
-    private static final Pattern ASTERISK_PATTERN = Pattern.compile("(?:[^\\]([*]))");
-    private static final Pattern COLON_PATTERN = Pattern.compile("(?:[^\\](:))");
-    private static final Pattern SEMICOLON_PATTERN = Pattern.compile("(?:[^\\](;))");
-    private static final Pattern COMMA_PATTERN = Pattern.compile("(?:[^\\](,))");
-    private static final Pattern PIPE_PATTERN = Pattern.compile("(?:[^\\]([|]))");
-    private static final Pattern FSLASH_PATTERN = Pattern.compile("(?:[^\\]([/]))");
+    private static final Pattern ASTERISK_PATTERN = Pattern.compile("(?<=[^\\\\])([*])");
+    private static final Pattern COLON_PATTERN = Pattern.compile("(?<=[^\\\\])([:])");
+    private static final Pattern SEMICOLON_PATTERN = Pattern.compile("(?<=[^\\\\])([;])");
+    private static final Pattern COMMA_PATTERN = Pattern.compile("(?<=[^\\\\])([,])");
+    private static final Pattern PIPE_PATTERN = Pattern.compile("(?<=[^\\\\])([|])");
+    private static final Pattern FSLASH_PATTERN = Pattern.compile("(?<=[^\\\\])([/])");
 
     /**
      * The plugin that stores this ItemSyntax reference. Only set this if you have a method: "public String parseItemSyntax(String item) {" in your plugin class.
@@ -143,6 +144,13 @@ public class ItemSyntax {
         String[] enchantSplit = SEMICOLON_PATTERN.split(nameLoreSplit[0]);
         String[] amountSplit = ASTERISK_PATTERN.split(enchantSplit[0], 2);
         String[] dataSplit = COLON_PATTERN.split(amountSplit[0], 2);
+
+        System.out.println(Arrays.toString(advMetadataSplit));
+        System.out.println(Arrays.toString(nameLoreSplit));
+        System.out.println(Arrays.toString(enchantSplit));
+        System.out.println(Arrays.toString(amountSplit));
+        System.out.println(Arrays.toString(dataSplit));
+
         try {
             material = Material.getMaterial(Integer.parseInt(dataSplit[0]));
         } catch (NumberFormatException e) {
