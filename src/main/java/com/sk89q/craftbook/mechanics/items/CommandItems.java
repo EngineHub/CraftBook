@@ -386,9 +386,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                             amount += tStack.getAmount();
 
-                            if(amount >=stack.getAmount())
+                            if(amount >=stack.getAmount()) {
                                 found = true;
-                            break;
+                                break;
+                            }
                         }
                     }
 
@@ -402,13 +403,25 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                     boolean found = false;
 
-                    for(ItemStack tStack : player.getInventory().getContents()) {
+                    int amount = stack.getAmount();
+
+                    for(int i = 0; i < player.getInventory().getContents().length; i++) {
+                        ItemStack tStack = player.getInventory().getContents()[i];
                         if(ItemUtil.areItemsIdentical(stack, tStack)) {
-                            found = true;
                             ItemStack toRemove = tStack.clone();
-                            toRemove.setAmount(stack.getAmount());
-                            player.getInventory().removeItem(toRemove);
-                            break;
+                            if(toRemove.getAmount() > amount) {
+
+                                toRemove.setAmount(toRemove.getAmount() - amount);
+                                player.getInventory().setItem(i, toRemove);
+                                amount = 0;
+                            } else {
+                                amount -= toRemove.getAmount();
+                                player.getInventory().setItem(i, null);
+                            }
+                            if(amount <= 0) {
+                                found = true;
+                                break;
+                            }
                         }
                     }
 
