@@ -1,3 +1,16 @@
+3.9 Beta 3 (22nd July)
++ Added escape characters to Item Syntax.
++ Added EXPERIMENTAL caching to Item Syntax. This may improve CPU performance at the cost of slight amounts of memory.
++ Added the ability for lava to be used in cauldrons instead of fire.
++ Added monetary rewards to CustomDrops.
++ Added permission node to bypass max toggle area limit.
+* Fixed chairs allowing sitting when a block was above the chair.
+* Fixed BetterPhysics related error.
+* Optimized Cauldron Item Tracking option.
+* Updated for 1.7.10
+* Fixed mechanisms.yml not getting new values added automatically.
+* Fixed CommandItem consumables becoming out of sync when multiple existed.
+
 3.9 Beta 2 (22nd June)
 + Added commands to enable and disable mechanics. (/cb enable, /cb disable)
 + Added load ordering to mechanics - Should fix CommandItems not being usable in crafting, etc.
