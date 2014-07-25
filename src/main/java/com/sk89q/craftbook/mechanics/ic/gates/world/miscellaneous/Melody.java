@@ -71,6 +71,8 @@ public class Melody extends AbstractSelfTriggeredIC {
 
     MelodyPlayer player;
 
+    boolean foundFile = false;
+
     @Override
     public void load() {
 
@@ -104,15 +106,18 @@ public class Melody extends AbstractSelfTriggeredIC {
                 break;
             }
         }
+
+        if(file != null && file.exists())
+            foundFile = true;
+        else
+            CraftBookPlugin.logDebugMessage("Midi file not found in melody IC: " + midiName, "midi");
     }
 
     @Override
     public void trigger(ChipState chip) {
 
-        if (file == null || !file.exists()) {
-            CraftBookPlugin.logDebugMessage("Midi file not found in melody IC: " + midiName, "midi");
+        if (!foundFile)
             return;
-        }
 
         if(player == null || !player.isValid() && (loop || chip.isTriggered(0) && chip.getInput(0))) {
             try {

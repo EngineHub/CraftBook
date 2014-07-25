@@ -75,10 +75,15 @@ public class ParsingUtil {
 
             String key, value;
 
-            if(var.contains("|") && RegexUtil.PIPE_PATTERN.split(var).length >= 2) {
+            if(var.contains("|")) {
                 String[] bits = RegexUtil.PIPE_PATTERN.split(var);
-                key = bits[0];
-                value = bits[1];
+                if(bits.length < 2) {
+                    key = "global";
+                    value = var;
+                } else {
+                    key = bits[0];
+                    value = bits[1];
+                }
                 CraftBookPlugin.logDebugMessage("Variable " + value + " at " + key + " detected!", "variables.line-parsing");
             } else {
                 key = "global";
