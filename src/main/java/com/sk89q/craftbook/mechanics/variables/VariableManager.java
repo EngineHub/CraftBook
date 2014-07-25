@@ -103,8 +103,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
      */
     public String getNamespace(String variable) {
 
-        if(variable.contains("|") && RegexUtil.PIPE_PATTERN.split(variable).length >= 2) {
+        if(variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
+            if(bits.length < 2) return "global";
             return bits[0];
         } else {
             return "global";
@@ -119,8 +120,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
      */
     public String getVariableName(String variable) {
 
-        if(variable.contains("|") && RegexUtil.PIPE_PATTERN.split(variable).length >= 2) {
+        if(variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
+            if(bits.length < 2) return variable;
             return bits[1];
         } else {
             return variable;
