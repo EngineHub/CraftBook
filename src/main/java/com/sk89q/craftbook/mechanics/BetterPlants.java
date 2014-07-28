@@ -58,8 +58,18 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         public void run () {
 
             for(World world : tickedWorlds) {
+
+                int x = 0,y = 0,z = 0;
+                x = CraftBookPlugin.inst().getRandom().nextInt(16);
+                y = CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight());
+                z = CraftBookPlugin.inst().getRandom().nextInt(16);
+
                 for(Chunk chunk : world.getLoadedChunks()) {
-                    Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
+                    Block block = null;
+                    if(fastTickRandoms)
+                        block = chunk.getBlock(x,y,z);
+                    else
+                        block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
                     if(fernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
                         block.setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 3, false);
@@ -84,11 +94,15 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     }
 
     boolean fernFarming;
+    boolean fastTickRandoms;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
         fernFarming = config.getBoolean(path + "fern-farming", true);
+
+        config.setComment(path + "fast-random-ticks", "Use a way of generating less random numbers, by only generating it once for all chunks, instead of one each chunk.");
+        fastTickRandoms = config.getBoolean(path + "fast-random-ticks", true);
     }
 }
