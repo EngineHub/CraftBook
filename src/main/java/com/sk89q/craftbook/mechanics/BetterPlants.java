@@ -28,7 +28,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         for(World world : Bukkit.getWorlds())
-            tickedWorlds.add(world.getName());
+            tickedWorlds.add(world);
 
         if(fernFarming)
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
@@ -57,8 +57,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         @Override
         public void run () {
 
-            for(String worldName : tickedWorlds) {
-                World world = Bukkit.getWorld(worldName);
+            for(World world : tickedWorlds) {
                 for(Chunk chunk : world.getLoadedChunks()) {
                     Block block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
@@ -71,17 +70,17 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
     }
 
-    private Set<String> tickedWorlds = new HashSet<String>();
+    private Set<World> tickedWorlds = new HashSet<World>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onWorldLoad(WorldLoadEvent event) {
 
-        tickedWorlds.add(event.getWorld().getName());
+        tickedWorlds.add(event.getWorld());
     }
 
     public void onWorldUnload(WorldUnloadEvent event) {
 
-        tickedWorlds.remove(event.getWorld().getName());
+        tickedWorlds.remove(event.getWorld());
     }
 
     boolean fernFarming;
