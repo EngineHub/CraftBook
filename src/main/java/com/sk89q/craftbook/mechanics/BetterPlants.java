@@ -59,10 +59,13 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
             for(World world : tickedWorlds) {
 
-                int x = 0,y = 0,z = 0;
-                x = CraftBookPlugin.inst().getRandom().nextInt(16);
-                y = CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight());
-                z = CraftBookPlugin.inst().getRandom().nextInt(16);
+                int x = 0, y = 0, z = 0;
+
+                if(fastTickRandoms) {
+                    x = CraftBookPlugin.inst().getRandom().nextInt(16);
+                    y = CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight());
+                    z = CraftBookPlugin.inst().getRandom().nextInt(16);
+                }
 
                 for(Chunk chunk : world.getLoadedChunks()) {
                     Block block = null;
