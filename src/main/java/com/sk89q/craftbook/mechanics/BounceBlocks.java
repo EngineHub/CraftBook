@@ -25,18 +25,22 @@ import com.sk89q.util.yaml.YAMLProcessor;
 public class BounceBlocks extends AbstractCraftBookMechanic {
 
     List<ItemInfo> blocks;
+    double sensitivity;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
-        config.setComment(path + "blocks", "A list of blocks that can be sat on.");
+        config.setComment(path + "blocks", "A list of blocks that can be jumped on.");
         blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("DIAMOND_BLOCK")));
+
+        config.setComment(path + "sensitivity", "The sensitivity of jumping.");
+        sensitivity = config.getDouble(path + "sensitivity", 0.1);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if(event.getTo().getY() - event.getFrom().getY() > 0.2) { //Sensitivity setting for the jumping, may need tweaking
+        if(event.getTo().getY() - event.getFrom().getY() > sensitivity) { //Sensitivity setting for the jumping, may need tweaking
 
             if(event.getPlayer().hasPermission("craftbook.mech.bounceblocks.use")) //Do this after the simple arithmatic, permission lookup is slower.
                 return;
