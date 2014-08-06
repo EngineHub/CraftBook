@@ -48,25 +48,28 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
                     //Boom, headshot.
                     Block sign = block.getRelative(BlockFace.DOWN);
-                    ChangedSign s = BukkitUtil.toChangedSign(sign);
 
-                    if(s.getLine(1).equals("[Jump]")) {
+                    if(SignUtil.isSign(sign)) {
+                        ChangedSign s = BukkitUtil.toChangedSign(sign);
 
-                        double x = 0,y = 0,z = 0;
+                        if(s.getLine(1).equals("[Jump]")) {
 
-                        String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2));
-                        if(bits.length == 0) return;
-                        if(bits.length == 1)
-                            y = Double.parseDouble(bits[0]);
-                        else {
-                            x = Double.parseDouble(bits[0]);
-                            y = Double.parseDouble(bits[1]);
-                            z = Double.parseDouble(bits[2]);
+                            double x = 0,y = 0,z = 0;
+
+                            String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2));
+                            if(bits.length == 0) return;
+                            if(bits.length == 1)
+                                y = Double.parseDouble(bits[0]);
+                            else {
+                                x = Double.parseDouble(bits[0]);
+                                y = Double.parseDouble(bits[1]);
+                                z = Double.parseDouble(bits[2]);
+                            }
+
+                            event.getPlayer().setVelocity(event.getPlayer().getVelocity().add(new Vector(x,y,z)));
                         }
-
-                        event.getPlayer().setVelocity(event.getPlayer().getVelocity().add(new Vector(x,y,z)));
+                        break;
                     }
-                    break;
                 }
             }
         }
