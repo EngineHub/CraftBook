@@ -43,7 +43,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
         if(Math.abs(event.getTo().getY() - event.getFrom().getY()) > sensitivity) { //Sensitivity setting for the jumping, may need tweaking
 
-            if(event.getPlayer().hasPermission("craftbook.mech.bounceblocks.use")) //Do this after the simple arithmatic, permission lookup is slower.
+            if(!event.getPlayer().hasPermission("craftbook.mech.bounceblocks.use")) //Do this after the simple arithmatic, permission lookup is slower.
                 return;
 
             Block block = event.getFrom().getBlock().getRelative(BlockFace.DOWN);
