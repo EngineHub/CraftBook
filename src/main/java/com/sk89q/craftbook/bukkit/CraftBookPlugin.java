@@ -56,6 +56,7 @@ import com.sk89q.craftbook.mechanics.BetterPhysics;
 import com.sk89q.craftbook.mechanics.BetterPistons;
 import com.sk89q.craftbook.mechanics.BetterPlants;
 import com.sk89q.craftbook.mechanics.Bookcase;
+import com.sk89q.craftbook.mechanics.BounceBlocks;
 import com.sk89q.craftbook.mechanics.Chair;
 import com.sk89q.craftbook.mechanics.ChunkAnchor;
 import com.sk89q.craftbook.mechanics.CommandSigns;
@@ -253,6 +254,7 @@ public class CraftBookPlugin extends JavaPlugin {
         availableMechanics.put("Netherrack", Netherrack.class);
         availableMechanics.put("JackOLantern", JackOLantern.class);
         availableMechanics.put("Pipes", Pipes.class);
+        availableMechanics.put("BounceBlocks", BounceBlocks.class);
         availableMechanics.put("ICs", ICMechanic.class);
         availableMechanics.put("MinecartBooster", CartBooster.class);
         availableMechanics.put("MinecartReverser", CartReverser.class);
