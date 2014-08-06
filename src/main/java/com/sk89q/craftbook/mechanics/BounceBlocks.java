@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -38,9 +39,9 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(final PlayerMoveEvent event) {
 
-        if(event.getTo().getY() - event.getFrom().getY() > sensitivity) { //Sensitivity setting for the jumping, may need tweaking
+        if(Math.abs(event.getTo().getY() - event.getFrom().getY()) > sensitivity) { //Sensitivity setting for the jumping, may need tweaking
 
             if(event.getPlayer().hasPermission("craftbook.mech.bounceblocks.use")) //Do this after the simple arithmatic, permission lookup is slower.
                 return;
@@ -50,27 +51,39 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
             for(ItemInfo check : blocks) {
                 if(check.isSame(block)) {
 
+                    CraftBookPlugin.logDebugMessage("Player jumped on a block that is a BoucneBlock!", "bounce-blocks");
+
                     //Boom, headshot.
                     Block sign = block.getRelative(BlockFace.DOWN);
 
                     if(SignUtil.isSign(sign)) {
-                        ChangedSign s = BukkitUtil.toChangedSign(sign);
+                        final ChangedSign s = BukkitUtil.toChangedSign(sign);
 
                         if(s.getLine(1).equals("[Jump]")) {
 
-                            double x = 0,y = 0,z = 0;
+                            CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
 
-                            String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2));
-                            if(bits.length == 0) return;
-                            if(bits.length == 1)
-                                y = Double.parseDouble(bits[0]);
-                            else {
-                                x = Double.parseDouble(bits[0]);
-                                y = Double.parseDouble(bits[1]);
-                                z = Double.parseDouble(bits[2]);
-                            }
+                            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                                @Override
+                                public void run () {
+                                    double x = 0,y = 0,z = 0;
 
-                            event.getPlayer().setVelocity(event.getPlayer().getVelocity().add(new Vector(x,y,z)));
+                                    String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2));
+                                    if(bits.length == 0)
+                                        y = 0.5;
+                                    if(bits.length == 1)
+                                        y = Double.parseDouble(bits[0]);
+                                    else {
+                                        x = Double.parseDouble(bits[0]);
+                                        y = Double.parseDouble(bits[1]);
+                                        z = Double.parseDouble(bits[2]);
+                                    }
+
+                                    Vector velocity = event.getPlayer().getVelocity().add(new Vector(x,y,z));
+
+                                    event.getPlayer().setVelocity(velocity);
+                                }
+                            }, 2L);
                         }
                         break;
                     }
