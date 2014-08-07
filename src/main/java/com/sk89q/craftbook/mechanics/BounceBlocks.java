@@ -66,7 +66,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(final PlayerMoveEvent event) {
 
-        if(Math.abs(event.getTo().getY() - event.getFrom().getY()) > sensitivity) { //Sensitivity setting for the jumping, may need tweaking
+        if(Math.abs(event.getTo().getY() - event.getFrom().getY()) > sensitivity && event.getFrom().getY() - event.getFrom().getBlockY() < 0.25) { //Sensitivity setting for the jumping, may need tweaking
 
             if(!event.getPlayer().hasPermission("craftbook.mech.bounceblocks.use")) //Do this after the simple arithmatic, permission lookup is slower.
                 return;
@@ -155,6 +155,22 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.bounceblocks")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
+            SignUtil.cancelSign(event);
+            return;
+        }
+
+        try {
+            String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(event.getLine(2), "!", ""));
+            if(bits.length == 0)
+                if(bits.length == 1)
+                    Double.parseDouble(bits[0]);
+                else {
+                    Double.parseDouble(bits[0]);
+                    Double.parseDouble(bits[1]);
+                    Double.parseDouble(bits[2]);
+                }
+        } catch(Exception e){
+            lplayer.printError("mech.bounceblocks.invalid-velocity");
             SignUtil.cancelSign(event);
             return;
         }
