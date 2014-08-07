@@ -2,7 +2,10 @@ package com.sk89q.craftbook.mechanics;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -26,6 +29,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
     List<ItemInfo> blocks;
     double sensitivity;
+    Map<ItemInfo, Vector> autoBouncers;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -35,6 +39,27 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
         config.setComment(path + "sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble(path + "sensitivity", 0.1);
+
+        config.setComment(path + "auto-blocks", "Blocks that automatically apply forces when jumped on.");
+        for(String key : config.getKeys(path + "auto-blocks")) {
+
+            double x = 0,y = 0,z = 0;
+
+            String[] bits = RegexUtil.COMMA_PATTERN.split(config.getString(path + "auto-blocks." + key));
+            if(bits.length == 0)
+                y = 0.5;
+            if(bits.length == 1)
+                y = Double.parseDouble(bits[0]);
+            else {
+                x = Double.parseDouble(bits[0]);
+                y = Double.parseDouble(bits[1]);
+                z = Double.parseDouble(bits[2]);
+            }
+
+            ItemInfo block = new ItemInfo(key);
+
+            autoBouncers.put(block, new Vector(x,y,z));
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -63,8 +88,9 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                             CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
 
                             double x = 0,y = 0,z = 0;
+                            boolean straight = s.getLine(2).startsWith("!");
 
-                            String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2));
+                            String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
                             if(bits.length == 0)
                                 y = 0.5;
                             if(bits.length == 1)
@@ -75,12 +101,44 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                                 z = Double.parseDouble(bits[2]);
                             }
 
-                            Vector velocity = event.getPlayer().getVelocity().add(new Vector(x,y,z));
+                            if(!straight) {
 
-                            event.getPlayer().setVelocity(velocity);
+                                Vector facing = event.getTo().getDirection();
+
+                                //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
+                                double angle = Math.atan2(facing.getX(), facing.getZ());
+
+                                x = Math.sin(angle)*x;
+                                z = Math.cos(angle)*z;
+                            }
+
+                            event.getPlayer().setVelocity(new Vector(x,y,z));
+                            event.getPlayer().setFallDistance(-20f);
                         }
-                        break;
+                        return;
                     }
+                }
+            }
+
+            for(Entry<ItemInfo, Vector> entry : autoBouncers.entrySet()) {
+                if(entry.getKey().isSame(block)) {
+
+                    CraftBookPlugin.logDebugMessage("Player jumped on a auto block that is a BoucneBlock!", "bounce-blocks");
+
+                    CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
+
+                    double x = entry.getValue().getX(), y = entry.getValue().getY(), z = entry.getValue().getZ();
+
+                    Vector facing = event.getTo().getDirection();
+
+                    //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
+                    double angle = Math.atan2(facing.getX(), facing.getZ());
+
+                    x = Math.sin(angle)*x;
+                    z = Math.cos(angle)*z;
+
+                    event.getPlayer().setVelocity(new Vector(x,y,z));
+                    event.getPlayer().setFallDistance(-20f);
                 }
             }
         }
