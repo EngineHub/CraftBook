@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +30,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
     List<ItemInfo> blocks;
     double sensitivity;
-    Map<ItemInfo, Vector> autoBouncers;
+    Map<ItemInfo, Vector> autoBouncers = new HashMap<ItemInfo, Vector>();
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
