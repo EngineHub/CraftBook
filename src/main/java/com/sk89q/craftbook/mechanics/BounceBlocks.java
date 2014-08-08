@@ -41,6 +41,9 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
         config.setComment(path + "sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble(path + "sensitivity", 0.1);
 
+        if(config.getKeys(path + "auto-blocks") == null)
+            config.addNode(path + "auto-blocks");
+
         config.setComment(path + "auto-blocks", "Blocks that automatically apply forces when jumped on.");
         for(String key : config.getKeys(path + "auto-blocks")) {
 
