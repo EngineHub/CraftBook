@@ -88,22 +88,24 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             List<DropReward> rewards = new ArrayList<DropReward>();
 
-            for(String reward : config.getKeys("custom-drops." + key + ".rewards")) {
+            if(config.getKeys("custom-drops." + key + ".rewards") != null) {
+                for(String reward : config.getKeys("custom-drops." + key + ".rewards")) {
 
-                String rewardType = config.getString("custom-drops." + key + ".rewards." + reward + ".type", "None");
+                    String rewardType = config.getString("custom-drops." + key + ".rewards." + reward + ".type", "None");
 
-                DropReward dropReward = null;
+                    DropReward dropReward = null;
 
-                if(rewardType.equalsIgnoreCase("money")) {
+                    if(rewardType.equalsIgnoreCase("money")) {
 
-                    double amount = config.getDouble("custom-drops." + key + ".rewards." + reward + ".amount", 10);
+                        double amount = config.getDouble("custom-drops." + key + ".rewards." + reward + ".amount", 10);
 
-                    dropReward = new MonetaryDropReward(reward, amount);
+                        dropReward = new MonetaryDropReward(reward, amount);
+                    }
+
+                    if(dropReward == null) continue;
+
+                    rewards.add(dropReward);
                 }
-
-                if(dropReward == null) continue;
-
-                rewards.add(dropReward);
             }
 
             CustomDropDefinition def = null;
