@@ -37,6 +37,7 @@ public class BukkitConfiguration {
     public boolean languageScanText;
 
     public boolean debugMode;
+    public boolean debugLogToFile;
     public List<String> debugFlags;
 
     public String persistentStorageType;
@@ -136,6 +137,9 @@ public class BukkitConfiguration {
 
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
         debugMode = config.getBoolean("debug-mode", false);
+
+        config.setComment("debug-mode-file-logging", "Causes all debug mode output to be logged into a file. This file is reset every startup (And every /cb reload).");
+        debugLogToFile = config.getBoolean("debug-mode-file-logging", false);
 
         config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
         debugFlags = config.getStringList("debug-flags", new ArrayList<String>());

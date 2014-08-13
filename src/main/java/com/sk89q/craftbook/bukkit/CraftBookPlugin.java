@@ -513,6 +513,14 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void setupCraftBook() {
 
+        if(config.debugLogToFile) {
+            try {
+                debugLogger = new PrintWriter(new File(getDataFolder(), "debug.log"));
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        }
+
         // Initialize the language manager.
         logDebugMessage("Initializing Languages!", "startup");
         languageManager = new LanguageManager();
@@ -1129,6 +1137,12 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanics = null;
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
+
+        if(config.debugLogToFile) {
+            debugLogger.close();
+            debugLogger = null;
+        }
+
         config.load();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
@@ -1251,12 +1265,17 @@ public class CraftBookPlugin extends JavaPlugin {
         return false;
     }
 
+    private static PrintWriter debugLogger;
+
     public static void logDebugMessage(String message, String code) {
 
         if(!isDebugFlagEnabled(code))
             return;
 
         logger().info("[Debug][" + code + "] " + message);
+
+        if(CraftBookPlugin.inst().getConfiguration().debugLogToFile)
+            debugLogger.println("[" + code + "] " + message);
     }
 
     public boolean hasPersistentStorage() {
