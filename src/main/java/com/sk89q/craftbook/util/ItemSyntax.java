@@ -105,7 +105,7 @@ public class ItemSyntax {
         return StringUtils.replace(builder.toString(), "\u00A7", "&");
     }
 
-    private static final Cache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(60, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
+    private static final Cache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
 
         @Override
         public ItemStack load(String line) throws Exception {

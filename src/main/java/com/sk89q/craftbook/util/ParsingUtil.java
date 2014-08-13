@@ -3,11 +3,15 @@ package com.sk89q.craftbook.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
@@ -51,16 +55,24 @@ public class ParsingUtil {
 
     public static List<String> getPossibleVariables(String line) {
 
-        List<String> variables = new ArrayList<String>();
-
-        for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
-            if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
-            if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
-                variables.add(bit.trim());
-        }
-
-        return variables;
+        return variableFinderCache.getUnchecked(line);
     }
+
+    private static final Cache<String, List<String>> variableFinderCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, List<String>>() {
+        @Override
+        public List<String> load (String line) throws Exception {
+
+            List<String> variables = new ArrayList<String>();
+
+            for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
+                if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
+                if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
+                    variables.add(bit.trim());
+            }
+
+            return variables;
+        }
+    });
 
     public static String parseVariables(String line, CommandSender player) {
 
