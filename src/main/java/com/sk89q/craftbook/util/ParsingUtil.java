@@ -55,6 +55,9 @@ public class ParsingUtil {
 
     public static List<String> getPossibleVariables(String line) {
 
+        if(!line.contains("%"))
+            return new ArrayList<String>();
+
         return variableFinderCache.getUnchecked(line);
     }
 
