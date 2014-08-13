@@ -264,12 +264,6 @@ public class Playlist {
                         }
 
                         lastPlayers = new HashMap<String, SearchArea>(getPlayers());
-
-                        try {
-                            Thread.sleep(1000L);
-                        } catch (InterruptedException e) {
-                            BukkitUtil.printStacktrace(e);
-                        }
                     } catch (MidiUnavailableException e) {
                         BukkitUtil.printStacktrace(e);
                     } catch (InvalidMidiDataException e) {
@@ -289,12 +283,6 @@ public class Playlist {
                     }
 
                     lastPlayers = new HashMap<String, SearchArea>(getPlayers());
-
-                    try {
-                        Thread.sleep(1000L);
-                    } catch (InterruptedException e) {
-                        BukkitUtil.printStacktrace(e);
-                    }
                 } else if (line.startsWith("send ")) {
 
                     String message = StringUtils.replace(line, "send ", "");
