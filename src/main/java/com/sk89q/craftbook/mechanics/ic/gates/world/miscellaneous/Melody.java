@@ -81,8 +81,12 @@ public class Melody extends AbstractSelfTriggeredIC {
 
         String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
 
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), split[0]);
-        else area = SearchArea.createEmptyArea();
+        if (!getLine(3).isEmpty()) {
+            if(SearchArea.isValidArea(getLocation().getBlock(), split[0]))
+                area = SearchArea.createArea(getLocation().getBlock(), split[0]);
+            else
+                return;
+        } else area = SearchArea.createEmptyArea();
 
         for(int i = 1; i < split.length; i++) {
             if(split[i].toUpperCase(Locale.ENGLISH).contains("START")) forceStart = true;
@@ -116,7 +120,7 @@ public class Melody extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (!foundFile)
+        if (!foundFile || area == null)
             return;
 
         if(player == null || !player.isValid() && (loop || chip.isTriggered(0) && chip.getInput(0))) {
