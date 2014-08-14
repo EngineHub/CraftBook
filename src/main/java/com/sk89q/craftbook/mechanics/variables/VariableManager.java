@@ -56,6 +56,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
             return false;
         }
 
+        if(packetMessageOverride)
+            new VariablePacketModifier();
+
         return true;
     }
 
@@ -187,6 +190,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     boolean consoleOverride;
     boolean playerCommandOverride;
     boolean playerChatOverride;
+    boolean packetMessageOverride;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -202,6 +206,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         config.setComment(path + "enable-in-player-chat", "Allow variables to work in player chat.");
         playerChatOverride = config.getBoolean(path + "enable-in-player-chat", false);
+
+        config.setComment(path + "override-all-text", "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
+        packetMessageOverride = config.getBoolean(path + "override-all-text", false);
     }
 
     @Override
