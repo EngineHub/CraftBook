@@ -1,3 +1,14 @@
+3.9 Beta 4 (16th August)
++ Added a BounceBlocks mechanic - Allow custom jump values to be set, as well as automatic bouncing blocks.
++ Added an optimizing option to BetterPlants. This makes them run much faster whilst making it a little less random.
++ Added an option to override outgoing chat packets in variables, to modify all plugin or server messages.
+* Made ICs that appear to be a valid ID, but aren't, break.
+* Optimized variable parsing and MIDI ICs that reference an invalid file.
+* Fixed CustomDrops erroring if rewards were not set.
+* Fixed Melody ICs where an invalid WG region was specified playing globally.
+* Fixed short sounds in playlists having a long delay after them.
+* Fixed empty lines, or lines without a % being seen as a variable.
+
 3.9 Beta 3 (22nd July)
 + Added escape characters to Item Syntax.
 + Added EXPERIMENTAL caching to Item Syntax. This may improve CPU performance at the cost of slight amounts of memory.
