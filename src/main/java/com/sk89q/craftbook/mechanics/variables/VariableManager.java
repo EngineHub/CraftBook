@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.variables;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -22,8 +21,10 @@ import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -170,9 +171,11 @@ public class VariableManager extends AbstractCraftBookMechanic {
                     if(CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace) != null) continue;
                     OfflinePlayer player = Bukkit.getOfflinePlayer(namespace);
                     if(player.hasPlayedBefore()) {
-                        UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(namespace));
                         try {
-                            UUID uuid = fetcher.call().get(player.getName());
+                            ProfileService resolver = HttpRepositoryService.forMinecraft();
+                            Profile profile = resolver.findByName(player.getName()); // May be null
+
+                            UUID uuid = profile.getUniqueId();
                             line = StringUtils.replace(line, var, var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid)));
                         } catch (Exception e) {
                             e.printStackTrace();

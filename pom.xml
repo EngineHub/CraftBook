@@ -70,6 +70,14 @@
             <version>3.3.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+	       <groupId>com.sk89q</groupId>
+	       <artifactId>squirrelid</artifactId>
+	       <version>0.1.0</version>
+	       <scope>compile</scope>
+	       <type>jar</type>
+	       <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
@@ -204,6 +212,33 @@
                     </archive>
                 </configuration>
             </plugin>
+
+	        <plugin>
+	           <groupId>org.apache.maven.plugins</groupId>
+	           <artifactId>maven-shade-plugin</artifactId>
+	           <version>1.4</version>
+	           <executions>
+	               <execution>
+	                   <phase>package</phase>
+	                   <goals>
+	                       <goal>shade</goal>
+	                   </goals>
+	                   <configuration>
+	                       <artifactSet>
+	                           <includes>
+					              <include>com.sk89q:squirrelid</include>
+	                           </includes>
+	                       </artifactSet>
+	                       <relocations>
+	                          <relocation>
+	                               <pattern>com.sk89q.squirrelid</pattern>
+	                               <shadedPattern>com.sk89q.worldguard.util.profile</shadedPattern>
+	                           </relocation>
+	                       </relocations>
+	                   </configuration>
+	               </execution>
+	           </executions>
+	        </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>

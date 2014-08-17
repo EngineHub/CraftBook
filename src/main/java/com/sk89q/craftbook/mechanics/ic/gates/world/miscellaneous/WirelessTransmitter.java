@@ -20,7 +20,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -44,8 +43,10 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.PersistentDataIC;
-import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
@@ -64,14 +65,17 @@ public class WirelessTransmitter extends AbstractIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(band) == null) {
-                OfflinePlayer player = Bukkit.getOfflinePlayer(band);
+            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
+                String line3 = getLine(3);
+                OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
                 if(player.hasPlayedBefore()) {
-                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(band));
                     try {
-                        UUID uuid = fetcher.call().get(band);
+                        ProfileService resolver = HttpRepositoryService.forMinecraft();
+                        Profile profile = resolver.findByName(player.getName()); // May be null
+
+                        UUID uuid = profile.getUniqueId();
                         band = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
-                        getSign().setLine(3, band);
+                        getSign().setLine(3, line3);
                         getSign().update(false);
                     } catch (Exception e) {
                         e.printStackTrace();

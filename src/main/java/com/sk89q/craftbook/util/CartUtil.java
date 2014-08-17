@@ -88,6 +88,8 @@ public class CartUtil {
             return new ItemStack(Material.HOPPER_MINECART, 1);
         else if(cart instanceof CommandMinecart)
             return new ItemStack(Material.COMMAND_MINECART, 1);
+        else if(cart instanceof SpawnerMinecart)
+            return new ItemStack(Material.MINECART, 1);
 
         return null;
     }

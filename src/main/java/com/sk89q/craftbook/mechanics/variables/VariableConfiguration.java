@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.variables;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -13,7 +12,9 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.UUIDFetcher;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class VariableConfiguration {
@@ -48,9 +49,11 @@ public class VariableConfiguration {
                 if(CraftBookPlugin.inst().getUUIDMappings().getUUID(keys[0]) != null) continue;
                 OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
                 if(player.hasPlayedBefore()) {
-                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));
                     try {
-                        UUID uuid = fetcher.call().get(player.getName());
+                        ProfileService resolver = HttpRepositoryService.forMinecraft();
+                        Profile profile = resolver.findByName(player.getName()); // May be null
+
+                        UUID uuid = profile.getUniqueId();
                         keys[0] = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
                     } catch (Exception e) {
                         e.printStackTrace();

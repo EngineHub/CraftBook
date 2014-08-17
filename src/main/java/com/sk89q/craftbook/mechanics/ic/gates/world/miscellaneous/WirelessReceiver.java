@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -34,7 +33,9 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.util.UUIDFetcher;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessReceiver extends AbstractSelfTriggeredIC {
@@ -51,14 +52,17 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(band) == null) {
-                OfflinePlayer player = Bukkit.getOfflinePlayer(band);
+            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
+                String line3 = getLine(3);
+                OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
                 if(player.hasPlayedBefore()) {
-                    UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(band));
                     try {
-                        UUID uuid = fetcher.call().get(band);
+                        ProfileService resolver = HttpRepositoryService.forMinecraft();
+                        Profile profile = resolver.findByName(player.getName()); // May be null
+
+                        UUID uuid = profile.getUniqueId();
                         band = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
-                        getSign().setLine(3, band);
+                        getSign().setLine(3, line3);
                         getSign().update(false);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -1,9 +1,7 @@
 package com.sk89q.craftbook.mechanics.area;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -25,10 +23,12 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.UUIDFetcher;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.data.DataException;
 
@@ -149,10 +149,12 @@ public class Area extends AbstractCraftBookMechanic {
             OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
             if(player.hasPlayedBefore()) {
                 String originalNamespace = namespace;
-                UUIDFetcher fetcher = new UUIDFetcher(Arrays.asList(player.getName()));
+
                 try {
-                    UUID uuid = fetcher.call().get(player.getName());
-                    namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
+                    ProfileService resolver = HttpRepositoryService.forMinecraft();
+                    Profile profile = resolver.findByName("player.getName()"); // May be null
+
+                    namespace = "~" + CraftBookPlugin.inst().getUUIDMappings().getCBID(profile.getUniqueId());
                     CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
                     sign.setLine(0, namespace);
                 } catch (Exception e) {
