@@ -232,7 +232,7 @@
 	                       <relocations>
 	                          <relocation>
 	                               <pattern>com.sk89q.squirrelid</pattern>
-	                               <shadedPattern>com.sk89q.worldguard.util.profile</shadedPattern>
+	                               <shadedPattern>com.sk89q.craftbook.util.profile</shadedPattern>
 	                           </relocation>
 	                       </relocations>
 	                   </configuration>
