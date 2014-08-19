@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sk89q.craftbook</groupId>
@@ -70,12 +71,12 @@
             <version>3.3.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-	       <groupId>com.sk89q</groupId>
-	       <artifactId>squirrelid</artifactId>
-	       <version>0.1.0</version>
-	       <scope>compile</scope>
-	       <type>jar</type>
-	       <optional>true</optional>
+            <groupId>com.sk89q</groupId>
+            <artifactId>squirrelid</artifactId>
+            <version>0.1.0</version>
+            <scope>compile</scope>
+            <type>jar</type>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -98,24 +99,24 @@
             <version>3.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-	        <groupId>org.powermock</groupId>
-	        <artifactId>powermock-module-junit4</artifactId>
-	        <version>1.5.5</version>
-	        <type>jar</type>
-	        <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.powermock</groupId>
-	        <artifactId>powermock-api-mockito</artifactId>
-	        <version>1.5.5</version>
-	        <type>jar</type>
-	        <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	       <groupId>fr.neatmonster</groupId>
-	       <artifactId>ncpcore</artifactId>
-	       <version>static</version>
-	    </dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.5.5</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.5.5</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.neatmonster</groupId>
+            <artifactId>ncpcore</artifactId>
+            <version>static</version>
+        </dependency>
         <dependency>
             <groupId>net.gravitydevelopment.anticheat</groupId>
             <artifactId>AntiCheat</artifactId>
@@ -213,32 +214,32 @@
                 </configuration>
             </plugin>
 
-	        <plugin>
-	           <groupId>org.apache.maven.plugins</groupId>
-	           <artifactId>maven-shade-plugin</artifactId>
-	           <version>1.4</version>
-	           <executions>
-	               <execution>
-	                   <phase>package</phase>
-	                   <goals>
-	                       <goal>shade</goal>
-	                   </goals>
-	                   <configuration>
-	                       <artifactSet>
-	                           <includes>
-					              <include>com.sk89q:squirrelid</include>
-	                           </includes>
-	                       </artifactSet>
-	                       <relocations>
-	                          <relocation>
-	                               <pattern>com.sk89q.squirrelid</pattern>
-	                               <shadedPattern>com.sk89q.craftbook.util.profile</shadedPattern>
-	                           </relocation>
-	                       </relocations>
-	                   </configuration>
-	               </execution>
-	           </executions>
-	        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.sk89q:squirrelid</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.sk89q.squirrelid</pattern>
+                                    <shadedPattern>com.sk89q.craftbook.util.profile</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -306,103 +307,16 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
-            
+
             <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-eclipse-plugin</artifactId>
-			    <version>2.9</version>
-			    <configuration>
-				    <downloadSources>true</downloadSources>
-				    <downloadJavadocs>true</downloadJavadocs>
-			    </configuration>
-		    </plugin>
-		    
-		    <!-- Leave this alone! Compile-time checks so that your extension works. -->
-			<!--<plugin>
-			    <groupId>org.bsc.maven</groupId>
-			    <artifactId>maven-processor-plugin</artifactId>
-			    <version>2.2.4</version>
-			 
-			    <executions>
-			        <execution>
-			            <id>process</id>
-			            <phase>process-classes</phase>
-			 
-			            <goals>
-			                <goal>process</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			 
-			    <configuration>
-			        <outputDirectory>src/main/generated</outputDirectory>
-			 
-			        <processors>
-			            <processor>com.laytonsmith.core.extensions.ExtensionAnnotationProcessor</processor>
-			        </processors>
-			    </configuration>
-			</plugin> -->
-			 
-			<!-- Leave this alone! Run-time extension loading speedup. -->
-			<!--<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-			    <artifactId>exec-maven-plugin</artifactId>
-			    <version>1.2.1</version>
-			 
-			    <executions>
-			        <execution>
-			            <id>cache-annotations</id>
-			            <phase>process-classes</phase>
-			            <goals>
-			                <goal>java</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			 
-			    <configuration>
-			        <mainClass>com.laytonsmith.PureUtilities.ClassLoading.Annotations.CacheAnnotations</mainClass>
-			 
-			        <arguments>
-			            <argument>${basedir}/target/classes</argument>
-			            <argument>${basedir}/target/classes</argument>
-			        </arguments>
-			    </configuration>
-			</plugin>-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                </configuration>
+            </plugin>
         </plugins>
-        <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									org.codehaus.mojo
-        								</groupId>
-        								<artifactId>
-        									exec-maven-plugin
-        								</artifactId>
-        								<versionRange>
-        									[1.2.1,)
-        								</versionRange>
-        								<goals>
-        									<goal>java</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
-        </pluginManagement>
     </build>
 </project>
