@@ -150,7 +150,8 @@ public class ItemSyntax {
             if (material == null || material == Material.AIR) material = Material.STONE;
 
             ItemStack rVal = new ItemStack(material, amount, (short) data);
-            rVal.setData(new MaterialData(material, (byte)data));
+            if(data <= Byte.MAX_VALUE)
+                rVal.setData(new MaterialData(material, (byte)data));
 
             if(nameLoreSplit.length > 1) {
 
