@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 
 public class ProtectionUtil {
 
@@ -66,7 +65,8 @@ public class ProtectionUtil {
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().canBuild(player, block);
+
+        return CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ProtectionUtil {
             return !event.isCancelled();
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.USE, loc, CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
+        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
     }
 
     /**
@@ -114,7 +114,7 @@ public class ProtectionUtil {
                 return false;
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.CHEST_ACCESS, block.getLocation(), CraftBookPlugin.plugins.getWorldGuard().wrapPlayer(player));
+        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
     }
 
     /**
@@ -138,10 +138,8 @@ public class ProtectionUtil {
         }
         if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null) return true;
 
-        if(newState.getType() == Material.SNOW)
-            return CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.SNOW_FALL, block.getLocation());
-        if(newState.getType() == Material.ICE)
-            return CraftBookPlugin.plugins.getWorldGuard().getGlobalRegionManager().allows(DefaultFlag.ICE_FORM, block.getLocation());
+        if(newState.getType() == Material.SNOW || newState.getType() == Material.ICE)
+            return CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(null, block.getLocation(), newState.getType());
 
         return true;
     }
