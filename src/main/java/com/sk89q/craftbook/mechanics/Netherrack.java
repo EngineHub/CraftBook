@@ -16,11 +16,9 @@
 
 package com.sk89q.craftbook.mechanics;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -52,12 +50,8 @@ public class Netherrack extends AbstractCraftBookMechanic {
 
         if (event.isOn() && canReplaceWithFire(above.getType())) {
             above.setType(Material.FIRE);
-            for(Player p : Bukkit.getOnlinePlayers())
-                p.sendBlockChange(above.getLocation(), Material.FIRE, (byte) 0);
         } else if (!event.isOn() && above != null && above.getType() == Material.FIRE) {
             above.setType(Material.AIR);
-            for(Player p : Bukkit.getOnlinePlayers())
-                p.sendBlockChange(above.getLocation(), Material.AIR, (byte) 0);
         }
     }
 
