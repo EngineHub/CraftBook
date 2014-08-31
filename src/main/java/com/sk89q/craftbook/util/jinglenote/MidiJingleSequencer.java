@@ -125,14 +125,16 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        if (chan == 9) { // Percussion
-                            // Sounds like utter crap
-                            if(ICMechanic.instance.usePercussionMidi)
+                        synchronized(players) {
+                            if (chan == 9) { // Percussion
+                                // Sounds like utter crap
+                                if(ICMechanic.instance.usePercussionMidi)
+                                    for(JingleNotePlayer player : players)
+                                        player.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
+                            } else {
                                 for(JingleNotePlayer player : players)
-                                    player.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
-                        } else {
-                            for(JingleNotePlayer player : players)
-                                player.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
+                                    player.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
+                            }
                         }
                     }
                 }
@@ -148,8 +150,10 @@ public class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                     running = true;
                     playedBefore = true;
-                    for(JingleNotePlayer player : players)
-                        CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
+                    synchronized(players) {
+                        for(JingleNotePlayer player : players)
+                            CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
+                    }
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
             } catch(Exception e){
