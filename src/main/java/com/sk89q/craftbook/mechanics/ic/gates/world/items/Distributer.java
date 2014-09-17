@@ -112,7 +112,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
         currentIndex++;
         getSign().setLine(3, String.valueOf(currentIndex));
-        if (currentIndex > left && currentIndex <= left+right)
+        if (currentIndex >= left && currentIndex <= left+right)
             return true;
         else if (currentIndex <= left)
             return false;
