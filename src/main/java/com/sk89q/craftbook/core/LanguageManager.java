@@ -2,16 +2,12 @@ package com.sk89q.craftbook.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -109,13 +105,13 @@ public class LanguageManager {
 
     public String getPlayersLanguage(Player p) {
 
-        try {
-            Field d = EntityPlayer.class.getDeclaredField("locale");
-            d.setAccessible(true);
-            return (String) d.get(((CraftPlayer) p).getHandle());
-        } catch (Throwable e) {
-            return CraftBookPlugin.inst().getConfiguration().language;
-        }
+        //try {
+        //Field d = EntityPlayer.class.getDeclaredField("locale");
+        //d.setAccessible(true);
+        //return (String) d.get(((CraftPlayer) p).getHandle());
+        //} catch (Throwable e) {
+        return CraftBookPlugin.inst().getConfiguration().language;
+        //}
     }
 
     public Set<String> getLanguages() {
