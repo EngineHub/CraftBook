@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(value = TYPE)
 public @interface Mechanic {
 
-	public String name() default "Mechanic";
+	public String name();
 }

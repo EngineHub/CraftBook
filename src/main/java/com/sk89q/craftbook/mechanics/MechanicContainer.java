@@ -17,4 +17,9 @@ public class MechanicContainer {
 
 		return properties.name();
 	}
+
+	public Class<?> getMechanicClass() {
+
+		return clazz;
+	}
 }
