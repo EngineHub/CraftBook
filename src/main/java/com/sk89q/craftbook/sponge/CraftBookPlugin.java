@@ -1,4 +1,4 @@
-package com.sk89q.craftbook;
+package com.sk89q.craftbook.sponge;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -9,11 +9,12 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartedEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-import com.sk89q.craftbook.mechanics.Mechanic;
-import com.sk89q.craftbook.mechanics.MechanicContainer;
+import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.sponge.mechanics.Mechanic;
+import com.sk89q.craftbook.sponge.mechanics.MechanicContainer;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0")
-public class CraftBookPlugin {
+public class CraftBookPlugin extends CraftBookAPI {
 
 	Set<MechanicContainer> availableMechanics = new HashSet<MechanicContainer>();
 
@@ -21,6 +22,8 @@ public class CraftBookPlugin {
 
 	@Subscribe
 	public void onServerStarted(ServerStartedEvent event) {
+
+		instance = this;
 
 		searchClasspath();
 

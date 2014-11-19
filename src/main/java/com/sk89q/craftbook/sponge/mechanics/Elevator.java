@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.mechanics;
+package com.sk89q.craftbook.sponge.mechanics;
 
 import org.spongepowered.api.event.Subscribe;
 
