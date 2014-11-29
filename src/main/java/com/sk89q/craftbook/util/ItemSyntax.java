@@ -24,9 +24,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
@@ -105,7 +105,7 @@ public class ItemSyntax {
         return StringUtils.replace(builder.toString(), "\u00A7", "&");
     }
 
-    private static final Cache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
+    private static final LoadingCache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
 
         @Override
         public ItemStack load(String line) throws Exception {

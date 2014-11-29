@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.core.commandhelper;
 
-import com.laytonsmith.PureUtilities.Version;
+/*import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CString;
@@ -72,4 +72,4 @@ public class CHFunctions {
             return CHVersion.V3_0_1;
         }
     }
-}
+}*/
