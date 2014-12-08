@@ -307,7 +307,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getVersion() {
 
-        return "3.9b4";
+        return "3.9";
     }
 
     /**
@@ -317,7 +317,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public static String getStableBuild() {
 
-        return "3895";
+        return "DISABLE";//"3895";
     }
 
     public static int getUpdaterID() {

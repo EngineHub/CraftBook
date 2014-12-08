@@ -407,6 +407,10 @@ public class ItemUtil {
                 return new ItemStack(Material.GRILLED_PORK);
             case POTATO_ITEM:
                 return new ItemStack(Material.BAKED_POTATO);
+            case MUTTON:
+                return new ItemStack(Material.COOKED_MUTTON);
+            case RABBIT:
+                return new ItemStack(Material.COOKED_RABBIT);
             default:
                 return null;
         }
@@ -522,6 +526,7 @@ public class ItemUtil {
             case FERMENTED_SPIDER_EYE:
             case SULPHUR:
             case GOLDEN_CARROT:
+            case RABBIT_FOOT:
                 return true;
             default:
                 return false;

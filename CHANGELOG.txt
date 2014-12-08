@@ -1,3 +1,12 @@
+3.9 (30th November)
+* Fixed a few issues with UUID resolution.
+* Fixed ItemSyntax allowing some invalid values.
+* Updated to WorldGuard 6.
+* Remove redundant code - causing possible slowdowns.
+* Fixed issues with MIDI and Playlist parsing.
+* Fixed Distributor 'off by one' error.
+- Removed Per Player Languages due to recent bukkit issues. It will now only use the default.
+
 3.9 Beta 4 (16th August)
 + Added a BounceBlocks mechanic - Allow custom jump values to be set, as well as automatic bouncing blocks.
 + Added an optimizing option to BetterPlants. This makes them run much faster whilst making it a little less random.
