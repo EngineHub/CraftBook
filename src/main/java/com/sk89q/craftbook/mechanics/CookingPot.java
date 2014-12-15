@@ -85,7 +85,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         int lastTick = 0, oldTick;
 
         try {
-            lastTick = Math.max(0, Integer.parseInt(sign.getLine(2).trim()));
+            lastTick = Math.max(0, Integer.parseInt(sign.getLine(2)));
         } catch (Exception e) {
             sign.setLine(2, String.valueOf(0));
             sign.update(false);
@@ -106,9 +106,12 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 if(items.size() == 0) return;
 
                 if(lastTick < 500) {
-                    lastTick = cookingPotSuperFast ? lastTick + getMultiplier(sign) : lastTick + Math.min(getMultiplier(sign), 5);
-                    if(getMultiplier(sign) > 0)
-                        decreaseMultiplier(sign, 1);
+
+                    int multiplier = getMultiplier(sign);
+
+                    lastTick = cookingPotSuperFast ? lastTick + multiplier : lastTick + Math.min(multiplier, 5);
+                    if(multiplier > 0)
+                        setMultiplier(sign, multiplier - 1);
                 }
                 if (lastTick >= 50) {
                     for (ItemStack i : items) {
@@ -118,7 +121,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
                         if (cooked == null) {
                             if (cookingPotOres)
                                 cooked = ItemUtil.getSmeletedResult(i);
-                            if (cooked == null) continue;
+                            else
+                                continue;
                         }
                         if (chest.getInventory().addItem(cooked).isEmpty()) {
                             ItemStack toRemove = i.clone();
@@ -255,7 +259,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         int multiplier;
         try {
-            multiplier = Integer.parseInt(sign.getLine(3).trim());
+            multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {
             multiplier = cookingPotFuel ? 0 : 1;
             setMultiplier(sign, multiplier);
