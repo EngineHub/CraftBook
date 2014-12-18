@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -82,6 +83,15 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         event.setHandled(true);
 
+        if(sign.getLine(0).equals("WAITING")) {
+
+            //So it's waiting.
+            if(CraftBookPlugin.inst().getRandom().nextInt(100) != 0)
+                return;
+            sign.setLine(0, "");
+            sign.update(false);
+        }
+
         int lastTick = 0, oldTick;
 
         try {
@@ -92,18 +102,24 @@ public class CookingPot extends AbstractCraftBookMechanic {
         }
         oldTick = lastTick;
         Block b = SignUtil.getBackBlock(event.getBlock());
-        Block fire = b.getRelative(0, 1, 0);
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getType() == Material.CHEST) {
+            Block fire = b.getRelative(0, 1, 0);
             if (fire.getType() == Material.FIRE) {
                 Chest chest = (Chest) cb.getState();
+                Inventory inventory = chest.getInventory();
+
                 List<ItemStack> items;
                 if(cookingPotOres)
-                    items = ItemUtil.getRawMaterials(chest.getInventory());
+                    items = ItemUtil.getRawMaterials(inventory);
                 else
-                    items = ItemUtil.getRawFood(chest.getInventory());
+                    items = ItemUtil.getRawFood(inventory);
 
-                if(items.size() == 0) return;
+                if(items.size() == 0) {
+                    sign.setLine(0, "WAITING");
+                    sign.update(false);
+                    return;
+                }
 
                 if(lastTick < 500) {
 
@@ -124,10 +140,10 @@ public class CookingPot extends AbstractCraftBookMechanic {
                             else
                                 continue;
                         }
-                        if (chest.getInventory().addItem(cooked).isEmpty()) {
+                        if (inventory.addItem(cooked).isEmpty()) {
                             ItemStack toRemove = i.clone();
                             toRemove.setAmount(1);
-                            chest.getInventory().removeItem(toRemove);
+                            inventory.removeItem(toRemove);
                             chest.update();
                             lastTick -= 50;
                             break;
