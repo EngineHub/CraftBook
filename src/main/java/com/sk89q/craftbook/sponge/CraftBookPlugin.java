@@ -1,62 +1,38 @@
 package com.sk89q.craftbook.sponge;
 
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartedEvent;
+import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.core.CraftBookAPI;
-import com.sk89q.craftbook.sponge.mechanics.Mechanic;
-import com.sk89q.craftbook.sponge.mechanics.MechanicContainer;
+import com.sk89q.craftbook.core.Mechanic;
+import com.sk89q.craftbook.core.MechanicFactory;
 
-@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0")
+@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0", dependencies = "required-after:WorldEdit@[6.0,)")
 public class CraftBookPlugin extends CraftBookAPI {
 
-	Set<MechanicContainer> availableMechanics = new HashSet<MechanicContainer>();
+    private Set<MechanicFactory<? extends Mechanic>> enabledMechanics = new HashSet<MechanicFactory<? extends Mechanic>>();
 
-	Set<MechanicContainer> enabledMechanics = new HashSet<MechanicContainer>();
+    @Subscribe
+    public void onPreInitialization(PreInitializationEvent event) {
 
-	@Subscribe
-	public void onServerStarted(ServerStartedEvent event) {
+        instance = this;
 
-		instance = this;
+        discoverFactories();
 
-		searchClasspath();
+        for(MechanicFactory<? extends Mechanic> mech : getAvailableMechanics()) {
 
-		for(MechanicContainer mech : availableMechanics) {
+            //TODO is enabled check.
 
-			//TODO is enabled check.
+            enabledMechanics.add(mech);
+        }
+    }
 
-			enabledMechanics.add(mech);
-		}
-	}
+    @Override
+    public void discoverFactories() {
 
-	@SuppressWarnings("unchecked")
-	public void searchClasspath() {
-
-		try {
-			Field f = ClassLoader.class.getDeclaredField("classes");
-			f.setAccessible(true);
-
-			Vector<Class<?>> classes =  (Vector<Class<?>>) f.get(getClass().getClassLoader());
-
-			for(Class<?> clazz : classes) {
-				if(clazz.isAnnotationPresent(Mechanic.class)) { //It's a mechanic!
-					availableMechanics.add(new MechanicContainer(clazz));
-				}
-			}
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	}
+    }
 }

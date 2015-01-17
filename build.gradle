@@ -18,11 +18,11 @@ version = '4.0-SNAPSHOT'
 repositories {
     mavenCentral()
     maven { url "http://maven.sk89q.com/repo/" }
-    maven { url "http://new.creeperrepo.net/Sponge/maven/" }
+    maven { url "http://repo.spongepowered.org/maven/" }
 }
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:1.0.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:1.1-SNAPSHOT'
     compile 'org.yaml:snakeyaml:1.14'
     compile 'com.sk89q:squirrelid:0.1.0'
     compile 'com.google.guava:guava:17.0'
