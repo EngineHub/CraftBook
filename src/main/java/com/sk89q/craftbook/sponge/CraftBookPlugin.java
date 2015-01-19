@@ -9,12 +9,11 @@ import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
-import com.sk89q.craftbook.core.MechanicFactory;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0", dependencies = "required-after:WorldEdit@[6.0,)")
 public class CraftBookPlugin extends CraftBookAPI {
 
-    private Set<MechanicFactory<? extends Mechanic>> enabledMechanics = new HashSet<MechanicFactory<? extends Mechanic>>();
+    private Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
     @Subscribe
     public void onPreInitialization(PreInitializationEvent event) {
@@ -23,7 +22,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         discoverFactories();
 
-        for(MechanicFactory<? extends Mechanic> mech : getAvailableMechanics()) {
+        for(Mechanic mech : getAvailableMechanics()) {
 
             //TODO is enabled check.
 

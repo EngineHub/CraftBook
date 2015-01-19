@@ -4,6 +4,7 @@ import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionType;
+import org.spongepowered.api.event.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -17,12 +18,11 @@ public class Elevator extends SpongeMechanic {
 	}*/
 
     @Subscribe
-    public void onPlayerInteract(PlayerBlockInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractBlockEvent event) {
 
         if(event.getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
-        if(!event.getBlock().isPresent()) return; //They are right clicking nothing.
 
-        transportEntity(event.getPlayer(), event.getBlock().get(), Direction.DOWN); //Can't read signs atm, assume down.
+        transportEntity(event.getPlayer(), event.getBlock(), Direction.DOWN); //Can't read signs atm, assume down.
     }
 
     public void transportEntity(Entity entity, BlockLoc block, Direction direction) {
@@ -72,7 +72,7 @@ public class Elevator extends SpongeMechanic {
     }
 
     @Override
-    public void onLoad () {
+    public void onInitialize () {
         // TODO Auto-generated method stub
 
     }

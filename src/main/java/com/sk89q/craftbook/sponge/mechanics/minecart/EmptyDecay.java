@@ -27,7 +27,7 @@ public class EmptyDecay extends SpongeMechanic {
         @Override
         public void run() {
 
-            if(!cart.getRider().isPresent()) {
+            if(!cart.getPassenger().isPresent()) {
                 cart.remove();
             }
         }
@@ -40,7 +40,7 @@ public class EmptyDecay extends SpongeMechanic {
     }
 
     @Override
-    public void onLoad () {
+    public void onInitialize () {
         // TODO Auto-generated method stub
 
     }

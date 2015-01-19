@@ -10,7 +10,7 @@ public abstract class CraftBookAPI {
 
     public static CraftBookAPI instance;
 
-    private Set<MechanicFactory<? extends Mechanic>> availableMechanics = new HashSet<MechanicFactory<? extends Mechanic>>();
+    private Set<Mechanic> availableMechanics = new HashSet<Mechanic>();
 
     @SuppressWarnings("unchecked")
     public static <T extends CraftBookAPI> T inst() {
@@ -20,22 +20,22 @@ public abstract class CraftBookAPI {
 
     public abstract void discoverFactories();
 
-    public boolean registerMechanic(MechanicFactory<? extends Mechanic> factory) {
+    public boolean registerMechanic(Mechanic mechanic) {
 
-        if(factory == null) return false;
+        if(mechanic == null) return false;
 
         try {
-            factory.onRegister();
+            mechanic.onInitialize();
         } catch(CraftBookException e) {
             e.printStackTrace();
         }
-        return availableMechanics.add(factory);
+        return availableMechanics.add(mechanic);
     }
 
     /**
      * Gets a collection of all available mechanics.
      */
-    public Collection<MechanicFactory<? extends Mechanic>> getAvailableMechanics() {
+    public Collection<Mechanic> getAvailableMechanics() {
 
         return availableMechanics;
     }

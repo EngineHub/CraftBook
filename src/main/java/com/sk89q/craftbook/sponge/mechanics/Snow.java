@@ -11,7 +11,7 @@ public class Snow extends SpongeMechanic {
     }
 
     @Override
-    public void onLoad () {
+    public void onInitialize () {
         // TODO Auto-generated method stub
 
     }
