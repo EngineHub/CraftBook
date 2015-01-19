@@ -29,7 +29,15 @@ public class Elevator extends SpongeMechanic {
 
         if(event.getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
 
-        transportEntity(event.getPlayer(), event.getBlock(), Direction.DOWN); //Can't read signs atm, assume down.
+        if(event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
+
+            Sign sign = event.getBlock().getData(Sign.class).get();
+
+            boolean down = sign.getLine(1).equals("[Lift Down]");
+
+            if(down || sign.getLine(1).equals("[Lift Up]"))
+                transportEntity(event.getPlayer(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
+        }
     }
 
     public void transportEntity(Entity entity, BlockLoc block, Direction direction) {
