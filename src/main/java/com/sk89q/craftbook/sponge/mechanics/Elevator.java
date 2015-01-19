@@ -1,13 +1,20 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
+import java.util.EnumSet;
+
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionType;
 import org.spongepowered.api.event.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.world.Location;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3f;
 import com.sk89q.craftbook.core.util.CachePolicy;
 
 public class Elevator extends SpongeMechanic {
@@ -29,9 +36,9 @@ public class Elevator extends SpongeMechanic {
 
         BlockLoc destination = findDestination(block, direction);
 
+        if(destination == block) return; //This elevator has no destination.
 
-
-        //TODO
+        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
     }
 
     /**
@@ -54,8 +61,10 @@ public class Elevator extends SpongeMechanic {
                 if(test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
                     //It's a sign.
 
-                    //TODO Can't go any further yet with Sponge. Assume it's an elevator.
-                    return test;
+                    Sign sign = test.getData(Sign.class).get();
+
+                    if(sign.getLine(1).equals("[Lift Up]") || sign.getLine(1).equals("[Lift Down]") || sign.getLine(1).equals("[Lift]"))
+                        return test;
                 }
             }
         } else {
@@ -67,8 +76,7 @@ public class Elevator extends SpongeMechanic {
 
     @Override
     public String getName () {
-        // TODO Auto-generated method stub
-        return null;
+        return "Elevator";
     }
 
     @Override
@@ -79,7 +87,6 @@ public class Elevator extends SpongeMechanic {
 
     @Override
     public CachePolicy getCachePolicy () {
-        // TODO Auto-generated method stub
         return null;
     }
 }
