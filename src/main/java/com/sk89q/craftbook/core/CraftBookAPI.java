@@ -18,7 +18,7 @@ public abstract class CraftBookAPI {
         return (T) instance;
     }
 
-    public abstract void discoverFactories();
+    public abstract void discoverMechanics();
 
     public boolean registerMechanic(Mechanic mechanic) {
 
@@ -29,6 +29,7 @@ public abstract class CraftBookAPI {
         } catch(CraftBookException e) {
             e.printStackTrace();
         }
+
         return availableMechanics.add(mechanic);
     }
 
