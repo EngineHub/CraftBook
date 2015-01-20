@@ -13,7 +13,7 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 
-@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0", dependencies = "required-after:WorldEdit@[6.0,)")
+@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/*, dependencies = "required-after:WorldEdit@[6.0,)"*/)
 public class CraftBookPlugin extends CraftBookAPI {
 
     public static Game game;
@@ -28,19 +28,23 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         discoverMechanics();
 
-        for(Mechanic mech : getAvailableMechanics()) {
+        for(Class<? extends Mechanic> mech : getAvailableMechanics()) {
 
             //TODO is enabled check.
 
-            enabledMechanics.add(mech);
+            try {
+                enabledMechanics.add(createMechanic(mech));
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         }
     }
 
     @Override
     public void discoverMechanics() {
 
-        registerMechanic(new Elevator());
+        registerMechanic(Elevator.class);
 
-        registerMechanic(new EmptyDecay());
+        registerMechanic(EmptyDecay.class);
     }
 }

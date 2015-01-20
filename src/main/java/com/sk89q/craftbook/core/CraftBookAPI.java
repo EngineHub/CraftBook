@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.core;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +9,7 @@ public abstract class CraftBookAPI {
 
     public static CraftBookAPI instance;
 
-    private Set<Mechanic> availableMechanics = new HashSet<Mechanic>();
+    private Set<Class<? extends Mechanic>> availableMechanics = new HashSet<Class<? extends Mechanic>>();
 
     @SuppressWarnings("unchecked")
     public static <T extends CraftBookAPI> T inst() {
@@ -20,23 +19,26 @@ public abstract class CraftBookAPI {
 
     public abstract void discoverMechanics();
 
-    public boolean registerMechanic(Mechanic mechanic) {
+    public boolean registerMechanic(Class<? extends Mechanic> mechanic) {
 
         if(mechanic == null) return false;
 
-        try {
-            mechanic.onInitialize();
-        } catch(CraftBookException e) {
-            e.printStackTrace();
-        }
-
         return availableMechanics.add(mechanic);
+    }
+
+    public Mechanic createMechanic(Class<? extends Mechanic> clazz) throws InstantiationException, IllegalAccessException, CraftBookException {
+
+        Mechanic mechanic = clazz.newInstance();
+
+        mechanic.onInitialize();
+
+        return mechanic;
     }
 
     /**
      * Gets a collection of all available mechanics.
      */
-    public Collection<Mechanic> getAvailableMechanics() {
+    public Set<Class<? extends Mechanic>> getAvailableMechanics() {
 
         return availableMechanics;
     }
