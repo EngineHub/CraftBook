@@ -3,8 +3,10 @@ package com.sk89q.craftbook.sponge;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.state.PreInitializationEvent;
+import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -20,11 +22,15 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     private Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
+    public static Logger logger = LoggerFactory.getLogger(CraftBookPlugin.class);
+
     @Subscribe
-    public void onPreInitialization(PreInitializationEvent event) {
+    public void onPreInitialization(ServerStartingEvent event) {
 
         game = event.getGame();
         instance = this;
+
+        logger.info("Starting CraftBook");
 
         discoverMechanics();
 
@@ -33,7 +39,11 @@ public class CraftBookPlugin extends CraftBookAPI {
             //TODO is enabled check.
 
             try {
-                enabledMechanics.add(createMechanic(mech));
+                Mechanic mechanic = createMechanic(mech);
+                enabledMechanics.add(mechanic);
+                game.getEventManager().register(this, mechanic);
+
+                logger.info("Enabled: " + mech.getName());
             } catch (Throwable t) {
                 t.printStackTrace();
             }
@@ -43,8 +53,10 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Override
     public void discoverMechanics() {
 
+        logger.info("Enumerating Mechanics");
         registerMechanic(Elevator.class);
 
         registerMechanic(EmptyDecay.class);
+        logger.info("Found " + getAvailableMechanics().size() + ".");
     }
 }
