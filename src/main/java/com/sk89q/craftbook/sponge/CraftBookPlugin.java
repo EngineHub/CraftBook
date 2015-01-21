@@ -13,6 +13,7 @@ import org.spongepowered.api.util.event.Subscribe;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
+import com.sk89q.craftbook.sponge.mechanics.Snow;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/*, dependencies = "required-after:WorldEdit@[6.0,)"*/)
@@ -55,6 +56,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         logger.info("Enumerating Mechanics");
         registerMechanic(Elevator.class);
+        registerMechanic(Snow.class);
 
         registerMechanic(EmptyDecay.class);
         logger.info("Found " + getAvailableMechanics().size() + ".");
