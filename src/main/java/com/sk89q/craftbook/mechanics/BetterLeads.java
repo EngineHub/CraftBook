@@ -111,6 +111,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         if(leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
             for(Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
+                if(ent == null || !ent.isValid()) continue;
                 if(ent.getType() != event.getEntity().getType())
                     continue;
                 if(((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
