@@ -51,7 +51,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getClickedBlock().getLocation(), true)) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
