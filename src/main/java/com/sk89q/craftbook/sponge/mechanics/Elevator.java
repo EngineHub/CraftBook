@@ -1,20 +1,17 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.EnumSet;
-
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionType;
-import org.spongepowered.api.event.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
+import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.flowpowered.math.vector.Vector3f;
 import com.sk89q.craftbook.core.util.CachePolicy;
 
 public class Elevator extends SpongeMechanic {
@@ -25,18 +22,18 @@ public class Elevator extends SpongeMechanic {
 	}*/
 
     @Subscribe
-    public void onPlayerInteract(PlayerInteractBlockEvent event) {
+    public void onPlayerInteract(HumanInteractBlockEvent event) {
 
-        if(event.getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
+        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
 
         if(event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            boolean down = sign.getLine(1).equals("[Lift Down]");
+            boolean down = true;//event.getInteractionType() == EntityInteractionType.RIGHT_CLICK;//sign.getLine(1).getContent().equals("[Lift Down]");
 
-            if(down || sign.getLine(1).equals("[Lift Up]"))
-                transportEntity(event.getPlayer(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
+            //if(down || sign.getLine(1).getContent().equals("[Lift Up]"))
+            transportEntity(event.getHuman(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
         }
     }
 
@@ -46,7 +43,39 @@ public class Elevator extends SpongeMechanic {
 
         if(destination == block) return; //This elevator has no destination.
 
-        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
+        BlockLoc floor = destination.getExtent().getBlock((int) Math.floor(entity.getLocation().getPosition().getX()), destination.getY() + 1, (int) Math.floor(entity.getLocation().getPosition().getZ()));
+        // well, unless that's already a ceiling.
+        if (!floor.getType().isSolidCube()) {
+            floor = floor.getRelative(Direction.DOWN);
+        }
+
+        // now iterate down until we find enough open space to stand in
+        // or until we're 5 blocks away, which we consider too far.
+        int foundFree = 0;
+        boolean foundGround = false;
+        for (int i = 0; i < 5; i++) {
+            if (floor.getType().isSolidCube()) {
+                foundFree++;
+            } else {
+                foundGround = true;
+                break;
+            }
+            if (floor.getY() == 0x0) {
+                break;
+            }
+            floor = floor.getRelative(Direction.DOWN);
+        }
+
+        /*if (!foundGround) {
+            return;
+        }
+        if (foundFree < 2) {
+            return;
+        }*/
+
+        entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(), floor.getLocation().getPosition().getY(), entity.getLocation().getPosition().getZ())));
+
+        //entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
     }
 
     /**
@@ -64,6 +93,9 @@ public class Elevator extends SpongeMechanic {
         if(direction == Direction.UP || direction == Direction.DOWN) {
 
             while(direction == Direction.UP ? y < 256 : y >= 0) {
+
+                y += direction == Direction.UP ? 1 : -1;
+
                 BlockLoc test = block.getExtent().getBlock(block.getX(), y, block.getZ());
 
                 if(test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
@@ -71,8 +103,8 @@ public class Elevator extends SpongeMechanic {
 
                     Sign sign = test.getData(Sign.class).get();
 
-                    if(sign.getLine(1).equals("[Lift Up]") || sign.getLine(1).equals("[Lift Down]") || sign.getLine(1).equals("[Lift]"))
-                        return test;
+                    //if(sign.getLine(1).equals("[Lift Up]") || sign.getLine(1).equals("[Lift Down]") || sign.getLine(1).equals("[Lift]"))
+                    return test;
                 }
             }
         } else {
@@ -85,12 +117,6 @@ public class Elevator extends SpongeMechanic {
     @Override
     public String getName () {
         return "Elevator";
-    }
-
-    @Override
-    public void onInitialize () {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

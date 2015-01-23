@@ -5,6 +5,7 @@ import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.core.util.CachePolicy;
+import com.sk89q.craftbook.core.util.CraftBookException;
 
 public class Snow extends SpongeMechanic {
 
@@ -23,7 +24,9 @@ public class Snow extends SpongeMechanic {
     }
 
     @Override
-    public void onInitialize () {
+    public void onInitialize () throws CraftBookException {
+
+        super.onInitialize();
 
         BlockTypes.SNOW_LAYER.setTickRandomly(true);
     }
