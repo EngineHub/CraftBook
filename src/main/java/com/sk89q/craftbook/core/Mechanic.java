@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.core;
 
-import org.spongepowered.api.block.BlockLoc;
-
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.core.util.CraftBookException;
@@ -12,7 +10,17 @@ public interface Mechanic {
 
     public void onInitialize() throws CraftBookException;
 
-    public MechanicData getData(BlockLoc location);
+    /**
+     * Gets the persistent data for this mechanic, using the given location key.
+     * 
+     * <p>
+     *  The location key should be able to identify each individual block in a world, as well as the world that it exists in.
+     * </p>
+     * 
+     * @param locationKey The locationKey.
+     * @return The data
+     */
+    public MechanicData getData(String locationKey);
 
     public CachePolicy getCachePolicy();
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.MechanicDataCache;
 
 public abstract class CraftBookAPI {
 
@@ -42,4 +43,6 @@ public abstract class CraftBookAPI {
 
         return availableMechanics;
     }
+
+    public abstract MechanicDataCache getCache();
 }

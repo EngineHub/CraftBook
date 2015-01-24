@@ -14,11 +14,11 @@ import org.spongepowered.api.util.event.Subscribe;
 import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
-public class Bridge extends SimpleArea {
+public class Door extends SimpleArea {
 
     @Override
     public String getName () {
-        return "Bridge";
+        return "Door";
     }
 
     @Subscribe
@@ -30,16 +30,16 @@ public class Bridge extends SimpleArea {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(sign.getLine(1).toLegacy().equals("[Bridge]")) {
+            if(sign.getLine(1).toLegacy().equals("[Door Up]") || sign.getLine(1).toLegacy().equals("[Door Down]")) {
 
-                Direction back = SignUtil.getBack(event.getBlock());
+                Direction back = sign.getLine(1).toLegacy().equals("[Door Up]") ? Direction.UP : Direction.DOWN;
 
-                BlockLoc baseBlock = event.getBlock().getRelative(Direction.DOWN);
+                BlockLoc baseBlock = event.getBlock().getRelative(back);
 
                 BlockLoc left = baseBlock.getRelative(SignUtil.getLeft(event.getBlock()));
                 BlockLoc right = baseBlock.getRelative(SignUtil.getRight(event.getBlock()));
 
-                BlockLoc otherSide = getOtherEnd(event.getBlock());
+                BlockLoc otherSide = getOtherEnd(event.getBlock(), back);
                 if(otherSide == null) {
                     if(event.getHuman() instanceof CommandSource)
                         ((CommandSource) event.getHuman()).sendMessage("Missing other end!");
@@ -55,7 +55,7 @@ public class Bridge extends SimpleArea {
                 if(baseBlock.getType() == type)
                     type = BlockTypes.AIR;
 
-                while(baseBlock.getX() != otherSide.getX() || baseBlock.getZ() != otherSide.getZ()) {
+                while(baseBlock.getY() != otherSide.getY() + (back == Direction.UP ? -1 : 1)) {
 
                     baseBlock.replaceWith(type);
                     left.replaceWith(type);
@@ -70,9 +70,7 @@ public class Bridge extends SimpleArea {
         }
     }
 
-    public BlockLoc getOtherEnd(BlockLoc block) {
-
-        Direction back = SignUtil.getBack(block);
+    public BlockLoc getOtherEnd(BlockLoc block, Direction back) {
 
         for(int i = 0; i < 16; i++) {
 
@@ -81,7 +79,7 @@ public class Bridge extends SimpleArea {
             if(SignUtil.isSign(block)) {
                 Sign sign = block.getData(Sign.class).get();
 
-                if(sign.getLine(1).toLegacy().equals("[Bridge]")) {
+                if(sign.getLine(1).toLegacy().equals("[Door Up]") || sign.getLine(1).toLegacy().equals("[Door Down]") || sign.getLine(1).toLegacy().equals("[Door]")) {
 
                     return block;
                 }
@@ -95,5 +93,4 @@ public class Bridge extends SimpleArea {
     public CachePolicy getCachePolicy () {
         return null;
     }
-
 }

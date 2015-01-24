@@ -12,9 +12,14 @@ import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
+import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.Snow;
+import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
+import com.sk89q.craftbook.sponge.mechanics.area.Door;
+import com.sk89q.craftbook.sponge.mechanics.area.Gate;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
+import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/*, dependencies = "required-after:WorldEdit@[6.0,)"*/)
 public class CraftBookPlugin extends CraftBookAPI {
@@ -25,6 +30,8 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     public static Logger logger = LoggerFactory.getLogger(CraftBookPlugin.class);
 
+    MechanicDataCache cache;
+
     @Subscribe
     public void onPreInitialization(ServerStartingEvent event) {
 
@@ -32,6 +39,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         instance = this;
 
         logger.info("Starting CraftBook");
+
+        cache = new SpongeDataCache();
 
         discoverMechanics();
 
@@ -57,8 +66,16 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Enumerating Mechanics");
         registerMechanic(Elevator.class);
         registerMechanic(Snow.class);
+        registerMechanic(Bridge.class);
+        registerMechanic(Door.class);
+        registerMechanic(Gate.class);
 
         registerMechanic(EmptyDecay.class);
         logger.info("Found " + getAvailableMechanics().size() + ".");
+    }
+
+    @Override
+    public MechanicDataCache getCache () {
+        return cache;
     }
 }
