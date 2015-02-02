@@ -10,46 +10,45 @@ import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 
 public class EmptyDecay extends SpongeMechanic {
 
-    @Subscribe
-    public void onVehicleExit(EntityDismountEvent event) {
+	@Subscribe
+	public void onVehicleExit(EntityDismountEvent event) {
 
-        if(event.getDismounted() instanceof Minecart)
-            event.getGame().getScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin>inst(), new MinecartDecay((Minecart) event.getDismounted()), 40L);
-    }
+		if(event.getDismounted() instanceof Minecart)
+			event.getGame().getSyncScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin>inst(), new MinecartDecay((Minecart) event.getDismounted()), 40L);
+	}
 
-    public static class MinecartDecay implements Runnable {
+	public static class MinecartDecay implements Runnable {
 
-        Minecart cart;
+		Minecart cart;
 
-        public MinecartDecay(Minecart cart) {
+		public MinecartDecay(Minecart cart) {
 
-            this.cart = cart;
-        }
+			this.cart = cart;
+		}
 
-        @Override
-        public void run() {
+		@Override
+		public void run() {
 
-            if(!cart.getPassenger().isPresent()) {
-                cart.remove();
-            }
-        }
-    }
+			if(!cart.getPassenger().isPresent()) {
+				cart.remove();
+			}
+		}
+	}
 
-    @Override
-    public String getName () {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getName () {
+		return "MinecartEmptyDecay";
+	}
 
-    @Override
-    public void onInitialize () {
-        // TODO Auto-generated method stub
+	@Override
+	public void onInitialize () {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    public CachePolicy getCachePolicy () {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public CachePolicy getCachePolicy () {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
