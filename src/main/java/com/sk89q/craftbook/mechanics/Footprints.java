@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,12 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -57,27 +53,13 @@ public class Footprints extends AbstractCraftBookMechanic {
                 return;
 
             try {
-                PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.WORLD_PARTICLES);
-                packet.getStrings().write(0, "footstep");
-                packet.getFloat().write(0, (float) event.getPlayer().getLocation().getX())
-                .write(1, (float) (event.getPlayer().getLocation().getY() + yOffset))
-                .write(2, (float) event.getPlayer().getLocation().getZ())
-                .write(3, 0F)
-                .write(4, 0F)
-                .write(5, 0F)
-                .write(6, 0F);
-                packet.getIntegers().write(0, 1);
                 for (Player play : CraftBookPlugin.inst().getServer().getOnlinePlayers()) {
                     if(!play.canSee(event.getPlayer()))
                         continue;
                     if(!play.hasPermission("craftbook.mech.footprints.see"))
                         continue;
                     if (play.getWorld().equals(event.getPlayer().getPlayer().getWorld())) {
-                        try {
-                            ProtocolLibrary.getProtocolManager().sendServerPacket(play, packet);
-                        } catch (InvocationTargetException e) {
-                            BukkitUtil.printStacktrace(e);
-                        }
+                        play.getWorld().spigot().playEffect(event.getPlayer().getLocation().add(0, yOffset, 0), Effect.FOOTSTEP);
                     }
                 }
 
@@ -99,11 +81,8 @@ public class Footprints extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
-        if (CraftBookPlugin.plugins.hasProtocolLib()) {
-            footsteps = new HashSet<String>();
-            return true;
-        } else CraftBookPlugin.inst().getLogger().warning("Footprints require ProtocolLib! They will not function without it!");
-        return false;
+        footsteps = new HashSet<String>();
+        return true;
     }
 
     @Override
