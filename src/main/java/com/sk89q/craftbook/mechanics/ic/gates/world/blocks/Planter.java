@@ -23,7 +23,12 @@ import org.bukkit.material.Tree;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
@@ -206,6 +211,14 @@ public class Planter extends AbstractSelfTriggeredIC {
     protected boolean plantBlockAt(ItemStack item, Block block) {
 
         switch (item.getType()) {
+            case SAPLING:
+            case RED_ROSE:
+            case YELLOW_FLOWER:
+            case CACTUS:
+            case RED_MUSHROOM:
+            case BROWN_MUSHROOM:
+            case WATER_LILY:
+                block.setTypeIdAndData(item.getTypeId(), (byte)0, true);
             case SEEDS:
                 block.setTypeIdAndData(Material.CROPS.getId(), (byte) 0, true);
                 return true;
