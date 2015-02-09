@@ -138,6 +138,11 @@ public class MechanicListenerAdapter implements Listener {
     }
 
     public void checkBlockChange(Player player, Block block, boolean build) {
+        
+        if (block == null) {
+            return;
+        }
+        
         switch(block.getType()) {
 
             case REDSTONE_TORCH_ON:
