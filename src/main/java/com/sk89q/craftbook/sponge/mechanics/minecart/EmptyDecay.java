@@ -41,6 +41,5 @@ public class EmptyDecay extends SpongeMechanic {
 
     @Override
     public void onInitialize () {
-
     }
 }
