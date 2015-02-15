@@ -16,8 +16,12 @@
 
 package com.sk89q.craftbook.sponge.util;
 
+import jdk.nashorn.internal.ir.Block;
+
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.data.Sign;
+import org.spongepowered.api.text.message.Message;
 import org.spongepowered.api.util.Direction;
 
 /**
@@ -394,5 +398,17 @@ public class SignUtil {
             default:
                 return null;
         }
+    }
+
+    /* From this point on - replacements for ChangedSign in CB 3.x */
+
+    public static String getTextRaw(Sign sign, int line) {
+
+        return getText(sign, line).toLegacy();
+    }
+
+    public static Message getText(Sign sign, int line) {
+
+        return sign.getLine(line);
     }
 }

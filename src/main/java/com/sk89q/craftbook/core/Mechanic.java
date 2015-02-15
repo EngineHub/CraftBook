@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.core;
 
 import com.sk89q.craftbook.core.mechanics.MechanicData;
-import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.core.util.CraftBookException;
 
 public interface Mechanic {
@@ -21,6 +20,4 @@ public interface Mechanic {
      * @return The data
      */
     public MechanicData getData(String locationKey);
-
-    public CachePolicy getCachePolicy();
 }

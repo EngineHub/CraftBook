@@ -4,7 +4,6 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.util.event.Subscribe;
 
-import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.core.util.CraftBookException;
 
 public class Snow extends SpongeMechanic {
@@ -30,10 +29,4 @@ public class Snow extends SpongeMechanic {
 
         BlockTypes.SNOW_LAYER.setTickRandomly(true);
     }
-
-    @Override
-    public CachePolicy getCachePolicy () {
-        return CachePolicy.NONE;
-    }
-
 }

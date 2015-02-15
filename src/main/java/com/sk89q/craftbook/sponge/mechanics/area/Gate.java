@@ -15,15 +15,9 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Gate extends SimpleArea {
-
-    @Override
-    public String getName () {
-        return "Gate";
-    }
 
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
@@ -34,8 +28,7 @@ public class Gate extends SimpleArea {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(sign.getLine(1).toLegacy().equals("[Gate]")) {
-
+            if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
                 activateGate(event.getHuman(), event.getBlock());
             }
         } else if(event.getBlock().getType() == BlockTypes.FENCE) {
@@ -52,7 +45,7 @@ public class Gate extends SimpleArea {
 
                             Sign sign = event.getBlock().getExtent().getBlock(x1, y1, z1).getData(Sign.class).get();
 
-                            if(sign.getLine(1).toLegacy().equals("[Gate]")) {
+                            if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
 
                                 activateGate(event.getHuman(), event.getBlock().getExtent().getBlock(x1, y1, z1));
                                 break;
@@ -101,7 +94,6 @@ public class Gate extends SimpleArea {
 
                     if(block.getExtent().getBlock(x1, y2, z1).getType() == BlockTypes.FENCE) {
                         while(block.getExtent().getBlock(x1, y2, z1).getType() == BlockTypes.FENCE) {
-
                             y2++;
                         }
 
@@ -130,10 +122,5 @@ public class Gate extends SimpleArea {
                 block = block.getRelative(dir);
             }
         }
-    }
-
-    @Override
-    public CachePolicy getCachePolicy () {
-        return null;
     }
 }

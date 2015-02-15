@@ -11,15 +11,9 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 
-import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Door extends SimpleArea {
-
-    @Override
-    public String getName () {
-        return "Door";
-    }
 
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
@@ -30,9 +24,9 @@ public class Door extends SimpleArea {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(sign.getLine(1).toLegacy().equals("[Door Up]") || sign.getLine(1).toLegacy().equals("[Door Down]")) {
+            if(SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]")) {
 
-                Direction back = sign.getLine(1).toLegacy().equals("[Door Up]") ? Direction.UP : Direction.DOWN;
+                Direction back = SignUtil.getTextRaw(sign, 1).equals("[Door Up]") ? Direction.UP : Direction.DOWN;
 
                 BlockLoc baseBlock = event.getBlock().getRelative(back);
 
@@ -79,18 +73,13 @@ public class Door extends SimpleArea {
             if(SignUtil.isSign(block)) {
                 Sign sign = block.getData(Sign.class).get();
 
-                if(sign.getLine(1).toLegacy().equals("[Door Up]") || sign.getLine(1).toLegacy().equals("[Door Down]") || sign.getLine(1).toLegacy().equals("[Door]")) {
+                if(SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]") || SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
 
                     return block;
                 }
             }
         }
 
-        return null;
-    }
-
-    @Override
-    public CachePolicy getCachePolicy () {
         return null;
     }
 }

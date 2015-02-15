@@ -10,6 +10,15 @@ import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
 public abstract class SpongeMechanic implements Mechanic {
 
+    private String name;
+
+    @Override
+    public String getName() {
+        if(name == null)
+            name = this.getClass().getSimpleName();
+        return name;
+    }
+
     @Override
     public void onInitialize() throws CraftBookException {
 

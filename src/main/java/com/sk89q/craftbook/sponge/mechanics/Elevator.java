@@ -14,7 +14,7 @@ import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.sk89q.craftbook.core.util.CachePolicy;
+import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Elevator extends SpongeMechanic {
 
@@ -32,9 +32,9 @@ public class Elevator extends SpongeMechanic {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            boolean down = sign.getLine(1).toLegacy().equals("[Lift Down]");
+            boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
-            if(down || sign.getLine(1).toLegacy().equals("[Lift Up]"))
+            if(down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]"))
                 transportEntity(event.getHuman(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
         }
     }
@@ -109,7 +109,7 @@ public class Elevator extends SpongeMechanic {
 
                     Sign sign = test.getData(Sign.class).get();
 
-                    if(sign.getLine(1).toLegacy().equals("[Lift Up]") || sign.getLine(1).toLegacy().equals("[Lift Down]") || sign.getLine(1).toLegacy().equals("[Lift]"))
+                    if(SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift]"))
                         return test;
                 }
             }
@@ -118,15 +118,5 @@ public class Elevator extends SpongeMechanic {
         }
 
         return block;
-    }
-
-    @Override
-    public String getName () {
-        return "Elevator";
-    }
-
-    @Override
-    public CachePolicy getCachePolicy () {
-        return null;
     }
 }

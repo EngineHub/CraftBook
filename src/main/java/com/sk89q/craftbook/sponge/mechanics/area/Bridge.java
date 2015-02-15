@@ -11,15 +11,9 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 
-import com.sk89q.craftbook.core.util.CachePolicy;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Bridge extends SimpleArea {
-
-    @Override
-    public String getName () {
-        return "Bridge";
-    }
 
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
@@ -30,7 +24,7 @@ public class Bridge extends SimpleArea {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(sign.getLine(1).toLegacy().equals("[Bridge]")) {
+            if(SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
                 Direction back = SignUtil.getBack(event.getBlock());
 
@@ -81,7 +75,7 @@ public class Bridge extends SimpleArea {
             if(SignUtil.isSign(block)) {
                 Sign sign = block.getData(Sign.class).get();
 
-                if(sign.getLine(1).toLegacy().equals("[Bridge]")) {
+                if(SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
                     return block;
                 }
@@ -90,10 +84,4 @@ public class Bridge extends SimpleArea {
 
         return null;
     }
-
-    @Override
-    public CachePolicy getCachePolicy () {
-        return null;
-    }
-
 }
