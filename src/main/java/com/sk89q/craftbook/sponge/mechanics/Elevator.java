@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
+import java.util.EnumSet;
+
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
@@ -9,11 +11,13 @@ import org.spongepowered.api.event.block.data.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3f;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Elevator extends SpongeMechanic {
@@ -79,9 +83,9 @@ public class Elevator extends SpongeMechanic {
             return;
         }
 
-        entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(), floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
+        // entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(), floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
-        //entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
+        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
     }
 
     /**

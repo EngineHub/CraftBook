@@ -1,20 +1,28 @@
 package com.sk89q.craftbook.sponge;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.util.event.Subscribe;
 
+import com.google.inject.Inject;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.Snow;
+import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
 import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
@@ -28,9 +36,28 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     private Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
-    public static Logger logger = LoggerFactory.getLogger(CraftBookPlugin.class);
-
     MechanicDataCache cache;
+
+    /* Configuration Data */
+
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private File mainConfig;
+
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private ConfigurationLoader<CommentedConfigurationNode> configManager;
+
+    protected SpongeConfiguration config;
+
+    /* Logging */
+
+    @Inject
+    protected Logger logger;
+
+    public Logger getLogger() {
+        return logger;
+    }
 
     @Subscribe
     public void onPreInitialization(ServerStartingEvent event) {
@@ -40,22 +67,28 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         logger.info("Starting CraftBook");
 
-        cache = new SpongeDataCache();
+        config = new SpongeConfiguration(this, mainConfig, configManager);
 
         discoverMechanics();
 
-        for(Class<? extends Mechanic> mech : getAvailableMechanics()) {
+        logger.info("Loading Configuration");
 
-            //TODO is enabled check.
+        config.load();
 
-            try {
-                Mechanic mechanic = createMechanic(mech);
-                enabledMechanics.add(mechanic);
-                game.getEventManager().register(this, mechanic);
+        cache = new SpongeDataCache();
 
-                logger.info("Enabled: " + mech.getName());
-            } catch (Throwable t) {
-                t.printStackTrace();
+        for(Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
+
+            if(config.enabledMechanics.contains(mech.getKey())) {
+                try {
+                    Mechanic mechanic = createMechanic(mech.getValue());
+                    enabledMechanics.add(mechanic);
+                    game.getEventManager().register(this, mechanic);
+
+                    logger.info("Enabled: " + mech.getKey());
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
             }
         }
     }
@@ -64,14 +97,30 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
 
         logger.info("Enumerating Mechanics");
-        registerMechanic(Elevator.class);
-        registerMechanic(Snow.class);
-        registerMechanic(Bridge.class);
-        registerMechanic(Door.class);
-        registerMechanic(Gate.class);
+        registerSpongeMechanic(Elevator.class);
+        registerSpongeMechanic(Snow.class);
+        registerSpongeMechanic(Bridge.class);
+        registerSpongeMechanic(Door.class);
+        registerSpongeMechanic(Gate.class);
 
-        registerMechanic(EmptyDecay.class);
+        registerSpongeMechanic(EmptyDecay.class);
         logger.info("Found " + getAvailableMechanics().size() + ".");
+    }
+
+    public boolean registerSpongeMechanic(Class<? extends SpongeMechanic> clazz) {
+
+        try {
+            Field name = clazz.getDeclaredField("name");
+            String nameString = (String) name.get(null);
+
+            registerMechanic(nameString, clazz);
+
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+
+            return false;
+        }
     }
 
     @Override

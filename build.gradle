@@ -19,6 +19,7 @@ repositories {
     mavenCentral()
     maven { url "http://maven.sk89q.com/repo/" }
     maven { url "http://repo.spongepowered.org/maven/" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
