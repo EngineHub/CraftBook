@@ -83,13 +83,12 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         event.setHandled(true);
 
-        if(sign.getLine(0).equals("WAITING")) {
+        if(sign.getLine(0).equals("HEATING")) {
 
             //So it's waiting.
-            if(CraftBookPlugin.inst().getRandom().nextInt(100) != 0)
+            if(CraftBookPlugin.inst().getRandom().nextInt(200) != 0)
                 return;
             sign.setLine(0, "");
-            sign.update(false);
         }
 
         int lastTick = 0, oldTick;
@@ -98,7 +97,6 @@ public class CookingPot extends AbstractCraftBookMechanic {
             lastTick = Math.max(0, Integer.parseInt(sign.getLine(2)));
         } catch (Exception e) {
             sign.setLine(2, String.valueOf(0));
-            sign.update(false);
         }
         oldTick = lastTick;
         Block b = SignUtil.getBackBlock(event.getBlock());
@@ -116,7 +114,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                     items = ItemUtil.getRawFood(inventory);
 
                 if(items.size() == 0) {
-                    sign.setLine(0, "WAITING");
+                    sign.setLine(0, "HEATING");
                     sign.update(false);
                     return;
                 }
@@ -263,6 +261,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
     public void increaseMultiplier(ChangedSign sign, int amount) {
 
+        if(sign.getLine(0).equals("HEATING"))
+            sign.setLine(0, "");
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
