@@ -41,32 +41,11 @@ public class Gate extends SimpleArea {
 
                             Sign sign = event.getBlock().getExtent().getBlock(x1, y1, z1).getData(Sign.class).get();
 
-                            triggerMechanic(event.getBlock().getExtent().getBlock(x1, y1, z1), sign, event.getHuman());
+                            triggerMechanic(event.getBlock().getExtent().getBlock(x1, y1, z1), sign, event.getHuman(), null);
                         }
                     }
                 }
             }
-        }
-    }
-
-    public void activateGate(Human human, BlockLoc block) {
-
-        Set<Vector3i> columns = new HashSet<Vector3i>();
-
-        findColumns(block, columns);
-
-        if(columns.size() > 0) {
-            Boolean on = null;
-            for(Vector3i vec : columns) {
-                BlockLoc col = block.getExtent().getBlock(vec.toDouble());
-                if(on == null) {
-                    on = col.getRelative(Direction.DOWN).getType() != BlockTypes.FENCE;
-                }
-                toggleColumn(col, on.booleanValue());
-            }
-        } else {
-            if(human instanceof CommandSource)
-                ((CommandSource) human).sendMessage("Can't find a gate!");
         }
     }
 
@@ -117,10 +96,27 @@ public class Gate extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human) {
+    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
         if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
-            activateGate(human, block);
+
+            Set<Vector3i> columns = new HashSet<Vector3i>();
+
+            findColumns(block, columns);
+
+            if(columns.size() > 0) {
+                Boolean on = forceState;
+                for(Vector3i vec : columns) {
+                    BlockLoc col = block.getExtent().getBlock(vec.toDouble());
+                    if(on == null) {
+                        on = col.getRelative(Direction.DOWN).getType() != BlockTypes.FENCE;
+                    }
+                    toggleColumn(col, on.booleanValue());
+                }
+            } else {
+                if(human instanceof CommandSource)
+                    ((CommandSource) human).sendMessage("Can't find a gate!");
+            }
         } else return false;
 
         return true;

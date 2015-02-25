@@ -34,7 +34,7 @@ public class Bridge extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human) {
+    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
         if(SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
@@ -58,7 +58,7 @@ public class Bridge extends SimpleArea {
             right = baseBlock.getRelative(SignUtil.getRight(block));
 
             BlockType type = BlockTypes.PLANKS;
-            if(baseBlock.getType() == type)
+            if(baseBlock.getType() == type && (forceState == null || forceState == false))
                 type = BlockTypes.AIR;
 
             while(baseBlock.getX() != otherSide.getX() || baseBlock.getZ() != otherSide.getZ()) {
