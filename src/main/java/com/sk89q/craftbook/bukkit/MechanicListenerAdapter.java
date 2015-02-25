@@ -81,7 +81,7 @@ public class MechanicListenerAdapter implements Listener {
         Action action = null;
         if(event.getAction() == Action.RIGHT_CLICK_AIR) {
             try {
-                block = event.getPlayer().getTargetBlock(null, 5);
+                block = event.getPlayer().getTargetBlock((Set<Material>)null, 5);
                 if(block != null && block.getType() != Material.AIR)
                     action = Action.RIGHT_CLICK_BLOCK;
                 else
