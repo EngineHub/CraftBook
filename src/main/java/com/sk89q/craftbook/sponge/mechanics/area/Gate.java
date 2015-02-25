@@ -19,19 +19,15 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Gate extends SimpleArea {
 
+    @Override
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
         if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
 
-        if(SignUtil.isSign(event.getBlock())) {
+        super.onPlayerInteract(event);
 
-            Sign sign = event.getBlock().getData(Sign.class).get();
-
-            if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
-                activateGate(event.getHuman(), event.getBlock());
-            }
-        } else if(event.getBlock().getType() == BlockTypes.FENCE) {
+        if(event.getBlock().getType() == BlockTypes.FENCE) {
 
             int x = event.getBlock().getX();
             int y = event.getBlock().getY();
@@ -45,11 +41,7 @@ public class Gate extends SimpleArea {
 
                             Sign sign = event.getBlock().getExtent().getBlock(x1, y1, z1).getData(Sign.class).get();
 
-                            if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
-
-                                activateGate(event.getHuman(), event.getBlock().getExtent().getBlock(x1, y1, z1));
-                                break;
-                            }
+                            triggerMechanic(event.getBlock().getExtent().getBlock(x1, y1, z1), sign, event.getHuman());
                         }
                     }
                 }
@@ -122,5 +114,15 @@ public class Gate extends SimpleArea {
                 block = block.getRelative(dir);
             }
         }
+    }
+
+    @Override
+    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human) {
+
+        if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
+            activateGate(human, block);
+        } else return false;
+
+        return true;
     }
 }
