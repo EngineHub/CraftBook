@@ -31,6 +31,7 @@ public class SpongeConfiguration {
 
         try {
             if (!mainConfig.exists()) {
+                mainConfig.getParentFile().mkdirs();
                 mainConfig.createNewFile();
                 config = configManager.load();
 
@@ -50,6 +51,7 @@ public class SpongeConfiguration {
             configManager.save(config);
         } catch (IOException exception) {
             plugin.getLogger().error("The CraftBook Configuration could not be read!");
+            exception.printStackTrace();
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
 import org.spongepowered.api.block.BlockLoc;
-import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.living.Human;
@@ -55,9 +55,9 @@ public class Door extends SimpleArea {
             left = baseBlock.getRelative(SignUtil.getLeft(block));
             right = baseBlock.getRelative(SignUtil.getRight(block));
 
-            BlockType type = BlockTypes.PLANKS;
-            if(baseBlock.getType() == type && (forceState == null || forceState == false))
-                type = BlockTypes.AIR;
+            BlockState type = block.getRelative(back).getState();
+            if(baseBlock.getState().equals(type) && (forceState == null || forceState == false))
+                type = BlockTypes.AIR.getDefaultState();
 
             while(baseBlock.getY() != otherSide.getY() + (back == Direction.UP ? -1 : 1)) {
 

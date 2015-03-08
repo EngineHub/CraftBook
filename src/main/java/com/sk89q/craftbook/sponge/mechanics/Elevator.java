@@ -6,7 +6,7 @@ import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityInteractionType;
+import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.event.block.data.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
@@ -30,7 +30,7 @@ public class Elevator extends SpongeMechanic {
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
-        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionType.RIGHT_CLICK) return;
+        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
         if(event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
 
@@ -49,7 +49,7 @@ public class Elevator extends SpongeMechanic {
 
         if(destination == block) return; //This elevator has no destination.
 
-        BlockLoc floor = destination.getExtent().getBlock((int) Math.floor(entity.getLocation().getPosition().getX()), destination.getY() + 1, (int) Math.floor(entity.getLocation().getPosition().getZ()));
+        BlockLoc floor = destination.getExtent().getFullBlock((int) Math.floor(entity.getLocation().getPosition().getX()), destination.getY() + 1, (int) Math.floor(entity.getLocation().getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (floor.getType().isSolidCube()) {
             floor = floor.getRelative(Direction.DOWN);
@@ -85,7 +85,7 @@ public class Elevator extends SpongeMechanic {
 
         // entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(), floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
-        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY(), 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
+        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY()-1, 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
     }
 
     /**
@@ -106,7 +106,7 @@ public class Elevator extends SpongeMechanic {
 
                 y += direction == Direction.UP ? 1 : -1;
 
-                BlockLoc test = block.getExtent().getBlock(block.getX(), y, block.getZ());
+                BlockLoc test = block.getExtent().getFullBlock(block.getX(), y, block.getZ());
 
                 if(test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
                     //It's a sign.

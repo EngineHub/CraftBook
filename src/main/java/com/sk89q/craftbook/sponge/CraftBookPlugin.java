@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.sponge;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -110,13 +109,10 @@ public class CraftBookPlugin extends CraftBookAPI {
     public boolean registerSpongeMechanic(Class<? extends SpongeMechanic> clazz) {
 
         try {
-            Field name = clazz.getDeclaredField("name");
-            String nameString = (String) name.get(null);
-
-            registerMechanic(nameString, clazz);
+            registerMechanic(clazz.getSimpleName(), clazz);
 
             return true;
-        } catch(Exception e) {
+        } catch(Throwable e) {
             e.printStackTrace();
 
             return false;
