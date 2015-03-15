@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -56,6 +58,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
     }
 
+    private HashSet<String> cookingSet = new HashSet<String>();
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onPing(SelfTriggerPingEvent event) {
 
@@ -67,7 +71,21 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
+        if(cookingPotChunkLimit) {
+            if(cookingSet.contains(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ()))
+                return;
+
+            cookingSet.add(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
+        }
+
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+    }
+
+    @EventHandler
+    public void onUnregister(SelfTriggerUnregisterEvent event) {
+
+        if(cookingPotChunkLimit)
+            cookingSet.remove(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -83,7 +101,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         event.setHandled(true);
 
-        if(sign.getLine(0).equals("HEATING")) {
+        if(cookingPotHeating && sign.getLine(0).equals("HEATING")) {
 
             //So it's waiting.
             if(CraftBookPlugin.inst().getRandom().nextInt(200) != 0)
@@ -114,8 +132,10 @@ public class CookingPot extends AbstractCraftBookMechanic {
                     items = ItemUtil.getRawFood(inventory);
 
                 if(items.size() == 0) {
-                    sign.setLine(0, "HEATING");
-                    sign.update(false);
+                    if(cookingPotHeating) {
+                        sign.setLine(0, "HEATING");
+                        sign.update(false);
+                    }
                     return;
                 }
 
@@ -316,6 +336,9 @@ public class CookingPot extends AbstractCraftBookMechanic {
     boolean cookingPotDestroyBuckets;
     boolean cookingPotSuperFast;
 
+    boolean cookingPotChunkLimit;
+    boolean cookingPotHeating;
+
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
@@ -336,5 +359,9 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         config.setComment(path + "super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
         cookingPotSuperFast = config.getBoolean(path + "super-fast-cooking", false);
+
+        cookingPotHeating = config.getBoolean(path + "heating", false);
+
+        cookingPotChunkLimit = config.getBoolean(path + "chunk-limit", false);
     }
 }
