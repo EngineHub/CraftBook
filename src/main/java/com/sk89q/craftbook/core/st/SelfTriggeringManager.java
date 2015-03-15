@@ -66,10 +66,7 @@ public class SelfTriggeringManager {
         if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
 
         if(hasChanged || registeredLocations == null) {
-            synchronized (this) {
-                // Copy to array to get rid of concurrency snafus
-                registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
-            }
+            registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
         }
 
         for (Location location : registeredLocations) {
@@ -94,10 +91,7 @@ public class SelfTriggeringManager {
         if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
 
         if(hasChanged || registeredLocations == null) {
-            synchronized (this) {
-                // Copy to array to get rid of concurrency snafus
-                registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
-            }
+            registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
         }
 
         for (Location location : registeredLocations) {
