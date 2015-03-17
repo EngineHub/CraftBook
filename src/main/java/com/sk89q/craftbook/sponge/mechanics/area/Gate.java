@@ -23,21 +23,21 @@ public class Gate extends SimpleArea {
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
-        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
         super.onPlayerInteract(event);
 
-        if(event.getBlock().getType() == BlockTypes.FENCE) {
+        if (event.getBlock().getType() == BlockTypes.FENCE) {
 
             int x = event.getBlock().getX();
             int y = event.getBlock().getY();
             int z = event.getBlock().getZ();
 
             for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-                for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+                for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
-                        if(SignUtil.isSign(event.getBlock().getExtent().getFullBlock(x1, y1, z1))) {
+                        if (SignUtil.isSign(event.getBlock().getExtent().getFullBlock(x1, y1, z1))) {
 
                             Sign sign = event.getBlock().getExtent().getFullBlock(x1, y1, z1).getData(Sign.class).get();
 
@@ -58,7 +58,7 @@ public class Gate extends SimpleArea {
         int z = block.getZ();
 
         for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-            for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+            for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                 for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
                     searchColumn(block.getExtent().getFullBlock(x1, y1, z1), columns);
@@ -71,7 +71,7 @@ public class Gate extends SimpleArea {
 
         int y = block.getY();
 
-        if(block.getExtent().getBlock(block.getX(), y, block.getZ()).getType() == BlockTypes.FENCE) {
+        if (block.getExtent().getBlock(block.getX(), y, block.getZ()).getType() == BlockTypes.FENCE) {
 
             GateColumn column = new GateColumn(block);
 
@@ -79,15 +79,11 @@ public class Gate extends SimpleArea {
 
             BlockLoc temp = column.topBlock;
 
-            while(temp.getType() == BlockTypes.FENCE || temp.getType() == BlockTypes.AIR) {
-                if(!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH))))
-                    searchColumn(temp.getRelative(Direction.NORTH), columns);
-                if(!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH))))
-                    searchColumn(temp.getRelative(Direction.SOUTH), columns);
-                if(!columns.contains(new GateColumn(temp.getRelative(Direction.EAST))))
-                    searchColumn(temp.getRelative(Direction.EAST), columns);
-                if(!columns.contains(new GateColumn(temp.getRelative(Direction.WEST))))
-                    searchColumn(temp.getRelative(Direction.WEST), columns);
+            while (temp.getType() == BlockTypes.FENCE || temp.getType() == BlockTypes.AIR) {
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) searchColumn(temp.getRelative(Direction.NORTH), columns);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) searchColumn(temp.getRelative(Direction.SOUTH), columns);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) searchColumn(temp.getRelative(Direction.EAST), columns);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.WEST)))) searchColumn(temp.getRelative(Direction.WEST), columns);
 
                 temp = temp.getRelative(Direction.DOWN);
             }
@@ -100,13 +96,13 @@ public class Gate extends SimpleArea {
 
         block = block.getRelative(dir);
 
-        if(on) {
-            while(block.getType() == BlockTypes.AIR) {
+        if (on) {
+            while (block.getType() == BlockTypes.AIR) {
                 block.replaceWith(BlockTypes.FENCE);
                 block = block.getRelative(dir);
             }
         } else {
-            while(block.getType() == BlockTypes.FENCE) {
+            while (block.getType() == BlockTypes.FENCE) {
                 block.replaceWith(BlockTypes.AIR);
                 block = block.getRelative(dir);
             }
@@ -116,24 +112,23 @@ public class Gate extends SimpleArea {
     @Override
     public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
-        if(SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
+        if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
 
             Set<GateColumn> columns = new HashSet<GateColumn>();
 
             findColumns(block, columns);
 
-            if(columns.size() > 0) {
+            if (columns.size() > 0) {
                 Boolean on = forceState;
-                for(GateColumn vec : columns) {
+                for (GateColumn vec : columns) {
                     BlockLoc col = vec.getBlock();
-                    if(on == null) {
+                    if (on == null) {
                         on = col.getRelative(Direction.DOWN).getType() != BlockTypes.FENCE;
                     }
                     toggleColumn(col, on.booleanValue());
                 }
             } else {
-                if(human instanceof CommandSource)
-                    ((CommandSource) human).sendMessage("Can't find a gate!");
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage("Can't find a gate!");
             }
         } else return false;
 
@@ -150,7 +145,7 @@ public class Gate extends SimpleArea {
 
         public GateColumn(BlockLoc topBlock) {
 
-            while(topBlock.getType() == BlockTypes.FENCE) {
+            while (topBlock.getType() == BlockTypes.FENCE) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
 
@@ -170,8 +165,7 @@ public class Gate extends SimpleArea {
 
         @Override
         public boolean equals(Object o) {
-            if(o instanceof GateColumn)
-                return ((GateColumn) o).topBlock.getX() == topBlock.getX() && ((GateColumn) o).topBlock.getZ() == topBlock.getZ();
+            if (o instanceof GateColumn) return ((GateColumn) o).topBlock.getX() == topBlock.getX() && ((GateColumn) o).topBlock.getZ() == topBlock.getZ();
 
             return false;
         }

@@ -7,20 +7,19 @@ import com.sk89q.craftbook.core.mechanics.MechanicData;
 
 public abstract class MechanicDataCache {
 
-    private LoadingCache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250)
-            .build(new CacheLoader<String, MechanicData>() {
-                @Override
-                public MechanicData load(String locationKey) {
+    private LoadingCache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).build(new CacheLoader<String, MechanicData>() {
+        @Override
+        public MechanicData load(String locationKey) {
 
-                    return loadFromDisk(locationKey);
-                }
-            });
+            return loadFromDisk(locationKey);
+        }
+    });
 
     protected abstract MechanicData loadFromDisk(String locationKey);
 
     public MechanicData getMechanicData(String locationKey) {
 
-        if(locationKey == null) return null;
+        if (locationKey == null) return null;
 
         return mechanicData.getUnchecked(locationKey);
     }

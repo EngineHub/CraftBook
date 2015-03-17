@@ -30,16 +30,15 @@ public class Elevator extends SpongeMechanic {
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
-        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
-        if(event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
+        if (event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
             boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
-            if(down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]"))
-                transportEntity(event.getHuman(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
+            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getHuman(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
         }
     }
 
@@ -47,7 +46,7 @@ public class Elevator extends SpongeMechanic {
 
         BlockLoc destination = findDestination(block, direction);
 
-        if(destination == block) return; //This elevator has no destination.
+        if (destination == block) return; // This elevator has no destination.
 
         BlockLoc floor = destination.getExtent().getFullBlock((int) Math.floor(entity.getLocation().getPosition().getX()), destination.getY() + 1, (int) Math.floor(entity.getLocation().getPosition().getZ()));
         // well, unless that's already a ceiling.
@@ -73,19 +72,18 @@ public class Elevator extends SpongeMechanic {
         }
 
         if (!foundGround) {
-            if(entity instanceof CommandSource)
-                ((CommandSource) entity).sendMessage("No floor!");
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage("No floor!");
             return;
         }
         if (foundFree < 2) {
-            if(entity instanceof CommandSource)
-                ((CommandSource) entity).sendMessage("Obstructed!");
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage("Obstructed!");
             return;
         }
 
-        // entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(), floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
+        // entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(),
+        // floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
-        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY()-1, 0)), new Vector3f(0,0,0), EnumSet.<RelativePositions>of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
+        entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY() - 1, 0)), new Vector3f(0, 0, 0), EnumSet.<RelativePositions> of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
     }
 
     /**
@@ -93,32 +91,30 @@ public class Elevator extends SpongeMechanic {
      * 
      * @param block The starting block.
      * @param direction The direction to move in.
-     * 
      * @return The elevator destination.
      */
     private BlockLoc findDestination(BlockLoc block, Direction direction) {
 
         int y = block.getY();
 
-        if(direction == Direction.UP || direction == Direction.DOWN) {
+        if (direction == Direction.UP || direction == Direction.DOWN) {
 
-            while(direction == Direction.UP ? y < 256 : y >= 0) {
+            while (direction == Direction.UP ? y < 256 : y >= 0) {
 
                 y += direction == Direction.UP ? 1 : -1;
 
                 BlockLoc test = block.getExtent().getFullBlock(block.getX(), y, block.getZ());
 
-                if(test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
-                    //It's a sign.
+                if (test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
+                    // It's a sign.
 
                     Sign sign = test.getData(Sign.class).get();
 
-                    if(SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift]"))
-                        return test;
+                    if (SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift]")) return test;
                 }
             }
         } else {
-            //We don't currently support non-up/down elevators, this isn't a Roald Dahl novel.
+            // We don't currently support non-up/down elevators, this isn't a Roald Dahl novel.
         }
 
         return block;

@@ -20,16 +20,17 @@ public abstract class SimpleArea extends SpongeMechanic {
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
-        if(event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
-        if(SignUtil.isSign(event.getBlock())) {
+        if (SignUtil.isSign(event.getBlock())) {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
+            if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
                 try {
                     ((Cancellable) event).setCancelled(true);
-                } catch(Throwable e){} //TODO remove
+                } catch (Throwable e) {
+                } // TODO remove
             }
         }
     }
@@ -37,8 +38,8 @@ public abstract class SimpleArea extends SpongeMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for(BlockLoc block : event.getAffectedBlocks()) {
-            if(SignUtil.isSign(block)) {
+        for (BlockLoc block : event.getAffectedBlocks()) {
+            if (SignUtil.isSign(block)) {
 
                 Sign sign = block.getData(Sign.class).get();
 

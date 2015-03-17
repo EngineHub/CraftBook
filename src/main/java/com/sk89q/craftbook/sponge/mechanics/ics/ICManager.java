@@ -7,25 +7,24 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
 
 public class ICManager {
 
-	public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<ICType<? extends IC>>();
-	
-	static {
-		
-		registerICType(new ICType<Repeater>("MC1000", "REPEATER", Repeater.class));
-	}
-	
-	public static void registerICType(ICType<? extends IC> ic) {
-		
-		registeredICTypes.add(ic);
-	}
-	
-	public static ICType<? extends IC> getICType(String id) {
-		
-		for(ICType<? extends IC> icType : registeredICTypes) {
-			if(icType.modelId.equalsIgnoreCase("[" + id + "]"))
-				return icType;
-		}
-		
-		return null;
-	}
+    public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<ICType<? extends IC>>();
+
+    static {
+
+        registerICType(new ICType<Repeater>("MC1000", "REPEATER", Repeater.class));
+    }
+
+    public static void registerICType(ICType<? extends IC> ic) {
+
+        registeredICTypes.add(ic);
+    }
+
+    public static ICType<? extends IC> getICType(String id) {
+
+        for (ICType<? extends IC> icType : registeredICTypes) {
+            if (icType.modelId.equalsIgnoreCase("[" + id + "]")) return icType;
+        }
+
+        return null;
+    }
 }

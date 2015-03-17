@@ -7,10 +7,9 @@ public class LocationUtil {
 
     public static Direction getFacing(BlockLoc base, BlockLoc other) {
 
-        for(Direction dir : Direction.values()) {
+        for (Direction dir : Direction.values()) {
 
-            if(base.getRelative(dir).equals(other))
-                return dir;
+            if (base.getRelative(dir).equals(other)) return dir;
         }
 
         return null;

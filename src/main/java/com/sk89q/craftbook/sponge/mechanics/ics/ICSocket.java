@@ -29,7 +29,7 @@ public class ICSocket extends SpongeMechanic {
      * @return The IC
      */
     public IC getIC(BlockLoc block) {
-        return ((BaseICData)this.getData(block)).ic;
+        return ((BaseICData) this.getData(block)).ic;
     }
 
     @Override
@@ -40,21 +40,21 @@ public class ICSocket extends SpongeMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for(BlockLoc block : event.getAffectedBlocks()) {
+        for (BlockLoc block : event.getAffectedBlocks()) {
 
-            if(block.getType() == BlockTypes.WALL_SIGN) {
-            	ICType<? extends IC> icType = ICManager.getICType(block.getData(Sign.class).get().getLine(1).toLegacy());
+            if (block.getType() == BlockTypes.WALL_SIGN) {
+                ICType<? extends IC> icType = ICManager.getICType(block.getData(Sign.class).get().getLine(1).toLegacy());
 
-            	if(icType == null) continue;
-            	
+                if (icType == null) continue;
+
                 BaseICData data = (BaseICData) getData(block);
 
-                if(data.ic == null) {
+                if (data.ic == null) {
 
-                    //Initialize new IC.
-                	data.ic = icType.buildIC(block);
+                    // Initialize new IC.
+                    data.ic = icType.buildIC(block);
 
-                    //Check for alternate PinSet types.
+                    // Check for alternate PinSet types.
 
                     data.pins = PINSETS.get(data.ic.getType().getDefaultPinSet());
                 }
@@ -78,7 +78,7 @@ public class ICSocket extends SpongeMechanic {
         PinSet pins;
 
         @Override
-        public DataContainer toContainer () {
+        public DataContainer toContainer() {
 
             return null;
         }

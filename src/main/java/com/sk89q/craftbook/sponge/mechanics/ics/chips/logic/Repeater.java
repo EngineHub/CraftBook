@@ -8,14 +8,14 @@ import com.sk89q.craftbook.sponge.mechanics.ics.PinSet;
 
 public class Repeater extends IC {
 
-	public Repeater(ICType<IC> type, BlockLoc block) {
-		super(type, block);
-	}
+    public Repeater(ICType<IC> type, BlockLoc block) {
+        super(type, block);
+    }
 
-	@Override
-	public void trigger(PinSet pinset) {
-		
-		for(int i = 0; i < pinset.getInputCount(); i++)
-			pinset.setOutput(i, pinset.getInput(i, this), this);
-	}
+    @Override
+    public void trigger(PinSet pinset) {
+
+        for (int i = 0; i < pinset.getInputCount(); i++)
+            pinset.setOutput(i, pinset.getInput(i, this), this);
+    }
 }

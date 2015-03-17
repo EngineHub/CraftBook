@@ -16,7 +16,7 @@ public class SpongeConfiguration {
     private File mainConfig;
     private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
-    private CommentedConfigurationNode  config;
+    private CommentedConfigurationNode config;
 
     public List<String> enabledMechanics;
 
@@ -35,15 +35,15 @@ public class SpongeConfiguration {
                 mainConfig.createNewFile();
                 config = configManager.load();
 
-                //Create default configuration - TODO
+                // Create default configuration - TODO
 
                 configManager.save(config);
             }
             config = configManager.load();
 
-            enabledMechanics = config.getNode("enabled-mechanics").<String>getList(new Function<Object, String>() {
+            enabledMechanics = config.getNode("enabled-mechanics").<String> getList(new Function<Object, String>() {
                 @Override
-                public String apply (Object input) {
+                public String apply(Object input) {
                     return String.valueOf(input);
                 }
             }, Arrays.asList("Elevator", "Snow"));

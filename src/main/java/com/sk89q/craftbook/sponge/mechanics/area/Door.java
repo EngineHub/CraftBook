@@ -14,17 +14,16 @@ public class Door extends SimpleArea {
 
     public BlockLoc getOtherEnd(BlockLoc block, Direction back) {
 
-        for(int i = 0; i < 16; i++) {
+        for (int i = 0; i < 16; i++) {
 
             block = block.getRelative(back);
 
-            if(SignUtil.isSign(block)) {
+            if (SignUtil.isSign(block)) {
                 Sign sign = block.getData(Sign.class).get();
 
-                if(SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]") || SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
+                if (SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]") || SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
 
-                    return block;
-                }
+                return block; }
             }
         }
 
@@ -32,9 +31,9 @@ public class Door extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic (BlockLoc block, Sign sign, Human human, Boolean forceState) {
+    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
-        if(SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]")) {
+        if (SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]")) {
 
             Direction back = SignUtil.getTextRaw(sign, 1).equals("[Door Up]") ? Direction.UP : Direction.DOWN;
 
@@ -44,9 +43,8 @@ public class Door extends SimpleArea {
             BlockLoc right = baseBlock.getRelative(SignUtil.getRight(block));
 
             BlockLoc otherSide = getOtherEnd(block, back);
-            if(otherSide == null) {
-                if(human instanceof CommandSource)
-                    ((CommandSource) human).sendMessage("Missing other end!");
+            if (otherSide == null) {
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage("Missing other end!");
                 return true;
             }
 
@@ -56,10 +54,9 @@ public class Door extends SimpleArea {
             right = baseBlock.getRelative(SignUtil.getRight(block));
 
             BlockState type = block.getRelative(back).getState();
-            if(baseBlock.getState().equals(type) && (forceState == null || forceState == false))
-                type = BlockTypes.AIR.getDefaultState();
+            if (baseBlock.getState().equals(type) && (forceState == null || forceState == false)) type = BlockTypes.AIR.getDefaultState();
 
-            while(baseBlock.getY() != otherSide.getY() + (back == Direction.UP ? -1 : 1)) {
+            while (baseBlock.getY() != otherSide.getY() + (back == Direction.UP ? -1 : 1)) {
 
                 baseBlock.replaceWith(type);
                 left.replaceWith(type);

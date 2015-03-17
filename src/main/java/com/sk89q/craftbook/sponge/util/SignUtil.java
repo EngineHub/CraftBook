@@ -1,15 +1,12 @@
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -29,15 +26,12 @@ import org.spongepowered.api.util.Direction;
  * Convenience methods for dealing with some sign block data.
  * </p>
  * <p>
- * If you intend to care about the eight further directions (as opposed to the four cardinal directions and the four
- * ordinal directions), this isn't
- * for you -- since Direction has no such directions, those will be rounded to the nearest ordinal direction. (If the
- * term "further direction"
+ * If you intend to care about the eight further directions (as opposed to the four cardinal directions and the four ordinal directions), this isn't
+ * for you -- since Direction has no such directions, those will be rounded to the nearest ordinal direction. (If the term "further direction"
  * confuses you, see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
  * </p>
  * <p>
- * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign (which extends
- * MaterialData). However, that thing:
+ * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign (which extends MaterialData). However, that thing:
  * <ul>
  * <li>doesn't provide the relative direction methods.
  * <li>rounds the further divisions to cardinal/ordinal differently (and wrong, in my book).
@@ -58,11 +52,10 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return the direction a player would be facing when reading the sign; i.e. the face that is actually the back
-     *         side of the sign.
+     * side of the sign.
      */
     public static Direction getFacing(BlockLoc sign) {
 
@@ -71,11 +64,10 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return the side of the sign containing the text (in other words, when a player places a new sign,
-     *         while facing north, this will return south).
+     * while facing north, this will return south).
      */
     public static Direction getFront(BlockLoc sign) {
 
@@ -131,13 +123,11 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return the blank side of the sign opposite the text. In the case of a wall sign,
-     *         the block in this direction is the block to which the sign is
-     *         attached. This is also the direction a player would be facing when reading the sign; see {@link
-     *         #getFacing(Block)}.
+     * the block in this direction is the block to which the sign is
+     * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(Block)}.
      */
     public static Direction getBack(BlockLoc sign) {
 
@@ -199,12 +189,11 @@ public class SignUtil {
         for (int i = 0; i < searchRadius; i++) {
             if (isSign(otherBlock.getRelative(way))) {
                 otherBlock = otherBlock.getRelative(way);
-                //TODO if (BukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
+                // TODO if (BukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
                 found = true;
                 break;
-                //}
-            } else
-                otherBlock = otherBlock.getRelative(way);
+                // }
+            } else otherBlock = otherBlock.getRelative(way);
         }
         if (!found) return null;
         return otherBlock;
@@ -212,12 +201,11 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return the cardinal or ordinal direction to a player's left as they face the sign to read it; if the sign is
-     *         oriented in a further direction,
-     *         the result is rounded to the nearest ordinal direction.
+     * oriented in a further direction,
+     * the result is rounded to the nearest ordinal direction.
      */
     public static Direction getRight(BlockLoc sign) {
 
@@ -273,12 +261,11 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return the cardinal or ordinal direction to a player's right they face the sign to read it; if the sign is
-     *         oriented in a further direction, the
-     *         result is rounded to the nearest ordinal direction.
+     * oriented in a further direction, the
+     * result is rounded to the nearest ordinal direction.
      */
     public static Direction getLeft(BlockLoc sign) {
 
@@ -334,12 +321,11 @@ public class SignUtil {
 
     /**
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *             if you ask about a stone block, it's considered a wall
-     *             sign).
-     *
+     * if you ask about a stone block, it's considered a wall
+     * sign).
      * @return true if the sign is oriented along a cardinal direction (or if it's a wall sign,
-     *         since those are always oriented along cardinal
-     *         directions); false otherwise.
+     * since those are always oriented along cardinal
+     * directions); false otherwise.
      */
     public static boolean isCardinal(BlockLoc sign) {
 
@@ -358,7 +344,6 @@ public class SignUtil {
 
     /**
      * @param face Start from direction
-     *
      * @return clockwise direction
      */
     public static Direction getClockWise(Direction face) {
@@ -380,7 +365,6 @@ public class SignUtil {
 
     /**
      * @param face Start from direction
-     *
      * @return clockwise direction
      */
     public static Direction getCounterClockWise(Direction face) {

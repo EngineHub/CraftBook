@@ -24,7 +24,7 @@ public abstract class CraftBookAPI {
 
     public boolean registerMechanic(String name, Class<? extends Mechanic> mechanic) {
 
-        if(mechanic == null) return false;
+        if (mechanic == null) return false;
 
         return availableMechanics.put(name, mechanic) == null;
     }

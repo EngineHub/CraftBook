@@ -14,8 +14,7 @@ public abstract class SpongeMechanic implements Mechanic {
 
     @Override
     public String getName() {
-        if(name == null)
-            name = this.getClass().getSimpleName();
+        if (name == null) name = this.getClass().getSimpleName();
         return name;
     }
 
@@ -28,8 +27,7 @@ public abstract class SpongeMechanic implements Mechanic {
 
         StringBuilder builder = new StringBuilder();
 
-        if(block.getExtent() instanceof World)
-            builder.append(((World) block.getExtent()).getName()).append('.');
+        if (block.getExtent() instanceof World) builder.append(((World) block.getExtent()).getName()).append('.');
         builder.append(block.getX()).append('.');
         builder.append(block.getY()).append('.');
         builder.append(block.getZ());

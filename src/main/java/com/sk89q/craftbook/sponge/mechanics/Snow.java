@@ -11,19 +11,19 @@ public class Snow extends SpongeMechanic {
     @Subscribe
     public void onBlockTick(BlockRandomTickEvent event) {
 
-        if(event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
+        if (event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
 
-            //It's snow.
+            // It's snow.
         }
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return "BetterSnow";
     }
 
     @Override
-    public void onInitialize () throws CraftBookException {
+    public void onInitialize() throws CraftBookException {
 
         super.onInitialize();
 

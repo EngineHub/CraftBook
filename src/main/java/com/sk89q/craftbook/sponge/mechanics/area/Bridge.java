@@ -16,17 +16,16 @@ public class Bridge extends SimpleArea {
 
         Direction back = SignUtil.getBack(block);
 
-        for(int i = 0; i < 16; i++) {
+        for (int i = 0; i < 16; i++) {
 
             block = block.getRelative(back);
 
-            if(SignUtil.isSign(block)) {
+            if (SignUtil.isSign(block)) {
                 Sign sign = block.getData(Sign.class).get();
 
-                if(SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
+                if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
-                    return block;
-                }
+                return block; }
             }
         }
 
@@ -36,7 +35,7 @@ public class Bridge extends SimpleArea {
     @Override
     public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
-        if(SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
+        if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
             Direction back = SignUtil.getBack(block);
 
@@ -46,9 +45,8 @@ public class Bridge extends SimpleArea {
             BlockLoc right = baseBlock.getRelative(SignUtil.getRight(block));
 
             BlockLoc otherSide = getOtherEnd(block);
-            if(otherSide == null) {
-                if(human instanceof CommandSource)
-                    ((CommandSource) human).sendMessage("Missing other end!");
+            if (otherSide == null) {
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage("Missing other end!");
                 return true;
             }
 
@@ -58,10 +56,9 @@ public class Bridge extends SimpleArea {
             right = baseBlock.getRelative(SignUtil.getRight(block));
 
             BlockState type = block.getRelative(Direction.DOWN).getState();
-            if(baseBlock.getState().equals(type) && (forceState == null || forceState == false))
-                type = BlockTypes.AIR.getDefaultState();
+            if (baseBlock.getState().equals(type) && (forceState == null || forceState == false)) type = BlockTypes.AIR.getDefaultState();
 
-            while(baseBlock.getX() != otherSide.getX() || baseBlock.getZ() != otherSide.getZ()) {
+            while (baseBlock.getX() != otherSide.getX() || baseBlock.getZ() != otherSide.getZ()) {
 
                 baseBlock.replaceWith(type);
                 left.replaceWith(type);

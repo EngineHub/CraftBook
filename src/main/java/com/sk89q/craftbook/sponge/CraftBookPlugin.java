@@ -29,7 +29,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 
-@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/*, dependencies = "required-after:WorldEdit@[6.0,)"*/)
+@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
 public class CraftBookPlugin extends CraftBookAPI {
 
     public static Game game;
@@ -77,9 +77,9 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         cache = new SpongeDataCache();
 
-        for(Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
+        for (Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
 
-            if(config.enabledMechanics.contains(mech.getKey())) {
+            if (config.enabledMechanics.contains(mech.getKey())) {
                 try {
                     Mechanic mechanic = createMechanic(mech.getValue());
                     enabledMechanics.add(mechanic);
@@ -102,7 +102,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         registerSpongeMechanic(Bridge.class);
         registerSpongeMechanic(Door.class);
         registerSpongeMechanic(Gate.class);
-        
+
         registerSpongeMechanic(ICSocket.class);
 
         registerSpongeMechanic(EmptyDecay.class);
@@ -115,7 +115,7 @@ public class CraftBookPlugin extends CraftBookAPI {
             registerMechanic(clazz.getSimpleName(), clazz);
 
             return true;
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             e.printStackTrace();
 
             return false;
@@ -123,7 +123,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     }
 
     @Override
-    public MechanicDataCache getCache () {
+    public MechanicDataCache getCache() {
         return cache;
     }
 }
