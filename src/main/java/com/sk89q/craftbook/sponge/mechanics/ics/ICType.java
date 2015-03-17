@@ -1,7 +1,9 @@
-package com.sk89q.craftbook.sponge.mechanics.integratedcircuits;
+package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+import org.spongepowered.api.block.BlockLoc;
 
 public class ICType<T extends IC> {
 
@@ -11,13 +13,14 @@ public class ICType<T extends IC> {
 	
 	Class<T> icClass;
 	Object[] extraArguments = new Object[0];
-	Class<?>[] argumentTypes = new Class<?>[1];
+	Class<?>[] argumentTypes = new Class<?>[2];
 	
 	public ICType(String modelId, String shorthandId, Class<T> icClass) {
 		this.modelId = modelId;
 		this.shorthandId = shorthandId;
 		this.icClass = icClass;
 		argumentTypes[0] = ICType.class;
+		argumentTypes[1] = BlockLoc.class;
 	}
 	
 	public ICType(String modelId, String shorthandId, Class<T> icClass, String defaultPinset) {
@@ -28,9 +31,10 @@ public class ICType<T extends IC> {
 	public ICType<T> setExtraArguments(Object ... args) {
 		extraArguments = args;
 		
-		argumentTypes = new Class<?>[extraArguments.length + 1];
+		argumentTypes = new Class<?>[extraArguments.length + 2];
 		argumentTypes[0] = ICType.class;
-		int num = 1;
+		argumentTypes[1] = BlockLoc.class;
+		int num = 2;
 		for(Object obj : args)
 			argumentTypes[num ++] = obj.getClass();
 		
@@ -41,11 +45,11 @@ public class ICType<T extends IC> {
         return defaultPinset != null ? defaultPinset : "SISO";
     }
     
-    public IC buildIC() {
+    public IC buildIC(BlockLoc block) {
     	
     	try {
 			Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
-			IC ic = construct.newInstance(this, extraArguments);
+			IC ic = construct.newInstance(this, block, extraArguments);
 			
 			return ic;
 		} catch (NoSuchMethodException e) {

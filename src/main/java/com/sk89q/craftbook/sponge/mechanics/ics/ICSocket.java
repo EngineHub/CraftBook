@@ -1,16 +1,17 @@
-package com.sk89q.craftbook.sponge.mechanics.integratedcircuits;
+package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import java.util.HashMap;
 
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.service.persistence.data.DataContainer;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
-import com.sk89q.craftbook.sponge.mechanics.integratedcircuits.pinsets.SISO;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
@@ -42,13 +43,16 @@ public class ICSocket extends SpongeMechanic {
         for(BlockLoc block : event.getAffectedBlocks()) {
 
             if(block.getType() == BlockTypes.WALL_SIGN) {
-                //TODO check if sign is a valid IC.
+            	ICType<? extends IC> icType = ICManager.getICType(block.getData(Sign.class).get().getLine(1).toLegacy());
 
+            	if(icType == null) continue;
+            	
                 BaseICData data = (BaseICData) getData(block);
 
                 if(data.ic == null) {
 
                     //Initialize new IC.
+                	data.ic = icType.buildIC(block);
 
                     //Check for alternate PinSet types.
 
@@ -58,6 +62,7 @@ public class ICSocket extends SpongeMechanic {
                 Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
                 data.pins.setInput(data.pins.getInputId(data.ic, facing), block.isFacePowered(facing), data.ic);
+                data.ic.trigger(data.pins);
             }
         }
     }

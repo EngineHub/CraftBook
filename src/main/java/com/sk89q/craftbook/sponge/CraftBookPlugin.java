@@ -25,6 +25,7 @@ import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
 import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 
@@ -101,6 +102,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         registerSpongeMechanic(Bridge.class);
         registerSpongeMechanic(Door.class);
         registerSpongeMechanic(Gate.class);
+        
+        registerSpongeMechanic(ICSocket.class);
 
         registerSpongeMechanic(EmptyDecay.class);
         logger.info("Found " + getAvailableMechanics().size() + ".");

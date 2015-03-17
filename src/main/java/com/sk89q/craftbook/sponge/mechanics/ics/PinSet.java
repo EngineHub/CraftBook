@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.sponge.mechanics.integratedcircuits;
+package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import org.spongepowered.api.util.Direction;
 

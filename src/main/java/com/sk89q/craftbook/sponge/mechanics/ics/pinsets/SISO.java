@@ -1,9 +1,9 @@
-package com.sk89q.craftbook.sponge.mechanics.integratedcircuits.pinsets;
+package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
 import org.spongepowered.api.util.Direction;
 
-import com.sk89q.craftbook.sponge.mechanics.integratedcircuits.IC;
-import com.sk89q.craftbook.sponge.mechanics.integratedcircuits.PinSet;
+import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.PinSet;
 
 public class SISO extends PinSet {
 
