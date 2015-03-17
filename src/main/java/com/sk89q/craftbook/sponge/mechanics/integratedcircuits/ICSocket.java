@@ -52,7 +52,7 @@ public class ICSocket extends SpongeMechanic {
 
                     //Check for alternate PinSet types.
 
-                    data.pins = PINSETS.get(data.ic.getDefaultPinSet());
+                    data.pins = PINSETS.get(data.ic.getType().getDefaultPinSet());
                 }
 
                 Direction facing = LocationUtil.getFacing(block, event.getBlock());

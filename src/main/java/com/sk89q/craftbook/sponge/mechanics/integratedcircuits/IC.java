@@ -4,9 +4,15 @@ import org.spongepowered.api.block.BlockLoc;
 
 public abstract class IC {
 
+	ICType type;
+	
+	public IC(ICType type) {
+		this.type = type;
+	}
+	
     public abstract BlockLoc getBlock();
-
-    public String getDefaultPinSet() {
-        return "SISO";
+    
+    public ICType getType() {
+    	return type;
     }
 }
