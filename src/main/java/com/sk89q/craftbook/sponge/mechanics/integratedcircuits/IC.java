@@ -4,15 +4,15 @@ import org.spongepowered.api.block.BlockLoc;
 
 public abstract class IC {
 
-	ICType type;
+	ICType<IC> type;
 	
-	public IC(ICType type) {
+	public IC(ICType<IC> type) {
 		this.type = type;
 	}
 	
     public abstract BlockLoc getBlock();
     
-    public ICType getType() {
+    public ICType<IC> getType() {
     	return type;
     }
 }
