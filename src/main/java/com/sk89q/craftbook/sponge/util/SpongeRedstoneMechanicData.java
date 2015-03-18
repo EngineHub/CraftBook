@@ -1,0 +1,20 @@
+package com.sk89q.craftbook.sponge.util;
+
+import org.spongepowered.api.service.persistence.data.DataContainer;
+import org.spongepowered.api.service.persistence.data.DataQuery;
+import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
+
+
+public class SpongeRedstoneMechanicData implements SpongeMechanicData {
+
+    public int lastCurrent;
+
+    @Override
+    public DataContainer toContainer() {
+
+        DataContainer container = new MemoryDataContainer();
+        container.set(new DataQuery("lastCurrent"), lastCurrent);
+
+        return container;
+    }
+}

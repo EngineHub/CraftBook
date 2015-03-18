@@ -14,6 +14,7 @@ import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 
 public abstract class SimpleArea extends SpongeMechanic {
 
@@ -43,7 +44,11 @@ public abstract class SimpleArea extends SpongeMechanic {
 
                 Sign sign = block.getData(Sign.class).get();
 
-                triggerMechanic(block, sign, null, block.isPowered());
+                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
+                if(data.lastCurrent != (block.isPowered() ? 15 : 0)) {
+                    triggerMechanic(block, sign, null, block.isPowered());
+                    data.lastCurrent = block.isPowered() ? 15 : 0;
+                }
             }
         }
     }

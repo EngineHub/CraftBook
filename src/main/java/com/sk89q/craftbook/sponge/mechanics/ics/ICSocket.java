@@ -7,13 +7,14 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.service.persistence.data.DataContainer;
+import org.spongepowered.api.service.persistence.data.DataQuery;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
-import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
+import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 
 public class ICSocket extends SpongeMechanic {
 
@@ -29,7 +30,7 @@ public class ICSocket extends SpongeMechanic {
      * @return The IC
      */
     public IC getIC(BlockLoc block) {
-        return ((BaseICData) this.getData(block)).ic;
+        return this.getData(BaseICData.class, block).ic;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ICSocket extends SpongeMechanic {
 
                 if (icType == null) continue;
 
-                BaseICData data = (BaseICData) getData(block);
+                BaseICData data = getData(BaseICData.class, block);
 
                 if (data.ic == null) {
 
@@ -67,12 +68,7 @@ public class ICSocket extends SpongeMechanic {
         }
     }
 
-    public class BaseICData implements SpongeMechanicData {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -9040614175206920563L;
+    public class BaseICData extends SpongeRedstoneMechanicData {
 
         IC ic;
         PinSet pins;
@@ -80,7 +76,12 @@ public class ICSocket extends SpongeMechanic {
         @Override
         public DataContainer toContainer() {
 
-            return null;
+            DataContainer container = super.toContainer();
+
+            container.set(new DataQuery("icState"), ic);
+            container.set(new DataQuery("pinState"), pins);
+
+            return container;
         }
     }
 }
