@@ -34,7 +34,7 @@ public class Door extends SimpleArea {
     @Override
     public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
-        if (SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]")) {
+        if (!SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
 
             Direction back = SignUtil.getTextRaw(sign, 1).equals("[Door Up]") ? Direction.UP : Direction.DOWN;
 
@@ -68,8 +68,16 @@ public class Door extends SimpleArea {
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
                 right = baseBlock.getRelative(SignUtil.getRight(block));
             }
-        } else return false;
+        } else {
+            if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Door not activatable from here!").build());
+            return false;
+        }
 
         return true;
+    }
+
+    @Override
+    public boolean isMechanicSign(Sign sign) {
+        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Up]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Down]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door]");
     }
 }

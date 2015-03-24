@@ -5,8 +5,6 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.living.Human;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
@@ -27,18 +25,18 @@ public class Bridge extends SimpleArea {
                 Sign sign = block.getData(Sign.class).get();
 
                 if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
-
-                return block; }
+                    return block; 
+                }
             }
         }
 
         return null;
     }
-
+    
     @Override
     public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 
-        if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
+        if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
             Direction back = SignUtil.getBack(block);
 
@@ -72,8 +70,16 @@ public class Bridge extends SimpleArea {
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
                 right = baseBlock.getRelative(SignUtil.getRight(block));
             }
-        } else return false;
+        } else {
+            if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Bridge not activatable from here!").build());
+            return false;
+        }
 
         return true;
+    }
+
+    @Override
+    public boolean isMechanicSign(Sign sign) {
+        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge End]");
     }
 }

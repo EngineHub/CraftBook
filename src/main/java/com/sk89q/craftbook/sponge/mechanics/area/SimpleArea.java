@@ -7,6 +7,7 @@ import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
+import org.spongepowered.api.event.block.data.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.event.Cancellable;
@@ -19,6 +20,12 @@ import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 public abstract class SimpleArea extends SpongeMechanic {
 
     @Subscribe
+    public void onSignChange(SignChangeEvent event) {
+        
+        //TODO check player permissions.
+    }
+    
+    @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
         if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
@@ -27,11 +34,13 @@ public abstract class SimpleArea extends SpongeMechanic {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
-                try {
-                    ((Cancellable) event).setCancelled(true);
-                } catch (Throwable e) {
-                } // TODO remove
+            if(isMechanicSign(sign)) {
+                if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
+                    try {
+                        ((Cancellable) event).setCancelled(true);
+                    } catch (Throwable e) {
+                    } // TODO remove
+                }
             }
         }
     }
@@ -44,10 +53,12 @@ public abstract class SimpleArea extends SpongeMechanic {
 
                 Sign sign = block.getData(Sign.class).get();
 
-                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                if(data.lastCurrent != (block.isPowered() ? 15 : 0)) {
-                    triggerMechanic(block, sign, null, block.isPowered());
-                    data.lastCurrent = block.isPowered() ? 15 : 0;
+                if(isMechanicSign(sign)) {
+                    SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
+                    if(data.lastCurrent != (block.isPowered() ? 15 : 0)) {
+                        triggerMechanic(block, sign, null, block.isPowered());
+                        data.lastCurrent = block.isPowered() ? 15 : 0;
+                    }
                 }
             }
         }
@@ -62,4 +73,6 @@ public abstract class SimpleArea extends SpongeMechanic {
      * @param forceState If the mechanic should forcibly enter a specific state
      */
     public abstract boolean triggerMechanic(BlockLoc block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
+
+    public abstract boolean isMechanicSign(Sign sign);
 }

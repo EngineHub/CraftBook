@@ -171,4 +171,9 @@ public class Gate extends SimpleArea {
             return false;
         }
     }
+
+    @Override
+    public boolean isMechanicSign(Sign sign) {
+        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Gate]");
+    }
 }
