@@ -18,7 +18,8 @@ import jdk.nashorn.internal.ir.Block;
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
-import org.spongepowered.api.text.message.Message;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
 
 /**
@@ -388,10 +389,13 @@ public class SignUtil {
 
     public static String getTextRaw(Sign sign, int line) {
 
-        return getText(sign, line).toLegacy();
+        Text text = getText(sign, line);
+        if(text instanceof Literal)
+            return ((Literal) text).getContent();
+        return text.toString();
     }
 
-    public static Message getText(Sign sign, int line) {
+    public static Text getText(Sign sign, int line) {
 
         return sign.getLine(line);
     }

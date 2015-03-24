@@ -14,6 +14,7 @@ import org.spongepowered.api.util.event.Subscribe;
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
+import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 
 public class ICSocket extends SpongeMechanic {
@@ -44,7 +45,7 @@ public class ICSocket extends SpongeMechanic {
         for (BlockLoc block : event.getAffectedBlocks()) {
 
             if (block.getType() == BlockTypes.WALL_SIGN) {
-                ICType<? extends IC> icType = ICManager.getICType(block.getData(Sign.class).get().getLine(1).toLegacy());
+                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign) block.getData(Sign.class), 1));
 
                 if (icType == null) continue;
 

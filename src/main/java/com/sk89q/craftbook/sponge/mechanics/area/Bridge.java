@@ -5,6 +5,9 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextBuilder;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 
@@ -46,7 +49,7 @@ public class Bridge extends SimpleArea {
 
             BlockLoc otherSide = getOtherEnd(block);
             if (otherSide == null) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage("Missing other end!");
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
                 return true;
             }
 

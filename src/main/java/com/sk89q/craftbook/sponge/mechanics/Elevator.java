@@ -10,6 +10,7 @@ import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.event.block.data.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.command.CommandSource;
@@ -72,11 +73,11 @@ public class Elevator extends SpongeMechanic {
         }
 
         if (!foundGround) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage("No floor!");
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.builder("No floor!").build());
             return;
         }
         if (foundFree < 2) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage("Obstructed!");
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.builder("Obstructed!").build());
             return;
         }
 
