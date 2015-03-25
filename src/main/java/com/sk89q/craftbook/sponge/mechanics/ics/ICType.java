@@ -2,6 +2,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import org.spongepowered.api.block.BlockLoc;
 
@@ -49,7 +50,13 @@ public class ICType<T extends IC> {
 
         try {
             Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
-            IC ic = construct.newInstance(this, block, extraArguments);
+            IC ic = null;
+            if(extraArguments.length > 0)
+                ic = construct.newInstance(this, block, extraArguments);
+            else
+                ic = construct.newInstance(this, block);
+
+            ic.load();
 
             return ic;
         } catch (NoSuchMethodException e) {
@@ -65,6 +72,8 @@ public class ICType<T extends IC> {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+
+        System.out.println("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments));
 
         return null;
     }

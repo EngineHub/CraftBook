@@ -45,26 +45,28 @@ public class ICSocket extends SpongeMechanic {
         for (BlockLoc block : event.getAffectedBlocks()) {
 
             if (block.getType() == BlockTypes.WALL_SIGN) {
-                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign) block.getData(Sign.class), 1));
+
+                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(block.getData(Sign.class).get(), 1));
 
                 if (icType == null) continue;
 
-                BaseICData data = getData(BaseICData.class, block);
+                //BaseICData data = getData(BaseICData.class, block);
+                BaseICData data = new BaseICData();
 
                 if (data.ic == null) {
 
                     // Initialize new IC.
                     data.ic = icType.buildIC(block);
-
-                    // Check for alternate PinSet types.
-
-                    data.pins = PINSETS.get(data.ic.getType().getDefaultPinSet());
                 }
 
                 Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
-                data.pins.setInput(data.pins.getInputId(data.ic, facing), block.isFacePowered(facing), data.ic);
-                data.ic.trigger(data.pins);
+                boolean powered = block.isPowered();//block.isFacePowered(facing);
+
+                if(powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
+                    data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
+                    data.ic.trigger();
+                }
             }
         }
     }
@@ -72,7 +74,6 @@ public class ICSocket extends SpongeMechanic {
     public class BaseICData extends SpongeRedstoneMechanicData {
 
         IC ic;
-        PinSet pins;
 
         @Override
         public DataContainer toContainer() {
@@ -80,7 +81,6 @@ public class ICSocket extends SpongeMechanic {
             DataContainer container = super.toContainer();
 
             container.set(new DataQuery("icState"), ic);
-            container.set(new DataQuery("pinState"), pins);
 
             return container;
         }

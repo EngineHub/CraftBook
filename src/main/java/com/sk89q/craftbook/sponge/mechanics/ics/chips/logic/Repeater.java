@@ -4,7 +4,6 @@ import org.spongepowered.api.block.BlockLoc;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
-import com.sk89q.craftbook.sponge.mechanics.ics.PinSet;
 
 public class Repeater extends IC {
 
@@ -13,9 +12,11 @@ public class Repeater extends IC {
     }
 
     @Override
-    public void trigger(PinSet pinset) {
+    public void trigger() {
 
-        for (int i = 0; i < pinset.getInputCount(); i++)
-            pinset.setOutput(i, pinset.getInput(i, this), this);
+        System.out.println("TRIGGER");
+
+        for (int i = 0; i < getPinSet().getInputCount(); i++)
+            getPinSet().setOutput(i, getPinSet().getInput(i, this), this);
     }
 }

@@ -9,7 +9,7 @@ public class LocationUtil {
 
         for (Direction dir : Direction.values()) {
 
-            if (base.getRelative(dir).equals(other)) return dir;
+            if (base.getRelative(dir).getPosition().equals(other.getPosition())) return dir;
         }
 
         return null;

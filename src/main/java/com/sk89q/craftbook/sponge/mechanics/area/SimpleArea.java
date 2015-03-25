@@ -9,7 +9,7 @@ import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.event.block.data.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
-import org.spongepowered.api.event.entity.living.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.event.Cancellable;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -21,10 +21,10 @@ public abstract class SimpleArea extends SpongeMechanic {
 
     @Subscribe
     public void onSignChange(SignChangeEvent event) {
-        
+
         //TODO check player permissions.
     }
-    
+
     @Subscribe
     public void onPlayerInteract(HumanInteractBlockEvent event) {
 
