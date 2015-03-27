@@ -24,7 +24,8 @@ public class Door extends SimpleArea {
 
                 if (SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]") || SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
 
-                return block; }
+                    return block;
+                }
             }
         }
 

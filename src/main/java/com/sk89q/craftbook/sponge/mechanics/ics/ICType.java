@@ -51,10 +51,9 @@ public class ICType<T extends IC> {
         try {
             Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
             IC ic = null;
-            if(extraArguments.length > 0)
+            if (extraArguments.length > 0)
                 ic = construct.newInstance(this, block, extraArguments);
-            else
-                ic = construct.newInstance(this, block);
+            else ic = construct.newInstance(this, block);
 
             ic.load();
 

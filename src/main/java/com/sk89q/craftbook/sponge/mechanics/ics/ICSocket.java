@@ -61,9 +61,9 @@ public class ICSocket extends SpongeMechanic {
 
                 Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
-                boolean powered = block.isPowered();//block.isFacePowered(facing);
+                boolean powered = block.isPowered();// block.isFacePowered(facing);
 
-                if(powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
+                if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
                     data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
                     data.ic.trigger();
                 }

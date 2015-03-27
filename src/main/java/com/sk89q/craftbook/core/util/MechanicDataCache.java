@@ -16,7 +16,7 @@ public abstract class MechanicDataCache {
 
         T data = (T) mechanicData.getIfPresent(locationKey);
 
-        if(data == null || !clazz.isInstance(data)) {
+        if (data == null || !clazz.isInstance(data)) {
             data = loadFromDisk(clazz, locationKey);
             mechanicData.put(locationKey, data);
         }

@@ -25,14 +25,14 @@ public class Bridge extends SimpleArea {
                 Sign sign = block.getData(Sign.class).get();
 
                 if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
-                    return block; 
+                    return block;
                 }
             }
         }
 
         return null;
     }
-    
+
     @Override
     public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
 

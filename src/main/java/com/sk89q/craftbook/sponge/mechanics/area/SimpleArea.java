@@ -22,7 +22,7 @@ public abstract class SimpleArea extends SpongeMechanic {
     @Subscribe
     public void onSignChange(SignChangeEvent event) {
 
-        //TODO check player permissions.
+        // TODO check player permissions.
     }
 
     @Subscribe
@@ -34,7 +34,7 @@ public abstract class SimpleArea extends SpongeMechanic {
 
             Sign sign = event.getBlock().getData(Sign.class).get();
 
-            if(isMechanicSign(sign)) {
+            if (isMechanicSign(sign)) {
                 if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
                     try {
                         ((Cancellable) event).setCancelled(true);
@@ -53,9 +53,9 @@ public abstract class SimpleArea extends SpongeMechanic {
 
                 Sign sign = block.getData(Sign.class).get();
 
-                if(isMechanicSign(sign)) {
+                if (isMechanicSign(sign)) {
                     SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                    if(data.lastCurrent != (block.isPowered() ? 15 : 0)) {
+                    if (data.lastCurrent != (block.isPowered() ? 15 : 0)) {
                         triggerMechanic(block, sign, null, block.isPowered());
                         data.lastCurrent = block.isPowered() ? 15 : 0;
                     }

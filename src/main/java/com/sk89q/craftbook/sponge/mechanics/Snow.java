@@ -15,23 +15,23 @@ public class Snow extends SpongeMechanic {
     @Subscribe
     public void onBlockTick(BlockRandomTickEvent event) {
 
-        if(event.getBlock().getExtent() instanceof WeatherUniverse) {
+        if (event.getBlock().getExtent() instanceof WeatherUniverse) {
             if (event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
-                if(event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
-                    //Temporarily just set to a full snow block.
+                if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
+                    // Temporarily just set to a full snow block.
                     event.getBlock().replaceWith(BlockTypes.SNOW);
                 }
             }
         }
     }
-    
+
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
-        
-        if(event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.AIR) {
-            //Occurred in a block where a snow-related change could have happened.
-            for(BlockLoc block : event.getAffectedBlocks()) {
-                
+
+        if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.AIR) {
+            // Occurred in a block where a snow-related change could have happened.
+            for (BlockLoc block : event.getAffectedBlocks()) {
+
             }
         }
     }

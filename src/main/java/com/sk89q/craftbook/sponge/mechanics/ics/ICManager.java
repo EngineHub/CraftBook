@@ -24,8 +24,7 @@ public class ICManager {
     public static ICType<? extends IC> getICType(String id) {
 
         for (ICType<? extends IC> icType : registeredICTypes) {
-            if (id.equalsIgnoreCase("[" + icType.modelId + "]")) return icType;
-            else if(id.equalsIgnoreCase("=" + icType.shorthandId));
+            if (id.equalsIgnoreCase("[" + icType.modelId + "]") || id.equalsIgnoreCase("=" + icType.shorthandId)) return icType;
         }
 
         return null;

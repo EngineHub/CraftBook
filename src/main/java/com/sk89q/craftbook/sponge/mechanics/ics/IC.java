@@ -24,7 +24,7 @@ public abstract class IC {
     public void load() {
 
         PinSet set = getPinSet();
-        pinstates = new boolean[set.getInputCount()]; //Just input for now.
+        pinstates = new boolean[set.getInputCount()]; // Just input for now.
     }
 
     public BlockLoc getBlock() {
