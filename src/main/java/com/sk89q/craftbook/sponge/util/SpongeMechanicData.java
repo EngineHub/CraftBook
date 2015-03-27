@@ -4,6 +4,8 @@ import org.spongepowered.api.service.persistence.DataSerializable;
 
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 
-public interface SpongeMechanicData extends MechanicData, DataSerializable {
+public abstract class SpongeMechanicData implements MechanicData, DataSerializable {
 
+    public SpongeMechanicData() {
+    }
 }

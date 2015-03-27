@@ -14,8 +14,6 @@ public class Repeater extends IC {
     @Override
     public void trigger() {
 
-        System.out.println("TRIGGER");
-
         for (int i = 0; i < getPinSet().getInputCount(); i++)
             getPinSet().setOutput(i, getPinSet().getInput(i, this), this);
     }

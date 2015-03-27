@@ -7,7 +7,6 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
 public abstract class SpongeMechanic implements Mechanic {
 
@@ -33,12 +32,12 @@ public abstract class SpongeMechanic implements Mechanic {
         builder.append(block.getY()).append('.');
         builder.append(block.getZ());
 
-        return CraftBookPlugin.inst().getCache().getMechanicData(builder.toString());
+        return CraftBookPlugin.inst().getCache().getMechanicData(clazz, builder.toString());
     }
 
     @Override
-    public SpongeMechanicData getData(String locationKey) {
+    public <T extends MechanicData> T getData(Class<T> clazz, String locationKey) {
 
-        return (SpongeMechanicData) CraftBookPlugin.inst().getCache().getMechanicData(locationKey);
+        return CraftBookPlugin.inst().getCache().getMechanicData(clazz, locationKey);
     }
 }

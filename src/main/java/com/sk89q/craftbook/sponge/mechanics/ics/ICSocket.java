@@ -8,6 +8,7 @@ import org.spongepowered.api.block.data.Sign;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.service.persistence.data.DataContainer;
 import org.spongepowered.api.service.persistence.data.DataQuery;
+import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -15,7 +16,7 @@ import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
+import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
 public class ICSocket extends SpongeMechanic {
 
@@ -50,8 +51,7 @@ public class ICSocket extends SpongeMechanic {
 
                 if (icType == null) continue;
 
-                //BaseICData data = getData(BaseICData.class, block);
-                BaseICData data = new BaseICData();
+                BaseICData data = getData(BaseICData.class, block);
 
                 if (data.ic == null) {
 
@@ -71,14 +71,17 @@ public class ICSocket extends SpongeMechanic {
         }
     }
 
-    public class BaseICData extends SpongeRedstoneMechanicData {
+    public static class BaseICData extends SpongeMechanicData {
 
         IC ic;
+
+        public BaseICData() {
+        }
 
         @Override
         public DataContainer toContainer() {
 
-            DataContainer container = super.toContainer();
+            DataContainer container = new MemoryDataContainer();
 
             container.set(new DataQuery("icState"), ic);
 

@@ -19,5 +19,5 @@ public interface Mechanic {
      * @param locationKey The locationKey.
      * @return The data
      */
-    public MechanicData getData(String locationKey);
+    public <T extends MechanicData> T getData(Class<T> clazz, String locationKey);
 }

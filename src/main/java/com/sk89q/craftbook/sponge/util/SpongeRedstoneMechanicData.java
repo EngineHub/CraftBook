@@ -5,7 +5,10 @@ import org.spongepowered.api.service.persistence.data.DataQuery;
 import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
 
 
-public class SpongeRedstoneMechanicData implements SpongeMechanicData {
+public class SpongeRedstoneMechanicData extends SpongeMechanicData {
+
+    public SpongeRedstoneMechanicData() {
+    }
 
     public int lastCurrent;
 

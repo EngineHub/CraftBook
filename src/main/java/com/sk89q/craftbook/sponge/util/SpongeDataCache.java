@@ -12,9 +12,17 @@ import com.sk89q.craftbook.core.util.MechanicDataCache;
 public class SpongeDataCache extends MechanicDataCache implements DataSource {
 
     @Override
-    protected <T extends MechanicData> T loadFromDisk(String locationKey) {
+    protected <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey) {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
         return null;
-        // return CraftBookPlugin.<CraftBookPlugin>inst().game.getServiceManager().;
+        //TODO saving/loading.
     }
 
     @Override

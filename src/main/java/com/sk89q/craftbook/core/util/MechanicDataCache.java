@@ -1,28 +1,26 @@
 package com.sk89q.craftbook.core.util;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 
 public abstract class MechanicDataCache {
 
-    //TODO make a proper type-safe loader.
+    private Cache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).build();
 
-    private LoadingCache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).build(new CacheLoader<String, MechanicData>() {
-        @Override
-        public MechanicData load(String locationKey) {
+    protected abstract <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey);
 
-            return loadFromDisk(locationKey);
-        }
-    });
-
-    protected abstract <T extends MechanicData> T loadFromDisk(String locationKey);
-
-    public <T extends MechanicData> T getMechanicData(String locationKey) {
+    public <T extends MechanicData> T getMechanicData(Class<T> clazz, String locationKey) {
 
         if (locationKey == null) return null;
 
-        return (T) mechanicData.getUnchecked(locationKey);
+        T data = (T) mechanicData.getIfPresent(locationKey);
+
+        if(data == null || !clazz.isInstance(data)) {
+            data = loadFromDisk(clazz, locationKey);
+            mechanicData.put(locationKey, data);
+        }
+
+        return data;
     }
 }
