@@ -13,11 +13,9 @@
 
 package com.sk89q.craftbook.sponge.util;
 
-import jdk.nashorn.internal.ir.Block;
-
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.data.Sign;
+import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
@@ -128,7 +126,7 @@ public class SignUtil {
      * sign).
      * @return the blank side of the sign opposite the text. In the case of a wall sign,
      * the block in this direction is the block to which the sign is
-     * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(Block)}.
+     * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(BlockLoc)}.
      */
     public static Direction getBack(BlockLoc sign) {
 
@@ -396,6 +394,6 @@ public class SignUtil {
 
     public static Text getText(Sign sign, int line) {
 
-        return sign.getLine(line);
+        return sign.getSignData().getLine(line);
     }
 }

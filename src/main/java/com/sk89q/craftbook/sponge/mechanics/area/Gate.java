@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.data.Sign;
+import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;

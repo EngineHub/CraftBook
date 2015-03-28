@@ -4,10 +4,10 @@ import java.util.EnumSet;
 
 import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.data.Sign;
+import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionTypes;
-import org.spongepowered.api.event.block.data.SignChangeEvent;
+import org.spongepowered.api.event.block.tile.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;

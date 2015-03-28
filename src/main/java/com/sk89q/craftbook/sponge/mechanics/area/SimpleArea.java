@@ -3,11 +3,11 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import javax.annotation.Nullable;
 
 import org.spongepowered.api.block.BlockLoc;
-import org.spongepowered.api.block.data.Sign;
+import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.event.block.data.SignChangeEvent;
+import org.spongepowered.api.event.block.tile.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.event.Cancellable;
