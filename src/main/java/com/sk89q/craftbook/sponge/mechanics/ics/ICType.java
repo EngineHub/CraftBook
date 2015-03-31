@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import org.spongepowered.api.block.BlockLoc;
+import org.spongepowered.api.world.Location;
 
 public class ICType<T extends IC> {
 
@@ -21,7 +21,7 @@ public class ICType<T extends IC> {
         this.shorthandId = shorthandId;
         this.icClass = icClass;
         argumentTypes[0] = ICType.class;
-        argumentTypes[1] = BlockLoc.class;
+        argumentTypes[1] = Location.class;
     }
 
     public ICType(String modelId, String shorthandId, Class<T> icClass, String defaultPinset) {
@@ -34,7 +34,7 @@ public class ICType<T extends IC> {
 
         argumentTypes = new Class<?>[extraArguments.length + 2];
         argumentTypes[0] = ICType.class;
-        argumentTypes[1] = BlockLoc.class;
+        argumentTypes[1] = Location.class;
         int num = 2;
         for (Object obj : args)
             argumentTypes[num++] = obj.getClass();
@@ -46,7 +46,7 @@ public class ICType<T extends IC> {
         return defaultPinset != null ? defaultPinset : "SISO";
     }
 
-    public IC buildIC(BlockLoc block) {
+    public IC buildIC(Location block) {
 
         try {
             Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);

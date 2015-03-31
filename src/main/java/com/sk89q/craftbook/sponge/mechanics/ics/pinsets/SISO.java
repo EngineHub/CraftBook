@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.PinSet;
@@ -29,7 +29,7 @@ public class SISO extends PinSet {
     public void setOutput(int outputId, boolean powered, IC ic) {
 
         if (getOutput(outputId, ic) != powered) {
-            BlockLoc block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
+            Location block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
 
             // BlockProperty<?> prop = block.getState().getPropertyByName("powered").get();
             // block.replaceWith(block.getState().cycleProperty(prop));

@@ -1,14 +1,15 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import org.spongepowered.api.block.BlockLoc;
+import org.spongepowered.api.world.Location;
+
 
 public abstract class IC {
 
     ICType<? extends IC> type;
-    BlockLoc block;
+    Location block;
     boolean[] pinstates;
 
-    public IC(ICType<? extends IC> type, BlockLoc block) {
+    public IC(ICType<? extends IC> type, Location block) {
         this.type = type;
         this.block = block;
     }
@@ -27,7 +28,7 @@ public abstract class IC {
         pinstates = new boolean[set.getInputCount()]; // Just input for now.
     }
 
-    public BlockLoc getBlock() {
+    public Location getBlock() {
         return block;
     }
 

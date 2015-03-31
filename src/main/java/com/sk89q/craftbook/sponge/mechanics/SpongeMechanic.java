@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import org.spongepowered.api.block.BlockLoc;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.sk89q.craftbook.core.Mechanic;
@@ -23,7 +23,7 @@ public abstract class SpongeMechanic implements Mechanic {
 
     }
 
-    public <T extends MechanicData> T getData(Class<T> clazz, BlockLoc block) {
+    public <T extends MechanicData> T getData(Class<T> clazz, Location block) {
 
         StringBuilder builder = new StringBuilder();
 

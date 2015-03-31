@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import org.spongepowered.api.block.BlockLoc;
+import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 
 public class Repeater extends IC {
 
-    public Repeater(ICType<IC> type, BlockLoc block) {
+    public Repeater(ICType<IC> type, Location block) {
         super(type, block);
     }
 

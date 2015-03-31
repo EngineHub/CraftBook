@@ -2,7 +2,6 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import java.util.HashMap;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
@@ -11,6 +10,7 @@ import org.spongepowered.api.service.persistence.data.DataQuery;
 import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
@@ -31,7 +31,7 @@ public class ICSocket extends SpongeMechanic {
      * 
      * @return The IC
      */
-    public IC getIC(BlockLoc block) {
+    public IC getIC(Location block) {
         return this.getData(BaseICData.class, block).ic;
     }
 
@@ -43,7 +43,7 @@ public class ICSocket extends SpongeMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for (BlockLoc block : event.getAffectedBlocks()) {
+        for (Location block : event.getAffectedBlocks()) {
 
             if (block.getType() == BlockTypes.WALL_SIGN) {
 

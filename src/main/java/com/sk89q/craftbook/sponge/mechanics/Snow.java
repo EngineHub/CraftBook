@@ -1,10 +1,10 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.weather.WeatherUniverse;
 import org.spongepowered.api.world.weather.Weathers;
 
@@ -30,7 +30,7 @@ public class Snow extends SpongeMechanic {
 
         if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.AIR) {
             // Occurred in a block where a snow-related change could have happened.
-            for (BlockLoc block : event.getAffectedBlocks()) {
+            for (Location block : event.getAffectedBlocks()) {
 
             }
         }

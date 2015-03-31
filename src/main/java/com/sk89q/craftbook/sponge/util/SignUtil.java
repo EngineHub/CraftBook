@@ -13,12 +13,12 @@
 
 package com.sk89q.craftbook.sponge.util;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
 
 /**
  * <p>
@@ -44,7 +44,7 @@ import org.spongepowered.api.util.Direction;
  */
 public class SignUtil {
 
-    public static boolean isSign(BlockLoc block) {
+    public static boolean isSign(Location block) {
 
         return block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN;
     }
@@ -56,7 +56,7 @@ public class SignUtil {
      * @return the direction a player would be facing when reading the sign; i.e. the face that is actually the back
      * side of the sign.
      */
-    public static Direction getFacing(BlockLoc sign) {
+    public static Direction getFacing(Location sign) {
 
         return getBack(sign);
     }
@@ -68,7 +68,7 @@ public class SignUtil {
      * @return the side of the sign containing the text (in other words, when a player places a new sign,
      * while facing north, this will return south).
      */
-    public static Direction getFront(BlockLoc sign) {
+    public static Direction getFront(Location sign) {
 
         if (sign.getType() == BlockTypes.STANDING_SIGN) {
             switch (sign.getState().getDataValue()) {
@@ -115,7 +115,7 @@ public class SignUtil {
         }
     }
 
-    public static BlockLoc getFrontBlock(BlockLoc sign) {
+    public static Location getFrontBlock(Location sign) {
 
         return sign.getRelative(getFront(sign));
     }
@@ -128,7 +128,7 @@ public class SignUtil {
      * the block in this direction is the block to which the sign is
      * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(BlockLoc)}.
      */
-    public static Direction getBack(BlockLoc sign) {
+    public static Direction getBack(Location sign) {
 
         if (sign.getType() == BlockTypes.STANDING_SIGN) {
             switch (sign.getState().getDataValue()) {
@@ -175,14 +175,14 @@ public class SignUtil {
         }
     }
 
-    public static BlockLoc getBackBlock(BlockLoc sign) {
+    public static Location getBackBlock(Location sign) {
 
         return sign.getRelative(getBack(sign));
     }
 
-    public static BlockLoc getNextSign(BlockLoc sign, String criterea, int searchRadius) {
+    public static Location getNextSign(Location sign, String criterea, int searchRadius) {
 
-        BlockLoc otherBlock = sign;
+        Location otherBlock = sign;
         Direction way = getBack(sign);
         boolean found = false;
         for (int i = 0; i < searchRadius; i++) {
@@ -206,7 +206,7 @@ public class SignUtil {
      * oriented in a further direction,
      * the result is rounded to the nearest ordinal direction.
      */
-    public static Direction getRight(BlockLoc sign) {
+    public static Direction getRight(Location sign) {
 
         if (sign.getType() == BlockTypes.STANDING_SIGN) {
             switch (sign.getState().getDataValue()) {
@@ -253,7 +253,7 @@ public class SignUtil {
         }
     }
 
-    public static BlockLoc getLeftBlock(BlockLoc sign) {
+    public static Location getLeftBlock(Location sign) {
 
         return sign.getRelative(getLeft(sign));
     }
@@ -266,7 +266,7 @@ public class SignUtil {
      * oriented in a further direction, the
      * result is rounded to the nearest ordinal direction.
      */
-    public static Direction getLeft(BlockLoc sign) {
+    public static Direction getLeft(Location sign) {
 
         if (sign.getType() == BlockTypes.STANDING_SIGN) {
             switch (sign.getState().getDataValue()) {
@@ -313,7 +313,7 @@ public class SignUtil {
         }
     }
 
-    public static BlockLoc getRightBlock(BlockLoc sign) {
+    public static Location getRightBlock(Location sign) {
 
         return sign.getRelative(getRight(sign));
     }
@@ -326,7 +326,7 @@ public class SignUtil {
      * since those are always oriented along cardinal
      * directions); false otherwise.
      */
-    public static boolean isCardinal(BlockLoc sign) {
+    public static boolean isCardinal(Location sign) {
 
         if (sign.getType() == BlockTypes.STANDING_SIGN) {
             switch (sign.getState().getDataValue()) {

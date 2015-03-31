@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
@@ -8,12 +7,13 @@ import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Bridge extends SimpleArea {
 
-    public BlockLoc getOtherEnd(BlockLoc block) {
+    public Location getOtherEnd(Location block) {
 
         Direction back = SignUtil.getBack(block);
 
@@ -34,18 +34,18 @@ public class Bridge extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic(BlockLoc block, Sign sign, Human human, Boolean forceState) {
+    public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
         if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
 
             Direction back = SignUtil.getBack(block);
 
-            BlockLoc baseBlock = block.getRelative(Direction.DOWN);
+            Location baseBlock = block.getRelative(Direction.DOWN);
 
-            BlockLoc left = baseBlock.getRelative(SignUtil.getLeft(block));
-            BlockLoc right = baseBlock.getRelative(SignUtil.getRight(block));
+            Location left = baseBlock.getRelative(SignUtil.getLeft(block));
+            Location right = baseBlock.getRelative(SignUtil.getRight(block));
 
-            BlockLoc otherSide = getOtherEnd(block);
+            Location otherSide = getOtherEnd(block);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
                 return true;

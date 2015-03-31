@@ -2,7 +2,6 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import java.util.EnumSet;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.Entity;
@@ -42,13 +41,13 @@ public class Elevator extends SpongeMechanic {
         }
     }
 
-    public void transportEntity(Entity entity, BlockLoc block, Direction direction) {
+    public void transportEntity(Entity entity, Location block, Direction direction) {
 
-        BlockLoc destination = findDestination(block, direction);
+        Location destination = findDestination(block, direction);
 
         if (destination == block) return; // This elevator has no destination.
 
-        BlockLoc floor = destination.getExtent().getFullBlock((int) Math.floor(entity.getLocation().getPosition().getX()), destination.getY() + 1, (int) Math.floor(entity.getLocation().getPosition().getZ()));
+        Location floor = destination.getExtent().getFullBlock((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
         // well, unless that's already a ceiling.
         if (floor.getType().isSolidCube()) {
             floor = floor.getRelative(Direction.DOWN);
@@ -93,9 +92,9 @@ public class Elevator extends SpongeMechanic {
      * @param direction The direction to move in.
      * @return The elevator destination.
      */
-    private BlockLoc findDestination(BlockLoc block, Direction direction) {
+    private Location findDestination(Location block, Direction direction) {
 
-        int y = block.getY();
+        int y = block.getBlockY();
 
         if (direction == Direction.UP || direction == Direction.DOWN) {
 
@@ -103,7 +102,7 @@ public class Elevator extends SpongeMechanic {
 
                 y += direction == Direction.UP ? 1 : -1;
 
-                BlockLoc test = block.getExtent().getFullBlock(block.getX(), y, block.getZ());
+                Location test = block.getExtent().getFullBlock(block.getBlockX(), y, block.getBlockZ());
 
                 if (test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
                     // It's a sign.

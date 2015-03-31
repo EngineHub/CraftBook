@@ -2,7 +2,6 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import javax.annotation.Nullable;
 
-import org.spongepowered.api.block.BlockLoc;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
@@ -12,6 +11,7 @@ import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.util.event.Cancellable;
 import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -48,7 +48,7 @@ public abstract class SimpleArea extends SpongeMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for (BlockLoc block : event.getAffectedBlocks()) {
+        for (Location block : event.getAffectedBlocks()) {
             if (SignUtil.isSign(block)) {
 
                 Sign sign = block.getData(Sign.class).get();
@@ -72,7 +72,7 @@ public abstract class SimpleArea extends SpongeMechanic {
      * @param human The triggering human, if applicable
      * @param forceState If the mechanic should forcibly enter a specific state
      */
-    public abstract boolean triggerMechanic(BlockLoc block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
+    public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
 
     public abstract boolean isMechanicSign(Sign sign);
 }
