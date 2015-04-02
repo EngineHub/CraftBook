@@ -15,7 +15,7 @@ public class SpongeRedstoneMechanicData extends SpongeMechanicData {
     public DataContainer toContainer() {
 
         DataContainer container = new MemoryDataContainer();
-        container.set(new DataQuery("lastCurrent"), lastCurrent);
+        container.set(DataQuery.of("lastCurrent"), lastCurrent);
 
         return container;
     }

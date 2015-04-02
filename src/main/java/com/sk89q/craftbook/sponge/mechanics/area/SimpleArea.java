@@ -9,6 +9,8 @@ import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.event.block.tile.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.service.persistence.data.DataContainer;
+import org.spongepowered.api.service.persistence.data.DataQuery;
 import org.spongepowered.api.util.event.Cancellable;
 import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
@@ -75,4 +77,19 @@ public abstract class SimpleArea extends SpongeMechanic {
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
 
     public abstract boolean isMechanicSign(Sign sign);
+
+    public static class SimpleAreaData extends SpongeRedstoneMechanicData {
+
+        int storedAmount;
+
+        @Override
+        public DataContainer toContainer() {
+
+            DataContainer container = super.toContainer();
+
+            container.set(DataQuery.of("storedAmount"), storedAmount);
+
+            return container;
+        }
+    }
 }
