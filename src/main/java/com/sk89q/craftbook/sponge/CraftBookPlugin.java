@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -28,6 +29,7 @@ import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
+import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
@@ -48,6 +50,9 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Inject
     @DefaultConfig(sharedRoot = false)
     private ConfigurationLoader<CommentedConfigurationNode> configManager;
+
+    @Inject
+    public PluginContainer container;
 
     protected SpongeConfiguration config;
 
@@ -92,6 +97,8 @@ public class CraftBookPlugin extends CraftBookAPI {
                 }
             }
         }
+
+        SelfTriggerManager.initialize();
     }
 
     @Override

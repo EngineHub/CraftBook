@@ -14,11 +14,13 @@ import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
+import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
+import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
-public class ICSocket extends SpongeMechanic {
+public class ICSocket extends SpongeMechanic implements SelfTriggeringMechanic {
 
     public static final HashMap<String, PinSet> PINSETS = new HashMap<String, PinSet>();
 
@@ -32,7 +34,7 @@ public class ICSocket extends SpongeMechanic {
      * @return The IC
      */
     public IC getIC(Location block) {
-        return this.getData(BaseICData.class, block).ic;
+        return createICData(block).ic;
     }
 
     @Override
@@ -45,30 +47,49 @@ public class ICSocket extends SpongeMechanic {
 
         for (Location block : event.getAffectedBlocks()) {
 
-            if (block.getType() == BlockTypes.WALL_SIGN) {
+            BaseICData data = createICData(block);
+            if(data == null) continue;
 
-                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(block.getData(Sign.class).get(), 1));
+            Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
-                if (icType == null) continue;
+            boolean powered = block.isPowered();// block.isFacePowered(facing);
 
-                BaseICData data = getData(BaseICData.class, block);
-
-                if (data.ic == null) {
-
-                    // Initialize new IC.
-                    data.ic = icType.buildIC(block);
-                }
-
-                Direction facing = LocationUtil.getFacing(block, event.getBlock());
-
-                boolean powered = block.isPowered();// block.isFacePowered(facing);
-
-                if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
-                    data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
-                    data.ic.trigger();
-                }
+            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
+                data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
+                data.ic.trigger();
             }
         }
+    }
+
+    @Override
+    public void onThink(Location block) {
+
+        BaseICData data = createICData(block);
+        if(data == null) return;
+        if(!(data.ic instanceof SelfTriggeringIC)) return;
+        ((SelfTriggeringIC) data.ic).think();
+    }
+
+    public BaseICData createICData(Location block) {
+
+        if (block.getType() == BlockTypes.WALL_SIGN) {
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(block.getData(Sign.class).get(), 1));
+
+            if (icType == null) return null;
+
+            BaseICData data = getData(BaseICData.class, block);
+
+            if (data.ic == null) {
+
+                // Initialize new IC.
+                data.ic = icType.buildIC(block);
+                if (data.ic instanceof SelfTriggeringIC) SelfTriggerManager.register(this, block);
+            }
+
+            return data;
+        }
+
+        return null;
     }
 
     public static class BaseICData extends SpongeMechanicData {
