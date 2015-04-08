@@ -22,7 +22,10 @@ public class SelfTriggerManager {
     }
 
     public static void unregisterAll(Extent extent) {
-        // TODO Make some API to make this super easy.
+        for(Location loc : selfTriggeringMechanics.keySet()) {
+            if(extent.contains(loc))
+                selfTriggeringMechanics.remove(loc);
+        }
     }
 
     public static void think() {
