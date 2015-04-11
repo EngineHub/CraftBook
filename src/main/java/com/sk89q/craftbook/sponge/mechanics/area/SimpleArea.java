@@ -3,16 +3,16 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import javax.annotation.Nullable;
 
 import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.event.Cancellable;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.event.block.tile.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
-import org.spongepowered.api.service.persistence.data.DataContainer;
-import org.spongepowered.api.service.persistence.data.DataQuery;
-import org.spongepowered.api.util.event.Cancellable;
-import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
@@ -34,7 +34,7 @@ public abstract class SimpleArea extends SpongeMechanic {
 
         if (SignUtil.isSign(event.getBlock())) {
 
-            Sign sign = event.getBlock().getData(Sign.class).get();
+            Sign sign = (Sign) event.getBlock().getTileEntity().get();
 
             if (isMechanicSign(sign)) {
                 if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
@@ -53,7 +53,7 @@ public abstract class SimpleArea extends SpongeMechanic {
         for (Location block : event.getAffectedBlocks()) {
             if (SignUtil.isSign(block)) {
 
-                Sign sign = block.getData(Sign.class).get();
+                Sign sign = (Sign) block.getTileEntity().get();
 
                 if (isMechanicSign(sign)) {
                     SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);

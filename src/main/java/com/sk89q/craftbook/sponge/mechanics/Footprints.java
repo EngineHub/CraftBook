@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.living.LivingMoveEvent;
-import org.spongepowered.api.util.event.Subscribe;
 
 public class Footprints extends SpongeMechanic {
 

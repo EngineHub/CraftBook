@@ -10,11 +10,11 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
-import org.spongepowered.api.util.event.Subscribe;
 
 import com.google.inject.Inject;
 import com.sk89q.craftbook.core.CraftBookAPI;

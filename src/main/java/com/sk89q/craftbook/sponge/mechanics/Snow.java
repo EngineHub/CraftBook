@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.weather.WeatherUniverse;
 import org.spongepowered.api.world.weather.Weathers;

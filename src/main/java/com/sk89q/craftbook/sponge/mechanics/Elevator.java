@@ -2,10 +2,10 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import java.util.EnumSet;
 
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.tile.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
@@ -13,7 +13,6 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
@@ -31,9 +30,9 @@ public class Elevator extends SpongeMechanic {
 
         if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
-        if (event.getBlock().getType() == BlockTypes.WALL_SIGN || event.getBlock().getType() == BlockTypes.STANDING_SIGN) {
+        if (SignUtil.isSign(event.getBlock())) {
 
-            Sign sign = event.getBlock().getData(Sign.class).get();
+            Sign sign = (Sign) event.getBlock().getTileEntity().get();
 
             boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
@@ -104,10 +103,10 @@ public class Elevator extends SpongeMechanic {
 
                 Location test = block.getExtent().getFullBlock(block.getBlockX(), y, block.getBlockZ());
 
-                if (test.getType() == BlockTypes.WALL_SIGN || test.getType() == BlockTypes.STANDING_SIGN) {
+                if (SignUtil.isSign(test)) {
                     // It's a sign.
 
-                    Sign sign = test.getData(Sign.class).get();
+                    Sign sign = (Sign) test.getTileEntity().get();
 
                     if (SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift]")) return test;
                 }

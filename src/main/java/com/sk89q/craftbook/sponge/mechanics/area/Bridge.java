@@ -22,7 +22,7 @@ public class Bridge extends SimpleArea {
             block = block.getRelative(back);
 
             if (SignUtil.isSign(block)) {
-                Sign sign = block.getData(Sign.class).get();
+                Sign sign = (Sign) block.getTileEntity().get();
 
                 if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
                     return block;

@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.sponge.util;
 
-import org.spongepowered.api.service.persistence.data.DataContainer;
-import org.spongepowered.api.service.persistence.data.DataQuery;
-import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.MemoryDataContainer;
 
 public class SpongeRedstoneMechanicData extends SpongeMechanicData {
 

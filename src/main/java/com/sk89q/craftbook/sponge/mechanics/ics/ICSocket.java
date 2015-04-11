@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.MemoryDataContainer;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.service.persistence.data.DataContainer;
-import org.spongepowered.api.service.persistence.data.DataQuery;
-import org.spongepowered.api.service.persistence.data.MemoryDataContainer;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
@@ -73,7 +73,7 @@ public class ICSocket extends SpongeMechanic implements SelfTriggeringMechanic {
     public BaseICData createICData(Location block) {
 
         if (block.getType() == BlockTypes.WALL_SIGN) {
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(block.getData(Sign.class).get(), 1));
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign)block.getTileEntity().get(), 1));
 
             if (icType == null) return null;
 
@@ -104,7 +104,7 @@ public class ICSocket extends SpongeMechanic implements SelfTriggeringMechanic {
 
             DataContainer container = new MemoryDataContainer();
 
-            container.set(new DataQuery("icState"), ic);
+            container.set(DataQuery.of("icState"), ic);
 
             return container;
         }

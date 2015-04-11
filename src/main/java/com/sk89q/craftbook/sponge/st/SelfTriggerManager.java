@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.world.ChunkUnloadEvent;
+import org.spongepowered.api.event.world.WorldUnloadEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
@@ -15,6 +18,7 @@ public class SelfTriggerManager {
 
     public static void initialize() {
         CraftBookPlugin.game.getSyncScheduler().runRepeatingTask(CraftBookPlugin.<CraftBookPlugin> inst().container, new SelfTriggerClock(), 2L);
+        CraftBookPlugin.game.getEventManager().register(CraftBookPlugin.inst(), new SelfTriggerManager());
     }
 
     public static void register(SelfTriggeringMechanic mechanic, Location location) {
@@ -32,5 +36,15 @@ public class SelfTriggerManager {
         for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
         }
+    }
+
+    @Subscribe
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        unregisterAll(event.getChunk());
+    }
+
+    @Subscribe
+    public void onWorldUnload(WorldUnloadEvent event) {
+        unregisterAll(event.getWorld());
     }
 }

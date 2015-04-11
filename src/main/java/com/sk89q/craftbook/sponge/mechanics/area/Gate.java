@@ -7,12 +7,12 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
@@ -40,7 +40,7 @@ public class Gate extends SimpleArea {
 
                         if (SignUtil.isSign(event.getBlock().getExtent().getFullBlock(x1, y1, z1))) {
 
-                            Sign sign = event.getBlock().getExtent().getFullBlock(x1, y1, z1).getData(Sign.class).get();
+                            Sign sign = (Sign) event.getBlock().getExtent().getFullBlock(x1, y1, z1).getTileEntity().get();
 
                             triggerMechanic(event.getBlock().getExtent().getFullBlock(x1, y1, z1), sign, event.getHuman(), null);
                         }

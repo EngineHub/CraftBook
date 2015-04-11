@@ -1,46 +1,18 @@
-// $Id$
-/*
- * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package com.sk89q.craftbook.sponge.util;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.data.manipulators.blocks.DirectionalData;
+import org.spongepowered.api.data.manipulators.tileentities.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import com.google.common.base.Optional;
+
 /**
- * <p>
  * Convenience methods for dealing with some sign block data.
- * </p>
- * <p>
- * If you intend to care about the eight further directions (as opposed to the four cardinal directions and the four ordinal directions), this isn't
- * for you -- since Direction has no such directions, those will be rounded to the nearest ordinal direction. (If the term "further direction"
- * confuses you, see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
- * </p>
- * <p>
- * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign (which extends MaterialData). However, that thing:
- * <ul>
- * <li>doesn't provide the relative direction methods.
- * <li>rounds the further divisions to cardinal/ordinal differently (and wrong, in my book).
- * <li>has the same class name for that MaterialData thing as the BlockState, which is annoying as hell import-wise.
- * <li>requires allocating an object and copying two bytes in a fashion that I consider kinda unnecessary.
- * </ul>
- * Ideally, I think I'd like to see if I can get something like these methods pushed to bukkit.
- * </p>
- *
- * @author hash
  */
 public class SignUtil {
 
@@ -70,49 +42,12 @@ public class SignUtil {
      */
     public static Direction getFront(Location sign) {
 
-        if (sign.getType() == BlockTypes.STANDING_SIGN) {
-            switch (sign.getState().getDataValue()) {
-                case 0x0:
-                    return Direction.SOUTH;
-                case 0x1:
-                case 0x2:
-                case 0x3:
-                    return Direction.SOUTHWEST;
-                case 0x4:
-                    return Direction.WEST;
-                case 0x5:
-                case 0x6:
-                case 0x7:
-                    return Direction.NORTHWEST;
-                case 0x8:
-                    return Direction.NORTH;
-                case 0x9:
-                case 0xA:
-                case 0xB:
-                    return Direction.NORTHEAST;
-                case 0xC:
-                    return Direction.EAST;
-                case 0xD:
-                case 0xE:
-                case 0xF:
-                    return Direction.SOUTHEAST;
-                default:
-                    return null;
-            }
-        } else {
-            switch (sign.getState().getDataValue()) {
-                case 0x2:
-                    return Direction.NORTH;
-                case 0x3:
-                    return Direction.SOUTH;
-                case 0x4:
-                    return Direction.WEST;
-                case 0x5:
-                    return Direction.EAST;
-                default:
-                    return null;
-            }
-        }
+        Optional<DirectionalData> data = sign.getData(DirectionalData.class);
+
+        if(data.isPresent())
+            return data.get().getValue();
+        else
+            return null;
     }
 
     public static Location getFrontBlock(Location sign) {
@@ -130,49 +65,10 @@ public class SignUtil {
      */
     public static Direction getBack(Location sign) {
 
-        if (sign.getType() == BlockTypes.STANDING_SIGN) {
-            switch (sign.getState().getDataValue()) {
-                case 0x0:
-                    return Direction.NORTH;
-                case 0x1:
-                case 0x2:
-                case 0x3:
-                    return Direction.NORTHEAST;
-                case 0x4:
-                    return Direction.EAST;
-                case 0x5:
-                case 0x6:
-                case 0x7:
-                    return Direction.SOUTHEAST;
-                case 0x8:
-                    return Direction.SOUTH;
-                case 0x9:
-                case 0xA:
-                case 0xB:
-                    return Direction.SOUTHWEST;
-                case 0xC:
-                    return Direction.WEST;
-                case 0xD:
-                case 0xE:
-                case 0xF:
-                    return Direction.NORTHWEST;
-                default:
-                    return null;
-            }
-        } else {
-            switch (sign.getState().getDataValue()) {
-                case 0x2:
-                    return Direction.SOUTH;
-                case 0x3:
-                    return Direction.NORTH;
-                case 0x4:
-                    return Direction.EAST;
-                case 0x5:
-                    return Direction.WEST;
-                default:
-                    return null;
-            }
-        }
+        Direction front = getFront(sign);
+        if(front == null) return null;
+
+        return front.getOpposite();
     }
 
     public static Location getBackBlock(Location sign) {
@@ -208,49 +104,10 @@ public class SignUtil {
      */
     public static Direction getRight(Location sign) {
 
-        if (sign.getType() == BlockTypes.STANDING_SIGN) {
-            switch (sign.getState().getDataValue()) {
-                case 0x0:
-                    return Direction.EAST;
-                case 0x1:
-                case 0x2:
-                case 0x3:
-                    return Direction.SOUTHEAST;
-                case 0x4:
-                    return Direction.SOUTH;
-                case 0x5:
-                case 0x6:
-                case 0x7:
-                    return Direction.SOUTHWEST;
-                case 0x8:
-                    return Direction.WEST;
-                case 0x9:
-                case 0xA:
-                case 0xB:
-                    return Direction.NORTHWEST;
-                case 0xC:
-                    return Direction.NORTH;
-                case 0xD:
-                case 0xE:
-                case 0xF:
-                    return Direction.NORTHEAST;
-                default:
-                    return null;
-            }
-        } else {
-            switch (sign.getState().getDataValue()) {
-                case 0x2:
-                    return Direction.WEST;
-                case 0x3:
-                    return Direction.EAST;
-                case 0x4:
-                    return Direction.SOUTH;
-                case 0x5:
-                    return Direction.NORTH;
-                default:
-                    return null;
-            }
-        }
+        Direction front = getFront(sign);
+        if(front == null) return null;
+
+        return getClockWise(front);
     }
 
     public static Location getLeftBlock(Location sign) {
@@ -268,77 +125,15 @@ public class SignUtil {
      */
     public static Direction getLeft(Location sign) {
 
-        if (sign.getType() == BlockTypes.STANDING_SIGN) {
-            switch (sign.getState().getDataValue()) {
-                case 0x0:
-                    return Direction.WEST;
-                case 0x1:
-                case 0x2:
-                case 0x3:
-                    return Direction.NORTHWEST;
-                case 0x4:
-                    return Direction.NORTH;
-                case 0x5:
-                case 0x6:
-                case 0x7:
-                    return Direction.NORTHEAST;
-                case 0x8:
-                    return Direction.EAST;
-                case 0x9:
-                case 0xA:
-                case 0xB:
-                    return Direction.SOUTHEAST;
-                case 0xC:
-                    return Direction.SOUTH;
-                case 0xD:
-                case 0xE:
-                case 0xF:
-                    return Direction.SOUTHWEST;
-                default:
-                    return null;
-            }
-        } else {
-            switch (sign.getState().getDataValue()) {
-                case 0x2:
-                    return Direction.EAST;
-                case 0x3:
-                    return Direction.WEST;
-                case 0x4:
-                    return Direction.NORTH;
-                case 0x5:
-                    return Direction.SOUTH;
-                default:
-                    return null;
-            }
-        }
+        Direction front = getFront(sign);
+        if(front == null) return null;
+
+        return getCounterClockWise(front);
     }
 
     public static Location getRightBlock(Location sign) {
 
         return sign.getRelative(getRight(sign));
-    }
-
-    /**
-     * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     * if you ask about a stone block, it's considered a wall
-     * sign).
-     * @return true if the sign is oriented along a cardinal direction (or if it's a wall sign,
-     * since those are always oriented along cardinal
-     * directions); false otherwise.
-     */
-    public static boolean isCardinal(Location sign) {
-
-        if (sign.getType() == BlockTypes.STANDING_SIGN) {
-            switch (sign.getState().getDataValue()) {
-                case 0x0:
-                case 0x4:
-                case 0x8:
-                case 0xC:
-                    return true;
-                default:
-                    return false;
-            }
-        } else return true;
     }
 
     /**
@@ -394,6 +189,6 @@ public class SignUtil {
 
     public static Text getText(Sign sign, int line) {
 
-        return sign.getSignData().getLine(line);
+        return sign.getData(SignData.class).get().getLine(line);
     }
 }

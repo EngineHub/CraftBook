@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics.minecart;
 
+import org.spongepowered.api.data.manipulators.entities.PassengerData;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.EntityDismountEvent;
-import org.spongepowered.api.util.event.Subscribe;
 
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
@@ -27,7 +28,7 @@ public class EmptyDecay extends SpongeMechanic {
         @Override
         public void run() {
 
-            if (!cart.getPassenger().isPresent()) {
+            if (!cart.getData(PassengerData.class).isPresent()) {
                 cart.remove();
             }
         }
