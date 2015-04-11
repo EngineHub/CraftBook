@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.manipulators.blocks.PoweredData;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -31,9 +32,12 @@ public class SISO extends PinSet {
         if (getOutput(outputId, ic) != powered) {
             Location block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
 
-            // BlockProperty<?> prop = block.getState().getPropertyByName("powered").get();
-            // block.replaceWith(block.getState().cycleProperty(prop));
-            block.replaceWith(powered ? BlockTypes.REDSTONE_BLOCK : BlockTypes.STONE);
+            if(block.getType() != BlockTypes.LEVER) return; //Can't set this.
+
+            if(powered)
+                block.getOrCreate(PoweredData.class);
+            else
+                block.remove(PoweredData.class);
         }
     }
 
@@ -49,7 +53,7 @@ public class SISO extends PinSet {
 
     @Override
     public boolean getOutput(int outputId, IC ic) {
-        return ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock())).getType() == BlockTypes.REDSTONE_BLOCK;
+        return ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock())).getData(PoweredData.class).isPresent();
     }
 
     @Override
