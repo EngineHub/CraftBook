@@ -5,7 +5,6 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.weather.WeatherUniverse;
 import org.spongepowered.api.world.weather.Weathers;
 
 import com.sk89q.craftbook.core.util.CraftBookException;
@@ -15,12 +14,10 @@ public class Snow extends SpongeMechanic {
     @Subscribe
     public void onBlockTick(BlockRandomTickEvent event) {
 
-        if (event.getBlock().getExtent() instanceof WeatherUniverse) {
-            if (event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
-                if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
-                    // Temporarily just set to a full snow block.
-                    event.getBlock().replaceWith(BlockTypes.SNOW);
-                }
+        if (event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
+            if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
+                // Temporarily just set to a full snow block.
+                event.getBlock().replaceWith(BlockTypes.SNOW);
             }
         }
     }
@@ -47,5 +44,6 @@ public class Snow extends SpongeMechanic {
         super.onInitialize();
 
         BlockTypes.SNOW_LAYER.setTickRandomly(true);
+        BlockTypes.SNOW.setTickRandomly(true);
     }
 }
