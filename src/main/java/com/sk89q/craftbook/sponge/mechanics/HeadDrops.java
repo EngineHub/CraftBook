@@ -1,15 +1,14 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.manipulators.OwnableData;
 import org.spongepowered.api.data.manipulators.entities.SkullData;
 import org.spongepowered.api.data.types.SkullTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.living.LivingDeathEvent;
 import org.spongepowered.api.item.ItemTypes;
@@ -26,13 +25,13 @@ public class HeadDrops extends SpongeMechanic {
         EntityType type = event.getLiving().getType();
 
         SkullData data = null;
-        UUID ownerUUID = null;
+        GameProfile profile = null;
 
         if(type == EntityTypes.PLAYER) {
             //This be a player.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
             data.setValue(SkullTypes.PLAYER);
-            ownerUUID = event.getLiving().getUniqueId();
+            profile = ((Player) event.getLiving()).getProfile();
         } else if(type == EntityTypes.ZOMBIE) {
             //This be a zombie.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
@@ -51,7 +50,7 @@ public class HeadDrops extends SpongeMechanic {
             if(skullType != null) {
 
                 //Add extra mob.
-                //TODO - find out which data does that.
+                profile = skullType.getProfile();
                 data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
                 data.setValue(SkullTypes.PLAYER);
             }
@@ -59,9 +58,9 @@ public class HeadDrops extends SpongeMechanic {
 
         if(data != null) {
             ItemStack stack = CraftBookPlugin.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).itemData(data).build();
-            if(ownerUUID != null) {
+            if(profile != null) {
                 OwnableData owner = stack.getOrCreate(OwnableData.class).get();
-                owner.setProfile(CraftBookPlugin.game.getRegistry().createGameProfile(ownerUUID, "Skull"));
+                owner.setProfile(profile);
             }
             event.getDroppedItems().add(stack);
         }
@@ -69,51 +68,37 @@ public class HeadDrops extends SpongeMechanic {
 
     private enum MobSkullType {
 
-        //Official
-        BLAZE("MHF_Blaze", "Blaze_Head"),
-        CAVE_SPIDER("MHF_CaveSpider"),
-        CHICKEN("MHF_Chicken", "scraftbrothers1"),
-        COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
-        ENDERMAN("MHF_Enderman", "Violit"),
-        GHAST("MHF_Ghast", "_QuBra_"),
-        MAGMA_CUBE("MHF_LavaSlime"),
-        MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
-        PIG("MHF_Pig", "XlexerX"),
-        PIG_ZOMBIE("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
-        SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
-        SLIME("MHF_Slime", "HappyHappyMan"),
-        SPIDER("MHF_Spider", "Kelevra_V"),
-        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9"),
-        IRON_GOLEM("MHF_Golem", "zippie007"),
-        SQUID("MHF_Squid", "squidette8"),
-        OCELOT("MHF_Ocelot", "scraftbrothers3"),
+        //Official or Guaranteed Static - Vanilla
+        BLAZE(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("4c38ed11-596a-4fd4-ab1d-26f386c1cbac"), "MHF_Blaze")),
+        CAVE_SPIDER(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("cab28771-f0cd-4fe7-b129-02c69eba79a5"), "MHF_CaveSpider")),
+        CHICKEN(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("92deafa9-4307-42d9-b003-88601598d6c0"), "MHF_Chicken")),
+        COW(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("f159b274-c22e-4340-b7c1-52abde147713"), "MHF_Cow")),
+        ENDERMAN(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("40ffb372-12f6-4678-b3f2-2176bf56dd4b"), "MHF_Enderman")),
+        GHAST(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("063085a6-797f-4785-be1a-21cd7580f752"), "MHF_Ghast")),
+        IRON_GOLEM(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("757f90b2-2344-4b8d-8dac-824232e2cece"), "MHF_Golem")),
+        MAGMA_CUBE(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("0972bdd1-4b86-49fb-9ecc-a353f8491a51"), "MHF_LavaSlime")),
+        MUSHROOM_COW(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("a46817d6-73c5-4f3f-b712-af6b3ff47b96"), "MHF_MushroomCow")),
+        OCELOT(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("1bee9df5-4f71-42a2-bf52-d97970d3fea3"), "MHF_Ocelot")),
+        PIG(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("8b57078b-f1bd-45df-83c4-d88d16768fbe"), "MHF_Pig")),
+        PIG_ZOMBIE(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("18a2bb50-334a-4084-9184-2c380251a24b"), "MHF_PigZombie")),
+        SHEEP(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("dfaad551-4e7e-45a1-a6f7-c6fc5ec823ac"), "MHF_Sheep")),
+        SLIME(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("870aba93-40e8-48b3-89c5-32ece00d6630"), "MHF_Slime")),
+        SPIDER(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("5ad55f34-41b6-4bd2-9c32-18983c635936"), "MHF_Spider")),
+        SQUID(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("72e64683-e313-4c36-a408-c66b64e94af5"), "MHF_Squid")),
+        WITHER(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("39af6844-6809-4d2f-8ba4-7e92d087be18"), "MHF_Wither")),
+        WOLF(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("8d2d1d6d-8034-4c89-bd86-809a31fd5193"), "MHF_Wolf")),
+        VILLAGER(CraftBookPlugin.game.getRegistry().createGameProfile(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
 
-        //Unofficial/Community
-        BAT("coolwhip101", "bozzobrain"),
-        ENDER_DRAGON("KingEndermen", "KingEnderman"),
-        SILVERFISH("Xzomag", "AlexVMiner"),
-        SNOWMAN("scraftbrothers2", "Koebasti"),
-        HORSE("gavertoso"),
-        WOLF("Budwolf"),
-        WITCH("scrafbrothers4");
+        MobSkullType(GameProfile profile) {
 
-        MobSkullType(String playerName, String ... oldNames) {
-
-            this.playerName = playerName;
-            this.oldNames = new HashSet<String>(Arrays.asList(oldNames));
+            this.profile = profile;
         }
 
-        private String playerName;
-        private Set<String> oldNames;
+        private GameProfile profile;
 
-        public String getPlayerName() {
+        public GameProfile getProfile() {
 
-            return playerName;
-        }
-
-        public boolean isOldName(String name) {
-
-            return oldNames.contains(name);
+            return profile;
         }
 
         public static MobSkullType getFromEntityType(EntityType entType) {
@@ -125,14 +110,14 @@ public class HeadDrops extends SpongeMechanic {
             }
         }
 
-        public static EntityType getEntityType(String name) {
+        public static EntityType getEntityType(GameProfile profile) {
 
-            if (name == null)
+            if (profile == null)
                 return null;
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name)) {
-                    Optional<EntityType> tt = CraftBookPlugin.game.getRegistry().getType(EntityType.class, name);
+                if(type.getProfile().equals(profile)) {
+                    Optional<EntityType> tt = CraftBookPlugin.game.getRegistry().getType(EntityType.class, type.name());
                     if(!tt.isPresent())
                         continue;
                     return tt.get();
