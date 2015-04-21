@@ -11,7 +11,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartingEvent;
+import org.spongepowered.api.event.state.ServerAboutToStartEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
+import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.Footprints;
 import com.sk89q.craftbook.sponge.mechanics.HeadDrops;
@@ -41,6 +42,8 @@ public class CraftBookPlugin extends CraftBookAPI {
     public Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
     MechanicDataCache cache;
+
+    public BlockBagManager blockBagManager;
 
     /* Configuration Data */
 
@@ -67,7 +70,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     }
 
     @Subscribe
-    public void onPreInitialization(ServerStartingEvent event) {
+    public void onInitialization(ServerAboutToStartEvent event) {
 
         game = event.getGame();
         instance = this;
@@ -83,6 +86,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         config.load();
 
         cache = new SpongeDataCache();
+        blockBagManager = new BlockBagManager();
 
         for (Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
 

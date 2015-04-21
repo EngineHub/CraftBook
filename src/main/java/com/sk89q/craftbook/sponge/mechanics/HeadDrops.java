@@ -10,6 +10,8 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.block.BlockBreakEvent;
+import org.spongepowered.api.event.block.BlockPlaceEvent;
 import org.spongepowered.api.event.entity.living.LivingDropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -67,6 +69,18 @@ public class HeadDrops extends SpongeMechanic {
         }
     }
 
+    @Subscribe
+    public void onBlockPlace(BlockPlaceEvent event) {
+
+
+    }
+
+    @Subscribe
+    public void onBlockBreak(BlockBreakEvent event) {
+
+
+    }
+
     private enum MobSkullType {
 
         //Official or Guaranteed Static - Vanilla
@@ -117,7 +131,7 @@ public class HeadDrops extends SpongeMechanic {
                 return null;
 
             for(MobSkullType type : values())
-                if(type.getProfile().equals(profile)) {
+                if(type.getProfile().getUniqueId().equals(profile.getUniqueId())) {
                     Optional<EntityType> tt = CraftBookPlugin.game.getRegistry().getType(EntityType.class, type.name());
                     if(!tt.isPresent())
                         continue;
