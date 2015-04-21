@@ -1,4 +1,4 @@
-package com.sk89q.craftbook.sponge.mechanics;
+package com.sk89q.craftbook.sponge.mechanics.types;
 
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -17,7 +17,7 @@ public abstract class SpongeMechanic implements Mechanic {
         if (name == null) name = this.getClass().getSimpleName();
         return name;
     }
-
+    
     @Override
     public void onInitialize() throws CraftBookException {
 

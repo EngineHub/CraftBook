@@ -9,6 +9,7 @@ import org.spongepowered.api.world.weather.WeatherUniverse;
 import org.spongepowered.api.world.weather.Weathers;
 
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
 public class Snow extends SpongeMechanic {
 

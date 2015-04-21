@@ -4,6 +4,8 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.living.LivingMoveEvent;
 
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+
 public class Footprints extends SpongeMechanic {
 
     @Subscribe

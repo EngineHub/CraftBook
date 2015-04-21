@@ -23,12 +23,12 @@ import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.Footprints;
 import com.sk89q.craftbook.sponge.mechanics.Snow;
-import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
 import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 

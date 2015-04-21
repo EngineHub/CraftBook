@@ -6,7 +6,7 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.EntityDismountEvent;
 
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
 public class EmptyDecay extends SpongeMechanic {
 

@@ -12,15 +12,15 @@ import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import com.sk89q.craftbook.sponge.mechanics.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 
-public class ICSocket extends SpongeMechanic implements SelfTriggeringMechanic {
+public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
 
     public static final HashMap<String, PinSet> PINSETS = new HashMap<String, PinSet>();
 
@@ -69,6 +69,11 @@ public class ICSocket extends SpongeMechanic implements SelfTriggeringMechanic {
         if(!(data.ic instanceof SelfTriggeringIC)) return;
         ((SelfTriggeringIC) data.ic).think();
     }
+    
+    @Override
+	public boolean isValid(Location location) {
+		return createICData(location) != null;
+	}
 
     public BaseICData createICData(Location block) {
 

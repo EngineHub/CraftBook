@@ -16,6 +16,7 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
 public class Elevator extends SpongeMechanic {
