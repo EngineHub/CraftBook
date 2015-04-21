@@ -10,17 +10,18 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.living.LivingDeathEvent;
+import org.spongepowered.api.event.entity.living.LivingDropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import com.google.common.base.Optional;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
 public class HeadDrops extends SpongeMechanic {
 
     @Subscribe
-    public void onEntityDeath(LivingDeathEvent event) {
+    public void onEntityDeath(LivingDropItemEvent event) {
 
         EntityType type = event.getLiving().getType();
 
