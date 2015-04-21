@@ -5,12 +5,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.world.ChunkLoadEvent;
 import org.spongepowered.api.event.world.ChunkUnloadEvent;
 import org.spongepowered.api.event.world.WorldUnloadEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
+import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
 public class SelfTriggerManager {
 
@@ -36,6 +40,24 @@ public class SelfTriggerManager {
         for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
         }
+    }
+    
+    @Subscribe
+    public void onChunkLoad(ChunkLoadEvent event) {
+    	for(int x = 0; x < 16; x++) {
+    		for(int z = 0; z < 16; z++) {
+    			for(int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
+    				Location block = event.getChunk().getFullBlock(x, y, z);
+    				for(Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin>inst().enabledMechanics) {
+    					if(mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
+    						if(((SpongeBlockMechanic) mechanic).isValid(block))
+    							register((SelfTriggeringMechanic) mechanic, block);
+    					} else 
+    						continue;
+    				}
+    			}
+    		}
+    	}
     }
 
     @Subscribe

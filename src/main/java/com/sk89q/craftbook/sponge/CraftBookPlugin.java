@@ -38,7 +38,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     public static Game game;
 
-    private Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
+    public Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
     MechanicDataCache cache;
 
