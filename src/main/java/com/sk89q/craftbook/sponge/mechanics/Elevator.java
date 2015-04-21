@@ -16,10 +16,10 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
-public class Elevator extends SpongeMechanic {
+public class Elevator extends SpongeBlockMechanic {
 
     @Subscribe
     public void onSignChange(SignChangeEvent event) {
@@ -118,4 +118,16 @@ public class Elevator extends SpongeMechanic {
 
         return block;
     }
+
+	@Override
+	public boolean isValid(Location location) {
+        if (SignUtil.isSign(location)) {
+
+            Sign sign = (Sign) location.getTileEntity().get();
+
+             return SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]");
+        }
+        
+        return false;
+	}
 }

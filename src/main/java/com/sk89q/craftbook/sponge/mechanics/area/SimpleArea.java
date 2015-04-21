@@ -15,11 +15,11 @@ import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.world.Location;
 
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 
-public abstract class SimpleArea extends SpongeMechanic {
+public abstract class SimpleArea extends SpongeBlockMechanic {
 
     @Subscribe
     public void onSignChange(SignChangeEvent event) {
@@ -76,6 +76,14 @@ public abstract class SimpleArea extends SpongeMechanic {
      */
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
 
+    public boolean isValid(Location location) {
+    	if (SignUtil.isSign(location)) {
+            Sign sign = (Sign) location.getTileEntity().get();
+            return isMechanicSign(sign);
+    	}
+    	return false;
+    }
+    
     public abstract boolean isMechanicSign(Sign sign);
 
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
