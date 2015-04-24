@@ -12,14 +12,14 @@ public class BlockBagInterface extends BlockBag {
 
     BlockBag[] bags;
 
-    public BlockBagInterface(BlockBag ... bags) {
+    public BlockBagInterface(BlockBag... bags) {
         this.bags = bags;
     }
 
     @Override
     public List<ItemStack> addItems(ItemStack... itemStacks) {
-        for(BlockBag bag : bags) {
-            if(itemStacks.length == 0) break;
+        for (BlockBag bag : bags) {
+            if (itemStacks.length == 0) break;
             itemStacks = bag.addItems(itemStacks).toArray(new ItemStack[0]);
         }
 
@@ -28,8 +28,8 @@ public class BlockBagInterface extends BlockBag {
 
     @Override
     public List<ItemStack> removeItems(ItemStack... itemStacks) {
-        for(BlockBag bag : bags) {
-            if(itemStacks.length == 0) break;
+        for (BlockBag bag : bags) {
+            if (itemStacks.length == 0) break;
             itemStacks = bag.removeItems(itemStacks).toArray(new ItemStack[0]);
         }
 

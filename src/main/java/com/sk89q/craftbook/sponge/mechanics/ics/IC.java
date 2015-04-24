@@ -52,7 +52,7 @@ public abstract class IC implements DataSerializable {
 
         DataContainer container = new MemoryDataContainer();
 
-        for(Field field : this.getClass().getFields()) {
+        for (Field field : this.getClass().getFields()) {
             try {
                 container.set(DataQuery.of(field.getName()), field.get(this));
             } catch (IllegalArgumentException e) {

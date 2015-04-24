@@ -76,26 +76,27 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
      */
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
 
+    @Override
     public boolean isValid(Location location) {
-    	if (SignUtil.isSign(location)) {
+        if (SignUtil.isSign(location)) {
             Sign sign = (Sign) location.getTileEntity().get();
             return isMechanicSign(sign);
-    	}
-    	return false;
+        }
+        return false;
     }
-    
+
     public abstract boolean isMechanicSign(Sign sign);
 
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
 
-        int storedAmount;
+        long blockBagId;
 
         @Override
         public DataContainer toContainer() {
 
             DataContainer container = super.toContainer();
 
-            container.set(DataQuery.of("storedAmount"), storedAmount);
+            container.set(DataQuery.of("blockBagId"), blockBagId);
 
             return container;
         }

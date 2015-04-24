@@ -32,12 +32,11 @@ public class SISO extends PinSet {
         if (getOutput(outputId, ic) != powered) {
             Location block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
 
-            if(block.getType() != BlockTypes.LEVER) return; //Can't set this.
+            if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
 
-            if(powered)
+            if (powered)
                 block.getOrCreate(PoweredData.class);
-            else
-                block.remove(PoweredData.class);
+            else block.remove(PoweredData.class);
         }
     }
 

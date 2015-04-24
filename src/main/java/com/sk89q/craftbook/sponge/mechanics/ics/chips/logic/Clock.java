@@ -17,8 +17,8 @@ public class Clock extends IC implements SelfTriggeringIC {
     @Override
     public void think() {
 
-        ticks ++;
-        if(ticks == 20) {
+        ticks++;
+        if (ticks == 20) {
             ticks = 0;
             getPinSet().setOutput(0, !getPinSet().getOutput(0, this), this);
         }

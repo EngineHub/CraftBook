@@ -9,7 +9,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
  */
 public abstract class BlockBag {
 
-    public abstract List<ItemStack> addItems(ItemStack ... itemStacks);
+    public abstract List<ItemStack> addItems(ItemStack... itemStacks);
 
-    public abstract List<ItemStack> removeItems(ItemStack ... itemStacks);
+    public abstract List<ItemStack> removeItems(ItemStack... itemStacks);
 }

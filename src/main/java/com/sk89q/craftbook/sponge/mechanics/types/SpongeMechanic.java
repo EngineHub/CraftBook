@@ -17,7 +17,7 @@ public abstract class SpongeMechanic implements Mechanic {
         if (name == null) name = this.getClass().getSimpleName();
         return name;
     }
-    
+
     @Override
     public void onInitialize() throws CraftBookException {
 

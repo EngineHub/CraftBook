@@ -48,7 +48,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         for (Location block : event.getAffectedBlocks()) {
 
             BaseICData data = createICData(block);
-            if(data == null) continue;
+            if (data == null) continue;
 
             Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
@@ -65,20 +65,20 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public void onThink(Location block) {
 
         BaseICData data = createICData(block);
-        if(data == null) return;
-        if(!(data.ic instanceof SelfTriggeringIC)) return;
+        if (data == null) return;
+        if (!(data.ic instanceof SelfTriggeringIC)) return;
         ((SelfTriggeringIC) data.ic).think();
     }
-    
+
     @Override
-	public boolean isValid(Location location) {
-		return createICData(location) != null;
-	}
+    public boolean isValid(Location location) {
+        return createICData(location) != null;
+    }
 
     public BaseICData createICData(Location block) {
 
         if (block.getType() == BlockTypes.WALL_SIGN) {
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign)block.getTileEntity().get(), 1));
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign) block.getTileEntity().get(), 1));
 
             if (icType == null) return null;
 

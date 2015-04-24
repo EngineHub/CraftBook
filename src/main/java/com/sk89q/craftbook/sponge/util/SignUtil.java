@@ -44,10 +44,9 @@ public class SignUtil {
 
         Optional<DirectionalData> data = sign.getData(DirectionalData.class);
 
-        if(data.isPresent())
+        if (data.isPresent())
             return data.get().getValue();
-        else
-            return null;
+        else return null;
     }
 
     public static Location getFrontBlock(Location sign) {
@@ -66,7 +65,7 @@ public class SignUtil {
     public static Direction getBack(Location sign) {
 
         Direction front = getFront(sign);
-        if(front == null) return null;
+        if (front == null) return null;
 
         return front.getOpposite();
     }
@@ -105,7 +104,7 @@ public class SignUtil {
     public static Direction getRight(Location sign) {
 
         Direction front = getFront(sign);
-        if(front == null) return null;
+        if (front == null) return null;
 
         return getClockWise(front);
     }
@@ -126,7 +125,7 @@ public class SignUtil {
     public static Direction getLeft(Location sign) {
 
         Direction front = getFront(sign);
-        if(front == null) return null;
+        if (front == null) return null;
 
         return getCounterClockWise(front);
     }

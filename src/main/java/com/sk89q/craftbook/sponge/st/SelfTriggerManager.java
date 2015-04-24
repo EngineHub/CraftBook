@@ -29,9 +29,8 @@ public class SelfTriggerManager {
     }
 
     public static void unregisterAll(Extent extent) {
-        for(Location loc : selfTriggeringMechanics.keySet()) {
-            if(extent.contains(loc))
-                selfTriggeringMechanics.remove(loc);
+        for (Location loc : selfTriggeringMechanics.keySet()) {
+            if (extent.contains(loc)) selfTriggeringMechanics.remove(loc);
         }
     }
 
@@ -43,16 +42,17 @@ public class SelfTriggerManager {
 
     @Subscribe
     public void onChunkLoad(ChunkLoadEvent event) {
-        for(int x = 0; x < 16; x++) {
-            for(int z = 0; z < 16; z++) {
-                for(int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
+
+        // TODO somehow make this more efficient whilst retaining functionality.
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
                     Location block = event.getChunk().getFullBlock(x, y, z);
-                    for(Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin>inst().enabledMechanics) {
-                        if(mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                            if(((SpongeBlockMechanic) mechanic).isValid(block))
-                                register((SelfTriggeringMechanic) mechanic, block);
-                        } else
-                            continue;
+                    for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin> inst().enabledMechanics) {
+                        if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
+                            if (((SpongeBlockMechanic) mechanic).isValid(block)) register((SelfTriggeringMechanic) mechanic, block);
+                        } else continue;
                     }
                 }
             }

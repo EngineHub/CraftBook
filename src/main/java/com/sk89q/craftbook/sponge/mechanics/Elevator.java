@@ -64,18 +64,18 @@ public class Elevator extends SpongeBlockMechanic {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == 0x0) {
+            if (floor.getY() == 0) {
                 break;
             }
             floor = floor.getRelative(Direction.DOWN);
         }
 
         if (!foundGround) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.builder("No floor!").build());
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("No floor!"));
             return;
         }
         if (foundFree < 2) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.builder("Obstructed!").build());
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("Obstructed!"));
             return;
         }
 
