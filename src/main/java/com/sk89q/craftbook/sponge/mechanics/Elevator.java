@@ -119,15 +119,15 @@ public class Elevator extends SpongeBlockMechanic {
         return block;
     }
 
-	@Override
-	public boolean isValid(Location location) {
+    @Override
+    public boolean isValid(Location location) {
         if (SignUtil.isSign(location)) {
 
             Sign sign = (Sign) location.getTileEntity().get();
 
-             return SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]");
+            return SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || SignUtil.getTextRaw(sign, 1).equals("[Lift]");
         }
-        
+
         return false;
-	}
+    }
 }

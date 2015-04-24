@@ -24,7 +24,7 @@ public class Bridge extends SimpleArea {
             if (SignUtil.isSign(block)) {
                 Sign sign = (Sign) block.getTileEntity().get();
 
-                if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
+                if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]") || SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {
                     return block;
                 }
             }
