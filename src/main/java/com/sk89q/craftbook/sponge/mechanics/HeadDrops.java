@@ -66,6 +66,7 @@ public class HeadDrops extends SpongeMechanic {
                 owner.setProfile(profile);
             }
             event.getDroppedItems().add(stack);
+            event.getDroppedItems();
         }
     }
 

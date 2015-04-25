@@ -29,7 +29,7 @@ public class SISO extends PinSet {
     @Override
     public void setOutput(int outputId, boolean powered, IC ic) {
 
-        if (getOutput(outputId, ic) != powered) {
+        //if (getOutput(outputId, ic) != powered) {
             Location block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
 
             if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
@@ -37,7 +37,7 @@ public class SISO extends PinSet {
             if (powered)
                 block.getOrCreate(PoweredData.class);
             else block.remove(PoweredData.class);
-        }
+        //}
     }
 
     @Override

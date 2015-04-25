@@ -182,8 +182,8 @@ public class SignUtil {
     public static String getTextRaw(Sign sign, int line) {
 
         Text text = getText(sign, line);
-        if (text instanceof Literal) return ((Literal) text).getContent();
-        return text.toString();
+        if (text instanceof Literal) return ((Literal) text).getContent().replace("", "");
+        return text.toString().replace("", "");
     }
 
     public static Text getText(Sign sign, int line) {
