@@ -35,7 +35,7 @@ public class SISO extends PinSet {
             if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
 
             if (powered)
-                block.getOrCreate(PoweredData.class);
+                block.offer(block.getOrCreate(PoweredData.class).get());
             else block.remove(PoweredData.class);
         //}
     }

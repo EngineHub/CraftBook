@@ -64,6 +64,7 @@ public class HeadDrops extends SpongeMechanic {
             if (profile != null) {
                 OwnableData owner = stack.getOrCreate(OwnableData.class).get();
                 owner.setProfile(profile);
+                stack.offer(owner);
             }
             event.getDroppedItems().add(stack);
             event.getDroppedItems();
