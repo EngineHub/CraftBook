@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.manipulators.OwnableData;
-import org.spongepowered.api.data.manipulators.entities.SkullData;
+import org.spongepowered.api.data.manipulators.SkullData;
 import org.spongepowered.api.data.types.SkullTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
