@@ -3,8 +3,6 @@ package com.sk89q.craftbook.sponge.st;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.world.ChunkLoadEvent;
@@ -13,7 +11,6 @@ import org.spongepowered.api.event.world.WorldUnloadEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
-import com.google.common.util.concurrent.MoreExecutors;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
@@ -44,27 +41,27 @@ public class SelfTriggerManager {
     }
 
     @Subscribe
-    public void onChunkLoad(ChunkLoadEvent event) {
+    public void onChunkLoad(final ChunkLoadEvent event) {
 
         // TODO change this if the world explodes.
 
-		CraftBookPlugin.game.getAsyncScheduler().runTask(CraftBookPlugin.<CraftBookPlugin>inst().container, new Runnable() {
-			@Override
-			public void run() {
-		        for (int x = 0; x < 16; x++) {
-		            for (int z = 0; z < 16; z++) {
-		                for (int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
-		                    Location block = event.getChunk().getFullBlock(x, y, z);
-		                    for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin> inst().enabledMechanics) {
-		                        if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-		                            if (((SpongeBlockMechanic) mechanic).isValid(block)) register((SelfTriggeringMechanic) mechanic, block);
-		                        } else continue;
-		                    }
-		                }
-		            }
-		        }
-			}
-		});
+        CraftBookPlugin.game.getAsyncScheduler().runTask(CraftBookPlugin.<CraftBookPlugin>inst().container, new Runnable() {
+            @Override
+            public void run() {
+                for (int x = 0; x < 16; x++) {
+                    for (int z = 0; z < 16; z++) {
+                        for (int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
+                            Location block = event.getChunk().getFullBlock(x, y, z);
+                            for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin> inst().enabledMechanics) {
+                                if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
+                                    if (((SpongeBlockMechanic) mechanic).isValid(block)) register((SelfTriggeringMechanic) mechanic, block);
+                                } else continue;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Subscribe
