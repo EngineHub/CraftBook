@@ -11,7 +11,6 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerAboutToStartEvent;
 import org.spongepowered.api.event.state.ServerStartedEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -91,7 +90,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         for (Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
 
-            if (true || config.enabledMechanics.contains(mech.getKey())) {
+            if (config.enabledMechanics.contains(mech.getKey())) {
                 try {
                     Mechanic mechanic = createMechanic(mech.getValue());
                     enabledMechanics.add(mechanic);

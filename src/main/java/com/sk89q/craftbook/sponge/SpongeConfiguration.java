@@ -2,13 +2,16 @@ package com.sk89q.craftbook.sponge;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 import com.google.common.base.Function;
+import com.sk89q.craftbook.core.Mechanic;
 
 public class SpongeConfiguration {
 
@@ -36,6 +39,7 @@ public class SpongeConfiguration {
                 config = configManager.load();
 
                 // Create default configuration - TODO
+                config.getNode("enabled-mechanics").setValue(Arrays.asList("Elevator"));
 
                 configManager.save(config);
             }
@@ -47,6 +51,16 @@ public class SpongeConfiguration {
                     return String.valueOf(input);
                 }
             }, Arrays.asList("Elevator", "Snow"));
+
+            List<String> disabledMechanics = new ArrayList<String>();
+
+            for(Entry<String, Class<? extends Mechanic>> entry : plugin.getAvailableMechanics()) {
+                if(!enabledMechanics.contains(entry.getKey())) {
+                    disabledMechanics.add(entry.getKey());
+                }
+            }
+
+            config.getNode("disabled-mechanics").setValue(disabledMechanics);
 
             configManager.save(config);
         } catch (IOException exception) {
