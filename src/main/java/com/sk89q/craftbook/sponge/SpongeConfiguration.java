@@ -36,21 +36,10 @@ public class SpongeConfiguration {
             if (!mainConfig.exists()) {
                 mainConfig.getParentFile().mkdirs();
                 mainConfig.createNewFile();
-                config = configManager.load();
-
-                // Create default configuration - TODO
-                config.getNode("enabled-mechanics").setValue(Arrays.asList("Elevator")).setComment("The list of mechanics to load.");
-
-                configManager.save(config);
             }
             config = configManager.load();
 
-            enabledMechanics = config.getNode("enabled-mechanics").<String> getList(new Function<Object, String>() {
-                @Override
-                public String apply(Object input) {
-                    return String.valueOf(input);
-                }
-            }, Arrays.asList("Elevator", "Snow"));
+            enabledMechanics = getValue(config.getNode("enabled-mechanics"), Arrays.asList("Elevator"), "The list of mechanics to load.");
 
             List<String> disabledMechanics = new ArrayList<String>();
 
@@ -67,5 +56,27 @@ public class SpongeConfiguration {
             plugin.getLogger().error("The CraftBook Configuration could not be read!");
             exception.printStackTrace();
         }
+    }
+
+    protected <T> T getValue(CommentedConfigurationNode node, T defaultValue, String comment) {
+        if(comment != null) {
+            node.setComment(comment);
+        }
+
+        if(node.isVirtual()) {
+            node.setValue(defaultValue);
+            return defaultValue;
+        }
+
+        return node.getValue(new Function<Object, T>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public T apply(Object input) {
+
+                //Add converters into here where necessary.
+
+                return (T)input;
+            }
+        }, defaultValue);
     }
 }
