@@ -39,7 +39,7 @@ public class SpongeConfiguration {
                 config = configManager.load();
 
                 // Create default configuration - TODO
-                config.getNode("enabled-mechanics").setValue(Arrays.asList("Elevator"));
+                config.getNode("enabled-mechanics").setValue(Arrays.asList("Elevator")).setComment("The list of mechanics to load.");
 
                 configManager.save(config);
             }
@@ -60,7 +60,7 @@ public class SpongeConfiguration {
                 }
             }
 
-            config.getNode("disabled-mechanics").setValue(disabledMechanics);
+            config.getNode("disabled-mechanics").setValue(disabledMechanics).setComment("This contains all disabled mechanics. It is never read internally, but just acts as a convenient place to grab mechanics from.");
 
             configManager.save(config);
         } catch (IOException exception) {
