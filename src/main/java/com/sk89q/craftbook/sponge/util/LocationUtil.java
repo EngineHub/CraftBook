@@ -14,4 +14,13 @@ public class LocationUtil {
 
         return null;
     }
+
+    private static Direction[] directFaces = null;
+
+    public static Direction[] getDirectFaces() {
+
+        if(directFaces == null)
+            directFaces = new Direction[]{Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+        return directFaces;
+    }
 }

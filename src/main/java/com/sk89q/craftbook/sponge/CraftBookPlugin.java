@@ -25,6 +25,7 @@ import com.sk89q.craftbook.sponge.mechanics.Elevator;
 import com.sk89q.craftbook.sponge.mechanics.Footprints;
 import com.sk89q.craftbook.sponge.mechanics.HeadDrops;
 import com.sk89q.craftbook.sponge.mechanics.Snow;
+import com.sk89q.craftbook.sponge.mechanics.TreeLopper;
 import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
 import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
@@ -117,6 +118,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         registerSpongeMechanic(Gate.class);
         registerSpongeMechanic(Footprints.class);
         registerSpongeMechanic(HeadDrops.class);
+        registerSpongeMechanic(TreeLopper.class);
 
         registerSpongeMechanic(ICSocket.class);
 
