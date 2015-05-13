@@ -25,7 +25,7 @@ public class HeadDrops extends SpongeMechanic {
     @Subscribe
     public void onEntityDeath(LivingDropItemEvent event) {
 
-        EntityType type = event.getLiving().getType();
+        EntityType type = event.getEntity().getType();
 
         SkullData data = null;
         GameProfile profile = null;
@@ -34,7 +34,7 @@ public class HeadDrops extends SpongeMechanic {
             // This be a player.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
             data.setValue(SkullTypes.PLAYER);
-            profile = ((Player) event.getLiving()).getProfile();
+            profile = ((Player) event.getEntity()).getProfile();
         } else if (type == EntityTypes.ZOMBIE) {
             // This be a zombie.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();

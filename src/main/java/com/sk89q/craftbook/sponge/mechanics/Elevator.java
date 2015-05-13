@@ -37,7 +37,7 @@ public class Elevator extends SpongeBlockMechanic {
 
             boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
-            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getHuman(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
+            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getEntity(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
         }
     }
 

@@ -35,10 +35,10 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         if (SignUtil.isSign(event.getBlock())) {
 
             Sign sign = (Sign) event.getBlock().getTileEntity().get();
-            
+
             if (isMechanicSign(sign)) {
-            	            	
-                if (triggerMechanic(event.getBlock(), sign, event.getHuman(), null) && event instanceof Cancellable) {
+
+                if (triggerMechanic(event.getBlock(), sign, event.getEntity(), null) && event instanceof Cancellable) {
                     try {
                         ((Cancellable) event).setCancelled(true);
                     } catch (Throwable e) {

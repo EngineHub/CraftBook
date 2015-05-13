@@ -42,7 +42,7 @@ public class Gate extends SimpleArea {
 
                             Sign sign = (Sign) event.getBlock().getExtent().getFullBlock(x1, y1, z1).getTileEntity().get();
 
-                            triggerMechanic(event.getBlock().getExtent().getFullBlock(x1, y1, z1), sign, event.getHuman(), null);
+                            triggerMechanic(event.getBlock().getExtent().getFullBlock(x1, y1, z1), sign, event.getEntity(), null);
                         }
                     }
                 }
