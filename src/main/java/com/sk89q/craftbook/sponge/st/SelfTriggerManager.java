@@ -30,7 +30,7 @@ public class SelfTriggerManager {
 
     public static void unregisterAll(Extent extent) {
         for (Location loc : selfTriggeringMechanics.keySet()) {
-            if (extent.contains(loc)) selfTriggeringMechanics.remove(loc);
+            if (loc.inExtent(extent)) selfTriggeringMechanics.remove(loc);
         }
     }
 

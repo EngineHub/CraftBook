@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.manipulators.blocks.PoweredData;
+import org.spongepowered.api.data.manipulator.block.PoweredData;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 

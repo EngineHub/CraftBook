@@ -2,11 +2,11 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import java.util.EnumSet;
 
-import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.tile.SignChangeEvent;
+import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.text.Texts;

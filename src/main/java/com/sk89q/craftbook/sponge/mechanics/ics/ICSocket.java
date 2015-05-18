@@ -3,7 +3,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 import java.util.HashMap;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.MemoryDataContainer;

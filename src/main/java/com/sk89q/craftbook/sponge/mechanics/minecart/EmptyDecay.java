@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.minecart;
 
-import org.spongepowered.api.data.manipulators.entities.PassengerData;
+import org.spongepowered.api.data.manipulator.entity.PassengerData;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.EntityDismountEvent;

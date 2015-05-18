@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.sponge.util;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tile.Sign;
-import org.spongepowered.api.data.manipulators.blocks.DirectionalData;
-import org.spongepowered.api.data.manipulators.tileentities.SignData;
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.manipulator.block.DirectionalData;
+import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;

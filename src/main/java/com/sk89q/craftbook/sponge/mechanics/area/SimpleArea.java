@@ -2,7 +2,7 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import javax.annotation.Nullable;
 
-import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.event.block.tile.SignChangeEvent;
+import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.world.Location;

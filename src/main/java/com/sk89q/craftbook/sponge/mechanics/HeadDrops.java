@@ -3,9 +3,9 @@ package com.sk89q.craftbook.sponge.mechanics;
 import java.util.UUID;
 
 import org.spongepowered.api.GameProfile;
-import org.spongepowered.api.data.manipulators.OwnableData;
-import org.spongepowered.api.data.manipulators.SkullData;
-import org.spongepowered.api.data.types.SkullTypes;
+import org.spongepowered.api.data.manipulator.OwnableData;
+import org.spongepowered.api.data.manipulator.SkullData;
+import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.player.Player;

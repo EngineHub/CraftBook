@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.manipulators.blocks.TreeData;
-import org.spongepowered.api.data.types.TreeType;
+import org.spongepowered.api.data.manipulator.block.TreeData;
+import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;

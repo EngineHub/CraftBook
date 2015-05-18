@@ -2,7 +2,7 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tile.Sign;
+import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
