@@ -113,7 +113,7 @@ public class Gate extends SimpleArea {
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
-        if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
+        if (SignUtil.getTextRaw(sign.getData().get(), 1).equals("[Gate]")) {
 
             Set<GateColumn> columns = new HashSet<GateColumn>();
 
@@ -173,7 +173,7 @@ public class Gate extends SimpleArea {
     }
 
     @Override
-    public boolean isMechanicSign(Sign sign) {
-        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Gate]");
+    public String[] getValidSigns() {
+        return new String[]{"[Gate]"};
     }
 }

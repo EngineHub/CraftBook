@@ -5,14 +5,18 @@ import javax.annotation.Nullable;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
 import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
@@ -24,7 +28,22 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     @Subscribe
     public void onSignChange(SignChangeEvent event) {
 
-        // TODO check player permissions.
+        Player player = null;
+        if(event.getCause().isPresent() && event.getCause().get() instanceof Player)
+            player = (Player) event.getCause().get();
+
+        for(String line : getValidSigns()) {
+            if(SignUtil.getTextRaw(event.getCurrentData(), 1).equalsIgnoreCase(line)) {
+                if(player != null && !player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
+                    player.sendMessage(Texts.of(TextColors.RED, "You do not have permission to create this mechanic!"));
+                    event.setCancelled(true);
+                } else {
+                    SignData data = event.getCurrentData();
+                    data.setLine(1, Texts.of(line));
+                    event.setNewData(data);
+                }
+            }
+        }
     }
 
     @Subscribe
@@ -38,11 +57,8 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
             if (isMechanicSign(sign)) {
 
-                if (triggerMechanic(event.getBlock(), sign, event.getEntity(), null) && event instanceof Cancellable) {
-                    try {
-                        ((Cancellable) event).setCancelled(true);
-                    } catch (Throwable e) {
-                    } // TODO remove
+                if (triggerMechanic(event.getBlock(), sign, event.getEntity(), null)) {
+                    event.setCancelled(true);
                 }
             }
         }
@@ -86,7 +102,14 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         return false;
     }
 
-    public abstract boolean isMechanicSign(Sign sign);
+    public boolean isMechanicSign(Sign sign) {
+        for(String text : getValidSigns())
+            if(SignUtil.getTextRaw(sign, 1).equals(text))
+                return true;
+        return false;
+    }
+
+    public abstract String[] getValidSigns();
 
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
 

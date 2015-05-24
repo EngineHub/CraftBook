@@ -78,7 +78,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public BaseICData createICData(Location block) {
 
         if (block.getType() == BlockTypes.WALL_SIGN) {
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw((Sign) block.getTileEntity().get(), 1));
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(((Sign) block.getTileEntity().get()).getData().get(), 1));
 
             if (icType == null) return null;
 

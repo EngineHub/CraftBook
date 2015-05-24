@@ -45,6 +45,8 @@ public class Bridge extends SimpleArea {
             Location left = baseBlock.getRelative(SignUtil.getLeft(block));
             Location right = baseBlock.getRelative(SignUtil.getRight(block));
 
+            //TODO verify types of end.
+
             Location otherSide = getOtherEnd(block);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
@@ -81,5 +83,10 @@ public class Bridge extends SimpleArea {
     @Override
     public boolean isMechanicSign(Sign sign) {
         return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge End]");
+    }
+
+    @Override
+    public String[] getValidSigns() {
+        return new String[]{"[Bridge]", "[Bridge End]"};
     }
 }

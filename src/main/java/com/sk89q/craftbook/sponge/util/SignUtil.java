@@ -60,7 +60,7 @@ public class SignUtil {
      * sign).
      * @return the blank side of the sign opposite the text. In the case of a wall sign,
      * the block in this direction is the block to which the sign is
-     * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFacing(BlockLoc)}.
+     * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFront(Location)}.
      */
     public static Direction getBack(Location sign) {
 
@@ -181,13 +181,20 @@ public class SignUtil {
 
     public static String getTextRaw(Sign sign, int line) {
 
+        Text text = getText(sign.getData().get(), line);
+        if (text instanceof Literal) return ((Literal) text).getContent();
+        return text.toString();
+    }
+
+    public static String getTextRaw(SignData sign, int line) {
+
         Text text = getText(sign, line);
         if (text instanceof Literal) return ((Literal) text).getContent();
         return text.toString();
     }
 
-    public static Text getText(Sign sign, int line) {
+    public static Text getText(SignData sign, int line) {
 
-        return sign.getData(SignData.class).get().getLine(line);
+        return sign.getLine(line);
     }
 }

@@ -44,6 +44,8 @@ public class Door extends SimpleArea {
             Location left = baseBlock.getRelative(SignUtil.getLeft(block));
             Location right = baseBlock.getRelative(SignUtil.getRight(block));
 
+            //TODO verify types of end.
+
             Location otherSide = getOtherEnd(block, back);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
@@ -80,5 +82,10 @@ public class Door extends SimpleArea {
     @Override
     public boolean isMechanicSign(Sign sign) {
         return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Up]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Down]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door]");
+    }
+
+    @Override
+    public String[] getValidSigns() {
+        return new String[]{"[Door Up]", "[Door Down]", "[Door]"};
     }
 }
