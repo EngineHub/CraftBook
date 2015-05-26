@@ -22,8 +22,7 @@ public class Door extends SimpleArea {
             if (SignUtil.isSign(block)) {
                 Sign sign = (Sign) block.getTileEntity().get();
 
-                if (SignUtil.getTextRaw(sign, 1).equals("[Door Up]") || SignUtil.getTextRaw(sign, 1).equals("[Door Down]") || SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
-
+                if (isMechanicSign(sign)) {
                     return block;
                 }
             }

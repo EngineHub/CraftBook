@@ -24,7 +24,7 @@ public class Bridge extends SimpleArea {
             if (SignUtil.isSign(block)) {
                 Sign sign = (Sign) block.getTileEntity().get();
 
-                if (SignUtil.getTextRaw(sign, 1).equals("[Bridge]") || SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {
+                if (isMechanicSign(sign)) {
                     return block;
                 }
             }
@@ -36,7 +36,7 @@ public class Bridge extends SimpleArea {
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
-        if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge]")) {
+        if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {
 
             Direction back = SignUtil.getBack(block);
 

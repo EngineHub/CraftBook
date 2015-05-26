@@ -54,8 +54,9 @@ public class SelfTriggerManager {
                             Location block = event.getChunk().getFullBlock(x, y, z);
                             for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin> inst().enabledMechanics) {
                                 if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                                    if (((SpongeBlockMechanic) mechanic).isValid(block)) register((SelfTriggeringMechanic) mechanic, block);
-                                } else continue;
+                                    if (((SpongeBlockMechanic) mechanic).isValid(block))
+                                        register((SelfTriggeringMechanic) mechanic, block);
+                                }
                             }
                         }
                     }

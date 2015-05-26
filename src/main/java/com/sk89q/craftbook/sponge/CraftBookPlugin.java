@@ -91,7 +91,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         for (Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
 
-            if (config.enabledMechanics.contains(mech.getKey())) {
+            if (config.enabledMechanics.contains(mech.getKey()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
                 try {
                     Mechanic mechanic = createMechanic(mech.getValue());
                     enabledMechanics.add(mechanic);
