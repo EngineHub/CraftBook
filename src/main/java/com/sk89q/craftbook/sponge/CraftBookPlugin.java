@@ -111,6 +111,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
 
         logger.info("Enumerating Mechanics");
+        //Standard Mechanics
         registerSpongeMechanic(Elevator.class);
         registerSpongeMechanic(Snow.class);
         registerSpongeMechanic(Bridge.class);
@@ -120,8 +121,10 @@ public class CraftBookPlugin extends CraftBookAPI {
         registerSpongeMechanic(HeadDrops.class);
         registerSpongeMechanic(TreeLopper.class);
 
+        //Circuit Mechanics
         registerSpongeMechanic(ICSocket.class);
 
+        //Vehicle Mechanics
         registerSpongeMechanic(EmptyDecay.class);
         logger.info("Found " + getAvailableMechanics().size() + ".");
     }
@@ -129,14 +132,11 @@ public class CraftBookPlugin extends CraftBookAPI {
     public boolean registerSpongeMechanic(Class<? extends SpongeMechanic> clazz) {
 
         try {
-            registerMechanic(clazz.getSimpleName(), clazz);
-
-            return true;
+            return registerMechanic(clazz.getSimpleName(), clazz);
         } catch (Throwable e) {
             e.printStackTrace();
-
-            return false;
         }
+        return false;
     }
 
     @Override

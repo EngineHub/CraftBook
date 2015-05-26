@@ -23,6 +23,10 @@ public abstract class SpongeMechanic implements Mechanic {
 
     }
 
+    public void onDisable() {
+
+    }
+
     public <T extends MechanicData> T getData(Class<T> clazz, Location block) {
 
         StringBuilder builder = new StringBuilder();

@@ -23,6 +23,11 @@ public interface Mechanic {
     void onInitialize() throws CraftBookException;
 
     /**
+     * Called when the mechanic should be disabled.
+     */
+    void onDisable();
+
+    /**
      * Gets the persistent data for this mechanic, using the given location key.
      * <p>
      * The location key should be able to identify each individual block in a world, as well as the world that it exists in. The location does not,
