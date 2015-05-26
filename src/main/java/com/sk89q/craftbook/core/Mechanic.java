@@ -3,11 +3,24 @@ package com.sk89q.craftbook.core;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.CraftBookException;
 
+/**
+ * The base class for any CraftBook mechanic.
+ */
 public interface Mechanic {
 
-    public String getName();
+    /**
+     * Gets the name of the mechanic.
+     *
+     * @return The name
+     */
+    String getName();
 
-    public void onInitialize() throws CraftBookException;
+    /**
+     * Called when the mechanic should initialize.
+     *
+     * @throws CraftBookException Occurs when the mechanic can not be started.
+     */
+    void onInitialize() throws CraftBookException;
 
     /**
      * Gets the persistent data for this mechanic, using the given location key.
@@ -19,5 +32,5 @@ public interface Mechanic {
      * @param locationKey The locationKey.
      * @return The data
      */
-    public <T extends MechanicData> T getData(Class<T> clazz, String locationKey);
+     <T extends MechanicData> T getData(Class<T> clazz, String locationKey);
 }

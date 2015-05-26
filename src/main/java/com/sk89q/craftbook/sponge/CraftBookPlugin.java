@@ -71,10 +71,10 @@ public class CraftBookPlugin extends CraftBookAPI {
     }
 
     @Subscribe
-    public void onInitialization(ServerStartedEvent event) {
+    public void onInitialization(ServerStartedEvent event) throws IllegalAccessException {
 
         game = event.getGame();
-        instance = this;
+        setInstance(this);
 
         logger.info("Starting CraftBook");
 
