@@ -59,7 +59,7 @@ public class Snow extends SpongeMechanic {
             }
         } else {
             location.replaceWith(BlockTypes.SNOW_LAYER);
-            dataOptional = location.getData(LayeredData.class);
+            dataOptional = location.getOrCreate(LayeredData.class);
             LayeredData data = dataOptional.get();
             data.setValue(data.getMaxValue());
             location.offer(data);
