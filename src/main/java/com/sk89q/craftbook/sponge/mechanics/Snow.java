@@ -1,11 +1,13 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import com.google.common.base.Optional;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.manipulator.block.LayeredData;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.weather.Weathers;
 
@@ -16,11 +18,11 @@ public class Snow extends SpongeMechanic {
 
     @Subscribe
     public void onBlockTick(BlockRandomTickEvent event) {
-        if (event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.SNOW) {
+        if ((event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.SNOW) && canSeeSky(event.getBlock())) {
             if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
                 //Higher the snow.
                 if (event.getBlock().getType() == BlockTypes.SNOW_LAYER)
-                    increaseSnow(event.getBlock());
+                    increaseSnow(event.getBlock(), true);
             } else {
                 //Lower the snow.
                 decreaseSnow(event.getBlock());
@@ -28,7 +30,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public void increaseSnow(Location location) {
+    public void increaseSnow(Location location, boolean disperse) {
 
         Optional<LayeredData> dataOptional = location.getData(LayeredData.class);
         if(dataOptional.isPresent()) {
@@ -38,9 +40,15 @@ public class Snow extends SpongeMechanic {
             if(currentHeight > data.getMaxValue())
                 location.replaceWith(BlockTypes.SNOW);
             else {
-                data.setValue(currentHeight);
-                location.offer(data);
+                if(disperse) {
+                    disperseSnow(location, null);
+                } else {
+                    data.setValue(currentHeight);
+                    location.offer(data);
+                }
             }
+        } else {
+            location.replaceWith(BlockTypes.SNOW_LAYER);
         }
     }
 
@@ -57,7 +65,7 @@ public class Snow extends SpongeMechanic {
                 data.setValue(currentHeight);
                 location.offer(data);
             }
-        } else {
+        } else if (location.getType() == BlockTypes.SNOW) {
             location.replaceWith(BlockTypes.SNOW_LAYER);
             dataOptional = location.getOrCreate(LayeredData.class);
             LayeredData data = dataOptional.get();
@@ -66,10 +74,56 @@ public class Snow extends SpongeMechanic {
         }
     }
 
+    private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NONE};
+
+    public void disperseSnow(Location location, Direction ignoredFace) {
+
+        int currentHeight = location.getOrCreate(LayeredData.class).get().getValue();
+
+        for(final Direction dir : VALID_SNOW_DIRECTIONS) {
+            if(dir == ignoredFace) continue;
+            final Location relative = location.getRelative(dir);
+            if(canPlaceSnowAt(relative)) {
+                Optional<LayeredData> dataOptional = relative.getData(LayeredData.class);
+                if(dataOptional.isPresent()) {
+                    if(currentHeight < dataOptional.get().getValue())
+                        continue;
+                }
+                increaseSnow(relative, false);
+                if(dir != Direction.NONE) {
+                    decreaseSnow(location);
+                    CraftBookPlugin.game.getSyncScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin>inst(), new Runnable() {
+                        @Override
+                        public void run() {
+                            disperseSnow(relative, dir.getOpposite());
+                        }
+                    }, 40L);
+                }
+                break;
+            }
+        }
+    }
+
+    public boolean canSeeSky(Location location) {
+        while(location.getBlockY() < location.getExtent().getBlockMax().getY()) {
+            location = location.getRelative(Direction.UP);
+            if(location.getType() != BlockTypes.AIR)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean canPlaceSnowAt(Location location) {
+        if(location.getType() == BlockTypes.AIR || location.getType() == BlockTypes.SNOW_LAYER)
+            return true;
+
+        return false;
+    }
+
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.AIR) {
+        if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
             // Occurred in a block where a snow-related change could have happened.
             for (Location block : event.getAffectedBlocks()) {
 
