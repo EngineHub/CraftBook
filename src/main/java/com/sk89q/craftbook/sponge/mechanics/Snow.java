@@ -21,9 +21,9 @@ public class Snow extends SpongeMechanic {
         if ((event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.SNOW)) {
             if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
                 //Higher the snow.
-                if (event.getBlock().getType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()))
+                if (event.getBlock().getType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()) && event.getBlock().getTemperature() <= 0.15f) //Only increase snow at valid blocks, where snow could actually fall.
                     increaseSnow(event.getBlock(), true);
-            } else if(!isBlockBurried(event.getBlock())) {
+            } else if(!isBlockBuried(event.getBlock()) && event.getBlock().getTemperature() > 0.15f) { //Only melt if on top, and too hot.
                 //Lower the snow.
                 decreaseSnow(event.getBlock());
             }
@@ -95,7 +95,7 @@ public class Snow extends SpongeMechanic {
                         @Override
                         public void run() {
                             disperseSnow(relative, dir.getOpposite());
-                            if(isBlockBurried(location))
+                            if(isBlockBuried(location))
                                 disperseSnow(location.getRelative(Direction.UP), null);
                         }
                     }, 40L);
@@ -115,10 +115,10 @@ public class Snow extends SpongeMechanic {
     }
 
     public boolean canPlaceSnowAt(Location location) {
-        return location.getType() == BlockTypes.AIR || location.getType() == BlockTypes.SNOW_LAYER || location.getType() == BlockTypes.TALLGRASS;
+        return location.getType() == BlockTypes.SNOW_LAYER || location.getType().getReplaceable();
     }
 
-    public boolean isBlockBurried(Location location) {
+    public boolean isBlockBuried(Location location) {
         return location.getRelative(Direction.UP).getType() == BlockTypes.SNOW_LAYER || location.getRelative(Direction.UP).getType() == BlockTypes.SNOW;
     }
 

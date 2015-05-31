@@ -29,8 +29,8 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     public void onSignChange(SignChangeEvent event) {
 
         Player player = null;
-        if(event.getCause().isPresent() && event.getCause().get() instanceof Player)
-            player = (Player) event.getCause().get();
+        if(event.getCause().isPresent() && event.getCause().get().getCause() instanceof Player)
+            player = (Player) event.getCause().get().getCause();
 
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getCurrentData(), 1).equalsIgnoreCase(line)) {
