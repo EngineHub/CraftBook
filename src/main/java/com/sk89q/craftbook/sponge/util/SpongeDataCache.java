@@ -31,7 +31,11 @@ public class SpongeDataCache extends MechanicDataCache {
             T data = clazz.newInstance();
 
             try {
-                ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File("craftbook-data", locationKey + ".cbd"))));
+                File file = new File("craftbook-data", locationKey + ".cbd");
+                if(!file.exists())
+                    return data;
+
+                ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
 
                 while (true) {
                     try {
