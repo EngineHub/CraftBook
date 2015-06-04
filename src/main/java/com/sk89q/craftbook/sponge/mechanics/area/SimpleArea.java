@@ -1,15 +1,13 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
-import javax.annotation.Nullable;
-
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
@@ -19,9 +17,7 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
+import javax.annotation.Nullable;
 
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
@@ -112,17 +108,6 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     public abstract String[] getValidSigns();
 
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
-
-        long blockBagId;
-
-        @Override
-        public DataContainer toContainer() {
-
-            DataContainer container = super.toContainer();
-
-            container.set(DataQuery.of("blockBagId"), blockBagId);
-
-            return container;
-        }
+        public long blockBagId;
     }
 }

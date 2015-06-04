@@ -1,17 +1,5 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import java.util.HashMap;
-
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.data.MemoryDataContainer;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.Location;
-
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
@@ -19,6 +7,14 @@ import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.block.BlockUpdateEvent;
+import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+
+import java.util.HashMap;
 
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
 
@@ -98,20 +94,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     public static class BaseICData extends SpongeMechanicData {
-
-        IC ic;
-
-        public BaseICData() {
-        }
-
-        @Override
-        public DataContainer toContainer() {
-
-            DataContainer container = new MemoryDataContainer();
-
-            container.set(DataQuery.of("icState"), ic);
-
-            return container;
-        }
+        public IC ic;
     }
 }

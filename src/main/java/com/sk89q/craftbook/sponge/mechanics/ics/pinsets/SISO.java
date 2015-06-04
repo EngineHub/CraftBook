@@ -36,7 +36,8 @@ public class SISO extends PinSet {
 
             if (powered)
                 block.offer(block.getOrCreate(PoweredData.class).get());
-            else block.remove(PoweredData.class);
+            else
+                block.remove(PoweredData.class);
         }
     }
 

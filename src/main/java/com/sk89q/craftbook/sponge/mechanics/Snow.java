@@ -75,7 +75,9 @@ public class Snow extends SpongeMechanic {
     private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NONE};
 
     public void disperseSnow(final Location location, Direction ignoredFace) {
-        int currentHeight = location.getOrCreate(LayeredData.class).get().getValue().intValue();
+
+        Optional<LayeredData> heightData = location.getOrCreate(LayeredData.class);
+        int currentHeight = heightData.get().getValue().intValue();
 
         for(final Direction dir : VALID_SNOW_DIRECTIONS) {
             if(dir == ignoredFace) continue;
@@ -96,7 +98,7 @@ public class Snow extends SpongeMechanic {
                         public void run() {
                             disperseSnow(relative, dir.getOpposite());
                             if(isBlockBuried(location))
-                                disperseSnow(location.getRelative(Direction.UP), null);
+                                disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
                         }
                     }, 40L);
                 }
@@ -115,7 +117,7 @@ public class Snow extends SpongeMechanic {
     }
 
     public boolean canPlaceSnowAt(Location location) {
-        return location.getType() == BlockTypes.SNOW_LAYER || location.getType().getReplaceable();
+        return location.getType() == BlockTypes.SNOW_LAYER || location.getType().isReplaceable();
     }
 
     public boolean isBlockBuried(Location location) {
