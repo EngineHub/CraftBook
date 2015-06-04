@@ -46,6 +46,9 @@ public class Snow extends SpongeMechanic {
                     location.offer(data);
                 }
             }
+
+            if(location.getRelative(Direction.DOWN).getType() == BlockTypes.WATER || location.getRelative(Direction.DOWN).getType() == BlockTypes.FLOWING_WATER)
+                location.getRelative(Direction.DOWN).replaceWith(BlockTypes.ICE);
         } else {
             location.replaceWith(BlockTypes.SNOW_LAYER);
         }
