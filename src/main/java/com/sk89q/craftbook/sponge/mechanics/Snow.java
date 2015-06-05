@@ -80,7 +80,7 @@ public class Snow extends SpongeMechanic {
     public void disperseSnow(final Location location, Direction ignoredFace) {
 
         Optional<LayeredData> heightData = location.getOrCreate(LayeredData.class);
-        int currentHeight = heightData.get().getValue().intValue();
+        int currentHeight = heightData.get().getValue();
 
         for(final Direction dir : VALID_SNOW_DIRECTIONS) {
             if(dir == ignoredFace) continue;
@@ -89,7 +89,7 @@ public class Snow extends SpongeMechanic {
             if(canPlaceSnowAt(relative)) {
                 Optional<LayeredData> dataOptional = relative.getData(LayeredData.class);
                 if(dataOptional.isPresent()) {
-                    int otherHeight = dataOptional.get().getValue().intValue();
+                    int otherHeight = dataOptional.get().getValue();
                     if(dir != Direction.NONE && dir != Direction.DOWN && currentHeight <= otherHeight+1)
                         continue;
                 }

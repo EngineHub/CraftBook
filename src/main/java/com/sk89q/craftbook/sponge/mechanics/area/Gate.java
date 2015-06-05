@@ -1,8 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -16,7 +14,8 @@ import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
-import com.sk89q.craftbook.sponge.util.SignUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Gate extends SimpleArea {
 
@@ -136,7 +135,7 @@ public class Gate extends SimpleArea {
         return true;
     }
 
-    public class GateColumn {
+    public static class GateColumn {
 
         Location topBlock;
 
