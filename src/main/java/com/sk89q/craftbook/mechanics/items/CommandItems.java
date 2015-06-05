@@ -369,6 +369,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     break current;
                 }
 
+                if(event instanceof Cancellable && comdef.cancelAction)
+                    ((Cancellable) event).setCancelled(true);
+
                 if(cooldownPeriods.containsKey(new Tuple2<String, String>(lplayer.getName(), comdef.name))) {
                     if(def.clickType != ClickType.PASSIVE && !def.cooldownMessage.isEmpty())
                         lplayer.printError(lplayer.translate(def.cooldownMessage).replace("%time%", String.valueOf(cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)))));
@@ -464,9 +467,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
                                 doCommand(command, event, comdef, player);
                         }
                     }, comdef.delay);
-
-                if(event instanceof Cancellable && comdef.cancelAction)
-                    ((Cancellable) event).setCancelled(true);
             }
         }
         }
