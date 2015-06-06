@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.EnumSet;
-
+import com.flowpowered.math.vector.Vector3d;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -15,9 +16,7 @@ import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
-import com.flowpowered.math.vector.Vector3d;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.SignUtil;
+import java.util.EnumSet;
 
 public class Elevator extends SpongeBlockMechanic {
 
@@ -98,7 +97,7 @@ public class Elevator extends SpongeBlockMechanic {
 
         if (direction == Direction.UP || direction == Direction.DOWN) {
 
-            while (direction == Direction.UP ? y < 256 : y >= 0) {
+            while (direction == Direction.UP ? y < 256 : y > 0) {
 
                 y += direction == Direction.UP ? 1 : -1;
 
