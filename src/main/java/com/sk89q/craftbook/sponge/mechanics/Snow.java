@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import com.google.common.base.Optional;
+import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.manipulator.block.LayeredData;
 import org.spongepowered.api.event.Subscribe;
@@ -10,9 +12,6 @@ import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.weather.Weathers;
-
-import com.sk89q.craftbook.core.util.CraftBookException;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
 public class Snow extends SpongeMechanic {
 
@@ -23,8 +22,16 @@ public class Snow extends SpongeMechanic {
                 //Higher the snow.
                 if (event.getBlock().getType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()) && event.getBlock().getTemperature() <= 0.15f) //Only increase snow at valid blocks, where snow could actually fall.
                     increaseSnow(event.getBlock(), true);
-            } else if(!isBlockBuried(event.getBlock()) && event.getBlock().getTemperature() > 0.15f) { //Only melt if on top, and too hot.
+            } else if(!isBlockBuried(event.getBlock())) { //Only melt if on top, and too hot.
                 //Lower the snow.
+                Optional<LayeredData> data = event.getBlock().getData(LayeredData.class);
+                if(data.isPresent()) {
+                    if(data.get().getValue() == 0)
+                        return;
+                } else if (event.getBlock().getTemperature() > 0.15f) {
+                    return;
+                }
+
                 decreaseSnow(event.getBlock());
             }
         }
@@ -120,7 +127,9 @@ public class Snow extends SpongeMechanic {
     }
 
     public boolean canPlaceSnowAt(Location location) {
-        return location.getType() == BlockTypes.SNOW_LAYER || location.getType().isReplaceable();
+        if(location.getType() == BlockTypes.SNOW_LAYER) return true;
+        if(location.getType() == BlockTypes.WATER || location.getType() == BlockTypes.FLOWING_WATER || location.getType() == BlockTypes.LAVA || location.getType() == BlockTypes.FLOWING_LAVA) return false;
+        return location.getType().isReplaceable();
     }
 
     public boolean isBlockBuried(Location location) {
