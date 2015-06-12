@@ -48,7 +48,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             Direction facing = LocationUtil.getFacing(block, event.getBlock());
 
-            boolean powered = block.isPowered();// block.isFacePowered(facing);
+            boolean powered = block.getRelative(facing).isPowered();//block.getRelative(facing).isFacePowered(facing.getOpposite());
 
             if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
                 data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
@@ -85,6 +85,9 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 // Initialize new IC.
                 data.ic = icType.buildIC(block);
                 if (data.ic instanceof SelfTriggeringIC) SelfTriggerManager.register(this, block);
+            } else if(data.ic.block == null) {
+                data.ic.block = block;
+                data.ic.type = icType;
             }
 
             return data;

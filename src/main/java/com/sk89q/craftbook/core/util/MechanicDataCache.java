@@ -35,4 +35,8 @@ public abstract class MechanicDataCache {
 
         return data;
     }
+
+    public void clearAll() {
+        mechanicData.invalidateAll();
+    }
 }

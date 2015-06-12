@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.ServerStartedEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
@@ -105,6 +106,12 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
 
         SelfTriggerManager.initialize();
+    }
+
+    @Subscribe
+    public void onServerStopping(ServerStoppingEvent event) {
+
+        cache.clearAll();
     }
 
     @Override

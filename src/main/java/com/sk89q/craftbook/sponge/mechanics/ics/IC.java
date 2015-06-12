@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 import org.spongepowered.api.world.Location;
 
-public abstract class IC extends SpongeMechanicData {
+public abstract class IC {
 
-    public ICType<? extends IC> type;
-    public Location block;
+    protected ICType<? extends IC> type;
+    protected Location block;
     public boolean[] pinstates;
 
     public IC() {}

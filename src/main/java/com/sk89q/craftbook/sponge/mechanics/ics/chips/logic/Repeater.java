@@ -7,6 +7,8 @@ import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 
 public class Repeater extends IC {
 
+    public Repeater() {}
+
     public Repeater(ICType<IC> type, Location block) {
         super(type, block);
     }

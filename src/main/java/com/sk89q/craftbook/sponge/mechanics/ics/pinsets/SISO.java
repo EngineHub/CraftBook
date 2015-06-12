@@ -29,10 +29,14 @@ public class SISO extends PinSet {
     @Override
     public void setOutput(int outputId, boolean powered, IC ic) {
 
+        System.out.println("Setting Power P1" + powered);
+
         if (getOutput(outputId, ic) != powered) {
             Location block = ic.getBlock().getRelative(SignUtil.getBack(ic.getBlock())).getRelative(SignUtil.getBack(ic.getBlock()));
 
             if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
+
+            System.out.println("Setting Power" + powered);
 
             if (powered)
                 block.offer(block.getOrCreate(PoweredData.class).get());
