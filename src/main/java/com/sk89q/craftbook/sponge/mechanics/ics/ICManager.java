@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
@@ -17,6 +18,8 @@ public class ICManager {
         registerICType(new ICType<Inverter>("MC1001", "INVERTER", Inverter.class));
 
         registerICType(new ICType<Clock>("MC1421", "CLOCK", Clock.class));
+
+        registerICType(new ICType<AndGate>("MC3002", "AND", AndGate.class, "3ISO"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {

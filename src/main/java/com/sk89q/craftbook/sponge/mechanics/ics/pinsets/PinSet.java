@@ -1,23 +1,62 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.manipulator.block.PoweredData;
+import org.spongepowered.api.world.Location;
 
-public interface PinSet {
+public abstract class PinSet {
 
-    int getInputCount();
+    public abstract int getInputCount();
 
-    int getOutputCount();
+    public abstract int getOutputCount();
 
-    void setInput(int inputId, boolean powered, IC ic);
+    public void setInput(int inputId, boolean powered, IC ic) {
+        if(inputId == -1) return;
+        ic.getPinStates()[inputId] = powered;
+    }
 
-    void setOutput(int outputId, boolean powered, IC ic);
+    public void setOutput(int outputId, boolean powered, IC ic) {
 
-    boolean getInput(int inputId, IC ic);
+        if(outputId == -1) return;
 
-    boolean getOutput(int outputId, IC ic);
+        if (getOutput(outputId, ic) != powered) {
+            Location block = getPinLocation(outputId + getInputCount(), ic);
 
-    int getInputId(IC ic, Direction direction);
+            if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
 
-    String getName();
+            if (powered)
+                block.offer(block.getOrCreate(PoweredData.class).get());
+            else
+                block.remove(PoweredData.class);
+        }
+    }
+
+    public int getPinForLocation(IC ic, Location location) {
+        for(int i = 0; i < getInputCount() + getOutputCount(); i++)
+            if(getPinLocation(i, ic).getBlockPosition().equals(location.getBlockPosition()))
+                return i;
+        return -1;
+    }
+
+    public boolean getInput(int inputId, IC ic) {
+        if(inputId == -1) return false;
+        return ic.getPinStates()[inputId];
+    }
+
+    public boolean getOutput(int outputId, IC ic) {
+        if(outputId == -1) return false;
+        return getPinLocation(getInputCount() + outputId, ic).getData(PoweredData.class).isPresent();
+    }
+
+    public boolean isValid(int id, IC ic) {
+        BlockType type = getPinLocation(id, ic).getType();
+
+        return type == BlockTypes.REDSTONE_WIRE || type == BlockTypes.LEVER;
+    }
+
+    public abstract String getName();
+
+    public abstract Location getPinLocation(int id, IC ic);
 }

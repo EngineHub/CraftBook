@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
-import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
@@ -23,7 +24,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public static final HashMap<String, PinSet> PINSETS = new HashMap<String, PinSet>();
 
     static {
-        PINSETS.put("SISO", new SISO());
+        PINSETS.put("SISO", new PinsSISO());
+        PINSETS.put("3ISO", new Pins3ISO());
     }
 
     /**
@@ -53,8 +55,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             boolean powered = block.getRelative(facing).isPowered();//block.getRelative(facing).isFacePowered(facing.getOpposite());
 
-            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getInputId(data.ic, facing), data.ic)) {
-                data.ic.getPinSet().setInput(data.ic.getPinSet().getInputId(data.ic, facing), powered, data.ic);
+            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getBlock()), data.ic)) {
+                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getBlock()), powered, data.ic);
                 data.ic.trigger();
             }
         }
