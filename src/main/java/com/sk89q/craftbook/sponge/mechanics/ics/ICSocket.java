@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.SISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
@@ -9,6 +10,7 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.util.Direction;
@@ -47,6 +49,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             if (data == null) continue;
 
             Direction facing = LocationUtil.getFacing(block, event.getBlock());
+            if(facing == null) return; //Something is wrong here.
 
             boolean powered = block.getRelative(facing).isPowered();//block.getRelative(facing).isFacePowered(facing.getOpposite());
 
@@ -74,20 +77,22 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public BaseICData createICData(Location block) {
 
         if (block.getType() == BlockTypes.WALL_SIGN) {
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(((Sign) block.getTileEntity().get()).getData().get(), 1));
-
+            SignData signData = ((Sign) block.getTileEntity().get()).getData().get();
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(signData, 1));
             if (icType == null) return null;
 
             BaseICData data = getData(BaseICData.class, block);
 
             if (data.ic == null) {
-
                 // Initialize new IC.
                 data.ic = icType.buildIC(block);
-                if (data.ic instanceof SelfTriggeringIC) SelfTriggerManager.register(this, block);
+                if(data.ic instanceof SelfTriggeringIC && SignUtil.getTextRaw(signData, 1).endsWith("S") ||  SignUtil.getTextRaw(signData, 1).endsWith(" ST"))
+                    ((SelfTriggeringIC)data.ic).selfTriggering = true;
+                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SelfTriggerManager.register(this, block);
             } else if(data.ic.block == null) {
                 data.ic.block = block;
                 data.ic.type = icType;
+                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SelfTriggerManager.register(this, block);
             }
 
             return data;

@@ -1,11 +1,12 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import org.spongepowered.api.world.Location;
 
 public abstract class IC {
 
-    protected ICType<? extends IC> type;
-    protected Location block;
+    public transient ICType<? extends IC> type;
+    public transient Location block;
     public boolean[] pinstates;
 
     public IC() {}
