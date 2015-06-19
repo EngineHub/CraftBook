@@ -1,9 +1,8 @@
 package com.sk89q.craftbook.sponge.st;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.core.Mechanic;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.world.ChunkLoadEvent;
 import org.spongepowered.api.event.world.ChunkUnloadEvent;
@@ -11,9 +10,9 @@ import org.spongepowered.api.event.world.WorldUnloadEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
-import com.sk89q.craftbook.core.Mechanic;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class SelfTriggerManager {
 
@@ -50,7 +49,7 @@ public class SelfTriggerManager {
             public void run() {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
-                        for (int y = 0; y < event.getChunk().getWorld().getBuildHeight(); y++) {
+                        for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
                             Location block = event.getChunk().getFullBlock(x, y, z);
                             for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin> inst().enabledMechanics) {
                                 if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
