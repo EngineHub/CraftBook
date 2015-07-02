@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ICManager {
 
@@ -18,8 +17,6 @@ public class ICManager {
         registerICType(new ICType<Inverter>("MC1001", "INVERTER", Inverter.class));
 
         registerICType(new ICType<Clock>("MC1421", "CLOCK", Clock.class));
-
-        registerICType(new ICType<AndGate>("MC3002", "AND", AndGate.class, "3ISO"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {
@@ -30,7 +27,7 @@ public class ICManager {
     public static ICType<? extends IC> getICType(String id) {
 
         for (ICType<? extends IC> icType : registeredICTypes) {
-            if (id.equalsIgnoreCase("[" + icType.modelId + "]") || id.equalsIgnoreCase("=" + icType.shorthandId) || id.equalsIgnoreCase("[" + icType.modelId + "]S") || id.equalsIgnoreCase("=" + icType.shorthandId + " ST")) return icType;
+            if (id.equalsIgnoreCase("[" + icType.modelId + "]") || id.equalsIgnoreCase("=" + icType.shorthandId)) return icType;
         }
 
         return null;

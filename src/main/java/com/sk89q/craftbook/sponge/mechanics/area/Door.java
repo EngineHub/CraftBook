@@ -40,74 +40,35 @@ public class Door extends SimpleArea {
 
             Location baseBlock = block.getRelative(back);
 
+            Location left = baseBlock.getRelative(SignUtil.getLeft(block));
+            Location right = baseBlock.getRelative(SignUtil.getRight(block));
+
+            //TODO verify types of end.
+
             Location otherSide = getOtherEnd(block, back);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
                 return true;
             }
 
-            Location otherBase = otherSide.getRelative(back.getOpposite());
-
-            if(!baseBlock.getState().equals(otherBase.getState())) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Both ends must be the same material!").build());
-                return true;
-            }
-
-            int leftBlocks = 0, rightBlocks = 0; //Default to 0. Single width bridge is the default.
-
-            Location left = baseBlock.getRelative(SignUtil.getLeft(block));
-            Location right = baseBlock.getRelative(SignUtil.getRight(block));
-
-            //Calculate left distance
-            Location otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
-
-            while(true) {
-                if(left.getState().equals(baseBlock.getState()) && otherLeft.getState().equals(baseBlock.getState())) {
-                    leftBlocks ++;
-                    left = left.getRelative(SignUtil.getLeft(block));
-                    otherLeft = otherLeft.getRelative(SignUtil.getLeft(block));
-                } else {
-                    break;
-                }
-            }
-
-            //Calculate right distance
-            Location otherRight = otherBase.getRelative(SignUtil.getRight(block));
-
-            while(true) {
-                if(right.getState().equals(baseBlock.getState()) && otherRight.getState().equals(baseBlock.getState())) {
-                    rightBlocks ++;
-                    right = right.getRelative(SignUtil.getRight(block));
-                    otherRight = otherRight.getRelative(SignUtil.getRight(block));
-                } else {
-                    break;
-                }
-            }
-
             baseBlock = baseBlock.getRelative(back);
 
-            BlockState type = block.getRelative(back).getState();
-            if (baseBlock.getState().equals(type) && (forceState == null || !forceState)) type = BlockTypes.AIR.getDefaultState();
+            left = baseBlock.getRelative(SignUtil.getLeft(block));
+            right = baseBlock.getRelative(SignUtil.getRight(block));
 
-            while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
+            BlockState type = block.getRelative(back).getBlock();
+            if (baseBlock.getBlock().equals(type) && (forceState == null || forceState == false)) type = BlockTypes.AIR.getDefaultState();
 
-                baseBlock.replaceWith(type);
+            while (baseBlock.getY() != otherSide.getY() + (back == Direction.UP ? -1 : 1)) {
 
-                left = baseBlock.getRelative(SignUtil.getLeft(block));
-
-                for(int i = 0; i < leftBlocks; i++) {
-                    left.replaceWith(type);
-                    left = left.getRelative(SignUtil.getLeft(block));
-                }
-
-                right = baseBlock.getRelative(SignUtil.getRight(block));
-
-                for(int i = 0; i < rightBlocks; i++) {
-                    right.replaceWith(type);
-                    right = right.getRelative(SignUtil.getRight(block));
-                }
+                baseBlock.setBlock(type);
+                left.setBlock(type);
+                right.setBlock(type);
 
                 baseBlock = baseBlock.getRelative(back);
+
+                left = baseBlock.getRelative(SignUtil.getLeft(block));
+                right = baseBlock.getRelative(SignUtil.getRight(block));
             }
         } else {
             if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Door not activatable from here!").build());

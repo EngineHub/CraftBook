@@ -1,10 +1,10 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import org.spongepowered.api.world.Location;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+
+import org.spongepowered.api.world.Location;
 
 public class ICType<T extends IC> {
 

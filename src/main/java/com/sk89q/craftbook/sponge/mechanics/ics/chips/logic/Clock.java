@@ -6,7 +6,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
 
-public class Clock extends SelfTriggeringIC {
+public class Clock extends IC implements SelfTriggeringIC {
 
     public int ticks;
 
@@ -25,7 +25,8 @@ public class Clock extends SelfTriggeringIC {
     }
 
     @Override
-    public boolean canThink() {
-        return true;
+    public void trigger() {
+
     }
+
 }
