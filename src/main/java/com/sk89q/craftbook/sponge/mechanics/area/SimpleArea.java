@@ -70,9 +70,9 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
                 if (isMechanicSign(sign)) {
                     SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                    if (data.lastCurrent != (block.isPowered() ? 15 : 0)) {
-                        triggerMechanic(block, sign, null, block.isPowered());
-                        data.lastCurrent = block.isPowered() ? 15 : 0;
+                    if (data.lastCurrent != (block.isBlockPowered() ? 15 : 0)) {
+                        triggerMechanic(block, sign, null, block.isBlockPowered());
+                        data.lastCurrent = block.isBlockPowered() ? 15 : 0;
                     }
                 }
             }

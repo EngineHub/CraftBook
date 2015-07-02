@@ -27,7 +27,7 @@ public class Gate extends SimpleArea {
 
         super.onPlayerInteract(event);
 
-        if (event.getBlock().getType() == BlockTypes.FENCE) {
+        if (event.getBlock().getBlockType() == BlockTypes.FENCE) {
 
             int x = event.getBlock().getBlockX();
             int y = event.getBlock().getBlockY();
@@ -37,11 +37,11 @@ public class Gate extends SimpleArea {
                 for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
-                        if (SignUtil.isSign(event.getBlock().getExtent().getFullBlock(x1, y1, z1))) {
+                        if (SignUtil.isSign(event.getBlock().getExtent().getLocation(x1, y1, z1))) {
 
-                            Sign sign = (Sign) event.getBlock().getExtent().getFullBlock(x1, y1, z1).getTileEntity().get();
+                            Sign sign = (Sign) event.getBlock().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
 
-                            triggerMechanic(event.getBlock().getExtent().getFullBlock(x1, y1, z1), sign, event.getEntity(), null);
+                            triggerMechanic(event.getBlock().getExtent().getLocation(x1, y1, z1), sign, event.getEntity(), null);
                         }
                     }
                 }
@@ -61,7 +61,7 @@ public class Gate extends SimpleArea {
             for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                 for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
-                    searchColumn(block.getExtent().getFullBlock(x1, y1, z1), columns);
+                    searchColumn(block.getExtent().getLocation(x1, y1, z1), columns);
                 }
             }
         }
@@ -79,7 +79,7 @@ public class Gate extends SimpleArea {
 
             Location temp = column.topBlock;
 
-            while (temp.getType() == BlockTypes.FENCE || temp.getType() == BlockTypes.AIR) {
+            while (temp.getBlockType() == BlockTypes.FENCE || temp.getBlockType() == BlockTypes.AIR) {
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) searchColumn(temp.getRelative(Direction.NORTH), columns);
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) searchColumn(temp.getRelative(Direction.SOUTH), columns);
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) searchColumn(temp.getRelative(Direction.EAST), columns);
@@ -97,13 +97,13 @@ public class Gate extends SimpleArea {
         block = block.getRelative(dir);
 
         if (on) {
-            while (block.getType() == BlockTypes.AIR) {
-                block.replaceWith(BlockTypes.FENCE);
+            while (block.getBlockType() == BlockTypes.AIR) {
+                block.setBlockType(BlockTypes.FENCE);
                 block = block.getRelative(dir);
             }
         } else {
-            while (block.getType() == BlockTypes.FENCE) {
-                block.replaceWith(BlockTypes.AIR);
+            while (block.getBlockType() == BlockTypes.FENCE) {
+                block.setBlockType(BlockTypes.AIR);
                 block = block.getRelative(dir);
             }
         }
@@ -123,9 +123,9 @@ public class Gate extends SimpleArea {
                 for (GateColumn vec : columns) {
                     Location col = vec.getBlock();
                     if (on == null) {
-                        on = col.getRelative(Direction.DOWN).getType() != BlockTypes.FENCE;
+                        on = col.getRelative(Direction.DOWN).getBlockType() != BlockTypes.FENCE;
                     }
-                    toggleColumn(col, on.booleanValue());
+                    toggleColumn(col, on);
                 }
             } else {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Can't find a gate!").build());
@@ -140,12 +140,12 @@ public class Gate extends SimpleArea {
         Location topBlock;
 
         public GateColumn(Extent extent, int x, int y, int z) {
-            this(extent.getFullBlock(x, y, z));
+            this(extent.getLocation(x, y, z));
         }
 
         public GateColumn(Location topBlock) {
 
-            while (topBlock.getType() == BlockTypes.FENCE) {
+            while (topBlock.getBlockType() == BlockTypes.FENCE) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
 

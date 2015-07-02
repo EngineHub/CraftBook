@@ -21,7 +21,7 @@ public class TreeLopper extends SpongeMechanic {
     @Subscribe
     public void onBlockBreak(PlayerBreakBlockEvent event) {
 
-        if(event.getBlock().getType() == BlockTypes.LOG || event.getBlock().getType() == BlockTypes.LOG2) {
+        if(event.getBlock().getBlockType() == BlockTypes.LOG || event.getBlock().getBlockType() == BlockTypes.LOG2) {
             checkBlocks(event.getBlock(), event.getEntity(), event.getBlock().getData(TreeData.class).get().getValue(), new ArrayList<Location>());
         }
     }
@@ -36,7 +36,7 @@ public class TreeLopper extends SpongeMechanic {
         if(!data.isPresent()) return;
 
         if(data.get().getValue().equals(type)) { //Same tree type.
-            block.digWith(player.getItemInHand().get());
+            block.digBlockWith(player.getItemInHand().get());
             for(Direction dir : LocationUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }

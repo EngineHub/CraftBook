@@ -24,7 +24,7 @@ public abstract class PinSet {
         if (getOutput(outputId, ic) != powered) {
             Location block = getPinLocation(outputId + getInputCount(), ic);
 
-            if (block.getType() != BlockTypes.LEVER) return; // Can't set this.
+            if (block.getBlockType() != BlockTypes.LEVER) return; // Can't set this.
 
             if (powered)
                 block.offer(block.getOrCreate(PoweredData.class).get());
@@ -51,7 +51,7 @@ public abstract class PinSet {
     }
 
     public boolean isValid(int id, IC ic) {
-        BlockType type = getPinLocation(id, ic).getType();
+        BlockType type = getPinLocation(id, ic).getBlockType();
 
         return type == BlockTypes.REDSTONE_WIRE || type == BlockTypes.LEVER;
     }

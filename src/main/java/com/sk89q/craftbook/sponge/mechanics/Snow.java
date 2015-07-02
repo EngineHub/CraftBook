@@ -17,10 +17,10 @@ public class Snow extends SpongeMechanic {
 
     @Subscribe
     public void onBlockTick(BlockRandomTickEvent event) {
-        if ((event.getBlock().getType() == BlockTypes.SNOW_LAYER || event.getBlock().getType() == BlockTypes.SNOW)) {
+        if ((event.getBlock().getBlockType() == BlockTypes.SNOW_LAYER || event.getBlock().getBlockType() == BlockTypes.SNOW)) {
             if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
                 //Higher the snow.
-                if (event.getBlock().getType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()) && event.getBlock().getTemperature() <= 0.15f) //Only increase snow at valid blocks, where snow could actually fall.
+                if (event.getBlock().getBlockType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()) && event.getBlock().getTemperature() <= 0.15f) //Only increase snow at valid blocks, where snow could actually fall.
                     increaseSnow(event.getBlock(), true);
             } else if(!isBlockBuried(event.getBlock())) { //Only melt if on top, and too hot.
                 //Lower the snow.
@@ -44,7 +44,7 @@ public class Snow extends SpongeMechanic {
             int currentHeight = data.getValue();
             currentHeight ++;
             if(currentHeight > data.getMaxValue())
-                location.replaceWith(BlockTypes.SNOW);
+                location.setBlockType(BlockTypes.SNOW);
             else {
                 if(disperse) {
                     disperseSnow(location, null);
@@ -54,10 +54,10 @@ public class Snow extends SpongeMechanic {
                 }
             }
 
-            if(location.getRelative(Direction.DOWN).getType() == BlockTypes.WATER || location.getRelative(Direction.DOWN).getType() == BlockTypes.FLOWING_WATER)
-                location.getRelative(Direction.DOWN).replaceWith(BlockTypes.ICE);
+            if(location.getRelative(Direction.DOWN).getBlockType() == BlockTypes.WATER || location.getRelative(Direction.DOWN).getBlockType() == BlockTypes.FLOWING_WATER)
+                location.getRelative(Direction.DOWN).setBlockType(BlockTypes.ICE);
         } else {
-            location.replaceWith(BlockTypes.SNOW_LAYER);
+            location.setBlockType(BlockTypes.SNOW_LAYER);
         }
     }
 
@@ -68,13 +68,13 @@ public class Snow extends SpongeMechanic {
             int currentHeight = data.getValue();
             currentHeight --;
             if(currentHeight < data.getMinValue())
-                location.replaceWith(BlockTypes.AIR);
+                location.setBlockType(BlockTypes.AIR);
             else {
                 data.setValue(currentHeight);
                 location.offer(data);
             }
-        } else if (location.getType() == BlockTypes.SNOW) {
-            location.replaceWith(BlockTypes.SNOW_LAYER);
+        } else if (location.getBlockType() == BlockTypes.SNOW) {
+            location.setBlockType(BlockTypes.SNOW_LAYER);
             dataOptional = location.getOrCreate(LayeredData.class);
             LayeredData data = dataOptional.get();
             data.setValue(data.getMaxValue());
@@ -103,14 +103,14 @@ public class Snow extends SpongeMechanic {
                 increaseSnow(relative, false);
                 if(dir != Direction.NONE) {
                     decreaseSnow(location);
-                    CraftBookPlugin.game.getSyncScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin>inst(), new Runnable() {
+                    CraftBookPlugin.game.getScheduler().getTaskBuilder().delay(40L).execute(new Runnable() {
                         @Override
                         public void run() {
                             disperseSnow(relative, dir.getOpposite());
                             if(isBlockBuried(location))
                                 disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
                         }
-                    }, 40L);
+                    }).submit(CraftBookPlugin.inst());
                 }
                 break;
             }
@@ -120,26 +120,26 @@ public class Snow extends SpongeMechanic {
     public boolean canSeeSky(Location location) {
         while(location.getBlockY() < location.getExtent().getBlockMax().getY()) {
             location = location.getRelative(Direction.UP);
-            if(location.getType() != BlockTypes.AIR && location.getType() != BlockTypes.LEAVES && location.getType() != BlockTypes.LEAVES2)
+            if(location.getBlockType() != BlockTypes.AIR && location.getBlockType() != BlockTypes.LEAVES && location.getBlockType() != BlockTypes.LEAVES2)
                 return false;
         }
         return true;
     }
 
     public boolean canPlaceSnowAt(Location location) {
-        if(location.getType() == BlockTypes.SNOW_LAYER) return true;
-        if(location.getType() == BlockTypes.WATER || location.getType() == BlockTypes.FLOWING_WATER || location.getType() == BlockTypes.LAVA || location.getType() == BlockTypes.FLOWING_LAVA) return false;
-        return location.getType().isReplaceable();
+        if(location.getBlockType() == BlockTypes.SNOW_LAYER) return true;
+        if(location.getBlockType() == BlockTypes.WATER || location.getBlockType() == BlockTypes.FLOWING_WATER || location.getBlockType() == BlockTypes.LAVA || location.getBlockType() == BlockTypes.FLOWING_LAVA) return false;
+        return location.getBlockType().isReplaceable();
     }
 
     public boolean isBlockBuried(Location location) {
-        return location.getRelative(Direction.UP).getType() == BlockTypes.SNOW_LAYER || location.getRelative(Direction.UP).getType() == BlockTypes.SNOW;
+        return location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW_LAYER || location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW;
     }
 
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
+        if (event.getBlock().getBlockType() == BlockTypes.SNOW || event.getBlock().getBlockType() == BlockTypes.SNOW_LAYER) {
             // Occurred in a block where a snow-related change could have happened.
             for (Location block : event.getAffectedBlocks()) {
 
