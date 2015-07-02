@@ -96,7 +96,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives jar
+    archives shadowJar
     archives sourcesJar
     archives javadocJar
 }
@@ -109,6 +109,7 @@ build.dependsOn(javadocJar)
 shadowJar {
     classifier 'dist'
     dependencies {
+        include(dependency("com.owlike:genson"))
     }
     exclude 'GradleStart**'
     exclude '.cache'
