@@ -13,7 +13,7 @@ public class EmptyDecay extends SpongeMechanic {
     @Subscribe
     public void onVehicleExit(EntityDismountEvent event) {
 
-        //TODO if (event.getDismounted() instanceof Minecart) event.getGame().getSyncScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin> inst(), new MinecartDecay((Minecart) event.getDismounted()), 40L);
+        if (event.getDismounted() instanceof Minecart) event.getGame().getSyncScheduler().runTaskAfter(CraftBookPlugin.<CraftBookPlugin> inst(), new MinecartDecay((Minecart) event.getDismounted()), 40L);
     }
 
     public static class MinecartDecay implements Runnable {

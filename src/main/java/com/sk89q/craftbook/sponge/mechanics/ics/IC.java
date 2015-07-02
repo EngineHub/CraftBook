@@ -1,18 +1,15 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import java.lang.reflect.Field;
-
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.data.DataSerializable;
-import org.spongepowered.api.data.MemoryDataContainer;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import org.spongepowered.api.world.Location;
 
-public abstract class IC implements DataSerializable {
+public abstract class IC {
 
-    public ICType<? extends IC> type;
-    public Location block;
+    public transient ICType<? extends IC> type;
+    public transient Location block;
     public boolean[] pinstates;
+
+    public IC() {}
 
     public IC(ICType<? extends IC> type, Location block) {
         this.type = type;
@@ -45,23 +42,5 @@ public abstract class IC implements DataSerializable {
 
     public boolean[] getPinStates() {
         return pinstates;
-    }
-
-    @Override
-    public DataContainer toContainer() {
-
-        DataContainer container = new MemoryDataContainer();
-
-        for (Field field : this.getClass().getFields()) {
-            try {
-                container.set(DataQuery.of(field.getName()), field.get(this));
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return container;
     }
 }

@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.EnumSet;
-
+import com.flowpowered.math.vector.Vector3d;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -15,9 +16,7 @@ import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
-import com.flowpowered.math.vector.Vector3d;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.SignUtil;
+import java.util.EnumSet;
 
 public class Elevator extends SpongeBlockMechanic {
 
@@ -47,9 +46,9 @@ public class Elevator extends SpongeBlockMechanic {
 
         if (destination == block) return; // This elevator has no destination.
 
-        Location floor = destination.getExtent().getLocation((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
+        Location floor = destination.getExtent().getFullBlock((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
         // well, unless that's already a ceiling.
-        if (floor.getBlockType().isSolidCube()) {
+        if (floor.getType().isSolidCube()) {
             floor = floor.getRelative(Direction.DOWN);
         }
 
@@ -58,7 +57,7 @@ public class Elevator extends SpongeBlockMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getBlockType().isSolidCube()) {
+            if (!floor.getType().isSolidCube()) {
                 foundFree++;
             } else {
                 foundGround = true;
@@ -98,11 +97,11 @@ public class Elevator extends SpongeBlockMechanic {
 
         if (direction == Direction.UP || direction == Direction.DOWN) {
 
-            while (direction == Direction.UP ? y < 256 : y >= 0) {
+            while (direction == Direction.UP ? y < 256 : y > 0) {
 
                 y += direction == Direction.UP ? 1 : -1;
 
-                Location test = block.getExtent().getLocation(block.getBlockX(), y, block.getBlockZ());
+                Location test = block.getExtent().getFullBlock(block.getBlockX(), y, block.getBlockZ());
 
                 if (SignUtil.isSign(test)) {
                     // It's a sign.

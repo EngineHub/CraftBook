@@ -1,21 +1,5 @@
 package com.sk89q.craftbook.sponge;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-
-import org.slf4j.Logger;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartedEvent;
-import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.service.config.DefaultConfig;
-
 import com.google.inject.Inject;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
@@ -34,6 +18,21 @@ import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.slf4j.Logger;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.state.ServerStartedEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.service.config.DefaultConfig;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
 public class CraftBookPlugin extends CraftBookAPI {
@@ -76,6 +75,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         game = event.getGame();
         setInstance(this);
 
+        new File("craftbook-data").mkdir();
+
         logger.info("Starting CraftBook");
 
         config = new SpongeConfiguration(this, mainConfig, configManager);
@@ -105,6 +106,12 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
 
         SelfTriggerManager.initialize();
+    }
+
+    @Subscribe
+    public void onServerStopping(ServerStoppingEvent event) {
+
+        cache.clearAll();
     }
 
     @Override

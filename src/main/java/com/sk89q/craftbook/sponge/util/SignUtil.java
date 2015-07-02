@@ -18,7 +18,7 @@ public class SignUtil {
 
     public static boolean isSign(Location block) {
 
-        return block.getBlockType() == BlockTypes.STANDING_SIGN || block.getBlockType() == BlockTypes.WALL_SIGN;
+        return block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN;
     }
 
     /**
