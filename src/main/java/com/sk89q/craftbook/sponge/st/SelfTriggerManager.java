@@ -50,7 +50,7 @@ public class SelfTriggerManager {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
                         for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
-                            Location block = event.getChunk().getLocation(x, y, z);
+                            Location block = event.getChunk().getLocation(x, y, z).add(event.getChunk().getBlockMin().toDouble());
                             for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin>inst().enabledMechanics) {
                                 if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
                                     if (((SpongeBlockMechanic) mechanic).isValid(block))
