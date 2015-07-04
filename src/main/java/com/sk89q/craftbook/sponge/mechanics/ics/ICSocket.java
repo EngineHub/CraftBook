@@ -15,6 +15,7 @@ import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 
 import java.util.HashMap;
@@ -79,6 +80,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public BaseICData createICData(Location block) {
 
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
+            if(block.getExtent() instanceof Chunk)
+                block = ((Chunk) block.getExtent()).getWorld().getLocation(block.getX(), block.getY(), block.getZ());
             SignData signData = ((Sign) block.getTileEntity().get()).getData().get();
             ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(signData, 1));
             if (icType == null) return null;
