@@ -14,6 +14,7 @@ public class Footprints extends SpongeMechanic {
         if (event.getOldLocation().getBlockPosition().equals(event.getNewLocation().getBlockPosition())) return;
 
         // TODO make this only place footprints every so often, and only on certain blocks.
-        event.getEntity().getWorld().spawnParticles(event.getGame().getRegistry().getParticleEffectBuilder(ParticleTypes.FOOTSTEP).build(), event.getEntity().getLocation().getPosition());
+        if(event.getEntity().isOnGround())
+            event.getEntity().getWorld().spawnParticles(event.getGame().getRegistry().getParticleEffectBuilder(ParticleTypes.FOOTSTEP).build(), event.getEntity().getLocation().getPosition());
     }
 }
