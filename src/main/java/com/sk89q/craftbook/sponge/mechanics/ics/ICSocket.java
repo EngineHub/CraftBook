@@ -93,12 +93,12 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 data.ic = icType.buildIC(block);
                 if(data.ic instanceof SelfTriggeringIC && SignUtil.getTextRaw(signData, 1).endsWith("S") ||  SignUtil.getTextRaw(signData, 1).endsWith(" ST"))
                     ((SelfTriggeringIC)data.ic).selfTriggering = true;
-                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SelfTriggerManager.register(this, block);
             } else if(data.ic.block == null) {
                 data.ic.block = block;
                 data.ic.type = icType;
-                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SelfTriggerManager.register(this, block);
             }
+
+            if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SelfTriggerManager.register(this, block);
 
             return data;
         }
