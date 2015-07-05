@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -72,7 +73,7 @@ public class Footprints extends AbstractCraftBookMechanic {
                     }
                 }, event.getPlayer().isSprinting() ? 7 : 10);
             } catch (Throwable e) {
-                CraftBookPlugin.logger().warning("Footprints do not work without ProtocolLib!");
+                CraftBookPlugin.logger().log(Level.WARNING, "Failed to send footprints for " + event.getPlayer().getName(), e);
                 return;
             }
         }
