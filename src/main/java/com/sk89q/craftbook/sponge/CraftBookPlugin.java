@@ -5,11 +5,7 @@ import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
-import com.sk89q.craftbook.sponge.mechanics.Elevator;
-import com.sk89q.craftbook.sponge.mechanics.Footprints;
-import com.sk89q.craftbook.sponge.mechanics.HeadDrops;
-import com.sk89q.craftbook.sponge.mechanics.Snow;
-import com.sk89q.craftbook.sponge.mechanics.TreeLopper;
+import com.sk89q.craftbook.sponge.mechanics.*;
 import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
 import com.sk89q.craftbook.sponge.mechanics.area.Door;
 import com.sk89q.craftbook.sponge.mechanics.area.Gate;
@@ -17,6 +13,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
+import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -98,14 +95,15 @@ public class CraftBookPlugin extends CraftBookAPI {
                     enabledMechanics.add(mechanic);
                     game.getEventManager().register(this, mechanic);
 
+                    if(!SelfTriggerManager.isInitialized && mechanic instanceof SelfTriggeringMechanic)
+                        SelfTriggerManager.initialize();
+
                     logger.info("Enabled: " + mech.getKey());
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
             }
         }
-
-        SelfTriggerManager.initialize();
     }
 
     @Subscribe

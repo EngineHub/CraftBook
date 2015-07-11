@@ -16,11 +16,15 @@ import java.util.Map.Entry;
 
 public class SelfTriggerManager {
 
+    public static boolean isInitialized = false;
+
     private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<Location, SelfTriggeringMechanic>();
 
     public static void initialize() {
         CraftBookPlugin.game.getScheduler().getTaskBuilder().interval(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
         CraftBookPlugin.game.getEventManager().register(CraftBookPlugin.inst(), new SelfTriggerManager());
+
+        isInitialized = true;
     }
 
     public static void register(SelfTriggeringMechanic mechanic, Location location) {
