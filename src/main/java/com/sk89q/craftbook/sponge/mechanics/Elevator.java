@@ -82,6 +82,7 @@ public class Elevator extends SpongeBlockMechanic {
         // floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
         entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY() - 1, 0)), new Vector3d(0, 0, 0), EnumSet.<RelativePositions> of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
+        if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("You've gone " + (direction == Direction.DOWN ? "down" : "up") + " a floor!"));
     }
 
     /**
