@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
@@ -20,6 +21,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.HashMap;
 
+@Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
 
     public static final HashMap<String, PinSet> PINSETS = new HashMap<String, PinSet>();

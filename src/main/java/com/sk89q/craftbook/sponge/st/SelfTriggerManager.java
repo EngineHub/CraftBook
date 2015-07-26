@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.sponge.st;
 
-import com.sk89q.craftbook.core.Mechanic;
+import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
+import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.world.ChunkLoadEvent;
 import org.spongepowered.api.event.world.ChunkUnloadEvent;
@@ -55,10 +57,16 @@ public class SelfTriggerManager {
                     for (int z = 0; z < 16; z++) {
                         for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
                             Location block = event.getChunk().getLocation(x, y, z).add(event.getChunk().getBlockMin().toDouble());
-                            for (Mechanic mechanic : CraftBookPlugin.<CraftBookPlugin>inst().enabledMechanics) {
-                                if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                                    if (((SpongeBlockMechanic) mechanic).isValid(block))
-                                        register((SelfTriggeringMechanic) mechanic, block);
+                            for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+                                if(!module.isEnabled()) continue;
+                                try {
+                                    SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
+                                    if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
+                                        if (((SpongeBlockMechanic) mechanic).isValid(block))
+                                            register((SelfTriggeringMechanic) mechanic, block);
+                                    }
+                                } catch (ModuleNotInstantiatedException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }

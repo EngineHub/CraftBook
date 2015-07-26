@@ -1,17 +1,15 @@
 package com.sk89q.craftbook.sponge;
 
+import com.google.common.base.Function;
+import com.me4502.modularframework.module.ModuleWrapper;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
-
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-
-import com.google.common.base.Function;
-import com.sk89q.craftbook.core.Mechanic;
 
 public class SpongeConfiguration {
 
@@ -43,9 +41,9 @@ public class SpongeConfiguration {
 
             List<String> disabledMechanics = new ArrayList<String>();
 
-            for(Entry<String, Class<? extends Mechanic>> entry : plugin.getAvailableMechanics()) {
-                if(!enabledMechanics.contains(entry.getKey())) {
-                    disabledMechanics.add(entry.getKey());
+            for(ModuleWrapper entry : plugin.moduleController.getModules()) {
+                if(!enabledMechanics.contains(entry.getName())) {
+                    disabledMechanics.add(entry.getName());
                 }
             }
 

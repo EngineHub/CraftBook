@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.me4502.modularframework.module.Module;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -11,6 +12,7 @@ import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.util.SignUtil;
 
+@Module(moduleName = "Door", onEnable="onInitialize", onDisable="onDisable")
 public class Door extends SimpleArea {
 
     public Location getOtherEnd(Location block, Direction back) {

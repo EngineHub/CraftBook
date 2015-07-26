@@ -1,11 +1,13 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
+import com.me4502.modularframework.module.Module;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.living.LivingMoveEvent;
 
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 
+@Module(moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic {
 
     @Subscribe

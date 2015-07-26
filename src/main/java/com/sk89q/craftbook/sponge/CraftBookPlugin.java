@@ -1,17 +1,14 @@
 package com.sk89q.craftbook.sponge;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.me4502.modularframework.ModuleController;
+import com.me4502.modularframework.ShadedModularFramework;
+import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
+import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
-import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
-import com.sk89q.craftbook.sponge.mechanics.*;
-import com.sk89q.craftbook.sponge.mechanics.area.Bridge;
-import com.sk89q.craftbook.sponge.mechanics.area.Door;
-import com.sk89q.craftbook.sponge.mechanics.area.Gate;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
-import com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
@@ -27,16 +24,11 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
 public class CraftBookPlugin extends CraftBookAPI {
 
     public static Game game;
-
-    public Set<Mechanic> enabledMechanics = new HashSet<Mechanic>();
 
     MechanicDataCache cache;
 
@@ -54,6 +46,8 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Inject
     public PluginContainer container;
+
+    public ModuleController moduleController;
 
     protected SpongeConfiguration config;
 
@@ -87,21 +81,27 @@ public class CraftBookPlugin extends CraftBookAPI {
         cache = new SpongeDataCache();
         blockBagManager = new BlockBagManager();
 
-        for (Entry<String, Class<? extends Mechanic>> mech : getAvailableMechanics()) {
-
-            if (config.enabledMechanics.contains(mech.getKey()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
-                try {
-                    Mechanic mechanic = createMechanic(mech.getValue());
-                    enabledMechanics.add(mechanic);
-                    game.getEventManager().register(this, mechanic);
-
-                    if(!SelfTriggerManager.isInitialized && mechanic instanceof SelfTriggeringMechanic)
-                        SelfTriggerManager.initialize();
-
-                    logger.info("Enabled: " + mech.getKey());
-                } catch (Throwable t) {
-                    t.printStackTrace();
+        moduleController.enableModules(new Predicate<ModuleWrapper>() {
+            @Override
+            public boolean apply(ModuleWrapper input) {
+                if (config.enabledMechanics.contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
+                    logger.info("Enabled: " + input.getName());
+                    return true;
                 }
+
+                return false;
+            }
+        });
+
+        for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+            if (!module.isEnabled()) continue;
+            try {
+                if (module.getModule() instanceof SelfTriggeringMechanic && !SelfTriggerManager.isInitialized) {
+                    SelfTriggerManager.initialize();
+                    break;
+                }
+            } catch(ModuleNotInstantiatedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -109,6 +109,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Subscribe
     public void onServerStopping(ServerStoppingEvent event) {
 
+        moduleController.disableModules();
         cache.clearAll();
     }
 
@@ -116,32 +117,29 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
 
         logger.info("Enumerating Mechanics");
+
+        moduleController = ShadedModularFramework.registerModuleController(this, game);
+        File configDir = new File(mainConfig.getParent(), "mechanics");
+        configDir.mkdir();
+        moduleController.setConfigurationDirectory(configDir);
+
         //Standard Mechanics
-        registerSpongeMechanic(Elevator.class);
-        registerSpongeMechanic(Snow.class);
-        registerSpongeMechanic(Bridge.class);
-        registerSpongeMechanic(Door.class);
-        registerSpongeMechanic(Gate.class);
-        registerSpongeMechanic(Footprints.class);
-        registerSpongeMechanic(HeadDrops.class);
-        registerSpongeMechanic(TreeLopper.class);
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Elevator");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Snow");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.area.Bridge");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.area.Door");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.area.Gate");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Footprints");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.HeadDrops");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.TreeLopper");
 
         //Circuit Mechanics
-        registerSpongeMechanic(ICSocket.class);
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket");
 
         //Vehicle Mechanics
-        registerSpongeMechanic(EmptyDecay.class);
-        logger.info("Found " + getAvailableMechanics().size() + ".");
-    }
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
 
-    public boolean registerSpongeMechanic(Class<? extends SpongeMechanic> clazz) {
-
-        try {
-            return registerMechanic(clazz.getSimpleName(), clazz);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return false;
+        logger.info("Found " + moduleController.getModules().size() + ".");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -17,6 +18,7 @@ import org.spongepowered.api.world.extent.Extent;
 import java.util.HashSet;
 import java.util.Set;
 
+@Module(moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
 public class Gate extends SimpleArea {
 
     @Override

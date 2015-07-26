@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.base.Optional;
+import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.LocationUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.manipulator.block.TreeData;
 import org.spongepowered.api.data.type.TreeType;
@@ -12,10 +13,10 @@ import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import com.google.common.base.Optional;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import com.sk89q.craftbook.sponge.util.LocationUtil;
+import java.util.ArrayList;
+import java.util.List;
 
+@Module(moduleName = "TreeLopper", onEnable="onInitialize", onDisable="onDisable")
 public class TreeLopper extends SpongeMechanic {
 
     @Subscribe

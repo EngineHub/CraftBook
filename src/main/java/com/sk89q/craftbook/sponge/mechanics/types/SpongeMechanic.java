@@ -1,12 +1,11 @@
 package com.sk89q.craftbook.sponge.mechanics.types;
 
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
-
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class SpongeMechanic implements Mechanic {
 

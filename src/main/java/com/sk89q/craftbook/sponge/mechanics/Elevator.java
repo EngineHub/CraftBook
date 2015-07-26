@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -18,6 +19,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.EnumSet;
 
+@Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeBlockMechanic {
 
     @Subscribe

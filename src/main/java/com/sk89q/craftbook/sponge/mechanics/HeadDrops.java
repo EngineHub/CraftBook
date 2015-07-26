@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import java.util.UUID;
-
+import com.google.common.base.Optional;
+import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.manipulator.OwnableData;
 import org.spongepowered.api.data.manipulator.SkullData;
@@ -16,10 +18,9 @@ import org.spongepowered.api.event.entity.living.LivingDropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import com.google.common.base.Optional;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import java.util.UUID;
 
+@Module(moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic {
 
     @Subscribe

@@ -1,5 +1,10 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.google.inject.Inject;
+import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -9,9 +14,12 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
-import com.sk89q.craftbook.sponge.util.SignUtil;
-
+@Module(moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
 public class Bridge extends SimpleArea {
+
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
 
     public Location getOtherEnd(Location block) {
 

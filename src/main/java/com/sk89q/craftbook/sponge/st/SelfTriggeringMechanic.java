@@ -4,5 +4,5 @@ import org.spongepowered.api.world.Location;
 
 public interface SelfTriggeringMechanic {
 
-    public void onThink(Location location);
+    void onThink(Location location);
 }
