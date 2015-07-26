@@ -3,6 +3,8 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.SpongeConfiguration;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
@@ -21,11 +23,20 @@ public class Bridge extends SimpleArea {
     @ModuleConfiguration
     public ConfigurationNode config;
 
+    @Override
+    public void onInitialize() throws CraftBookException {
+        maximumLength = SpongeConfiguration.<Integer>getValue(config.getNode("maximum-length"), 16, "The maximum length the bridge can be.");
+        maximumWidth = SpongeConfiguration.<Integer>getValue(config.getNode("maximum-width"), 5, "The maximum width each side of the bridge can be. The overall max width is this*2 + 1.");
+    }
+
+    private int maximumLength;
+    private int maximumWidth;
+
     public Location getOtherEnd(Location block) {
 
         Direction back = SignUtil.getBack(block);
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < maximumLength; i++) {
 
             block = block.getRelative(back);
 
@@ -71,6 +82,7 @@ public class Bridge extends SimpleArea {
             Location otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
 
             while(true) {
+                if(leftBlocks >= maximumWidth) break;
                 if(left.getBlock().equals(baseBlock.getBlock()) && otherLeft.getBlock().equals(baseBlock.getBlock())) {
                     leftBlocks ++;
                     left = left.getRelative(SignUtil.getLeft(block));
@@ -84,6 +96,7 @@ public class Bridge extends SimpleArea {
             Location otherRight = otherBase.getRelative(SignUtil.getRight(block));
 
             while(true) {
+                if(rightBlocks >= maximumWidth) break;
                 if(right.getBlock().equals(baseBlock.getBlock()) && otherRight.getBlock().equals(baseBlock.getBlock())) {
                     rightBlocks ++;
                     right = right.getRelative(SignUtil.getRight(block));

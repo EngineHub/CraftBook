@@ -2,6 +2,7 @@ package com.sk89q.craftbook.sponge;
 
 import com.google.common.base.Function;
 import com.me4502.modularframework.module.ModuleWrapper;
+import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -56,14 +57,13 @@ public class SpongeConfiguration {
         }
     }
 
-    protected <T> T getValue(CommentedConfigurationNode node, T defaultValue, String comment) {
-        if(comment != null) {
-            node.setComment(comment);
-        }
-
+    public static <T> T getValue(ConfigurationNode node, T defaultValue, String comment) {
         if(node.isVirtual()) {
             node.setValue(defaultValue);
-            return defaultValue;
+        }
+
+        if(comment != null && node instanceof CommentedConfigurationNode) {
+            ((CommentedConfigurationNode)node).setComment(comment);
         }
 
         return node.getValue(new Function<Object, T>() {
