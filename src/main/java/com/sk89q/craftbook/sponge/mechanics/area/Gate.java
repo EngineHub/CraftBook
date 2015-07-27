@@ -1,7 +1,12 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.SpongeConfiguration;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.EntityInteractionTypes;
@@ -20,6 +25,17 @@ import java.util.Set;
 
 @Module(moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
 public class Gate extends SimpleArea {
+
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    @Override
+    public void onInitialize() throws CraftBookException {
+        searchRadius = SpongeConfiguration.<Integer>getValue(config.getNode("search-radius"), 5, "The maximum area around the sign the gate can search.");
+    }
+
+    private int searchRadius = 5;
 
     @Override
     @Subscribe
@@ -50,8 +66,6 @@ public class Gate extends SimpleArea {
             }
         }
     }
-
-    private static int searchRadius = 5;
 
     public void findColumns(Location block, Set<GateColumn> columns) {
 
