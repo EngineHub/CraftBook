@@ -130,7 +130,7 @@ public class Gate extends SimpleArea {
 
         if (SignUtil.getTextRaw(sign.getData().get(), 1).equals("[Gate]")) {
 
-            Set<GateColumn> columns = new HashSet<GateColumn>();
+            Set<GateColumn> columns = new HashSet<>();
 
             findColumns(block, columns);
 

@@ -24,7 +24,7 @@ import java.util.HashMap;
 @Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
 
-    public static final HashMap<String, PinSet> PINSETS = new HashMap<String, PinSet>();
+    public static final HashMap<String, PinSet> PINSETS = new HashMap<>();
 
     static {
         PINSETS.put("SISO", new PinsSISO());

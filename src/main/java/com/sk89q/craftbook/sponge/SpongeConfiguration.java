@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge;
 
-import com.google.common.base.Function;
 import com.me4502.modularframework.module.ModuleWrapper;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -40,7 +39,7 @@ public class SpongeConfiguration {
 
             enabledMechanics = getValue(config.getNode("enabled-mechanics"), Arrays.asList("Elevator"), "The list of mechanics to load.");
 
-            List<String> disabledMechanics = new ArrayList<String>();
+            List<String> disabledMechanics = new ArrayList<>();
 
             for(ModuleWrapper entry : plugin.moduleController.getModules()) {
                 if(!enabledMechanics.contains(entry.getName())) {
@@ -66,15 +65,11 @@ public class SpongeConfiguration {
             ((CommentedConfigurationNode)node).setComment(comment);
         }
 
-        return node.getValue(new Function<Object, T>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public T apply(Object input) {
+        return node.getValue(input -> {
 
-                //Add converters into here where necessary.
+            //Add converters into here where necessary.
 
-                return (T)input;
-            }
+            return (T)input;
         }, defaultValue);
     }
 }

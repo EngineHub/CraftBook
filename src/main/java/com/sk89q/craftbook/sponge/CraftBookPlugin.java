@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge;
 
-import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.me4502.modularframework.ModuleController;
 import com.me4502.modularframework.ShadedModularFramework;
@@ -81,16 +80,13 @@ public class CraftBookPlugin extends CraftBookAPI {
         cache = new SpongeDataCache();
         blockBagManager = new BlockBagManager();
 
-        moduleController.enableModules(new Predicate<ModuleWrapper>() {
-            @Override
-            public boolean apply(ModuleWrapper input) {
-                if (config.enabledMechanics.contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
-                    logger.info("Enabled: " + input.getName());
-                    return true;
-                }
-
-                return false;
+        moduleController.enableModules(input -> {
+            if (config.enabledMechanics.contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
+                logger.info("Enabled: " + input.getName());
+                return true;
             }
+
+            return false;
         });
 
         for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {

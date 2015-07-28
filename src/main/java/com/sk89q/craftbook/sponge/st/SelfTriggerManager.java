@@ -50,24 +50,21 @@ public class SelfTriggerManager {
 
         // TODO change this if the world explodes.
 
-        event.getGame().getScheduler().getTaskBuilder().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
-                            Location block = event.getChunk().getLocation(x, y, z).add(event.getChunk().getBlockMin().toDouble());
-                            for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
-                                if(!module.isEnabled()) continue;
-                                try {
-                                    SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
-                                    if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                                        if (((SpongeBlockMechanic) mechanic).isValid(block))
-                                            register((SelfTriggeringMechanic) mechanic, block);
-                                    }
-                                } catch (ModuleNotInstantiatedException e) {
-                                    e.printStackTrace();
+        event.getGame().getScheduler().getTaskBuilder().execute(() -> {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
+                        Location block = event.getChunk().getLocation(x, y, z).add(event.getChunk().getBlockMin().toDouble());
+                        for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+                            if(!module.isEnabled()) continue;
+                            try {
+                                SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
+                                if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
+                                    if (((SpongeBlockMechanic) mechanic).isValid(block))
+                                        register((SelfTriggeringMechanic) mechanic, block);
                                 }
+                            } catch (ModuleNotInstantiatedException e) {
+                                e.printStackTrace();
                             }
                         }
                     }

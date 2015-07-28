@@ -27,8 +27,6 @@ public class SpongeDataCache extends MechanicDataCache {
                 data = jsonConverter.deserialize(reader, clazz);
 
                 reader.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

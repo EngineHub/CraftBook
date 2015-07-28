@@ -10,16 +10,16 @@ import java.util.Set;
 
 public class ICManager {
 
-    public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<ICType<? extends IC>>();
+    public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<>();
 
     static {
 
-        registerICType(new ICType<Repeater>("MC1000", "REPEATER", Repeater.class));
-        registerICType(new ICType<Inverter>("MC1001", "INVERTER", Inverter.class));
+        registerICType(new ICType<>("MC1000", "REPEATER", Repeater.class));
+        registerICType(new ICType<>("MC1001", "INVERTER", Inverter.class));
 
-        registerICType(new ICType<Clock>("MC1421", "CLOCK", Clock.class));
+        registerICType(new ICType<>("MC1421", "CLOCK", Clock.class));
 
-        registerICType(new ICType<AndGate>("MC3002", "AND", AndGate.class, "3ISO"));
+        registerICType(new ICType<>("MC3002", "AND", AndGate.class, "3ISO"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {

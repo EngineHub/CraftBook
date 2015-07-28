@@ -23,7 +23,7 @@ public class TreeLopper extends SpongeMechanic {
     public void onBlockBreak(PlayerBreakBlockEvent event) {
 
         if(event.getBlock().getBlockType() == BlockTypes.LOG || event.getBlock().getBlockType() == BlockTypes.LOG2) {
-            checkBlocks(event.getBlock(), event.getEntity(), event.getBlock().getData(TreeData.class).get().getValue(), new ArrayList<Location>());
+            checkBlocks(event.getBlock(), event.getEntity(), event.getBlock().getData(TreeData.class).get().getValue(), new ArrayList<>());
         }
     }
 
