@@ -48,18 +48,18 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for (Location block : event.getAffectedBlocks()) {
+        for (Location block : event.getLocations()) {
 
             BaseICData data = createICData(block);
             if (data == null) continue;
 
-            Direction facing = LocationUtil.getFacing(block, event.getBlock());
+            Direction facing = LocationUtil.getFacing(block, event.getLocation());
             if(facing == null) return; //Something is wrong here.
 
             boolean powered = block.getRelative(facing).isBlockPowered();//block.getRelative(facing).isFacePowered(facing.getOpposite());
 
-            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getBlock()), data.ic)) {
-                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getBlock()), powered, data.ic);
+            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getLocation()), data.ic)) {
+                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getLocation()), powered, data.ic);
                 data.ic.trigger();
             }
         }

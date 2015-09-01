@@ -32,9 +32,7 @@ public class SpongeDataCache extends MechanicDataCache {
             }
 
             return data;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

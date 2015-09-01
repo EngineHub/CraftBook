@@ -20,7 +20,7 @@ public class SelfTriggerManager {
 
     public static boolean isInitialized = false;
 
-    private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<Location, SelfTriggeringMechanic>();
+    private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
 
     public static void initialize() {
         CraftBookPlugin.game.getScheduler().getTaskBuilder().interval(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
@@ -34,9 +34,7 @@ public class SelfTriggerManager {
     }
 
     public static void unregisterAll(Extent extent) {
-        for (Location loc : selfTriggeringMechanics.keySet()) {
-            if (loc.inExtent(extent)) selfTriggeringMechanics.remove(loc);
-        }
+        selfTriggeringMechanics.keySet().stream().filter(loc -> loc.inExtent(extent)).forEach(selfTriggeringMechanics::remove);
     }
 
     public static void think() {

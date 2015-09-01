@@ -45,21 +45,21 @@ public class Gate extends SimpleArea {
 
         super.onPlayerInteract(event);
 
-        if (event.getBlock().getBlockType() == BlockTypes.FENCE) {
+        if (event.getBlock().getType() == BlockTypes.FENCE) {
 
-            int x = event.getBlock().getBlockX();
-            int y = event.getBlock().getBlockY();
-            int z = event.getBlock().getBlockZ();
+            int x = event.getLocation().getBlockX();
+            int y = event.getLocation().getBlockY();
+            int z = event.getLocation().getBlockZ();
 
             for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
                 for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
-                        if (SignUtil.isSign(event.getBlock().getExtent().getLocation(x1, y1, z1))) {
+                        if (SignUtil.isSign(event.getLocation().getExtent().getLocation(x1, y1, z1))) {
 
-                            Sign sign = (Sign) event.getBlock().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
+                            Sign sign = (Sign) event.getLocation().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
 
-                            triggerMechanic(event.getBlock().getExtent().getLocation(x1, y1, z1), sign, event.getEntity(), null);
+                            triggerMechanic(event.getLocation().getExtent().getLocation(x1, y1, z1), sign, event.getEntity(), null);
                         }
                     }
                 }
@@ -181,9 +181,8 @@ public class Gate extends SimpleArea {
 
         @Override
         public boolean equals(Object o) {
-            if (o instanceof GateColumn) return ((GateColumn) o).topBlock.getX() == topBlock.getX() && ((GateColumn) o).topBlock.getZ() == topBlock.getZ();
+            return o instanceof GateColumn && ((GateColumn) o).topBlock.getX() == topBlock.getX() && ((GateColumn) o).topBlock.getZ() == topBlock.getZ();
 
-            return false;
         }
     }
 

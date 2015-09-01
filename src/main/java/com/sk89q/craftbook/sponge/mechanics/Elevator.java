@@ -32,13 +32,13 @@ public class Elevator extends SpongeBlockMechanic {
 
         if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
-        if (SignUtil.isSign(event.getBlock())) {
+        if (SignUtil.isSign(event.getLocation())) {
 
             Sign sign = (Sign) event.getBlock().getTileEntity().get();
 
             boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
-            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getEntity(), event.getBlock(), down ? Direction.DOWN : Direction.UP);
+            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getEntity(), event.getLocation(), down ? Direction.DOWN : Direction.UP);
         }
     }
 

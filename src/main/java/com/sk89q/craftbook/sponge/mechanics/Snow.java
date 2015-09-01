@@ -6,7 +6,7 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.manipulator.block.LayeredData;
+import org.spongepowered.api.data.manipulator.mutable.block.LayeredData;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.block.BlockRandomTickEvent;
 import org.spongepowered.api.event.block.BlockUpdateEvent;
@@ -23,10 +23,10 @@ public class Snow extends SpongeMechanic {
             if (event.getBlock().getExtent().getWeather() != Weathers.CLEAR) {
                 //Higher the snow.
                 if (event.getBlock().getBlockType() == BlockTypes.SNOW_LAYER && canSeeSky(event.getBlock()) && event.getBlock().getTemperature() <= 0.15f) //Only increase snow at valid blocks, where snow could actually fall.
-                    increaseSnow(event.getBlock(), true);
-            } else if(!isBlockBuried(event.getBlock())) { //Only melt if on top, and too hot.
+                    increaseSnow(event.getLocation(), true);
+            } else if(!isBlockBuried(event.getLocation())) { //Only melt if on top, and too hot.
                 //Lower the snow.
-                Optional<LayeredData> data = event.getBlock().getData(LayeredData.class);
+                Optional<LayeredData> data = event.getBlock().get(LayeredData.class);
                 if(data.isPresent()) {
                     if(data.get().getValue() == 0)
                         return;
@@ -138,9 +138,9 @@ public class Snow extends SpongeMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        if (event.getBlock().getBlockType() == BlockTypes.SNOW || event.getBlock().getBlockType() == BlockTypes.SNOW_LAYER) {
+        if (event.getBlock().getType() == BlockTypes.SNOW || event.getBlock().getType() == BlockTypes.SNOW_LAYER) {
             // Occurred in a block where a snow-related change could have happened.
-            for (Location block : event.getAffectedBlocks()) {
+            for (Location block : event.getLocations()) {
 
             }
         }

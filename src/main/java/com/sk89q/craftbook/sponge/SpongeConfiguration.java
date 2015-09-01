@@ -7,9 +7,9 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpongeConfiguration {
 
@@ -37,15 +37,9 @@ public class SpongeConfiguration {
             }
             config = configManager.load();
 
-            enabledMechanics = getValue(config.getNode("enabled-mechanics"), Arrays.asList("Elevator"), "The list of mechanics to load.");
+            enabledMechanics = getValue(config.getNode("enabled-mechanics"), Collections.singletonList("Elevator"), "The list of mechanics to load.");
 
-            List<String> disabledMechanics = new ArrayList<>();
-
-            for(ModuleWrapper entry : plugin.moduleController.getModules()) {
-                if(!enabledMechanics.contains(entry.getName())) {
-                    disabledMechanics.add(entry.getName());
-                }
-            }
+            List<String> disabledMechanics = plugin.moduleController.getModules().stream().filter(entry -> !enabledMechanics.contains(entry.getName())).map(ModuleWrapper::getName).collect(Collectors.toList());
 
             config.getNode("disabled-mechanics").setValue(disabledMechanics).setComment("This contains all disabled mechanics. It is never read internally, but just acts as a convenient place to grab mechanics from.");
 

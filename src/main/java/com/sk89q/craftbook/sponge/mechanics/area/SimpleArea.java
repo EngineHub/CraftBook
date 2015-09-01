@@ -4,6 +4,7 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.data.manipulator.tileentity.SignData;
 import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
@@ -47,13 +48,13 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
         if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
 
-        if (SignUtil.isSign(event.getBlock())) {
+        if (SignUtil.isSign(event.getLocation())) {
 
-            Sign sign = (Sign) event.getBlock().getTileEntity().get();
+            Sign sign = (Sign) event.getBlock().get(Sign.class).get();
 
             if (isMechanicSign(sign)) {
 
-                if (triggerMechanic(event.getBlock(), sign, event.getEntity(), null)) {
+                if (triggerMechanic(event.getLocation(), sign, event.getEntity(), null)) {
                     event.setCancelled(true);
                 }
             }
@@ -63,7 +64,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     @Subscribe
     public void onBlockUpdate(BlockUpdateEvent event) {
 
-        for (Location block : event.getAffectedBlocks()) {
+        for (Location block : event.getLocations()) {
             if (SignUtil.isSign(block)) {
 
                 Sign sign = (Sign) block.getTileEntity().get();

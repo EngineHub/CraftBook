@@ -1,15 +1,14 @@
 package com.sk89q.craftbook.sponge.util;
 
+import com.google.common.base.Optional;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.manipulator.block.DirectionalData;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
+import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
-
-import com.google.common.base.Optional;
 
 /**
  * Convenience methods for dealing with some sign block data.
@@ -42,10 +41,10 @@ public class SignUtil {
      */
     public static Direction getFront(Location sign) {
 
-        Optional<DirectionalData> data = sign.getData(DirectionalData.class);
+        Optional<DirectionalData> data = sign.get(DirectionalData.class);
 
         if (data.isPresent())
-            return data.get().getValue();
+            return data.get().direction().get();
         else return null;
     }
 
@@ -195,6 +194,6 @@ public class SignUtil {
 
     public static Text getText(SignData sign, int line) {
 
-        return sign.getLine(line);
+        return sign.lines().get(line);
     }
 }
