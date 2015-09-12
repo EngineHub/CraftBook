@@ -33,24 +33,6 @@ public class Door extends SimpleArea {
     private int maximumLength;
     private int maximumWidth;
 
-    public Location getOtherEnd(Location block, Direction back) {
-
-        for (int i = 0; i < maximumLength; i++) {
-
-            block = block.getRelative(back);
-
-            if (SignUtil.isSign(block)) {
-                Sign sign = (Sign) block.getTileEntity().get();
-
-                if (isMechanicSign(sign)) {
-                    return block;
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
@@ -60,7 +42,7 @@ public class Door extends SimpleArea {
 
             Location baseBlock = block.getRelative(back);
 
-            Location otherSide = getOtherEnd(block, back);
+            Location otherSide = getOtherEnd(block, back, maximumLength);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
                 return true;

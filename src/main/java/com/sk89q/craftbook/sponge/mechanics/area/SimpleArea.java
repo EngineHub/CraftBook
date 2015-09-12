@@ -4,80 +4,80 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
-import org.spongepowered.api.entity.EntityInteractionTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.block.PoweredData;
 import org.spongepowered.api.entity.living.Human;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.BlockUpdateEvent;
-import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
-import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
-import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 import javax.annotation.Nullable;
 
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
-    @Subscribe
-    public void onSignChange(SignChangeEvent event) {
+    @Listener
+    public void onSignChange(ChangeSignEvent event) {
 
-        Player player = null;
-        if(event.getCause().isPresent() && event.getCause().get().getCause() instanceof Player)
-            player = (Player) event.getCause().get().getCause();
+        Player player;
+        if(event.getCause().first(Player.class).isPresent())
+            player = event.getCause().first(Player.class).get();
+        else
+            return;
 
         for(String line : getValidSigns()) {
-            if(SignUtil.getTextRaw(event.getCurrentData(), 1).equalsIgnoreCase(line)) {
-                if(player != null && !player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
+            if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
+                if(!player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
                     player.sendMessage(Texts.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
-                    SignData data = event.getCurrentData();
-                    data.setLine(1, Texts.of(line));
-                    event.setNewData(data);
+                    event.getText().lines().set(1, Texts.of(line));
                 }
             }
         }
     }
 
-    @Subscribe
-    public void onPlayerInteract(HumanInteractBlockEvent event) {
+    @Listener
+    public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        Human human;
+        if(event.getCause().first(Human.class).isPresent())
+            human = event.getCause().first(Human.class).get();
+        else
+            return;
 
-        if (SignUtil.isSign(event.getLocation())) {
-
-            Sign sign = (Sign) event.getBlock().get(Sign.class).get();
+        if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
+            Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
 
             if (isMechanicSign(sign)) {
 
-                if (triggerMechanic(event.getLocation(), sign, event.getEntity(), null)) {
+                if (triggerMechanic(event.getTargetBlock().getLocation().get(), sign, human, null)) {
                     event.setCancelled(true);
                 }
             }
         }
     }
 
-    @Subscribe
-    public void onBlockUpdate(BlockUpdateEvent event) {
+    @Listener
+    public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
 
-        for (Location block : event.getLocations()) {
-            if (SignUtil.isSign(block)) {
+        event.getRelatives().values().stream().filter(SignUtil::isSign).forEach(block -> {
 
-                Sign sign = (Sign) block.getTileEntity().get();
+            Sign sign = (Sign) block.getTileEntity();
 
-                if (isMechanicSign(sign)) {
-                    SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                    if (data.lastCurrent != (block.isBlockPowered() ? 15 : 0)) {
-                        triggerMechanic(block, sign, null, block.isBlockPowered());
-                        data.lastCurrent = block.isBlockPowered() ? 15 : 0;
-                    }
+            if (isMechanicSign(sign)) {
+                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
+                if (data.lastCurrent != (block.get(PoweredData.class).isPresent() ? 15 : 0)) {
+                    triggerMechanic(block, sign, null, block.get(Keys.POWERED).isPresent());
+                    data.lastCurrent = block.get(Keys.POWERED).isPresent() ? 15 : 0;
                 }
             }
-        }
+        });
     }
 
     /**
@@ -89,6 +89,20 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
      * @param forceState If the mechanic should forcibly enter a specific state
      */
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
+
+    public Location getOtherEnd(Location block, Direction back, int maximumLength) {
+        for (int i = 0; i < maximumLength; i++) {
+            block = block.getRelative(back);
+            if (SignUtil.isSign(block)) {
+                Sign sign = (Sign) block.getTileEntity().get();
+
+                if (isMechanicSign(sign)) {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
 
     @Override
     public boolean isValid(Location location) {

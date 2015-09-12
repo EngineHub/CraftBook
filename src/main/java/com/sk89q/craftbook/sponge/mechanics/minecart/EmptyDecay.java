@@ -5,17 +5,17 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.EntityDismountEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.DismountEntityEvent;
 
 @Module(moduleName = "MinecartEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
 public class EmptyDecay extends SpongeMechanic {
 
-    @Subscribe
-    public void onVehicleExit(EntityDismountEvent event) {
+    @Listener
+    public void onVehicleExit(DismountEntityEvent event) {
 
-        if (event.getDismounted() instanceof Minecart) {
-            event.getGame().getScheduler().getTaskBuilder().delay(40L).execute(new MinecartDecay((Minecart) event.getDismounted())).submit(CraftBookPlugin.inst());
+        if (event.getTargetEntity() instanceof Minecart) {
+            event.getGame().getScheduler().createTaskBuilder().delay(40L).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
     }
 

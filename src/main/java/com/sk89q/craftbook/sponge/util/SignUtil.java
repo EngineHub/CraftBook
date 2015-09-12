@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.sponge.util;
 
 import com.google.common.base.Optional;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.manipulator.mutable.block.DirectionalData;
@@ -16,8 +17,11 @@ import org.spongepowered.api.world.Location;
 public class SignUtil {
 
     public static boolean isSign(Location block) {
-
         return block.getBlockType() == BlockTypes.STANDING_SIGN || block.getBlockType() == BlockTypes.WALL_SIGN;
+    }
+
+    public static boolean isSign(BlockState block) {
+        return block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN;
     }
 
     /**
@@ -180,7 +184,7 @@ public class SignUtil {
 
     public static String getTextRaw(Sign sign, int line) {
 
-        Text text = getText(sign.getData().get(), line);
+        Text text = getText(sign.get(SignData.class).get(), line);
         if (text instanceof Literal) return ((Literal) text).getContent();
         return text.toString();
     }

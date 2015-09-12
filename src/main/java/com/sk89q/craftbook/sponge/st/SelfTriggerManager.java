@@ -5,10 +5,10 @@ import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.world.ChunkLoadEvent;
-import org.spongepowered.api.event.world.ChunkUnloadEvent;
-import org.spongepowered.api.event.world.WorldUnloadEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.world.UnloadWorldEvent;
+import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
+import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
@@ -23,8 +23,8 @@ public class SelfTriggerManager {
     private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
 
     public static void initialize() {
-        CraftBookPlugin.game.getScheduler().getTaskBuilder().interval(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
-        CraftBookPlugin.game.getEventManager().register(CraftBookPlugin.inst(), new SelfTriggerManager());
+        CraftBookPlugin.game.getScheduler().createTaskBuilder().interval(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
+        CraftBookPlugin.game.getEventManager().registerListeners(CraftBookPlugin.inst(), new SelfTriggerManager());
 
         isInitialized = true;
     }
@@ -43,16 +43,16 @@ public class SelfTriggerManager {
         }
     }
 
-    @Subscribe
-    public void onChunkLoad(final ChunkLoadEvent event) {
+    @Listener
+    public void onChunkLoad(LoadChunkEvent event) {
 
         // TODO change this if the world explodes.
 
-        event.getGame().getScheduler().getTaskBuilder().execute(() -> {
+        event.getGame().getScheduler().createTaskBuilder().execute(() -> {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
-                    for (int y = 0; y < event.getChunk().getWorld().getBlockMax().getY(); y++) {
-                        Location block = event.getChunk().getLocation(x, y, z).add(event.getChunk().getBlockMin().toDouble());
+                    for (int y = 0; y < event.getTargetChunk().getWorld().getBlockMax().getY(); y++) {
+                        Location block = event.getTargetChunk().getLocation(x, y, z).add(event.getTargetChunk().getBlockMin().toDouble());
                         for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
                             if(!module.isEnabled()) continue;
                             try {
@@ -71,13 +71,13 @@ public class SelfTriggerManager {
         }).submit(CraftBookPlugin.inst());
     }
 
-    @Subscribe
-    public void onChunkUnload(ChunkUnloadEvent event) {
-        unregisterAll(event.getChunk());
+    @Listener
+    public void onChunkUnload(UnloadChunkEvent event) {
+        unregisterAll(event.getTargetChunk());
     }
 
-    @Subscribe
-    public void onWorldUnload(WorldUnloadEvent event) {
-        unregisterAll(event.getWorld());
+    @Listener
+    public void onWorldUnload(UnloadWorldEvent event) {
+        unregisterAll(event.getTargetWorld());
     }
 }

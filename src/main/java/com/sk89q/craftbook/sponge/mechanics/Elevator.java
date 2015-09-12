@@ -6,11 +6,10 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityInteractionTypes;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.tileentity.SignChangeEvent;
-import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
-import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
@@ -22,23 +21,27 @@ import java.util.EnumSet;
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeBlockMechanic {
 
-    @Subscribe
-    public void onSignChange(SignChangeEvent event) {
+    @Listener
+    public void onSignChange(ChangeSignEvent event) {
 
     }
 
-    @Subscribe
-    public void onPlayerInteract(HumanInteractBlockEvent event) {
+    @Listener
+    public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        Human human;
+        if(event.getCause().first(Human.class).isPresent())
+            human = event.getCause().first(Human.class).get();
+        else
+            return;
 
-        if (SignUtil.isSign(event.getLocation())) {
+        if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
 
-            Sign sign = (Sign) event.getBlock().getTileEntity().get();
+            Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
 
             boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]");
 
-            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(event.getEntity(), event.getLocation(), down ? Direction.DOWN : Direction.UP);
+            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]")) transportEntity(human, event.getTargetBlock().getLocation().get(), down ? Direction.DOWN : Direction.UP);
         }
     }
 

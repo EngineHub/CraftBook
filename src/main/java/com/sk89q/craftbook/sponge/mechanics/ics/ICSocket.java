@@ -10,11 +10,12 @@ import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.manipulator.tileentity.SignData;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.BlockUpdateEvent;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
@@ -45,21 +46,27 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return "IC";
     }
 
-    @Subscribe
-    public void onBlockUpdate(BlockUpdateEvent event) {
+    @Listener
+    public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
 
-        for (Location block : event.getLocations()) {
+        BlockSnapshot source;
+        if(event.getCause().first(BlockSnapshot.class).isPresent())
+            source = event.getCause().first(BlockSnapshot.class).get();
+        else
+            return;
+
+        for (Location block : event.getRelatives().values()) {
 
             BaseICData data = createICData(block);
             if (data == null) continue;
 
-            Direction facing = LocationUtil.getFacing(block, event.getLocation());
+            Direction facing = LocationUtil.getFacing(block, source.getLocation().get());
             if(facing == null) return; //Something is wrong here.
 
-            boolean powered = block.getRelative(facing).isBlockPowered();//block.getRelative(facing).isFacePowered(facing.getOpposite());
+            boolean powered = block.getRelative(facing).get(Keys.POWERED).isPresent();//block.getRelative(facing).isFacePowered(facing.getOpposite());
 
-            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getLocation()), data.ic)) {
-                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, event.getLocation()), powered, data.ic);
+            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get()), data.ic)) {
+                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get()), powered, data.ic);
                 data.ic.trigger();
             }
         }
@@ -84,8 +91,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             if(block.getExtent() instanceof Chunk)
                 block = ((Chunk) block.getExtent()).getWorld().getLocation(block.getX(), block.getY(), block.getZ());
-            SignData signData = ((Sign) block.getTileEntity().get()).getData().get();
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(signData, 1));
+            Sign sign = ((Sign) block.getTileEntity().get());
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
             if (icType == null) return null;
 
             BaseICData data = getData(BaseICData.class, block);
@@ -93,7 +100,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             if (data.ic == null) {
                 // Initialize new IC.
                 data.ic = icType.buildIC(block);
-                if(data.ic instanceof SelfTriggeringIC && SignUtil.getTextRaw(signData, 1).endsWith("S") ||  SignUtil.getTextRaw(signData, 1).endsWith(" ST"))
+                if(data.ic instanceof SelfTriggeringIC && SignUtil.getTextRaw(sign, 1).endsWith("S") ||  SignUtil.getTextRaw(sign, 1).endsWith(" ST"))
                     ((SelfTriggeringIC)data.ic).selfTriggering = true;
             } else if(data.ic.block == null) {
                 data.ic.block = block;

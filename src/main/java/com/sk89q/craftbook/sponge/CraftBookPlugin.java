@@ -15,9 +15,9 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.ServerStartedEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.DefaultConfig;
@@ -59,8 +59,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         return logger;
     }
 
-    @Subscribe
-    public void onInitialization(ServerStartedEvent event) throws IllegalAccessException {
+    @Listener
+    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
 
         game = event.getGame();
         setInstance(this);
@@ -102,8 +102,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
     }
 
-    @Subscribe
-    public void onServerStopping(ServerStoppingEvent event) {
+    @Listener
+    public void onServerStopping(GameStoppingServerEvent event) {
 
         moduleController.disableModules();
         cache.clearAll();

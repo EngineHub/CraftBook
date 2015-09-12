@@ -5,16 +5,18 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.GameProfile;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.OwnableData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
 import org.spongepowered.api.data.type.SkullTypes;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.block.BlockBreakEvent;
-import org.spongepowered.api.event.block.BlockPlaceEvent;
-import org.spongepowered.api.event.entity.living.LivingDropItemEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.BreakBlockEvent;
+import org.spongepowered.api.event.block.PlaceBlockEvent;
+import org.spongepowered.api.event.inventory.DropItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -23,10 +25,16 @@ import java.util.UUID;
 @Module(moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic {
 
-    @Subscribe
-    public void onEntityDeath(LivingDropItemEvent event) {
+    @Listener
+    public void onEntityDeath(DropItemStackEvent.Pre event) {
 
-        EntityType type = event.getEntity().getType();
+        Entity entity;
+        if(event.getCause().first(Entity.class).isPresent())
+            entity = event.getCause().first(Entity.class).get();
+        else
+            return;
+
+        EntityType type = entity.getType();
 
         SkullData data = null;
         GameProfile profile = null;
@@ -34,20 +42,20 @@ public class HeadDrops extends SpongeMechanic {
         if (type == EntityTypes.PLAYER) {
             // This be a player.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
-            data.setValue(SkullTypes.PLAYER);
-            profile = ((Player) event.getEntity()).getProfile();
+            data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
+            profile = ((Player) entity).getProfile();
         } else if (type == EntityTypes.ZOMBIE) {
             // This be a zombie.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
-            data.setValue(SkullTypes.ZOMBIE);
+            data.set(Keys.SKULL_TYPE, SkullTypes.ZOMBIE);
         } else if (type == EntityTypes.CREEPER) {
             // This be a creeper.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
-            data.setValue(SkullTypes.CREEPER);
+            data.set(Keys.SKULL_TYPE, SkullTypes.CREEPER);
         } else if (type == EntityTypes.SKELETON) {
             // This be a skeleton.
             data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
-            data.setValue(SkullTypes.SKELETON);
+            data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
         } else {
 
             MobSkullType skullType = MobSkullType.getFromEntityType(type);
@@ -56,29 +64,28 @@ public class HeadDrops extends SpongeMechanic {
                 // Add extra mob.
                 profile = skullType.getProfile();
                 data = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(SkullData.class).get().create();
-                data.setValue(SkullTypes.PLAYER);
+                data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
             }
         }
 
         if (data != null) {
-            ItemStack stack = CraftBookPlugin.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).itemData(data).build();
+            ItemStack stack = CraftBookPlugin.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
                 OwnableData owner = stack.getOrCreate(OwnableData.class).get();
-                owner.setProfile(profile);
+                owner.set(Keys.OWNED_BY_PROFILE, profile);
                 stack.offer(owner);
             }
-            event.getDroppedItems().add(stack);
-            event.getDroppedItems();
+            event.addItem(stack.createSnapshot());
         }
     }
 
-    @Subscribe
-    public void onBlockPlace(BlockPlaceEvent event) {
+    @Listener
+    public void onBlockPlace(PlaceBlockEvent event) {
 
     }
 
-    @Subscribe
-    public void onBlockBreak(BlockBreakEvent event) {
+    @Listener
+    public void onBlockBreak(BreakBlockEvent event) {
 
     }
 

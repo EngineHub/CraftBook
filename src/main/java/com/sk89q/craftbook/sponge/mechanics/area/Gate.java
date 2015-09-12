@@ -9,11 +9,9 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.entity.EntityInteractionTypes;
 import org.spongepowered.api.entity.living.Human;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.living.human.HumanInteractBlockEvent;
-import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
@@ -37,29 +35,32 @@ public class Gate extends SimpleArea {
 
     private int searchRadius = 5;
 
-    @Override
-    @Subscribe
-    public void onPlayerInteract(HumanInteractBlockEvent event) {
+    @Listener
+    public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        if (event instanceof PlayerInteractBlockEvent && ((PlayerInteractBlockEvent) event).getInteractionType() != EntityInteractionTypes.USE) return;
+        Human human;
+        if(event.getCause().first(Human.class).isPresent())
+            human = event.getCause().first(Human.class).get();
+        else
+            return;
 
         super.onPlayerInteract(event);
 
-        if (event.getBlock().getType() == BlockTypes.FENCE) {
+        if (event.getTargetBlock().getLocation().get().getBlockType() == BlockTypes.FENCE) {
 
-            int x = event.getLocation().getBlockX();
-            int y = event.getLocation().getBlockY();
-            int z = event.getLocation().getBlockZ();
+            int x = event.getTargetBlock().getLocation().get().getBlockX();
+            int y = event.getTargetBlock().getLocation().get().getBlockY();
+            int z = event.getTargetBlock().getLocation().get().getBlockZ();
 
             for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
                 for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
 
-                        if (SignUtil.isSign(event.getLocation().getExtent().getLocation(x1, y1, z1))) {
+                        if (SignUtil.isSign(event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1))) {
 
-                            Sign sign = (Sign) event.getLocation().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
+                            Sign sign = (Sign) event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
 
-                            triggerMechanic(event.getLocation().getExtent().getLocation(x1, y1, z1), sign, event.getEntity(), null);
+                            triggerMechanic(event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1), sign, human, null);
                         }
                     }
                 }
@@ -128,7 +129,7 @@ public class Gate extends SimpleArea {
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
-        if (SignUtil.getTextRaw(sign.getData().get(), 1).equals("[Gate]")) {
+        if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
 
             Set<GateColumn> columns = new HashSet<>();
 

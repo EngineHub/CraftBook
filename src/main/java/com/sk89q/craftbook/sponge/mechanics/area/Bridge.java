@@ -32,26 +32,6 @@ public class Bridge extends SimpleArea {
     private int maximumLength;
     private int maximumWidth;
 
-    public Location getOtherEnd(Location block) {
-
-        Direction back = SignUtil.getBack(block);
-
-        for (int i = 0; i < maximumLength; i++) {
-
-            block = block.getRelative(back);
-
-            if (SignUtil.isSign(block)) {
-                Sign sign = (Sign) block.getTileEntity().get();
-
-                if (isMechanicSign(sign)) {
-                    return block;
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
 
@@ -61,7 +41,7 @@ public class Bridge extends SimpleArea {
 
             Location baseBlock = block.getRelative(Direction.DOWN);
 
-            Location otherSide = getOtherEnd(block);
+            Location otherSide = getOtherEnd(block, SignUtil.getBack(block), maximumLength);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
                 return true;
