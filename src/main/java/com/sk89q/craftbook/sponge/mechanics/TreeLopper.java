@@ -6,7 +6,6 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.block.TreeData;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.Listener;
@@ -42,10 +41,10 @@ public class TreeLopper extends SpongeMechanic {
 
         traversed.add(block);
 
-        Optional<TreeData> data = block.get(TreeData.class);
+        Optional<TreeType> data = block.getBlock().get(Keys.TREE_TYPE);
         if(!data.isPresent()) return;
 
-        if(data.get().getValue(Keys.TREE_TYPE).equals(type)) { //Same tree type.
+        if(data.get().equals(type)) { //Same tree type.
             block.digBlockWith(player.getItemInHand().get());
             for(Direction dir : LocationUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
