@@ -5,6 +5,7 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.Listener;
@@ -53,7 +54,7 @@ public class Elevator extends SpongeBlockMechanic {
 
         Location floor = destination.getExtent().getLocation((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
         // well, unless that's already a ceiling.
-        if (floor.getBlockType().isSolidCube()) {
+        if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() == MatterProperty.Matter.SOLID) {
             floor = floor.getRelative(Direction.DOWN);
         }
 
@@ -62,7 +63,7 @@ public class Elevator extends SpongeBlockMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getBlockType().isSolidCube()) {
+            if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() != MatterProperty.Matter.SOLID) {
                 foundFree++;
             } else {
                 foundGround = true;

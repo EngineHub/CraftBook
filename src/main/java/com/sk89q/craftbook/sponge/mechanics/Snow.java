@@ -8,6 +8,7 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.block.LayeredData;
+import org.spongepowered.api.data.property.block.ReplaceableProperty;
 import org.spongepowered.api.data.property.block.TemperatureProperty;
 import org.spongepowered.api.data.value.BoundedValue;
 import org.spongepowered.api.event.Listener;
@@ -128,7 +129,7 @@ public class Snow extends SpongeMechanic {
     }
 
     public boolean canPlaceSnowAt(Location location) {
-        return location.getBlockType() == BlockTypes.SNOW_LAYER || !(location.getBlockType() == BlockTypes.WATER || location.getBlockType() == BlockTypes.FLOWING_WATER || location.getBlockType() == BlockTypes.LAVA || location.getBlockType() == BlockTypes.FLOWING_LAVA) && location.getBlockType().isReplaceable();
+        return location.getBlockType() == BlockTypes.SNOW_LAYER || !(location.getBlockType() == BlockTypes.WATER || location.getBlockType() == BlockTypes.FLOWING_WATER || location.getBlockType() == BlockTypes.LAVA || location.getBlockType() == BlockTypes.FLOWING_LAVA) && location.getBlockType().getProperty(ReplaceableProperty.class).get().getValue();
     }
 
     public boolean isBlockBuried(Location location) {
