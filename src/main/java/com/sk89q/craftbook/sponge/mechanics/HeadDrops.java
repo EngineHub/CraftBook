@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import com.google.common.base.Optional;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
@@ -20,6 +19,7 @@ import org.spongepowered.api.event.inventory.DropItemStackEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Module(moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")

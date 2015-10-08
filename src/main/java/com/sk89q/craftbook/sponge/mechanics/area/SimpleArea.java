@@ -68,7 +68,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
         event.getRelatives().values().stream().filter(SignUtil::isSign).forEach(block -> {
 
-            Sign sign = (Sign) block.getTileEntity();
+            Sign sign = (Sign) block.getTileEntity().get();
 
             if (isMechanicSign(sign)) {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);

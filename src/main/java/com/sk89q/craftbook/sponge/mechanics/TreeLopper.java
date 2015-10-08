@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import com.google.common.base.Optional;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
@@ -16,6 +15,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Module(moduleName = "TreeLopper", onEnable="onInitialize", onDisable="onDisable")
 public class TreeLopper extends SpongeMechanic {
@@ -45,7 +45,7 @@ public class TreeLopper extends SpongeMechanic {
         if(!data.isPresent()) return;
 
         if(data.get().equals(type)) { //Same tree type.
-            block.digBlockWith(player.getItemInHand().get());
+            //TODO FIX THIS block.digBlockWith(player.getItemInHand().get());
             for(Direction dir : LocationUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }

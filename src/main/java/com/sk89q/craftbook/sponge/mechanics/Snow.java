@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
-import com.google.common.base.Optional;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
@@ -16,6 +15,8 @@ import org.spongepowered.api.event.block.TickBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.weather.Weathers;
+
+import java.util.Optional;
 
 @Module(moduleName = "Snow", onEnable="onInitialize", onDisable="onDisable")
 public class Snow extends SpongeMechanic {

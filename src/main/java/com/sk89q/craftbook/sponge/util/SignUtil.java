@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge.util;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -10,6 +9,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+
+import java.util.Optional;
 
 /**
  * Convenience methods for dealing with some sign block data.
