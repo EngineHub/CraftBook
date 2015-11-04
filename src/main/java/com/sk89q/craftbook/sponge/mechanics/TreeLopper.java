@@ -2,13 +2,13 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import com.sk89q.craftbook.sponge.util.LocationUtil;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.BreakBlockEvent;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class TreeLopper extends SpongeMechanic {
 
     @Listener
-    public void onBlockBreak(BreakBlockEvent event) {
+    public void onBlockBreak(ChangeBlockEvent.Break event) {
 
         Human human;
         if(event.getCause().first(Human.class).isPresent())
@@ -46,7 +46,7 @@ public class TreeLopper extends SpongeMechanic {
 
         if(data.get().equals(type)) { //Same tree type.
             //TODO FIX THIS block.digBlockWith(player.getItemInHand().get());
-            for(Direction dir : LocationUtil.getDirectFaces()) {
+            for(Direction dir : BlockUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }
         }

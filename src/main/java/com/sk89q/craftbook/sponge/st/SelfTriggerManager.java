@@ -23,7 +23,7 @@ public class SelfTriggerManager {
     private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
 
     public static void initialize() {
-        CraftBookPlugin.game.getScheduler().createTaskBuilder().interval(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
+        CraftBookPlugin.game.getScheduler().createTaskBuilder().intervalTicks(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
         CraftBookPlugin.game.getEventManager().registerListeners(CraftBookPlugin.inst(), new SelfTriggerManager());
 
         isInitialized = true;

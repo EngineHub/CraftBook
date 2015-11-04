@@ -7,16 +7,10 @@ import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
-import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 
@@ -46,7 +40,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return "IC";
     }
 
-    @Listener
+    /*TODO @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
 
         BlockSnapshot source;
@@ -60,7 +54,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             BaseICData data = createICData(block);
             if (data == null) continue;
 
-            Direction facing = LocationUtil.getFacing(block, source.getLocation().get());
+            Direction facing = BlockUtil.getFacing(block, source.getLocation().get());
             if(facing == null) return; //Something is wrong here.
 
             boolean powered = block.getRelative(facing).get(Keys.POWERED).isPresent();//block.getRelative(facing).isFacePowered(facing.getOpposite());
@@ -70,7 +64,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 data.ic.trigger();
             }
         }
-    }
+    } */
 
     @Override
     public void onThink(Location block) {

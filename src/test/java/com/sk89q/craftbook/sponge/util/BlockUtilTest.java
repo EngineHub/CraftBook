@@ -8,14 +8,14 @@ import org.spongepowered.api.world.extent.Extent;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class LocationUtilTest {
+public class BlockUtilTest {
 
     @Test
     public void getFacingTest() {
 
-        for(Direction direction : LocationUtil.getDirectFaces()) {
+        for(Direction direction : BlockUtil.getDirectFaces()) {
             Location loc = new Location(mock(Extent.class), 0, 0, 0);
-            assertTrue(LocationUtil.getFacing(loc, loc.getRelative(direction)) == direction);
+            assertTrue(BlockUtil.getFacing(loc, loc.getRelative(direction)) == direction);
         }
     }
 }

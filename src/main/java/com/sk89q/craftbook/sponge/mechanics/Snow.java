@@ -109,7 +109,7 @@ public class Snow extends SpongeMechanic {
                 increaseSnow(relative, false);
                 if(dir != Direction.NONE) {
                     decreaseSnow(location);
-                    CraftBookPlugin.game.getScheduler().createTaskBuilder().delay(40L).execute(() -> {
+                    CraftBookPlugin.game.getScheduler().createTaskBuilder().delayTicks(40L).execute(() -> {
                         disperseSnow(relative, dir.getOpposite());
                         if(isBlockBuried(location))
                             disperseSnow(location.getRelative(Direction.UP), Direction.NONE);

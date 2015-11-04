@@ -5,7 +5,7 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.OwnableData;
+import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.Entity;
@@ -13,9 +13,8 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.BreakBlockEvent;
-import org.spongepowered.api.event.block.PlaceBlockEvent;
-import org.spongepowered.api.event.inventory.DropItemStackEvent;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -26,7 +25,7 @@ import java.util.UUID;
 public class HeadDrops extends SpongeMechanic {
 
     @Listener
-    public void onEntityDeath(DropItemStackEvent.Pre event) {
+    public void onEntityDeath(DropItemEvent.Pre event) {
 
         Entity entity;
         if(event.getCause().first(Entity.class).isPresent())
@@ -71,21 +70,21 @@ public class HeadDrops extends SpongeMechanic {
         if (data != null) {
             ItemStack stack = CraftBookPlugin.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
-                OwnableData owner = stack.getOrCreate(OwnableData.class).get();
-                owner.set(Keys.OWNED_BY_PROFILE, profile);
+                RepresentedPlayerData owner = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(RepresentedPlayerData.class).get().create();
+                owner.set(Keys.REPRESENTED_PLAYER, profile);
                 stack.offer(owner);
             }
-            event.addItem(stack.createSnapshot());
+            event.getDroppedItems().add(stack.createSnapshot());
         }
     }
 
     @Listener
-    public void onBlockPlace(PlaceBlockEvent event) {
+    public void onBlockPlace(ChangeBlockEvent.Place event) {
 
     }
 
     @Listener
-    public void onBlockBreak(BreakBlockEvent event) {
+    public void onBlockBreak(ChangeBlockEvent.Break event) {
 
     }
 

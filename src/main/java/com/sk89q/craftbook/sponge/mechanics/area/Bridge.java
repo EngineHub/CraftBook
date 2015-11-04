@@ -5,6 +5,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.SpongeConfiguration;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
@@ -53,7 +54,7 @@ public class Bridge extends SimpleArea {
                 return true;
             }
 
-            int leftBlocks = 0, rightBlocks = 0; //Default to 0. Single width bridge is the default.
+            int leftBlocks, rightBlocks;
 
             Location left = baseBlock.getRelative(SignUtil.getLeft(block));
             Location right = baseBlock.getRelative(SignUtil.getRight(block));
@@ -61,30 +62,12 @@ public class Bridge extends SimpleArea {
             //Calculate left distance
             Location otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
 
-            while(true) {
-                if(leftBlocks >= maximumWidth) break;
-                if(left.getBlock().equals(baseBlock.getBlock()) && otherLeft.getBlock().equals(baseBlock.getBlock())) {
-                    leftBlocks ++;
-                    left = left.getRelative(SignUtil.getLeft(block));
-                    otherLeft = otherLeft.getRelative(SignUtil.getLeft(block));
-                } else {
-                    break;
-                }
-            }
+            leftBlocks = BlockUtil.getDoubleLength(left, otherLeft, baseBlock.getBlock(), SignUtil.getLeft(block), maximumWidth);
 
             //Calculate right distance
             Location otherRight = otherBase.getRelative(SignUtil.getRight(block));
 
-            while(true) {
-                if(rightBlocks >= maximumWidth) break;
-                if(right.getBlock().equals(baseBlock.getBlock()) && otherRight.getBlock().equals(baseBlock.getBlock())) {
-                    rightBlocks ++;
-                    right = right.getRelative(SignUtil.getRight(block));
-                    otherRight = otherRight.getRelative(SignUtil.getRight(block));
-                } else {
-                    break;
-                }
-            }
+            rightBlocks = BlockUtil.getDoubleLength(right, otherRight, baseBlock.getBlock(), SignUtil.getRight(block), maximumWidth);
 
             baseBlock = baseBlock.getRelative(back);
 

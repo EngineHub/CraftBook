@@ -15,7 +15,7 @@ public class EmptyDecay extends SpongeMechanic {
     public void onVehicleExit(DismountEntityEvent event) {
 
         if (event.getTargetEntity() instanceof Minecart) {
-            event.getGame().getScheduler().createTaskBuilder().delay(40L).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
+            event.getGame().getScheduler().createTaskBuilder().delayTicks(40L).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
     }
 
@@ -30,7 +30,6 @@ public class EmptyDecay extends SpongeMechanic {
 
         @Override
         public void run() {
-
             if (!cart.get(PassengerData.class).isPresent()) {
                 cart.remove();
             }

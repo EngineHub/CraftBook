@@ -4,13 +4,10 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.block.PoweredData;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -63,7 +60,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         }
     }
 
-    @Listener
+    /*TODO @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
 
         event.getRelatives().values().stream().filter(SignUtil::isSign).forEach(block -> {
@@ -78,7 +75,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
                 }
             }
         });
-    }
+    }*/
 
     /**
      * Triggers the mechanic.
