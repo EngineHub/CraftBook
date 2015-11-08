@@ -21,8 +21,9 @@ public class ConfigValue<T> {
         return this;
     }
 
-    public void save(ConfigurationNode configurationNode) {
+    public ConfigValue<T> save(ConfigurationNode configurationNode) {
         SpongeConfiguration.setValue(configurationNode.getNode(key), value, comment);
+        return this;
     }
 
     public String getKey() {

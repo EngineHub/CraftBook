@@ -4,11 +4,13 @@ import com.me4502.modularframework.module.ModuleWrapper;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.spongepowered.api.CatalogType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SpongeConfiguration {
@@ -54,7 +56,7 @@ public class SpongeConfiguration {
 
     public static <T> T getValue(ConfigurationNode node, T defaultValue, String comment) {
         if(node.isVirtual()) {
-            node.setValue(defaultValue);
+            setValue(node, defaultValue, comment);
         }
 
         if(comment != null && node instanceof CommentedConfigurationNode) {
@@ -62,8 +64,9 @@ public class SpongeConfiguration {
         }
 
         return node.getValue(input -> {
-
             //Add converters into here where necessary.
+            if(defaultValue instanceof CatalogType)
+                return (T) CraftBookPlugin.game.getRegistry().getType((Class<CatalogType>)defaultValue.getClass(), String.valueOf(input)).orElseGet(() -> (CatalogType) defaultValue);
 
             return (T)input;
         }, defaultValue);
@@ -74,6 +77,12 @@ public class SpongeConfiguration {
             ((CommentedConfigurationNode)node).setComment(comment);
         }
 
-        node.setValue(value);
+        Object converted = value;
+        if(value instanceof CatalogType)
+            converted = ((CatalogType)value).getName();
+        if(value instanceof Optional)
+            converted = ((Optional) value).orElseGet(() -> null);
+
+        node.setValue(converted);
     }
 }
