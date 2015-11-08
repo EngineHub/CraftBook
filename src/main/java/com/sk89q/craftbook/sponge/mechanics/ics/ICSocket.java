@@ -7,14 +7,24 @@ import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.property.block.PoweredProperty;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
@@ -40,8 +50,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return "IC";
     }
 
-    /*TODO @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
+    @Listener
+    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
 
         BlockSnapshot source;
         if(event.getCause().first(BlockSnapshot.class).isPresent())
@@ -49,7 +59,10 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         else
             return;
 
-        for (Location block : event.getRelatives().values()) {
+        if(source.getState().getType() != BlockTypes.REDSTONE_WIRE) return;
+
+        for (Location block : event.getNeighbors().entrySet().stream().map(
+                (Function<Map.Entry<Direction, BlockState>, Location>) directionBlockStateEntry -> source.getLocation().get().getRelative(directionBlockStateEntry.getKey())).collect(Collectors.toList())) {
 
             BaseICData data = createICData(block);
             if (data == null) continue;
@@ -57,14 +70,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             Direction facing = BlockUtil.getFacing(block, source.getLocation().get());
             if(facing == null) return; //Something is wrong here.
 
-            boolean powered = block.getRelative(facing).get(Keys.POWERED).isPresent();//block.getRelative(facing).isFacePowered(facing.getOpposite());
+            boolean powered = block.getRelative(facing).getProperty(PoweredProperty.class).isPresent();//block.getRelative(facing).isFacePowered
+            // (facing
+            // .getOpposite());
 
             if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get()), data.ic)) {
                 data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get()), powered, data.ic);
                 data.ic.trigger();
             }
         }
-    } */
+    }
 
     @Override
     public void onThink(Location block) {

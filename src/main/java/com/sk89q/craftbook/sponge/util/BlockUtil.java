@@ -24,13 +24,26 @@ public class BlockUtil {
 
     private static Direction[] directFaces = null;
 
+    /**
+     * Get faces that are directly touching the block.
+     *
+     * @return Faces that are directly touching the block.
+     */
     public static Direction[] getDirectFaces() {
-
         if(directFaces == null)
             directFaces = new Direction[]{Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         return directFaces;
     }
 
+    /**
+     * Gets the length of a line of blocks, with a maximum length.
+     *
+     * @param startBlock The starting location
+     * @param testState The block that the line is made of
+     * @param direction The direction of the line from the starting block
+     * @param maximum The maximum length
+     * @return The found length
+     */
     public static int getLength(Location startBlock, BlockState testState, Direction direction, int maximum) {
         int length = 0;
 
@@ -46,7 +59,7 @@ public class BlockUtil {
         return length;
     }
 
-    public static int getDoubleLength(Location firstBlock, Location secondBlock, BlockState testState, Direction direction, int maximum) {
+    public static int getMinimumLength(Location firstBlock, Location secondBlock, BlockState testState, Direction direction, int maximum) {
         return Math.min(getLength(firstBlock, testState, direction, maximum), getLength(secondBlock, testState, direction, maximum));
     }
 }

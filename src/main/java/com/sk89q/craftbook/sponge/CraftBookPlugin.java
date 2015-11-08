@@ -61,7 +61,6 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
-
         game = event.getGame();
         setInstance(this);
 
@@ -104,14 +103,12 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onServerStopping(GameStoppingServerEvent event) {
-
         moduleController.disableModules();
         cache.clearAll();
     }
 
     @Override
     public void discoverMechanics() {
-
         logger.info("Enumerating Mechanics");
 
         moduleController = ShadedModularFramework.registerModuleController(this, game);

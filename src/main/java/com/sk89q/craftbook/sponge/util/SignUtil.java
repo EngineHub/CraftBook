@@ -18,7 +18,7 @@ import java.util.Optional;
 public class SignUtil {
 
     public static boolean isSign(Location block) {
-        return block.getBlockType() == BlockTypes.STANDING_SIGN || block.getBlockType() == BlockTypes.WALL_SIGN;
+        return isSign(block.getBlock());
     }
 
     public static boolean isSign(BlockState block) {
@@ -33,7 +33,6 @@ public class SignUtil {
      * side of the sign.
      */
     public static Direction getFacing(Location sign) {
-
         return getBack(sign);
     }
 
@@ -45,7 +44,6 @@ public class SignUtil {
      * while facing north, this will return south).
      */
     public static Direction getFront(Location sign) {
-
         Optional<Direction> data = sign.get(Keys.DIRECTION);
 
         if (data.isPresent())
@@ -54,7 +52,6 @@ public class SignUtil {
     }
 
     public static Location getFrontBlock(Location sign) {
-
         return sign.getRelative(getFront(sign));
     }
 
@@ -67,7 +64,6 @@ public class SignUtil {
      * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFront(Location)}.
      */
     public static Direction getBack(Location sign) {
-
         Direction front = getFront(sign);
         if (front == null) return null;
 
@@ -75,12 +71,10 @@ public class SignUtil {
     }
 
     public static Location getBackBlock(Location sign) {
-
         return sign.getRelative(getBack(sign));
     }
 
     public static Location getNextSign(Location sign, String criterea, int searchRadius) {
-
         Location otherBlock = sign;
         Direction way = getBack(sign);
         boolean found = false;
@@ -106,7 +100,6 @@ public class SignUtil {
      * the result is rounded to the nearest ordinal direction.
      */
     public static Direction getRight(Location sign) {
-
         Direction front = getFront(sign);
         if (front == null) return null;
 
@@ -114,7 +107,6 @@ public class SignUtil {
     }
 
     public static Location getLeftBlock(Location sign) {
-
         return sign.getRelative(getLeft(sign));
     }
 
@@ -127,7 +119,6 @@ public class SignUtil {
      * result is rounded to the nearest ordinal direction.
      */
     public static Direction getLeft(Location sign) {
-
         Direction front = getFront(sign);
         if (front == null) return null;
 
@@ -135,7 +126,6 @@ public class SignUtil {
     }
 
     public static Location getRightBlock(Location sign) {
-
         return sign.getRelative(getRight(sign));
     }
 
@@ -144,7 +134,6 @@ public class SignUtil {
      * @return clockwise direction
      */
     public static Direction getClockWise(Direction face) {
-
         switch (face) {
             case NORTH:
                 return Direction.EAST;
@@ -154,9 +143,8 @@ public class SignUtil {
                 return Direction.WEST;
             case WEST:
                 return Direction.NORTH;
-
             default:
-                return null;
+                return face;
         }
     }
 
@@ -165,7 +153,6 @@ public class SignUtil {
      * @return clockwise direction
      */
     public static Direction getCounterClockWise(Direction face) {
-
         switch (face) {
             case NORTH:
                 return Direction.WEST;
@@ -175,30 +162,26 @@ public class SignUtil {
                 return Direction.EAST;
             case WEST:
                 return Direction.SOUTH;
-
             default:
-                return null;
+                return face;
         }
     }
 
     /* From this point on - replacements for ChangedSign in CB 3.x */
 
     public static String getTextRaw(Sign sign, int line) {
-
         Text text = getText(sign.get(SignData.class).get(), line);
         if (text instanceof Literal) return ((Literal) text).getContent();
         return text.toString();
     }
 
     public static String getTextRaw(SignData sign, int line) {
-
         Text text = getText(sign, line);
         if (text instanceof Literal) return ((Literal) text).getContent();
         return text.toString();
     }
 
     public static Text getText(SignData sign, int line) {
-
         return sign.lines().get(line);
     }
 }

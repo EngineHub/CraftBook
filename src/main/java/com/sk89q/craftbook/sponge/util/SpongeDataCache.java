@@ -41,7 +41,6 @@ public class SpongeDataCache extends MechanicDataCache {
 
     @Override
     protected void saveToDisk(Class<MechanicData> clazz, String locationKey, MechanicData data) {
-
         try {
             File file = new File("craftbook-data", locationKey + ".json");
 

@@ -22,14 +22,12 @@ public class SpongeConfiguration {
     public List<String> enabledMechanics;
 
     public SpongeConfiguration(CraftBookPlugin plugin, File mainConfig, ConfigurationLoader<CommentedConfigurationNode> configManager) {
-
         this.plugin = plugin;
         this.mainConfig = mainConfig;
         this.configManager = configManager;
     }
 
     public void load() {
-
         try {
             if (!mainConfig.exists()) {
                 mainConfig.getParentFile().mkdirs();
@@ -50,6 +48,10 @@ public class SpongeConfiguration {
         }
     }
 
+    public void save() {
+
+    }
+
     public static <T> T getValue(ConfigurationNode node, T defaultValue, String comment) {
         if(node.isVirtual()) {
             node.setValue(defaultValue);
@@ -65,5 +67,13 @@ public class SpongeConfiguration {
 
             return (T)input;
         }, defaultValue);
+    }
+
+    public static <T> void setValue(ConfigurationNode node, T value, String comment) {
+        if(comment != null && node instanceof CommentedConfigurationNode) {
+            ((CommentedConfigurationNode)node).setComment(comment);
+        }
+
+        node.setValue(value);
     }
 }

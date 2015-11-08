@@ -3,8 +3,8 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
-import com.sk89q.craftbook.sponge.SpongeConfiguration;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
@@ -28,12 +28,17 @@ public class Gate extends SimpleArea {
     @ModuleConfiguration
     public ConfigurationNode config;
 
+    private ConfigValue<Integer> searchRadius = new ConfigValue<>("search-radius", "The maximum area around the sign the gate can search.", 5);
+
     @Override
     public void onInitialize() throws CraftBookException {
-        searchRadius = SpongeConfiguration.<Integer>getValue(config.getNode("search-radius"), 5, "The maximum area around the sign the gate can search.");
+        searchRadius.load(config);
     }
 
-    private int searchRadius = 5;
+    @Override
+    public void onDisable() {
+        searchRadius.save(config);
+    }
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event) {
@@ -52,9 +57,9 @@ public class Gate extends SimpleArea {
             int y = event.getTargetBlock().getLocation().get().getBlockY();
             int z = event.getTargetBlock().getLocation().get().getBlockZ();
 
-            for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-                for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
-                    for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
+            for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
+                for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
+                    for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
 
                         if (SignUtil.isSign(event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1))) {
 
@@ -74,9 +79,9 @@ public class Gate extends SimpleArea {
         int y = block.getBlockY();
         int z = block.getBlockZ();
 
-        for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-            for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
-                for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
+        for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
+            for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
+                for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
 
                     searchColumn(block.getExtent().getLocation(x1, y1, z1), columns);
                 }

@@ -3,16 +3,24 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -60,22 +68,30 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         }
     }
 
-    /*TODO @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent.Power event) {
+    @Listener
+    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
 
-        event.getRelatives().values().stream().filter(SignUtil::isSign).forEach(block -> {
+        BlockSnapshot source;
+        if(event.getCause().first(BlockSnapshot.class).isPresent())
+            source = event.getCause().first(BlockSnapshot.class).get();
+        else
+            return;
 
+        event.getNeighbors().entrySet().stream().map(
+                (Function<Map.Entry<Direction, BlockState>, Location>) directionBlockStateEntry -> source.getLocation().get()
+                        .getRelative(directionBlockStateEntry.getKey())).collect(
+                Collectors.toList()).stream().filter(block -> block.getTileEntity().isPresent()).forEach(block -> {
             Sign sign = (Sign) block.getTileEntity().get();
 
             if (isMechanicSign(sign)) {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                if (data.lastCurrent != (block.get(PoweredData.class).isPresent() ? 15 : 0)) {
-                    triggerMechanic(block, sign, null, block.get(Keys.POWERED).isPresent());
-                    data.lastCurrent = block.get(Keys.POWERED).isPresent() ? 15 : 0;
+                if (data.lastCurrent != (block.getProperty(PoweredProperty.class).isPresent() ? 15 : 0)) {
+                    triggerMechanic(block, sign, null, block.getProperty(PoweredProperty.class).isPresent());
+                    data.lastCurrent = block.getProperty(PoweredProperty.class).isPresent() ? 15 : 0;
                 }
             }
         });
-    }*/
+    }
 
     /**
      * Triggers the mechanic.
