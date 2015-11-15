@@ -7,14 +7,11 @@ import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
@@ -23,10 +20,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -96,48 +90,23 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         else
             return;
 
-        event.getNeighbors().entrySet().stream().map(
-                (Function<Map.Entry<Direction, BlockState>, Location>) directionBlockStateEntry -> source.getLocation().get()
-                        .getRelative(directionBlockStateEntry.getKey())).collect(
-                Collectors.toList()).stream().filter(block -> block.getTileEntity().isPresent()).forEach(block -> {
-            Sign sign = (Sign) block.getTileEntity().get();
+        if(!SignUtil.isSign(source.getState())) return;
+        Sign sign = (Sign) source.getLocation().get().getTileEntity().get();
 
-            if (isMechanicSign(sign)) {
-                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                if (data.lastCurrent != (block.getProperty(PoweredProperty.class).isPresent() ? 15 : 0)) {
-                    triggerMechanic(block, sign, null, block.getProperty(PoweredProperty.class).isPresent());
-                    data.lastCurrent = block.getProperty(PoweredProperty.class).isPresent() ? 15 : 0;
+        if (isMechanicSign(sign)) {
+            event.getNeighbors().entrySet().stream().map(
+                    (Function<Map.Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
+                    collect(Collectors.toList()).stream().forEach(block -> {
+
+                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
+                if (block.getBlock().get(Keys.POWER).isPresent()) {
+                    if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
+                        triggerMechanic(source.getLocation().get(), sign, null, block.getBlock().get(Keys.POWER).get() > 0);
+                        data.lastCurrent = block.getBlock().get(Keys.POWER).get();
+                    }
                 }
-            }
-        });
-    }
-
-    @Listener
-    public void onBlockChange(ChangeBlockEvent.Modify event) {
-        event.getTransactions().stream().filter(transaction1 -> transaction1.getFinal().getState().getType() == BlockTypes.REDSTONE_WIRE).forEach
-                (transaction -> {
-                    Optional<Set<Direction>> directions = transaction.getFinal().getExtendedState().get(Keys.CONNECTED_DIRECTIONS);
-                    List<Direction> directionSet = new ArrayList<>(directions.get());
-                    if(directionSet.size() == 1)
-                        directionSet.add(directionSet.get(0).getOpposite());
-                    directionSet.forEach((direction) -> {
-                        Location block = transaction.getOriginal().getLocation().get().getRelative(direction);
-
-                        if(SignUtil.isSign(block)) {
-                            Sign sign = (Sign) block.getTileEntity().get();
-                            if (isMechanicSign(sign)) {
-
-                                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
-                                //if (data.lastCurrent != transaction.getFinal().getExtendedState().get(Keys.POWER).get()) {
-                                    //System.out.println(transaction.getFinal().getExtendedState().toString() + " result " + (transaction.getFinal().getExtendedState().get(Keys.POWER).get() > 0));
-
-                                    triggerMechanic(block, sign, event.getCause().first(Player.class).orElse(null), transaction.getFinal().getExtendedState().get(Keys.POWER).get() > 0);
-                                //    data.lastCurrent = transaction.getFinal().getExtendedState().get(Keys.POWER).get();
-                                //}
-                            }
-                        }
-                    });
-                });
+            });
+        }
     }
 
     /**

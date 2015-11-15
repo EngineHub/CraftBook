@@ -85,9 +85,7 @@ public class Bridge extends SimpleArea {
             baseBlock = baseBlock.getRelative(back);
 
             BlockState type = block.getRelative(Direction.DOWN).getBlock();
-            if ((baseBlock.getBlock().equals(type) && (forceState == null || !forceState)) || forceState != null && !forceState) type = BlockTypes.AIR.getDefaultState();
-
-            System.out.println(forceState + " type " + type.toString());
+            if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
             while (baseBlock.getBlockX() != otherSide.getBlockX() || baseBlock.getBlockZ() != otherSide.getBlockZ()) {
 

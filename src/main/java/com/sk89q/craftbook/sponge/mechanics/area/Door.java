@@ -103,7 +103,7 @@ public class Door extends SimpleArea {
             baseBlock = baseBlock.getRelative(back);
 
             BlockState type = block.getRelative(back).getBlock();
-            if (baseBlock.getBlock().equals(type) && (forceState == null || !forceState)) type = BlockTypes.AIR.getDefaultState();
+            if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
             while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
 
