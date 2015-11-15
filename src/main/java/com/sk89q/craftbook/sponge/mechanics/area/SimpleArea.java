@@ -101,7 +101,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
                 if (block.getBlock().get(Keys.POWER).isPresent()) {
                     if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
-                        triggerMechanic(source.getLocation().get(), sign, null, block.getBlock().get(Keys.POWER).get() > 0);
+                        triggerMechanic(source.getLocation().get(), sign, event.getCause().first(Human.class).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
                         data.lastCurrent = block.getBlock().get(Keys.POWER).get();
                     }
                 }

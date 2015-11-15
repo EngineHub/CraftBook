@@ -24,12 +24,9 @@ public abstract class PinSet {
         if (getOutput(outputId, ic) != powered) {
             Location block = getPinLocation(outputId + getInputCount(), ic);
 
-            if (block.getBlockType() != BlockTypes.LEVER) return; // Can't set this.
+            if (!block.supports(Keys.POWERED)) return; // Can't set this.
 
-            if (powered)
-                block.offer(Keys.POWERED, true);
-            else
-                block.remove(Keys.POWERED);
+            block.offer(Keys.POWERED, powered);
         }
     }
 
@@ -45,7 +42,7 @@ public abstract class PinSet {
     }
 
     public boolean getOutput(int outputId, IC ic) {
-        return outputId != -1 && getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).isPresent();
+        return outputId != -1 && (Boolean)getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).get();
     }
 
     public boolean isValid(int id, IC ic) {
