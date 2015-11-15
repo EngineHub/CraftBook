@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -17,6 +18,8 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
+import java.util.Set;
+
 @Module(moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
 public class Bridge extends SimpleArea {
 
@@ -29,12 +32,16 @@ public class Bridge extends SimpleArea {
 
     @Override
     public void onInitialize() throws CraftBookException {
+        super.loadCommonConfig(config);
+
         maximumLength.load(config);
         maximumWidth.load(config);
     }
 
     @Override
     public void onDisable() {
+        super.saveCommonConfig(config);
+
         maximumLength.save(config);
         maximumWidth.save(config);
     }
@@ -78,7 +85,9 @@ public class Bridge extends SimpleArea {
             baseBlock = baseBlock.getRelative(back);
 
             BlockState type = block.getRelative(Direction.DOWN).getBlock();
-            if (baseBlock.getBlock().equals(type) && (forceState == null || !forceState)) type = BlockTypes.AIR.getDefaultState();
+            if ((baseBlock.getBlock().equals(type) && (forceState == null || !forceState)) || forceState != null && !forceState) type = BlockTypes.AIR.getDefaultState();
+
+            System.out.println(forceState + " type " + type.toString());
 
             while (baseBlock.getBlockX() != otherSide.getBlockX() || baseBlock.getBlockZ() != otherSide.getBlockZ()) {
 
@@ -116,5 +125,13 @@ public class Bridge extends SimpleArea {
     @Override
     public String[] getValidSigns() {
         return new String[]{"[Bridge]", "[Bridge End]"};
+    }
+
+    @Override
+    public Set<BlockState> getDefaultBlocks() {
+        Set<BlockState> states = Sets.newHashSet();
+        states.add(BlockTypes.PLANKS.getDefaultState());
+        states.add(BlockTypes.COBBLESTONE.getDefaultState());
+        return states;
     }
 }

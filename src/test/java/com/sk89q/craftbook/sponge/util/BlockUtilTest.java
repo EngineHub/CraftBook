@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.sponge.util;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
 import org.junit.Test;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 public class BlockUtilTest {
 

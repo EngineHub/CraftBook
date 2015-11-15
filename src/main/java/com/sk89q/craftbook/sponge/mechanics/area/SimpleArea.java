@@ -1,15 +1,20 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
@@ -18,13 +23,27 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 public abstract class SimpleArea extends SpongeBlockMechanic {
+
+    protected ConfigValue<Set<BlockState>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks());
+
+    public void loadCommonConfig(ConfigurationNode config) {
+        allowedBlocks.load(config);
+    }
+
+    public void saveCommonConfig(ConfigurationNode config) {
+        allowedBlocks.save(config);
+    }
 
     @Listener
     public void onSignChange(ChangeSignEvent event) {
@@ -93,6 +112,34 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         });
     }
 
+    @Listener
+    public void onBlockChange(ChangeBlockEvent.Modify event) {
+        event.getTransactions().stream().filter(transaction1 -> transaction1.getFinal().getState().getType() == BlockTypes.REDSTONE_WIRE).forEach
+                (transaction -> {
+                    Optional<Set<Direction>> directions = transaction.getFinal().getExtendedState().get(Keys.CONNECTED_DIRECTIONS);
+                    List<Direction> directionSet = new ArrayList<>(directions.get());
+                    if(directionSet.size() == 1)
+                        directionSet.add(directionSet.get(0).getOpposite());
+                    directionSet.forEach((direction) -> {
+                        Location block = transaction.getOriginal().getLocation().get().getRelative(direction);
+
+                        if(SignUtil.isSign(block)) {
+                            Sign sign = (Sign) block.getTileEntity().get();
+                            if (isMechanicSign(sign)) {
+
+                                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, block);
+                                //if (data.lastCurrent != transaction.getFinal().getExtendedState().get(Keys.POWER).get()) {
+                                    //System.out.println(transaction.getFinal().getExtendedState().toString() + " result " + (transaction.getFinal().getExtendedState().get(Keys.POWER).get() > 0));
+
+                                    triggerMechanic(block, sign, event.getCause().first(Player.class).orElse(null), transaction.getFinal().getExtendedState().get(Keys.POWER).get() > 0);
+                                //    data.lastCurrent = transaction.getFinal().getExtendedState().get(Keys.POWER).get();
+                                //}
+                            }
+                        }
+                    });
+                });
+    }
+
     /**
      * Triggers the mechanic.
      * 
@@ -134,6 +181,8 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     }
 
     public abstract String[] getValidSigns();
+
+    public abstract Set<BlockState> getDefaultBlocks();
 
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
         public long blockBagId;

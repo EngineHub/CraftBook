@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -7,6 +8,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.living.Human;
@@ -32,11 +34,15 @@ public class Gate extends SimpleArea {
 
     @Override
     public void onInitialize() throws CraftBookException {
+        super.loadCommonConfig(config);
+
         searchRadius.load(config);
     }
 
     @Override
     public void onDisable() {
+        super.saveCommonConfig(config);
+
         searchRadius.save(config);
     }
 
@@ -195,5 +201,16 @@ public class Gate extends SimpleArea {
     @Override
     public String[] getValidSigns() {
         return new String[]{"[Gate]"};
+    }
+
+    @Override
+    public Set<BlockState> getDefaultBlocks() {
+        Set<BlockState> states = Sets.newHashSet();
+        states.add(BlockTypes.FENCE.getDefaultState());
+        states.add(BlockTypes.NETHER_BRICK_FENCE.getDefaultState());
+        states.add(BlockTypes.GLASS_PANE.getDefaultState());
+        states.add(BlockTypes.STAINED_GLASS_PANE.getDefaultState());
+        states.add(BlockTypes.IRON_BARS.getDefaultState());
+        return states;
     }
 }

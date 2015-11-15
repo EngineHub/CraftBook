@@ -68,7 +68,7 @@ public class HeadDrops extends SpongeMechanic {
         }
 
         if (data != null) {
-            ItemStack stack = CraftBookPlugin.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).itemData(data).build();
+            ItemStack stack = CraftBookPlugin.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
                 RepresentedPlayerData owner = CraftBookPlugin.game.getRegistry().getManipulatorRegistry().getBuilder(RepresentedPlayerData.class).get().create();
                 owner.set(Keys.REPRESENTED_PLAYER, profile);

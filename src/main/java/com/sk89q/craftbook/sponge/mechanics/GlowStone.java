@@ -7,7 +7,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.Location;
 
@@ -18,7 +18,7 @@ public class GlowStone extends SpongeBlockMechanic {
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    ConfigValue<BlockType> offBlock = new ConfigValue<>("off-block", "Sets the block that the glowstone turns into when turned off.", BlockTypes.SOUL_SAND);
+    ConfigValue<BlockState> offBlock = new ConfigValue<>("off-block", "Sets the block that the glowstone turns into when turned off.", BlockTypes.SOUL_SAND.getDefaultState());
 
     @Override
     public void onInitialize() throws CraftBookException {

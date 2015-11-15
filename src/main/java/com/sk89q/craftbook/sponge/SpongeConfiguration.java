@@ -35,7 +35,8 @@ public class SpongeConfiguration {
                 mainConfig.getParentFile().mkdirs();
                 mainConfig.createNewFile();
             }
-            config = configManager.load();
+
+            config = configManager.load(CraftBookPlugin.<CraftBookPlugin>inst().configurationOptions);
 
             enabledMechanics = getValue(config.getNode("enabled-mechanics"), Collections.singletonList("Elevator"), "The list of mechanics to load.");
 
@@ -62,6 +63,9 @@ public class SpongeConfiguration {
         if(comment != null && node instanceof CommentedConfigurationNode) {
             ((CommentedConfigurationNode)node).setComment(comment);
         }
+
+        //if(!node.getOptions().acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
+        //    throw new RuntimeException();
 
         return node.getValue(input -> {
             //Add converters into here where necessary.

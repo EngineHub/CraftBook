@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -16,6 +17,8 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
+import java.util.Set;
+
 @Module(moduleName = "Door", onEnable="onInitialize", onDisable="onDisable")
 public class Door extends SimpleArea {
 
@@ -28,12 +31,16 @@ public class Door extends SimpleArea {
 
     @Override
     public void onInitialize() throws CraftBookException {
+        super.loadCommonConfig(config);
+
         maximumLength.load(config);
         maximumWidth.load(config);
     }
 
     @Override
     public void onDisable() {
+        super.saveCommonConfig(config);
+
         maximumLength.save(config);
         maximumWidth.save(config);
     }
@@ -134,5 +141,13 @@ public class Door extends SimpleArea {
     @Override
     public String[] getValidSigns() {
         return new String[]{"[Door Up]", "[Door Down]", "[Door]"};
+    }
+
+    @Override
+    public Set<BlockState> getDefaultBlocks() {
+        Set<BlockState> states = Sets.newHashSet();
+        states.add(BlockTypes.PLANKS.getDefaultState());
+        states.add(BlockTypes.COBBLESTONE.getDefaultState());
+        return states;
     }
 }
