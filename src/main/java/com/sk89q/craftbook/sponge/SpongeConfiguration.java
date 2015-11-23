@@ -85,7 +85,7 @@ public class SpongeConfiguration {
         if(value instanceof CatalogType)
             converted = ((CatalogType)value).getName();
         if(value instanceof Optional)
-            converted = ((Optional) value).orElseGet(() -> null);
+            converted = ((Optional<?>) value).orElse(null);
 
         node.setValue(converted);
     }

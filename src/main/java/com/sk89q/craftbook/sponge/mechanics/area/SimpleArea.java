@@ -15,6 +15,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -101,7 +102,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
                 if (block.getBlock().get(Keys.POWER).isPresent()) {
                     if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
-                        triggerMechanic(source.getLocation().get(), sign, event.getCause().first(Human.class).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
+                        triggerMechanic(source.getLocation().get(), sign, (Player) event.getCause().get(NamedCause.NOTIFIER).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
                         data.lastCurrent = block.getBlock().get(Keys.POWER).get();
                     }
                 }

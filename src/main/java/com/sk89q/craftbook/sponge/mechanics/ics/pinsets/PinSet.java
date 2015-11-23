@@ -42,7 +42,7 @@ public abstract class PinSet {
     }
 
     public boolean getOutput(int outputId, IC ic) {
-        return outputId != -1 && (Boolean)getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).get();
+        return outputId != -1 && (Boolean) getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).orElse(false);
     }
 
     public boolean isValid(int id, IC ic) {

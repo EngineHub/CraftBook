@@ -128,6 +128,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onServerStopping(GameStoppingServerEvent event) {
+        SelfTriggerManager.unload();
         moduleController.disableModules();
         cache.clearAll();
     }
@@ -155,6 +156,8 @@ public class CraftBookPlugin extends CraftBookAPI {
         //Circuit Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.GlowStone");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Netherrack");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.JackOLantern");
 
         //Vehicle Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");

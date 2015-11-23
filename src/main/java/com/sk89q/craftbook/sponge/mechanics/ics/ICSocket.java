@@ -16,6 +16,9 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.text.Text.Literal;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
@@ -45,6 +48,17 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     @Override
     public String getName() {
         return "IC";
+    }
+
+    @Listener
+    public void onChangeSign(ChangeSignEvent event) {
+
+        ICType<? extends IC> icType = ICManager.getICType(((Literal)event.getText().lines().get(1)).getContent());
+        if (icType == null) return;
+
+        System.out.println(icType.shorthandId);
+
+        event.getText().lines().set(1, Texts.of("=" + icType.shorthandId));
     }
 
     @Listener
@@ -98,7 +112,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             BaseICData data = getData(BaseICData.class, block);
 
-            if (data.ic == null) {
+            if (data.ic == null || !icType.equals(data.ic.type)) {
                 // Initialize new IC.
                 data.ic = icType.buildIC(block);
                 if(data.ic instanceof SelfTriggeringIC && SignUtil.getTextRaw(sign, 1).endsWith("S") ||  SignUtil.getTextRaw(sign, 1).endsWith(" ST"))

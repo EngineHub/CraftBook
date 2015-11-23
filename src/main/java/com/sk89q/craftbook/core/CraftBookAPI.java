@@ -22,7 +22,6 @@ public abstract class CraftBookAPI {
     }
 
     public static void setInstance(CraftBookAPI api) throws IllegalAccessException {
-        if(instance != null) throw new IllegalAccessException("Illegal assignment of Instance.");
         instance = api;
     }
 

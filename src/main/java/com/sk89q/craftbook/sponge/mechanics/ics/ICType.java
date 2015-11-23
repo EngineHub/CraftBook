@@ -66,4 +66,26 @@ public class ICType<T extends IC> {
 
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ICType<?> icType = (ICType<?>) o;
+
+        return modelId.equals(icType.modelId) && icClass.equals(icType.icClass);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = modelId.hashCode();
+        result = 31 * result + icClass.hashCode();
+        return result;
+    }
 }
