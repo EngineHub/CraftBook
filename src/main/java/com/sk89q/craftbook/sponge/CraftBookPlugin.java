@@ -155,9 +155,9 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         //Circuit Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.GlowStone");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Netherrack");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.JackOLantern");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.GlowStone");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.Netherrack");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.JackOLantern");
 
         //Vehicle Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
