@@ -67,13 +67,11 @@ public class SpongeConfiguration {
         //if(!node.getOptions().acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
         //    throw new RuntimeException();
 
-        return node.getValue(input -> {
-            //Add converters into here where necessary.
-            if(defaultValue instanceof CatalogType)
-                return (T) CraftBookPlugin.game.getRegistry().getType((Class<CatalogType>)defaultValue.getClass(), String.valueOf(input)).orElseGet(() -> (CatalogType) defaultValue);
-
-            return (T)input;
-        }, defaultValue);
+        try {
+            return (T) node.getValue(defaultValue);
+        } catch(Exception e) {
+            return defaultValue;
+        }
     }
 
     public static <T> void setValue(ConfigurationNode node, T value, String comment) {

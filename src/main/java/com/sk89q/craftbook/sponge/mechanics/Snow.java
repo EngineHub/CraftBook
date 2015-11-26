@@ -49,7 +49,7 @@ public class Snow extends SpongeMechanic {
             LayeredData data = dataOptional.get();
             int currentHeight = data.getValue(Keys.LAYER).get().get();
             currentHeight ++;
-            if(currentHeight > ((BoundedValue<Integer>)data.getValue(Keys.LAYER).get()).getMaxValue())
+            if(currentHeight > data.getValue(Keys.LAYER).get().getMaxValue())
                 location.setBlockType(BlockTypes.SNOW);
             else {
                 if(disperse) {
@@ -73,7 +73,7 @@ public class Snow extends SpongeMechanic {
             LayeredData data = dataOptional.get();
             int currentHeight = data.getValue(Keys.LAYER).get().get();
             currentHeight --;
-            if(currentHeight < ((BoundedValue<Integer>)data.getValue(Keys.LAYER).get()).getMinValue())
+            if(currentHeight < data.getValue(Keys.LAYER).get().getMinValue())
                 location.setBlockType(BlockTypes.AIR);
             else {
                 data.set(Keys.LAYER, currentHeight);

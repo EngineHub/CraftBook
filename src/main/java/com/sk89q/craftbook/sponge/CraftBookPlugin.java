@@ -83,17 +83,17 @@ public class CraftBookPlugin extends CraftBookAPI {
         configurationOptions.getSerializers().registerType(TypeToken.of(BlockState.class), new TypeSerializer<BlockState>() {
             @Override
             public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
-                return null;
+                return BlockTypes.AIR.getDefaultState();
             }
 
             @Override
             public void serialize(TypeToken<?> type, BlockState obj, ConfigurationNode value) throws ObjectMappingException {
                 value.setValue(obj.toString());
-            }
+        }
         });
         configurationOptions.setAcceptedTypes(Sets.newHashSet(BlockState.class));
-        if(!configurationOptions.acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
-            throw new RuntimeException();
+        //if(!configurationOptions.acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
+        //    throw new RuntimeException();
 
         discoverMechanics();
 

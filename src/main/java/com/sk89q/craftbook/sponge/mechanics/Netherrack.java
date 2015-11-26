@@ -7,17 +7,12 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
-
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Module(moduleName = "Netherrack", onEnable="onInitialize", onDisable="onDisable")
 public class Netherrack extends SpongeBlockMechanic {
@@ -44,16 +39,11 @@ public class Netherrack extends SpongeBlockMechanic {
             return;
 
         if(source.getState().getType() == BlockTypes.NETHERRACK) {
-            event.getNeighbors().entrySet().stream().map(
-                    (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
-                    collect(Collectors.toList()).stream().forEach(block -> {
-
-                if (block.getBlock().get(Keys.POWER).isPresent()) {
-                    Location above = source.getLocation().get().getRelative(Direction.UP);
-                    if(above.getBlock().getType() == BlockTypes.AIR || above.getBlock().getType() == BlockTypes.FIRE)
-                        updateState(above, block.getBlock().get(Keys.POWER).get() > 0);
-                }
-            });
+            Location above = source.getLocation().get().getRelative(Direction.UP);
+            if(above.getBlock().getType() == BlockTypes.AIR || above.getBlock().getType() == BlockTypes.FIRE) {
+                PoweredProperty poweredProperty = source.getLocation().get().getProperty(PoweredProperty.class).orElse(null);
+                updateState(above, poweredProperty == null ? false : poweredProperty.getValue());
+            }
         }
     }
 
