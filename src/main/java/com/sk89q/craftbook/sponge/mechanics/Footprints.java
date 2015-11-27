@@ -25,7 +25,8 @@ public class Footprints extends SpongeMechanic {
     }
 
     private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new CacheLoader<UUID, FootprintData>() {
-        @Override public FootprintData load(UUID key) throws Exception {
+        @Override
+        public FootprintData load(UUID key) throws Exception {
             return new FootprintData();
         }
     });

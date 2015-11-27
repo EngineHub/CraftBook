@@ -21,7 +21,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -96,7 +96,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
         if (isMechanicSign(sign)) {
             event.getNeighbors().entrySet().stream().map(
-                    (Function<Map.Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
+                    (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
                     collect(Collectors.toList()).stream().forEach(block -> {
 
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
