@@ -12,10 +12,10 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
 import java.util.Set;
@@ -47,7 +47,7 @@ public class Bridge extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
+    public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
 
         if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {
 

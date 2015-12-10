@@ -6,7 +6,7 @@ import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
-import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.util.Direction;
@@ -23,9 +23,9 @@ public class TreeLopper extends SpongeMechanic {
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event) {
 
-        Human human;
-        if(event.getCause().first(Human.class).isPresent())
-            human = event.getCause().first(Human.class).get();
+        Humanoid human;
+        if(event.getCause().first(Humanoid.class).isPresent())
+            human = event.getCause().first(Humanoid.class).get();
         else
             return;
 
@@ -36,7 +36,7 @@ public class TreeLopper extends SpongeMechanic {
         });
     }
 
-    public void checkBlocks(Location<World> block, Human player, TreeType type, List<Location> traversed) {
+    public void checkBlocks(Location<World> block, Humanoid player, TreeType type, List<Location> traversed) {
         if(traversed.contains(block)) return;
 
         traversed.add(block);

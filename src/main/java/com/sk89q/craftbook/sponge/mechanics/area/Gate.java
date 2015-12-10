@@ -11,12 +11,12 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
 
@@ -49,9 +49,9 @@ public class Gate extends SimpleArea {
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        Human human;
-        if(event.getCause().first(Human.class).isPresent())
-            human = event.getCause().first(Human.class).get();
+        Humanoid human;
+        if(event.getCause().first(Humanoid.class).isPresent())
+            human = event.getCause().first(Humanoid.class).get();
         else
             return;
 
@@ -138,7 +138,7 @@ public class Gate extends SimpleArea {
     }
 
     @Override
-    public boolean triggerMechanic(Location block, Sign sign, Human human, Boolean forceState) {
+    public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
 
         if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
 

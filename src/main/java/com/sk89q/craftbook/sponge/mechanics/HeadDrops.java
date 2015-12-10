@@ -3,7 +3,6 @@ package com.sk89q.craftbook.sponge.mechanics;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
@@ -17,6 +16,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.profile.GameProfile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -40,20 +40,20 @@ public class HeadDrops extends SpongeMechanic {
 
         if (type == EntityTypes.PLAYER) {
             // This be a player.
-            data = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(SkullData.class).get().create();
+            data = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(SkullData.class).get().create();
             data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
             profile = ((Player) entity).getProfile();
         } else if (type == EntityTypes.ZOMBIE) {
             // This be a zombie.
-            data = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(SkullData.class).get().create();
+            data = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(SkullData.class).get().create();
             data.set(Keys.SKULL_TYPE, SkullTypes.ZOMBIE);
         } else if (type == EntityTypes.CREEPER) {
             // This be a creeper.
-            data = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(SkullData.class).get().create();
+            data = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(SkullData.class).get().create();
             data.set(Keys.SKULL_TYPE, SkullTypes.CREEPER);
         } else if (type == EntityTypes.SKELETON) {
             // This be a skeleton.
-            data = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(SkullData.class).get().create();
+            data = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(SkullData.class).get().create();
             data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
         } else {
 
@@ -62,7 +62,7 @@ public class HeadDrops extends SpongeMechanic {
 
                 // Add extra mob.
                 profile = skullType.getProfile();
-                data = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(SkullData.class).get().create();
+                data = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(SkullData.class).get().create();
                 data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
             }
         }
@@ -70,7 +70,7 @@ public class HeadDrops extends SpongeMechanic {
         if (data != null) {
             ItemStack stack = CraftBookPlugin.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
-                RepresentedPlayerData owner = CraftBookPlugin.game.getManipulatorRegistry().getBuilder(RepresentedPlayerData.class).get().create();
+                RepresentedPlayerData owner = CraftBookPlugin.game.getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
                 owner.set(Keys.REPRESENTED_PLAYER, profile);
                 stack.offer(owner);
             }

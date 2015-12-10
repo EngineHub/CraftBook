@@ -5,16 +5,16 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
-import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.world.Location;
 
 import java.util.EnumSet;
@@ -30,9 +30,9 @@ public class Elevator extends SpongeBlockMechanic {
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        Human human;
-        if(event.getCause().first(Human.class).isPresent())
-            human = event.getCause().first(Human.class).get();
+        Humanoid human;
+        if(event.getCause().first(Humanoid.class).isPresent())
+            human = event.getCause().first(Humanoid.class).get();
         else
             return;
 

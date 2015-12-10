@@ -9,7 +9,7 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -64,9 +64,9 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event) {
 
-        Human human;
-        if(event.getCause().first(Human.class).isPresent())
-            human = event.getCause().first(Human.class).get();
+        Humanoid human;
+        if(event.getCause().first(Humanoid.class).isPresent())
+            human = event.getCause().first(Humanoid.class).get();
         else
             return;
 
@@ -118,7 +118,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
      * @param human The triggering human, if applicable
      * @param forceState If the mechanic should forcibly enter a specific state
      */
-    public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Human human, @Nullable Boolean forceState);
+    public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
 
     public Location getOtherEnd(Location block, Direction back, int maximumLength) {
         for (int i = 0; i < maximumLength; i++) {
