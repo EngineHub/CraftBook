@@ -20,7 +20,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.DefaultConfig;
@@ -34,8 +34,6 @@ import java.io.File;
 
 @Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
 public class CraftBookPlugin extends CraftBookAPI {
-
-    public static Game game;
 
     MechanicDataCache cache;
 
@@ -70,7 +68,6 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
-        game = event.getGame();
         setInstance(this);
 
         new File("craftbook-data").mkdir();
@@ -137,7 +134,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
         logger.info("Enumerating Mechanics");
 
-        moduleController = ShadedModularFramework.registerModuleController(this, game);
+        moduleController = ShadedModularFramework.registerModuleController(this, Sponge.getGame());
         File configDir = new File(mainConfig.getParent(), "mechanics");
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);

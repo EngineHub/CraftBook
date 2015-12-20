@@ -4,6 +4,7 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.block.LayeredData;
@@ -109,7 +110,7 @@ public class Snow extends SpongeMechanic {
                 increaseSnow(relative, false);
                 if(dir != Direction.NONE) {
                     decreaseSnow(location);
-                    CraftBookPlugin.game.getScheduler().createTaskBuilder().delayTicks(40L).execute(() -> {
+                    Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(40L).execute(() -> {
                         disperseSnow(relative, dir.getOpposite());
                         if(isBlockBuried(location))
                             disperseSnow(location.getRelative(Direction.UP), Direction.NONE);

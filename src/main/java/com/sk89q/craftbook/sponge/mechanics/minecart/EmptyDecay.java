@@ -3,6 +3,7 @@ package com.sk89q.craftbook.sponge.mechanics.minecart;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.event.Listener;
@@ -15,7 +16,7 @@ public class EmptyDecay extends SpongeMechanic {
     public void onVehicleExit(DismountEntityEvent event) {
 
         if (event.getTargetEntity() instanceof Minecart) {
-            event.getGame().getScheduler().createTaskBuilder().delayTicks(40L).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
+            Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(40L).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
     }
 
