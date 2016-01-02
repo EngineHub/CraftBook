@@ -6,7 +6,6 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Text.Literal;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -171,14 +170,12 @@ public class SignUtil {
 
     public static String getTextRaw(Sign sign, int line) {
         Text text = getText(sign.get(SignData.class).get(), line);
-        if (text instanceof Literal) return ((Literal) text).getContent();
-        return text.toString();
+        return text.toPlain();
     }
 
     public static String getTextRaw(SignData sign, int line) {
         Text text = getText(sign, line);
-        if (text instanceof Literal) return ((Literal) text).getContent();
-        return text.toString();
+        return text.toPlain();
     }
 
     public static Text getText(SignData sign, int line) {

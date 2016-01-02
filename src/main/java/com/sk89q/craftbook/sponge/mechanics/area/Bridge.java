@@ -14,7 +14,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -57,13 +57,13 @@ public class Bridge extends SimpleArea {
 
             Location otherSide = getOtherEnd(block, SignUtil.getBack(block), maximumLength.getValue());
             if (otherSide == null) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Missing other end!").build());
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Missing other end!").build());
                 return true;
             }
             Location otherBase = otherSide.getRelative(Direction.DOWN);
 
             if(!baseBlock.getBlock().equals(otherBase.getBlock())) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Both ends must be the same material!").build());
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Both ends must be the same material!").build());
                 return true;
             }
 
@@ -108,7 +108,7 @@ public class Bridge extends SimpleArea {
                 baseBlock = baseBlock.getRelative(back);
             }
         } else {
-            if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Bridge not activatable from here!").build());
+            if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Bridge not activatable from here!").build());
             return false;
         }
 

@@ -15,7 +15,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
@@ -156,7 +156,7 @@ public class Gate extends SimpleArea {
                     toggleColumn(col, on);
                 }
             } else {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Texts.builder("Can't find a gate!").build());
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't find a gate!").build());
             }
         } else return false;
 

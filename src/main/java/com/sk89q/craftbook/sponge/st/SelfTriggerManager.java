@@ -48,7 +48,8 @@ public class SelfTriggerManager {
         selfTriggeringMechanics.put(location, mechanic);
     }
 
-    public static void registerAll(Chunk chunk) {
+    private static void registerAll(Chunk chunk) {
+        // TODO change this if the world explodes.
         /*Sponge.getGame().getScheduler().createTaskBuilder().execute(() -> {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -86,11 +87,11 @@ public class SelfTriggerManager {
         }
     }
 
-    public static void unregisterAll(Extent extent) {
+    private static void unregisterAll(Extent extent) {
         new HashSet<>(selfTriggeringMechanics.keySet()).stream().filter(loc -> loc.inExtent(extent)).forEach(selfTriggeringMechanics::remove);
     }
 
-    public static void think() {
+    static void think() {
         for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
         }
@@ -98,8 +99,6 @@ public class SelfTriggerManager {
 
     @Listener
     public void onChunkLoad(LoadChunkEvent event) {
-
-        // TODO change this if the world explodes.
         registerAll(event.getTargetChunk());
     }
 

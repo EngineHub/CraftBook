@@ -17,8 +17,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.text.Text.Literal;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
@@ -53,12 +52,12 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     @Listener
     public void onChangeSign(ChangeSignEvent event) {
 
-        ICType<? extends IC> icType = ICManager.getICType(((Literal)event.getText().lines().get(1)).getContent());
+        ICType<? extends IC> icType = ICManager.getICType((event.getText().lines().get(1)).toPlain());
         if (icType == null) return;
 
         System.out.println(icType.shorthandId);
 
-        event.getText().lines().set(1, Texts.of("=" + icType.shorthandId));
+        event.getText().lines().set(1, Text.of("=" + icType.shorthandId));
     }
 
     @Listener

@@ -16,7 +16,7 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
-    protected ConfigValue<Set<BlockState>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks());
+    private ConfigValue<Set<BlockState>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks());
 
     public void loadCommonConfig(ConfigurationNode config) {
         allowedBlocks.load(config);
@@ -52,10 +52,10 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
                 if(!player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
-                    player.sendMessage(Texts.of(TextColors.RED, "You do not have permission to create this mechanic!"));
+                    player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
-                    event.getText().lines().set(1, Texts.of(line));
+                    event.getText().lines().set(1, Text.of(line));
                 }
             }
         }
@@ -102,7 +102,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
                 if (block.getBlock().get(Keys.POWER).isPresent()) {
                     if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
-                        triggerMechanic(source.getLocation().get(), sign, (Player) event.getCause().get(NamedCause.NOTIFIER).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
+                        triggerMechanic(source.getLocation().get(), sign, event.getCause().get(NamedCause.NOTIFIER, Player.class).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
                         data.lastCurrent = block.getBlock().get(Keys.POWER).get();
                     }
                 }

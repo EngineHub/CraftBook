@@ -12,7 +12,7 @@ import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.world.Location;
@@ -76,11 +76,11 @@ public class Elevator extends SpongeBlockMechanic {
         }
 
         if (!foundGround) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("No floor!"));
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("No floor!"));
             return;
         }
         if (foundFree < 2) {
-            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("Obstructed!"));
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("Obstructed!"));
             return;
         }
 
@@ -88,7 +88,7 @@ public class Elevator extends SpongeBlockMechanic {
         // floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
         entity.setLocationAndRotation(new Location(destination.getExtent(), new Vector3d(0, destination.getY() - 1, 0)), new Vector3d(0, 0, 0), EnumSet.of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
-        if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Texts.of("You've gone " + (direction == Direction.DOWN ? "down" : "up") + " a floor!"));
+        if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("You've gone " + (direction == Direction.DOWN ? "down" : "up") + " a floor!"));
     }
 
     /**
