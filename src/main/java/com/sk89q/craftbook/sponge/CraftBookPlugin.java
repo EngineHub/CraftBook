@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.sponge;
 
-import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.ModuleController;
@@ -12,6 +11,7 @@ import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
@@ -88,9 +88,18 @@ public class CraftBookPlugin extends CraftBookAPI {
                 value.setValue(obj.toString());
         }
         });
-        configurationOptions.setAcceptedTypes(Sets.newHashSet(BlockState.class));
-        //if(!configurationOptions.acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
-        //    throw new RuntimeException();
+
+        configurationOptions.getSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializer<BlockFilter>() {
+            @Override
+            public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+                return new BlockFilter(value.getString());
+            }
+
+            @Override
+            public void serialize(TypeToken<?> type, BlockFilter obj, ConfigurationNode value) throws ObjectMappingException {
+                value.setValue(obj.getRule());
+            }
+        });
 
         discoverMechanics();
 
@@ -102,7 +111,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         blockBagManager = new BlockBagManager();
 
         moduleController.enableModules(input -> {
-            if (config.enabledMechanics.contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
+            if (config.enabledMechanics.getValue().contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
                 logger.info("Enabled: " + input.getName());
                 return true;
             }

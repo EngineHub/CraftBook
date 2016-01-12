@@ -20,11 +20,11 @@ public class EmptyDecay extends SpongeMechanic {
         }
     }
 
-    public static class MinecartDecay implements Runnable {
+    private static class MinecartDecay implements Runnable {
 
         Minecart cart;
 
-        public MinecartDecay(Minecart cart) {
+        MinecartDecay(Minecart cart) {
 
             this.cart = cart;
         }

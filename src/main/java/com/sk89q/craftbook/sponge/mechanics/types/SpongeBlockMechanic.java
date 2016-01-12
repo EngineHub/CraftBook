@@ -10,7 +10,7 @@ public abstract class SpongeBlockMechanic extends SpongeMechanic {
      * Whilst this can be used internally by the mechanic, that may not be the most efficient thing to do.
      * </p>
      * 
-     * @param location
+     * @param location The location to check at.
      * @return If the block is an instance of this mechanic
      */
     public abstract boolean isValid(Location location);

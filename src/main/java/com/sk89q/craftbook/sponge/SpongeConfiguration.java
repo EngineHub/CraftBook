@@ -1,16 +1,14 @@
 package com.sk89q.craftbook.sponge;
 
 import com.me4502.modularframework.module.ModuleWrapper;
-import ninja.leaping.configurate.ConfigurationNode;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import org.spongepowered.api.CatalogType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SpongeConfiguration {
@@ -21,7 +19,7 @@ public class SpongeConfiguration {
 
     private CommentedConfigurationNode config;
 
-    public List<String> enabledMechanics;
+    public ConfigValue<List<String>> enabledMechanics = new ConfigValue<>("enabled-mechanics", "The list of mechanics to load.", Collections.singletonList("Elevator"), null);
 
     public SpongeConfiguration(CraftBookPlugin plugin, File mainConfig, ConfigurationLoader<CommentedConfigurationNode> configManager) {
         this.plugin = plugin;
@@ -38,9 +36,9 @@ public class SpongeConfiguration {
 
             config = configManager.load(CraftBookPlugin.<CraftBookPlugin>inst().configurationOptions);
 
-            enabledMechanics = getValue(config.getNode("enabled-mechanics"), Collections.singletonList("Elevator"), "The list of mechanics to load.");
+            enabledMechanics.load(config);
 
-            List<String> disabledMechanics = plugin.moduleController.getModules().stream().filter(entry -> !enabledMechanics.contains(entry.getName())).map(ModuleWrapper::getName).collect(Collectors.toList());
+            List<String> disabledMechanics = plugin.moduleController.getModules().stream().filter(entry -> !enabledMechanics.getValue().contains(entry.getName())).map(ModuleWrapper::getName).collect(Collectors.toList());
 
             config.getNode("disabled-mechanics").setValue(disabledMechanics).setComment("This contains all disabled mechanics. It is never read internally, but just acts as a convenient place to grab mechanics from.");
 
@@ -53,38 +51,5 @@ public class SpongeConfiguration {
 
     public void save() {
 
-    }
-
-    public static <T> T getValue(ConfigurationNode node, T defaultValue, String comment) {
-        if(node.isVirtual()) {
-            setValue(node, defaultValue, comment);
-        }
-
-        if(comment != null && node instanceof CommentedConfigurationNode) {
-            ((CommentedConfigurationNode)node).setComment(comment);
-        }
-
-        //if(!node.getOptions().acceptsType(BlockTypes.AIR.getDefaultState().getClass()))
-        //    throw new RuntimeException();
-
-        try {
-            return (T) node.getValue(defaultValue);
-        } catch(Exception e) {
-            return defaultValue;
-        }
-    }
-
-    public static <T> void setValue(ConfigurationNode node, T value, String comment) {
-        if(comment != null && node instanceof CommentedConfigurationNode) {
-            ((CommentedConfigurationNode)node).setComment(comment);
-        }
-
-        Object converted = value;
-        if(value instanceof CatalogType)
-            converted = ((CatalogType)value).getName();
-        if(value instanceof Optional)
-            converted = ((Optional<?>) value).orElse(null);
-
-        node.setValue(converted);
     }
 }

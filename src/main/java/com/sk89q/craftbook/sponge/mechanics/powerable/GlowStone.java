@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.sponge.mechanics.powerable;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -17,16 +18,16 @@ public class GlowStone extends SimplePowerable {
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    ConfigValue<BlockState> offBlock = new ConfigValue<>("off-block", "Sets the block that the glowstone turns into when turned off.", BlockTypes.SOUL_SAND.getDefaultState());
+    private ConfigValue<BlockState> offBlock = new ConfigValue<>("off-block", "Sets the block that the glowstone turns into when turned off.", BlockTypes.SOUL_SAND.getDefaultState(), TypeToken.of(BlockState.class));
 
     @Override
     public void onInitialize() throws CraftBookException {
-        //offBlock.load(config);
+        offBlock.load(config);
     }
 
     @Override
     public void onDisable() {
-        //offBlock.save(config);
+        offBlock.save(config);
     }
 
     @Override

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Module(moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic {
 
-    ParticleEffect footprintParticle;
+    private ParticleEffect footprintParticle;
 
     public void onInitialize() {
         footprintParticle = Sponge.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.FOOTSTEP).build();
@@ -49,20 +49,20 @@ public class Footprints extends SpongeMechanic {
         }
     }
 
-    public FootprintData getFootprintData(UUID uuid) {
+    private FootprintData getFootprintData(UUID uuid) {
         return footprintDataCache.getUnchecked(uuid);
     }
 
-    private class FootprintData {
-        public Vector3d position;
-        public boolean side;
+    private static class FootprintData {
+        Vector3d position;
+        boolean side;
 
-        public FootprintData() {
+        FootprintData() {
             this.position = new Vector3d(0,0,0);
             this.side = false;
         }
 
-        public boolean canPlaceFootprint(Vector3d currentPosition) {
+        boolean canPlaceFootprint(Vector3d currentPosition) {
             return position.distanceSquared(currentPosition) > 1;
         }
     }

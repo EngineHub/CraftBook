@@ -6,6 +6,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -54,6 +55,11 @@ public class Bridge extends SimpleArea {
             Direction back = SignUtil.getBack(block);
 
             Location baseBlock = block.getRelative(Direction.DOWN);
+
+            if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't use this material for a bridge!").build());
+                return true;
+            }
 
             Location otherSide = getOtherEnd(block, SignUtil.getBack(block), maximumLength.getValue());
             if (otherSide == null) {
@@ -126,10 +132,11 @@ public class Bridge extends SimpleArea {
     }
 
     @Override
-    public Set<BlockState> getDefaultBlocks() {
-        Set<BlockState> states = Sets.newHashSet();
-        states.add(BlockTypes.PLANKS.getDefaultState());
-        states.add(BlockTypes.COBBLESTONE.getDefaultState());
+    public Set<BlockFilter> getDefaultBlocks() {
+        Set<BlockFilter> states = Sets.newHashSet();
+        states.add(new BlockFilter("PLANKS"));
+        states.add(new BlockFilter("BOOKSHELF"));
+        states.add(new BlockFilter("COBBLESTONE"));
         return states;
     }
 }

@@ -4,6 +4,8 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import java.util.Collection;
+
 public class BlockUtil {
 
     /**
@@ -33,6 +35,14 @@ public class BlockUtil {
         if(directFaces == null)
             directFaces = new Direction[]{Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         return directFaces;
+    }
+
+    public static boolean doesStatePassFilters(Collection<BlockFilter> filters, BlockState state) {
+        for(BlockFilter filter : filters)
+            for(BlockState blockState : filter.getApplicableBlockStates())
+                if(blockState.equals(state))
+                    return true;
+        return false;
     }
 
     /**
