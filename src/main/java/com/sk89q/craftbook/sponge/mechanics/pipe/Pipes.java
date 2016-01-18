@@ -1,7 +1,10 @@
 package com.sk89q.craftbook.sponge.mechanics.pipe;
 
 import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.InputPipePart;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.OutputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PassthroughPipePart;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PipePart;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import org.spongepowered.api.world.Location;
 
@@ -17,6 +20,8 @@ public class Pipes extends SpongeBlockMechanic {
     public void onInitialize() {
         List<PipePart> pipePartList = new ArrayList<>();
         pipePartList.add(new PassthroughPipePart());
+        pipePartList.add(new InputPipePart());
+        pipePartList.add(new OutputPipePart());
 
         pipeParts = pipePartList.toArray(new PipePart[pipePartList.size()]);
     }
