@@ -4,7 +4,9 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class BlockUtil {
 
@@ -35,6 +37,25 @@ public class BlockUtil {
         if(directFaces == null)
             directFaces = new Direction[]{Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         return directFaces;
+    }
+
+    public static List<Location> getAdjacentExcept(Location location, Direction ... directions) {
+        List<Location> locations = new ArrayList<>();
+
+        for(Direction direction : getDirectFaces()) {
+            boolean passes = true;
+            for(Direction direction1 : directions) {
+                if(direction1 == direction) {
+                    passes = false;
+                    break;
+                }
+            }
+            if (passes) {
+                locations.add(location.getRelative(direction));
+            }
+        }
+
+        return locations;
     }
 
     public static boolean doesStatePassFilters(Collection<BlockFilter> filters, BlockState state) {
