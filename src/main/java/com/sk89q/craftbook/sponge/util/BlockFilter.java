@@ -65,4 +65,9 @@ public class BlockFilter {
     public String getRule() {
         return this.rule;
     }
+
+    @Override
+    public String toString() {
+        return this.rule;
+    }
 }

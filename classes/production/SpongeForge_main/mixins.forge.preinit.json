@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.4",
+    "package": "org.spongepowered.mod.mixin.core",
+    "refmap": "mixins.forge.refmap.json",
+    "mixins": [
+        "fml.common.MixinModContainer",
+        "fml.common.eventhandler.MixinEvent"
+    ],
+    "client": [
+        "fml.common.MixinMinecraftDummyContainerClient"
+    ],
+    "server": [
+        "fml.common.MixinMinecraftDummyContainerServer"
+    ]
+}

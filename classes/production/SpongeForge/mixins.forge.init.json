@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "minVersion": "0.5.1",
+    "package": "org.spongepowered.mod.mixin.core",
+    "refmap": "mixins.forge.refmap.json",
+    "mixins": [
+        "fml.common.MixinLoadController"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

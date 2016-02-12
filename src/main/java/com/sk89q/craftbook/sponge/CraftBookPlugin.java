@@ -7,8 +7,13 @@ import com.me4502.modularframework.ShadedModularFramework;
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
+import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
@@ -111,7 +116,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         blockBagManager = new BlockBagManager();
 
         moduleController.enableModules(input -> {
-            if (config.enabledMechanics.getValue().contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))) {
+            if (config.enabledMechanics.getValue().contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all")) || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
                 logger.info("Enabled: " + input.getName());
                 return true;
             }
@@ -130,6 +135,19 @@ public class CraftBookPlugin extends CraftBookAPI {
                 e.printStackTrace();
             }
         }
+
+        if("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
+            for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+                if(!module.isEnabled()) continue;
+                try {
+                    Mechanic mechanic = (Mechanic) module.getModule();
+                    if(mechanic instanceof DocumentationProvider)
+                        DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
+                } catch (ModuleNotInstantiatedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Listener
@@ -144,7 +162,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Enumerating Mechanics");
 
         moduleController = ShadedModularFramework.registerModuleController(this, Sponge.getGame());
-        File configDir = new File(mainConfig.getParent(), "mechanics");
+        File configDir = new File(getWorkingDirectory(), "mechanics");
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);
         moduleController.setConfigurationOptions(configurationOptions);
@@ -175,5 +193,10 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Override
     public MechanicDataCache getCache() {
         return cache;
+    }
+
+    @Override
+    public File getWorkingDirectory() {
+        return mainConfig.getParentFile();
     }
 }

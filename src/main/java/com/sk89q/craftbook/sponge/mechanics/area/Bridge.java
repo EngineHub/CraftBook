@@ -6,6 +6,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -22,7 +23,7 @@ import org.spongepowered.api.world.Location;
 import java.util.Set;
 
 @Module(moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
-public class Bridge extends SimpleArea {
+public class Bridge extends SimpleArea implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -138,5 +139,24 @@ public class Bridge extends SimpleArea {
         states.add(new BlockFilter("BOOKSHELF"));
         states.add(new BlockFilter("COBBLESTONE"));
         return states;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/bridge";
+    }
+
+    @Override
+    public String getMainDocumentation() {
+        return "";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                allowedBlocks,
+                maximumLength,
+                maximumWidth
+        };
     }
 }

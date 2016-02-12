@@ -3,6 +3,8 @@ package com.sk89q.craftbook.core;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 
+import java.io.File;
+
 /**
  * The core class for all implementations of the CraftBook Core.
  */
@@ -21,7 +23,7 @@ public abstract class CraftBookAPI {
         return (T) instance;
     }
 
-    public static void setInstance(CraftBookAPI api) throws IllegalAccessException {
+    public static void setInstance(CraftBookAPI api) {
         instance = api;
     }
 
@@ -36,4 +38,11 @@ public abstract class CraftBookAPI {
      * @return The {@link MechanicDataCache}
      */
     public abstract MechanicDataCache getCache();
+
+    /**
+     * Gets the working directory of CraftBook.
+     *
+     * @return The working directory
+     */
+    public abstract File getWorkingDirectory();
 }

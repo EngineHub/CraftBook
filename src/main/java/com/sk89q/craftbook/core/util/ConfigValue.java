@@ -55,8 +55,16 @@ public class ConfigValue<T> {
         return this.value == null ? this.defaultValue : this.value;
     }
 
+    public T getDefaultValue() {
+        return this.defaultValue;
+    }
+
     public void setValue(T value) {
         this.value = value;
+    }
+
+    public TypeToken<T> getTypeToken() {
+        return this.typeToken == null ? TypeToken.of((Class<T>) defaultValue.getClass()) : typeToken;
     }
 
     private void setValueInternal(ConfigurationNode configurationNode) {
