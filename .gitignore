@@ -13,6 +13,8 @@ local.properties
 .loadpath
 *.iml
 *.class
+classes/
+logs/
 
 # Eclipse Core
 .project
