@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
@@ -42,8 +41,13 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
 
+/**
+ * Pipes class, suggested fix
+ * @author Me4502
+ * @author _Bedrock_Miner_
+ *
+ */
 public class Pipes extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -104,25 +108,61 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         return null;
     }
-
-    public void searchNearbyPipes(Block block, Set<Location> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions) {
-
-        LinkedList<Block> searchQueue = new LinkedList<Block>();
-
-        //Enumerate the search queue.
-        for (int x = -1; x < 2; x++) {
+	
+	/*
+	 * This is the main method to call when ItemStacks should be transferred via pipe.
+	 */
+	public void deliverItemStacks(Block startBlock, List<ItemStack> items) {
+		// Creating all the sets we need.
+		// Evaluated is used to keep track of blocks we have checked already.
+		Set<Location> evaluated = new HashSet<Location>();
+		// Active blocks are all the blocks that will be evaluated in this step. The first is of course the start block.
+		Set<Block> activeBlocks = new HashSet<Block>();
+		activeBlocks.add(startBlock);
+		
+		// Found blocks are the blocks nearby the active blocks. They will be evaluated in the next step.
+		Set<Block> foundBlocks = new HashSet<Block>();
+		// Found pistons and droppers will be evaluated directly as they might get items out of the pipe.
+		Set<Block> foundOutput = new HashSet<Block>();
+		
+		while (activeBlocks.size() > 0) {
+			// Clearing the sets for a new search round
+			foundBlocks.clear();
+			foundOutput.clear();
+			for (Block block: activeBlocks) {
+				searchNearbyPipeParts(block, evaluated, foundBlocks, foundOutput);
+			}
+			// Got all potential blocks for this stage. Evaluating all the outputs
+			for (Block output: foundOutput) {
+				depositItems(output, items);
+				//If no item is left, we've finished our work.
+				if (items.size() == 0)
+					return;
+			}
+			// foundBlocks becomes the new set of active Blocks.
+			activeBlocks.clear();
+			activeBlocks.addAll(foundBlocks);
+			foundBlocks.clear();
+		}
+	}
+	
+	/*
+	 * This method searches for pipe elements around the given start block. Found glass blocks (only full cubes, not panes) are 
+	 * added to the "found" set, found pistons and droppers are added to the "output" set. Their locations are added to the 
+	 * "evaluated" set.
+	 */
+	public void searchNearbyPipeParts(Block block, Set<Location> evaluated, Set<Block> found, Set<Block> output) {
+		// Iterating through the nearby blocks
+		for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
-
-                    if(items.isEmpty())
-                        return;
-
-                    if (!pipesDiagonal) {
+					// Continue if diagonal although not allowed
+					if (!pipesDiagonal) {
                         if (x != 0 && y != 0) continue;
                         if (x != 0 && z != 0) continue;
                         if (y != 0 && z != 0) continue;
                     } else {
-
+						// Check diagonal insulation
                         if (Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z) && Math.abs(y) == Math.abs(z)) {
                             if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
                                     && pipeInsulator.isSame(block.getRelative(0, y, 0))
@@ -146,140 +186,190 @@ public class Pipes extends AbstractCraftBookMechanic {
                             }
                         }
                     }
-
-                    Block off = block.getRelative(x, y, z);
-
+					// Retrieving the new pipe block
+					Block off = block.getRelative(x, y, z);
+					// Checking if it really is a pipe block
                     if (!isValidPipeBlock(off.getType())) continue;
+					// Checking that the location has not been evaluated yet.
+                    if (evaluated.contains(off.getLocation())) continue;
+					
+					// We've found a new piece of pipe!
+					
+					// Comparing the glass color
+					if(block.getType() == Material.STAINED_GLASS && off.getType() == Material.STAINED_GLASS && block.getData() != off.getData()) continue;
+					
+                    if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS) {
+						// Add found glass cube to the "found" set.
+                        found.add(off);
+						evaluated.add(off.getLocation());
+						
+                    } else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
+						// Checking for glass panes (It seems like glass panes can conduct diagonally if two xyz values are != 0
+						// Is this intended?)
+						
+						//Initial offset. This will be increased until we reach the end of the glasspane track.
+						int dx = x;
+						int dy = y;
+						int dz = z;
+						
+						while (true) {
+							Block offset = off.getRelative(dx, dy, dz);
+							
+							// Checking if the track leads to nowhere
+							if (!isValidPipeBlock(offset.getType())) break;
+							// Checking for circles, exiting if wrong
+							if (evaluated.contains(offset.getLocation())) break;
+							// Checking colorcodes, exiting if wrong
+							if(offset.getType() == Material.STAINED_GLASS_PANE) {
+								Block prev = offset.getRelative(-x, -y, -z);
+								Block next = offset.getRelative(x, y, z);
+								if( (prev.getType() == Material.STAINED_GLASS || prev.getType() == Material.STAINED_GLASS_PANE) 
+									&& off.getData() != prev.getData() || 
+									(next.getType() == Material.STAINED_GLASS || next.getType() == Material.STAINED_GLASS_PANE) 
+									&& off.getData() != next.getData()) 
+									break;
+							// Checking for end of pane track, adding found glass cube to the "found" set and exiting
+							} else if (offset.getType() == Material.GLASS || offset.getType() == Material.STAINED_GLASS) {
+								found.add(offset);
+								evaluated.add(offset.getLocation());
+								break;
+							} else {
+								// Increasing the offset
+								dx += x;
+								dy += y;
+								dz += z;
+							}
+						}						
+                    } else if(off.getType() == Material.PISTON_BASE || off.getType() == Material.DROPPER)
+						// From what I see in the code below, dropper should simply spit out what they get through the pipe.
+						// However, droppers in the pipe are never detected, so I added the or statement in the if check above
+						// to detect droppers as well. With this it hopefully works.
+						// Add found pistons and droppers to the "output" set. They will be evaluated first.
+                        output.add(off);
+						evaluated.add(off.getLocation());
+				}
+			}
+		}
+	}
+	
+	/*
+	 * Deposits the Items in the output if possible. This can probably be extended to more output possibilities.
+	 */
+	public void depositItems(Block output, List<ItemStack> items) {
+		// Piston output to a chest
+		if (output.getType() == Material.PISTON_BASE) {
+            ChangedSign sign = getSignOnPiston(output);
+			// Now you can remove the "p" if you want to...
+            HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
+            HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
 
-                    if (visitedPipes.contains(off.getLocation())) continue;
-
-                    visitedPipes.add(off.getLocation());
-
-                    if(block.getType() == Material.STAINED_GLASS && off.getType() == Material.STAINED_GLASS && block.getData() != off.getData()) continue;
-
-                    if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
-                        searchQueue.add(off);
-                    else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
-                        if (!isValidPipeBlock(off.getRelative(x, y, z).getType())) continue;
-                        if (visitedPipes.contains(off.getRelative(x, y, z).getLocation())) continue;
-                        if(off.getType() == Material.STAINED_GLASS_PANE) {
-                            if((block.getType() == Material.STAINED_GLASS || block.getType() == Material.STAINED_GLASS_PANE) && off.getData() != block.getData() || (off.getRelative(x, y, z).getType() == Material.STAINED_GLASS || off.getRelative(x, y, z).getType() == Material.STAINED_GLASS_PANE) && off.getData() != off.getRelative(x, y, z).getData()) continue;
-                        }
-                        visitedPipes.add(off.getRelative(x, y, z).getLocation());
-                        searchQueue.add(off.getRelative(x, y, z));
-                    } else if(off.getType() == Material.PISTON_BASE)
-                        searchQueue.add(0, off); //Pistons are treated with higher priority.
+            if(sign != null) {
+				/*
+				// TODO: Add the book mechanic to allow more items to be filtered.
+				
+				if (sign.getLine(2).equalsIgnoreCase("book")) {
+					int slotForBook = //the 4th line on the sign. Slot 0 if empty.
+					// ...retrieve book content and parse data
+					// first page = "filter" (keyword to stop automatic removal)
+					// second page = included items
+					// third page = excluded items
+				}
+				*/
+				
+                for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                    pFilters.add(ItemSyntax.getItem(line3.trim()));
                 }
+                for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                    pExceptions.add(ItemSyntax.getItem(line4.trim()));
+                }
+
+                pFilters.removeAll(Collections.singleton(null));
+                pExceptions.removeAll(Collections.singleton(null));
             }
-        }
 
-        //Use the queue to search blocks.
-        for(Block bl : searchQueue) {
-            if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS)
-                searchNearbyPipes(bl, visitedPipes, items, filters, exceptions);
-            else if (bl.getType() == Material.PISTON_BASE) {
+			// Apply filters
+            List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+            if(filteredItems.isEmpty())
+                return;
 
-                PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
+            List<ItemStack> newItems = new ArrayList<ItemStack>();
+            PistonBaseMaterial p = (PistonBaseMaterial) output.getState().getData();
 
-                ChangedSign sign = getSignOnPiston(bl);
-
-                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
-                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
-
-                if(sign != null) {
-
-                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ItemSyntax.getItem(line3.trim()));
+			// Insert items
+            Block fac = output.getRelative(p.getFacing());
+            if (InventoryUtil.doesBlockHaveInventory(fac)) {
+                newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
+            } else if(fac.getType() == Material.JUKEBOX) {
+                Jukebox juke = (Jukebox) fac.getState();
+                List<ItemStack> its = new ArrayList<ItemStack>(filteredItems);
+                if(!juke.isPlaying()) {
+                    Iterator<ItemStack> iter = its.iterator();
+                    while(iter.hasNext()) {
+                        ItemStack st = iter.next();
+                        if(!st.getType().isRecord()) continue;
+                        juke.setPlaying(st.getType());
+                        iter.remove();
+                        break;
                     }
-                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
-                    }
-
-                    pFilters.removeAll(Collections.singleton(null));
-                    pExceptions.removeAll(Collections.singleton(null));
                 }
+                newItems.addAll(its);
+            } else {
+                PipePutEvent event = new PipePutEvent(output, new ArrayList<ItemStack>(filteredItems), fac);
+                Bukkit.getPluginManager().callEvent(event);
 
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
-
-                if(filteredItems.isEmpty())
-                    continue;
-
-                List<ItemStack> newItems = new ArrayList<ItemStack>();
-
-                Block fac = bl.getRelative(p.getFacing());
-                if (InventoryUtil.doesBlockHaveInventory(fac)) {
-                    newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
-                } else if(fac.getType() == Material.JUKEBOX) {
-                    Jukebox juke = (Jukebox) fac.getState();
-                    List<ItemStack> its = new ArrayList<ItemStack>(filteredItems);
-                    if(!juke.isPlaying()) {
-                        Iterator<ItemStack> iter = its.iterator();
-                        while(iter.hasNext()) {
-                            ItemStack st = iter.next();
-                            if(!st.getType().isRecord()) continue;
-                            juke.setPlaying(st.getType());
-                            iter.remove();
-                            break;
-                        }
-                    }
-                    newItems.addAll(its);
-                } else {
-                    PipePutEvent event = new PipePutEvent(bl, new ArrayList<ItemStack>(filteredItems), fac);
-                    Bukkit.getPluginManager().callEvent(event);
-
-                    newItems.addAll(event.getItems());
-                }
-
-                items.removeAll(filteredItems);
-                items.addAll(newItems);
-
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
-            } else if (bl.getType() == Material.DROPPER) {
-
-                ChangedSign sign = getSignOnPiston(bl);
-
-                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
-                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
-
-                if(sign != null) {
-
-                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ItemSyntax.getItem(line3.trim()));
-                    }
-                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
-                    }
-
-                    pFilters.removeAll(Collections.singleton(null));
-                    pExceptions.removeAll(Collections.singleton(null));
-                }
-
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
-
-                if(filteredItems.isEmpty())
-                    continue;
-
-                Dropper dropper = (Dropper) bl.getState();
-                List<ItemStack> newItems = new ArrayList<ItemStack>();
-
-                newItems.addAll(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
-
-                for(ItemStack stack : dropper.getInventory().getContents())
-                    if(ItemUtil.isStackValid(stack))
-                        for(int i = 0; i < stack.getAmount(); i++)
-                            dropper.drop();
-
-                items.removeAll(filteredItems);
-                items.addAll(newItems);
-
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                newItems.addAll(event.getItems());
             }
-        }
-    }
 
+            items.removeAll(filteredItems);
+            items.addAll(newItems);
+			
+		// Dropper mechanic
+        } else if (output.getType() == Material.DROPPER) {
+            ChangedSign sign = getSignOnPiston(output);
+
+            HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
+            HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
+
+            if(sign != null) {
+				// TODO: book code, see above 		
+                for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                    pFilters.add(ItemSyntax.getItem(line3.trim()));
+                }
+                for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                    pExceptions.add(ItemSyntax.getItem(line4.trim()));
+                }
+
+                pFilters.removeAll(Collections.singleton(null));
+                pExceptions.removeAll(Collections.singleton(null));
+            }
+
+			// Filtering
+            List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+            if(filteredItems.isEmpty())
+                return;
+	
+			// Depositing
+            Dropper dropper = (Dropper) output.getState();
+            List<ItemStack> newItems = new ArrayList<ItemStack>();
+            newItems.addAll(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
+
+			// Spitting them out
+            for(ItemStack stack : dropper.getInventory().getContents())
+                if(ItemUtil.isStackValid(stack))
+                    for(int i = 0; i < stack.getAmount(); i++)
+                        dropper.drop();
+
+            items.removeAll(filteredItems);
+            items.addAll(newItems);
+        }
+        
+	}
+	
     private boolean isValidPipeBlock(Material typeId) {
 
-        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER || typeId == Material.THIN_GLASS || typeId == Material.STAINED_GLASS_PANE;
+        return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE 
+			|| typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER 
+			|| typeId == Material.THIN_GLASS || typeId == Material.STAINED_GLASS_PANE;
     }
 
     public void startPipe(Block block, List<ItemStack> items, boolean request) {
@@ -303,8 +393,6 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         filters.removeAll(Collections.singleton(null));
         exceptions.removeAll(Collections.singleton(null));
-
-        Set<Location> visitedPipes = new HashSet<Location>();
 
         if (block.getType() == Material.PISTON_STICKY_BASE) {
 
@@ -334,8 +422,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                    deliverItemStacks(block, items);
                 }
 
                 if (!items.isEmpty()) {
@@ -357,8 +444,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                    // Inserted my method
+                    deliverItemStacks(block, items);
                 }
 
                 if (!items.isEmpty()) {
@@ -382,8 +469,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
 
                 if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                    // Inserted my method
+                    deliverItemStacks(block, items);
                 }
 
                 if (!items.isEmpty()) {
@@ -398,8 +485,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
-                    visitedPipes.add(fac.getLocation());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
+                    // Inserted my method
+                    deliverItemStacks(block, items);
                 }
                 leftovers.addAll(items);
             }
