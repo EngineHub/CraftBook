@@ -25,6 +25,10 @@
     </properties>
     <repositories>
         <repository>
+            <id>spigot</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>Apache</id>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
@@ -54,11 +58,6 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
             <version>1.8-R0.1-SNAPSHOT</version>
         </dependency>
 
@@ -108,12 +107,6 @@
             <groupId>fr.neatmonster</groupId>
             <artifactId>ncpcore</artifactId>
             <version>static</version>
-        </dependency>
-        <dependency>
-            <groupId>net.gravitydevelopment.anticheat</groupId>
-            <artifactId>AntiCheat</artifactId>
-            <version>2.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <distributionManagement>
@@ -181,7 +174,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -191,7 +184,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <addMavenDescriptor>true</addMavenDescriptor>
@@ -209,7 +202,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <version>2.4.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -235,7 +228,7 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-2</version>
+                <version>2.6</version>
                 <configuration>
                     <descriptor>${basedir}/src/main/assembly/default.xml</descriptor>
                 </configuration>
@@ -253,7 +246,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.3</version>
                 <configuration>
                     <preparationGoals>assembly:assembly</preparationGoals>
                     <goals>assembly:assembly</goals>
@@ -264,7 +257,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7.2</version>
+                <version>2.19.1</version>
                 <configuration>
                     <excludes>
                         <exclude>**/TestOfflinePermissible.java</exclude>
@@ -275,7 +268,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.4</version>
                 <configuration>
                     <reportPlugins>
                         <plugin>
@@ -300,15 +293,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>

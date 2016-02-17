@@ -31,4 +31,5 @@
             </includes>
         </fileSet>
     </fileSets>
+    <id>dist</id>
 </assembly>
