@@ -8,6 +8,7 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -79,11 +80,16 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
         if(SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
             signLocation = groundLocation.getRelative(Direction.DOWN);
 
-        if(signLocation != null && event.getToTransform().getPosition().getY() > event.getFromTransform().getPosition().getY()) {
+        if(signLocation != null) {
             Sign sign = (Sign) signLocation.getTileEntity().get();
 
-            if (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]"))
-                transportEntity(event.getTargetEntity(), signLocation, Direction.UP); //Jump is up
+            if (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]")) {
+                if (event.getToTransform().getPosition().getY() > event.getFromTransform().getPosition().getY()) {
+                    transportEntity(event.getTargetEntity(), signLocation, Direction.UP); //Jump is up
+                } else if(event.getTargetEntity().get(Keys.IS_SNEAKING).orElse(false)) {
+                    transportEntity(event.getTargetEntity(), signLocation, Direction.DOWN); //Sneak is down
+                }
+            }
         }
     }
 
