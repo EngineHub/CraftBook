@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
-import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockFilterSetTypeToken;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -23,16 +23,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import javax.annotation.Nullable;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
-    protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeToken<Set<BlockFilter>>() {});
+    protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterSetTypeToken());
 
     public void loadCommonConfig(ConfigurationNode config) {
         allowedBlocks.load(config);
@@ -159,4 +158,5 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     public static class SimpleAreaData extends SpongeRedstoneMechanicData {
         public long blockBagId;
     }
+
 }
