@@ -91,9 +91,15 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
 
         Location<World> destination = findDestination(block, direction);
 
-        if (destination == block) return; // This elevator has no destination.
+        if (destination == block) {
+            if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("This lift has no destination!"));
+            return; // This elevator has no destination.
+        }
 
-        Location floor = destination.getExtent().getLocation((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
+        //Calculate difference.
+        destination = destination.add(0, Math.ceil(entity.getLocation().getPosition().getY() - block.getY()) + 1, 0);
+
+        Location<World> floor = destination.getExtent().getLocation((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
         // well, unless that's already a ceiling.
         if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() == MatterProperty.Matter.SOLID) {
             floor = floor.getRelative(Direction.DOWN);
@@ -104,7 +110,7 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() != MatterProperty.Matter.SOLID) {
+            if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() != MatterProperty.Matter.SOLID || SignUtil.isSign(floor)) {
                 foundFree++;
             } else {
                 foundGround = true;
@@ -145,7 +151,7 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
 
         if (direction == Direction.UP || direction == Direction.DOWN) {
 
-            while (direction == Direction.UP ? y < 256 : y > 0) {
+            while (direction == Direction.UP ? y < 255 : y > 0) {
 
                 y += direction == Direction.UP ? 1 : -1;
 
