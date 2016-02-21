@@ -17,16 +17,12 @@ public class SpongeDataCache extends MechanicDataCache {
         try {
             T data = clazz.newInstance();
 
-            try {
-                File file = new File("craftbook-data", locationKey + ".json");
-                if(!file.exists())
-                    return data;
+            File file = new File("craftbook-data", locationKey + ".json");
+            if(!file.exists())
+                return data;
 
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-
+            try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 data = jsonConverter.deserialize(reader, clazz);
-
-                reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,14 +37,10 @@ public class SpongeDataCache extends MechanicDataCache {
 
     @Override
     protected void saveToDisk(Class<MechanicData> clazz, String locationKey, MechanicData data) {
-        try {
-            File file = new File("craftbook-data", locationKey + ".json");
+        File file = new File("craftbook-data", locationKey + ".json");
 
-            PrintWriter writer = new PrintWriter(file);
-
+        try(PrintWriter writer = new PrintWriter(file)) {
             writer.print(jsonConverter.serialize(data));
-
-            writer.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -92,10 +92,10 @@ public class SignUtil {
         for (int i = 0; i < searchRadius; i++) {
             if (isSign(otherBlock.getRelative(way))) {
                 otherBlock = otherBlock.getRelative(way);
-                // TODO if (BukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
-                found = true;
-                break;
-                // }
+                if(getTextRaw((Sign) otherBlock.getTileEntity().get(), 1).equalsIgnoreCase(criterea)) {
+                    found = true;
+                    break;
+                }
             } else otherBlock = otherBlock.getRelative(way);
         }
         if (!found) return null;
