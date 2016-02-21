@@ -5,10 +5,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.trait.BlockTrait;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BlockFilter {
 
@@ -52,13 +49,13 @@ public class BlockFilter {
             if(counter.length != 0) {
                 while (true) {
                     BlockState state = blockType.getDefaultState();
-                    List<BlockTrait> blockTraits = new ArrayList<>(state.getTraits());
+                    List<BlockTrait<?>> blockTraits = new ArrayList<>(state.getTraits());
                     for (int i = 0; i < counter.length; i++) {
-                        BlockTrait trait = blockTraits.get(i);
+                        BlockTrait<?> trait = blockTraits.get(i);
                         if(traitSpecifics.containsKey(trait.getName().toLowerCase()))
                             state = state.withTrait(trait, traitSpecifics.get(trait.getName().toLowerCase())).orElse(null);
                         else {
-                            List<?> possibleValues = new ArrayList<>(trait.getPossibleValues());
+                            ArrayList<?> possibleValues = new ArrayList<>(trait.getPossibleValues());
                             if (counter[i] >= possibleValues.size()) {
                                 counter[i] = 0;
                                 if (i + 1 >= counter.length)
