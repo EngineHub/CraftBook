@@ -16,10 +16,22 @@ import java.util.Optional;
  */
 public class SignUtil {
 
+    /**
+     * Gets whether or not the block at this location is a sign.
+     *
+     * @param block The location to check
+     * @return If it is a sign
+     */
     public static boolean isSign(Location block) {
         return isSign(block.getBlock());
     }
 
+    /**
+     * If this blockstate is a sign.
+     *
+     * @param block The blockstate to check
+     * @return If it is a sign
+     */
     public static boolean isSign(BlockState block) {
         return block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN;
     }

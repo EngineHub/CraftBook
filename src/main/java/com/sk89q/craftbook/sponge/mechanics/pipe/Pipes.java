@@ -11,7 +11,6 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.item.InventoryItemData;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;

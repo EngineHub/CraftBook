@@ -204,11 +204,13 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
     }
 
     @Override
-    public String getMainDocumentation() {
-        return  "=========" +
-                "Elevators" +
-                "=========" +
-                "";
+    public String[] getMainDocumentation() {
+        return new String[]{
+                "=========",
+                "Elevators",
+                "=========",
+                ""
+        };
     }
 
     @Override

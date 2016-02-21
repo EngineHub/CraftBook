@@ -15,9 +15,13 @@ public interface DocumentationProvider {
     /**
      * Gets the main documentation section.
      *
-     * @return The main documentation section/
+     * <p>
+     *     Each string in the array refers to a different line.
+     * </p>
+     *
+     * @return The main documentation section
      */
-    String getMainDocumentation();
+    String[] getMainDocumentation();
 
     /**
      * Gets an array of all configuration nodes this mechanic uses.

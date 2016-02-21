@@ -6,13 +6,14 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "GlowStone", onEnable="onInitialize", onDisable="onDisable")
-public class GlowStone extends SimplePowerable {
+public class GlowStone extends SimplePowerable implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -38,5 +39,28 @@ public class GlowStone extends SimplePowerable {
     @Override
     public boolean isValid(Location location) {
         return location.getBlockType() == BlockTypes.GLOWSTONE;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/glowstone";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return  new String[]{
+                "=========",
+                "Glowstone",
+                "=========",
+                "The *Glowstone* mechanic allows switching a configurable block (defaulted to glass) to glowstone using redstone. Put a tonne together and you can control your home's lighting with a regular redstone switch.",
+                ""
+        };
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[] {
+                offBlock
+        };
     }
 }
