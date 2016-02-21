@@ -50,6 +50,16 @@ public class SpongeConfiguration {
     }
 
     public void save() {
+        try {
+            enabledMechanics.save(config);
 
+            List<String> disabledMechanics = plugin.moduleController.getModules().stream().filter(entry -> !enabledMechanics.getValue().contains(entry.getName())).map(ModuleWrapper::getName).collect(Collectors.toList());
+
+            config.getNode("disabled-mechanics").setValue(disabledMechanics).setComment("This contains all disabled mechanics. It is never read internally, but just acts as a convenient place to grab mechanics from.");
+
+            configManager.save(config);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
