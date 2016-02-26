@@ -6,6 +6,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -22,7 +24,7 @@ import org.spongepowered.api.world.Location;
 import java.util.Set;
 
 @Module(moduleName = "Door", onEnable="onInitialize", onDisable="onDisable")
-public class Door extends SimpleArea {
+public class Door extends SimpleArea implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -34,6 +36,7 @@ public class Door extends SimpleArea {
     @Override
     public void onInitialize() throws CraftBookException {
         super.loadCommonConfig(config);
+        super.registerCommonPermissions();
 
         maximumLength.load(config);
         maximumWidth.load(config);
@@ -156,5 +159,40 @@ public class Door extends SimpleArea {
         states.add(new BlockFilter("PLANKS"));
         states.add(new BlockFilter("COBBLESTONE"));
         return states;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/door";
+    }
+
+    @Override
+    public String getMainDocumentation() {
+        return  "=====" +
+                "Doors" +
+                "=====" +
+                "**Doors** are configurable-width vertical sections of the world that you can toggle on and off. The width of the door can be changed." +
+                "" +
+                "They can be toggled using two different methods:" +
+                "* Right clicking a sign" +
+                "* Powering the sign with redstone" +
+                "" +
+                "";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                allowedBlocks,
+                maximumLength,
+                maximumWidth
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[]{
+                createPermissions
+        };
     }
 }

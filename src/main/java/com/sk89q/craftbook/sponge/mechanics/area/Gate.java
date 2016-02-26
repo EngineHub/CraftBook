@@ -35,6 +35,7 @@ public class Gate extends SimpleArea {
     @Override
     public void onInitialize() throws CraftBookException {
         super.loadCommonConfig(config);
+        super.registerCommonPermissions();
 
         searchRadius.load(config);
     }

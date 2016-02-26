@@ -3,9 +3,12 @@ package com.sk89q.craftbook.sponge.mechanics;
 import com.flowpowered.math.vector.Vector3d;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
@@ -17,6 +20,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -29,6 +33,15 @@ import java.util.EnumSet;
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeBlockMechanic implements DocumentationProvider {
 
+    SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator.create", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
+
+    @Override
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+
+        createPermissions.register();
+    }
+
     @Listener
     public void onSignChange(ChangeSignEvent event) {
 
@@ -40,7 +53,7 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
 
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
-                if(!player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
+                if(!createPermissions.hasPermission(player)) {
                     player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
@@ -217,6 +230,13 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
 
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[]{
+            createPermissions
         };
     }
 }

@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.core.util.documentation;
 
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.PermissionNode;
 
 public interface DocumentationProvider {
 
@@ -29,4 +30,11 @@ public interface DocumentationProvider {
      * @return An array of configuration nodes.
      */
     ConfigValue<?>[] getConfigurationNodes();
+
+    /**
+     * Gets an array of all permission nodes this mechanic uses.
+     *
+     * @return An array of all permission nodes.
+     */
+    PermissionNode[] getPermissionNodes();
 }

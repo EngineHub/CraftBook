@@ -2,10 +2,7 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
-import com.sk89q.craftbook.sponge.util.BlockFilterSetTypeToken;
-import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
+import com.sk89q.craftbook.sponge.util.*;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
@@ -18,6 +15,7 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -31,6 +29,8 @@ import java.util.stream.Collectors;
 
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
+    protected SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
+
     protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterSetTypeToken());
 
     public void loadCommonConfig(ConfigurationNode config) {
@@ -39,6 +39,10 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
     public void saveCommonConfig(ConfigurationNode config) {
         allowedBlocks.save(config);
+    }
+
+    public void registerCommonPermissions() {
+        createPermissions.register();
     }
 
     @Listener
@@ -52,7 +56,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
-                if(!player.hasPermission("craftbook." + getName().toLowerCase() + ".create")) {
+                if(!createPermissions.hasPermission(player)) {
                     player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
