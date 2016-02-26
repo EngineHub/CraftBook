@@ -6,6 +6,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -24,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Module(moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
-public class Gate extends SimpleArea {
+public class Gate extends SimpleArea implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -162,6 +164,35 @@ public class Gate extends SimpleArea {
         } else return false;
 
         return true;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/gate";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[]{
+                "=====",
+                "Gates",
+                "====="
+        };
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                allowedBlocks,
+                searchRadius
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[]{
+                createPermissions
+        };
     }
 
     public static class GateColumn {

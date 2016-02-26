@@ -1,7 +1,9 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
@@ -9,6 +11,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
@@ -33,11 +36,19 @@ import java.util.EnumSet;
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeBlockMechanic implements DocumentationProvider {
 
+    ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
+
     SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator.create", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
+
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
 
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
+
+        allowJumpLifts.load(config);
 
         createPermissions.register();
     }
@@ -88,6 +99,9 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
         Location<World> groundLocation = event.getToTransform().getLocation().getRelative(Direction.DOWN);
 
         Location<World> signLocation = null;
+
+        if(!allowJumpLifts.getValue())
+            return;
 
         //Look for dat sign
         if(SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
@@ -229,7 +243,7 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
     @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
-
+                allowJumpLifts
         };
     }
 
