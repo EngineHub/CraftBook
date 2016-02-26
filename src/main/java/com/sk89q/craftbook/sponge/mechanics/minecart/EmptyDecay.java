@@ -5,6 +5,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
@@ -74,5 +75,10 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
         return new ConfigValue<?>[] {
                 emptyTicks
         };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[0];
     }
 }

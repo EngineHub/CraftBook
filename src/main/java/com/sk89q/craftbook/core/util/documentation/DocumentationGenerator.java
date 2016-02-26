@@ -19,11 +19,18 @@ public class DocumentationGenerator {
         docFile.getParentFile().mkdirs();
 
         try(PrintWriter writer = new PrintWriter(docFile)) {
-            writer.print(provider.getMainDocumentation());
+            for(String string : provider.getMainDocumentation())
+                writer.println(string);
 
             if(provider.getConfigurationNodes().length > 0) {
 
-                int nodeLength = 0, commentLength = 0, typeLength = 0, defaultLength = 0;
+                writer.println();
+                writer.println("=============");
+                writer.println("Configuration");
+                writer.println("=============");
+                writer.println();
+
+                int nodeLength = "Node".length(), commentLength = "Comment".length(), typeLength = "Type".length(), defaultLength = "Default".length();
 
                 for(ConfigValue<?> configValue : provider.getConfigurationNodes()) {
                     if(configValue.getKey().length() > nodeLength)
@@ -35,8 +42,6 @@ public class DocumentationGenerator {
                     if(configValue.getDefaultValue().toString().length() > defaultLength)
                         defaultLength = configValue.getDefaultValue().toString().length();
                 }
-
-                writer.println();
 
                 String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(commentLength, '=') + ' ' + createStringOfLength(typeLength, '=') + ' ' + createStringOfLength(defaultLength, '=');
 
@@ -51,7 +56,13 @@ public class DocumentationGenerator {
 
             if(provider.getPermissionNodes().length > 0) {
 
-                int nodeLength = 0, descriptionLength = 0, defaultRoleLength = 0;
+                writer.println();
+                writer.println("===========");
+                writer.println("Permissions");
+                writer.println("===========");
+                writer.println();
+
+                int nodeLength = "Node".length(), descriptionLength = "Description".length(), defaultRoleLength = "Default Role".length();
 
                 for(PermissionNode permissionNode : provider.getPermissionNodes()) {
                     if(permissionNode.getNode().length() > nodeLength)
@@ -61,8 +72,6 @@ public class DocumentationGenerator {
                     if(permissionNode.getDefaultRole().length() > defaultRoleLength)
                         defaultRoleLength = permissionNode.getDefaultRole().length();
                 }
-
-                writer.println();
 
                 String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(descriptionLength, '=') + ' ' + createStringOfLength(defaultRoleLength, '=');
 
