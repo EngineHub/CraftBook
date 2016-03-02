@@ -54,7 +54,7 @@ public class SoundEffect extends AbstractIC {
             }
         }
         if(sound == null)
-            sound = Sound.COW_IDLE;
+            sound = Sound.ENTITY_COW_AMBIENT;
     }
 
     @Override
