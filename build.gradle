@@ -143,6 +143,10 @@ compileJava.dependsOn(licenseFormat)
 build.dependsOn(sourcesJar)
 build.dependsOn(javadocJar)
 build.dependsOn(archivesZip)
+archivesZip.dependsOn(shadowJar)
+archivesZip.dependsOn(sourcesJar)
+archivesZip.dependsOn(javadocJar)
+archivesZip.dependsOn(jar)
 
 // Deployment Section
 
