@@ -1,3 +1,19 @@
+/*
+ * CraftBook Copyright (C) 2010-2016 sk89q <http://www.sk89q.com>
+ * CraftBook Copyright (C) 2011-2016 me4502 <http://www.me4502.com>
+ * CraftBook Copyright (C) Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
 package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.sk89q.craftbook.core.util.ConfigValue;
@@ -8,6 +24,7 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -15,6 +32,8 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -46,13 +65,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     }
 
     @Listener
-    public void onSignChange(ChangeSignEvent event) {
-
-        Player player;
-        if(event.getCause().first(Player.class).isPresent())
-            player = event.getCause().first(Player.class).get();
-        else
-            return;
+    public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
 
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
@@ -67,13 +80,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event) {
-
-        Humanoid human;
-        if(event.getCause().first(Humanoid.class).isPresent())
-            human = event.getCause().first(Humanoid.class).get();
-        else
-            return;
+    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
 
         if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
             Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
@@ -88,13 +95,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
-
-        BlockSnapshot source;
-        if(event.getCause().first(BlockSnapshot.class).isPresent())
-            source = event.getCause().first(BlockSnapshot.class).get();
-        else
-            return;
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
 
         if(!SignUtil.isSign(source.getState())) return;
         Sign sign = (Sign) source.getLocation().get().getTileEntity().get();

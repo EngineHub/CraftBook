@@ -1,35 +1,24 @@
-println """
-*******************************************
- You are building CraftBook! 
-
- If you encounter trouble:
- 1) Read COMPILING.md if you haven't yet
- 2) Use gradlew and not gradle
- 3) If you still need help, ask on IRC! irc.esper.net #sk89q
-
- Output files will be in [subproject]/build/libs
-*******************************************
-"""
-
 buildscript {
     repositories {
         mavenCentral()
-        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force 'com.google.guava:guava:18.0'
-        }
-    }
-
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.1'
-        classpath 'org.ajoberstar:gradle-git:0.12.0'
     }
 }
+
+plugins {
+    id "com.github.hierynomus.license" version "0.12.1"
+    id "com.github.johnrengelman.shadow" version "1.2.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'com.jfrog.artifactory-upload'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 if (!project.hasProperty("artifactory_contextUrl")) ext.artifactory_contextUrl = "http://localhost"
 if (!project.hasProperty("artifactory_user")) ext.artifactory_user = "guest"
@@ -44,13 +33,7 @@ if (!project.hasProperty("gitCommitHash")) {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-//apply plugin: 'checkstyle'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'com.jfrog.artifactory-upload'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
+defaultTasks 'licenseFormat', 'build'
 
 group = 'com.sk89q.craftbook'
 version = '4.0-SNAPSHOT'
@@ -58,6 +41,7 @@ ext.internalVersion = version + ";" + gitCommitHash
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
 
 //checkstyle.configFile = new File(rootProject.projectDir, "config/checkstyle/checkstyle.xml")
 
@@ -80,10 +64,39 @@ dependencies {
     testCompile 'junit:junit:4.+'
 }
 
+println """
+*******************************************
+ You are building CraftBook!
+
+ If you encounter trouble:
+ 1) Read COMPILING.md if you haven't yet
+ 2) Use gradlew and not gradle
+ 3) If you still need help, ask on IRC! irc.esper.net #sk89q
+
+ Output files will be in build/libs
+*******************************************
+"""
+
 if (JavaVersion.current().isJava8Compatible()) {
     // Java 8 turns on doclint which we fail
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+license {
+    ext {
+        year = Calendar.getInstance().get(Calendar.YEAR)
+    }
+
+    header = file('HEADER.txt')
+    include '**/*.java'
+
+    ignoreFailures = false
+    strictCheck = true
+
+    mapping {
+        java = 'SLASHSTAR_STYLE'
     }
 }
 

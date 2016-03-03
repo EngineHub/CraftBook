@@ -1,3 +1,19 @@
+/*
+ * CraftBook Copyright (C) 2010-2016 sk89q <http://www.sk89q.com>
+ * CraftBook Copyright (C) 2011-2016 me4502 <http://www.me4502.com>
+ * CraftBook Copyright (C) Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
 package com.sk89q.craftbook.sponge;
 
 import com.google.common.reflect.TypeToken;
@@ -20,7 +36,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -35,7 +50,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 
-@Plugin(id = "CraftBook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
+@Plugin(id = "com.sk89q.craftbook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
 public class CraftBookPlugin extends CraftBookAPI {
 
     MechanicDataCache cache;
@@ -82,24 +97,24 @@ public class CraftBookPlugin extends CraftBookAPI {
         configurationOptions = ConfigurationOptions.defaults();
         configurationOptions.getSerializers().registerType(TypeToken.of(BlockState.class), new TypeSerializer<BlockState>() {
             @Override
-            public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+            public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) {
                 return BlockTypes.AIR.getDefaultState();
             }
 
             @Override
-            public void serialize(TypeToken<?> type, BlockState obj, ConfigurationNode value) throws ObjectMappingException {
+            public void serialize(TypeToken<?> type, BlockState obj, ConfigurationNode value) {
                 value.setValue(obj.toString());
         }
         });
 
         configurationOptions.getSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializer<BlockFilter>() {
             @Override
-            public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+            public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) {
                 return new BlockFilter(value.getString());
             }
 
             @Override
-            public void serialize(TypeToken<?> type, BlockFilter obj, ConfigurationNode value) throws ObjectMappingException {
+            public void serialize(TypeToken<?> type, BlockFilter obj, ConfigurationNode value) {
                 value.setValue(obj.getRule());
             }
         });
@@ -177,6 +192,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.pipe.Pipes");
 
         //Circuit Mechanics
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Ammeter");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.GlowStone");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.Netherrack");
@@ -185,7 +201,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         //Vehicle Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
 
-        logger.info("Found " + moduleController.getModules().size() + ".");
+        logger.info("Found " + moduleController.getModules().size());
     }
 
     @Override
