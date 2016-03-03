@@ -132,6 +132,9 @@ task archivesZip(type:Zip) {
     from ('build/libs/')
     from ('LICENSE.txt')
     from ('README.md')
+    exclude ('*.zip')
+
+    destinationDir = file('build/libs')
 }
 
 // Extra Depends
