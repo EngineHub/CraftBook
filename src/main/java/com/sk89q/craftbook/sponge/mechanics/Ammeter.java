@@ -56,7 +56,7 @@ public class Ammeter extends SpongeBlockMechanic {
         for (int i = data; i < 15; i++)
             builder.append(Text.of(TextColors.BLACK, "|"));
         builder.append(Text.of(TextColors.YELLOW, ']'));
-        builder.append(Text.of(TextColors.WHITE, " " + data + "A"));
+        builder.append(Text.of(TextColors.WHITE, " " + data + " Amps"));
         return builder.build();
     }
 
