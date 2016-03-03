@@ -43,8 +43,6 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 
-//checkstyle.configFile = new File(rootProject.projectDir, "config/checkstyle/checkstyle.xml")
-
 repositories {
     mavenCentral()
     maven { url "http://repo.spongepowered.org/maven/" }
@@ -110,19 +108,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives shadowJar
-    archives sourcesJar
-    archives javadocJar
+jar {
+    classifier 'original'
 }
 
-//build.dependsOn(checkstyleMain)
-//build.dependsOn(checkstyleTest)
-build.dependsOn(sourcesJar)
-build.dependsOn(javadocJar)
-
 shadowJar {
-    classifier 'dist'
+    classifier ''
     dependencies {
         relocate ("com.me4502.modularframework", "com.sk89q.craftbook.util.modularframework") {
             include(dependency("com.me4502:ModularFramework"))
@@ -135,6 +126,28 @@ shadowJar {
     exclude '.cache'
     exclude 'LICENSE*'
     exclude "com/me4502/modularframework/ModularFramework.class" //Don't copy across the file that was left out of ModularFramework.
+}
+
+task archivesZip(type:Zip) {
+    from ('build/libs/')
+    from ('LICENSE.txt')
+    from ('README.md')
+}
+
+// Extra Depends
+
+compileJava.dependsOn(licenseFormat)
+build.dependsOn(sourcesJar)
+build.dependsOn(javadocJar)
+build.dependsOn(archivesZip)
+
+// Deployment Section
+
+artifacts {
+    archives shadowJar
+    archives sourcesJar
+    archives javadocJar
+    archives archivesZip.destinationDir
 }
 
 artifactory {
