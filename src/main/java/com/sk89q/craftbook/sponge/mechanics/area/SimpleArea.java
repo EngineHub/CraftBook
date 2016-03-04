@@ -23,8 +23,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -35,6 +35,7 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
 public abstract class SimpleArea extends SpongeBlockMechanic {
 
     protected SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
+    protected SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
     protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterSetTypeToken());
 
@@ -86,9 +88,12 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
             Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
 
             if (isMechanicSign(sign)) {
-
-                if (triggerMechanic(event.getTargetBlock().getLocation().get(), sign, human, null)) {
-                    event.setCancelled(true);
+                if((!(human instanceof Subject) || usePermissions.hasPermission((Subject) human))) {
+                    if (triggerMechanic(event.getTargetBlock().getLocation().get(), sign, human, null)) {
+                        event.setCancelled(true);
+                    }
+                } else if(human instanceof CommandSource) {
+                    ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
                 }
             }
         }
@@ -108,7 +113,16 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
                 SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
                 if (block.getBlock().get(Keys.POWER).isPresent()) {
                     if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
-                        triggerMechanic(source.getLocation().get(), sign, event.getCause().get(NamedCause.NOTIFIER, Player.class).orElse(null), block.getBlock().get(Keys.POWER).get() > 0);
+                        Humanoid human = event.getCause().get(NamedCause.NOTIFIER, Humanoid.class).orElse(null);
+                        if(human != null && human instanceof Subject) {
+                            if(!usePermissions.hasPermission((Subject) human)) {
+                                if(human instanceof CommandSource)
+                                    ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                                return;
+                            }
+                        }
+
+                        triggerMechanic(source.getLocation().get(), sign, human, block.getBlock().get(Keys.POWER).get() > 0);
                         data.lastCurrent = block.getBlock().get(Keys.POWER).get();
                     }
                 }

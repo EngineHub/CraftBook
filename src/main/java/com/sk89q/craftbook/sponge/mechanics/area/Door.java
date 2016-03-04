@@ -210,7 +210,8 @@ public class Door extends SimpleArea implements DocumentationProvider {
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[]{
-                createPermissions
+                createPermissions,
+                usePermissions
         };
     }
 }

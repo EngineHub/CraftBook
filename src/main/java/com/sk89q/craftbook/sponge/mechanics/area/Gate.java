@@ -35,7 +35,9 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.extent.Extent;
@@ -73,6 +75,12 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         super.onPlayerInteract(event, human);
 
         if (event.getTargetBlock().getLocation().get().getBlockType() == BlockTypes.FENCE) {
+
+            if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
+                if(human instanceof CommandSource)
+                    ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                return;
+            }
 
             int x = event.getTargetBlock().getLocation().get().getBlockX();
             int y = event.getTargetBlock().getLocation().get().getBlockY();
@@ -203,7 +211,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[]{
-                createPermissions
+                createPermissions,
+                usePermissions
         };
     }
 

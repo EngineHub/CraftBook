@@ -192,7 +192,8 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[]{
-            createPermissions
+                createPermissions,
+                usePermissions
         };
     }
 }
