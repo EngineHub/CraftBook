@@ -23,9 +23,9 @@ import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PassthroughPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PipePart;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.LocationUtil;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.entity.EntityTypes;
@@ -33,7 +33,6 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -79,10 +78,10 @@ public class Pipes extends SpongeBlockMechanic {
         Location inventorySource = location.getRelative(direction);
 
         //Let's try and find a source of items!
-        Inventory inventory = getInventoryForLocation(inventorySource);
+        Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(inventorySource);
 
-        if(inventory != null) {
-            Optional<ItemStack> itemStackOptional = inventory.poll(1);
+        if(inventory.isPresent()) {
+            Optional<ItemStack> itemStackOptional = inventory.get().poll(1);
             if(itemStackOptional.isPresent()) {
                 ItemStack itemStack = itemStackOptional.get();
                 Set<Location> traversed = new HashSet<>();
@@ -94,7 +93,7 @@ public class Pipes extends SpongeBlockMechanic {
                 }
 
                 if(itemStack.getQuantity() > 0) {
-                    for(ItemStackSnapshot snapshot : inventory.offer(itemStack).getRejectedItems()) {
+                    for(ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
                         Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition()).get();
                         item.offer(Keys.REPRESENTED_ITEM, snapshot);
                         location.getExtent().spawnEntity(item, Cause.of(location));
@@ -119,10 +118,10 @@ public class Pipes extends SpongeBlockMechanic {
 
         for(Location location1 : pipePart.findValidOutputs(location, itemStack, fromDirection)) {
             if(pipePart instanceof OutputPipePart) {
-                Inventory inventory = getInventoryForLocation(location1);
+                Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(location1);
 
-                if(inventory != null) {
-                    InventoryTransactionResult result = inventory.offer(itemStack);
+                if(inventory.isPresent()) {
+                    InventoryTransactionResult result = inventory.get().offer(itemStack);
                     if(result.getRejectedItems().size() > 0) {
                         for (ItemStackSnapshot snapshot : result.getRejectedItems()) {
                             itemStack = snapshot.createStack();
@@ -143,19 +142,6 @@ public class Pipes extends SpongeBlockMechanic {
             if(pipePart.isValid(location.getBlock()))
                 return pipePart;
         return null;
-    }
-
-    private Inventory getInventoryForLocation(Location location) {
-        Inventory inventory = null;
-
-        if(location.hasTileEntity()) {
-            TileEntity tileEntity = (TileEntity) location.getTileEntity().get();
-            if(tileEntity instanceof Carrier) {
-                inventory = ((Carrier) tileEntity).getInventory();
-            }
-        }
-
-        return inventory;
     }
 
     @Override

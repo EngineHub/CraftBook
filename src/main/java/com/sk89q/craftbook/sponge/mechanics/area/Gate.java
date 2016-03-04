@@ -204,6 +204,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 allowedBlocks,
+                allowRedstone,
                 searchRadius
         };
     }

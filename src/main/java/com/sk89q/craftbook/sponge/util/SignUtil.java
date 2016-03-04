@@ -75,7 +75,8 @@ public class SignUtil {
 
         if (data.isPresent())
             return data.get();
-        else return null;
+        else
+            return null;
     }
 
     public static Location getFrontBlock(Location sign) {

@@ -53,6 +53,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
     protected SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
     protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterSetTypeToken());
+    protected ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
     public void loadCommonConfig(ConfigurationNode config) {
         allowedBlocks.load(config);
@@ -101,6 +102,9 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
     @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
+
+        if(!allowRedstone.getValue())
+            return;
 
         if(!SignUtil.isSign(source.getState())) return;
         Sign sign = (Sign) source.getLocation().get().getTileEntity().get();

@@ -184,6 +184,7 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 allowedBlocks,
+                allowRedstone,
                 maximumLength,
                 maximumWidth
         };

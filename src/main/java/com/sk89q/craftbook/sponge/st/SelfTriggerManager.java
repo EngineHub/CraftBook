@@ -65,28 +65,6 @@ public class SelfTriggerManager {
     }
 
     private static void registerAll(Chunk chunk) {
-        // TODO change this if the world explodes.
-        /*Sponge.getGame().getScheduler().createTaskBuilder().execute(() -> {
-            for (int x = 0; x < 16; x++) {
-                for (int z = 0; z < 16; z++) {
-                    for (int y = 0; y < chunk.getWorld().getBlockMax().getY(); y++) {
-                        Location block = chunk.getLocation(x, y, z).add(chunk.getBlockMin().toDouble());
-                        for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
-                            if(!module.isEnabled()) continue;
-                            try {
-                                SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
-                                if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                                    if (((SpongeBlockMechanic) mechanic).isValid(block))
-                                        register((SelfTriggeringMechanic) mechanic, block);
-                                }
-                            } catch (ModuleNotInstantiatedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        }).submit(CraftBookPlugin.inst());*/
         for(TileEntity tileEntity : chunk.getTileEntities()) {
             for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
                 if(!module.isEnabled()) continue;

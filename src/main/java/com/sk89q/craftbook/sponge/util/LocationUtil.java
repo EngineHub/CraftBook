@@ -14,12 +14,33 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.st;
+package com.sk89q.craftbook.sponge.util;
 
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.world.Location;
 
-@FunctionalInterface
-public interface SelfTriggeringMechanic {
+import java.util.Optional;
 
-    void onThink(Location location);
+public class LocationUtil {
+
+    /**
+     * Gets an Inventory from a location.
+     *
+     * @param location The location to look for inventories at.
+     * @return An inventory, if present.
+     */
+    public static Optional<Inventory> getInventoryForLocation(Location location) {
+        Inventory inventory = null;
+
+        if(location.hasTileEntity()) {
+            TileEntity tileEntity = (TileEntity) location.getTileEntity().get();
+            if(tileEntity instanceof Carrier) {
+                inventory = ((Carrier) tileEntity).getInventory();
+            }
+        }
+
+        return Optional.ofNullable(inventory);
+    }
 }
