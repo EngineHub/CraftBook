@@ -25,7 +25,7 @@ import org.spongepowered.api.world.World;
 
 public abstract class SpongeMechanic implements Mechanic {
 
-    private static String name;
+    private String name;
 
     @Override
     public String getName() {

@@ -67,6 +67,7 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
 
     public void registerCommonPermissions() {
         createPermissions.register();
+        usePermissions.register();
     }
 
     @Listener
