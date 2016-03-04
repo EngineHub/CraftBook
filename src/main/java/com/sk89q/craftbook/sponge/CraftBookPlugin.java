@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.ModuleController;
 import com.me4502.modularframework.ShadedModularFramework;
@@ -30,17 +29,13 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
-import ninja.leaping.configurate.ConfigurationNode;
+import com.sk89q.craftbook.sponge.util.TypeSerializers;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -91,33 +86,10 @@ public class CraftBookPlugin extends CraftBookAPI {
         new File("craftbook-data").mkdir();
 
         logger.info("Starting CraftBook");
-
         config = new SpongeConfiguration(this, mainConfig, configManager);
 
         configurationOptions = ConfigurationOptions.defaults();
-        configurationOptions.getSerializers().registerType(TypeToken.of(BlockState.class), new TypeSerializer<BlockState>() {
-            @Override
-            public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) {
-                return BlockTypes.AIR.getDefaultState();
-            }
-
-            @Override
-            public void serialize(TypeToken<?> type, BlockState obj, ConfigurationNode value) {
-                value.setValue(obj.toString());
-        }
-        });
-
-        configurationOptions.getSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializer<BlockFilter>() {
-            @Override
-            public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) {
-                return new BlockFilter(value.getString());
-            }
-
-            @Override
-            public void serialize(TypeToken<?> type, BlockFilter obj, ConfigurationNode value) {
-                value.setValue(obj.getRule());
-            }
-        });
+        TypeSerializers.register(configurationOptions);
 
         discoverMechanics();
 
@@ -213,4 +185,5 @@ public class CraftBookPlugin extends CraftBookAPI {
     public File getWorkingDirectory() {
         return mainConfig.getParentFile();
     }
+
 }
