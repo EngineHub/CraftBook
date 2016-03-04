@@ -194,9 +194,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     @Override
     public String[] getMainDocumentation() {
         return new String[]{
-                "=====",
-                "Gates",
-                "====="
+                ""
         };
     }
 

@@ -28,9 +28,12 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
+import org.spongepowered.api.entity.vehicle.minecart.MinecartRideable;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DismountEntityEvent;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
 
 @Module(moduleName = "MinecartEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
 public class EmptyDecay extends SpongeMechanic implements DocumentationProvider {
@@ -40,18 +43,27 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
     public ConfigurationNode config;
 
     private ConfigValue<Long> emptyTicks = new ConfigValue<>("empty-ticks", "The amount of time that the cart must be empty before it decays, in ticks.", 40L);
+    private ConfigValue<Boolean> onlyOnExit = new ConfigValue<>("only-on-exit", "Only start the decay timer on exit, preventing carts being incorrectly removed.", true);
 
     @Override
     public void onInitialize() throws CraftBookException {
         emptyTicks.load(config);
+        onlyOnExit.load(config);
     }
 
     @Listener
     public void onVehicleExit(DismountEntityEvent event) {
 
-        if (event.getTargetEntity() instanceof Minecart) {
+        if (event.getTargetEntity() instanceof MinecartRideable) {
             Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
+    }
+
+    @Listener
+    public void onEntityCreate(SpawnEntityEvent event) {
+        if(onlyOnExit.getValue())
+            return;
+        event.getEntities().stream().filter(entity -> entity instanceof MinecartRideable).forEach(entity -> Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) entity)).submit(CraftBookPlugin.inst()));
     }
 
     private static class MinecartDecay implements Runnable {
@@ -83,18 +95,16 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
 
     @Override
     public String[] getMainDocumentation() {
-        return new String[0];
+        return new String[]{
+                "This mechanic allows for minecarts to be given a time to live whilst unoccupied. If a minecart is past this time, then the minecart will be removed from world. This is mostly useful for automated minecart stations, or for preventing lag from minecart spam."
+        };
     }
 
     @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
-                emptyTicks
+                emptyTicks,
+                onlyOnExit
         };
-    }
-
-    @Override
-    public PermissionNode[] getPermissionNodes() {
-        return new PermissionNode[0];
     }
 }

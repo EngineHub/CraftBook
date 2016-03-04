@@ -35,6 +35,10 @@ public class DocumentationGenerator {
         docFile.getParentFile().mkdirs();
 
         try(PrintWriter writer = new PrintWriter(docFile)) {
+            writer.println(createStringOfLength(provider.getName().length(), '='));
+            writer.println(provider.getName());
+            writer.println(createStringOfLength(provider.getName().length(), '='));
+
             for(String string : provider.getMainDocumentation())
                 writer.println(string);
 

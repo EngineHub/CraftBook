@@ -22,7 +22,6 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
-import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
@@ -66,11 +65,7 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
     @Override
     public String[] getMainDocumentation() {
         return  new String[]{
-                "=========",
-                "Glowstone",
-                "=========",
                 "The *Glowstone* mechanic allows switching a configurable block (defaulted to glass) to glowstone using redstone. Put a tonne together and you can control your home's lighting with a regular redstone switch.",
-                ""
         };
     }
 
@@ -79,10 +74,5 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
         return new ConfigValue<?>[] {
                 offBlock
         };
-    }
-
-    @Override
-    public PermissionNode[] getPermissionNodes() {
-        return new PermissionNode[0];
     }
 }

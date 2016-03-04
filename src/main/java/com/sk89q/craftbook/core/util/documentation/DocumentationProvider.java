@@ -21,6 +21,16 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 
 public interface DocumentationProvider {
 
+    ConfigValue<?>[] EMPTY_CONFIGURATION_NODES = new ConfigValue[0];
+    PermissionNode[] EMPTY_PERMISSION_NODES = new PermissionNode[0];
+
+    /**
+     * Gets the name of this DocumentationProvider, used for the header.
+     *
+     * @return The name
+     */
+    String getName();
+
     /**
      * Gets the relative path inside the mechanics directory that this
      * documentation file goes in.
@@ -45,12 +55,16 @@ public interface DocumentationProvider {
      *
      * @return An array of configuration nodes.
      */
-    ConfigValue<?>[] getConfigurationNodes();
+    default ConfigValue<?>[] getConfigurationNodes() {
+        return EMPTY_CONFIGURATION_NODES;
+    }
 
     /**
      * Gets an array of all permission nodes this mechanic uses.
      *
      * @return An array of all permission nodes.
      */
-    PermissionNode[] getPermissionNodes();
+    default PermissionNode[] getPermissionNodes() {
+        return EMPTY_PERMISSION_NODES;
+    }
 }
