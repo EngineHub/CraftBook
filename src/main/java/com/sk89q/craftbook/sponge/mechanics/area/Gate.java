@@ -81,9 +81,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             int y = event.getTargetBlock().getLocation().get().getBlockY();
             int z = event.getTargetBlock().getLocation().get().getBlockZ();
 
-            Location closestSign = null;
-            Vector3d blockFlat = new Vector3d(x, 0, z);
-
             for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
                 for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                     for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
@@ -91,24 +88,13 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                         Location location = event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1);
 
                         if (SignUtil.isSign(location) && SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1).equals("[Gate]")) {
-                            if(closestSign == null)
-                                closestSign = location;
-                            else {
-                                Vector3d oldClosest = new Vector3d(closestSign.getX(), 0, closestSign.getZ());
-                                Vector3d test = new Vector3d(x1, 0, z1);
-
-                                if(blockFlat.distanceSquared(test) < blockFlat.distanceSquared(oldClosest))
-                                    closestSign = location;
-                            }
+                            Set<GateColumn> columns = new HashSet<>();
+                            BlockState state = findColumns(event.getTargetBlock().getLocation().get(), columns, event.getTargetBlock().getLocation().get().getBlock());
+                            toggleColumns(state, columns, null);
+                            return;
                         }
                     }
                 }
-            }
-
-            if(closestSign != null) {
-                Sign sign = (Sign) closestSign.getTileEntity().get();
-
-                triggerMechanic(closestSign, sign, human, null);
             }
         }
     }
@@ -207,20 +193,23 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             BlockState state = findColumns(block, columns, null);
 
             if (columns.size() > 0) {
-                Boolean on = forceState;
-                for (GateColumn vec : columns) {
-                    Location col = vec.getBlock();
-                    if (on == null) {
-                        on = !isAllowedBlock(col.getRelative(Direction.DOWN).getBlock());
-                    }
-                    toggleColumn(col, on, state);
-                }
+                toggleColumns(state, columns, forceState);
             } else {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't find a gate!").build());
             }
         } else return false;
 
         return true;
+    }
+
+    public void toggleColumns(BlockState state, Set<GateColumn> columns, Boolean forceState) {
+        for (GateColumn vec : columns) {
+            Location col = vec.getBlock();
+            if (forceState == null) {
+                forceState = !isAllowedBlock(col.getRelative(Direction.DOWN).getBlock());
+            }
+            toggleColumn(col, forceState, state);
+        }
     }
 
     @Override
