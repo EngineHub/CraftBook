@@ -16,13 +16,14 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.trait.BlockTrait;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class BlockUtil {
 
@@ -40,6 +41,37 @@ public class BlockUtil {
         }
 
         return null;
+    }
+
+    public static BlockState getBlockStateFromString(String rule) {
+        BlockType blockType;
+
+        Map<String, String> traitSpecifics = new HashMap<>();
+
+        if(rule.contains("[") && rule.endsWith("]")) {
+            String subRule = rule.substring(rule.indexOf('['), rule.length()-2);
+            String[] parts = RegexUtil.COMMA_PATTERN.split(subRule);
+
+            blockType = Sponge.getGame().getRegistry().getType(BlockType.class, rule.substring(0, rule.indexOf('['))).orElse(null);
+
+            for(String part : parts) {
+                String[] keyValue = RegexUtil.EQUALS_PATTERN.split(part);
+                traitSpecifics.put(keyValue[0].toLowerCase(), keyValue[1]);
+            }
+        } else {
+            blockType = Sponge.getGame().getRegistry().getType(BlockType.class, rule).orElse(null);
+        }
+
+        if(blockType == null) {
+            return null;
+        }
+
+        BlockState state = blockType.getDefaultState();
+        for(Map.Entry<String, String> entry : traitSpecifics.entrySet()) {
+            state.getTrait(entry.getKey()).ifPresent((trait) -> state.withTrait(trait, entry.getValue()));
+        }
+
+        return state;
     }
 
     private static Direction[] directFaces = null;

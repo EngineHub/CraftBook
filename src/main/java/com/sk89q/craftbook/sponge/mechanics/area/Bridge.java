@@ -59,14 +59,6 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public void onDisable() {
-        super.saveCommonConfig(config);
-
-        maximumLength.save(config);
-        maximumWidth.save(config);
-    }
-
-    @Override
     public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
 
         if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {

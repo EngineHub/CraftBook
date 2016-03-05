@@ -40,7 +40,7 @@ public class TypeSerializers {
     public static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
         @Override
         public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) {
-            return BlockTypes.AIR.getDefaultState();
+            return BlockUtil.getBlockStateFromString(value.getString());
         }
 
         @Override

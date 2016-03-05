@@ -43,11 +43,6 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
     }
 
     @Override
-    public void onDisable() {
-        offBlock.save(config);
-    }
-
-    @Override
     public void updateState(Location<?> location, boolean powered) {
         location.setBlock(powered ? BlockTypes.GLOWSTONE.getDefaultState() : offBlock.getValue());
     }

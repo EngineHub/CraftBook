@@ -60,11 +60,6 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         allowRedstone.load(config);
     }
 
-    public void saveCommonConfig(ConfigurationNode config) {
-        allowedBlocks.save(config);
-        allowRedstone.save(config);
-    }
-
     public void registerCommonPermissions() {
         createPermissions.register();
         usePermissions.register();

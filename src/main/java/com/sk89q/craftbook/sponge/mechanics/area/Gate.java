@@ -63,13 +63,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         searchRadius.load(config);
     }
 
-    @Override
-    public void onDisable() {
-        super.saveCommonConfig(config);
-
-        searchRadius.save(config);
-    }
-
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
 
