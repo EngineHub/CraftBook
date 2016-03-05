@@ -43,6 +43,7 @@ public class ConfigValue<T> {
 
     public ConfigValue<T> load(ConfigurationNode configurationNode) {
         this.value = getValueInternal(configurationNode);
+        save(configurationNode);
         return this;
     }
 
