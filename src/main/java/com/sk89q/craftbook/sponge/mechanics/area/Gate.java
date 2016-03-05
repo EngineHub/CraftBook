@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -69,7 +71,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         super.onPlayerInteract(event, human);
 
         if (isAllowedBlock(event.getTargetBlock().getLocation().get().getBlock())) {
-
             if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
                 if(human instanceof CommandSource)
                     ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
@@ -80,18 +81,34 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             int y = event.getTargetBlock().getLocation().get().getBlockY();
             int z = event.getTargetBlock().getLocation().get().getBlockZ();
 
+            Location closestSign = null;
+            Vector3d blockFlat = new Vector3d(x, 0, z);
+
             for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
                 for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                     for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
 
-                        if (SignUtil.isSign(event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1))) {
+                        Location location = event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1);
 
-                            Sign sign = (Sign) event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1).getTileEntity().get();
+                        if (SignUtil.isSign(location) && SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1).equals("[Gate]")) {
+                            if(closestSign == null)
+                                closestSign = location;
+                            else {
+                                Vector3d oldClosest = new Vector3d(closestSign.getX(), 0, closestSign.getZ());
+                                Vector3d test = new Vector3d(x1, 0, z1);
 
-                            triggerMechanic(event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1), sign, human, null);
+                                if(blockFlat.distanceSquared(test) < blockFlat.distanceSquared(oldClosest))
+                                    closestSign = location;
+                            }
                         }
                     }
                 }
+            }
+
+            if(closestSign != null) {
+                Sign sign = (Sign) closestSign.getTileEntity().get();
+
+                triggerMechanic(closestSign, sign, human, null);
             }
         }
     }
@@ -102,23 +119,38 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         int y = block.getBlockY();
         int z = block.getBlockZ();
 
+        Location closestColumn = null;
+        Vector3d blockFlat = new Vector3d(block.getX(), 0, block.getZ());
+
         for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
             for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                 for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
+                    if (isAllowedBlock(block.getExtent().getBlock(x1, y1, z1))) {
+                        if(closestColumn == null)
+                            closestColumn = block.getExtent().getLocation(x1, y1, z1);
+                        else {
+                            Vector3d oldClosest = new Vector3d(closestColumn.getX(), 0, closestColumn.getZ());
+                            Vector3d test = new Vector3d(x1, 0, z1);
 
-                    state = searchColumn(block.getExtent().getLocation(x1, y1, z1), columns, state);
+                            if(blockFlat.distanceSquared(test) < blockFlat.distanceSquared(oldClosest))
+                                closestColumn = block.getExtent().getLocation(x1, y1, z1);
+                        }
+                    }
                 }
             }
         }
+
+        if(closestColumn != null)
+            state = searchColumn(closestColumn, columns, state);
+        else
+            System.out.println("No culmn");
 
         return state;
     }
 
     public BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
 
-        int y = block.getBlockY();
-
-        if (isAllowedBlock(block.getExtent().getBlock(block.getBlockX(), y, block.getBlockZ()))) {
+        if (isAllowedBlock(block.getBlock())) {
 
             GateColumn column = new GateColumn(block);
 
