@@ -129,6 +129,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                     state = temp.getBlock();
                 if(state.equals(temp.getBlock()))
                     columns.add(column);
+                else
+                    return state;
             }
 
             while (isAllowedBlock(temp.getBlock()) || temp.getBlockType() == BlockTypes.AIR) {
