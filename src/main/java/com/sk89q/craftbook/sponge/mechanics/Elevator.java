@@ -102,6 +102,9 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
     @Listener
     public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
 
+        if(event.getToTransform().getLocation().getY() <= 0)
+            return;
+
         Location<World> groundLocation = event.getToTransform().getLocation().getRelative(Direction.DOWN);
 
         Location<World> signLocation = null;
