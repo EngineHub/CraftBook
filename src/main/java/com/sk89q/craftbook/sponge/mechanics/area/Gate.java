@@ -27,6 +27,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
@@ -74,7 +75,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         super.onPlayerInteract(event, human);
 
-        if (event.getTargetBlock().getLocation().get().getBlockType() == BlockTypes.FENCE) {
+        if (isAllowedBlock(event.getTargetBlock().getLocation().get().getBlock())) {
 
             if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
                 if(human instanceof CommandSource)
@@ -102,7 +103,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         }
     }
 
-    public void findColumns(Location block, Set<GateColumn> columns) {
+    public BlockState findColumns(Location block, Set<GateColumn> columns, BlockState state) {
 
         int x = block.getBlockX();
         int y = block.getBlockY();
@@ -112,36 +113,45 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                 for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
 
-                    searchColumn(block.getExtent().getLocation(x1, y1, z1), columns);
+                    state = searchColumn(block.getExtent().getLocation(x1, y1, z1), columns, state);
                 }
             }
         }
+
+        return state;
     }
 
-    public void searchColumn(Location block, Set<GateColumn> columns) {
+    public BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
 
         int y = block.getBlockY();
 
-        if (block.getExtent().getBlock(block.getBlockX(), y, block.getBlockZ()).getType() == BlockTypes.FENCE) {
+        if (isAllowedBlock(block.getExtent().getBlock(block.getBlockX(), y, block.getBlockZ()))) {
 
             GateColumn column = new GateColumn(block);
 
-            columns.add(column);
-
             Location temp = column.topBlock;
 
-            while (temp.getBlockType() == BlockTypes.FENCE || temp.getBlockType() == BlockTypes.AIR) {
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) searchColumn(temp.getRelative(Direction.NORTH), columns);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) searchColumn(temp.getRelative(Direction.SOUTH), columns);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) searchColumn(temp.getRelative(Direction.EAST), columns);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.WEST)))) searchColumn(temp.getRelative(Direction.WEST), columns);
+            if(temp.getBlockType() != BlockTypes.AIR) {
+                if(state == null)
+                    state = temp.getBlock();
+                if(state.equals(temp.getBlock()))
+                    columns.add(column);
+            }
+
+            while (isAllowedBlock(temp.getBlock()) || temp.getBlockType() == BlockTypes.AIR) {
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) state = searchColumn(temp.getRelative(Direction.NORTH), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) state = searchColumn(temp.getRelative(Direction.SOUTH), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) state = searchColumn(temp.getRelative(Direction.EAST), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.WEST)))) state = searchColumn(temp.getRelative(Direction.WEST), columns, state);
 
                 temp = temp.getRelative(Direction.DOWN);
             }
         }
+
+        return state;
     }
 
-    public void toggleColumn(Location block, boolean on) {
+    public void toggleColumn(Location block, boolean on, BlockState gateType) {
 
         Direction dir = Direction.DOWN;
 
@@ -149,11 +159,11 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         if (on) {
             while (block.getBlockType() == BlockTypes.AIR) {
-                block.setBlockType(BlockTypes.FENCE);
+                block.setBlock(gateType == null ? BlockTypes.FENCE.getDefaultState() : gateType);
                 block = block.getRelative(dir);
             }
         } else {
-            while (block.getBlockType() == BlockTypes.FENCE) {
+            while (isAllowedBlock(block.getBlock())) {
                 block.setBlockType(BlockTypes.AIR);
                 block = block.getRelative(dir);
             }
@@ -167,16 +177,16 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
             Set<GateColumn> columns = new HashSet<>();
 
-            findColumns(block, columns);
+            BlockState state = findColumns(block, columns, null);
 
             if (columns.size() > 0) {
                 Boolean on = forceState;
                 for (GateColumn vec : columns) {
                     Location col = vec.getBlock();
                     if (on == null) {
-                        on = col.getRelative(Direction.DOWN).getBlockType() != BlockTypes.FENCE;
+                        on = !isAllowedBlock(col.getRelative(Direction.DOWN).getBlock());
                     }
-                    toggleColumn(col, on);
+                    toggleColumn(col, on, state);
                 }
             } else {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't find a gate!").build());
@@ -215,17 +225,13 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         };
     }
 
-    public static class GateColumn {
+    public class GateColumn {
 
         Location topBlock;
 
-        public GateColumn(Extent extent, int x, int y, int z) {
-            this(extent.getLocation(x, y, z));
-        }
-
         public GateColumn(Location topBlock) {
 
-            while (topBlock.getBlockType() == BlockTypes.FENCE) {
+            while (isAllowedBlock(topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
 
