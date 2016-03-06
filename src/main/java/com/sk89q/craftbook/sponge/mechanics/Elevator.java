@@ -25,6 +25,8 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
+import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -52,7 +54,7 @@ import org.spongepowered.api.world.World;
 import java.util.EnumSet;
 
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
-public class Elevator extends SpongeBlockMechanic implements DocumentationProvider {
+public class Elevator extends SpongeSignMechanic implements DocumentationProvider {
 
     ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
 
@@ -71,19 +73,16 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
         createPermissions.register();
     }
 
-    @Listener
-    public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
+    @Override
+    public String[] getValidSigns() {
+        return new String[] {
+                "[Lift Down]", "[Lift Up]", "[Lift]", "[Lift UpDown]"
+        };
+    }
 
-        for(String line : getValidSigns()) {
-            if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
-                if(!createPermissions.hasPermission(player)) {
-                    player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
-                    event.setCancelled(true);
-                } else {
-                    event.getText().lines().set(1, Text.of(line));
-                }
-            }
-        }
+    @Override
+    public SpongePermissionNode getCreatePermission() {
+        return this.createPermissions;
     }
 
     @Listener
@@ -102,15 +101,15 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
     @Listener
     public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
 
-        if(event.getToTransform().getLocation().getY() <= 0)
+        if(!LocationUtil.isLocationWithinRange(event.getToTransform().getLocation()))
+            return;
+
+        if(!allowJumpLifts.getValue())
             return;
 
         Location<World> groundLocation = event.getToTransform().getLocation().getRelative(Direction.DOWN);
 
         Location<World> signLocation = null;
-
-        if(!allowJumpLifts.getValue())
-            return;
 
         //Look for dat sign
         if(SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
@@ -211,27 +210,6 @@ public class Elevator extends SpongeBlockMechanic implements DocumentationProvid
         // We don't currently support non-up/down elevators, this isn't a Roald Dahl novel.
 
         return block;
-    }
-
-    @Override
-    public boolean isValid(Location location) {
-        if (SignUtil.isSign(location)) {
-
-            Sign sign = (Sign) location.getTileEntity().get();
-
-            for(String signLine : getValidSigns()) {
-                if(SignUtil.getTextRaw(sign, 1).equals(signLine))
-                    return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static String[] getValidSigns() {
-        return new String[] {
-                "[Lift Down]", "[Lift Up]", "[Lift]", "[Lift UpDown]"
-        };
     }
 
     @Override

@@ -16,7 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -24,9 +24,9 @@ import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TypeSerializers {
@@ -71,7 +71,7 @@ public class TypeSerializers {
             }
 
             if (value.hasListChildren()) {
-                Set<? extends ConfigurationNode> values = new HashSet<>(value.getChildrenList());
+                List<? extends ConfigurationNode> values = value.getChildrenList();
                 Set<Object> ret = new HashSet<>(values.size());
                 for (ConfigurationNode ent : values) {
                     ret.add(entrySerial.deserialize(entryType, ent));
@@ -93,7 +93,7 @@ public class TypeSerializers {
             if (entrySerial == null) {
                 throw new ObjectMappingException("No applicable type serializer for type " + entryType);
             }
-            value.setValue(ImmutableList.of());
+            value.setValue(ImmutableSet.of());
             for (Object ent : obj) {
                 entrySerial.serialize(entryType, ent, value.getAppendedNode());
             }

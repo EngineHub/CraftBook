@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.sk89q.craftbook.core.util.ConfigValue;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.*;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class SimpleArea extends SpongeBlockMechanic {
+public abstract class SimpleArea extends SpongeSignMechanic {
 
     protected SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     protected SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
@@ -174,15 +174,6 @@ public abstract class SimpleArea extends SpongeBlockMechanic {
         }
         return false;
     }
-
-    public boolean isMechanicSign(Sign sign) {
-        for(String text : getValidSigns())
-            if(SignUtil.getTextRaw(sign, 1).equals(text))
-                return true;
-        return false;
-    }
-
-    public abstract String[] getValidSigns();
 
     public abstract Set<BlockFilter> getDefaultBlocks();
 
