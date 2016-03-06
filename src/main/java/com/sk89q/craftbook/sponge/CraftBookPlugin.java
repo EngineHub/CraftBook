@@ -82,6 +82,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Listener
     public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
         setInstance(this);
+        TypeSerializers.registerDefaults();
 
         new File("craftbook-data").mkdir();
 

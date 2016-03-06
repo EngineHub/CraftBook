@@ -28,6 +28,7 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;

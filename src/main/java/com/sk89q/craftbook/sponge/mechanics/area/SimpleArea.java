@@ -26,11 +26,9 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Humanoid;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Named;
@@ -65,19 +63,9 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         usePermissions.register();
     }
 
-    @Listener
-    public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
-
-        for(String line : getValidSigns()) {
-            if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
-                if(!createPermissions.hasPermission(player)) {
-                    player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
-                    event.setCancelled(true);
-                } else {
-                    event.getText().lines().set(1, Text.of(line));
-                }
-            }
-        }
+    @Override
+    public SpongePermissionNode getCreatePermission() {
+        return createPermissions;
     }
 
     @Listener

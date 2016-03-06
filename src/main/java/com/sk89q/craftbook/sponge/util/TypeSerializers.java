@@ -24,6 +24,9 @@ import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.translator.ConfigurateTranslator;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,10 +34,14 @@ import java.util.Set;
 
 public class TypeSerializers {
 
+    public static void registerDefaults() {
+        ninja.leaping.configurate.objectmapping.serialize.TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
+    }
+
     public static void register(ConfigurationOptions options) {
-        options.getSerializers().registerType(TypeToken.of(BlockState.class), new TypeSerializers.BlockStateTypeSerializer());
-        options.getSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
-        options.getSerializers().registerType(new TypeToken<Set<?>>(){}, new TypeSerializers.SetTypeSerializer());
+        options.getSerializers().registerType(TypeToken.of(BlockState.class), new BlockStateTypeSerializer());
+        options.getSerializers().registerType(new TypeToken<Set<?>>(){}, new SetTypeSerializer());
+        options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
     }
 
     public static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
@@ -97,6 +104,23 @@ public class TypeSerializers {
             for (Object ent : obj) {
                 entrySerial.serialize(entryType, ent, value.getAppendedNode());
             }
+        }
+    }
+
+    public static class ItemStackTypeSerializer implements TypeSerializer<ItemStack> {
+
+        @Override
+        public ItemStack deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
+            final ConfigurateTranslator translator = ConfigurateTranslator.instance();
+            final DataView container = translator.translateFrom(value);
+            return ItemStack.builder().fromContainer(container).build();
+        }
+
+        @Override
+        public void serialize(TypeToken<?> type, ItemStack obj, ConfigurationNode value) throws ObjectMappingException {
+            final ConfigurateTranslator translator = ConfigurateTranslator.instance();
+            final DataView container = obj.toContainer();
+            translator.translateContainerToData(value, container);
         }
     }
 }
