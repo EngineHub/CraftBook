@@ -20,24 +20,43 @@ import com.flowpowered.math.vector.Vector3d;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockFilterSetTypeToken;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.util.Direction;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Module(moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic {
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterSetTypeToken());
+
     private ParticleEffect footprintParticle;
 
+    @Override
     public void onInitialize() {
         footprintParticle = Sponge.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.FOOTSTEP).build();
+
+        allowedBlocks.load(config);
     }
 
     private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new CacheLoader<UUID, FootprintData>() {
@@ -51,18 +70,33 @@ public class Footprints extends SpongeMechanic {
     public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
 
         if(event.getTargetEntity().isOnGround()) {
-            FootprintData data = getFootprintData(event.getTargetEntity().getUniqueId());
-            if(data.canPlaceFootprint(event.getToTransform().getPosition())) {
+            for(BlockFilter filter : allowedBlocks.getValue()) {
+                for(BlockState state : filter.getApplicableBlockStates()) {
+                    if(state.equals(event.getTargetEntity().getLocation().getRelative(Direction.DOWN).getBlock())) {
+                        FootprintData data = getFootprintData(event.getTargetEntity().getUniqueId());
+                        if (data.canPlaceFootprint(event.getToTransform().getPosition())) {
 
-                Vector3d footprintLocation = event.getToTransform().getPosition().add(0, 0.19, 0);
-                //Flip these, it should 'roughly' rotate 90 or -90 degrees.
-                Vector3d footOffset = new Vector3d(footprintLocation.getZ(), 0, footprintLocation.getX()).normalize().div(2);
+                            Vector3d footprintLocation = event.getToTransform().getPosition().add(0, 0.19, 0);
+                            //Flip these, it should 'roughly' rotate 90 or -90 degrees.
+                            Vector3d footOffset = new Vector3d(footprintLocation.getZ(), 0, footprintLocation.getX()).normalize().div(2);
 
-                event.getTargetEntity().getWorld().spawnParticles(footprintParticle, footprintLocation.add(footOffset.mul(data.side ? -1 : 1)));
-                data.position = event.getToTransform().getPosition();
-                data.side = !data.side;
+                            event.getTargetEntity().getWorld().spawnParticles(footprintParticle, footprintLocation.add(footOffset.mul(data.side ? -1 : 1)));
+                            data.position = event.getToTransform().getPosition();
+                            data.side = !data.side;
+                        }
+                        return;
+                    }
+                }
             }
         }
+    }
+
+    public static Set<BlockFilter> getDefaultBlocks() {
+        Set<BlockFilter> states = Sets.newHashSet();
+        states.add(new BlockFilter("SAND"));
+        states.add(new BlockFilter("DIRT"));
+        states.add(new BlockFilter("GRAVEL"));
+        return states;
     }
 
     private FootprintData getFootprintData(UUID uuid) {

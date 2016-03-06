@@ -31,17 +31,19 @@ public class SpongeDataCache extends MechanicDataCache {
     @Override
     protected <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey) {
         try {
-            T data = clazz.newInstance();
+            T data = null;
 
             File file = new File("craftbook-data", locationKey + ".json");
-            if(!file.exists())
-                return data;
-
-            try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                data = jsonConverter.deserialize(reader, clazz);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(file.exists()) {
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                    data = jsonConverter.deserialize(reader, clazz);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
+            if(data == null || !clazz.isInstance(data))
+                data = clazz.newInstance();
 
             return data;
         } catch (InstantiationException | IllegalAccessException e) {
@@ -52,7 +54,7 @@ public class SpongeDataCache extends MechanicDataCache {
     }
 
     @Override
-    protected void saveToDisk(Class<MechanicData> clazz, String locationKey, MechanicData data) {
+    protected <T extends MechanicData> void saveToDisk(Class<T> clazz, String locationKey, T data) {
         File file = new File("craftbook-data", locationKey + ".json");
 
         try(PrintWriter writer = new PrintWriter(file)) {

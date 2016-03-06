@@ -30,26 +30,33 @@ public abstract class MechanicDataCache {
         @Override
         public void onRemoval(RemovalNotification<String, MechanicData> notification) {
             MechanicData value = notification.getValue();
+            if(value == null)
+                return;
             saveToDisk((Class<MechanicData>) value.getClass(), notification.getKey(), value);
         }
     }).build();
 
     protected abstract <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey);
 
-    protected abstract void saveToDisk(Class<MechanicData> clazz, String locationKey, MechanicData data);
+    protected abstract <T extends MechanicData> void saveToDisk(Class<T> clazz, String locationKey, T data);
 
     public <T extends MechanicData> T getMechanicData(Class<T> clazz, String locationKey) {
-
         if (locationKey == null) return null;
 
-        T data = (T) mechanicData.getIfPresent(locationKey);
+        Object data = null;
+        try {
+            data = mechanicData.getIfPresent(locationKey);
+        } catch(Throwable ignored) {
+            System.out.println("Failed to load some data: " + locationKey);
+            ignored.printStackTrace();
+        }
 
         if (data == null || !clazz.isInstance(data)) {
             data = loadFromDisk(clazz, locationKey);
-            mechanicData.put(locationKey, data);
+            mechanicData.put(locationKey, (MechanicData) data);
         }
 
-        return data;
+        return (T) data;
     }
 
     public void clearAll() {

@@ -41,6 +41,7 @@ import org.spongepowered.api.world.Location;
 
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -96,26 +97,23 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         Sign sign = (Sign) source.getLocation().get().getTileEntity().get();
 
         if (isMechanicSign(sign)) {
+            Humanoid human = event.getCause().get(NamedCause.SOURCE, Humanoid.class).orElse(null);
+            if(human != null && human instanceof Subject) {
+                if(!usePermissions.hasPermission((Subject) human)) {
+                    if(human instanceof CommandSource)
+                        ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                    return;
+                }
+            }
+
+            SimpleAreaData data = getData(SimpleAreaData.class, source.getLocation().get());
             event.getNeighbors().entrySet().stream().map(
                     (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
-                    collect(Collectors.toList()).stream().forEach(block -> {
+                    collect(Collectors.toList()).stream().filter((block) -> BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).isPresent()).filter((block) -> data.lastCurrent != BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).get()).findFirst().ifPresent(block -> {
+                Optional<Integer> powerOptional = BlockUtil.getBlockPowerLevel(source.getLocation().get(), block);
 
-                SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
-                if (block.getBlock().get(Keys.POWER).isPresent()) {
-                    if (data.lastCurrent != block.getBlock().get(Keys.POWER).get()) {
-                        Humanoid human = event.getCause().get(NamedCause.NOTIFIER, Humanoid.class).orElse(null);
-                        if(human != null && human instanceof Subject) {
-                            if(!usePermissions.hasPermission((Subject) human)) {
-                                if(human instanceof CommandSource)
-                                    ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
-                                return;
-                            }
-                        }
-
-                        triggerMechanic(source.getLocation().get(), sign, human, block.getBlock().get(Keys.POWER).get() > 0);
-                        data.lastCurrent = block.getBlock().get(Keys.POWER).get();
-                    }
-                }
+                triggerMechanic(source.getLocation().get(), sign, human, powerOptional.get() > 0);
+                data.lastCurrent = powerOptional.get();
             });
         }
     }

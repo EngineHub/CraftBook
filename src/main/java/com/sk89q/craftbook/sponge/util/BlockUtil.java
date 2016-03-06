@@ -20,9 +20,12 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.trait.BlockTrait;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class BlockUtil {
@@ -41,6 +44,28 @@ public class BlockUtil {
         }
 
         return null;
+    }
+
+    public static Optional<Integer> getBlockPowerLevel(Location<?> ... blocks) {
+        for(Location<?> block : blocks) {
+            Optional<Integer> optional = getBlockPowerLevel(block);
+            if(optional.isPresent())
+                return optional;
+        }
+
+        return Optional.empty();
+    }
+
+    public static Optional<Integer> getBlockPowerLevel(Location<?> block) {
+        if (block.getBlock().get(Keys.POWER).isPresent()) {
+            return Optional.of(block.getBlock().get(Keys.POWER).get());
+        } else if (block.getBlock().get(Keys.POWERED).isPresent()) {
+            return Optional.of(block.getBlock().get(Keys.POWERED).get() ? 15 : 0);
+        } else if (block.getProperty(PoweredProperty.class).isPresent()) {
+            return Optional.of(block.getProperty(PoweredProperty.class).get().getValue() ? 15 : 0);
+        }
+
+        return Optional.empty();
     }
 
     public static BlockState getBlockStateFromString(String rule) {

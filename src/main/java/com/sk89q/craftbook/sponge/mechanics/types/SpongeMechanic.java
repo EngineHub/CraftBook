@@ -43,7 +43,6 @@ public abstract class SpongeMechanic implements Mechanic {
     }
 
     public <T extends MechanicData> T getData(Class<T> clazz, Location block) {
-
         StringBuilder builder = new StringBuilder();
 
         if (block.getExtent() instanceof World) builder.append(((World) block.getExtent()).getName()).append('.');

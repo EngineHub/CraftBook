@@ -17,28 +17,38 @@
 package com.sk89q.craftbook.sponge.mechanics.powerable;
 
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class SimplePowerable extends SpongeBlockMechanic {
 
     public abstract void updateState(Location<?> location, boolean powered);
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
-
-        BlockSnapshot source;
-        if(event.getCause().first(BlockSnapshot.class).isPresent())
-            source = event.getCause().first(BlockSnapshot.class).get();
-        else
-            return;
-
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
         if(isValid(source.getLocation().get())) {
-            PoweredProperty poweredProperty = source.getLocation().get().getProperty(PoweredProperty.class).orElse(null);
-            updateState(source.getLocation().get(), poweredProperty == null ? false : poweredProperty.getValue());
+            SpongeRedstoneMechanicData data = getData(SpongeRedstoneMechanicData.class, source.getLocation().get());
+
+            boolean wasPowered = data.lastCurrent > 0;
+            event.getNeighbors().entrySet().stream().map(
+                    (Function<Map.Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
+                    collect(Collectors.toList()).stream().filter((block) -> wasPowered != (BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).orElse(0) > 0)).findFirst().ifPresent(block -> {
+                boolean isPowered = BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).orElse(0) > 0;
+                updateState(source.getLocation().get(), isPowered);
+                data.lastCurrent = isPowered ? 15 : 0;
+            });
         }
     }
 }
