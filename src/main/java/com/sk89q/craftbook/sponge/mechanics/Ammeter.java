@@ -17,11 +17,14 @@
 package com.sk89q.craftbook.sponge.mechanics;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.CoalTypes;
@@ -41,6 +44,10 @@ import org.spongepowered.api.world.Location;
 @Module(moduleName = "Ammeter", onEnable="onInitialize", onDisable="onDisable")
 public class Ammeter extends SpongeBlockMechanic {
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
     private SpongePermissionNode permissionNode = new SpongePermissionNode("craftbook.ammeter.use", "Allows usage of the Ammeter mechanic", PermissionDescription.ROLE_USER);
 
     private ConfigValue<ItemStack> ammeterItem = new ConfigValue<>("ammeter-item", "The item that triggers the ammeter mechanic.", ItemStack.builder().itemType(ItemTypes.COAL).add(Keys.COAL_TYPE, CoalTypes.CHARCOAL).build(), TypeToken.of(ItemStack.class));
@@ -50,6 +57,8 @@ public class Ammeter extends SpongeBlockMechanic {
         super.onInitialize();
 
         permissionNode.register();
+
+        ammeterItem.load(config);
     }
 
     @Listener
