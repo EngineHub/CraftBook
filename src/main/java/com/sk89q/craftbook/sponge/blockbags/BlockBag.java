@@ -16,16 +16,36 @@
  */
 package com.sk89q.craftbook.sponge.blockbags;
 
-import java.util.List;
-
 import org.spongepowered.api.item.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * Represents an object that contains an inventory, and can be used as a source of blocks for CraftBook mechanics.
  */
 public abstract class BlockBag {
 
-    public abstract List<ItemStack> addItems(ItemStack... itemStacks);
+    /**
+     * Determines if this {@link BlockBag} contains the requested {@link ItemStack}s.
+     *
+     * @param itemStacks The requested items
+     * @return if it contains the items
+     */
+    public abstract boolean has(List<ItemStack> itemStacks);
 
-    public abstract List<ItemStack> removeItems(ItemStack... itemStacks);
+    /**
+     * Adds the given {@link ItemStack}s to this {@link BlockBag}.
+     *
+     * @param itemStacks The items to add
+     * @return All items that could not be added
+     */
+    public abstract List<ItemStack> add(List<ItemStack> itemStacks);
+
+    /**
+     * Removes the given {@link ItemStack}s from this {@link BlockBag}.
+     *
+     * @param itemStacks The items to remove
+     * @return All items that could not be removed
+     */
+    public abstract List<ItemStack> remove(List<ItemStack> itemStacks);
 }

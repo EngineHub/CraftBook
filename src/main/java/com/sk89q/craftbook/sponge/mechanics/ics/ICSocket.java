@@ -17,6 +17,8 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
@@ -33,6 +35,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
@@ -42,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 @Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
-public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic {
+public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
     public static final HashMap<String, PinSet> PINSETS = new HashMap<>();
 
@@ -61,13 +64,17 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Override
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+    }
+
+    @Override
     public String getName() {
-        return "IC";
+        return "ICs";
     }
 
     @Listener
     public void onChangeSign(ChangeSignEvent event) {
-
         ICType<? extends IC> icType = ICManager.getICType((event.getText().lines().get(1)).toPlain());
         if (icType == null) return;
 
@@ -77,16 +84,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
-
-        BlockSnapshot source;
-        if(event.getCause().first(BlockSnapshot.class).isPresent())
-            source = event.getCause().first(BlockSnapshot.class).get();
-        else
-            return;
-
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
         if(!SignUtil.isSign(source.getState())) return;
-        //Sign sign = (Sign) source.getLocation().get().getTileEntity().get();
 
         BaseICData data = createICData(source.getLocation().get());
         if (data == null) return;
@@ -104,7 +103,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public void onThink(Location block) {
-
         BaseICData data = createICData(block);
         if (data == null) return;
         if (!(data.ic instanceof SelfTriggeringIC)) return;
@@ -117,7 +115,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     public BaseICData createICData(Location block) {
-
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             if(block.getExtent() instanceof Chunk)
                 block = ((Chunk) block.getExtent()).getWorld().getLocation(block.getX(), block.getY(), block.getZ());
@@ -143,6 +140,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         }
 
         return null;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/ics";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[0];
     }
 
     public static class BaseICData extends SpongeMechanicData {

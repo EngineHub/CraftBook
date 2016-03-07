@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util;
+package com.sk89q.craftbook.sponge.util.type;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;

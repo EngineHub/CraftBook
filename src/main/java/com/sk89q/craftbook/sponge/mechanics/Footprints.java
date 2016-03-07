@@ -27,7 +27,7 @@ import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
-import com.sk89q.craftbook.sponge.util.BlockFilterSetTypeToken;
+import com.sk89q.craftbook.sponge.util.type.BlockFilterSetTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;

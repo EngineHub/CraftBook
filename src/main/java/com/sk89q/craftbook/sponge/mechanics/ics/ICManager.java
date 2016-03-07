@@ -29,7 +29,6 @@ public class ICManager {
     public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<>();
 
     static {
-
         registerICType(new ICType<>("MC1000", "REPEATER", Repeater.class));
         registerICType(new ICType<>("MC1001", "INVERTER", Inverter.class));
 
@@ -46,7 +45,11 @@ public class ICManager {
     public static ICType<? extends IC> getICType(String id) {
 
         for (ICType<? extends IC> icType : registeredICTypes) {
-            if (id.equalsIgnoreCase("[" + icType.modelId + "]") || id.equalsIgnoreCase("=" + icType.shorthandId) || id.equalsIgnoreCase("[" + icType.modelId + "]S") || id.equalsIgnoreCase("=" + icType.shorthandId + " ST")) return icType;
+            if (id.equalsIgnoreCase("[" + icType.modelId + "]")
+                    || id.equalsIgnoreCase("=" + icType.shorthandId)
+                    || id.equalsIgnoreCase("[" + icType.modelId + "]S")
+                    || id.equalsIgnoreCase("=" + icType.shorthandId + " ST"))
+                return icType;
         }
 
         return null;

@@ -30,7 +30,7 @@ import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
-import com.sk89q.craftbook.sponge.util.TypeSerializers;
+import com.sk89q.craftbook.sponge.util.type.TypeSerializers;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;

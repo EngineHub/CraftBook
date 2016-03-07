@@ -18,40 +18,48 @@ package com.sk89q.craftbook.sponge.blockbags;
 
 import org.spongepowered.api.item.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * An interface for accessing multiple block bags at the same time.
  */
-public class BlockBagInterface extends BlockBag {
+public class MultiBlockBag extends BlockBag {
 
     BlockBag[] bags;
 
-    public BlockBagInterface(BlockBag... bags) {
+    public MultiBlockBag(BlockBag... bags) {
         this.bags = bags;
     }
 
     @Override
-    public List<ItemStack> addItems(ItemStack... itemStacks) {
+    public boolean has(List<ItemStack> itemStacks) {
         for (BlockBag bag : bags) {
-            if (itemStacks.length == 0) break;
-            List<ItemStack> stacks = bag.addItems(itemStacks);
-            itemStacks = stacks.toArray(new ItemStack[stacks.size()]);
+            if (itemStacks.size() == 0) break;
+            if (bag.has(itemStacks))
+                return true;
         }
 
-        return Arrays.asList(itemStacks);
+        return false;
     }
 
     @Override
-    public List<ItemStack> removeItems(ItemStack... itemStacks) {
+    public List<ItemStack> add(List<ItemStack> itemStacks) {
         for (BlockBag bag : bags) {
-            if (itemStacks.length == 0) break;
-            List<ItemStack> stacks = bag.removeItems(itemStacks);
-            itemStacks = stacks.toArray(new ItemStack[stacks.size()]);
+            if (itemStacks.size() == 0) break;
+            itemStacks = bag.add(itemStacks);
         }
 
-        return Arrays.asList(itemStacks);
+        return itemStacks;
+    }
+
+    @Override
+    public List<ItemStack> remove(List<ItemStack> itemStacks) {
+        for (BlockBag bag : bags) {
+            if (itemStacks.size() == 0) break;
+            itemStacks = bag.remove(itemStacks);
+        }
+
+        return itemStacks;
     }
 
 }
