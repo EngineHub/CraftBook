@@ -21,16 +21,14 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
-import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
-import org.spongepowered.api.entity.vehicle.minecart.MinecartRideable;
+import org.spongepowered.api.entity.vehicle.minecart.RideableMinecart;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DismountEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
@@ -54,7 +52,7 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
     @Listener
     public void onVehicleExit(DismountEntityEvent event) {
 
-        if (event.getTargetEntity() instanceof MinecartRideable) {
+        if (event.getTargetEntity() instanceof RideableMinecart) {
             Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
     }
@@ -63,7 +61,7 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
     public void onEntityCreate(SpawnEntityEvent event) {
         if(onlyOnExit.getValue())
             return;
-        event.getEntities().stream().filter(entity -> entity instanceof MinecartRideable).forEach(entity -> Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) entity)).submit(CraftBookPlugin.inst()));
+        event.getEntities().stream().filter(entity -> entity instanceof RideableMinecart).forEach(entity -> Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) entity)).submit(CraftBookPlugin.inst()));
     }
 
     private static class MinecartDecay implements Runnable {

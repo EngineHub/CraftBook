@@ -33,6 +33,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -96,7 +97,7 @@ public class Pipes extends SpongeBlockMechanic {
                     for(ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
                         Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition()).get();
                         item.offer(Keys.REPRESENTED_ITEM, snapshot);
-                        location.getExtent().spawnEntity(item, Cause.of(location));
+                        location.getExtent().spawnEntity(item, Cause.of(NamedCause.source(location)));
                     }
                 }
             }
