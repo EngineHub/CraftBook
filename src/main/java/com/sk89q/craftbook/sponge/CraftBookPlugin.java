@@ -45,7 +45,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 
-@Plugin(id = "com.sk89q.craftbook", name = "CraftBook", version = "4.0"/* , dependencies = "required-after:WorldEdit@[6.0,)" */)
+@Plugin(id = "com.sk89q.craftbook", name = "CraftBook", version = "4.0")
 public class CraftBookPlugin extends CraftBookAPI {
 
     MechanicDataCache cache;
@@ -102,7 +102,9 @@ public class CraftBookPlugin extends CraftBookAPI {
         blockBagManager = new BlockBagManager();
 
         moduleController.enableModules(input -> {
-            if (config.enabledMechanics.getValue().contains(input.getName()) || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all")) || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
+            if (config.enabledMechanics.getValue().contains(input.getName())
+                    || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
+                    || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
                 logger.info("Enabled: " + input.getName());
                 return true;
             }
@@ -154,6 +156,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.setConfigurationOptions(configurationOptions);
 
         //Standard Mechanics
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Variables");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Elevator");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Snow");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.area.Bridge");
