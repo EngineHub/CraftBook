@@ -86,12 +86,20 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Bottles: " + bottleCount, "xpstorer");
 
-        event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
-        if(event.getClickedBlock() == null)
-            for(ItemStack leftOver : event.getPlayer().getInventory().addItem(new ItemStack(Material.EXP_BOTTLE, bottleCount)).values())
-                event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), leftOver);
-        else
-            event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), new ItemStack(Material.EXP_BOTTLE, bottleCount));
+        if(requireBottle) {
+            event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
+        }
+
+        while(bottleCount > 0) {
+            ItemStack bottles = new ItemStack(Material.EXP_BOTTLE, Math.min(bottleCount, 64));
+            if (event.getClickedBlock() == null)
+                for (ItemStack leftOver : event.getPlayer().getInventory().addItem(bottles).values())
+                    event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), leftOver);
+            else
+                event.getClickedBlock().getWorld().dropItemNaturally(event.getClickedBlock().getLocation(), bottles);
+
+            bottleCount -= 64;
+        }
 
         event.getPlayer().setLevel(0);
         event.getPlayer().setExp(0);
