@@ -12,7 +12,7 @@ def copy_tree(src, dst, symlinks=False, ignore=None):
         else:
             shutil.copy2(s, d)
 
-fromDir = "run/config/craftbook/documentation/"
+fromDir = "run/config/com.sk89q.craftbook/documentation/"
 toDir = "../CraftBookDocs/source/"
 
 copy_tree(fromDir, toDir)
