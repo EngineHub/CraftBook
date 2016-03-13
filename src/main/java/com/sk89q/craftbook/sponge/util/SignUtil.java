@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.sponge.mechanics.variable.Variables;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -24,7 +25,6 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
@@ -199,13 +199,15 @@ public class SignUtil {
     /* From this point on - replacements for ChangedSign in CB 3.x */
 
     public static String getTextRaw(Sign sign, int line) {
-        Text text = getText(sign.get(SignData.class).get(), line);
-        return text.toPlain();
+        return getTextRaw(sign.get(SignData.class).get(), line);
     }
 
     public static String getTextRaw(SignData sign, int line) {
         Text text = getText(sign, line);
-        return text.toPlain();
+        String raw = text.toPlain();
+        if(Variables.instance != null)
+            raw = Variables.instance.parseVariables(raw, null);
+        return raw;
     }
 
     public static Text getText(SignData sign, int line) {

@@ -35,7 +35,7 @@ public class SpongeConfiguration {
 
     private CommentedConfigurationNode config;
 
-    public ConfigValue<List<String>> enabledMechanics = new ConfigValue<>("enabled-mechanics", "The list of mechanics to load.", Collections.singletonList("Elevator"), null);
+    public ConfigValue<List<String>> enabledMechanics = new ConfigValue<>("enabled-mechanics", "The list of mechanics to load.", Collections.singletonList("Variables"), null);
 
     public SpongeConfiguration(CraftBookPlugin plugin, File mainConfig, ConfigurationLoader<CommentedConfigurationNode> configManager) {
         this.plugin = plugin;

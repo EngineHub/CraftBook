@@ -152,11 +152,6 @@ public class Door extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public boolean isMechanicSign(Sign sign) {
-        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Up]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door Down]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Door]");
-    }
-
-    @Override
     public String[] getValidSigns() {
         return new String[]{"[Door Up]", "[Door Down]", "[Door]"};
     }

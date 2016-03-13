@@ -22,4 +22,6 @@ public class RegexUtil {
     public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
     public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
+    public static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
+    public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
 }

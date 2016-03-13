@@ -133,11 +133,6 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public boolean isMechanicSign(Sign sign) {
-        return SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge]") || SignUtil.getTextRaw(sign, 1).equalsIgnoreCase("[Bridge End]");
-    }
-
-    @Override
     public String[] getValidSigns() {
         return new String[]{"[Bridge]", "[Bridge End]"};
     }
