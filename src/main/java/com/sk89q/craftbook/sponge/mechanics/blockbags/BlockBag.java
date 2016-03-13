@@ -14,16 +14,22 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.blockbags;
+package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import com.sk89q.craftbook.sponge.util.SerializationUtil;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents an object that contains an inventory, and can be used as a source of blocks for CraftBook mechanics.
  */
 public abstract class BlockBag {
+
+    public long blockBagId;
+    public String simpleName;
+    public UUID creator;
 
     /**
      * Determines if this {@link BlockBag} contains the requested {@link ItemStack}s.
@@ -48,4 +54,12 @@ public abstract class BlockBag {
      * @return All items that could not be removed
      */
     public abstract List<ItemStack> remove(List<ItemStack> itemStacks);
+
+    public String toString() {
+        return SerializationUtil.jsonConverter.serialize(this);
+    }
+
+    public static BlockBag createFromString(String blockBagString) {
+        return SerializationUtil.jsonConverter.deserialize(blockBagString, BlockBag.class);
+    }
 }

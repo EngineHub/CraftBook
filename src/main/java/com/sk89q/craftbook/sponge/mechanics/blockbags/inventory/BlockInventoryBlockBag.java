@@ -14,12 +14,18 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util;
+package com.sk89q.craftbook.sponge.mechanics.blockbags.inventory;
 
-import java.util.regex.Pattern;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.world.Location;
 
-public class RegexUtil {
-    public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
+public class BlockInventoryBlockBag extends InventoryBlockBag {
+
+    public Location<?> location;
+
+    public BlockInventoryBlockBag(Location<?> location) {
+        super(((Carrier)location.getTileEntity().get()).getInventory());
+
+        this.location = location;
+    }
 }

@@ -26,7 +26,7 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.blockbags.BlockBagManager;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
@@ -157,6 +157,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         //Standard Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Variables");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Elevator");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Snow");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.area.Bridge");

@@ -16,10 +16,12 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
@@ -46,5 +48,25 @@ public class LocationUtil {
 
     public static boolean isLocationWithinRange(Location location) {
         return location.getBlockY() < location.getExtent().getBlockMax().getY() && location.getBlockY() >= location.getExtent().getBlockMin().getY();
+    }
+
+    public static Location<World> locationFromString(String string) {
+        String[] parts = RegexUtil.COMMA_PATTERN.split(string);
+        if(parts.length < 4)
+            return null;
+
+        World world = Sponge.getGame().getServer().getWorld(parts[0]).orElse(null);
+        if(world == null)
+            return null;
+
+        double x = Double.parseDouble(parts[1]);
+        double y = Double.parseDouble(parts[2]);
+        double z = Double.parseDouble(parts[3]);
+
+        return world.getLocation(x, y, z);
+    }
+
+    public static String stringFromLocation(Location<World> location) {
+        return location.getExtent().getName() + ',' + location.getPosition().getX() + ',' + location.getPosition().getY() + ',' + location.getPosition().getZ();
     }
 }

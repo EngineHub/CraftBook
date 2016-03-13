@@ -51,7 +51,6 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
 
     @Listener
     public void onVehicleExit(DismountEntityEvent event) {
-
         if (event.getTargetEntity() instanceof RideableMinecart) {
             Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(emptyTicks.getValue()).execute(new MinecartDecay((Minecart) event.getTargetEntity())).submit(CraftBookPlugin.inst());
         }
@@ -69,7 +68,6 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
         Minecart cart;
 
         MinecartDecay(Minecart cart) {
-
             this.cart = cart;
         }
 

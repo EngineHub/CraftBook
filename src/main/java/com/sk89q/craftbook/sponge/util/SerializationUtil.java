@@ -16,10 +16,10 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
-import java.util.regex.Pattern;
+import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.reflect.VisibilityFilter;
 
-public class RegexUtil {
-    public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
+public class SerializationUtil {
+    public static Genson jsonConverter = new GensonBuilder().useFields(true, VisibilityFilter.PACKAGE_PUBLIC).useMethods(false).useRuntimeType(true).useClassMetadata(true).useConstructorWithArguments(true).create();
 }
