@@ -20,6 +20,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.List;
 
@@ -37,5 +38,5 @@ public abstract class PipePart {
      * @param inputSide The side that the input has come from.
      * @return A list of possible output locations.
      */
-    public abstract List<Location> findValidOutputs(Location location, ItemStack itemStack, Direction inputSide);
+    public abstract List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide);
 }

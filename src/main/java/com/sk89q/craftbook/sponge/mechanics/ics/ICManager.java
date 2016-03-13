@@ -45,10 +45,10 @@ public class ICManager {
     public static ICType<? extends IC> getICType(String id) {
 
         for (ICType<? extends IC> icType : registeredICTypes) {
-            if (id.equalsIgnoreCase("[" + icType.modelId + "]")
-                    || id.equalsIgnoreCase("=" + icType.shorthandId)
-                    || id.equalsIgnoreCase("[" + icType.modelId + "]S")
-                    || id.equalsIgnoreCase("=" + icType.shorthandId + " ST"))
+            if (id.equalsIgnoreCase('[' + icType.modelId + ']')
+                    || id.equalsIgnoreCase('=' + icType.shorthandId)
+                    || id.equalsIgnoreCase('[' + icType.modelId + "]S")
+                    || id.equalsIgnoreCase('=' + icType.shorthandId + " ST"))
                 return icType;
         }
 

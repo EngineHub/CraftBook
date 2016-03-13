@@ -18,16 +18,17 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class IC {
 
     public transient ICType<? extends IC> type;
-    public transient Location block;
+    public transient Location<World> block;
     public boolean[] pinstates;
 
     public IC() {}
 
-    public IC(ICType<? extends IC> type, Location block) {
+    public IC(ICType<? extends IC> type, Location<World> block) {
         this.type = type;
         this.block = block;
     }
@@ -46,7 +47,7 @@ public abstract class IC {
         pinstates = new boolean[set.getInputCount()]; // Just input for now.
     }
 
-    public Location getBlock() {
+    public Location<World> getBlock() {
         return block;
     }
 

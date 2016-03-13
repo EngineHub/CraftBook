@@ -21,6 +21,7 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class PinSet {
 
@@ -38,7 +39,7 @@ public abstract class PinSet {
         if(outputId == -1) return;
 
         if (getOutput(outputId, ic) != powered) {
-            Location block = getPinLocation(outputId + getInputCount(), ic);
+            Location<World> block = getPinLocation(outputId + getInputCount(), ic);
 
             if (!block.supports(Keys.POWERED)) return; // Can't set this.
 
@@ -46,7 +47,7 @@ public abstract class PinSet {
         }
     }
 
-    public int getPinForLocation(IC ic, Location location) {
+    public int getPinForLocation(IC ic, Location<World> location) {
         for(int i = 0; i < getInputCount() + getOutputCount(); i++)
             if(getPinLocation(i, ic).getBlockPosition().equals(location.getBlockPosition()))
                 return i;
@@ -58,7 +59,7 @@ public abstract class PinSet {
     }
 
     public boolean getOutput(int outputId, IC ic) {
-        return outputId != -1 && (Boolean) getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).orElse(false);
+        return outputId != -1 && getPinLocation(getInputCount() + outputId, ic).get(Keys.POWERED).orElse(false);
     }
 
     public boolean isValid(int id, IC ic) {
@@ -69,5 +70,5 @@ public abstract class PinSet {
 
     public abstract String getName();
 
-    public abstract Location getPinLocation(int id, IC ic);
+    public abstract Location<World> getPinLocation(int id, IC ic);
 }

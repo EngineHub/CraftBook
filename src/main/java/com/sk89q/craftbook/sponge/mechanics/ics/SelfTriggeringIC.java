@@ -17,12 +17,13 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class SelfTriggeringIC extends IC {
 
     public boolean selfTriggering;
 
-    public SelfTriggeringIC(ICType<? extends IC> type, Location block) {
+    public SelfTriggeringIC(ICType<? extends IC> type, Location<World> block) {
         this.type = type;
         this.block = block;
     }

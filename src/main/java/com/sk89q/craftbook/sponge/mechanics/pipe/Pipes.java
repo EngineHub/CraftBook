@@ -40,6 +40,7 @@ import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.*;
 
@@ -74,9 +75,9 @@ public class Pipes extends SpongeBlockMechanic {
         }
     }
 
-    public void performPipeAction(Location location) {
-        Direction direction = (Direction) location.get(Keys.DIRECTION).get();
-        Location inventorySource = location.getRelative(direction);
+    public void performPipeAction(Location<World> location) {
+        Direction direction = location.get(Keys.DIRECTION).get();
+        Location<World> inventorySource = location.getRelative(direction);
 
         //Let's try and find a source of items!
         Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(inventorySource);
@@ -104,7 +105,7 @@ public class Pipes extends SpongeBlockMechanic {
         }
     }
 
-    private ItemStack doPipeIteration(Location location, ItemStack itemStack, Direction fromDirection, Set<Location> traversed) {
+    private ItemStack doPipeIteration(Location<World> location, ItemStack itemStack, Direction fromDirection, Set<Location> traversed) {
         if(traversed.contains(location))
             return itemStack;
 
@@ -117,7 +118,7 @@ public class Pipes extends SpongeBlockMechanic {
         if(pipePart == null)
             return itemStack;
 
-        for(Location location1 : pipePart.findValidOutputs(location, itemStack, fromDirection)) {
+        for(Location<World> location1 : pipePart.findValidOutputs(location, itemStack, fromDirection)) {
             if(pipePart instanceof OutputPipePart) {
                 Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(location1);
 

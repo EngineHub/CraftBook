@@ -28,10 +28,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Module(moduleName = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
 public class BlockBagManager extends SpongeMechanic {
@@ -84,15 +81,15 @@ public class BlockBagManager extends SpongeMechanic {
         return null;
     }
 
-    public BlockBag getBlockBag(String name) {
+    public BlockBag getBlockBag(UUID creator, String name) {
         for(BlockBag bag : blockBags)
-            if(bag.simpleName.equals(name))
+            if(bag.simpleName.equals(name) && bag.creator.equals(creator))
                 return bag;
         return null;
     }
 
     public void createBlockBag(Player creator, BlockBag blockBag) {
-        if(getBlockBag(blockBag.simpleName) != null) {
+        if(getBlockBag(creator.getUniqueId(), blockBag.simpleName) != null) {
             creator.sendMessage(Text.of(TextColors.RED, "A blockbag with this name already exists!"));
             return;
         }

@@ -21,12 +21,13 @@ import org.spongepowered.api.world.Location;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
+import org.spongepowered.api.world.World;
 
 public class Clock extends SelfTriggeringIC {
 
     public int ticks;
 
-    public Clock(ICType<? extends IC> type, Location block) {
+    public Clock(ICType<? extends IC> type, Location<World> block) {
         super(type, block);
     }
 

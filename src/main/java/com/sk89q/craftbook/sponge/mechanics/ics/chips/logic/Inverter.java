@@ -20,10 +20,11 @@ import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import org.spongepowered.api.world.World;
 
 public class Inverter extends IC {
 
-    public Inverter(ICType<? extends IC> type, Location block) {
+    public Inverter(ICType<? extends IC> type, Location<World> block) {
         super(type, block);
     }
 

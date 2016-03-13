@@ -19,13 +19,12 @@ package com.sk89q.craftbook.sponge.util;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.block.trait.BlockTrait;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class BlockUtil {
@@ -112,8 +111,8 @@ public class BlockUtil {
         return directFaces;
     }
 
-    public static List<Location> getAdjacentExcept(Location location, Direction ... directions) {
-        List<Location> locations = new ArrayList<>();
+    public static List<Location<World>> getAdjacentExcept(Location<World> location, Direction ... directions) {
+        List<Location<World>> locations = new ArrayList<>();
 
         for(Direction direction : getDirectFaces()) {
             boolean passes = true;
@@ -131,6 +130,13 @@ public class BlockUtil {
         return locations;
     }
 
+    /**
+     * Gets whether or not the specified {@link BlockState} passes the {@link BlockFilter}s.
+     *
+     * @param filters The filters
+     * @param state The state to test
+     * @return If it passes
+     */
     public static boolean doesStatePassFilters(Collection<BlockFilter> filters, BlockState state) {
         for(BlockFilter filter : filters)
             for(BlockState blockState : filter.getApplicableBlockStates())

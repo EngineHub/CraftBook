@@ -20,12 +20,11 @@ import org.spongepowered.api.world.Location;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import org.spongepowered.api.world.World;
 
 public class Repeater extends IC {
 
-    public Repeater() {}
-
-    public Repeater(ICType<IC> type, Location block) {
+    public Repeater(ICType<IC> type, Location<World> block) {
         super(type, block);
     }
 

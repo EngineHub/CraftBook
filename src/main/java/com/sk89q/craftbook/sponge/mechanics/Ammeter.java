@@ -23,9 +23,9 @@ import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.CoalTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -63,22 +63,11 @@ public class Ammeter extends SpongeBlockMechanic {
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
-        int powerLevel = getPowerLevel(event.getTargetBlock().getExtendedState());
+        int powerLevel = BlockUtil.getBlockPowerLevel(event.getTargetBlock().getLocation().get()).orElse(-1);
         if (player.getItemInHand().isPresent() && powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().get().getItem() == ammeterItem.getValue().getItem()) {
             player.sendMessage(getCurrentLine(powerLevel));
             event.setCancelled(true);
         }
-    }
-
-    private static int getPowerLevel(BlockState state) {
-        if(state.get(Keys.POWER).isPresent()) {
-            return state.get(Keys.POWER).get();
-        } else if(state.get(Keys.POWERED).isPresent()){
-            return state.get(Keys.POWERED).get() ? 15 : 0;
-        }
-
-        //No method of retrieving power from this block is implemented, or it has no power.
-        return -1;
     }
 
     private static Text getCurrentLine(int powerLevel) {

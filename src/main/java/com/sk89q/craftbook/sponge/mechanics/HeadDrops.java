@@ -42,7 +42,6 @@ public class HeadDrops extends SpongeMechanic {
 
     @Listener
     public void onEntityDeath(DropItemEvent.Pre event) {
-
         Entity entity;
         if(event.getCause().first(Entity.class).isPresent())
             entity = event.getCause().first(Entity.class).get();
@@ -135,12 +134,10 @@ public class HeadDrops extends SpongeMechanic {
         private GameProfile profile;
 
         public GameProfile getProfile() {
-
             return profile;
         }
 
         public static MobSkullType getFromEntityType(EntityType entType) {
-
             try {
                 return MobSkullType.valueOf(entType.getName());
             } catch (Exception e) {
@@ -149,11 +146,10 @@ public class HeadDrops extends SpongeMechanic {
         }
 
         public static EntityType getEntityType(GameProfile profile) {
-
             if (profile == null) return null;
 
             for (MobSkullType type : values())
-                if (type.getProfile().getUniqueId().equals(profile.getUniqueId())) {
+                if (type.profile.getUniqueId().equals(profile.getUniqueId())) {
                     Optional<EntityType> tt = Sponge.getGame().getRegistry().getType(EntityType.class, type.name());
                     if (!tt.isPresent()) continue;
                     return tt.get();

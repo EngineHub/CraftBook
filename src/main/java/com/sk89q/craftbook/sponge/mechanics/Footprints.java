@@ -27,10 +27,10 @@ import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.type.BlockFilterSetTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Listener;
@@ -68,24 +68,17 @@ public class Footprints extends SpongeMechanic {
 
     @Listener
     public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
-
         if(event.getTargetEntity().isOnGround()) {
-            for(BlockFilter filter : allowedBlocks.getValue()) {
-                for(BlockState state : filter.getApplicableBlockStates()) {
-                    if(state.equals(event.getTargetEntity().getLocation().getRelative(Direction.DOWN).getBlock())) {
-                        FootprintData data = getFootprintData(event.getTargetEntity().getUniqueId());
-                        if (data.canPlaceFootprint(event.getToTransform().getPosition())) {
+            if(BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetEntity().getLocation().getRelative(Direction.DOWN).getBlock())) {
+                FootprintData data = getFootprintData(event.getTargetEntity().getUniqueId());
+                if (data.canPlaceFootprint(event.getToTransform().getPosition())) {
+                    Vector3d footprintLocation = event.getToTransform().getPosition().add(0, 0.19, 0);
+                    //Flip these, it should 'roughly' rotate 90 or -90 degrees.
+                    Vector3d footOffset = new Vector3d(footprintLocation.getZ(), 0, footprintLocation.getX()).normalize().div(2);
 
-                            Vector3d footprintLocation = event.getToTransform().getPosition().add(0, 0.19, 0);
-                            //Flip these, it should 'roughly' rotate 90 or -90 degrees.
-                            Vector3d footOffset = new Vector3d(footprintLocation.getZ(), 0, footprintLocation.getX()).normalize().div(2);
-
-                            event.getTargetEntity().getWorld().spawnParticles(footprintParticle, footprintLocation.add(footOffset.mul(data.side ? -1 : 1)));
-                            data.position = event.getToTransform().getPosition();
-                            data.side = !data.side;
-                        }
-                        return;
-                    }
+                    event.getTargetEntity().getWorld().spawnParticles(footprintParticle, footprintLocation.add(footOffset.mul(data.side ? -1 : 1)));
+                    data.position = event.getToTransform().getPosition();
+                    data.side = !data.side;
                 }
             }
         }

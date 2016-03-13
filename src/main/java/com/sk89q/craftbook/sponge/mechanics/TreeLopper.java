@@ -22,9 +22,11 @@ import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
-import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -37,22 +39,15 @@ import java.util.Optional;
 public class TreeLopper extends SpongeMechanic {
 
     @Listener
-    public void onBlockBreak(ChangeBlockEvent.Break event) {
-
-        Humanoid human;
-        if(event.getCause().first(Humanoid.class).isPresent())
-            human = event.getCause().first(Humanoid.class).get();
-        else
-            return;
-
+    public void onBlockBreak(ChangeBlockEvent.Break event, @Named(NamedCause.SOURCE) Player player) {
         event.getTransactions().forEach((transaction) -> {
             if(transaction.getOriginal().getState().getType() == BlockTypes.LOG || transaction.getOriginal().getState().getType() == BlockTypes.LOG2) {
-                checkBlocks(transaction.getOriginal().getLocation().get(), human, transaction.getOriginal().get(Keys.TREE_TYPE).get(), new ArrayList<>());
+                checkBlocks(transaction.getOriginal().getLocation().get(), player, transaction.getOriginal().get(Keys.TREE_TYPE).get(), new ArrayList<>());
             }
         });
     }
 
-    private void checkBlocks(Location<World> block, Humanoid player, TreeType type, List<Location> traversed) {
+    private void checkBlocks(Location<World> block, Player player, TreeType type, List<Location> traversed) {
         if(traversed.contains(block)) return;
 
         traversed.add(block);
@@ -61,7 +56,8 @@ public class TreeLopper extends SpongeMechanic {
         if(!data.isPresent()) return;
 
         if(data.get().equals(type)) { //Same tree type.
-            //TODO FIX THIS block.digBlockWith(player.getItemInHand().get());
+            //block.digBlockWith(player.getItemInHand().get());
+            block.removeBlock();
             for(Direction dir : BlockUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }

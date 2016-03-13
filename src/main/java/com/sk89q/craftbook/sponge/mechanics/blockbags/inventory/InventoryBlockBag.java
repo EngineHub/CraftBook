@@ -57,14 +57,15 @@ public abstract class InventoryBlockBag extends BlockBag {
 
     @Override
     public List<ItemStack> remove(List<ItemStack> itemStacks) {
-        /*List<ItemStack> output = new ArrayList<>();
+        List<ItemStack> output = new ArrayList<>();
         for(ItemStack stack : itemStacks) {
-            InventoryTransactionResult result = carrier.getInventory().(stack);
-            if(result.getRejectedItems().size() > 0) {
-                output.addAll(result.getRejectedItems().stream().map(ItemStackSnapshot::createStack).collect(Collectors.toList()));
-            }
+            Inventory view = inventory.query(stack);
+            //view.poll(stack.getQuantity());
+            //InventoryTransactionResult result = ;
+            //if(result.getRejectedItems().size() > 0) {
+            //    output.addAll(result.getRejectedItems().stream().map(ItemStackSnapshot::createStack).collect(Collectors.toList()));
+            //}
         }
-        return output;*/
         //TODO
         return itemStacks;
     }

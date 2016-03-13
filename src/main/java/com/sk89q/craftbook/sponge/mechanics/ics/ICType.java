@@ -29,7 +29,7 @@ public class ICType<T extends IC> {
     String defaultPinset;
 
     Class<T> icClass;
-    Object[] extraArguments = new Object[0];
+    Object[] extraArguments = null;
     Class<?>[] argumentTypes = new Class<?>[2];
 
     public ICType(String modelId, String shorthandId, Class<T> icClass) {
@@ -67,7 +67,7 @@ public class ICType<T extends IC> {
         try {
             Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
             IC ic;
-            if (extraArguments.length > 0)
+            if (extraArguments != null && extraArguments.length > 0)
                 ic = construct.newInstance(this, block, extraArguments);
             else ic = construct.newInstance(this, block);
 

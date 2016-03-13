@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class Pins3ISO extends PinSet {
 
@@ -38,7 +39,7 @@ public class Pins3ISO extends PinSet {
     }
 
     @Override
-    public Location getPinLocation(int id, IC ic) {
+    public Location<World> getPinLocation(int id, IC ic) {
         switch(id) {
             case 0:
                 return ic.getBlock().getRelative(SignUtil.getFront(ic.getBlock()));

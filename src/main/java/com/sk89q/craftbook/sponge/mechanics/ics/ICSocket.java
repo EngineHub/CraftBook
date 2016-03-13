@@ -80,7 +80,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
         System.out.println(icType.shorthandId);
 
-        event.getText().lines().set(1, Text.of("=" + icType.shorthandId));
+        event.getText().lines().set(1, Text.of('=' + icType.shorthandId));
     }
 
     @Listener

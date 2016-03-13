@@ -16,12 +16,12 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.type.VariableTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.event.Listener;
@@ -45,8 +45,7 @@ public class Variables extends SpongeMechanic {
 
         if(config.getValue() != null) {
             try {
-                variableStore = config.getValue(new TypeToken<Map<String, Map<String, String>>>() {
-                });
+                variableStore = config.getValue(new VariableTypeToken());
             } catch (ObjectMappingException e) {
                 e.printStackTrace();
                 System.out.println("Failed to read variables! Resetting..");
@@ -66,4 +65,5 @@ public class Variables extends SpongeMechanic {
     public void onCommandSend(SendCommandEvent event) {
 
     }
+
 }

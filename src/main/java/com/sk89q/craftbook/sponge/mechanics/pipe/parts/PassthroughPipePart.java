@@ -22,6 +22,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PassthroughPipePart extends PipePart {
     }
 
     @Override
-    public List<Location> findValidOutputs(Location location, ItemStack itemStack, Direction inputSide) {
+    public List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide) {
         return BlockUtil.getAdjacentExcept(location, inputSide.getOpposite());
     }
 }

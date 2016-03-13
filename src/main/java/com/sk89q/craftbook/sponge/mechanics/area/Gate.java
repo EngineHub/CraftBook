@@ -17,7 +17,6 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.flowpowered.math.vector.Vector3i;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -27,8 +26,8 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -44,7 +43,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.extent.Extent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -71,7 +69,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         super.onPlayerInteract(event, human);
 
-        if (isAllowedBlock(event.getTargetBlock().getLocation().get().getBlock())) {
+        if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetBlock().getLocation().get().getBlock())) {
             if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
                 if(human instanceof CommandSource)
                     ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
@@ -112,7 +110,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
             for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                 for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
-                    if (isAllowedBlock(block.getExtent().getBlock(x1, y1, z1))) {
+                    if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getExtent().getBlock(x1, y1, z1))) {
                         if(closestColumn == null)
                             closestColumn = block.getExtent().getLocation(x1, y1, z1);
                         else {
@@ -137,8 +135,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     public BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
 
-        if (isAllowedBlock(block.getBlock())) {
-
+        if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
             GateColumn column = new GateColumn(block);
 
             Location temp = column.topBlock;
@@ -152,7 +149,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                     return state;
             }
 
-            while (isAllowedBlock(temp.getBlock()) || temp.getBlockType() == BlockTypes.AIR) {
+            while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), temp.getBlock()) || temp.getBlockType() == BlockTypes.AIR) {
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) state = searchColumn(temp.getRelative(Direction.NORTH), columns, state);
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) state = searchColumn(temp.getRelative(Direction.SOUTH), columns, state);
                 if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) state = searchColumn(temp.getRelative(Direction.EAST), columns, state);
@@ -177,7 +174,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                 block = block.getRelative(dir);
             }
         } else {
-            while (isAllowedBlock(block.getBlock())) {
+            while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
                 block.setBlockType(BlockTypes.AIR);
                 block = block.getRelative(dir);
             }
@@ -207,7 +204,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         for (GateColumn vec : columns) {
             Location col = vec.getBlock();
             if (forceState == null) {
-                forceState = !isAllowedBlock(col.getRelative(Direction.DOWN).getBlock());
+                forceState = !BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), col.getRelative(Direction.DOWN).getBlock());
             }
             toggleColumn(col, forceState, state);
         }
@@ -247,8 +244,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         Location topBlock;
 
         public GateColumn(Location topBlock) {
-
-            while (isAllowedBlock(topBlock.getBlock())) {
+            while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
 

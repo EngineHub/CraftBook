@@ -19,10 +19,11 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class AnyInputLogicGate extends IC {
 
-    public AnyInputLogicGate(ICType<? extends IC> type, Location block) {
+    public AnyInputLogicGate(ICType<? extends IC> type, Location<World> block) {
         super(type, block);
     }
 

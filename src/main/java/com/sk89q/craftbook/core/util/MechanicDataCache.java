@@ -22,13 +22,14 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 public abstract class MechanicDataCache {
 
     private Cache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).expireAfterAccess(10, TimeUnit.MINUTES).removalListener(new RemovalListener<String, MechanicData>() {
         @Override
-        public void onRemoval(RemovalNotification<String, MechanicData> notification) {
+        public void onRemoval(@Nonnull RemovalNotification<String, MechanicData> notification) {
             MechanicData value = notification.getValue();
             if(value == null)
                 return;

@@ -142,16 +142,6 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         return null;
     }
 
-    public boolean isAllowedBlock(BlockState state) {
-        for(BlockFilter filter : allowedBlocks.getValue()) {
-            for(BlockState testState : filter.getApplicableBlockStates()) {
-                if(testState.equals(state))
-                    return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public boolean isValid(Location location) {
         if (SignUtil.isSign(location)) {

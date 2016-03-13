@@ -31,6 +31,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.TickBlockEvent;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.weather.Weathers;
 
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public void increaseSnow(Location location, boolean disperse) {
+    public void increaseSnow(Location<World> location, boolean disperse) {
         Optional<LayeredData> dataOptional = location.get(LayeredData.class);
         if(dataOptional.isPresent()) {
             LayeredData data = dataOptional.get();
@@ -84,7 +85,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public void decreaseSnow(Location location) {
+    public void decreaseSnow(Location<World> location) {
         Optional<LayeredData> dataOptional = location.get(LayeredData.class);
         if(dataOptional.isPresent()) {
             LayeredData data = dataOptional.get();
@@ -107,7 +108,7 @@ public class Snow extends SpongeMechanic {
 
     private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NONE};
 
-    public void disperseSnow(final Location location, Direction ignoredFace) {
+    public void disperseSnow(final Location<World> location, Direction ignoredFace) {
 
         Optional<LayeredData> heightData = location.getOrCreate(LayeredData.class);
         int currentHeight = heightData.get().getValue(Keys.LAYER).get().get();
@@ -115,7 +116,7 @@ public class Snow extends SpongeMechanic {
         for(final Direction dir : VALID_SNOW_DIRECTIONS) {
             if(dir == ignoredFace) continue;
             if(currentHeight == 0 && !(dir == Direction.DOWN || dir == Direction.NONE)) continue; //Stop snow moving around on the ground.
-            final Location relative = location.getRelative(dir);
+            final Location<World> relative = location.getRelative(dir);
             if(canPlaceSnowAt(relative)) {
                 Optional<LayeredData> dataOptional = relative.get(LayeredData.class);
                 if(dataOptional.isPresent()) {
@@ -137,7 +138,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public boolean canSeeSky(Location location) {
+    public boolean canSeeSky(Location<World> location) {
         while(location.getBlockY() < location.getExtent().getBlockMax().getY()) {
             location = location.getRelative(Direction.UP);
             if(location.getBlockType() != BlockTypes.AIR && location.getBlockType() != BlockTypes.LEAVES && location.getBlockType() != BlockTypes.LEAVES2)
@@ -146,11 +147,11 @@ public class Snow extends SpongeMechanic {
         return true;
     }
 
-    public boolean canPlaceSnowAt(Location location) {
+    public boolean canPlaceSnowAt(Location<World> location) {
         return location.getBlockType() == BlockTypes.SNOW_LAYER || !(location.getBlockType() == BlockTypes.WATER || location.getBlockType() == BlockTypes.FLOWING_WATER || location.getBlockType() == BlockTypes.LAVA || location.getBlockType() == BlockTypes.FLOWING_LAVA) && location.getBlockType().getProperty(ReplaceableProperty.class).get().getValue();
     }
 
-    public boolean isBlockBuried(Location location) {
+    public boolean isBlockBuried(Location<World> location) {
         return location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW_LAYER || location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW;
     }
 
