@@ -39,7 +39,7 @@ public abstract class CraftBookAPI {
         return (T) instance;
     }
 
-    public static void setInstance(CraftBookAPI api) {
+    public static <T extends CraftBookAPI> void setInstance(T api) {
         instance = api;
     }
 

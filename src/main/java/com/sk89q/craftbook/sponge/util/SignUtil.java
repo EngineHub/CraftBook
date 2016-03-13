@@ -24,6 +24,7 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class SignUtil {
      * @param block The location to check
      * @return If it is a sign
      */
-    public static boolean isSign(Location block) {
+    public static boolean isSign(Location<?> block) {
         return isSign(block.getBlock());
     }
 
@@ -59,7 +60,7 @@ public class SignUtil {
      * @return the direction a player would be facing when reading the sign; i.e. the face that is actually the back
      * side of the sign.
      */
-    public static Direction getFacing(Location sign) {
+    public static Direction getFacing(Location<?> sign) {
         return getBack(sign);
     }
 
@@ -70,16 +71,16 @@ public class SignUtil {
      * @return the side of the sign containing the text (in other words, when a player places a new sign,
      * while facing north, this will return south).
      */
-    public static Direction getFront(Location sign) {
+    public static Direction getFront(Location<?> sign) {
         Optional<Direction> data = sign.get(Keys.DIRECTION);
 
         if (data.isPresent())
             return data.get();
         else
-            return null;
+            return Direction.NONE;
     }
 
-    public static Location getFrontBlock(Location sign) {
+    public static Location<?> getFrontBlock(Location<?> sign) {
         return sign.getRelative(getFront(sign));
     }
 
@@ -93,16 +94,16 @@ public class SignUtil {
      */
     public static Direction getBack(Location sign) {
         Direction front = getFront(sign);
-        if (front == null) return null;
+        if (front == null) return Direction.NONE;
 
         return front.getOpposite();
     }
 
-    public static Location getBackBlock(Location sign) {
+    public static Location<?> getBackBlock(Location<?> sign) {
         return sign.getRelative(getBack(sign));
     }
 
-    public static Location getNextSign(Location sign, String criterea, int searchRadius) {
+    public static Location<?> getNextSign(Location<?> sign, String criterea, int searchRadius) {
         Location otherBlock = sign;
         Direction way = getBack(sign);
         boolean found = false;
@@ -127,14 +128,14 @@ public class SignUtil {
      * oriented in a further direction,
      * the result is rounded to the nearest ordinal direction.
      */
-    public static Direction getRight(Location sign) {
+    public static Direction getRight(Location<?> sign) {
         Direction front = getFront(sign);
-        if (front == null) return null;
+        if (front == null) return Direction.NONE;
 
         return getClockWise(front);
     }
 
-    public static Location getLeftBlock(Location sign) {
+    public static Location<?> getLeftBlock(Location<?> sign) {
         return sign.getRelative(getLeft(sign));
     }
 
@@ -146,14 +147,14 @@ public class SignUtil {
      * oriented in a further direction, the
      * result is rounded to the nearest ordinal direction.
      */
-    public static Direction getLeft(Location sign) {
+    public static Direction getLeft(Location<?> sign) {
         Direction front = getFront(sign);
-        if (front == null) return null;
+        if (front == null) return Direction.NONE;
 
         return getCounterClockWise(front);
     }
 
-    public static Location getRightBlock(Location sign) {
+    public static Location<?> getRightBlock(Location<?> sign) {
         return sign.getRelative(getRight(sign));
     }
 
