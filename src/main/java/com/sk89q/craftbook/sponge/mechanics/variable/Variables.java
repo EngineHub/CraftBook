@@ -26,6 +26,7 @@ import com.sk89q.craftbook.sponge.mechanics.variable.command.GetVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.RemoveVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.SetVariableCommand;
 import com.sk89q.craftbook.sponge.util.RegexUtil;
+import com.sk89q.craftbook.sponge.util.TextUtil;
 import com.sk89q.craftbook.sponge.util.type.VariableTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -36,6 +37,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 
 import javax.annotation.Nullable;
@@ -167,7 +169,14 @@ public class Variables extends SpongeMechanic {
 
     @Listener
     public void onPlayerChat(MessageChannelEvent event) {
-        //TODO Work out how to do proper replacements in the Text API
+        event.setMessage(TextUtil.transform(event.getMessage(), old -> {
+            if (old instanceof LiteralText) {
+                LiteralText literal = (LiteralText) old;
+                return literal.toBuilder().content(parseVariables(literal.getContent(), event.getCause().first(Player.class).orElse(null)));
+            }
+
+            return old;
+        }));
     }
 
     public static Set<String> getPossibleVariables(String line) {
