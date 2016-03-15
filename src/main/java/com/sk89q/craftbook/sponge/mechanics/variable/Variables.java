@@ -78,26 +78,47 @@ public class Variables extends SpongeMechanic {
         CommandSpec setVariable = CommandSpec.builder()
                 .description(Text.of("Set the value of a variable"))
                 .arguments(GenericArguments.string(Text.of("key")), GenericArguments.string(Text.of("value")))
-                .executor(new SetVariableCommand(this))
+                .executor(new SetVariableCommand(this, false))
+                .build();
+
+        CommandSpec setGlobalVariable = CommandSpec.builder()
+                .description(Text.of("Set the value of a global variable"))
+                .arguments(GenericArguments.string(Text.of("key")), GenericArguments.string(Text.of("value")))
+                .executor(new SetVariableCommand(this, true))
                 .build();
 
         CommandSpec getVariable = CommandSpec.builder()
                 .description(Text.of("Get the value of a variable"))
                 .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new GetVariableCommand(this))
+                .executor(new GetVariableCommand(this, false))
+                .build();
+
+        CommandSpec getGlobalVariable = CommandSpec.builder()
+                .description(Text.of("Get the value of a global variable"))
+                .arguments(GenericArguments.string(Text.of("key")))
+                .executor(new GetVariableCommand(this, true))
                 .build();
 
         CommandSpec removeVariable = CommandSpec.builder()
                 .description(Text.of("Removes a variable"))
                 .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new RemoveVariableCommand(this))
+                .executor(new RemoveVariableCommand(this, false))
+                .build();
+
+        CommandSpec removeGlobalVariable = CommandSpec.builder()
+                .description(Text.of("Removes a global variable"))
+                .arguments(GenericArguments.string(Text.of("key")))
+                .executor(new RemoveVariableCommand(this, true))
                 .build();
 
         CommandSpec variableCommand = CommandSpec.builder()
                 .description(Text.of("Base Variable command"))
                 .child(setVariable, "set", "def", "define")
+                .child(setGlobalVariable, "setglobal", "defglobal", "defineglobal")
                 .child(getVariable, "get")
+                .child(getGlobalVariable, "getglobal")
                 .child(removeVariable, "rm", "del", "remove")
+                .child(removeGlobalVariable, "rmglobal", "delglobal", "removeglobal")
                 .build();
 
         Sponge.getGame().getCommandManager().register(CraftBookPlugin.<CraftBookPlugin>inst(), variableCommand, "var", "variable", "variables");
