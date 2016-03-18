@@ -155,9 +155,4 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     }
 
     public abstract Set<BlockFilter> getDefaultBlocks();
-
-    public static class SimpleAreaData extends SpongeMechanicData {
-        public long blockBagId;
-    }
-
 }
