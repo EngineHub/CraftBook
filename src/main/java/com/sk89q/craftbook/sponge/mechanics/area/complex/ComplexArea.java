@@ -17,11 +17,10 @@
 package com.sk89q.craftbook.sponge.mechanics.area.complex;
 
 import com.me4502.modularframework.module.Module;
-import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
-import com.sk89q.craftbook.sponge.util.SpongeRedstoneMechanicData;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.world.Location;
 
@@ -45,7 +44,7 @@ public class ComplexArea extends SpongeSignMechanic {
         return null;
     }
 
-    private static class ComplexAreaData extends SpongeRedstoneMechanicData {
+    private static class ComplexAreaData extends SpongeMechanicData {
         public String namespace;
     }
 }

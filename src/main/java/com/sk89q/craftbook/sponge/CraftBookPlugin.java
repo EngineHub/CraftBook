@@ -30,6 +30,7 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
+import com.sk89q.craftbook.sponge.util.data.CraftBookData;
 import com.sk89q.craftbook.sponge.util.type.TypeSerializers;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -38,6 +39,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -80,8 +82,15 @@ public class CraftBookPlugin extends CraftBookAPI {
     }
 
     @Listener
-    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
+    public void onPreInitialization(GamePreInitializationEvent event) {
         setInstance(this);
+
+        logger.info("Performing Pre-Initialization");
+        CraftBookData.registerData();
+    }
+
+    @Listener
+    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
         TypeSerializers.registerDefaults();
 
         new File("craftbook-data").mkdir();
@@ -92,11 +101,16 @@ public class CraftBookPlugin extends CraftBookAPI {
         configurationOptions = ConfigurationOptions.defaults();
         TypeSerializers.register(configurationOptions);
 
-        discoverMechanics();
-
         logger.info("Loading Configuration");
 
         config.load();
+
+        if(config.dataOnlyMode.getValue()) {
+            logger.info("Halting CraftBook Initialization - Data Only Mode!");
+            return;
+        }
+
+        discoverMechanics();
 
         cache = new SpongeDataCache();
         blockBagManager = new BlockBagManager();
@@ -140,6 +154,8 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onServerStopping(GameStoppingServerEvent event) {
+        config.save();
+
         SelfTriggerManager.unload();
         moduleController.disableModules();
         cache.clearAll();

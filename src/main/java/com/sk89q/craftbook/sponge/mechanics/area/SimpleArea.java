@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.*;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.type.BlockFilterSetTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -106,14 +107,16 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 }
             }
 
-            SimpleAreaData data = getData(SimpleAreaData.class, source.getLocation().get());
             event.getNeighbors().entrySet().stream().map(
-                    (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
-                    collect(Collectors.toList()).stream().filter((block) -> BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).isPresent()).filter((block) -> data.lastCurrent != BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).get()).findFirst().ifPresent(block -> {
+                    (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey()))
+                    .collect(Collectors.toList()).stream()
+                    .filter((block) -> BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).isPresent())
+                    .filter((block) -> source.getLocation().get().get(CraftBookKeys.LAST_POWER).orElse(0) != BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).get())
+                    .findFirst().ifPresent(block -> {
                 Optional<Integer> powerOptional = BlockUtil.getBlockPowerLevel(source.getLocation().get(), block);
 
                 triggerMechanic(source.getLocation().get(), sign, human, powerOptional.get() > 0);
-                data.lastCurrent = powerOptional.get();
+                source.getLocation().get().offer(CraftBookKeys.LAST_POWER, powerOptional.get());
             });
         }
     }
@@ -153,7 +156,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
 
     public abstract Set<BlockFilter> getDefaultBlocks();
 
-    public static class SimpleAreaData extends SpongeRedstoneMechanicData {
+    public static class SimpleAreaData extends SpongeMechanicData {
         public long blockBagId;
     }
 
