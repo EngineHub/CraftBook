@@ -81,7 +81,7 @@ public class ConfigValue<T> {
     }
 
     public TypeToken<T> getTypeToken() {
-        return this.typeToken == null ? new TypeToken<T>(defaultValue.getClass()){} : typeToken;
+        return this.typeToken == null ? TypeToken.of((Class<T>) defaultValue.getClass()) : typeToken;
     }
 
     private void setValueInternal(ConfigurationNode configurationNode) {

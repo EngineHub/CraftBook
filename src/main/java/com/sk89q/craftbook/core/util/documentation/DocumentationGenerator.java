@@ -45,7 +45,6 @@ public class DocumentationGenerator {
             if(provider.getConfigurationNodes().length > 0) {
 
                 writer.println();
-                writer.println("=============");
                 writer.println("Configuration");
                 writer.println("=============");
                 writer.println();
@@ -77,7 +76,6 @@ public class DocumentationGenerator {
             if(provider.getPermissionNodes().length > 0) {
 
                 writer.println();
-                writer.println("===========");
                 writer.println("Permissions");
                 writer.println("===========");
                 writer.println();
