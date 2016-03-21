@@ -20,7 +20,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -28,7 +28,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import com.sk89q.craftbook.sponge.util.type.BlockFilterSetTypeToken;
+import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -37,7 +37,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.util.Direction;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +48,7 @@ public class Footprints extends SpongeMechanic {
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterSetTypeToken());
+    protected ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterListTypeToken());
 
     private ParticleEffect footprintParticle;
 
@@ -84,8 +84,8 @@ public class Footprints extends SpongeMechanic {
         }
     }
 
-    public static Set<BlockFilter> getDefaultBlocks() {
-        Set<BlockFilter> states = Sets.newHashSet();
+    public static List<BlockFilter> getDefaultBlocks() {
+        List<BlockFilter> states = Lists.newArrayList();
         states.add(new BlockFilter("SAND"));
         states.add(new BlockFilter("DIRT"));
         states.add(new BlockFilter("GRAVEL"));

@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -45,6 +45,7 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Module(moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
@@ -275,8 +276,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public Set<BlockFilter> getDefaultBlocks() {
-        Set<BlockFilter> states = Sets.newHashSet();
+    public List<BlockFilter> getDefaultBlocks() {
+        List<BlockFilter> states = Lists.newArrayList();
         states.add(new BlockFilter("FENCE"));
         states.add(new BlockFilter("NETHER_BRICK_FENCE"));
         states.add(new BlockFilter("GLASS_PANE"));

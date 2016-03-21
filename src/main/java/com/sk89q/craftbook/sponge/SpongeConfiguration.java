@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge;
 
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 
@@ -27,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SpongeConfiguration {
+public class SpongeConfiguration implements DocumentationProvider {
 
     private CraftBookPlugin plugin;
     private File mainConfig;
@@ -75,5 +76,30 @@ public class SpongeConfiguration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getName() {
+        return "Configuration";
+    }
+
+    @Override
+    public String getPath() {
+        return "config";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[]{
+                "CraftBook has multiple configuration files, therefore this page will focus on the main one, rather than configuration files for each individual mechanic. To configure mechanics, see :doc:`mechanics/index`."
+        };
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                enabledMechanics,
+                dataOnlyMode
+        };
     }
 }

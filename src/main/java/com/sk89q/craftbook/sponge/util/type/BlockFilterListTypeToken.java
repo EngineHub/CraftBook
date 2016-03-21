@@ -19,7 +19,7 @@ package com.sk89q.craftbook.sponge.util.type;
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 
-import java.util.Set;
+import java.util.List;
 
-public class BlockFilterSetTypeToken extends TypeToken<Set<BlockFilter>> {
+public class BlockFilterListTypeToken extends TypeToken<List<BlockFilter>> {
 }

@@ -18,9 +18,12 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import com.sk89q.craftbook.sponge.util.*;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
-import com.sk89q.craftbook.sponge.util.type.BlockFilterSetTypeToken;
+import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
@@ -41,9 +44,9 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -52,7 +55,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     protected SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     protected SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    protected ConfigValue<Set<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterSetTypeToken());
+    protected ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
     protected ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
     public void loadCommonConfig(ConfigurationNode config) {
@@ -154,5 +157,5 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         return false;
     }
 
-    public abstract Set<BlockFilter> getDefaultBlocks();
+    public abstract List<BlockFilter> getDefaultBlocks();
 }

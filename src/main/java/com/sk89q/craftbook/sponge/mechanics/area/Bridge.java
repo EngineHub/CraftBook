@@ -16,7 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -37,7 +37,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-import java.util.Set;
+import java.util.List;
 
 @Module(moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
 public class Bridge extends SimpleArea implements DocumentationProvider {
@@ -138,8 +138,8 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public Set<BlockFilter> getDefaultBlocks() {
-        Set<BlockFilter> states = Sets.newHashSet();
+    public List<BlockFilter> getDefaultBlocks() {
+        List<BlockFilter> states = Lists.newArrayList();
         states.add(new BlockFilter("PLANKS"));
         states.add(new BlockFilter("BOOKSHELF"));
         states.add(new BlockFilter("COBBLESTONE"));

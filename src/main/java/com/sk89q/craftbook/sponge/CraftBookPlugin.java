@@ -149,6 +149,8 @@ public class CraftBookPlugin extends CraftBookAPI {
                     e.printStackTrace();
                 }
             }
+
+            DocumentationGenerator.generateDocumentation(config);
         }
     }
 

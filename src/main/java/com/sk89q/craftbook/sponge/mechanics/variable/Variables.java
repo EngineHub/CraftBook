@@ -71,7 +71,9 @@ public class Variables extends SpongeMechanic {
                 System.out.println("Failed to read variables! Resetting..");
                 variableStore = new HashMap<>();
             }
-        } else {
+        }
+
+        if (variableStore != null){
             variableStore = new HashMap<>();
         }
 
