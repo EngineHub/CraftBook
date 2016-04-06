@@ -1,23 +1,16 @@
 package com.sk89q.craftbook.mechanics.area;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.bukkit.World;
-
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import org.bukkit.World;
 
-/**
- * @author Silthus
- */
+import java.io.File;
+import java.io.IOException;
+
 public class MCEditCuboidCopy extends CuboidCopy {
 
     private CuboidClipboard clipboard;
@@ -55,7 +48,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     public void paste() {
 
         try {
-            EditSession editSession = new EditSession(new BukkitWorld(world), -1);
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
             clipboard.place(editSession, origin, false);
             editSession.flushQueue();
@@ -70,7 +63,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
         try {
             CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1,
                     size.getZ() - 1));
-            EditSession editSession = new EditSession(new BukkitWorld(world), -1);
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
             editSession.setBlocks(region, new BaseBlock(0));
             editSession.flushQueue();
@@ -82,7 +75,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     @Override
     public void copy() {
 
-        EditSession editSession = new EditSession(new BukkitWorld(world), -1);
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
         editSession.enableQueue();
         // -1 means no block limit
         clipboard.copy(editSession);
