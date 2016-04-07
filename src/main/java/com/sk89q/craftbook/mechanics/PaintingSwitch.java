@@ -1,9 +1,12 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Painting;
@@ -14,22 +17,19 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Me4502
  */
 public class PaintingSwitch extends AbstractCraftBookMechanic {
 
-    Map<Painting, UUID> paintings = new HashMap<Painting, UUID>();
-    Map<UUID, Painting> players = new HashMap<UUID, Painting>();
+    private Map<Painting, UUID> paintings = new HashMap<Painting, UUID>();
+    private Map<UUID, Painting> players = new HashMap<UUID, Painting>();
 
     public boolean isBeingEdited(Painting paint) {
 
@@ -46,7 +46,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (event.getRightClicked() instanceof Painting) {
+        if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting) {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             Painting paint = (Painting) event.getRightClicked();
 
@@ -71,7 +71,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
                 players.remove(player.getUniqueId());
                 player.print("mech.painting.stop");
             } else if (isBeingEdited(paint)) {
-                player.print(player.translate("mech.painting.used") + " " + paintings.get(paint));
+                player.print(player.translate("mech.painting.used") + ' ' + paintings.get(paint));
             } else {
                 return;
             }
