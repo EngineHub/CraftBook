@@ -16,9 +16,24 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
+import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,28 +54,13 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PressureSensor;
 
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SignClickEvent;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
@@ -94,7 +94,7 @@ public class MechanicListenerAdapter implements Listener {
             action = event.getAction();
         }
 
-        if(block != null && SignUtil.isSign(block)) {
+        if(block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
             if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
                 if(signClickTimer.contains(event.getPlayer().getName())) {
                     return;
