@@ -48,7 +48,7 @@ import com.sk89q.craftbook.bukkit.util.BukkitUtil;
  *
  * @author hash
  */
-public class SignUtil {
+public final class SignUtil {
 
     public static boolean isSign(Block block) {
 

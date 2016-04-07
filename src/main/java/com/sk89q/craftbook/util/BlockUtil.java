@@ -1,17 +1,16 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BlockUtil {
+public final class BlockUtil {
 
     public static boolean areBlocksSimilar(Block block, Block block2) {
 

@@ -1,15 +1,14 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.craftbook.mechanics.minecart.MoreRails;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 
-import com.sk89q.craftbook.mechanics.minecart.MoreRails;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RailUtil {
+public final class RailUtil {
 
     public static List<Chest> getNearbyChests(Block body) {
 

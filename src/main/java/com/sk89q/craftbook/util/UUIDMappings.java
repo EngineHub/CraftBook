@@ -1,17 +1,11 @@
 package com.sk89q.craftbook.util;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.UUID;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class UUIDMappings {
+import java.sql.*;
+import java.util.UUID;
+
+public final class UUIDMappings {
 
     Connection db;
 

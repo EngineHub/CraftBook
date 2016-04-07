@@ -34,7 +34,7 @@ import com.google.common.cache.LoadingCache;
  * @author Me4502
  *
  */
-public class ItemSyntax {
+public final class ItemSyntax {
 
     private static final Pattern ASTERISK_PATTERN = Pattern.compile("(?<=[^\\\\])([*])");
     private static final Pattern COLON_PATTERN = Pattern.compile("(?<=[^\\\\])([:])");

@@ -1,15 +1,15 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("deprecation")
-public class ItemInfo {
+public final class ItemInfo {
 
     public MaterialData data;
 

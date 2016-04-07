@@ -28,7 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class PastebinPoster {
+public final class PastebinPoster {
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int READ_TIMEOUT = 5000;
 
@@ -38,9 +38,9 @@ public class PastebinPoster {
         thread.start();
     }
 
-    public static interface PasteCallback {
-        public void handleSuccess(String url);
-        public void handleError(String err);
+    public interface PasteCallback {
+        void handleSuccess(String url);
+        void handleError(String err);
     }
 
     private static class PasteProcessor implements Runnable {

@@ -23,7 +23,7 @@ import org.bukkit.material.MaterialData;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
-public class ItemUtil {
+public final class ItemUtil {
 
     /**
      * Add an itemstack to an existing itemstack.

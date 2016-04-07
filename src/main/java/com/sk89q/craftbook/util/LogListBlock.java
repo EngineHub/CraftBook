@@ -22,7 +22,7 @@ package com.sk89q.craftbook.util;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LogListBlock {
+public final class LogListBlock {
     private LinkedHashMap <String, Object> items
     = new LinkedHashMap<String, Object>();
     private int maxKeyLength = 0;

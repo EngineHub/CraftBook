@@ -15,7 +15,7 @@
 
 package com.sk89q.craftbook.util;
 
-public class Tuple2<A, B> {
+public final class Tuple2<A, B> {
 
     public final A a;
     public final B b;

@@ -1,11 +1,10 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -15,13 +14,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.ICMechanic;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.*;
 
-public class SearchArea {
+public final class SearchArea {
 
     private Location center = null;
     private Vector radius = null;
@@ -177,10 +172,12 @@ public class SearchArea {
     public boolean isWithinArea(Location location) {
 
         if(hasRegion()) {
-            if(getRegion().contains(BukkitUtil.toVector(location)) && location.getWorld().equals(world))
+
+            if(region.contains(BukkitUtil.toVector(location)) && location.getWorld().equals(world))
                 return true;
         } else if(hasRadiusAndCenter()) {
-            if(LocationUtil.isWithinRadius(location, getCenter(), getRadius()))
+
+            if(LocationUtil.isWithinRadius(location, center, radius))
                 return true;
         } else
             return true;
@@ -199,8 +196,9 @@ public class SearchArea {
 
         if(hasRegion()) {
 
-            Chunk c1 = getWorld().getChunkAt(getRegion().getMinimumPoint().getBlockX() >> 4, getRegion().getMinimumPoint().getBlockZ() >> 4);
-            Chunk c2 = getWorld().getChunkAt(getRegion().getMaximumPoint().getBlockX() >> 4, getRegion().getMaximumPoint().getBlockZ() >> 4);
+            Chunk c1 = getWorld().getChunkAt(region.getMinimumPoint().getBlockX() >> 4, region.getMinimumPoint().getBlockZ() >> 4);
+
+            Chunk c2 = getWorld().getChunkAt(region.getMaximumPoint().getBlockX() >> 4, region.getMaximumPoint().getBlockZ() >> 4);
             int xMin = Math.min(c1.getX(), c2.getX());
             int xMax = Math.max(c1.getX(), c2.getX());
             int zMin = Math.min(c1.getZ(), c2.getZ());
@@ -211,11 +209,13 @@ public class SearchArea {
                     chunks.add(getWorld().getChunkAt(x,z));
         } else if (hasRadiusAndCenter()) {
 
-            int chunkRadiusX = getRadius().getBlockX() < 16 ? 1 : getRadius().getBlockX() / 16;
-            int chunkRadiusZ = getRadius().getBlockZ() < 16 ? 1 : getRadius().getBlockZ() / 16;
+            int chunkRadiusX = radius.getBlockX() < 16 ? 1 : radius.getBlockX() / 16;
+
+            int chunkRadiusZ = radius.getBlockZ() < 16 ? 1 : radius.getBlockZ() / 16;
             for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
                 for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
-                    chunks.add(new Location(getCenter().getWorld(), getCenter().getBlockX() + chX * 16, getCenter().getBlockY(), getCenter().getBlockZ() + chZ * 16).getChunk());
+
+                    chunks.add(new Location(center.getWorld(), center.getBlockX() + chX * 16, center.getBlockY(), center.getBlockZ() + chZ * 16).getChunk());
                 }
             }
         }
@@ -230,23 +230,22 @@ public class SearchArea {
      */
     public Block getRandomBlockInArea() {
 
-        int xMin=0,xMax=0,yMin=0,yMax=0,zMin=0,zMax=0;
+        int xMin,xMax,yMin,yMax,zMin,zMax;
 
         if(hasRegion()) {
-            xMin = getRegion().getMinimumPoint().getBlockX();
-            xMax = getRegion().getMaximumPoint().getBlockX();
-            yMin = getRegion().getMinimumPoint().getBlockY();
-            yMax = getRegion().getMaximumPoint().getBlockY();
-            zMin = getRegion().getMinimumPoint().getBlockZ();
-            zMax = getRegion().getMaximumPoint().getBlockZ();
+            xMin = region.getMinimumPoint().getBlockX();
+            xMax = region.getMaximumPoint().getBlockX();
+            yMin = region.getMinimumPoint().getBlockY();
+            yMax = region.getMaximumPoint().getBlockY();
+            zMin = region.getMinimumPoint().getBlockZ();
+            zMax = region.getMaximumPoint().getBlockZ();
         } else if(hasRadiusAndCenter()) {
-
-            xMin = Math.min(getCenter().getBlockX() - getRadius().getBlockX(), getCenter().getBlockX() + getRadius().getBlockX());
-            xMax = Math.max(getCenter().getBlockX() - getRadius().getBlockX(), getCenter().getBlockX() + getRadius().getBlockX());
-            yMin = Math.min(getCenter().getBlockY() - getRadius().getBlockY(), getCenter().getBlockY() + getRadius().getBlockY());
-            yMax = Math.max(getCenter().getBlockY() - getRadius().getBlockY(), getCenter().getBlockY() + getRadius().getBlockY());
-            zMin = Math.min(getCenter().getBlockZ() - getRadius().getBlockZ(), getCenter().getBlockZ() + getRadius().getBlockZ());
-            zMax = Math.max(getCenter().getBlockZ() - getRadius().getBlockZ(), getCenter().getBlockZ() + getRadius().getBlockZ());
+            xMin = Math.min(center.getBlockX() - radius.getBlockX(), center.getBlockX() + radius.getBlockX());
+            xMax = Math.max(center.getBlockX() - radius.getBlockX(), center.getBlockX() + radius.getBlockX());
+            yMin = Math.min(center.getBlockY() - radius.getBlockY(), center.getBlockY() + radius.getBlockY());
+            yMax = Math.max(center.getBlockY() - radius.getBlockY(), center.getBlockY() + radius.getBlockY());
+            zMin = Math.min(center.getBlockZ() - radius.getBlockZ(), center.getBlockZ() + radius.getBlockZ());
+            zMax = Math.max(center.getBlockZ() - radius.getBlockZ(), center.getBlockZ() + radius.getBlockZ());
         } else
             return null;
 
@@ -316,8 +315,10 @@ public class SearchArea {
      */
     public World getWorld() {
 
-        if(world == null && getCenter() != null)
-            return getCenter().getWorld();
+        if(world == null && center != null) {
+
+            return center.getWorld();
+        }
         return world;
     }
 

@@ -1,15 +1,14 @@
 package com.sk89q.craftbook.util;
 
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.*;
+import java.util.Map.Entry;
 
-public class EventUtil {
+public final class EventUtil {
 
     private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
 

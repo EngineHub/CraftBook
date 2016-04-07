@@ -6,7 +6,7 @@ import java.util.Collections;
 /**
  * A util file to verify many different things.
  */
-public class VerifyUtil {
+public final class VerifyUtil {
 
     /**
      * Verify that a radius is within the maximum.

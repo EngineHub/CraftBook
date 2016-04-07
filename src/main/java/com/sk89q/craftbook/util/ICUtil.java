@@ -53,7 +53,7 @@ import com.sk89q.worldedit.regions.SphereRegionSelector;
  *
  * @author sk89q
  */
-public class ICUtil {
+public final class ICUtil {
 
     /**
      * Set an IC's output state at a block.

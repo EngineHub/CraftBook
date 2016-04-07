@@ -13,7 +13,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
  *
  * @author hash
  */
-public class RedstoneUtil {
+public final class RedstoneUtil {
 
     /**
      * Represents the power input state of a mechanism.

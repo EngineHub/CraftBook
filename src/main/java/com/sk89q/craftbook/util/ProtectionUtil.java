@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldguard.protection.GlobalRegionManager;
 
-public class ProtectionUtil {
+public final class ProtectionUtil {
 
     /**
      * Checks to see if a player can build at a location. This will return
@@ -55,7 +55,7 @@ public class ProtectionUtil {
 
             CompatabilityUtil.disableInterferences(player);
             BlockEvent event;
-            if(build)
+            if (build)
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
             else
                 event = new BlockBreakEvent(block, player);
@@ -64,9 +64,8 @@ public class ProtectionUtil {
             CompatabilityUtil.enableInterferences(player);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
-        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
+        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || (CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block));
 
-        return CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block);
     }
 
     /**
@@ -90,8 +89,7 @@ public class ProtectionUtil {
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }
-        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
+        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
     }
 
     /**
@@ -110,11 +108,10 @@ public class ProtectionUtil {
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
 
-            if(!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK))
+            if (!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK))
                 return false;
         }
-        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard) return true;
-        return CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
+        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
     }
 
     /**
@@ -136,12 +133,8 @@ public class ProtectionUtil {
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
             return !event.isCancelled();
         }
-        if (!CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null) return true;
+        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || !(newState.getType() == Material.SNOW || newState.getType() == Material.ICE) || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(null, block.getLocation(), newState.getType());
 
-        if(newState.getType() == Material.SNOW || newState.getType() == Material.ICE)
-            return CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(null, block.getLocation(), newState.getType());
-
-        return true;
     }
 
     /**
