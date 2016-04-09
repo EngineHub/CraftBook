@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -70,7 +71,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
     public boolean harvest() {
 
-        for (Entity entity : area.getEntitiesInArea(Arrays.asList(EntityType.MOB_PEACEFUL))) {
+        for (Entity entity : area.getEntitiesInArea(Collections.singletonList(EntityType.MOB_PEACEFUL))) {
             if (entity.isValid() && (entity instanceof Cow || entity instanceof Sheep)) {
                 if(!((Animals) entity).isAdult())
                     continue;

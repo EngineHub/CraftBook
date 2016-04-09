@@ -1,16 +1,14 @@
 package com.sk89q.craftbook.mechanics.items;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
+import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,31 +26,15 @@ import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
-import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LoadPriority;
-import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class CommandItems extends AbstractCraftBookMechanic {
 
@@ -184,7 +166,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event.getItem() == null)
             return;
 
-        if(event.getAction() == Action.PHYSICAL)
+        if(event.getAction() == Action.PHYSICAL && event.getHand() != EquipmentSlot.HAND)
             return;
 
         performCommandItems(event.getItem(), event.getPlayer(), event);

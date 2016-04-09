@@ -1,32 +1,20 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.Arrays;
-import java.util.HashMap;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.util.InventoryUtil;
+import com.sk89q.craftbook.util.SearchArea;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.SearchArea;
+import java.util.Collections;
+import java.util.EnumMap;
 
 public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
@@ -85,14 +73,11 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         }
     }
 
-    HashMap<EntityType, Entity> lastEntity = new HashMap<EntityType, Entity>();
+    private EnumMap<EntityType, Entity> lastEntity = new EnumMap<EntityType, Entity>(EntityType.class);
 
     public boolean breed() {
 
-        if(lastEntity != null)
-            lastEntity.clear();
-        else
-            lastEntity = new HashMap<EntityType, Entity>();
+        lastEntity.clear();
         InventoryHolder inv = null;
 
         if(InventoryUtil.doesBlockHaveInventory(chest))
@@ -101,7 +86,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         if(inv == null)
             return false;
 
-        for (Entity entity : area.getEntitiesInArea(Arrays.asList(com.sk89q.craftbook.util.EntityType.MOB_PEACEFUL))) {
+        for (Entity entity : area.getEntitiesInArea(Collections.singletonList(com.sk89q.craftbook.util.EntityType.MOB_PEACEFUL))) {
             if (entity.isValid() && entity instanceof Ageable) {
                 if(!((Ageable) entity).canBreed() || !canBreed(entity))
                     continue;

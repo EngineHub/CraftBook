@@ -1,10 +1,12 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -22,17 +24,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
@@ -137,7 +137,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if(!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND) return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 

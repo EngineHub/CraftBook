@@ -1,15 +1,7 @@
 package com.sk89q.craftbook.mechanics.crafting;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -253,7 +245,7 @@ public class RecipeManager {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
             } else {
                 items = getShapeIngredients("crafting-recipes." + id + ".ingredients");
-                shape = config.getStringList("crafting-recipes." + id + ".shape", Arrays.asList(""));
+                shape = config.getStringList("crafting-recipes." + id + ".shape", Collections.singletonList(""));
             }
             Iterator<CraftingItemStack> iterator = getItems("crafting-recipes." + id + ".results").iterator();
             if(iterator.hasNext())
@@ -301,8 +293,8 @@ public class RecipeManager {
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
                 LinkedHashMap<String, Character> resz = new LinkedHashMap<String, Character>();
-                for(CraftingItemStack stack : items.keySet())
-                    resz.put(stack.toString() + " ", items.get(stack));
+                for(Map.Entry<CraftingItemStack, Character> craftingItemStackCharacterEntry : items.entrySet())
+                    resz.put(craftingItemStackCharacterEntry.getKey().toString() + " ", craftingItemStackCharacterEntry.getValue());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }

@@ -30,6 +30,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * This allows users to Right-click to check the light level.
@@ -42,7 +43,7 @@ public class LightStone extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!item.equals(player.getHeldItemInfo())) return;

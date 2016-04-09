@@ -132,12 +132,12 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         CraftBookPlugin.logDebugMessage("Pre-Crafting has been initiated!", "advanced-data");
         try {
             boolean hasFailed = false;
-            for(Recipe rec : advancedRecipes.keySet()) {
+            for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
 
-                if(ItemUtil.areRecipesIdentical(rec, event.getRecipe())) {
+                if(ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
 
                     thisrecipe: {
-                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                    RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
 
                     ItemStack[] tests = ((CraftingInventory)event.getView().getTopInventory()).getMatrix();
                     CraftingItemStack[] tests2;
@@ -195,7 +195,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     }
 
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getRecipe().getResult(),rec, p);
+                    bits = applyAdvancedEffects(event.getRecipe().getResult(), recipeRecipeEntry.getKey(), p);
                     break;
                 }
                 }
@@ -227,12 +227,12 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         boolean shouldCancel = false;
 
-        for(Recipe rec : advancedRecipes.keySet()) {
-            if(!(rec instanceof FurnaceRecipe)) continue;
-            FurnaceRecipe frec = (FurnaceRecipe) rec;
+        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
+            if(!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
+            FurnaceRecipe frec = (FurnaceRecipe) recipeRecipeEntry.getKey();
             if(ItemUtil.areBaseItemsIdentical(frec.getInput(), event.getCurrentItem())) {
 
-                RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
                 if(ItemUtil.areItemsIdentical(event.getCurrentItem(), recipe.getIngredients().get(0).getItemStack())) {
                     shouldCancel = false;
                     break;
@@ -253,13 +253,13 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         ItemStack bits = null;
         CraftBookPlugin.logDebugMessage("Smelting has been initiated!", "advanced-data");
-        for(Recipe rec : advancedRecipes.keySet()) {
+        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
 
-            if(!(rec instanceof FurnaceRecipe)) continue;
+            if(!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
             try {
-                if(checkFurnaceRecipes((FurnaceRecipe) rec, event.getSource(), event.getResult())) {
+                if(checkFurnaceRecipes((FurnaceRecipe) recipeRecipeEntry.getKey(), event.getSource(), event.getResult())) {
 
-                    RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                    RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
 
                     ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
                     leftovers.add(event.getSource());
@@ -285,7 +285,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                         continue;
 
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being smelted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getResult(),rec, null);
+                    bits = applyAdvancedEffects(event.getResult(), recipeRecipeEntry.getKey(), null);
                     break;
                 }
             } catch(InvalidCraftingException e){
@@ -307,11 +307,11 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Crafting has been initiated!", "advanced-data");
         Player p = (Player) event.getWhoClicked();
-        for(Recipe rec : advancedRecipes.keySet()) {
+        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
 
-            if(ItemUtil.areRecipesIdentical(rec, event.getRecipe())) {
+            if(ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
                 CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
-                RecipeManager.Recipe recipe = advancedRecipes.get(rec);
+                RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
                 applyPostData(recipe, p, event);
                 event.setCurrentItem(applyAdvancedEffects(event.getCurrentItem(), event.getRecipe(), (Player) event.getWhoClicked()));
                 break;

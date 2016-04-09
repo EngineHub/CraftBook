@@ -28,6 +28,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack.
@@ -60,7 +61,7 @@ public class Netherrack extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
         if(event.getClickedBlock().getType() != Material.NETHERRACK) return;
         if (event.getBlockFace() == BlockFace.UP) {
             Block fire = event.getClickedBlock().getRelative(event.getBlockFace());
@@ -70,7 +71,7 @@ public class Netherrack extends AbstractCraftBookMechanic {
         }
     }
 
-    private boolean canReplaceWithFire(Material t) {
+    private static boolean canReplaceWithFire(Material t) {
 
         switch (t) {
             case SNOW:

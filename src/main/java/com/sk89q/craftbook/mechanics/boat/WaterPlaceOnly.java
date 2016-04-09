@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class WaterPlaceOnly extends AbstractCraftBookMechanic {
 
@@ -17,7 +18,7 @@ public class WaterPlaceOnly extends AbstractCraftBookMechanic {
     public void playerInteractEvent(PlayerInteractEvent event) {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.BOAT) {
+            if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.BOAT && event.getHand() != EquipmentSlot.HAND) {
                 Block above = event.getClickedBlock().getRelative(0,1,0);
                 if ((!isWater(above) || event.getClickedBlock().getY() == event.getClickedBlock().getWorld().getMaxHeight() - 1) && !isWater(event.getClickedBlock())) {
                     event.setCancelled(true);

@@ -1,16 +1,5 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.minecart.RideableMinecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -18,6 +7,17 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.minecart.RideableMinecart;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.EquipmentSlot;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class TemporaryCart extends AbstractCraftBookMechanic {
 
@@ -39,7 +39,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
 
         if(!RailUtil.isTrack(event.getClickedBlock().getType()))
             return;

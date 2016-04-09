@@ -2570,7 +2570,7 @@ public class Wiki implements Serializable
         // expected form: <rev timestamp="2009-04-05T22:40:35Z" xml:space="preserve">TEXT OF PAGE</rev>
         String line = fetch(url.toString(), "getDeletedText");
         int a = line.indexOf("<rev ");
-        a = line.indexOf(">", a) + 1;
+        a = line.indexOf('>', a) + 1;
         int b = line.indexOf("</rev>", a);
         return line.substring(a, b);
     }
@@ -4890,7 +4890,7 @@ public class Wiki implements Serializable
         {
             if (end != null && start.before(end)) //aargh
                 throw new IllegalArgumentException("Specified start date is before specified end date!");
-            lestart = calendarToTimestamp(start).toString();
+            lestart = calendarToTimestamp(start);
         }
         if (end != null)
         {
@@ -6171,7 +6171,7 @@ public class Wiki implements Serializable
             if (line.contains("</diff>"))
             {
                 int a = line.indexOf("<diff");
-                a = line.indexOf(">", a) + 1;
+                a = line.indexOf('>', a) + 1;
                 int b = line.indexOf("</diff>", a);
                 return decode(line.substring(a, b));
             }

@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Button;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -81,7 +82,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
     public void onCommonClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND)
             return;
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());

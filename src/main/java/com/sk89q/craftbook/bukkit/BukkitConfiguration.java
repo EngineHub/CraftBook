@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -84,7 +85,7 @@ public class BukkitConfiguration {
                 "");
 
         config.setComment("enabled-mechanics", "List of mechanics to enable! If they aren't in this list, the server won't load them!");
-        enabledMechanics = config.getStringList("enabled-mechanics", Arrays.asList("Variables"));
+        enabledMechanics = config.getStringList("enabled-mechanics", Collections.singletonList("Variables"));
 
         List<String> disabledMechanics = new ArrayList<String>();
 
@@ -130,7 +131,7 @@ public class BukkitConfiguration {
         language = config.getString("language", "en_US");
 
         config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
-        languages = config.getStringList("languages", Arrays.asList("en_US"));
+        languages = config.getStringList("languages", Collections.singletonList("en_US"));
 
         config.setComment("scan-text-for-localization", "If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.");
         languageScanText = config.getBoolean("scan-text-for-localization", false);

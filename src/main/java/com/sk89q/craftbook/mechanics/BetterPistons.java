@@ -1,18 +1,16 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.DoubleChest;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
@@ -23,21 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.*;
 
 public class BetterPistons extends AbstractCraftBookMechanic {
 
@@ -115,7 +99,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    private final double movemod = 1.0;
+    private static final double movemod = 1.0;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {

@@ -31,6 +31,7 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -40,7 +41,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
         if(!BlockType.canTransferRedstone(event.getClickedBlock().getTypeId()) && !BlockType.isRedstoneSource(event.getClickedBlock().getTypeId())) return;
 
         if (!EventUtil.passesFilter(event)) return;

@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -26,7 +27,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         else if(block.getType() != Material.AIR)
             if(!block.isSame(event.getClickedBlock())) return;
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 

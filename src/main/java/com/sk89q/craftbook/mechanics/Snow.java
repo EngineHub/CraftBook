@@ -341,7 +341,7 @@ public class Snow extends AbstractCraftBookMechanic {
             List<BlockFace> faces = new LinkedList<BlockFace>(Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST));
 
             if(snow.getType() == Material.SNOW && canLandOn(snow.getRelative(0, -2, 0)) && isReplacable(snow.getRelative(0, -1, 0)))
-                faces = new LinkedList<BlockFace>(Arrays.asList(BlockFace.DOWN));
+                faces = new LinkedList<BlockFace>(Collections.singletonList(BlockFace.DOWN));
             else {
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
                 faces.add(0, BlockFace.DOWN);

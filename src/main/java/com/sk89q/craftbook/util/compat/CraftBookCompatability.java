@@ -2,9 +2,9 @@ package com.sk89q.craftbook.util.compat;
 
 import org.bukkit.entity.Player;
 
-public abstract class CraftBookCompatability {
+public interface CraftBookCompatability {
 
-    public abstract void enable(Player player);
+    abstract void enable(Player player);
 
-    public abstract void disable(Player player);
+    abstract void disable(Player player);
 }

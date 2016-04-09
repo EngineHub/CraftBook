@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Server;
@@ -76,7 +77,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         if (!getLine(3).isEmpty()) {
             types = new ArrayList<EntityType>(EntityType.getDetected(getLine(3)));
         } else
-            types = Arrays.asList(EntityType.MOB_HOSTILE);
+            types = Collections.singletonList(EntityType.MOB_HOSTILE);
 
         if(types.isEmpty())
             types.add(EntityType.ANY);

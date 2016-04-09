@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -152,7 +153,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(item.clone())), getBackBlock());
+            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Collections.singletonList(item.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
             if(!event.isValid())

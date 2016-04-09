@@ -1,11 +1,6 @@
 package com.sk89q.craftbook.bukkit.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -237,7 +232,7 @@ public class PlayerUtil {
      */
     public static Iterable<Player> matchPlayers(Player player) {
 
-        return Arrays.asList(player);
+        return Collections.singletonList(player);
     }
 
     /**

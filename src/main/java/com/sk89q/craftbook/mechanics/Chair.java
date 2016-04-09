@@ -1,11 +1,17 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerOptions;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,27 +24,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerOptions;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -161,7 +155,7 @@ public class Chair extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND)
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

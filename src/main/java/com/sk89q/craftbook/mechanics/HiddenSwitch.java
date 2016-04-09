@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
@@ -119,7 +120,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
 
         if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
                 || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH

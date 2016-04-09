@@ -1,9 +1,6 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +33,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "blocks", "A list of blocks that can be jumped on.");
-        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("DIAMOND_BLOCK")));
+        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Collections.singletonList("DIAMOND_BLOCK")));
 
         config.setComment(path + "sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble(path + "sensitivity", 0.1);

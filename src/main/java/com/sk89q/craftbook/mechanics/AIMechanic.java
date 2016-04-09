@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Difficulty;
@@ -126,9 +127,9 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         visionEnabled = config.getStringList(path + "vision-enable", Arrays.asList("Zombie","PigZombie"));
 
         config.setComment(path + "crit-bow-enable", "The list of entities to enable bow critical AI mechanics for.");
-        critBowEnabled = config.getStringList(path + "crit-bow-enable", Arrays.asList("Skeleton"));
+        critBowEnabled = config.getStringList(path + "crit-bow-enable", Collections.singletonList("Skeleton"));
 
         config.setComment(path + "attack-passive-enable", "The list of entities to enable attack passive AI mechanics for.");
-        attackPassiveEnabled = config.getStringList(path + "attack-passive-enable", Arrays.asList("Zombie"));
+        attackPassiveEnabled = config.getStringList(path + "attack-passive-enable", Collections.singletonList("Zombie"));
     }
 }

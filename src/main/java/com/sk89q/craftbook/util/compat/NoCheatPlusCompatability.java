@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import fr.neatmonster.nocheatplus.checks.CheckType;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 
-public class NoCheatPlusCompatability extends CraftBookCompatability {
+public class NoCheatPlusCompatability implements CraftBookCompatability {
 
     Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
     CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK,CheckType.BLOCKINTERACT,CheckType.COMBINED,CheckType.MOVING};
