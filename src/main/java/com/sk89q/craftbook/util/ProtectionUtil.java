@@ -97,7 +97,7 @@ public final class ProtectionUtil {
      * true if region protection is disabled or WorldGuard is not found.
      *
      * @param player The player to check.
-     * @param loc    The location to check at.
+     * @param block    The location to check at.
      *
      * @return whether {@code player} can build at {@code loc}
      *

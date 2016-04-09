@@ -112,8 +112,7 @@ public final class ItemInfo {
 
     @Override
     public String toString() {
-
-        return data.getItemType().name() + ":" + data.getData();
+        return data.getItemType().name() + ':' + data.getData();
     }
 
     @Override

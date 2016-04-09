@@ -1,27 +1,22 @@
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Pattern;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public final class ItemUtil {
 
@@ -71,7 +66,7 @@ public final class ItemUtil {
     /**
      * Check whether or not an item passes filters.
      * 
-     * @param stacks The item to check if it passes.
+     * @param stack The item to check if it passes.
      * @param inclusions The list of items to include, skipped if empty.
      * @param exclusions The list of items to exclude, skipped if empty.
      * @return If the item passes the filters.
@@ -171,8 +166,7 @@ public final class ItemUtil {
                         CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shaped");
                         return false;
                     }
-                    List<ItemStack> test = new ArrayList<ItemStack>();
-                    test.addAll(stacks1);
+                    List<ItemStack> test = new ArrayList<ItemStack>(stacks1);
                     if(test.size() == 0) {
                         CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shaped");
                         return true;
@@ -199,8 +193,7 @@ public final class ItemUtil {
 
                 CraftBookPlugin.logDebugMessage("Same Size!", "advanced-data.compare-recipes.shapeless");
 
-                List<ItemStack> test = new ArrayList<ItemStack>();
-                test.addAll(VerifyUtil.<ItemStack>withoutNulls(recipe1.getIngredientList()));
+                List<ItemStack> test = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(recipe1.getIngredientList()));
                 if(test.size() == 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shapeless");
                     return true;
@@ -234,22 +227,20 @@ public final class ItemUtil {
                 if(!lore.equals("$IGNORE"))
                     return true;
 
-        if(meta.hasEnchants())
-            return true;
+        return meta.hasEnchants();
 
-        return false;
     }
 
     public static boolean areItemMetaIdentical(ItemMeta meta, ItemMeta meta2) {
 
         //Display Names
-        String displayName1 = null;
+        String displayName1;
         if(meta.hasDisplayName())
             displayName1 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta.getDisplayName().trim()));
         else
             displayName1 = "$IGNORE";
 
-        String displayName2 = null;
+        String displayName2;
         if(meta2.hasDisplayName())
             displayName2 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta2.getDisplayName().trim()));
         else
@@ -344,13 +335,7 @@ public final class ItemUtil {
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else {
-
-            if(item.getType() != item2.getType())
-                return false;
-            if(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0)
-                return false;
-
-            return true;
+            return item.getType() == item2.getType() && !(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0);
         }
     }
 
@@ -684,7 +669,7 @@ public final class ItemUtil {
     /**
      * Returns the maximum durability that an item can have.
      * 
-     * @param typeId
+     * @param type
      * @return
      */
     public static short getMaxDurability(Material type) {

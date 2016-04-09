@@ -1,33 +1,29 @@
 package com.sk89q.craftbook.util.jinglenote;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.bukkit.Bukkit;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.bukkit.Bukkit;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * @author Me4502 with code borrowed from CraftBook Extra
  */
 public class StringJingleSequencer implements JingleSequencer {
 
-    String tune;
-    int delay;
-    int position;
-    int taskID;
-    boolean isPlaying;
-    boolean playedBefore = false;
+    private int delay;
+    private int position;
+    private int taskID;
+    private boolean isPlaying;
+    private boolean playedBefore = false;
 
-    List<Note> song;
+    private List<Note> song;
 
     private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
 
     public StringJingleSequencer(String tune, int delay) {
-
-        this.tune = tune;
         this.delay = delay;
         song = parseTune(tune);
     }
@@ -60,7 +56,7 @@ public class StringJingleSequencer implements JingleSequencer {
         }, delay, delay);
     }
 
-    public ArrayList<Note> parseTune(String tune) {
+    private static ArrayList<Note> parseTune(String tune) {
 
         if (tune == null) return null;
 
@@ -98,10 +94,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
                 if (skip) {
                     musicKeys.add(new Note(Instrument.PIANO, (byte) 0, 0));
-                    if (octave == 0) octave = 10;
-
                 } else {
-
                     if (octave < 2) octave = 2;
 
                     pitch += (octave - 2) * 12;
@@ -109,7 +102,7 @@ public class StringJingleSequencer implements JingleSequencer {
                     if (pitch < 0) pitch = 0;
                     else if (pitch > 24) pitch = 24;
 
-                    musicKeys.add(new Note(toMCSound(instrument), (byte) pitch, 60F));
+                    musicKeys.add(new Note(Instrument.toMCSound(instrument), (byte) pitch, 60F));
                 }
 
                 i++;
@@ -121,7 +114,7 @@ public class StringJingleSequencer implements JingleSequencer {
         return musicKeys;
     }
 
-    public byte getTypeFromChar(char type) {
+    private static byte getTypeFromChar(char type) {
 
         byte instrument = -1;
         switch (type) {
@@ -154,7 +147,7 @@ public class StringJingleSequencer implements JingleSequencer {
         return instrument;
     }
 
-    public int getPitchFromChar(char charPitch) {
+    private static int getPitchFromChar(char charPitch) {
 
         int pitch = 0;
         switch (charPitch) {
@@ -188,26 +181,6 @@ public class StringJingleSequencer implements JingleSequencer {
         }
 
         return pitch;
-    }
-
-    protected Instrument toMCSound(byte instrument) {
-
-        switch (instrument) {
-            case 1:
-                return Instrument.BASS_GUITAR;
-            case 2:
-                return Instrument.SNARE_DRUM;
-            case 3:
-                return Instrument.STICKS;
-            case 4:
-                return Instrument.BASS_DRUM;
-            case 5:
-                return Instrument.GUITAR;
-            case 6:
-                return Instrument.BASS;
-            default:
-                return Instrument.PIANO;
-        }
     }
 
     @Override

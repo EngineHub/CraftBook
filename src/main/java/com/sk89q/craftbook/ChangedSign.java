@@ -1,13 +1,5 @@
 package com.sk89q.craftbook;
 
-import java.util.Arrays;
-import java.util.Locale;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.block.Sign;
-
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
@@ -16,6 +8,13 @@ import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.block.Sign;
+
+import java.util.Arrays;
+import java.util.Locale;
 
 public class ChangedSign {
 
@@ -41,7 +40,7 @@ public class ChangedSign {
                         key = "global";
 
                     if(player != null && !VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), key, var, "use"))
-                        setLine(i, StringUtils.replace(line, "%" + key + "|" + var + "%", ""));
+                        setLine(i, StringUtils.replace(line, '%' + key + '|' + var + '%', ""));
                 }
             }
         }
@@ -166,7 +165,7 @@ public class ChangedSign {
     public boolean updateSign(ChangedSign sign) {
 
         if(!equals(sign)) {
-            this.sign = sign.getSign();
+            this.sign = sign.sign;
             flushLines();
             return true;
         }
@@ -203,7 +202,7 @@ public class ChangedSign {
     public int hashCode() {
 
         return (getType().hashCode() * 1103515245 + 12345
-                ^ Arrays.hashCode(getLines()) * 1103515245 + 12345
+                ^ Arrays.hashCode(lines) * 1103515245 + 12345
                 ^ getX() * 1103515245 + 12345
                 ^ getY() * 1103515245 + 12345
                 ^ getZ() * 1103515245 + 12345
@@ -213,7 +212,7 @@ public class ChangedSign {
 
     @Override
     public String toString() {
-        return lines[0] + "|" + lines[1] + "|" + lines[2] + "|" + lines[3];
+        return lines[0] + '|' + lines[1] + '|' + lines[2] + '|' + lines[3];
     }
 
     public boolean hasVariable(String var) {
@@ -221,6 +220,6 @@ public class ChangedSign {
         if(VariableManager.instance == null) return false;
 
         var = var.toLowerCase(Locale.ENGLISH);
-        return lines[0].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[1].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[2].toLowerCase(Locale.ENGLISH).contains("%" + var + "%") || lines[3].toLowerCase(Locale.ENGLISH).contains("%" + var + "%");
+        return lines[0].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[1].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[2].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[3].toLowerCase(Locale.ENGLISH).contains('%' + var + '%');
     }
 }

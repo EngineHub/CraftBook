@@ -67,9 +67,9 @@ import java.util.Set;
  *
  * @author sk89q
  */
-public class MechanicListenerAdapter implements Listener {
+final class MechanicListenerAdapter implements Listener {
 
-    Set<String> signClickTimer = new HashSet<String>();
+    private Set<String> signClickTimer = new HashSet<String>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
@@ -137,7 +137,7 @@ public class MechanicListenerAdapter implements Listener {
         }
     }
 
-    public void checkBlockChange(Player player, Block block, boolean build) {
+    private static void checkBlockChange(Player player, Block block, boolean build) {
         switch(block.getType()) {
 
             case REDSTONE_TORCH_ON:
@@ -191,7 +191,7 @@ public class MechanicListenerAdapter implements Listener {
         handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent());
     }
 
-    public void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
+    private static void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
 
         World world = block.getWorld();
         BlockWorldVector v = BukkitUtil.toWorldVector(block);
@@ -335,7 +335,7 @@ public class MechanicListenerAdapter implements Listener {
      * @param oldLevel
      * @param newLevel
      */
-    protected void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
+    private static void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = sourceBlock.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
         if(BukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.

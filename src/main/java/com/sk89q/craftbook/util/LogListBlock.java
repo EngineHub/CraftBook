@@ -97,8 +97,8 @@ public final class LogListBlock {
         return block;
     }
 
-    private String padKey(String key, int len) {
-        return String.format("%-" + len + "s", key);
+    private static String padKey(String key, int len) {
+        return String.format("%-" + len + 's', key);
     }
 
     protected String getOutput(String prefix) {

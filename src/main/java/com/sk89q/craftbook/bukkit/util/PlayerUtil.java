@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.bukkit.util;
 
-import java.util.*;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.minecraft.util.commands.CommandException;
+import java.util.*;
 
-public class PlayerUtil {
+public final class PlayerUtil {
 
     /**
      * Checks to see if the sender is a player, otherwise throw an exception.

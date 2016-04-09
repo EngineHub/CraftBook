@@ -1,18 +1,17 @@
 package com.sk89q.craftbook.util.compat;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
+import org.bukkit.entity.Player;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
-import fr.neatmonster.nocheatplus.checks.CheckType;
-import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-
 public class NoCheatPlusCompatability implements CraftBookCompatability {
 
-    Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
-    CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK,CheckType.BLOCKINTERACT,CheckType.COMBINED,CheckType.MOVING};
+    private Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
+    private CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK,CheckType.BLOCKINTERACT,CheckType.COMBINED,CheckType.MOVING};
 
     @Override
     public void enable (Player player) {

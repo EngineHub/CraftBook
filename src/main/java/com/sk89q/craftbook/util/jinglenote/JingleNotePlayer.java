@@ -13,7 +13,7 @@ import com.sk89q.craftbook.util.jinglenote.JingleSequencer.Note;
 public abstract class JingleNotePlayer implements Runnable {
 
     protected final String player;
-    protected JingleSequencer sequencer;
+    private JingleSequencer sequencer;
     protected SearchArea area;
 
     /**

@@ -16,22 +16,6 @@
 
 package com.sk89q.craftbook.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Lever;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.BukkitPlayer;
@@ -47,6 +31,21 @@ import com.sk89q.worldedit.regions.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.SphereRegionSelector;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Lever;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * IC utility functions.
@@ -147,7 +146,7 @@ public final class ICUtil {
                                 sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
                             } else if (selector instanceof SphereRegionSelector) {
 
-                                Vector centre = ((SphereRegionSelector)selector).getRegion().getCenter();
+                                Vector centre = selector.getRegion().getCenter();
 
                                 Vector offset = centre.subtract(sign.getBlockVector());
 

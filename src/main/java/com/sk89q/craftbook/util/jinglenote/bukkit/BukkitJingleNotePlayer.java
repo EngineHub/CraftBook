@@ -16,7 +16,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
         super(player, seq, area);
     }
 
-    Player p = null;
+    private Player p = null;
 
     @Override
     public void play (Note note)  {
@@ -36,8 +36,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
     }
 
-    public Sound toSound(Instrument instrument) {
-
+    private static Sound toSound(Instrument instrument) {
         switch(instrument) {
             case PIANO:
                 return Sound.BLOCK_NOTE_HARP;

@@ -16,20 +16,19 @@
 
 package com.sk89q.craftbook.util;
 
-import java.util.Comparator;
-
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Comparator;
 
 /**
  * Used to compare ComplexBlocks based on distance to a point.
  *
  * @author sk89q
  */
-public class DistanceComparator<T extends BlockState> implements Comparator<BlockState> {
+public class DistanceComparator<T extends BlockState> implements Comparator<T> {
 
     /**
      * Origin to compare from.
@@ -55,7 +54,7 @@ public class DistanceComparator<T extends BlockState> implements Comparator<Bloc
      * @return
      */
     @Override
-    public int compare(BlockState o1, BlockState o2) {
+    public int compare(T o1, T o2) {
 
         Block b1 = o1.getBlock();
         Block b2 = o2.getBlock();

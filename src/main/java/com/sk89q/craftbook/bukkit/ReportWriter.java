@@ -1,20 +1,5 @@
 package com.sk89q.craftbook.bukkit;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map.Entry;
-
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
-
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.mechanics.crafting.CraftingItemStack;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager;
@@ -23,6 +8,16 @@ import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.LogListBlock;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map.Entry;
 
 /**
  * Writes reports.
@@ -38,7 +33,7 @@ public class ReportWriter {
 
     private String flags = "";
 
-    CraftBookPlugin plugin;
+    private CraftBookPlugin plugin;
 
     public ReportWriter(CraftBookPlugin plugin) {
         this.plugin = plugin;

@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Provides hooks into many other plugins that may interfere with CraftBook.
  */
-public class CompatabilityUtil {
+public final class CompatabilityUtil {
 
     private static Set<CraftBookCompatability> compatChecks = new HashSet<CraftBookCompatability>();
 

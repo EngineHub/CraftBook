@@ -5,6 +5,11 @@
 
 package com.sk89q.craftbook.util.jinglenote;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.ICMechanic;
+
+import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,25 +17,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.ShortMessage;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.ICMechanic;
-
 /**
  * A sequencer that reads MIDI files.
  *
  * @author sk89q
  */
-public class MidiJingleSequencer implements JingleSequencer {
+public final class MidiJingleSequencer implements JingleSequencer {
 
     private static final int[] instruments = {
         0, 0, 0, 0, 0, 0, 0, 5, // 8
@@ -62,17 +54,15 @@ public class MidiJingleSequencer implements JingleSequencer {
         3, 3,                   //50 - Open Triangle
     };
 
-    protected final File midiFile;
     private Sequencer sequencer = null;
     private boolean running = false;
     private boolean playedBefore = false;
 
+    private static final Object PLAYER_LOCK = new Object();
+
     private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
-
-        this.midiFile = midiFile;
-
         try {
             sequencer = MidiSystem.getSequencer(false);
             sequencer.open();
@@ -93,7 +83,7 @@ public class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public void run() throws InterruptedException {
+    public void run() {
 
         final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
 
@@ -125,15 +115,15 @@ public class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        synchronized(players) {
+                        synchronized(PLAYER_LOCK) {
                             if (chan == 9) { // Percussion
                                 // Sounds like utter crap
                                 if(ICMechanic.instance.usePercussionMidi)
                                     for(JingleNotePlayer player : players)
-                                        player.play(new Note(toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
+                                        player.play(new Note(Instrument.toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
                             } else {
                                 for(JingleNotePlayer player : players)
-                                    player.play(new Note(toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
+                                    player.play(new Note(Instrument.toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                             }
                         }
                     }
@@ -150,7 +140,7 @@ public class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                     running = true;
                     playedBefore = true;
-                    synchronized(players) {
+                    synchronized(PLAYER_LOCK) {
                         for(JingleNotePlayer player : players)
                             CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
                     }
@@ -177,19 +167,19 @@ public class MidiJingleSequencer implements JingleSequencer {
                 if(sequencer.isOpen())
                     sequencer.close();
                 sequencer = null;
-            } catch(Exception e){}
+            } catch(Exception ignored){}
         }
         running = false;
     }
 
-    protected static byte toMCNote(int n) {
+    private static byte toMCNote(int n) {
 
         if (n < 54) return (byte) ((n - 6) % (18 - 6));
         else if (n > 78) return (byte) ((n - 6) % (18 - 6) + 12);
         else return (byte) (n - 54);
     }
 
-    protected static byte toMCInstrument(Integer patch) {
+    private static byte toMCInstrument(Integer patch) {
 
         if (patch == null) return 0;
 
@@ -198,27 +188,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) instruments[patch];
     }
 
-    protected Instrument toMCSound(byte instrument) {
-
-        switch (instrument) {
-            case 1:
-                return Instrument.BASS_GUITAR;
-            case 2:
-                return Instrument.SNARE_DRUM;
-            case 3:
-                return Instrument.STICKS;
-            case 4:
-                return Instrument.BASS_DRUM;
-            case 5:
-                return Instrument.GUITAR;
-            case 6:
-                return Instrument.BASS;
-            default:
-                return Instrument.PIANO;
-        }
-    }
-
-    protected static byte toMCPercussion(Integer patch) {
+    private static byte toMCPercussion(Integer patch) {
 
         if(patch == null)
             return 0;
@@ -231,7 +201,7 @@ public class MidiJingleSequencer implements JingleSequencer {
         return (byte) percussion[i];
     }
 
-    public Sequencer getSequencer() {
+    Sequencer getSequencer() {
         return sequencer;
     }
 
@@ -257,12 +227,9 @@ public class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void play (JingleNotePlayer player) {
         players.add(player);
-        if(!playedBefore)
-            try {
-                run();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if(!playedBefore) {
+            run();
+        }
     }
 
     @Override

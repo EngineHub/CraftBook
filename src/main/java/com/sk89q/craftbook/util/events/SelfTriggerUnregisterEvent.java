@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockEvent;
 
 public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellable {
 
-    UnregisterReason reason;
+    private UnregisterReason reason;
 
     public SelfTriggerUnregisterEvent (Block theBlock, UnregisterReason reason) {
         super(theBlock);
@@ -40,7 +40,7 @@ public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellabl
         cancelled = arg0;
     }
 
-    boolean cancelled;
+    private boolean cancelled;
 
     public enum UnregisterReason {
 

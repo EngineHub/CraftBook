@@ -50,7 +50,7 @@ public final class CartUtil {
         else if(type == EntityType.MINECART_COMMAND) {
             toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
             ((CommandMinecart)toCart).setCommand(((CommandMinecart)toCart).getCommand());
-            ((CommandMinecart)toCart).setName(((CommandMinecart)toCart).getName());
+            ((CommandMinecart)toCart).setName(toCart.getName());
         } else
             toCart = cart.getWorld().spawn(destination, RideableMinecart.class);
 

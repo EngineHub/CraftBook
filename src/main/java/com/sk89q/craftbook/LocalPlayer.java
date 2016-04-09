@@ -16,12 +16,12 @@
 
 package com.sk89q.craftbook;
 
-import java.util.UUID;
-
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
+
+import java.util.UUID;
 
 /**
  * Holds an abstraction for players.
@@ -29,43 +29,43 @@ import com.sk89q.worldedit.Vector;
  */
 public interface LocalPlayer {
 
-    public void print(String message);
+    void print(String message);
 
-    public void printError(String message);
+    void printError(String message);
 
-    public void printRaw(String message);
+    void printRaw(String message);
 
-    public void checkPermission(String perm) throws InsufficientPermissionsException;
+    void checkPermission(String perm) throws InsufficientPermissionsException;
 
-    public boolean hasPermission(String perm);
+    boolean hasPermission(String perm);
 
-    public String getName();
+    String getName();
 
-    public UUID getUniqueId();
+    UUID getUniqueId();
 
-    public String getCraftBookId();
+    String getCraftBookId();
 
-    public Location getPosition();
+    Location getPosition();
 
-    public void setPosition(Vector pos, float pitch, float yaw);
+    void setPosition(Vector pos, float pitch, float yaw);
 
-    public void teleport(Location location);
+    void teleport(Location location);
 
-    public boolean isSneaking();
+    boolean isSneaking();
 
-    public void setSneaking(boolean state);
+    void setSneaking(boolean state);
 
-    public boolean isInsideVehicle();
-
-    @Deprecated
-    public int getHeldItemType();
+    boolean isInsideVehicle();
 
     @Deprecated
-    public short getHeldItemData();
+    int getHeldItemType();
 
-    public ItemInfo getHeldItemInfo();
+    @Deprecated
+    short getHeldItemData();
 
-    public boolean isHoldingBlock();
+    ItemInfo getHeldItemInfo();
 
-    public String translate(String message);
+    boolean isHoldingBlock();
+
+    String translate(String message);
 }

@@ -157,10 +157,8 @@ public final class SearchArea {
         return entities;
     }
 
-    @SuppressWarnings("serial")
     public List<Entity> getEntitiesInArea() {
-
-        return getEntitiesInArea(new ArrayList<EntityType>(1){{add(EntityType.ANY);}});
+        return getEntitiesInArea(Collections.singletonList(EntityType.ANY));
     }
 
     /**
@@ -249,9 +247,9 @@ public final class SearchArea {
         } else
             return null;
 
-        int x = xMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (xMax - xMin + 1));
-        int y = yMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (yMax - yMin + 1));
-        int z = zMin + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (zMax - zMin + 1));
+        int x = xMin + CraftBookPlugin.inst().getRandom().nextInt(xMax - xMin + 1);
+        int y = yMin + CraftBookPlugin.inst().getRandom().nextInt(yMax - yMin + 1);
+        int z = zMin + CraftBookPlugin.inst().getRandom().nextInt(zMax - zMin + 1);
         Location loc = new Location(getWorld(), x, y, z);
         if(!isWithinArea(loc))
             return null;

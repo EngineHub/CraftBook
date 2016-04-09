@@ -1,37 +1,27 @@
 package com.sk89q.craftbook.util.jinglenote;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
+import com.sk89q.craftbook.util.SearchArea;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.ICManager;
-import com.sk89q.craftbook.util.SearchArea;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Playlist {
 
-    String playlist;
+    private String playlist;
 
-    List<String> lines = new ArrayList<String>();
+    private List<String> lines = new ArrayList<String>();
 
-    BukkitTask task;
+    private BukkitTask task;
 
     protected PlaylistInterpreter show = new PlaylistInterpreter();
 
@@ -48,12 +38,10 @@ public class Playlist {
     }
 
     public PlaylistInterpreter getPlaylistInterpreter() {
-
         return show;
     }
 
-    public void readPlaylist() throws IOException {
-
+    private void readPlaylist() throws IOException {
         lines.clear();
         File file = new File(new File(ICManager.inst().getMidiFolder(), "playlists"), playlist + ".txt");
         if(!file.exists()) {
@@ -61,7 +49,7 @@ public class Playlist {
             return;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-        String line = "";
+        String line;
         while ((line = br.readLine()) != null) {
 
             if(line.trim().isEmpty())
@@ -105,7 +93,7 @@ public class Playlist {
         volatile JingleNoteManager jNote = new JingleNoteManager();
         volatile JingleSequencer sequencer;
 
-        public PlaylistInterpreter() {
+        PlaylistInterpreter() {
             position = 0;
             players = new HashMap<String, SearchArea>();
             lastPlayers = new HashMap<String, SearchArea>();
@@ -118,24 +106,25 @@ public class Playlist {
 
         public synchronized void setPlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(getPlayers());
-            getPlayers().clear();
-            getPlayers().putAll(newPlayers);
+            lastPlayers = new HashMap<String, SearchArea>(players);
+            players.clear();
+            players.putAll(newPlayers);
             CraftBookPlugin.logDebugMessage("Reset player list!", "playlist");
         }
 
         public synchronized void addPlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(getPlayers());
-            getPlayers().putAll(newPlayers);
+            lastPlayers = new HashMap<String, SearchArea>(players);
+            players.putAll(newPlayers);
             CraftBookPlugin.logDebugMessage("Added player list!", "playlist");
         }
 
         public synchronized void removePlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(getPlayers());
-            for(String player : newPlayers.keySet())
-                getPlayers().remove(player);
+            lastPlayers = new HashMap<String, SearchArea>(players);
+            for(String player : newPlayers.keySet()) {
+                players.remove(player);
+            }
             CraftBookPlugin.logDebugMessage("Subtracted from player list!", "playlist");
         }
 
@@ -148,14 +137,11 @@ public class Playlist {
         public void run () {
 
             while (position < lines.size() && isPlaying()) {
-
                 if(sequencer != null) {
-
                     while(sequencer != null && sequencer.isPlaying() && !sequencer.getPlayers().isEmpty()) {
-
                         for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
-                            if(getPlayers().containsKey(p.getKey()) && jNote.isPlaying(p.getKey()))
+                            if(players.containsKey(p.getKey()) && jNote.isPlaying(p.getKey()))
                                 continue;
 
                             jNote.stop(p.getKey());
@@ -163,7 +149,7 @@ public class Playlist {
                             CraftBookPlugin.logDebugMessage("Removed player from sequencer: " + p.getKey(), "playlist");
                         }
 
-                        for(Entry<String, SearchArea> p : getPlayers().entrySet()) {
+                        for(Entry<String, SearchArea> p : players.entrySet()) {
 
                             if(lastPlayers.containsKey(p.getKey()))
                                 continue;
@@ -173,7 +159,7 @@ public class Playlist {
                             CraftBookPlugin.logDebugMessage("Added player to sequencer: " + p.getKey(), "playlist");
                         }
 
-                        lastPlayers = new HashMap<String, SearchArea>(getPlayers());
+                        lastPlayers = new HashMap<String, SearchArea>(players);
 
                         try {
                             Thread.sleep(10L);
@@ -203,7 +189,7 @@ public class Playlist {
                 if (line.trim().startsWith("#") || line.trim().isEmpty())
                     continue;
 
-                while(getPlayers().isEmpty()) {
+                while(players.isEmpty()) {
                     if(!isPlaying()) return;
                     try {
                         Thread.sleep(100L);
@@ -256,14 +242,14 @@ public class Playlist {
                             ((MidiJingleSequencer) sequencer).getSequencer().open();
                         }
 
-                        CraftBookPlugin.logDebugMessage("Player list on midi create: " + getPlayers().toString(), "playlist");
+                        CraftBookPlugin.logDebugMessage("Player list on midi create: " + players.toString(), "playlist");
 
-                        for(Entry<String, SearchArea> player : getPlayers().entrySet()) {
+                        for(Entry<String, SearchArea> player : players.entrySet()) {
                             jNote.play(player.getKey(), sequencer, player.getValue());
                             CraftBookPlugin.logDebugMessage("Added player to midi sequencer upon creation: " + player.getKey(), "playlist");
                         }
 
-                        lastPlayers = new HashMap<String, SearchArea>(getPlayers());
+                        lastPlayers = new HashMap<String, SearchArea>(players);
 
                         try {
                             Thread.sleep(1000L);
@@ -283,12 +269,12 @@ public class Playlist {
 
                     sequencer = new StringJingleSequencer(tune, 0);
 
-                    for(Entry<String, SearchArea> player : getPlayers().entrySet()) {
+                    for(Entry<String, SearchArea> player : players.entrySet()) {
                         jNote.play(player.getKey(), sequencer, player.getValue());
                         CraftBookPlugin.logDebugMessage("Added player to string sequencer upon creation: " + player.getKey(), "playlist");
                     }
 
-                    lastPlayers = new HashMap<String, SearchArea>(getPlayers());
+                    lastPlayers = new HashMap<String, SearchArea>(players);
 
                     try {
                         Thread.sleep(1000L);
@@ -299,7 +285,7 @@ public class Playlist {
 
                     String message = StringUtils.replace(line, "send ", "");
 
-                    for(String player : getPlayers().keySet()) {
+                    for(String player : players.keySet()) {
                         Player pp = Bukkit.getPlayerExact(player);
                         if(pp != null)
                             pp.sendMessage(message);
@@ -310,21 +296,5 @@ public class Playlist {
                 }
             }
         }
-    }
-
-    public boolean areIdentical(Map<String, SearchArea> h1, Map<String, SearchArea> h2) {
-        if ( h1.size() != h2.size() )
-            return false;
-        Map<String, SearchArea> clone = new HashMap<String, SearchArea>(h2);
-        Iterator<String> it = h1.keySet().iterator();
-        while (it.hasNext() ){
-            String o = it.next();
-            if (clone.containsKey(o)){
-                clone.remove(o);
-            } else {
-                return false;
-            }
-        }
-        return clone.isEmpty();
     }
 }

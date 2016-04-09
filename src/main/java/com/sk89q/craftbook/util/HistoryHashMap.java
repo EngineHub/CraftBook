@@ -25,21 +25,19 @@ import java.util.Map;
  *
  * @author sk89q
  */
-public class HistoryHashMap<K, V> extends LinkedHashMap<K, V> {
+public final class HistoryHashMap<K, V> extends LinkedHashMap<K, V> {
 
     private static final long serialVersionUID = -3275917656900940011L;
 
     private final int maxEntries;
 
     public HistoryHashMap(int maxEntries) {
-
         super();
         this.maxEntries = maxEntries;
     }
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-
         return size() > maxEntries;
     }
 }

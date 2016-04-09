@@ -1,5 +1,11 @@
 package com.sk89q.craftbook.core;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,19 +13,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-
 /**
  * @author Me4502
  */
 public class LanguageManager {
 
-    Map<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
+    private Map<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
 
     public void init() {
         checkForLanguages();
@@ -29,7 +28,7 @@ public class LanguageManager {
 
     }
 
-    public void checkForLanguages() {
+    private void checkForLanguages() {
 
         for (String language : CraftBookPlugin.inst().getConfiguration().languages) {
             language = language.trim();
@@ -79,7 +78,7 @@ public class LanguageManager {
                 return trans;
             }
         } else {
-            String translated = null;
+            String translated;
             if(def == null || languageData.getString(message) != null)
                 translated = languageData.getString(message);
             else {
@@ -103,7 +102,7 @@ public class LanguageManager {
         }
     }
 
-    public String getPlayersLanguage(Player p) {
+    public static String getPlayersLanguage(Player p) {
 
         //try {
         //Field d = EntityPlayer.class.getDeclaredField("locale");

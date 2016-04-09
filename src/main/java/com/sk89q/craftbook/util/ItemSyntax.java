@@ -1,32 +1,26 @@
 package com.sk89q.craftbook.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
@@ -49,7 +43,7 @@ public final class ItemSyntax {
     public static JavaPlugin plugin;
 
     /**
-     * The opposite of {@link getItem()}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
+     * The opposite of {@link ItemSyntax#getItem(String)}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
      * 
      * @author me4502
      * 
@@ -61,20 +55,20 @@ public final class ItemSyntax {
         StringBuilder builder = new StringBuilder();
         builder.append(item.getType().name());
         if(item.getDurability() > 0)
-            builder.append(":").append(item.getDurability());
+            builder.append(':').append(item.getDurability());
 
         if(item.hasItemMeta()) {
             if(item.getItemMeta().hasEnchants())
                 for(Entry<Enchantment,Integer> enchants : item.getItemMeta().getEnchants().entrySet())
-                    builder.append(";").append(enchants.getKey().getName()).append(":").append(enchants.getValue());
+                    builder.append(';').append(enchants.getKey().getName()).append(':').append(enchants.getValue());
             if(item.getItemMeta().hasDisplayName())
-                builder.append("|").append(item.getItemMeta().getDisplayName());
+                builder.append('|').append(item.getItemMeta().getDisplayName());
             if(item.getItemMeta().hasLore()) {
                 if(!item.getItemMeta().hasDisplayName())
                     builder.append("|$IGNORE");
                 List<String> list = item.getItemMeta().getLore();
                 for(String s : list)
-                    builder.append("|").append(s);
+                    builder.append('|').append(s);
             }
             ItemMeta meta = item.getItemMeta();
             if (meta instanceof SkullMeta) {
@@ -90,15 +84,15 @@ public final class ItemSyntax {
                         builder.append("/page:").append(page);
             } else if (meta instanceof LeatherArmorMeta) {
                 if(!((LeatherArmorMeta) meta).getColor().equals(Bukkit.getItemFactory().getDefaultLeatherColor()))
-                    builder.append("/color:").append(((LeatherArmorMeta) meta).getColor().getRed()).append(",").append(((LeatherArmorMeta) meta).getColor().getGreen()).append(",").append(((LeatherArmorMeta) meta).getColor().getBlue());
+                    builder.append("/color:").append(((LeatherArmorMeta) meta).getColor().getRed()).append(',').append(((LeatherArmorMeta) meta).getColor().getGreen()).append(',').append(((LeatherArmorMeta) meta).getColor().getBlue());
             } else if (meta instanceof PotionMeta) {
                 if(!((PotionMeta) meta).hasCustomEffects())
                     for(PotionEffect eff : ((PotionMeta) meta).getCustomEffects())
-                        builder.append("/potion:").append(eff.getType().getName()).append(";").append(eff.getDuration()).append(";").append(eff.getAmplifier());
+                        builder.append("/potion:").append(eff.getType().getName()).append(';').append(eff.getDuration()).append(';').append(eff.getAmplifier());
             } else if (meta instanceof EnchantmentStorageMeta) {
                 if(!((EnchantmentStorageMeta) meta).hasStoredEnchants())
                     for(Entry<Enchantment, Integer> eff : ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet())
-                        builder.append("/enchant:").append(eff.getKey().getName()).append(";").append(eff.getValue());
+                        builder.append("/enchant:").append(eff.getKey().getName()).append(';').append(eff.getValue());
             }
         }
 

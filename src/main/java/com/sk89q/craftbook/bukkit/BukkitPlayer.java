@@ -16,21 +16,21 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
-public class BukkitPlayer implements LocalPlayer {
+import java.util.UUID;
+
+public final class BukkitPlayer implements LocalPlayer {
 
     protected final CraftBookPlugin plugin;
     protected final Player player;
@@ -49,19 +49,19 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public void print(String message) {
 
-        player.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player))));
+        player.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player))));
     }
 
     @Override
     public void printError(String message) {
 
-        player.sendMessage(ChatColor.RED + ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player))));
+        player.sendMessage(ChatColor.RED + ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player))));
     }
 
     @Override
     public void printRaw(String message) {
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player))));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player))));
     }
 
     @Override
@@ -122,7 +122,7 @@ public class BukkitPlayer implements LocalPlayer {
     @Override
     public String translate(String message) {
 
-        return plugin.getLanguageManager().getString(message, plugin.getLanguageManager().getPlayersLanguage(player));
+        return plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player));
     }
 
     @Override

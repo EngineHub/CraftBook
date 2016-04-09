@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public interface CraftBookCompatability {
 
-    abstract void enable(Player player);
+    void enable(Player player);
 
-    abstract void disable(Player player);
+    void disable(Player player);
 }

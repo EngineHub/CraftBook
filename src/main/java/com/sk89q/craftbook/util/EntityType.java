@@ -55,7 +55,7 @@ public enum EntityType {
 
     private final char shortName;
 
-    private EntityType(char shortName) {
+    EntityType(char shortName) {
 
         this.shortName = shortName;
     }
@@ -80,7 +80,7 @@ public enum EntityType {
         } else {
             for (char aChar : line.toUpperCase().toCharArray()) {
                 for (EntityType aType : EntityType.values()) {
-                    if (aType.getCharName() == aChar) {
+                    if (aType.shortName == aChar) {
                         types.add(aType);
                     }
                 }

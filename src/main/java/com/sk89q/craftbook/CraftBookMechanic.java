@@ -15,12 +15,12 @@ public interface CraftBookMechanic extends Listener {
      * 
      * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
      */
-    public boolean enable();
+    boolean enable();
 
     /**
      * Called when the mechanic should be disabled. This should make sure all memory is released.
      */
-    public void disable();
+    void disable();
 
     /**
      * Loads the configuration for this mechanic.
@@ -28,10 +28,10 @@ public interface CraftBookMechanic extends Listener {
      * @param config The YAMLProcessor for this config.
      * @param path The path of the parent element.
      */
-    public void loadConfiguration(YAMLProcessor config, String path);
+    void loadConfiguration(YAMLProcessor config, String path);
 
     /**
      * The priority at which this mechanic should load.
      */
-    public LoadPriority getLoadPriority();
+    LoadPriority getLoadPriority();
 }

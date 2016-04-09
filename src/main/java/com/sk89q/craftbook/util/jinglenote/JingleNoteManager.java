@@ -5,12 +5,12 @@
 
 package com.sk89q.craftbook.util.jinglenote;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.craftbook.util.jinglenote.bukkit.BukkitJingleNotePlayer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A manager of play instances.
@@ -22,7 +22,7 @@ public class JingleNoteManager {
     /**
      * List of instances.
      */
-    protected final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
+    private final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
 
     public boolean isPlaying(String player) {
 

@@ -124,8 +124,8 @@ public final class EntityUtil {
         }
 
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("name")) {
-            ((LivingEntity) ent).setCustomName(data[1]);
-            ((LivingEntity) ent).setCustomNameVisible(true);
+            ent.setCustomName(data[1]);
+            ent.setCustomNameVisible(true);
         }
 
         if (ent instanceof Ageable && data[0].equalsIgnoreCase("babylock")) {

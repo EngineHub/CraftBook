@@ -15,22 +15,21 @@ import java.util.Set;
  */
 public interface JingleSequencer {
 
-    public void run() throws InterruptedException;
+    void run() throws InterruptedException;
 
-    public void stop();
+    void stop();
 
-    public void stop(JingleNotePlayer player);
+    void stop(JingleNotePlayer player);
 
-    public boolean isPlaying();
+    boolean isPlaying();
 
-    public boolean hasPlayedBefore();
+    boolean hasPlayedBefore();
 
-    public void play(JingleNotePlayer player);
+    void play(JingleNotePlayer player);
 
-    public Set<JingleNotePlayer> getPlayers();
+    Set<JingleNotePlayer> getPlayers();
 
-    public class Note {
-
+    class Note {
         Instrument instrument;
         byte note;
         float velocity;

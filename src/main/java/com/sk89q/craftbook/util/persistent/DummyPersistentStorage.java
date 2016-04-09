@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class DummyPersistentStorage extends PersistentStorage {
 
-    Map<String, Object> map;
+    private Map<String, Object> map;
 
     @Override
     public void open () {

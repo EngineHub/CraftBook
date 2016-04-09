@@ -24,7 +24,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 public class SQLitePersistentStorage extends PersistentStorage {
 
-    Connection db;
+    private Connection db;
 
     @Override
     public void open () {
@@ -45,9 +45,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             DatabaseMetaData dbm = db.getMetaData();
             ResultSet tables = dbm.getTables(null, null, "PersistentData", null);
 
-            if(tables.next()) //We already have something in this table, don't create it!
-                return;
-            else {
+            if(!tables.next()) { //We already have something in this table, don't create it.
                 String createTable = "CREATE TABLE PersistentData (KEY VARCHAR(255) PRIMARY KEY, VALUE TEXT)";
                 try {
                     Statement state = db.createStatement();
@@ -76,7 +74,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         return "SQLite";
     }
 
-    private void close(ResultSet results) {
+    private static void close(ResultSet results) {
 
         if(results != null) {
             try {
@@ -87,7 +85,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         }
     }
 
-    private void close(PreparedStatement statement) {
+    private static void close(PreparedStatement statement) {
 
         if(statement != null) {
             try {
