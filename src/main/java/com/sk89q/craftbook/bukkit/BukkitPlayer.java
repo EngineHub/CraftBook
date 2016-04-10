@@ -109,8 +109,8 @@ public final class BukkitPlayer implements LocalPlayer {
     @Override
     public int getHeldItemType() {
 
-        if (player.getItemInHand() == null) return 0;
-        return player.getItemInHand().getTypeId();
+        if (player.getInventory().getItemInMainHand() == null) return 0;
+        return player.getInventory().getItemInMainHand().getTypeId();
     }
 
     @Override
@@ -128,8 +128,8 @@ public final class BukkitPlayer implements LocalPlayer {
     @Override
     public short getHeldItemData () {
 
-        if (player.getItemInHand() == null) return 0;
-        return player.getItemInHand().getDurability();
+        if (player.getInventory().getItemInMainHand() == null) return 0;
+        return player.getInventory().getItemInMainHand().getDurability();
     }
 
     @Override

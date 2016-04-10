@@ -105,15 +105,14 @@ public class Bookcase extends AbstractCraftBookMechanic {
      *
      * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
-    protected String getBookLine() throws Exception {
-
+    private static String getBookLine() throws Exception {
         return lines[CraftBookPlugin.inst().getRandom().nextInt(lines.length)];
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
         if (!bookcaseReadWhenSneaking.doesPass(event.getPlayer().isSneaking())) return;
@@ -138,8 +137,8 @@ public class Bookcase extends AbstractCraftBookMechanic {
             read(player);
     }
 
-    boolean bookcaseReadHoldingBlock;
-    TernaryState bookcaseReadWhenSneaking;
+    private boolean bookcaseReadHoldingBlock;
+    private TernaryState bookcaseReadWhenSneaking;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

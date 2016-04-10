@@ -82,7 +82,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
     public void onCommonClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND)
+        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
             return;
 
         LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());

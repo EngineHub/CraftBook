@@ -166,7 +166,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event.getItem() == null)
             return;
 
-        if(event.getAction() == Action.PHYSICAL && event.getHand() != EquipmentSlot.HAND)
+        if(event.getAction() == Action.PHYSICAL || event.getHand() != EquipmentSlot.HAND)
             return;
 
         performCommandItems(event.getItem(), event.getPlayer(), event);
@@ -184,7 +184,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority=EventPriority.HIGH)
     public void onEntityDamageEntity(final EntityDamageByEntityEvent event) {
 
-        Player p = null;
+        Player p;
         if(event.getDamager() instanceof Projectile) {
             if(!(((Projectile) event.getDamager()).getShooter() instanceof Player))
                 return;

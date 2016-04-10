@@ -27,7 +27,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         else if(block.getType() != Material.AIR)
             if(!block.isSame(event.getClickedBlock())) return;
 
-        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND) return;
+        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 

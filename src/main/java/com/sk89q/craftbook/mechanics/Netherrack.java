@@ -61,7 +61,7 @@ public class Netherrack extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         if(event.getClickedBlock().getType() != Material.NETHERRACK) return;
         if (event.getBlockFace() == BlockFace.UP) {
             Block fire = event.getClickedBlock().getRelative(event.getBlockFace());

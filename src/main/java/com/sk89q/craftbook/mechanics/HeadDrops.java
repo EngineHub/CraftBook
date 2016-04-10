@@ -137,7 +137,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND) return;
+        if(!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 

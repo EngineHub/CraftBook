@@ -155,7 +155,7 @@ public class Chair extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (!EventUtil.passesFilter(event) && event.getHand() != EquipmentSlot.HAND)
+        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
             return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;

@@ -23,7 +23,7 @@ public class PlaceAnywhere extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         if(event.getPlayer().getItemInHand() == null || event.getPlayer().getItemInHand().getType() != Material.MINECART) return;
         if(RailUtil.isTrack(event.getClickedBlock().getType())) return;
 
