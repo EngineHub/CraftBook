@@ -139,6 +139,8 @@ public final class ItemUtil {
 
     public static boolean areRecipesIdentical(Recipe rec1, Recipe rec2) {
 
+        if(rec1 == null || rec2 == null)
+            return rec1 == rec2;
         if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
             CraftBookPlugin.logDebugMessage("Recipes have same results!", "advanced-data.compare-recipes");
             if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
