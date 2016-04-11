@@ -1,21 +1,17 @@
 package com.sk89q.craftbook.mechanics;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.sk89q.craftbook.BaseTestCase;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.worldedit.blocks.ItemID;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -25,10 +21,10 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.sk89q.craftbook.BaseTestCase;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.worldedit.blocks.ItemID;
+import java.util.ArrayList;
+
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TreeLopper.class,BlockBreakEvent.class})
@@ -52,9 +48,13 @@ public class TreeLopperTest extends BaseTestCase {
         when(axe.getAmount()).thenReturn(1);
         when(axe.hasItemMeta()).thenReturn(false);
 
+        PlayerInventory inventory = mock(PlayerInventory.class);
+        when(inventory.getItemInMainHand()).thenReturn(axe);
+
         Player player = mock(Player.class);
         when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
         when(player.getItemInHand()).thenReturn(axe);
+        when(player.getInventory()).thenReturn(inventory);
 
         final Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.LOG);
