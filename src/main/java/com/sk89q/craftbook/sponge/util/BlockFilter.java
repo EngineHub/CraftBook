@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -57,7 +59,7 @@ public class BlockFilter {
             }
 
             if(blockType == null) {
-                System.out.println("Missing type for filter rule: " + rule);
+                CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Missing type for filter rule: " + rule);
                 return cache;
             }
 
@@ -86,7 +88,7 @@ public class BlockFilter {
                     if(state != null) {
                         cache.add(state);
                     } else {
-                        System.out.println("Warning! A state was null when it shouldn't have been. Are you sure '" + rule + "' is correct?");
+                        CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + rule + "' is correct?");
                     }
 
                     counter[0] += 1;

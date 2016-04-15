@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge;
 
 import com.me4502.modularframework.module.ModuleWrapper;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -58,9 +59,8 @@ public class SpongeConfiguration implements DocumentationProvider {
             dataOnlyMode.load(config);
 
             configManager.save(config);
-        } catch (IOException exception) {
-            plugin.getLogger().error("The CraftBook Configuration could not be read!");
-            exception.printStackTrace();
+        } catch (IOException e) {
+            plugin.getLogger().error("The CraftBook Configuration could not be read!", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class SpongeConfiguration implements DocumentationProvider {
 
             configManager.save(config);
         } catch (IOException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("The CraftBook configuration could not be saved!", e);
         }
     }
 

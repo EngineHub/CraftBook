@@ -19,6 +19,7 @@ package com.sk89q.craftbook.core.util.documentation;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,7 +103,7 @@ public class DocumentationGenerator {
                 writer.println(border);
             }
         } catch(IOException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("An IO Exception occured.", e);
         }
     }
 

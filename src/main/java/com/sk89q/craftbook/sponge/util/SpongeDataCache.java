@@ -16,8 +16,10 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
 import java.io.*;
 
@@ -33,7 +35,7 @@ public class SpongeDataCache extends MechanicDataCache {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     data = SerializationUtil.jsonConverter.deserialize(reader, clazz);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to deserialize data " + locationKey, e);
                 }
             }
 
@@ -42,7 +44,7 @@ public class SpongeDataCache extends MechanicDataCache {
 
             return data;
         } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to create data object: " + locationKey, e);
         }
 
         return null;
@@ -55,7 +57,7 @@ public class SpongeDataCache extends MechanicDataCache {
         try(PrintWriter writer = new PrintWriter(file)) {
             writer.print(SerializationUtil.jsonConverter.serialize(data));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to write data: " + locationKey, e);
         }
     }
 }

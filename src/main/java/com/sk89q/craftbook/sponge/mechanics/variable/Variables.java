@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.variable;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
@@ -67,8 +68,7 @@ public class Variables extends SpongeMechanic {
             try {
                 variableStore = config.getNode("variables").getValue(new VariableTypeToken());
             } catch (ObjectMappingException e) {
-                e.printStackTrace();
-                System.out.println("Failed to read variables! Resetting..");
+                CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to read variables! Resetting..", e);
                 variableStore = new HashMap<>();
             }
         }

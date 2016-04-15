@@ -78,8 +78,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         ICType<? extends IC> icType = ICManager.getICType((event.getText().lines().get(1)).toPlain());
         if (icType == null) return;
 
-        System.out.println(icType.shorthandId);
-
         event.getText().lines().set(1, Text.of('=' + icType.shorthandId));
     }
 

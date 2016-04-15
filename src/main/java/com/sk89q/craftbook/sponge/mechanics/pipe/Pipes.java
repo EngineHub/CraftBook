@@ -17,6 +17,8 @@
 package com.sk89q.craftbook.sponge.mechanics.pipe;
 
 import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.InputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.OutputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PassthroughPipePart;
@@ -90,8 +92,8 @@ public class Pipes extends SpongeBlockMechanic {
 
                 try {
                     itemStack = doPipeIteration(location, itemStack, direction, traversed);
-                } catch(StackOverflowError error) {
-                    error.printStackTrace();
+                } catch(StackOverflowError e) {
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Pipe overflow. Please report this issue to the developers with images of setup.", e);
                 }
 
                 if(itemStack.getQuantity() > 0) {

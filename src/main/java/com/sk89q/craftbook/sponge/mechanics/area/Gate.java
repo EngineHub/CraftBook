@@ -128,8 +128,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         if(closestColumn != null)
             state = searchColumn(closestColumn, columns, state);
-        else
-            System.out.println("No culmn");
 
         return state;
     }

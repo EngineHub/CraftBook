@@ -26,7 +26,6 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
@@ -50,9 +49,7 @@ import java.io.File;
 @Plugin(id = "com.sk89q.craftbook", name = "CraftBook", version = "4.0")
 public class CraftBookPlugin extends CraftBookAPI {
 
-    MechanicDataCache cache;
-
-    public BlockBagManager blockBagManager;
+    private MechanicDataCache cache;
 
     /* Configuration Data */
 
@@ -75,7 +72,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     /* Logging */
 
     @Inject
-    protected Logger logger;
+    private Logger logger;
 
     public Logger getLogger() {
         return logger;
@@ -113,7 +110,6 @@ public class CraftBookPlugin extends CraftBookAPI {
         discoverMechanics();
 
         cache = new SpongeDataCache();
-        blockBagManager = new BlockBagManager();
 
         moduleController.enableModules(input -> {
             if (config.enabledMechanics.getValue().contains(input.getName())
@@ -134,7 +130,7 @@ public class CraftBookPlugin extends CraftBookAPI {
                     break;
                 }
             } catch(ModuleNotInstantiatedException e) {
-                e.printStackTrace();
+                CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to initialize module: " + module.getName(), e);
             }
         }
 
@@ -146,7 +142,7 @@ public class CraftBookPlugin extends CraftBookAPI {
                     if(mechanic instanceof DocumentationProvider)
                         DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
                 } catch (ModuleNotInstantiatedException e) {
-                    e.printStackTrace();
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to generate docs for module: " + module.getName(), e);
                 }
             }
 

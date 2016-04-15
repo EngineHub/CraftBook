@@ -20,7 +20,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -50,7 +52,7 @@ public class BlockBagManager extends SpongeMechanic {
                 blockBags[i] = BlockBag.createFromString(blockBagList.get(i));
             }
         } catch (ObjectMappingException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map object.", e);
         }
     }
 

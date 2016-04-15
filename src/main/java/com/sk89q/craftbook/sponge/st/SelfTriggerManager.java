@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.st;
 
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
@@ -75,7 +76,7 @@ public class SelfTriggerManager {
                             register((SelfTriggeringMechanic) mechanic, tileEntity.getLocation());
                     }
                 } catch (ModuleNotInstantiatedException e) {
-                    e.printStackTrace();
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to register self-triggering mechanic for module: " + module.getName(), e);
                 }
             }
         }

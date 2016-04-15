@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.Sponge;
@@ -41,7 +42,7 @@ public class SpongePermissionNode extends PermissionNode {
     public void register() {
         ProviderRegistration<PermissionService> provider = Sponge.getServiceManager().getRegistration(PermissionService.class).orElse(null);
         if(provider == null) {
-            System.out.println("Warning! Missing Permissions Provider. Permissions will not work as expected!");
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Missing Permissions Provider. Permissions will not work as expected!");
             return;
         }
 

@@ -20,7 +20,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -47,9 +49,8 @@ public abstract class MechanicDataCache {
         Object data = null;
         try {
             data = mechanicData.getIfPresent(locationKey);
-        } catch(Throwable ignored) {
-            System.out.println("Failed to load some data: " + locationKey);
-            ignored.printStackTrace();
+        } catch(Throwable e) {
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to load some data: " + locationKey, e);
         }
 
         if (data == null || !clazz.isInstance(data)) {

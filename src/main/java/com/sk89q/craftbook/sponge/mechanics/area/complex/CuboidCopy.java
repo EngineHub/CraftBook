@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area.complex;
 
+import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.world.DataException;
 import org.spongepowered.api.world.World;
@@ -68,7 +70,7 @@ public abstract class CuboidCopy {
         try {
             copy.loadFromFile(file);
         } catch (IOException | DataException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to load cuboid region: " + file.getAbsolutePath(), e);
             throw new CuboidCopyException(e.getMessage());
         }
         // make sure that null is never returned but an exception is thrown instead

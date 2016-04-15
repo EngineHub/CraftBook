@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.world.Location;
 
 import java.lang.reflect.Constructor;
@@ -64,23 +66,20 @@ public class ICType<T extends IC> {
 
     public IC buildIC(Location block) {
 
+        IC ic = null;
+
         try {
             Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
-            IC ic;
             if (extraArguments != null && extraArguments.length > 0)
                 ic = construct.newInstance(this, block, extraArguments);
             else ic = construct.newInstance(this, block);
 
             ic.load();
-
-            return ic;
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
-            e.printStackTrace();
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments), e);
         }
 
-        System.out.println("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments));
-
-        return null;
+        return ic;
     }
 
     @Override
