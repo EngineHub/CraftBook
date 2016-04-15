@@ -64,7 +64,7 @@ public class Ammeter extends SpongeBlockMechanic {
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         int powerLevel = BlockUtil.getBlockPowerLevel(event.getTargetBlock().getLocation().get()).orElse(-1);
-        if (player.getItemInHand().isPresent() && powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().get().getItem() == ammeterItem.getValue().getItem()) {
+        if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == ammeterItem.getValue().getItem()) {
             player.sendMessage(getCurrentLine(powerLevel));
             event.setCancelled(true);
         }

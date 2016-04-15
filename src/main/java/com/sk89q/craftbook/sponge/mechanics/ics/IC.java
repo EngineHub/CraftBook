@@ -23,8 +23,8 @@ import org.spongepowered.api.world.World;
 public abstract class IC {
 
     public transient ICType<? extends IC> type;
-    public transient Location<World> block;
-    public boolean[] pinstates;
+    public transient Location<?> block;
+    private boolean[] pinstates;
 
     public IC() {}
 
@@ -47,7 +47,7 @@ public abstract class IC {
         pinstates = new boolean[set.getInputCount()]; // Just input for now.
     }
 
-    public Location<World> getBlock() {
+    public Location<?> getBlock() {
         return block;
     }
 

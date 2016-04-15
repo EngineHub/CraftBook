@@ -39,7 +39,7 @@ public class Pins3ISO extends PinSet {
     }
 
     @Override
-    public Location<World> getPinLocation(int id, IC ic) {
+    public Location<?> getPinLocation(int id, IC ic) {
         switch(id) {
             case 0:
                 return ic.getBlock().getRelative(SignUtil.getFront(ic.getBlock()));

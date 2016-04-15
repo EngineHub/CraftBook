@@ -46,7 +46,7 @@ public class TypeSerializers {
         options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
     }
 
-    public static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
+    private static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
         @Override
         public BlockState deserialize(TypeToken<?> type, ConfigurationNode value) {
             return BlockUtil.getBlockStateFromString(value.getString());
@@ -58,7 +58,7 @@ public class TypeSerializers {
         }
     }
 
-    public static class BlockFilterTypeSerializer implements TypeSerializer<BlockFilter> {
+    private static class BlockFilterTypeSerializer implements TypeSerializer<BlockFilter> {
         @Override
         public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) {
             return new BlockFilter(value.getString());
@@ -70,7 +70,7 @@ public class TypeSerializers {
         }
     }
 
-    public static class SetTypeSerializer implements TypeSerializer<Set<?>> {
+    private static class SetTypeSerializer implements TypeSerializer<Set<?>> {
         @Override
         public Set<?> deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
             TypeToken<?> entryType = type.resolveType(Set.class.getTypeParameters()[0]);
@@ -109,7 +109,7 @@ public class TypeSerializers {
         }
     }
 
-    public static class ItemStackTypeSerializer implements TypeSerializer<ItemStack> {
+    private static class ItemStackTypeSerializer implements TypeSerializer<ItemStack> {
 
         @Override
         public ItemStack deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {

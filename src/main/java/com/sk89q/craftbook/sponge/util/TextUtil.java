@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class TextUtil {
+public final class TextUtil {
 
     public static Text transform(Text text, Function<Text, TextRepresentable> transformer) {
         checkNotNull(transformer, "transformer");

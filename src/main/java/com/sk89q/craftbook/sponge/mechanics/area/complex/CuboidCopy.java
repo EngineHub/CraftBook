@@ -25,16 +25,16 @@ import org.spongepowered.api.world.World;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class CuboidCopy {
+abstract class CuboidCopy {
 
     protected World world;
-    protected Vector origin;
+    Vector origin;
     protected Vector size;
-    protected int width;
-    protected int height;
+    int width;
+    int height;
     protected int length;
 
-    public CuboidCopy(Vector origin, Vector size, World world) {
+    CuboidCopy(Vector origin, Vector size, World world) {
 
         this.origin = origin;
         this.size = size;
@@ -44,7 +44,7 @@ public abstract class CuboidCopy {
         length = size.getBlockZ();
     }
 
-    protected CuboidCopy() {
+    CuboidCopy() {
         // used as constructor when file is loaded
     }
 

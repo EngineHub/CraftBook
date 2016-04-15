@@ -52,18 +52,18 @@ import java.util.stream.Collectors;
 
 public abstract class SimpleArea extends SpongeSignMechanic {
 
-    protected SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
-    protected SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
+    SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
+    SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    protected ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
-    protected ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
+    ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
+    ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
-    public void loadCommonConfig(ConfigurationNode config) {
+    void loadCommonConfig(ConfigurationNode config) {
         allowedBlocks.load(config);
         allowRedstone.load(config);
     }
 
-    public void registerCommonPermissions() {
+    void registerCommonPermissions() {
         createPermissions.register();
         usePermissions.register();
     }
@@ -133,20 +133,6 @@ public abstract class SimpleArea extends SpongeSignMechanic {
      * @param forceState If the mechanic should forcibly enter a specific state
      */
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
-
-    public Location getOtherEnd(Location block, Direction back, int maximumLength) {
-        for (int i = 0; i < maximumLength; i++) {
-            block = block.getRelative(back);
-            if (SignUtil.isSign(block)) {
-                Sign sign = (Sign) block.getTileEntity().get();
-
-                if (isMechanicSign(sign)) {
-                    return block;
-                }
-            }
-        }
-        return null;
-    }
 
     @Override
     public boolean isValid(Location location) {

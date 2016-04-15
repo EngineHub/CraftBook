@@ -22,9 +22,11 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractBoundedComparableData;
 import org.spongepowered.api.data.merge.MergeFunction;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.util.Optional;
 
+@NonnullByDefault
 public class LastPowerData extends AbstractBoundedComparableData<Integer, LastPowerData, ImmutableLastPowerData> {
 
     public LastPowerData() {

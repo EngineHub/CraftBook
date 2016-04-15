@@ -24,9 +24,11 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.util.Optional;
 
+@NonnullByDefault
 public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockBagData> {
 
     public BlockBagData() {

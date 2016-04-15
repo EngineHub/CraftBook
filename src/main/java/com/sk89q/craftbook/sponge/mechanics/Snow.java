@@ -61,7 +61,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public void increaseSnow(Location<World> location, boolean disperse) {
+    private void increaseSnow(Location<World> location, boolean disperse) {
         Optional<LayeredData> dataOptional = location.get(LayeredData.class);
         if(dataOptional.isPresent()) {
             LayeredData data = dataOptional.get();
@@ -85,7 +85,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public void decreaseSnow(Location<World> location) {
+    private void decreaseSnow(Location<World> location) {
         Optional<LayeredData> dataOptional = location.get(LayeredData.class);
         if(dataOptional.isPresent()) {
             LayeredData data = dataOptional.get();
@@ -108,7 +108,7 @@ public class Snow extends SpongeMechanic {
 
     private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NONE};
 
-    public void disperseSnow(final Location<World> location, Direction ignoredFace) {
+    private void disperseSnow(final Location<World> location, Direction ignoredFace) {
 
         Optional<LayeredData> heightData = location.getOrCreate(LayeredData.class);
         int currentHeight = heightData.get().getValue(Keys.LAYER).get().get();
@@ -138,7 +138,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    public boolean canSeeSky(Location<World> location) {
+    private boolean canSeeSky(Location<World> location) {
         while(location.getBlockY() < location.getExtent().getBlockMax().getY()) {
             location = location.getRelative(Direction.UP);
             if(location.getBlockType() != BlockTypes.AIR && location.getBlockType() != BlockTypes.LEAVES && location.getBlockType() != BlockTypes.LEAVES2)
@@ -147,11 +147,11 @@ public class Snow extends SpongeMechanic {
         return true;
     }
 
-    public boolean canPlaceSnowAt(Location<World> location) {
+    private boolean canPlaceSnowAt(Location<World> location) {
         return location.getBlockType() == BlockTypes.SNOW_LAYER || !(location.getBlockType() == BlockTypes.WATER || location.getBlockType() == BlockTypes.FLOWING_WATER || location.getBlockType() == BlockTypes.LAVA || location.getBlockType() == BlockTypes.FLOWING_LAVA) && location.getBlockType().getProperty(ReplaceableProperty.class).get().getValue();
     }
 
-    public boolean isBlockBuried(Location<World> location) {
+    private boolean isBlockBuried(Location<World> location) {
         return location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW_LAYER || location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW;
     }
 

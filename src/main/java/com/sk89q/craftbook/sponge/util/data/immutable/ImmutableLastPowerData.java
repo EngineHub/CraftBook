@@ -21,7 +21,9 @@ import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableBoundedComparableData;
 import org.spongepowered.api.data.value.immutable.ImmutableBoundedValue;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
+@NonnullByDefault
 public class ImmutableLastPowerData extends AbstractImmutableBoundedComparableData<Integer, ImmutableLastPowerData, LastPowerData> {
     public ImmutableLastPowerData() {
         this(0);

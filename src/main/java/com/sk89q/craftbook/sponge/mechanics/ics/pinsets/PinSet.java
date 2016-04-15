@@ -39,7 +39,7 @@ public abstract class PinSet {
         if(outputId == -1) return;
 
         if (getOutput(outputId, ic) != powered) {
-            Location<World> block = getPinLocation(outputId + getInputCount(), ic);
+            Location<?> block = getPinLocation(outputId + getInputCount(), ic);
 
             if (!block.supports(Keys.POWERED)) return; // Can't set this.
 
@@ -70,5 +70,5 @@ public abstract class PinSet {
 
     public abstract String getName();
 
-    public abstract Location<World> getPinLocation(int id, IC ic);
+    public abstract Location<?> getPinLocation(int id, IC ic);
 }

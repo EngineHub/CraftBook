@@ -24,9 +24,9 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ICManager {
+class ICManager {
 
-    public static Set<ICType<? extends IC>> registeredICTypes = new HashSet<>();
+    private static Set<ICType<? extends IC>> registeredICTypes = new HashSet<>();
 
     static {
         registerICType(new ICType<>("MC1000", "REPEATER", Repeater.class));

@@ -25,7 +25,7 @@ import org.spongepowered.api.block.trait.BlockTrait;
 
 import java.util.*;
 
-public class BlockFilter {
+public final class BlockFilter {
 
     private String rule;
 

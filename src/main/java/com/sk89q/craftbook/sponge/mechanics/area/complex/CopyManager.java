@@ -86,8 +86,7 @@ public class CopyManager {
         id = id.toLowerCase(Locale.ENGLISH);
 
         File folder = new File(new File(CraftBookPlugin.inst().getWorkingDirectory(), "areas"), namespace);
-        CuboidCopy copy = CuboidCopy.load(new File(folder, id + getFileSuffix()), world);
-        return copy;
+        return CuboidCopy.load(new File(folder, id + getFileSuffix()), world);
     }
 
     /**

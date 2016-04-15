@@ -26,7 +26,7 @@ import org.spongepowered.api.service.permission.PermissionService;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 
-public class SpongePermissionNode extends PermissionNode {
+public final class SpongePermissionNode extends PermissionNode {
 
     private PermissionDescription permissionDescription;
 

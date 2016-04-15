@@ -238,11 +238,11 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         };
     }
 
-    public class GateColumn {
+    private final class GateColumn {
 
         Location topBlock;
 
-        public GateColumn(Location topBlock) {
+        GateColumn(Location topBlock) {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }

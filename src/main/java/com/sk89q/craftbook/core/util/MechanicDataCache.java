@@ -46,19 +46,19 @@ public abstract class MechanicDataCache {
     public <T extends MechanicData> T getMechanicData(Class<T> clazz, String locationKey) {
         if (locationKey == null) return null;
 
-        Object data = null;
+        T data = null;
         try {
-            data = mechanicData.getIfPresent(locationKey);
+            data = (T) mechanicData.getIfPresent(locationKey);
         } catch(Throwable e) {
             CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to load some data: " + locationKey, e);
         }
 
         if (data == null || !clazz.isInstance(data)) {
             data = loadFromDisk(clazz, locationKey);
-            mechanicData.put(locationKey, (MechanicData) data);
+            mechanicData.put(locationKey, data);
         }
 
-        return (T) data;
+        return data;
     }
 
     public void clearAll() {

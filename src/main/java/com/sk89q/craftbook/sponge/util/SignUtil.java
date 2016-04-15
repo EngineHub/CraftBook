@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * Convenience methods for dealing with some sign block data.
  */
-public class SignUtil {
+public final class SignUtil {
 
     /**
      * Gets whether or not the block at this location is a sign.

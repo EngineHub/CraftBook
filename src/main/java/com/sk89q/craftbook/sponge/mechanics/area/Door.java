@@ -72,7 +72,7 @@ public class Door extends SimpleArea implements DocumentationProvider {
                 return true;
             }
 
-            Location otherSide = getOtherEnd(block, back, maximumLength.getValue());
+            Location otherSide = BlockUtil.getNextMatchingSign(block, back, maximumLength.getValue(), this::isMechanicSign);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Missing other end!").build());
                 return true;

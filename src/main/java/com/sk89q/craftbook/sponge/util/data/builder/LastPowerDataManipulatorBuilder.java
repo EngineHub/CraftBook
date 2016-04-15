@@ -23,9 +23,11 @@ import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.util.Optional;
 
+@NonnullByDefault
 public class LastPowerDataManipulatorBuilder implements DataManipulatorBuilder<LastPowerData, ImmutableLastPowerData> {
 
     @Override

@@ -20,6 +20,5 @@ import org.spongepowered.api.world.Location;
 
 @FunctionalInterface
 public interface SelfTriggeringMechanic {
-
-    void onThink(Location location);
+    void onThink(Location<?> location);
 }

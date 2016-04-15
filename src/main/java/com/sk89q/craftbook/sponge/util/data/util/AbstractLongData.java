@@ -21,7 +21,9 @@ import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.manipulator.ImmutableDataManipulator;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleData;
 import org.spongepowered.api.data.value.BaseValue;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
+@NonnullByDefault
 public abstract class AbstractLongData<M extends DataManipulator<M, I>, I extends ImmutableDataManipulator<I, M>>
         extends AbstractSingleData<Long, M, I> {
 
@@ -31,6 +33,6 @@ public abstract class AbstractLongData<M extends DataManipulator<M, I>, I extend
 
     @Override
     public int compareTo(M o) {
-        return Long.compare(o.get(this.usedKey).get(), this.getValue());
+        return Long.compare(o.get(this.usedKey).orElse(0L), this.getValue());
     }
 }

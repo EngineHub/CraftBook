@@ -23,7 +23,7 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
 import java.io.*;
 
-public class SpongeDataCache extends MechanicDataCache {
+public final class SpongeDataCache extends MechanicDataCache {
 
     @Override
     protected <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey) {

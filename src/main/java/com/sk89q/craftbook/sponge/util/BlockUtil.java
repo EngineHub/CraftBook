@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.util;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.util.Direction;
@@ -26,8 +27,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.*;
+import java.util.function.Predicate;
 
-public class BlockUtil {
+public final class BlockUtil {
 
     /**
      * Gets the relative direction of 'other' from 'base'.
@@ -171,5 +173,19 @@ public class BlockUtil {
 
     public static int getMinimumLength(Location firstBlock, Location secondBlock, BlockState testState, Direction direction, int maximum) {
         return Math.min(getLength(firstBlock, testState, direction, maximum), getLength(secondBlock, testState, direction, maximum));
+    }
+
+    public static Location getNextMatchingSign(Location block, Direction back, int maximumLength, Predicate<Sign> predicate) {
+        for (int i = 0; i < maximumLength; i++) {
+            block = block.getRelative(back);
+            if (SignUtil.isSign(block)) {
+                Sign sign = (Sign) block.getTileEntity().get();
+
+                if (predicate.test(sign)) {
+                    return block;
+                }
+            }
+        }
+        return null;
     }
 }

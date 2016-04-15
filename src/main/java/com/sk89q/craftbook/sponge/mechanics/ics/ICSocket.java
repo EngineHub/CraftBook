@@ -47,7 +47,7 @@ import java.util.Map.Entry;
 @Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
-    public static final HashMap<String, PinSet> PINSETS = new HashMap<>();
+    static final HashMap<String, PinSet> PINSETS = new HashMap<>();
 
     static {
         PINSETS.put("SISO", new PinsSISO());
@@ -100,7 +100,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Override
-    public void onThink(Location block) {
+    public void onThink(Location<?> block) {
         BaseICData data = createICData(block);
         if (data == null) return;
         if (!(data.ic instanceof SelfTriggeringIC)) return;
@@ -108,11 +108,11 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<?> location) {
         return createICData(location) != null;
     }
 
-    public BaseICData createICData(Location block) {
+    public BaseICData createICData(Location<?> block) {
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             if(block.getExtent() instanceof Chunk)
                 block = ((Chunk) block.getExtent()).getWorld().getLocation(block.getX(), block.getY(), block.getZ());
@@ -150,7 +150,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return new String[0];
     }
 
-    public static class BaseICData extends SpongeMechanicData {
+    private static class BaseICData extends SpongeMechanicData {
         public IC ic;
     }
 }
