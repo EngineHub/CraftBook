@@ -16,10 +16,16 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import org.spongepowered.api.block.BlockTypes;
+import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.living.player.Player;
@@ -38,12 +44,23 @@ import java.util.Optional;
 @Module(moduleName = "TreeLopper", onEnable="onInitialize", onDisable="onDisable")
 public class TreeLopper extends SpongeMechanic {
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that are logs.", getDefaultBlocks(), new BlockFilterListTypeToken());
+
+    @Override
+    public void onInitialize() {
+        allowedBlocks.load(config);
+    }
+
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event, @Named(NamedCause.SOURCE) Player player) {
-        event.getTransactions().forEach((transaction) -> {
-            if(transaction.getOriginal().getState().getType() == BlockTypes.LOG || transaction.getOriginal().getState().getType() == BlockTypes.LOG2) {
-                checkBlocks(transaction.getOriginal().getLocation().get(), player, transaction.getOriginal().get(Keys.TREE_TYPE).get(), new ArrayList<>());
-            }
+        event.getTransactions().stream().filter((t) -> BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), t.getOriginal().getState())).forEach((transaction) -> {
+            Optional<TreeType> treeType = transaction.getOriginal().get(Keys.TREE_TYPE);
+            if(treeType.isPresent())
+                checkBlocks(transaction.getOriginal().getLocation().get(), player, treeType.get(), new ArrayList<>());
         });
     }
 
@@ -53,14 +70,20 @@ public class TreeLopper extends SpongeMechanic {
         traversed.add(block);
 
         Optional<TreeType> data = block.getBlock().get(Keys.TREE_TYPE);
-        if(!data.isPresent()) return;
 
-        if(data.get().equals(type)) { //Same tree type.
+        if(data.isPresent() && data.get().equals(type)) { //Same tree type.
             //block.digBlockWith(player.getItemInHand().get());
             block.removeBlock();
             for(Direction dir : BlockUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }
         }
+    }
+
+    private static List<BlockFilter> getDefaultBlocks() {
+        List<BlockFilter> states = Lists.newArrayList();
+        states.add(new BlockFilter("LOG"));
+        states.add(new BlockFilter("LOG2"));
+        return states;
     }
 }
