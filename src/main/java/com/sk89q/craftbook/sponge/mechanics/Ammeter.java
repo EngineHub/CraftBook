@@ -22,6 +22,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
@@ -42,7 +44,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "Ammeter", onEnable="onInitialize", onDisable="onDisable")
-public class Ammeter extends SpongeBlockMechanic {
+public class Ammeter extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -96,5 +98,34 @@ public class Ammeter extends SpongeBlockMechanic {
     @Override
     public boolean isValid(Location location) {
         return location.get(Keys.POWER).isPresent();
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/ammeter";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[] {
+                "The ammeter allows you to get the current level in wires and redstone devices. ",
+                "",
+                "Right click any redstone device while holding coal to see the meter's output. " +
+                        "The current in wires decrease by one every block and source blocks emit a level of 15, giving us the wire length limit of 15 blocks."
+        };
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[] {
+                ammeterItem
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                permissionNode
+        };
     }
 }
