@@ -294,6 +294,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     its.add(ItemSyntax.getStringFromItem(stack));
                     items.put(event.getEntity().getName(), its);
                     CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
+                    break;
                 }
             }
         }
