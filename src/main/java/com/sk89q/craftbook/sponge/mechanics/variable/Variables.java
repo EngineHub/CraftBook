@@ -205,6 +205,11 @@ public class Variables extends SpongeMechanic {
     public static Set<String> getPossibleVariables(String line) {
         Set<String> variables = new HashSet<>();
 
+        if(!line.contains("%"))
+            return variables;
+
+        //FIXME
+
         for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
             if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
             if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
