@@ -28,8 +28,8 @@ import org.spongepowered.api.text.format.TextColors;
 
 public class SetVariableCommand implements CommandExecutor {
 
-    Variables variables;
-    boolean global;
+    private Variables variables;
+    private boolean global;
 
     public SetVariableCommand(Variables variables, boolean global) {
         this.variables = variables;

@@ -52,7 +52,7 @@ public class Variables extends SpongeMechanic {
 
     public static Variables instance;
 
-    Map<String, Map<String, String>> variableStore;
+    private Map<String, Map<String, String>> variableStore;
 
     @Inject
     @ModuleConfiguration

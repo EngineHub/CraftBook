@@ -52,9 +52,9 @@ import java.util.EnumSet;
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeSignMechanic implements DocumentationProvider {
 
-    ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
+    private ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
 
-    SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator.create", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator.create", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
 
     @Inject
     @ModuleConfiguration

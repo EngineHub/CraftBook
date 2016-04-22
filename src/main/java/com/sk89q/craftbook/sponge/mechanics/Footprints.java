@@ -48,7 +48,7 @@ public class Footprints extends SpongeMechanic {
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    protected ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterListTypeToken());
+    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterListTypeToken());
 
     private ParticleEffect footprintParticle;
 
@@ -84,11 +84,12 @@ public class Footprints extends SpongeMechanic {
         }
     }
 
-    public static List<BlockFilter> getDefaultBlocks() {
+    private static List<BlockFilter> getDefaultBlocks() {
         List<BlockFilter> states = Lists.newArrayList();
         states.add(new BlockFilter("SAND"));
         states.add(new BlockFilter("DIRT"));
         states.add(new BlockFilter("GRAVEL"));
+        states.add(new BlockFilter("SNOW"));
         return states;
     }
 
