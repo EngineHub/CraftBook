@@ -6,6 +6,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
@@ -24,7 +26,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "LightStone", onEnable="onInitialize", onDisable="onDisable")
-public class LightStone extends SpongeBlockMechanic {
+public class LightStone extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -52,31 +54,55 @@ public class LightStone extends SpongeBlockMechanic {
         }
     }
 
-    private static Text getCurrentLine(int powerLevel) {
+    private static Text getCurrentLine(int lightLevel) {
         Text.Builder builder = Text.builder();
         builder.append(Text.of(TextColors.YELLOW, "LightStone: ["));
         TextColor color;
-        if (powerLevel > 10)
-            color = TextColors.DARK_GREEN;
-        else if (powerLevel > 5)
-            color = TextColors.GOLD;
-        else if (powerLevel > 0)
-            color = TextColors.DARK_RED;
+        if (lightLevel >= 9)
+            color = TextColors.GREEN;
         else
-            color = TextColors.BLACK;
+            color = TextColors.DARK_RED;
 
-        for (int i = 0; i < powerLevel; i++)
+        for (int i = 0; i < lightLevel; i++)
             builder.append(Text.of(color, "|"));
 
-        for (int i = powerLevel; i < 15; i++)
+        for (int i = lightLevel; i < 15; i++)
             builder.append(Text.of(TextColors.BLACK, "|"));
         builder.append(Text.of(TextColors.YELLOW, ']'));
-        builder.append(Text.of(TextColors.WHITE, " " + powerLevel + " L"));
+        builder.append(Text.of(TextColors.WHITE, " " + lightLevel + " L"));
         return builder.build();
     }
 
     @Override
     public boolean isValid(Location location) {
         return BlockUtil.getLightLevel(location) >= 0;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/lightstone";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[]{
+                "The LightStone mechanic allows you to get the current light level for a block. Right click any block while holding GlowStone Dust to see the light level.",
+                "",
+                "If the light level is high enough that monsters won't spawn, the bar is shown as green. If they are able to spawn at the clicked location, it will be shown as red."
+        };
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[] {
+                lightstoneItem
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                permissionNode
+        };
     }
 }
