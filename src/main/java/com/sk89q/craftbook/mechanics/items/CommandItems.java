@@ -124,8 +124,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 public void run () {
 
                     for(Player player : Bukkit.getOnlinePlayers()) {
-                        if(player.getItemInHand() != null)
-                            performCommandItems(player.getItemInHand(), player, null);
+                        if(player.getInventory().getItemInMainHand() != null)
+                            performCommandItems(player.getInventory().getItemInMainHand(), player, null);
+                        if(player.getInventory().getItemInOffHand() != null)
+                            performCommandItems(player.getInventory().getItemInOffHand(), player, null);
                         for(ItemStack stack : player.getInventory().getArmorContents())
                             if(stack != null)
                                 performCommandItems(stack, player, null);
@@ -166,7 +168,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event.getItem() == null)
             return;
 
-        if(event.getAction() == Action.PHYSICAL || event.getHand() != EquipmentSlot.HAND)
+        if(event.getAction() == Action.PHYSICAL)
             return;
 
         performCommandItems(event.getItem(), event.getPlayer(), event);
@@ -230,10 +232,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority=EventPriority.HIGH)
     public void onBlockPlace(final BlockPlaceEvent event) {
 
-        if(event.getPlayer().getItemInHand() == null)
+        if(event.getItemInHand() == null)
             return;
 
-        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+        performCommandItems(event.getItemInHand(), event.getPlayer(), event);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -417,10 +419,19 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 }
 
                 if(def.consumeSelf) {
-                    if(player.getItemInHand().getAmount() > 1)
-                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-                    else
-                        player.setItemInHand(null);
+
+                    if(event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getHand() == EquipmentSlot.OFF_HAND
+                            || event instanceof BlockPlaceEvent && ((BlockPlaceEvent) event).getHand() == EquipmentSlot.OFF_HAND) {
+                        if (player.getInventory().getItemInOffHand().getAmount() > 1)
+                            player.getInventory().getItemInOffHand().setAmount(player.getInventory().getItemInOffHand().getAmount() - 1);
+                        else
+                            player.getInventory().setItemInOffHand(null);
+                    } else {
+                        if (player.getInventory().getItemInMainHand().getAmount() > 1)
+                            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                        else
+                            player.getInventory().setItemInMainHand(null);
+                    }
                 }
 
                 player.updateInventory();
