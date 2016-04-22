@@ -21,7 +21,9 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.data.property.block.PoweredProperty;
+import org.spongepowered.api.data.property.block.SkyLuminanceProperty;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -67,6 +69,28 @@ public final class BlockUtil {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Gets the combined light level of this block.
+     *
+     * <p>
+     *     Note: This includes both sky and block light levels.
+     * </p>
+     *
+     * @param block The block.
+     * @return The light level
+     */
+    public static int getLightLevel(Location<?> block) {
+        Optional<GroundLuminanceProperty> groundLuminanceProperty = block.getProperty(GroundLuminanceProperty.class);
+        Optional<SkyLuminanceProperty> skyLuminanceProperty = block.getProperty(SkyLuminanceProperty.class);
+        if(groundLuminanceProperty.isPresent() && skyLuminanceProperty.isPresent())
+            return (groundLuminanceProperty.get().getValue().intValue() + skyLuminanceProperty.get().getValue().intValue()) / 2;
+        else if(groundLuminanceProperty.isPresent())
+            return groundLuminanceProperty.get().getValue().intValue();
+        else if(skyLuminanceProperty.isPresent())
+            return skyLuminanceProperty.get().getValue().intValue();
+        return 0;
     }
 
     public static BlockState getBlockStateFromString(String rule) {
