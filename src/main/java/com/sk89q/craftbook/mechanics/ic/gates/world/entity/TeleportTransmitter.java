@@ -1,31 +1,19 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICMechanic;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.PlayerType;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.Tuple2;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
@@ -203,6 +191,8 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list", new HashSet<String>(TeleportTransmitter.lastKnownLocations.keySet()));
 
             for(Entry<String, Location> locations : TeleportTransmitter.lastKnownLocations.entrySet()) {
+                if(locations == null || locations.getValue() == null)
+                    continue;
 
                 String loc = locations.getValue().getWorld().getName() + ":" + locations.getValue().getBlockX() + ":" + locations.getValue().getBlockY() + ":" + locations.getValue().getBlockZ();
 
