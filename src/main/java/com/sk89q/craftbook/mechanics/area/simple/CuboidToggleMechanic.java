@@ -1,15 +1,5 @@
 package com.sk89q.craftbook.mechanics.area.simple;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -24,6 +14,15 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class that can be a mechanic that toggles a cuboid. This is basically either Door or Bridge.
@@ -182,8 +181,12 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             Block base;
             try {
                 base = getBlockBase(event.getBlock());
-                ItemStack toDrop = new ItemStack(base.getType(), getBlocks(sign, other), base.getData());
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
+                int amount = getBlocks(sign, other);
+                while(amount > 0) {
+                    ItemStack toDrop = new ItemStack(base.getType(), Math.min(amount, 64), base.getData());
+                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
+                    amount -= 64;
+                }
             } catch (InvalidMechanismException e) {
                 if(e.getMessage() != null)
                     player.printError(e.getMessage());
