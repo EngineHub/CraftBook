@@ -37,7 +37,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public abstract boolean isApplicableSign(String line);
 
-    public boolean open(Block sign, Block farSide, Block base, CuboidRegion toggle) {
+    public static boolean open(Block sign, Block farSide, Block base, CuboidRegion toggle) {
 
         ChangedSign s = BukkitUtil.toChangedSign(sign);
         ChangedSign other = BukkitUtil.toChangedSign(farSide);
@@ -194,7 +194,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean removeBlocks(ChangedSign s, ChangedSign other, int amount) {
+    public static boolean removeBlocks(ChangedSign s, ChangedSign other, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s, other) - amount;
@@ -203,7 +203,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return curBlocks >= 0;
     }
 
-    public boolean addBlocks(ChangedSign s, ChangedSign other, int amount) {
+    public static boolean addBlocks(ChangedSign s, ChangedSign other, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s, other) + amount;
@@ -212,14 +212,14 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return curBlocks >= 0;
     }
 
-    public void setBlocks(ChangedSign s, int amount) {
+    public static void setBlocks(ChangedSign s, int amount) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return;
         s.setLine(0, String.valueOf(amount));
         s.update(false);
     }
 
-    public int getBlocks(ChangedSign s, ChangedSign other) {
+    public static int getBlocks(ChangedSign s, ChangedSign other) {
 
         if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
             return 0;
@@ -240,7 +240,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return curBlocks;
     }
 
-    public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
+    public static boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
         return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
