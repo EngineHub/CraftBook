@@ -103,7 +103,7 @@ public final class ItemUtil {
                 return false;
         }
 
-        return passesFilters;
+        return true;
     }
 
     public static boolean areItemsSimilar(ItemStack item, Material type) {
