@@ -398,6 +398,8 @@ public final class ItemUtil {
                 return new ItemStack(Material.COOKED_MUTTON);
             case RABBIT:
                 return new ItemStack(Material.COOKED_RABBIT);
+            case CHORUS_FRUIT:
+                return new ItemStack(Material.CHORUS_FRUIT_POPPED);
             default:
                 return null;
         }
