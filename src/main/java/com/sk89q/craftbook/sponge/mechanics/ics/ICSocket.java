@@ -150,7 +150,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return new String[0];
     }
 
-    private static class BaseICData extends SpongeMechanicData {
+    public static class BaseICData extends SpongeMechanicData {
         public IC ic;
     }
 }
