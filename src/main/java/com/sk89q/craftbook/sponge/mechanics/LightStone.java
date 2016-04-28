@@ -47,11 +47,13 @@ public class LightStone extends SpongeBlockMechanic implements DocumentationProv
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
-        int lightLevel = BlockUtil.getLightLevel(event.getTargetBlock().getLocation().get());
-        if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == lightstoneItem.getValue().getItem()) {
-            player.sendMessage(getCurrentLine(lightLevel));
-            event.setCancelled(true);
-        }
+        event.getTargetBlock().getLocation().ifPresent((location) -> {
+            int lightLevel = BlockUtil.getLightLevel(location);
+            if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == lightstoneItem.getValue().getItem()) {
+                player.sendMessage(getCurrentLine(lightLevel));
+                event.setCancelled(true);
+            }
+        });
     }
 
     private static Text getCurrentLine(int lightLevel) {
