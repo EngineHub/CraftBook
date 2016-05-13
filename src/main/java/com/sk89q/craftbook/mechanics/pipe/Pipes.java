@@ -44,8 +44,10 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             Block pistonBlock;
 
-            if(((pistonBlock = SignUtil.getBackBlock(event.getBlock())).getType() == Material.PISTON_STICKY_BASE)
-                    || (event.getBlock().getType() == Material.SIGN_POST && ((pistonBlock = event.getBlock().getRelative(BlockFace.UP)).getType() == Material.PISTON_STICKY_BASE || (pistonBlock = event.getBlock().getRelative(BlockFace.DOWN)).getType() == Material.PISTON_STICKY_BASE))) {
+            if((isPiston(pistonBlock = SignUtil.getBackBlock(event.getBlock())))
+                    || (event.getBlock().getType() == Material.SIGN_POST
+                    && (isPiston(pistonBlock = event.getBlock().getRelative(BlockFace.UP))
+                    || isPiston(pistonBlock = event.getBlock().getRelative(BlockFace.DOWN))))) {
                 PistonBaseMaterial pis = (PistonBaseMaterial) pistonBlock.getState().getData();
                 Block off = pistonBlock.getRelative(pis.getFacing());
                 if (InventoryUtil.doesBlockHaveInventory(off)) {
@@ -65,6 +67,10 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         event.setLine(1, "[Pipe]");
         player.print("circuits.pipes.create");
+    }
+
+    private static boolean isPiston(Block block) {
+        return block.getType() == Material.PISTON_BASE || block.getType() == Material.PISTON_STICKY_BASE;
     }
 
     public static ChangedSign getSignOnPiston(Block block) {
