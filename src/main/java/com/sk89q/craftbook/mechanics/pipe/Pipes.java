@@ -1,22 +1,17 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Dropper;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Jukebox;
+import org.bukkit.block.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -25,24 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PistonBaseMaterial;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.VerifyUtil;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.*;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
@@ -62,17 +40,24 @@ public class Pipes extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(ProtectionUtil.shouldUseProtection() && SignUtil.getBackBlock(event.getBlock()).getType() == Material.PISTON_STICKY_BASE) {
+        if(ProtectionUtil.shouldUseProtection()) {
 
-            PistonBaseMaterial pis = (PistonBaseMaterial) SignUtil.getBackBlock(event.getBlock()).getState().getData();
-            Block off = SignUtil.getBackBlock(event.getBlock()).getRelative(pis.getFacing());
-            if(InventoryUtil.doesBlockHaveInventory(off)) {
-                if(!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
-                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
-                        player.printError("area.use-permission");
-                    SignUtil.cancelSign(event);
-                    return;
+            if((event.getBlock().getType() == Material.WALL_SIGN && SignUtil.getBackBlock(event.getBlock()).getType() == Material.PISTON_STICKY_BASE)
+                    || (event.getBlock().getType() == Material.SIGN_POST && (event.getBlock().getRelative(BlockFace.UP).getType() == Material.PISTON_STICKY_BASE || event.getBlock().getRelative(BlockFace.DOWN).getType() == Material.PISTON_STICKY_BASE))) {
+                PistonBaseMaterial pis = (PistonBaseMaterial) SignUtil.getBackBlock(event.getBlock()).getState().getData();
+                Block off = SignUtil.getBackBlock(event.getBlock()).getRelative(pis.getFacing());
+                if (InventoryUtil.doesBlockHaveInventory(off)) {
+                    if (!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
+                        if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                            player.printError("area.use-permission");
+                        SignUtil.cancelSign(event);
+                        return;
+                    }
                 }
+            } else {
+                player.printError("circuits.pipes.pipe-not-found");
+                SignUtil.cancelSign(event);
+                return;
             }
         }
 
@@ -451,10 +436,10 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    boolean pipesDiagonal;
-    ItemInfo pipeInsulator;
-    boolean pipeStackPerPull;
-    boolean pipeRequireSign;
+    private boolean pipesDiagonal;
+    private ItemInfo pipeInsulator;
+    private boolean pipeStackPerPull;
+    private boolean pipeRequireSign;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
