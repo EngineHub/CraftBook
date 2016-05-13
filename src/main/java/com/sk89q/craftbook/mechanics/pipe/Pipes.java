@@ -42,10 +42,12 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if(ProtectionUtil.shouldUseProtection()) {
 
-            if((SignUtil.getBackBlock(event.getBlock()).getType() == Material.PISTON_STICKY_BASE)
-                    || (event.getBlock().getType() == Material.SIGN_POST && (event.getBlock().getRelative(BlockFace.UP).getType() == Material.PISTON_STICKY_BASE || event.getBlock().getRelative(BlockFace.DOWN).getType() == Material.PISTON_STICKY_BASE))) {
-                PistonBaseMaterial pis = (PistonBaseMaterial) SignUtil.getBackBlock(event.getBlock()).getState().getData();
-                Block off = SignUtil.getBackBlock(event.getBlock()).getRelative(pis.getFacing());
+            Block pistonBlock;
+
+            if(((pistonBlock = SignUtil.getBackBlock(event.getBlock())).getType() == Material.PISTON_STICKY_BASE)
+                    || (event.getBlock().getType() == Material.SIGN_POST && ((pistonBlock = event.getBlock().getRelative(BlockFace.UP)).getType() == Material.PISTON_STICKY_BASE || (pistonBlock = event.getBlock().getRelative(BlockFace.DOWN)).getType() == Material.PISTON_STICKY_BASE))) {
+                PistonBaseMaterial pis = (PistonBaseMaterial) pistonBlock.getState().getData();
+                Block off = pistonBlock.getRelative(pis.getFacing());
                 if (InventoryUtil.doesBlockHaveInventory(off)) {
                     if (!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
                         if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
