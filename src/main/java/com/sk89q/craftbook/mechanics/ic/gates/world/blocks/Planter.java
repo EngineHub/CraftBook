@@ -1,10 +1,12 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.SearchArea;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -20,18 +22,10 @@ import org.bukkit.material.CocoaPlant;
 import org.bukkit.material.Dye;
 import org.bukkit.material.Tree;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.SearchArea;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
@@ -218,7 +212,8 @@ public class Planter extends AbstractSelfTriggeredIC {
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
             case WATER_LILY:
-                block.setTypeIdAndData(item.getTypeId(), (byte)0, true);
+                block.setTypeIdAndData(item.getTypeId(), item.getData().getData(), true);
+                return true;
             case SEEDS:
                 block.setTypeIdAndData(Material.CROPS.getId(), (byte) 0, true);
                 return true;
