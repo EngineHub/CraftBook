@@ -46,7 +46,7 @@ public class JackOLantern extends SimplePowerable {
     public void updateState(Location<?> location, boolean powered) {
         Direction direction = location.get(Keys.DIRECTION).orElse(Direction.NORTH);
         BlockState state = BlockState.builder().blockType(powered ? BlockTypes.LIT_PUMPKIN : BlockTypes.PUMPKIN).build();
-        state = state.with(Keys.DIRECTION, direction).get();
+        state = state.with(Keys.DIRECTION, direction).orElse(state);
         location.setBlock(state);
     }
 

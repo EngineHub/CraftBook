@@ -54,15 +54,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         PINSETS.put("3ISO", new Pins3ISO());
     }
 
-    /**
-     * Gets the IC that is in use by this IC Socket.
-     * 
-     * @return The IC
-     */
-    public IC getIC(Location block) {
-        return createICData(block).ic;
-    }
-
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -92,8 +83,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             boolean powered = entries.getValue().get(Keys.POWER).orElse(0) > 0;
 
-            if (powered != data.ic.getPinSet().getInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get().getRelative(entries.getKey())), data.ic)) {
-                data.ic.getPinSet().setInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get().getRelative(entries.getKey())), powered, data.ic);
+            if (powered != PinSet.getInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get().getRelative(entries.getKey())), data.ic)) {
+                PinSet.setInput(data.ic.getPinSet().getPinForLocation(data.ic, source.getLocation().get().getRelative(entries.getKey())), powered, data.ic);
                 data.ic.trigger();
             }
         }
@@ -112,7 +103,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return createICData(location) != null;
     }
 
-    public BaseICData createICData(Location<?> block) {
+    private BaseICData createICData(Location<?> block) {
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             if(block.getExtent() instanceof Chunk)
                 block = ((Chunk) block.getExtent()).getWorld().getLocation(block.getX(), block.getY(), block.getZ());

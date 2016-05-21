@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -36,7 +37,7 @@ public abstract class TwoInputLogicGate extends IC {
         // New input handling: any/first two valid inputs discovered. Moar flexibility!
         for (int i = 0; i < getPinSet().getInputCount(); i++) {
             if (getPinSet().isValid(i, this)) {
-                boolean pinval = getPinSet().getInput(i, this);
+                boolean pinval = PinSet.getInput(i, this);
                 // Got pin value, assign to first free variable, break if got both.
                 if (a == null) {
                     a = pinval;
@@ -53,5 +54,5 @@ public abstract class TwoInputLogicGate extends IC {
         getPinSet().setOutput(0, getResult(a, b), this);
     }
 
-    protected abstract boolean getResult(boolean a, boolean b);
+    abstract boolean getResult(boolean a, boolean b);
 }

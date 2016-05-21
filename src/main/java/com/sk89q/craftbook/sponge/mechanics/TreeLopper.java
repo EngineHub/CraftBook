@@ -64,7 +64,7 @@ public class TreeLopper extends SpongeMechanic {
         });
     }
 
-    private void checkBlocks(Location<World> block, Player player, TreeType type, List<Location> traversed) {
+    private static void checkBlocks(Location<World> block, Player player, TreeType type, List<Location> traversed) {
         if(traversed.contains(block)) return;
 
         traversed.add(block);

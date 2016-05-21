@@ -18,12 +18,13 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public abstract class AnyInputLogicGate extends IC {
+abstract class AnyInputLogicGate extends IC {
 
-    public AnyInputLogicGate(ICType<? extends IC> type, Location<World> block) {
+    AnyInputLogicGate(ICType<? extends IC> type, Location<World> block) {
         super(type, block);
     }
 
@@ -34,7 +35,7 @@ public abstract class AnyInputLogicGate extends IC {
             if (getPinSet().isValid(i, this)) {
                 valid++;
 
-                if (getPinSet().getInput(i, this)) {
+                if (PinSet.getInput(i, this)) {
                     on++;
                 }
             }

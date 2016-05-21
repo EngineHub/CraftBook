@@ -101,7 +101,7 @@ public class Snow extends SpongeMechanic {
         }
     }
 
-    private void decreaseSnow(Location<?> location) {
+    private static void decreaseSnow(Location<?> location) {
         Optional<MutableBoundedValue<Integer>> optionalHeightValue = location.getValue(Keys.LAYER);
         if(optionalHeightValue.isPresent()) {
             MutableBoundedValue<Integer> heightValue = optionalHeightValue.get();
@@ -153,7 +153,7 @@ public class Snow extends SpongeMechanic {
      * @param location The block.
      * @return If snow can reach it.
      */
-    private boolean canSnowReach(Location<?> location) {
+    private static boolean canSnowReach(Location<?> location) {
         while(location.getBlockY() < location.getExtent().getBlockMax().getY()) {
             location = location.getRelative(Direction.UP);
             if(location.getBlockType() != BlockTypes.AIR
@@ -170,18 +170,19 @@ public class Snow extends SpongeMechanic {
      * @param location The block.
      * @return If it can be replaced with snow.
      */
-    private boolean canPlaceSnowAt(Location<?> location) {
+    private static boolean canPlaceSnowAt(Location<?> location) {
         if (location.getBlockType() == BlockTypes.SNOW_LAYER)
             return true;
 
-        Optional<ReplaceableProperty> replaceableProperty = location.getBlockType().getProperty(ReplaceableProperty.class);
+        ReplaceableProperty replaceableProperty = location.getBlockType().getProperty(ReplaceableProperty.class).orElse(null);
 
-        return replaceableProperty.isPresent()
+        return replaceableProperty != null
                 && !(location.getBlockType() == BlockTypes.WATER
                 || location.getBlockType() == BlockTypes.FLOWING_WATER
                 || location.getBlockType() == BlockTypes.LAVA
                 || location.getBlockType() == BlockTypes.FLOWING_LAVA)
-                && replaceableProperty.get().getValue();
+                && replaceableProperty.getValue() != null
+                && replaceableProperty.getValue();
     }
 
     /**
@@ -190,7 +191,7 @@ public class Snow extends SpongeMechanic {
      * @param location The location of the block.
      * @return If it is buried.
      */
-    private boolean isBlockBuried(Location<?> location) {
+    private static boolean isBlockBuried(Location<?> location) {
         return location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW_LAYER
                 || location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW;
     }

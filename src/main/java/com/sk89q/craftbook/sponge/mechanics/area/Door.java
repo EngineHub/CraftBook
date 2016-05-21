@@ -60,7 +60,6 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
-
         if (!SignUtil.getTextRaw(sign, 1).equals("[Door]")) {
 
             Direction back = SignUtil.getTextRaw(sign, 1).equals("[Door Up]") ? Direction.UP : Direction.DOWN;
@@ -124,7 +123,6 @@ public class Door extends SimpleArea implements DocumentationProvider {
             if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
             while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
-
                 baseBlock.setBlock(type);
 
                 left = baseBlock.getRelative(SignUtil.getLeft(block));

@@ -75,27 +75,23 @@ public abstract class SimpleArea extends SpongeSignMechanic {
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
-
-        if(event.getTargetBlock().getLocation().isPresent()) {
-            if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
-                Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
-
-                if (isMechanicSign(sign)) {
+        event.getTargetBlock().getLocation().ifPresent(location -> {
+            if (isValid(location)) {
+                location.getTileEntity().ifPresent((sign -> {
                     if ((!(human instanceof Subject) || usePermissions.hasPermission((Subject) human))) {
-                        if (triggerMechanic(event.getTargetBlock().getLocation().get(), sign, human, null)) {
+                        if (triggerMechanic(location, (Sign) sign, human, null)) {
                             event.setCancelled(true);
                         }
                     } else if (human instanceof CommandSource) {
                         ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
                     }
-                }
+                }));
             }
-        }
+        });
     }
 
     @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
-
         if(!allowRedstone.getValue())
             return;
 

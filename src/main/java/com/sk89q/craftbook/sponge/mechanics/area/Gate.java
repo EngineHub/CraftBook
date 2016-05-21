@@ -46,6 +46,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Module(moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
@@ -67,40 +68,40 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
+        event.getTargetBlock().getLocation().ifPresent((location) -> {
+            super.onPlayerInteract(event, human);
 
-        super.onPlayerInteract(event, human);
+            if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock())) {
+                if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
+                    if(human instanceof CommandSource)
+                        ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                    return;
+                }
 
-        if (event.getTargetBlock().getLocation().isPresent() && BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetBlock().getLocation().get().getBlock())) {
-            if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
-                if(human instanceof CommandSource)
-                    ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
-                return;
-            }
+                int x = location.getBlockX();
+                int y = location.getBlockY();
+                int z = location.getBlockZ();
 
-            int x = event.getTargetBlock().getLocation().get().getBlockX();
-            int y = event.getTargetBlock().getLocation().get().getBlockY();
-            int z = event.getTargetBlock().getLocation().get().getBlockZ();
+                for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
+                    for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
+                        for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
+                            Location searchLocation = location.getExtent().getLocation(x1, y1, z1);
+                            Optional tileEntity = searchLocation.getTileEntity();
 
-            for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
-                for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
-                    for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
-
-                        Location location = event.getTargetBlock().getLocation().get().getExtent().getLocation(x1, y1, z1);
-
-                        if (SignUtil.isSign(location) && SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1).equals("[Gate]")) {
-                            Set<GateColumn> columns = new HashSet<>();
-                            BlockState state = findColumns(event.getTargetBlock().getLocation().get(), columns, event.getTargetBlock().getLocation().get().getBlock());
-                            toggleColumns(state, columns, null);
-                            return;
+                            if (SignUtil.isSign(searchLocation) && tileEntity.isPresent() && SignUtil.getTextRaw((Sign) tileEntity.get(), 1).equals("[Gate]")) {
+                                Set<GateColumn> columns = new HashSet<>();
+                                BlockState state = findColumns(location, columns, location.getBlock());
+                                toggleColumns(state, columns, null);
+                                return;
+                            }
                         }
                     }
                 }
             }
-        }
+        });
     }
 
-    public BlockState findColumns(Location block, Set<GateColumn> columns, BlockState state) {
-
+    private BlockState findColumns(Location block, Set<GateColumn> columns, BlockState state) {
         int x = block.getBlockX();
         int y = block.getBlockY();
         int z = block.getBlockZ();
@@ -132,10 +133,9 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return state;
     }
 
-    public BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
-
+    private BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
         if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
-            GateColumn column = new GateColumn(block);
+            GateColumn column = new GateColumn(block, allowedBlocks);
 
             Location temp = column.topBlock;
 
@@ -149,10 +149,10 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             }
 
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), temp.getBlock()) || temp.getBlockType() == BlockTypes.AIR) {
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH)))) state = searchColumn(temp.getRelative(Direction.NORTH), columns, state);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH)))) state = searchColumn(temp.getRelative(Direction.SOUTH), columns, state);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST)))) state = searchColumn(temp.getRelative(Direction.EAST), columns, state);
-                if (!columns.contains(new GateColumn(temp.getRelative(Direction.WEST)))) state = searchColumn(temp.getRelative(Direction.WEST), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.NORTH), allowedBlocks))) state = searchColumn(temp.getRelative(Direction.NORTH), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.SOUTH), allowedBlocks))) state = searchColumn(temp.getRelative(Direction.SOUTH), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.EAST), allowedBlocks))) state = searchColumn(temp.getRelative(Direction.EAST), columns, state);
+                if (!columns.contains(new GateColumn(temp.getRelative(Direction.WEST), allowedBlocks))) state = searchColumn(temp.getRelative(Direction.WEST), columns, state);
 
                 temp = temp.getRelative(Direction.DOWN);
             }
@@ -161,8 +161,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return state;
     }
 
-    public void toggleColumn(Location block, boolean on, BlockState gateType) {
-
+    private void toggleColumn(Location block, boolean on, BlockState gateType) {
         Direction dir = Direction.DOWN;
 
         block = block.getRelative(dir);
@@ -182,7 +181,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
-
         if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
 
             Set<GateColumn> columns = new HashSet<>();
@@ -199,7 +197,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return true;
     }
 
-    public void toggleColumns(BlockState state, Set<GateColumn> columns, Boolean forceState) {
+    private void toggleColumns(BlockState state, Set<GateColumn> columns, Boolean forceState) {
         for (GateColumn vec : columns) {
             Location col = vec.getBlock();
             if (forceState == null) {
@@ -238,11 +236,11 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         };
     }
 
-    private final class GateColumn {
+    private final static class GateColumn {
 
         Location topBlock;
 
-        GateColumn(Location topBlock) {
+        GateColumn(Location topBlock, ConfigValue<List<BlockFilter>> allowedBlocks) {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }

@@ -29,7 +29,7 @@ public abstract class PinSet {
 
     public abstract int getOutputCount();
 
-    public void setInput(int inputId, boolean powered, IC ic) {
+    public static void setInput(int inputId, boolean powered, IC ic) {
         if(inputId == -1) return;
         ic.getPinStates()[inputId] = powered;
     }
@@ -54,7 +54,7 @@ public abstract class PinSet {
         return -1;
     }
 
-    public boolean getInput(int inputId, IC ic) {
+    public static boolean getInput(int inputId, IC ic) {
         return inputId != -1 && ic.getPinStates()[inputId];
     }
 

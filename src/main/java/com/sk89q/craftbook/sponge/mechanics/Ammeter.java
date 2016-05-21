@@ -67,6 +67,7 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             int powerLevel = BlockUtil.getBlockPowerLevel(location).orElse(-1);
+
             if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == ammeterItem.getValue().getItem()) {
                 player.sendMessage(getCurrentLine(powerLevel));
                 event.setCancelled(true);

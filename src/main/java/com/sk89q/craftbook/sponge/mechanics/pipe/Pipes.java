@@ -77,7 +77,7 @@ public class Pipes extends SpongeBlockMechanic {
         }
     }
 
-    public void performPipeAction(Location<World> location) {
+    private void performPipeAction(Location<World> location) {
         Direction direction = location.get(Keys.DIRECTION).get();
         Location<World> inventorySource = location.getRelative(direction);
 

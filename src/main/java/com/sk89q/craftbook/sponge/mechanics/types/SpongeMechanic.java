@@ -53,9 +53,4 @@ public abstract class SpongeMechanic implements Mechanic {
         return CraftBookPlugin.inst().getCache().getMechanicData(clazz, builder.toString());
     }
 
-    @Override
-    public <T extends MechanicData> T getData(Class<T> clazz, String locationKey) {
-
-        return CraftBookPlugin.inst().getCache().getMechanicData(clazz, locationKey);
-    }
 }

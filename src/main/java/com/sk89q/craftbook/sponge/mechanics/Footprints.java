@@ -37,6 +37,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.util.Direction;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -59,12 +60,7 @@ public class Footprints extends SpongeMechanic {
         allowedBlocks.load(config);
     }
 
-    private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new CacheLoader<UUID, FootprintData>() {
-        @Override
-        public FootprintData load(UUID key) throws Exception {
-            return new FootprintData();
-        }
-    });
+    private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new FootprintDataCacheLoader());
 
     @Listener
     public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
@@ -108,6 +104,13 @@ public class Footprints extends SpongeMechanic {
 
         boolean canPlaceFootprint(Vector3d currentPosition) {
             return position.distanceSquared(currentPosition) > 1;
+        }
+    }
+
+    private static class FootprintDataCacheLoader extends CacheLoader<UUID, FootprintData> {
+        @Override
+        public FootprintData load(@Nonnull UUID key) throws Exception {
+            return new FootprintData();
         }
     }
 }

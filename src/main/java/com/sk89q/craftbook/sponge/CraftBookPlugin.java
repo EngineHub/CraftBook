@@ -67,7 +67,8 @@ public class CraftBookPlugin extends CraftBookAPI {
     public ModuleController moduleController;
 
     protected SpongeConfiguration config;
-    protected ConfigurationOptions configurationOptions;
+
+    ConfigurationOptions configurationOptions;
 
     /* Logging */
 
@@ -130,7 +131,7 @@ public class CraftBookPlugin extends CraftBookAPI {
                     break;
                 }
             } catch(ModuleNotInstantiatedException e) {
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to initialize module: " + module.getName(), e);
+                CraftBookAPI.<CraftBookPlugin>inst().logger.error("Failed to initialize module: " + module.getName(), e);
             }
         }
 
@@ -142,7 +143,7 @@ public class CraftBookPlugin extends CraftBookAPI {
                     if(mechanic instanceof DocumentationProvider)
                         DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
                 } catch (ModuleNotInstantiatedException e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to generate docs for module: " + module.getName(), e);
+                    CraftBookAPI.<CraftBookPlugin>inst().logger.error("Failed to generate docs for module: " + module.getName(), e);
                 }
             }
 

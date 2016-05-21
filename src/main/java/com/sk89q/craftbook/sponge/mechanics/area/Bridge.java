@@ -60,9 +60,7 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
-
         if (!SignUtil.getTextRaw(sign, 1).equals("[Bridge End]")) {
-
             Direction back = SignUtil.getBack(block);
 
             Location baseBlock = block.getRelative(Direction.DOWN);

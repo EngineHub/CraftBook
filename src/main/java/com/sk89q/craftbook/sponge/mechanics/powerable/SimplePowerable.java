@@ -31,21 +31,23 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class SimplePowerable extends SpongeBlockMechanic {
+abstract class SimplePowerable extends SpongeBlockMechanic {
 
     public abstract void updateState(Location<?> location, boolean powered);
 
     @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
-        if(isValid(source.getLocation().get())) {
-            boolean wasPowered = source.getLocation().get().get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
-            event.getNeighbors().entrySet().stream().map(
-                    (Function<Map.Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey())).
-                    collect(Collectors.toList()).stream().filter((block) -> wasPowered != (BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).orElse(0) > 0)).findFirst().ifPresent(block -> {
-                boolean isPowered = BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).orElse(0) > 0;
-                updateState(source.getLocation().get(), isPowered);
-                source.getLocation().get().offer(CraftBookKeys.LAST_POWER, isPowered ? 15 : 0);
-            });
-        }
+        source.getLocation().ifPresent((location) -> {
+            if(isValid(location)) {
+                boolean wasPowered = location.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
+                event.getNeighbors().entrySet().stream().map(
+                        (Function<Map.Entry<Direction, BlockState>, Location>) entry -> location.getRelative(entry.getKey())).
+                        collect(Collectors.toList()).stream().filter((block) -> wasPowered != (BlockUtil.getBlockPowerLevel(location, block).orElse(0) > 0)).findFirst().ifPresent(block -> {
+                    boolean isPowered = BlockUtil.getBlockPowerLevel(location, block).orElse(0) > 0;
+                    updateState(location, isPowered);
+                    location.offer(CraftBookKeys.LAST_POWER, isPowered ? 15 : 0);
+                });
+            }
+        });
     }
 }

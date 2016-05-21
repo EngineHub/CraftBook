@@ -48,6 +48,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 @Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeSignMechanic implements DocumentationProvider {
@@ -84,17 +85,18 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
 
-        if (event.getTargetBlock().getLocation().isPresent()) {
-            if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
+        event.getTargetBlock().getLocation().ifPresent((location) -> {
+            if (SignUtil.isSign(location)) {
+                Sign sign = (Sign) location.getTileEntity().get();
 
-                Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
+                Optional<Vector3d> interactionPoint = event.getInteractionPoint();
 
-                boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() < 0.5);
+                boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && interactionPoint.isPresent() && interactionPoint.get().getY() < 0.5);
 
-                if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() > 0.5))
-                    transportEntity(human, event.getTargetBlock().getLocation().get(), down ? Direction.DOWN : Direction.UP);
+                if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && interactionPoint.isPresent() && interactionPoint.get().getY() > 0.5))
+                    transportEntity(human, location, down ? Direction.DOWN : Direction.UP);
             }
-        }
+        });
     }
 
     @Listener
@@ -127,8 +129,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         }
     }
 
-    public void transportEntity(Entity entity, Location<World> block, Direction direction) {
-
+    private void transportEntity(Entity entity, Location<World> block, Direction direction) {
         Location<World> destination = findDestination(block, direction);
 
         if (destination == block) {
