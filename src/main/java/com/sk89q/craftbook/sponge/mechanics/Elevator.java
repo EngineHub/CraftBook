@@ -108,7 +108,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         Location<World> signLocation = null;
 
         //Look for dat sign
-        if(SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
+        if(LocationUtil.isLocationWithinRange(groundLocation.getRelative(Direction.DOWN)) && SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
             signLocation = groundLocation.getRelative(Direction.DOWN);
 
         if(signLocation != null) {
