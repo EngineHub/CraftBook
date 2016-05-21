@@ -84,13 +84,16 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
 
-        if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
+        if (event.getTargetBlock().getLocation().isPresent()) {
+            if (SignUtil.isSign(event.getTargetBlock().getLocation().get())) {
 
-            Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
+                Sign sign = (Sign) event.getTargetBlock().getLocation().get().getTileEntity().get();
 
-            boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() < 0.5);
+                boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() < 0.5);
 
-            if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() > 0.5)) transportEntity(human, event.getTargetBlock().getLocation().get(), down ? Direction.DOWN : Direction.UP);
+                if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && event.getInteractionPoint().isPresent() && event.getInteractionPoint().get().getY() > 0.5))
+                    transportEntity(human, event.getTargetBlock().getLocation().get(), down ? Direction.DOWN : Direction.UP);
+            }
         }
     }
 

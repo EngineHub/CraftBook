@@ -70,7 +70,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         super.onPlayerInteract(event, human);
 
-        if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetBlock().getLocation().get().getBlock())) {
+        if (event.getTargetBlock().getLocation().isPresent() && BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetBlock().getLocation().get().getBlock())) {
             if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
                 if(human instanceof CommandSource)
                     ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
