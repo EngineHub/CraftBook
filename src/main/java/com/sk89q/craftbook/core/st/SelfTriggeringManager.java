@@ -1,24 +1,29 @@
 package com.sk89q.craftbook.core.st;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.logging.Level;
 
-public class SelfTriggeringManager {
+public class SelfTriggeringManager implements Listener {
 
     /**
      * List of mechanics that think on a routine basis.
@@ -111,5 +116,28 @@ public class SelfTriggeringManager {
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onChunkLoad(final ChunkLoadEvent event) {
+
+        if (!EventUtil.passesFilter(event))
+            return;
+
+        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+            @Override
+            public void run() {
+                registerSelfTrigger(event.getChunk());
+            }
+        }, 2);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onChunkUnload(ChunkUnloadEvent event) {
+
+        if (!EventUtil.passesFilter(event))
+            return;
+
+        unregisterSelfTrigger(event.getChunk());
     }
 }

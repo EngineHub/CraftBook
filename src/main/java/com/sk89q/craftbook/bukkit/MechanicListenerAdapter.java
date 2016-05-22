@@ -404,35 +404,4 @@ final class MechanicListenerAdapter implements Listener {
             }
         }
     }
-
-    /**
-     * Called when a chunk is loaded.
-     */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onChunkLoad(final ChunkLoadEvent event) {
-
-        if (!EventUtil.passesFilter(event))
-            return;
-
-        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-            @Override
-            public void run() {
-
-                CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getChunk());
-            }
-        }, 2);
-    }
-
-    /**
-     * Called when a chunk is unloaded.
-     */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-
-        if (!EventUtil.passesFilter(event))
-            return;
-
-        CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getChunk());
-    }
 }

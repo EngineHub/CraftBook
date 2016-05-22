@@ -318,8 +318,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();
-        mechanicClock = new MechanicClock();
-        selfTriggerManager = new SelfTriggeringManager();
 
         logDebugMessage("Initializing Permission!", "startup");
         PermissionsResolverManager.initialize(this);
@@ -496,6 +494,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         mechanismsConfig.save();
 
+        boolean hasSTMechanic = false;
+
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
         while(iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
@@ -507,12 +507,15 @@ public class CraftBookPlugin extends JavaPlugin {
                     continue;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
+                if(mech instanceof CookingPot || mech instanceof ICMechanic) //TODO make this a better check.
+                    hasSTMechanic = true;
             } catch(Throwable t) {
                 getLogger().log(Level.WARNING, "Failed to enable mechanic: " + mech.getClass().getSimpleName(), t);
             }
         }
 
-        setupSelfTriggered();
+        if(hasSTMechanic)
+            setupSelfTriggered();
     }
 
     /**
@@ -822,6 +825,9 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private void setupSelfTriggered() {
 
+        mechanicClock = new MechanicClock();
+        selfTriggerManager = new SelfTriggeringManager();
+
         getLogger().info("Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
@@ -845,6 +851,8 @@ public class CraftBookPlugin extends JavaPlugin {
         // Set up the clock for self-triggered ICs.
 
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
+
+        getServer().getPluginManager().registerEvents(selfTriggerManager, this);
     }
 
     /**
