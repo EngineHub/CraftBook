@@ -16,10 +16,14 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -42,60 +46,73 @@ public class Snow extends SpongeMechanic {
     /**
      * An array of directions that snow can move in. In order of preference.
      */
-    private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NONE};
+    private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    private ConfigValue<Boolean> dispersionMode = new ConfigValue<>("dispersion-mode", "A realistic version of snow that disperses as it piles.", false);
+    private ConfigValue<Boolean> highPiling = new ConfigValue<>("high-piling", "Allows snow to pile up multiple blocks.", false);
+    private ConfigValue<Boolean> waterFreezing = new ConfigValue<>("water-freezing", "Allows snow to freeze water beneath it.", false);
 
     @Override
     public void onInitialize() throws CraftBookException {
-
         super.onInitialize();
 
         //Give the snow blocks the ability to tick randomly.
         BlockTypes.SNOW_LAYER.setTickRandomly(true);
         BlockTypes.SNOW.setTickRandomly(true);
+
+        dispersionMode.load(config);
+        highPiling.load(config);
+        waterFreezing.load(config);
     }
 
     @Listener
     public void onBlockTick(TickBlockEvent event) {
-        Location<World> location = event.getTargetBlock().getLocation().orElse(null);
-        if(location == null) return;
-        if ((event.getTargetBlock().getState().getType() == BlockTypes.SNOW_LAYER
-                || event.getTargetBlock().getState().getType() == BlockTypes.SNOW)) {
-            if (location.getExtent().getWeather() != Weathers.CLEAR) {
-                //Only increase snow at valid blocks, where snow could actually fall.
-                if (location.getBlockType() == BlockTypes.SNOW_LAYER && canSnowReach(location)
-                        && location.getProperty(TemperatureProperty.class).get().getValue() <= 0.15f)
-                    increaseSnow(location, true);
-            } else if(!isBlockBuried(location)) { //Only melt if on top, and too hot.
-                //Lower the snow.
-                if(location.get(Keys.LAYER).orElse(-1) == 0) {
-                    return;
-                } else if (location.getProperty(TemperatureProperty.class).get().getValue() > 0.15f) {
-                    return;
-                }
+        event.getTargetBlock().getLocation().ifPresent(location -> {
+            if (isSnowBlock(location)) {
+                if (getTemperature(location) == TemperatureType.FREEZING) {
+                    //Only increase snow at valid blocks, where snow could actually fall.
+                    if (location.getBlockType() == BlockTypes.SNOW_LAYER && canSnowReach(location))
+                        increaseSnow(location, true);
+                } else if (!isBlockBuried(location) && getTemperature(location) == TemperatureType.WARM) {
+                    //Only melt if on top, and too hot.
+                    if(location.get(Keys.LAYER).orElse(0) == 1) {
+                        return;
+                    }
 
-                decreaseSnow(location);
+                    //Lower the snow
+                    decreaseSnow(location);
+                } else if (!isBlockBuried(location)) {
+                    disperseSnow(location, null);
+                }
             }
-        }
+        });
     }
 
     private void increaseSnow(Location<?> location, boolean disperse) {
         Optional<MutableBoundedValue<Integer>> optionalHeightValue = location.getValue(Keys.LAYER);
-        if(optionalHeightValue.isPresent()) {
+        if(location.getBlockType() == BlockTypes.SNOW_LAYER && optionalHeightValue.isPresent()) {
             MutableBoundedValue<Integer> heightValue = optionalHeightValue.get();
-            int currentHeight = heightValue.get() + 1;
-            if(currentHeight > heightValue.getMaxValue())
-                location.setBlockType(BlockTypes.SNOW);
-            else {
-                if(disperse) {
+            int newHeight = heightValue.get() + 1;
+
+            if(newHeight > heightValue.getMaxValue()) {
+                if(highPiling.getValue())
+                    location.setBlockType(BlockTypes.SNOW);
+            } else {
+                location.offer(Keys.LAYER, newHeight);
+                if(disperse)
                     disperseSnow(location, null);
-                } else {
-                    location.offer(Keys.LAYER, currentHeight);
-                }
             }
 
-            if(location.getRelative(Direction.DOWN).getBlockType() == BlockTypes.WATER
-                    || location.getRelative(Direction.DOWN).getBlockType() == BlockTypes.FLOWING_WATER)
-                location.getRelative(Direction.DOWN).setBlockType(BlockTypes.ICE);
+            if(waterFreezing.getValue()) {
+                Location down = location.getRelative(Direction.DOWN);
+
+                if (down.getBlockType() == BlockTypes.WATER || down.getBlockType() == BlockTypes.FLOWING_WATER)
+                    down.setBlockType(BlockTypes.ICE);
+            }
         } else {
             location.setBlockType(BlockTypes.SNOW_LAYER);
         }
@@ -105,11 +122,12 @@ public class Snow extends SpongeMechanic {
         Optional<MutableBoundedValue<Integer>> optionalHeightValue = location.getValue(Keys.LAYER);
         if(optionalHeightValue.isPresent()) {
             MutableBoundedValue<Integer> heightValue = optionalHeightValue.get();
-            int currentHeight = heightValue.get() - 1;
-            if(currentHeight < heightValue.getMinValue())
+            int newHeight = heightValue.get() - 1;
+
+            if(newHeight < heightValue.getMinValue())
                 location.setBlockType(BlockTypes.AIR);
             else
-                location.offer(Keys.LAYER, currentHeight);
+                location.offer(Keys.LAYER, newHeight);
         } else if (location.getBlockType() == BlockTypes.SNOW) {
             location.setBlockType(BlockTypes.SNOW_LAYER);
             LayeredData data = location.getOrCreate(LayeredData.class).get();
@@ -119,31 +137,55 @@ public class Snow extends SpongeMechanic {
     }
 
     private void disperseSnow(final Location<?> location, Direction ignoredFace) {
-        int currentHeight = location.get(Keys.LAYER).orElse(-1);
-        if(currentHeight == -1)
+        if(!dispersionMode.getValue())
             return;
 
+        int currentHeight = location.get(Keys.LAYER).orElse(0);
+        if(currentHeight == 0)
+            return;
+
+        Direction currentSmallest = null;
+        int currentSmallestInt = Integer.MAX_VALUE;
+
         for(final Direction dir : VALID_SNOW_DIRECTIONS) {
-            if(dir == ignoredFace) continue;
-            if(currentHeight == 0 && !(dir == Direction.DOWN || dir == Direction.NONE)) continue; //Stop snow moving around on the ground.
+            if(dir == ignoredFace || (currentHeight == 1 && dir != Direction.DOWN)) continue;
+
             final Location<?> relative = location.getRelative(dir);
             if(canPlaceSnowAt(relative)) {
-                int otherHeight = relative.get(Keys.LAYER).orElse(-1);
-                if(otherHeight >= 0) {
-                    if(dir != Direction.NONE && dir != Direction.DOWN && currentHeight <= otherHeight+1)
+                int otherHeight = relative.get(Keys.LAYER).orElse(0);
+                if(otherHeight >= 1) {
+                    if(dir != Direction.DOWN && currentHeight < otherHeight+2) {
                         continue;
+                    }
                 }
-                increaseSnow(relative, false);
-                if(dir != Direction.NONE) {
+                if(dir == Direction.DOWN) {
+                    increaseSnow(relative, false);
                     decreaseSnow(location);
-                    Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(40L).execute(() -> {
+                    Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(20L).execute(() -> {
                         disperseSnow(relative, dir.getOpposite());
-                        if(isBlockBuried(location))
+                        if (isBlockBuried(location))
                             disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
                     }).submit(CraftBookPlugin.inst());
+                    break;
+                } else if(currentSmallest == null || currentSmallestInt > otherHeight) {
+                    currentSmallest = dir;
+                    currentSmallestInt = otherHeight;
+                    if(currentSmallestInt == 0)
+                        break; //Can't get smaller.
                 }
-                break;
             }
+        }
+
+        if(currentSmallest != null) {
+            Location<?> relative = location.getRelative(currentSmallest);
+            increaseSnow(relative, false);
+            decreaseSnow(location);
+            Direction finalCurrentSmallest = currentSmallest;
+            Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(20L).execute(() -> {
+                disperseSnow(relative, finalCurrentSmallest.getOpposite());
+                if (isBlockBuried(location))
+                    disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
+            }).submit(CraftBookPlugin.inst());
         }
     }
 
@@ -171,7 +213,7 @@ public class Snow extends SpongeMechanic {
      * @return If it can be replaced with snow.
      */
     private static boolean canPlaceSnowAt(Location<?> location) {
-        if (location.getBlockType() == BlockTypes.SNOW_LAYER)
+        if (location.getBlockType() == BlockTypes.SNOW_LAYER || location.getBlockType() == BlockTypes.AIR)
             return true;
 
         ReplaceableProperty replaceableProperty = location.getBlockType().getProperty(ReplaceableProperty.class).orElse(null);
@@ -192,8 +234,45 @@ public class Snow extends SpongeMechanic {
      * @return If it is buried.
      */
     private static boolean isBlockBuried(Location<?> location) {
-        return location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW_LAYER
-                || location.getRelative(Direction.UP).getBlockType() == BlockTypes.SNOW;
+        return isSnowBlock(location.getRelative(Direction.UP));
+    }
+
+    /**
+     * Checks whether the block is snow.
+     *
+     * @param location The location of the block.
+     * @return If it's snow
+     */
+    private static boolean isSnowBlock(Location<?> location) {
+        return location.getBlockType() == BlockTypes.SNOW || location.getBlockType() == BlockTypes.SNOW_LAYER;
+    }
+
+    /**
+     * Gets the temperature of the block.
+     *
+     * @param location The location of the block.
+     * @return The temperature
+     */
+    private static TemperatureType getTemperature(Location<World> location) {
+        Optional<TemperatureProperty> temperaturePropertyOptional = location.getProperty(TemperatureProperty.class);
+        if(!temperaturePropertyOptional.isPresent())
+            return TemperatureType.UNKNOWN;
+        Double temperature = temperaturePropertyOptional.get().getValue();
+        if(temperature == null)
+            return TemperatureType.UNKNOWN;
+        if(temperature < 0.15 && location.getExtent().getWeather() == Weathers.RAIN)
+            return TemperatureType.FREEZING;
+        else if (temperature < 0.15)
+            return TemperatureType.COLD;
+        else
+            return TemperatureType.WARM;
+    }
+
+    private enum TemperatureType {
+        FREEZING, //Snow generates
+        COLD, //Snow survives
+        WARM, //Snow melts
+        UNKNOWN //Unknown - don't do anything
     }
 
     @Override
