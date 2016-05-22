@@ -21,6 +21,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -41,7 +42,7 @@ import org.spongepowered.api.world.weather.Weathers;
 import java.util.Optional;
 
 @Module(moduleName = "Snow", onEnable="onInitialize", onDisable="onDisable")
-public class Snow extends SpongeMechanic {
+public class Snow extends SpongeMechanic implements DocumentationProvider {
 
     /**
      * An array of directions that snow can move in. In order of preference.
@@ -278,5 +279,24 @@ public class Snow extends SpongeMechanic {
     @Override
     public String getName() {
         return "BetterSnow";
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/snow";
+    }
+
+    @Override
+    public String[] getMainDocumentation() {
+        return new String[0];
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                dispersionMode,
+                highPiling,
+                waterFreezing
+        };
     }
 }
