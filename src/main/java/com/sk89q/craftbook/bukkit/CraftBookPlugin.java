@@ -127,6 +127,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
 
+    public boolean useLegacyCartSystem = false;
+
     static {
         availableMechanics = new TreeMap<String, Class<? extends CraftBookMechanic>>();
 
@@ -509,6 +511,8 @@ public class CraftBookPlugin extends JavaPlugin {
                 getServer().getPluginManager().registerEvents(mech, this);
                 if(mech instanceof CookingPot || mech instanceof ICMechanic) //TODO make this a better check.
                     hasSTMechanic = true;
+                if(mech instanceof CartBlockMechanism)
+                    useLegacyCartSystem = true;
             } catch(Throwable t) {
                 getLogger().log(Level.WARNING, "Failed to enable mechanic: " + mech.getClass().getSimpleName(), t);
             }
