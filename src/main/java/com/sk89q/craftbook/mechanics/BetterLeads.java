@@ -1,19 +1,15 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LeashHitch;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -23,12 +19,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Arrays;
+import java.util.List;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
@@ -167,9 +159,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
             boolean isOwner = false;
             if(ent instanceof Tameable)
-                if(!((Tameable) event.getEntity()).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
+                if(!((Tameable) ent).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
                     isOwner = true;
-            if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || ((Player) event.getRemover()).hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+            if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || event.getRemover().hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
             } else {
