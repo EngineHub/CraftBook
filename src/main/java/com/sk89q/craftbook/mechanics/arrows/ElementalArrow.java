@@ -6,11 +6,11 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
 public interface ElementalArrow {
 
-    public void addRecipe();
+    void addRecipe();
 
-    public boolean onShoot(EntityShootBowEvent event);
+    boolean onShoot(EntityShootBowEvent event);
 
-    public boolean onHit(ProjectileHitEvent event);
+    boolean onHit(ProjectileHitEvent event);
 
-    public boolean onCraft(PrepareItemCraftEvent event);
+    boolean onCraft(PrepareItemCraftEvent event);
 }

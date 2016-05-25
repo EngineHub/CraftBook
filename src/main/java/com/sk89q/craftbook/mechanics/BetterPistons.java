@@ -40,7 +40,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
      * @param sign The sign to check
      * @return the type of piston created
      */
-    public Types checkSign(Block sign) {
+    public static Types checkSign(Block sign) {
 
         Types type = null;
 
@@ -113,8 +113,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         // check if this looks at all like something we're interested in first
         PistonBaseMaterial piston = (PistonBaseMaterial) event.getBlock().getState().getData();
-        Block sign = event.getBlock().getRelative(piston.getFacing().getOppositeFace());
-        Types type = null;
+        Block sign;
+        Types type;
 
         for (BlockFace face : LocationUtil.getDirectFaces()) {
             if (face == piston.getFacing())
@@ -306,7 +306,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
      * @param from The from block.
      * @param to   The block the data is being moved to.
      */
-    public boolean copyData(Block from, Block to) {
+    public static boolean copyData(Block from, Block to) {
 
         BlockState toState = to.getState();
         BlockState fromState = from.getState();
@@ -380,15 +380,15 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    int pistonMaxDistance;
-    boolean pistonsCrusher;
-    boolean pistonsCrusherInstaKill;
-    List<ItemInfo> pistonsCrusherBlacklist;
-    boolean pistonsSuperPush;
-    boolean pistonsSuperSticky;
-    List<ItemInfo> pistonsMovementBlacklist;
-    boolean pistonsBounce;
-    List<ItemInfo> pistonsBounceBlacklist;
+    private int pistonMaxDistance;
+    private boolean pistonsCrusher;
+    private boolean pistonsCrusherInstaKill;
+    private List<ItemInfo> pistonsCrusherBlacklist;
+    private boolean pistonsSuperPush;
+    private boolean pistonsSuperSticky;
+    private List<ItemInfo> pistonsMovementBlacklist;
+    private boolean pistonsBounce;
+    private List<ItemInfo> pistonsBounceBlacklist;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

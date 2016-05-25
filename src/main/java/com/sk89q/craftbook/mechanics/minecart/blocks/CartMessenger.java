@@ -1,21 +1,17 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+
+import java.util.ArrayList;
 
 public class CartMessenger extends CartBlockMechanism {
-
-    CraftBookPlugin plugin = CraftBookPlugin.inst();
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

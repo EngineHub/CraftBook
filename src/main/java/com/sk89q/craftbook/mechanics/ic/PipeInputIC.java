@@ -9,5 +9,5 @@ public interface PipeInputIC {
      *
      * @param event The event that the pipe is sending.
      */
-    public void onPipeTransfer(PipePutEvent event);
+    void onPipeTransfer(PipePutEvent event);
 }

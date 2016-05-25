@@ -321,18 +321,18 @@ public class Chair extends AbstractCraftBookMechanic {
         chairs = null;
         try {
             ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
-        } catch(Throwable e) {
+        } catch(Throwable ignored) {
         }
     }
 
-    boolean chairAllowHeldBlock;
-    boolean chairHealth;
-    double chairHealAmount;
-    List<ItemInfo> chairBlocks;
-    boolean chairFacing;
-    boolean chairRequireSign;
-    int chairMaxDistance;
-    int chairMaxClickRadius;
+    private boolean chairAllowHeldBlock;
+    private boolean chairHealth;
+    private double chairHealAmount;
+    private List<ItemInfo> chairBlocks;
+    private boolean chairFacing;
+    private boolean chairRequireSign;
+    private int chairMaxDistance;
+    private int chairMaxClickRadius;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

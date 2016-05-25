@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -712,6 +713,17 @@ public final class ItemUtil {
                 return 33;
             default:
                 return 0;
+        }
+    }
+
+    public static void damageHeldItem(Player player) {
+        ItemStack heldItem = player.getItemInHand();
+        if(heldItem != null && getMaxDurability(heldItem.getType()) > 0) {
+            heldItem.setDurability((short) (heldItem.getDurability() + 1));
+            if(heldItem.getDurability() <= getMaxDurability(heldItem.getType()))
+                player.setItemInHand(heldItem);
+            else
+                player.setItemInHand(null);
         }
     }
 }

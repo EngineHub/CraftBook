@@ -1,17 +1,5 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.util.Vector;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -22,12 +10,26 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class BounceBlocks extends AbstractCraftBookMechanic {
 
     List<ItemInfo> blocks;
-    double sensitivity;
-    Map<ItemInfo, Vector> autoBouncers = new HashMap<ItemInfo, Vector>();
+    private double sensitivity;
+    private Map<ItemInfo, Vector> autoBouncers = new HashMap<ItemInfo, Vector>();
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

@@ -52,8 +52,7 @@ public class JackOLantern extends AbstractCraftBookMechanic {
         event.getBlock().setData(event.getBlock().getData(), false);
     }
 
-    public void setPowered(Block block, boolean on) {
-
+    private static void setPowered(Block block, boolean on) {
         byte data = block.getData();
         block.setType(on ? Material.JACK_O_LANTERN : Material.PUMPKIN);
         block.setData(data);

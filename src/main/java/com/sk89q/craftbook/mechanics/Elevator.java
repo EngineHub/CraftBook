@@ -57,7 +57,7 @@ import java.util.UUID;
  */
 public class Elevator extends AbstractCraftBookMechanic {
 
-    public HashSet<UUID> flyingPlayers;
+    private HashSet<UUID> flyingPlayers;
 
     @Override
     public boolean enable() {
@@ -149,11 +149,10 @@ public class Elevator extends AbstractCraftBookMechanic {
                 break;
             default:
                 SignUtil.cancelSign(event);
-                return;
         }
     }
 
-    public static enum Direction {
+    private enum Direction {
         NONE, UP, DOWN, RECV
     }
 
@@ -439,7 +438,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    public void teleportFinish(LocalPlayer player, Block destination, BlockFace shift) {
+    public static void teleportFinish(LocalPlayer player, Block destination, BlockFace shift) {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
@@ -463,7 +462,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean isValidLift(ChangedSign start, ChangedSign stop) {
+    public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
 
         if (start == null || stop == null) return true;
         if (start.getLine(2).toLowerCase(Locale.ENGLISH).startsWith("to:")) {
@@ -504,12 +503,12 @@ public class Elevator extends AbstractCraftBookMechanic {
         return Direction.NONE;
     }
 
-    boolean elevatorAllowRedstone;
-    int elevatorRedstoneRadius;
-    boolean elevatorButtonEnabled;
-    boolean elevatorLoop;
-    boolean elevatorSlowMove;
-    double elevatorMoveSpeed;
+    private boolean elevatorAllowRedstone;
+    private int elevatorRedstoneRadius;
+    private boolean elevatorButtonEnabled;
+    private boolean elevatorLoop;
+    private boolean elevatorSlowMove;
+    private double elevatorMoveSpeed;
 
 
     @Override

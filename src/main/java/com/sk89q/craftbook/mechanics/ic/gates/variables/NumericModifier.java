@@ -58,8 +58,8 @@ public class NumericModifier extends AbstractIC {
 
             try {
                 String var,key;
-                var = VariableManager.instance.getVariableName(variable);
-                key = VariableManager.instance.getNamespace(variable);
+                var = VariableManager.getVariableName(variable);
+                key = VariableManager.getNamespace(variable);
 
                 double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
 

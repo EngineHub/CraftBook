@@ -48,8 +48,8 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         event.setCollisionCancelled(true);
     }
 
-    boolean otherCarts;
-    boolean empty;
+    private boolean otherCarts;
+    private boolean empty;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

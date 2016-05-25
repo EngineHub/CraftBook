@@ -12,14 +12,14 @@ public interface CommandIC {
      * @param args The {@link CommandContext} for this command. Context 0 is the IC ID.
      * @param sender The {@link CommandSender} of this command.
      */
-    public void onICCommand(CommandContext args, CommandSender sender);
+    void onICCommand(CommandContext args, CommandSender sender);
 
     /**
      * Check the minimum arguments this command requires to be valid.
      * 
      * @return the amount of arguments required.
      */
-    public int getMinCommandArgs();
+    int getMinCommandArgs();
 
     /**
      * Gives information on each command.
@@ -32,5 +32,5 @@ public interface CommandIC {
      * 
      * @return The command information
      */
-    public String[][] getCommandInformation();
+    String[][] getCommandInformation();
 }

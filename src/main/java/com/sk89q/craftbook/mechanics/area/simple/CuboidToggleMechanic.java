@@ -53,7 +53,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public boolean close(Block sign, Block farSide, Block base, CuboidRegion toggle, LocalPlayer player) {
+    public static boolean close(Block sign, Block farSide, Block base, CuboidRegion toggle, LocalPlayer player) {
 
         ChangedSign s = BukkitUtil.toChangedSign(sign);
         ChangedSign other = BukkitUtil.toChangedSign(farSide);

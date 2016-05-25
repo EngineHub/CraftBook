@@ -170,8 +170,8 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         return false;
     }
 
-    int maxRange;
-    int maxLights;
+    private int maxRange;
+    private int maxLights;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

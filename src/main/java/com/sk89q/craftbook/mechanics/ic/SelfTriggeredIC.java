@@ -32,12 +32,12 @@ public interface SelfTriggeredIC extends PersistentIC {
      *
      * @param chip
      */
-    public void think(ChipState chip);
+    void think(ChipState chip);
 
     /**
      * Checks whether an {@link IC} should always be considered ST, even without the 'S'. This is useful for IC's such as MC1241 ({@link Clock}), which should always be ST.
      * 
      * @return if the {@link IC} should always be ST.
      */
-    public boolean isAlwaysST();
+    boolean isAlwaysST();
 }

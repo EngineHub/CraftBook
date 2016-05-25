@@ -44,10 +44,9 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
         event.setCancelled(true);
         event.setPickupCancelled(true);
         event.setCollisionCancelled(true);
-        return;
     }
 
-    boolean removeOtherBoats;
+    private boolean removeOtherBoats;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

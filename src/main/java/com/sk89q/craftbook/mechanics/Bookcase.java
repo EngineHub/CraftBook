@@ -46,7 +46,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
      *
      * @param player
      */
-    public void read(LocalPlayer player) {
+    public static void read(LocalPlayer player) {
 
         try {
             String text = getBookLine();

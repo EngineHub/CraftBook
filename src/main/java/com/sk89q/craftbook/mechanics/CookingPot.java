@@ -1,8 +1,17 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.HashSet;
-import java.util.List;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.*;
+import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -15,22 +24,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
-import com.sk89q.craftbook.util.events.SignClickEvent;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.HashSet;
+import java.util.List;
 
 public class CookingPot extends AbstractCraftBookMechanic {
 
@@ -286,11 +281,6 @@ public class CookingPot extends AbstractCraftBookMechanic {
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public void decreaseMultiplier(ChangedSign sign, int amount) {
-
-        setMultiplier(sign, getMultiplier(sign) - amount);
-    }
-
     public int getMultiplier(ChangedSign sign) {
 
         int multiplier;
@@ -310,7 +300,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         private Material id;
         private int mult;
 
-        private Ingredients(Material id, int mult) {
+        Ingredients(Material id, int mult) {
 
             this.id = id;
             this.mult = mult;
@@ -329,15 +319,15 @@ public class CookingPot extends AbstractCraftBookMechanic {
         }
     }
 
-    boolean cookingPotAllowRedstone;
-    boolean cookingPotFuel;
-    boolean cookingPotOres;
-    boolean cookingPotSignOpen;
-    boolean cookingPotDestroyBuckets;
-    boolean cookingPotSuperFast;
+    private boolean cookingPotAllowRedstone;
+    private boolean cookingPotFuel;
+    private boolean cookingPotOres;
+    private boolean cookingPotSignOpen;
+    private boolean cookingPotDestroyBuckets;
+    private boolean cookingPotSuperFast;
 
-    boolean cookingPotChunkLimit;
-    boolean cookingPotHeating;
+    private boolean cookingPotChunkLimit;
+    private boolean cookingPotHeating;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

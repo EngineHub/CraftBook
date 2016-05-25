@@ -1,39 +1,24 @@
 package com.sk89q.craftbook.mechanics.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.BooleanPrompt;
-import org.bukkit.conversations.Conversable;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.FixedSetPrompt;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.NullConversationPrefix;
-import org.bukkit.conversations.NumericPrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.*;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandItemCommands {
 
@@ -44,7 +29,7 @@ public class CommandItemCommands {
     @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name> [-a amount] [-s]", min = 1)
     public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
 
-        Player player = null;
+        Player player;
 
         if(context.hasFlag('p'))
             player = Bukkit.getPlayer(context.getFlag('p'));

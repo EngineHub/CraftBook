@@ -62,7 +62,7 @@ public class GlowStone extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    ItemInfo offBlock;
+    private ItemInfo offBlock;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

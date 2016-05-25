@@ -38,9 +38,9 @@ public class FallModifier extends AbstractCraftBookMechanic {
         ((Minecart) event.getVehicle()).setFlyingVelocityMod(fallSpeed);
     }
 
-    double verticalSpeed;
-    double horizontalSpeed;
-    Vector fallSpeed;
+    private double verticalSpeed;
+    private double horizontalSpeed;
+    private Vector fallSpeed;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

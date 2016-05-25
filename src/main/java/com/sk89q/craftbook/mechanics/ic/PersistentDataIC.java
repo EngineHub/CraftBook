@@ -18,7 +18,7 @@ public interface PersistentDataIC {
      * 
      * @throws IOException
      */
-    public void loadPersistentData(DataInputStream stream) throws IOException;
+    void loadPersistentData(DataInputStream stream) throws IOException;
 
     /**
      * Called when the {@link ICFactory} should save any persistent data required.
@@ -27,12 +27,12 @@ public interface PersistentDataIC {
      * 
      * @throws IOException
      */
-    public void savePersistentData(DataOutputStream stream) throws IOException;
+    void savePersistentData(DataOutputStream stream) throws IOException;
 
     /**
      * Gets the {@link File} in which the data should be saved/loaded.
      * 
      * @return The {@link File} to save and load from.
      */
-    public File getStorageFile();
+    File getStorageFile();
 }

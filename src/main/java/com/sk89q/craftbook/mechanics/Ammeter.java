@@ -67,7 +67,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    private int getSpecialData(Block block) {
+    private static int getSpecialData(Block block) {
 
         byte data = block.getData();
         int current = 0;
@@ -104,7 +104,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         return current;
     }
 
-    private String getCurrentLine(int data) {
+    private static String getCurrentLine(int data) {
 
         StringBuilder line = new StringBuilder(25);
         line.append(ChatColor.YELLOW).append("[");
@@ -123,7 +123,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         return line.toString();
     }
 
-    ItemInfo item;
+    private ItemInfo item;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

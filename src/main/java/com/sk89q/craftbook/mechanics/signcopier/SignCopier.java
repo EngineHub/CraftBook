@@ -1,15 +1,5 @@
 package com.sk89q.craftbook.mechanics.signcopier;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Sign;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -18,6 +8,15 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignCopier extends AbstractCraftBookMechanic {
 
@@ -82,7 +81,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
         }
     }
 
-    ItemInfo item;
+    private ItemInfo item;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

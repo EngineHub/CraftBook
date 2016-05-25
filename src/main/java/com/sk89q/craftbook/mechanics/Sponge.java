@@ -203,9 +203,9 @@ public class Sponge extends AbstractCraftBookMechanic {
         }
     }
 
-    int radius;
-    boolean circularRadius;
-    boolean redstone;
+    private int radius;
+    private boolean circularRadius;
+    private boolean redstone;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

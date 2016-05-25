@@ -26,9 +26,9 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
             ((Boat) event.getVehicle()).setOccupiedDeceleration(((Boat) event.getVehicle()).getOccupiedDeceleration() * occupiedDeceleration);
     }
 
-    double maxSpeed;
-    double unnoccupiedDeceleration;
-    double occupiedDeceleration;
+    private double maxSpeed;
+    private double unnoccupiedDeceleration;
+    private double occupiedDeceleration;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

@@ -142,7 +142,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    private void toggleSwitches(Block sign, BlockFace direction) {
+    private static void toggleSwitches(Block sign, BlockFace direction) {
 
         BlockFace[] checkFaces = new BlockFace[4];
         checkFaces[0] = BlockFace.UP;
@@ -174,12 +174,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, 1 * 20L);
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, 20L);
             }
         }
     }
 
-    boolean anyside;
+    private boolean anyside;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

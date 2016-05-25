@@ -9,7 +9,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 public class FireArrow extends AbstractArrow {
 
-    ShapelessRecipe recipe;
+    private ShapelessRecipe recipe;
 
     public FireArrow() {
 

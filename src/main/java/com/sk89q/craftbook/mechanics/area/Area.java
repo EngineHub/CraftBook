@@ -1,20 +1,5 @@
 package com.sk89q.craftbook.mechanics.area;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -31,6 +16,20 @@ import com.sk89q.squirrelid.resolver.HttpRepositoryService;
 import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.data.DataException;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 /**
  * Area.
@@ -131,7 +130,7 @@ public class Area extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    private boolean isValidArea(String namespace, String areaOn, String areaOff) {
+    private static boolean isValidArea(String namespace, String areaOn, String areaOff) {
 
         if (CopyManager.isExistingArea(CraftBookPlugin.inst().getDataFolder(), namespace, areaOn)) {
             if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return true;
@@ -140,7 +139,7 @@ public class Area extends AbstractCraftBookMechanic {
         return false;
     }
 
-    private boolean isValidArea(ChangedSign sign) {
+    private static boolean isValidArea(ChangedSign sign) {
 
         String namespace = sign.getLine(0).trim();
 
@@ -201,7 +200,7 @@ public class Area extends AbstractCraftBookMechanic {
         toggle(event.getBlock(), sign, save);
     }
 
-    private boolean toggle(Block signBlock, ChangedSign sign, boolean save) {
+    private static boolean toggle(Block signBlock, ChangedSign sign, boolean save) {
 
         if (!checkSign(sign)) return false;
 
@@ -316,7 +315,7 @@ public class Area extends AbstractCraftBookMechanic {
         String namespace = sign.getLine(0);
         String id = sign.getLine(2).toLowerCase(Locale.ENGLISH);
 
-        if (id == null || id.isEmpty() || id.length() < 1) return false;
+        if (id.isEmpty() || id.length() < 1) return false;
         if (namespace == null || namespace.isEmpty() || namespace.length() < 1) return false;
 
         return true;
@@ -325,7 +324,7 @@ public class Area extends AbstractCraftBookMechanic {
     // pattern to check where the markers for on and off state are
     private static final Pattern pattern = Pattern.compile("^\\-[A-Za-z0-9_]*?\\-$");
 
-    private boolean checkToggleState(ChangedSign sign) {
+    private static boolean checkToggleState(ChangedSign sign) {
 
         return coldCheckToggleState(sign);
     }
@@ -346,7 +345,7 @@ public class Area extends AbstractCraftBookMechanic {
         sign.update(false);
     }
 
-    boolean allowRedstone;
+    private boolean allowRedstone;
     boolean useSchematics;
     boolean shortenNames;
     int maxAreaSize;

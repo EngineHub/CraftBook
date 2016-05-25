@@ -220,7 +220,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         player.print("mech.teleport.alert");
     }
 
-    private boolean checkTeleportSign(LocalPlayer player, Block sign) {
+    private static boolean checkTeleportSign(LocalPlayer player, Block sign) {
 
         if (!SignUtil.isSign(sign)) {
             player.printError("mech.teleport.sign");
@@ -236,8 +236,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
         return true;
     }
 
-    boolean requireSign;
-    int maxRange;
+    private boolean requireSign;
+    private int maxRange;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

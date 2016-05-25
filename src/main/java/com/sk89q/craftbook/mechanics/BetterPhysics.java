@@ -54,30 +54,27 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(event.getBlock()));
     }
 
-    public static class FallingLadders implements Runnable {
-
+    private static class FallingLadders implements Runnable {
         Block ladder;
 
-        public FallingLadders(Block ladder) {
+        FallingLadders(Block ladder) {
 
             this.ladder = ladder;
         }
 
         public static boolean isValid(Block block) {
-
             return block.getType() == Material.LADDER && instance.ladders && block.getRelative(0, -1, 0).getType() == Material.AIR;
         }
 
         @Override
         public void run () {
-
             if(!isValid(ladder)) return;
             ladder.getWorld().spawnFallingBlock(ladder.getLocation(), ladder.getType(), ladder.getData());
             ladder.setTypeId(Material.AIR.getId(), false);
         }
     }
 
-    boolean ladders;
+    private boolean ladders;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

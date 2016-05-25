@@ -67,8 +67,8 @@ public class ItemCounter extends AbstractIC {
             chip.setOutput(0, amount > 0);
 
             String var,key;
-            var = VariableManager.instance.getVariableName(variable);
-            key = VariableManager.instance.getNamespace(variable);
+            var = VariableManager.getVariableName(variable);
+            key = VariableManager.getNamespace(variable);
 
             double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
 

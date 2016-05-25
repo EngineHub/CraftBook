@@ -1,11 +1,5 @@
 package com.sk89q.craftbook.mechanics.items;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionType;
 import com.sk89q.craftbook.util.ItemSyntax;
@@ -13,6 +7,11 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class CommandItemDefinition {
 
@@ -119,7 +118,7 @@ public class CommandItemDefinition {
 
     public void save(YAMLProcessor config, String path) {
 
-        config.setProperty(path + ".item", ItemSyntax.getStringFromItem(getItem()));
+        config.setProperty(path + ".item", ItemSyntax.getStringFromItem(stack));
         config.setProperty(path + ".commands", commands);
         config.setProperty(path + ".permission-node", permNode);
         config.setProperty(path + ".run-as", type.name());
@@ -150,8 +149,7 @@ public class CommandItemDefinition {
         config.setProperty(path + ".cooldown-message", cooldownMessage);
     }
 
-    public enum CommandType {
-
-        PLAYER,CONSOLE,SUPERUSER;
+    enum CommandType {
+        PLAYER,CONSOLE,SUPERUSER
     }
 }

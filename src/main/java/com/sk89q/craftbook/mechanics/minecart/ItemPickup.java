@@ -1,7 +1,8 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
-import java.util.Collection;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
@@ -9,9 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Collection;
 
 public class ItemPickup extends AbstractCraftBookMechanic {
 
@@ -30,7 +29,6 @@ public class ItemPickup extends AbstractCraftBookMechanic {
                 ((Item) event.getEntity()).setItemStack(leftovers.toArray(new ItemStack[1])[0]);
 
             event.setCollisionCancelled(true);
-            return;
         }
     }
 

@@ -1,21 +1,15 @@
 package com.sk89q.craftbook.mechanics.signcopier;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class SignEditCommands {
-
-    public SignEditCommands(CraftBookPlugin plugin) {
-
-    }
 
     @Command(aliases = {"edit"}, desc = "Edits the copied sign.", usage = "<Line> <Text>", min = 1, max = 2)
     public void editSign(CommandContext context, CommandSender sender) throws CommandException {

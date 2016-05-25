@@ -1,9 +1,16 @@
 package com.sk89q.craftbook.mechanics.variables;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
+import com.sk89q.squirrelid.Profile;
+import com.sk89q.squirrelid.resolver.HttpRepositoryService;
+import com.sk89q.squirrelid.resolver.ProfileService;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,21 +19,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.LoadPriority;
-import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.squirrelid.Profile;
-import com.sk89q.squirrelid.resolver.HttpRepositoryService;
-import com.sk89q.squirrelid.resolver.ProfileService;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class VariableManager extends AbstractCraftBookMechanic {
 
@@ -37,7 +32,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     /**
      * Stores the variables used in VariableStore ((Variable, Namespace), Value).
      */
-    protected HashMap<Tuple2<String, String>, String> variableStore;
+    private HashMap<Tuple2<String, String>, String> variableStore;
 
     @Override
     public boolean enable() {
@@ -105,7 +100,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
      * @param variable The variable
      * @return The namespace or global.
      */
-    public String getNamespace(String variable) {
+    public static String getNamespace(String variable) {
 
         if(variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
@@ -122,7 +117,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
      * @param variable The variable
      * @return The name.
      */
-    public String getVariableName(String variable) {
+    public static String getVariableName(String variable) {
 
         if(variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
@@ -190,10 +185,10 @@ public class VariableManager extends AbstractCraftBookMechanic {
     }
 
     boolean defaultToGlobal;
-    boolean consoleOverride;
-    boolean playerCommandOverride;
-    boolean playerChatOverride;
-    boolean packetMessageOverride;
+    private boolean consoleOverride;
+    private boolean playerCommandOverride;
+    private boolean playerChatOverride;
+    private boolean packetMessageOverride;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

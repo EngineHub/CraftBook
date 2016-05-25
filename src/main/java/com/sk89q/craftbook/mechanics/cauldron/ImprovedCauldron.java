@@ -170,7 +170,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
     public boolean trackCauldronItem(Item item) {
 
-        Block cauldron = null;
+        Block cauldron;
         if(isCauldron(item.getLocation().getBlock()))
             cauldron = item.getLocation().getBlock();
         else if(isCauldron(item.getLocation().getBlock().getRelative(BlockFace.DOWN)))
@@ -257,12 +257,12 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         return false;
     }
 
-    public boolean isItemSpoon(Material id) {
+    public static boolean isItemSpoon(Material id) {
 
         return id == Material.WOOD_SPADE || id == Material.STONE_SPADE || id == Material.IRON_SPADE || id == Material.DIAMOND_SPADE || id == Material.GOLD_SPADE;
     }
 
-    public double getSpoonChance(ItemStack item, double chance) {
+    public static double getSpoonChance(ItemStack item, double chance) {
 
         Material id = item.getType();
         double temp = chance / 100;
@@ -300,7 +300,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
      * @param recipe
      * @param items
      */
-    private void cook(Block block, ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
+    private static void cook(Block block, ImprovedCauldronCookbook.Recipe recipe, Collection<Item> items) {
         // first lets destroy all items inside the cauldron
         for (Item item : items)
             item.remove();
@@ -310,7 +310,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         }
     }
 
-    private Collection<Item> getItems(Block block) {
+    private static Collection<Item> getItems(Block block) {
 
         List<Item> items = new ArrayList<Item>();
         for (Entity entity : block.getChunk().getEntities()) {
@@ -339,10 +339,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         }
     }
 
-    boolean useSpoons;
-    boolean allowRedstone;
-    boolean itemTracking;
-    boolean requireSign;
+    private boolean useSpoons;
+    private boolean allowRedstone;
+    private boolean itemTracking;
+    private boolean requireSign;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

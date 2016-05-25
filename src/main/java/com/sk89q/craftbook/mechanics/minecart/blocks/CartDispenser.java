@@ -1,7 +1,14 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import java.util.Locale;
-
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.craftbook.util.RedstoneUtil.Power;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -17,15 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.RailUtil;
-import com.sk89q.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import java.util.Locale;
 
 /**
  * <p>
@@ -99,7 +98,6 @@ public class CartDispenser extends CartBlockMechanism {
                     case NA:
                         if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                             collect(cart, null);
-                        return;
                 }
             }
         } else {
@@ -137,7 +135,7 @@ public class CartDispenser extends CartBlockMechanism {
      * @param cart the cart to be destroyed/collected
      * @param inv  the inventory to place a cart item in, or null if we don't care.
      */
-    private void collect(Minecart cart, Inventory inv) {
+    private static void collect(Minecart cart, Inventory inv) {
 
         if (cart == null || cart.isDead()) return;
         cart.eject();
@@ -199,14 +197,14 @@ public class CartDispenser extends CartBlockMechanism {
         }
     }
 
-    public enum CartType {
+    private enum CartType {
         Minecart("Minecart", Minecart.class), StorageMinecart("Storage", StorageMinecart.class),
         PoweredMinecart("Powered", PoweredMinecart.class), TNTMinecart("TNT", ExplosiveMinecart.class), HopperMinecart("Hopper", org.bukkit.entity.minecart.HopperMinecart.class);
 
         private final Class<? extends Minecart> cl;
         private final String name;
 
-        private CartType(String name, Class<? extends Minecart> cl) {
+        CartType(String name, Class<? extends Minecart> cl) {
 
             this.name = name;
             this.cl = cl;
@@ -241,9 +239,9 @@ public class CartDispenser extends CartBlockMechanism {
         return new String[] {"Dispenser"};
     }
 
-    boolean minecartDispenserLegacy;
-    boolean minecartDispenserAntiSpam;
-    boolean minecartDispenserPropel;
+    private boolean minecartDispenserLegacy;
+    private boolean minecartDispenserAntiSpam;
+    private boolean minecartDispenserPropel;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

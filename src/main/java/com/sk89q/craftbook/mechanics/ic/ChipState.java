@@ -31,7 +31,7 @@ public interface ChipState {
      *
      * @return
      */
-    public boolean get(int pin);
+    boolean get(int pin);
 
     /**
      * Gets the value for an input.
@@ -40,7 +40,7 @@ public interface ChipState {
      * 
      * @return
      */
-    public boolean getInput(int inputIndex);
+    boolean getInput(int inputIndex);
 
     /**
      * Gets the value for an output.
@@ -49,7 +49,7 @@ public interface ChipState {
      * 
      * @return
      */
-    public boolean getOutput(int outputIndex);
+    boolean getOutput(int outputIndex);
 
     /**
      * Set a pin's value.
@@ -57,7 +57,7 @@ public interface ChipState {
      * @param pin
      * @param value
      */
-    public void set(int pin, boolean value);
+    void set(int pin, boolean value);
 
     /*
      * Sets the value for an output.
@@ -66,7 +66,7 @@ public interface ChipState {
      * 
      * @return
      */
-    public void setOutput(int outputIndex, boolean value);
+    void setOutput(int outputIndex, boolean value);
 
     /**
      * Returns whether this pin was triggered.
@@ -75,7 +75,7 @@ public interface ChipState {
      *
      * @return
      */
-    public boolean isTriggered(int pin);
+    boolean isTriggered(int pin);
 
     /**
      * Returns whether this pin is connected and valid
@@ -84,19 +84,19 @@ public interface ChipState {
      *
      * @return
      */
-    public boolean isValid(int pin);
+    boolean isValid(int pin);
 
     /**
      * Get the number of inputs.
      *
      * @return
      */
-    public int getInputCount();
+    int getInputCount();
 
     /**
      * Get the number of outputs.
      *
      * @return
      */
-    public int getOutputCount();
+    int getOutputCount();
 }

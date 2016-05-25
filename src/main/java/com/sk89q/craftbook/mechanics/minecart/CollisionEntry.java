@@ -23,7 +23,6 @@ public class CollisionEntry extends AbstractCraftBookMechanic {
             event.getVehicle().setPassenger(event.getEntity());
 
             event.setCollisionCancelled(true);
-            return;
         }
     }
 

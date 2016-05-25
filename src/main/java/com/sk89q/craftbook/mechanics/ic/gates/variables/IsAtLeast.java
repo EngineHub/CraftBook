@@ -58,8 +58,8 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
 
     public boolean isAtLeast() {
         String var,key;
-        var = VariableManager.instance.getVariableName(variable);
-        key = VariableManager.instance.getNamespace(variable);
+        var = VariableManager.getVariableName(variable);
+        key = VariableManager.getNamespace(variable);
 
         double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
 

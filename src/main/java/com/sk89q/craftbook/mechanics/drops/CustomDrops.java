@@ -1,12 +1,13 @@
 package com.sk89q.craftbook.mechanics.drops;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
+import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -18,18 +19,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
-import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CustomDrops extends AbstractCraftBookMechanic {
 
@@ -240,7 +235,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    boolean customDropPermissions;
+    private boolean customDropPermissions;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

@@ -26,7 +26,7 @@ public class ConstantSpeed extends AbstractCraftBookMechanic {
         }
     }
 
-    double speed;
+    private double speed;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

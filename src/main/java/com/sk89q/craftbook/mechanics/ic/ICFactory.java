@@ -35,7 +35,7 @@ public interface ICFactory {
      *
      * @return an IC ready to be used
      */
-    public IC create(ChangedSign sign);
+    IC create(ChangedSign sign);
 
     /**
      * Verify that the IC can be created in the area of the world defined by the given sign; throw exceptions if not.
@@ -48,7 +48,7 @@ public interface ICFactory {
      * @throws ICVerificationException if the area of the world defined by the sign does not represent a valid setup
      *                                 for this type of IC.
      */
-    public void verify(ChangedSign sign) throws ICVerificationException;
+    void verify(ChangedSign sign) throws ICVerificationException;
 
     /**
      * Check the player who creates the IC, used in the MessageSender IC, to make sure people without the right
@@ -61,14 +61,14 @@ public interface ICFactory {
      * @throws ICVerificationException if the area of the world defined by the sign does not represent a valid setup
      *                                 for this type of IC.
      */
-    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException;
+    void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException;
 
     /**
      * Get a short description of the IC
      *
      * @return a short description.
      */
-    public String getShortDescription();
+    String getShortDescription();
 
     /**
      * Get a long description, to be used for wiki generation.
@@ -78,14 +78,14 @@ public interface ICFactory {
      * 
      * @return an array containing each line of the long description of the IC's usage.
      */
-    public String[] getLongDescription();
+    String[] getLongDescription();
 
     /**
      * Get line-by-line help.
      *
      * @return array of lines 3 and 4
      */
-    public String[] getLineHelp();
+    String[] getLineHelp();
 
     /**
      * Get description of the function of each pin of the IC.
@@ -94,15 +94,15 @@ public interface ICFactory {
      * 
      * @return array of each pin in order.
      */
-    public String[] getPinDescription(ChipState state);
+    String[] getPinDescription(ChipState state);
 
     /**
      * Called on load to load extra information.
      */
-    public void load();
+    void load();
 
     /**
      * Unloads the IC Factory.
      */
-    public void unload();
+    void unload();
 }

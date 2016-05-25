@@ -1,8 +1,6 @@
 package com.sk89q.craftbook.mechanics.arrows;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.craftbook.util.EventUtil;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,7 +9,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
-import com.sk89q.craftbook.util.EventUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO finish
 public class ElementalArrowsMechanic implements Listener {
@@ -24,7 +23,7 @@ public class ElementalArrowsMechanic implements Listener {
      * entityID to the list. On hit, we check the list for entityID. If it's there, we do the stuff and remove it.
      */
 
-    List<ElementalArrow> arrows = new ArrayList<ElementalArrow>();
+    private List<ElementalArrow> arrows = new ArrayList<ElementalArrow>();
 
     public ElementalArrowsMechanic() {
 
@@ -65,7 +64,7 @@ public class ElementalArrowsMechanic implements Listener {
         }
     }
 
-    public void registerArrow(ElementalArrow arrow) {
+    private void registerArrow(ElementalArrow arrow) {
 
         arrow.addRecipe();
         arrows.add(arrow);

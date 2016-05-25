@@ -38,7 +38,7 @@ public class VisionSteering extends AbstractCraftBookMechanic {
         event.getPlayer().getVehicle().setVelocity(direction);
     }
 
-    public int minimumSensitivity;
+    private int minimumSensitivity;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

@@ -21,12 +21,11 @@ public class NoCollide extends AbstractCraftBookMechanic {
             if (!event.getVehicle().isEmpty() && !full) return;
 
             event.setCollisionCancelled(true);
-            return;
         }
     }
 
-    boolean empty;
-    boolean full;
+    private boolean empty;
+    private boolean full;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

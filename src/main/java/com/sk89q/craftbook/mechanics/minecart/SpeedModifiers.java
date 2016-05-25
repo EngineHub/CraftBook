@@ -25,8 +25,8 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
             ((Minecart) event.getVehicle()).setMaxSpeed(((Minecart) event.getVehicle()).getMaxSpeed() * maxSpeed);
     }
 
-    double maxSpeed;
-    double offRail;
+    private double maxSpeed;
+    private double offRail;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

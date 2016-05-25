@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
-import java.util.List;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class PipePutEvent extends PipeEvent implements Cancellable {
 
@@ -45,6 +45,6 @@ public class PipePutEvent extends PipeEvent implements Cancellable {
     private boolean isCancelled = false;
 
     public boolean isValid() {
-        return !isCancelled() && !getItems().isEmpty();
+        return !isCancelled && !getItems().isEmpty();
     }
 }

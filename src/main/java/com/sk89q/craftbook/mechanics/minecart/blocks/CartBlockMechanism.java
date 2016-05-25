@@ -1,16 +1,5 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import java.util.Locale;
-
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -22,6 +11,16 @@ import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
+
+import java.util.Locale;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their logic at interation time (like
@@ -52,7 +51,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      *
      * @return the appropriate Power state (see the documentation for {@link RedstoneUtil.Power}'s members).
      */
-    public Power isActive(CartMechanismBlocks blocks) {
+    public static Power isActive(CartMechanismBlocks blocks) {
 
         boolean isWired = false;
         if (blocks.hasSign()) {
@@ -95,7 +94,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      *
      * @return the appropriate Power state (see the documentation for {@link RedstoneUtil.Power}'s members).
      */
-    private Power isActive(Block block) {
+    private static Power isActive(Block block) {
 
         boolean isWired = false;
         for (BlockFace face : powerSupplyOptions) {

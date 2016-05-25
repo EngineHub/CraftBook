@@ -16,163 +16,33 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.families.Family3I3O;
-import com.sk89q.craftbook.mechanics.ic.families.Family3ISO;
-import com.sk89q.craftbook.mechanics.ic.families.FamilyAISO;
-import com.sk89q.craftbook.mechanics.ic.families.FamilySI3O;
-import com.sk89q.craftbook.mechanics.ic.families.FamilySI5O;
-import com.sk89q.craftbook.mechanics.ic.families.FamilySISO;
-import com.sk89q.craftbook.mechanics.ic.families.FamilyVIVO;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.AndGate;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Clock;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.ClockDivider;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.CombinationLock;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Counter;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.DeMultiplexer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Delayer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Dispatcher;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.DownCounter;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.EdgeTriggerDFlipFlop;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.FullAdder;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.FullSubtractor;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.HalfAdder;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.HalfSubtractor;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.InvertedRsNandLatch;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Inverter;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.JkFlipFlop;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.LevelTriggeredDFlipFlop;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.LowDelayer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.LowNotPulser;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.LowPulser;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Marquee;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.MemoryAccess;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.MemorySetter;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Monostable;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Multiplexer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.NandGate;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.NotDelayer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.NotLowDelayer;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.NotPulser;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Pulser;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Random3Bit;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Random5Bit;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.RandomBit;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.RangedOutput;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.Repeater;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.RsNandLatch;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.RsNorFlipFlop;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.ToggleFlipFlop;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.XnorGate;
-import com.sk89q.craftbook.mechanics.ic.gates.logic.XorGate;
+import com.sk89q.craftbook.mechanics.ic.families.*;
+import com.sk89q.craftbook.mechanics.ic.gates.logic.*;
 import com.sk89q.craftbook.mechanics.ic.gates.variables.IsAtLeast;
 import com.sk89q.craftbook.mechanics.ic.gates.variables.ItemCounter;
 import com.sk89q.craftbook.mechanics.ic.gates.variables.NumericModifier;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.BlockBreaker;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.BlockLauncher;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.BlockReplacer;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.BonemealTerraformer;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.CombineHarvester;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Cultivator;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Driller;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.FlexibleSetBlock;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Irrigator;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.LiquidFlood;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.MultipleSetBlock;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Planter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Pump;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.SetBlockAdmin;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.SetBlockChest;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.SetBridge;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.SetDoor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.Spigot;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.AdvancedEntitySpawner;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.AnimalBreeder;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.AnimalHarvester;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.CreatureSpawner;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.EntityCannon;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.EntityTrap;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.PlayerTrap;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.TeleportReciever;
-import com.sk89q.craftbook.mechanics.ic.gates.world.entity.TeleportTransmitter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.AutomaticCrafter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ContainerCollector;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ContainerDispenser;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ContainerStacker;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ContainerStocker;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.Distributer;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ItemDispenser;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.ItemFan;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.RangedCollector;
-import com.sk89q.craftbook.mechanics.ic.gates.world.items.Sorter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.ArrowBarrage;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.ArrowShooter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.FireBarrage;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.FireShooter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.FlameThrower;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.Jukebox;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.LightningSummon;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.Melody;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.MessageSender;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.ParticleEffect;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.PotionInducer;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.ProgrammableFireworkShow;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.RadioPlayer;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.RadioStation;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.SentryGun;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.SoundEffect;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.TimedExplosion;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.Tune;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.WirelessReceiver;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.WirelessTransmitter;
-import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.XPSpawner;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.BlockSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.ContentsSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.DaySensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.EntitySensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.ItemNotSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.ItemSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.LavaSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.LightSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.PlayerInventorySensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.PlayerSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.PowerSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.WaterSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.RainSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.ServerTimeModulus;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.TStormSensor;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.TimeControl;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.TimeControlAdvanced;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.TimeFaker;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.TimeSet;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.WeatherControl;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.WeatherControlAdvanced;
-import com.sk89q.craftbook.mechanics.ic.gates.world.weather.WeatherFaker;
+import com.sk89q.craftbook.mechanics.ic.gates.world.blocks.*;
+import com.sk89q.craftbook.mechanics.ic.gates.world.entity.*;
+import com.sk89q.craftbook.mechanics.ic.gates.world.items.*;
+import com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous.*;
+import com.sk89q.craftbook.mechanics.ic.gates.world.sensors.*;
+import com.sk89q.craftbook.mechanics.ic.gates.world.weather.*;
 import com.sk89q.craftbook.mechanics.ic.plc.PlcFactory;
 import com.sk89q.craftbook.mechanics.ic.plc.lang.Perlstone;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Manages known registered ICs. For an IC to be detected in-world through CraftBook,
@@ -438,7 +308,7 @@ public class ICManager {
         return cachedICs;
     }
 
-    public boolean hasCustomPrefix(String prefix) {
+    public static boolean hasCustomPrefix(String prefix) {
 
         return customPrefix.contains(prefix.toLowerCase(Locale.ENGLISH));
     }
@@ -604,8 +474,7 @@ public class ICManager {
 
     public String getSearchID(Player p, String search) {
 
-        ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(registered.keySet());
+        ArrayList<String> icNameList = new ArrayList<String>(registered.keySet());
 
         Collections.sort(icNameList);
 
@@ -633,8 +502,7 @@ public class ICManager {
      */
     public String[] generateICText(Player p, String search, char[] parameters) {
 
-        ArrayList<String> icNameList = new ArrayList<String>();
-        icNameList.addAll(registered.keySet());
+        ArrayList<String> icNameList = new ArrayList<String>(registered.keySet());
 
         Collections.sort(icNameList);
 

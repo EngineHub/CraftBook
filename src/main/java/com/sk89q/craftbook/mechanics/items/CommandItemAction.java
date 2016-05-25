@@ -16,7 +16,7 @@ public class CommandItemAction {
     protected String name;
     protected ActionType type;
     protected String value;
-    protected ActionRunStage stage;
+    ActionRunStage stage;
 
     public CommandItemAction(String name, ActionType type, String value, ActionRunStage stage) {
         this.name = name;
@@ -28,20 +28,20 @@ public class CommandItemAction {
     /**
      * The type of action this {@link CommandItemAction} is.
      */
-    public static enum ActionType {
+    enum ActionType {
 
         SETVAR,
         MATHVAR,
-        ISVAR;
+        ISVAR
     }
 
     /**
      * Defines when this {@link CommandItemAction} should run.
      * BEFORE should generally be for checks, whereas AFTER should generally be for changing things.
      */
-    public static enum ActionRunStage {
+    enum ActionRunStage {
 
-        BEFORE, AFTER;
+        BEFORE, AFTER
     }
 
     /**
@@ -55,19 +55,19 @@ public class CommandItemAction {
      */
     public boolean runAction(CommandItemDefinition definition, Event event, Player player) {
 
-        String newVal = CommandItems.INSTANCE.parseLine(value, event, player);
+        String newVal = CommandItems.parseLine(value, event, player);
 
         switch(type) {
             case SETVAR:
                 String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
-                String snamespace = VariableManager.instance.getNamespace(svarParts[0]);
-                String svar = VariableManager.instance.getVariableName(svarParts[0]);
+                String snamespace = VariableManager.getNamespace(svarParts[0]);
+                String svar = VariableManager.getVariableName(svarParts[0]);
                 VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
                 return true;
             case MATHVAR:
                 String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
-                String mnamespace = VariableManager.instance.getNamespace(mvarParts[0]);
-                String mvar = VariableManager.instance.getVariableName(mvarParts[0]);
+                String mnamespace = VariableManager.getNamespace(mvarParts[0]);
+                String mvar = VariableManager.getVariableName(mvarParts[0]);
 
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
@@ -88,8 +88,8 @@ public class CommandItemAction {
                 return true;
             case ISVAR:
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
-                String isnamespace = VariableManager.instance.getNamespace(isparts[0]);
-                String isvar = VariableManager.instance.getVariableName(isparts[0]);
+                String isnamespace = VariableManager.getNamespace(isparts[0]);
+                String isvar = VariableManager.getVariableName(isparts[0]);
                 return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
             default:
                 return true;

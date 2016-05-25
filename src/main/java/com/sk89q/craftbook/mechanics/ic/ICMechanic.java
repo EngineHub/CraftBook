@@ -127,7 +127,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             return setupIC(block, create);
         }
 
-        if (!manager.hasCustomPrefix(prefix)) return null;
+        if (!ICManager.hasCustomPrefix(prefix)) return null;
 
         String id = matcher.group(1);
 
@@ -359,7 +359,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         }
 
         try {
-            if (!manager.hasCustomPrefix(matcher.group(2))) {
+            if (!ICManager.hasCustomPrefix(matcher.group(2))) {
                 matches = false;
             }
         } catch (Exception e) {

@@ -19,7 +19,7 @@ public class CartBooster extends CartBlockMechanism {
         // enabled?
         if (Power.OFF == isActive(event.getBlocks())) return;
 
-        double multiplier = 1;
+        double multiplier;
 
         if(event.getBlocks().matches(minecartSpeedModMaxBoostBlock))
             multiplier = 100;
@@ -34,9 +34,7 @@ public class CartBooster extends CartBlockMechanism {
 
         // speed up or down
         Vector newVelocity;
-        if (multiplier != 1) {
-            newVelocity = event.getVehicle().getVelocity().multiply(multiplier);
-        } else return;
+        newVelocity = event.getVehicle().getVelocity().multiply(multiplier);
         // go
         event.getVehicle().setVelocity(newVelocity);
     }
@@ -53,10 +51,10 @@ public class CartBooster extends CartBlockMechanism {
         return null;
     }
 
-    ItemInfo minecartSpeedModMaxBoostBlock;
-    ItemInfo minecartSpeedMod25xBoostBlock;
-    ItemInfo minecartSpeedMod50xSlowBlock;
-    ItemInfo minecartSpeedMod20xSlowBlock;
+    private ItemInfo minecartSpeedModMaxBoostBlock;
+    private ItemInfo minecartSpeedMod25xBoostBlock;
+    private ItemInfo minecartSpeedMod50xSlowBlock;
+    private ItemInfo minecartSpeedMod20xSlowBlock;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

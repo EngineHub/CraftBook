@@ -1,8 +1,9 @@
 package com.sk89q.craftbook.mechanics.dispenser;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
@@ -11,10 +12,8 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Me4502
@@ -116,11 +115,11 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         return true;
     }
 
-    boolean cannonEnable;
-    boolean fanEnable;
-    boolean fireArrowsEnable;
-    boolean snowShooterEnable;
-    boolean xpShooterEnable;
+    private boolean cannonEnable;
+    private boolean fanEnable;
+    private boolean fireArrowsEnable;
+    private boolean snowShooterEnable;
+    private boolean xpShooterEnable;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

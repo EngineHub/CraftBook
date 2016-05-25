@@ -466,7 +466,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
-    public void doCommand(String command, Event event, CommandItemDefinition comdef, Player player) {
+    public static void doCommand(String command, Event event, CommandItemDefinition comdef, Player player) {
 
         if(command == null || command.trim().isEmpty())
             return;
@@ -490,7 +490,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
-    public String parseLine(String command, Event event, Player player) {
+    public static String parseLine(String command, Event event, Player player) {
 
         if(command == null) return null;
 

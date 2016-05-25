@@ -36,7 +36,7 @@ public interface ICFamily {
      *
      * @return
      */
-    public ChipState detect(BlockWorldVector source, ChangedSign sign);
+    ChipState detect(BlockWorldVector source, ChangedSign sign);
 
     /**
      * Return a {@link ChipState} that provides an interface to access the I/O pins.
@@ -46,19 +46,19 @@ public interface ICFamily {
      *
      * @return
      */
-    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign);
+    ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign);
 
     /**
      * Gets the sign modifier of the family. In case of the base ic thats MC.
      *
      * @return family modifier
      */
-    public String getSuffix();
+    String getSuffix();
 
     /**
      * Gets the name of this IC Family.
      * 
      * @return the name
      */
-    public String getName();
+    String getName();
 }

@@ -28,12 +28,12 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
     }
 
-    public class BoatRemover implements Runnable {
+    class BoatRemover implements Runnable {
 
         LivingEntity player;
         Boat boat;
 
-        public BoatRemover(LivingEntity player, Boat boat) {
+        BoatRemover(LivingEntity player, Boat boat) {
             this.player = player;
             this.boat = boat;
         }
@@ -58,7 +58,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean giveItem;
+    boolean giveItem;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

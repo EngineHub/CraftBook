@@ -42,7 +42,7 @@ public class CartMechanismBlocks {
      * @param sign the block containing the sign that gives additional configuration to the mechanism,
      *             or null if not interested.
      */
-    public CartMechanismBlocks(Block rail, Block base, Block sign) {
+    private CartMechanismBlocks(Block rail, Block base, Block sign) {
 
         this.rail = rail;
         this.base = base;
@@ -115,7 +115,7 @@ public class CartMechanismBlocks {
      *
      * @param base the block on which the rails sit; the type of this block is what determines the mechanism type.
      */
-    public static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
+    private static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
 
         if (!RailUtil.isTrack(base.getRelative(BlockFace.UP, 1).getType()))
             throw new InvalidMechanismException("could not find rails.");
@@ -141,7 +141,7 @@ public class CartMechanismBlocks {
      *
      * @param sign the block containing the sign that gives additional configuration to the mechanism.
      */
-    public static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
+    private static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
 
         if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
         if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 2).getType()))
@@ -203,17 +203,17 @@ public class CartMechanismBlocks {
         return !hasSign() ? null : BukkitUtil.toChangedSign(sign);
     }
 
-    public boolean hasSign() {
+    boolean hasSign() {
 
         return sign != null && SignUtil.isSign(sign);
     }
 
-    public boolean hasRail() {
+    boolean hasRail() {
 
         return rail != null;
     }
 
-    public boolean hasBase() {
+    boolean hasBase() {
 
         return base != null;
     }

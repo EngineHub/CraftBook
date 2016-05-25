@@ -1,25 +1,20 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Difficulty;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
@@ -101,7 +96,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean isEntityEnabled(Entity ent, List<String> entities) {
+    private static boolean isEntityEnabled(Entity ent, List<String> entities) {
 
         if(entities == null) return false;
         for(String entity : entities)
@@ -116,9 +111,9 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         return visionEnabled.size() > 0 && attackPassiveEnabled.size() > 0 && critBowEnabled.size() > 0;
     }
 
-    List<String> visionEnabled;
-    List<String> critBowEnabled;
-    List<String> attackPassiveEnabled;
+    private List<String> visionEnabled;
+    private List<String> critBowEnabled;
+    private List<String> attackPassiveEnabled;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

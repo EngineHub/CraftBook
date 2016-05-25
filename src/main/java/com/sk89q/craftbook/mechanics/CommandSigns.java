@@ -89,7 +89,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         runCommandSign(s, null);
     }
 
-    public void runCommandSign(ChangedSign sign, LocalPlayer player) {
+    public static void runCommandSign(ChangedSign sign, LocalPlayer player) {
 
         String command = StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3);
 
@@ -110,7 +110,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
-    boolean allowRedstone;
+    private boolean allowRedstone;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

@@ -43,11 +43,11 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         }
     }
 
-    static class Decay implements Runnable {
+    private static class Decay implements Runnable {
 
         RideableMinecart cart;
 
-        public Decay(RideableMinecart cart) {
+        Decay(RideableMinecart cart) {
 
             this.cart = cart;
         }
@@ -60,7 +60,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         }
     }
 
-    int delay;
+    private int delay;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

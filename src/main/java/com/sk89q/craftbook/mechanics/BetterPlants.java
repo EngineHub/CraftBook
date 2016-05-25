@@ -1,8 +1,10 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -14,26 +16,33 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
 
+    private BukkitTask growthTask;
+
     @Override
     public boolean enable() {
+        if(fernFarming) {
+            for(World world : Bukkit.getWorlds())
+                tickedWorlds.add(world);
 
-        for(World world : Bukkit.getWorlds())
-            tickedWorlds.add(world);
-
-        if(fernFarming)
-            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
+            growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
+        }
 
         return fernFarming; //Only enable if a mech is enabled
+    }
+
+    @Override
+    public void disable() {
+        tickedWorlds.clear();
+
+        if(growthTask != null)
+            growthTask.cancel();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -52,7 +61,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
     }
 
-    public class GrowthTicker extends BukkitRunnable {
+    private class GrowthTicker implements Runnable {
 
         @Override
         public void run () {
@@ -68,7 +77,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                 }
 
                 for(Chunk chunk : world.getLoadedChunks()) {
-                    Block block = null;
+                    Block block;
                     if(fastTickRandoms)
                         block = chunk.getBlock(x,y,z);
                     else
@@ -91,13 +100,14 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         tickedWorlds.add(event.getWorld());
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
     public void onWorldUnload(WorldUnloadEvent event) {
 
         tickedWorlds.remove(event.getWorld());
     }
 
-    boolean fernFarming;
-    boolean fastTickRandoms;
+    private boolean fernFarming;
+    private boolean fastTickRandoms;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

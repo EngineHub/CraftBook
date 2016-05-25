@@ -1,34 +1,5 @@
 package com.sk89q.craftbook.mechanics.crafting;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.permissions.PermissionAttachment;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -39,6 +10,18 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.*;
+import org.bukkit.permissions.PermissionAttachment;
+
+import java.io.File;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Custom Crafting Recipe Handler
@@ -80,7 +63,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
      */
     public boolean addRecipe(RecipeManager.Recipe r) {
         try {
-            Recipe sh = null;
+            Recipe sh;
 
             if (r.getType() == RecipeManager.RecipeType.SHAPELESS) {
                 sh = new ShapelessRecipe(r.getResult().getItemStack());

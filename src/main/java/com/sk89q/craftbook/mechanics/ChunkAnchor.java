@@ -106,8 +106,8 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         }
     }
 
-    boolean allowRedstone;
-    boolean checkChunks;
+    private boolean allowRedstone;
+    private boolean checkChunks;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

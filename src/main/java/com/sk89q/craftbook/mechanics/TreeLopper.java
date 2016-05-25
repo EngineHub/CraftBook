@@ -1,35 +1,24 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.TreeSpecies;
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.*;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Tree;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
@@ -87,14 +76,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(visitedLocations.contains(block.getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block))
                 if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, hasPlanted)) {
-                    ItemStack heldItem = event.getPlayer().getItemInHand();
-                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getType()) > 0) {
-                        heldItem.setDurability((short) (heldItem.getDurability() + 1));
-                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getType()))
-                            event.getPlayer().setItemInHand(heldItem);
-                        else
-                            event.getPlayer().setItemInHand(null);
-                    }
+                    ItemUtil.damageHeldItem(event.getPlayer());
                 }
         }
     }
@@ -104,7 +86,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && breakLeaves) {
             MaterialData nw = toBreak.getState().getData();
             Tree old = new Tree(originalBlock.getMaterialData().getItemType(), (byte) originalBlock.getData());
-            if(!(nw instanceof Tree) || !(old instanceof Tree)) return false;
+            if(!(nw instanceof Tree)) return false;
             if(enforceDataValues && ((Tree) nw).getSpecies() != old.getSpecies()) return false;
         } else {
             if(toBreak.getType() != originalBlock.getType()) return false;
@@ -142,14 +124,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(visitedLocations.contains(block.getRelative(face).getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block.getRelative(face)))
                 if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
-                    ItemStack heldItem = event.getPlayer().getItemInHand();
-                    if(heldItem != null && ItemUtil.getMaxDurability(heldItem.getType()) > 0) {
-                        heldItem.setDurability((short) (heldItem.getDurability() + 1));
-                        if(heldItem.getDurability() <= ItemUtil.getMaxDurability(heldItem.getType()))
-                            event.getPlayer().setItemInHand(heldItem);
-                        else
-                            event.getPlayer().setItemInHand(null);
-                    }
+                    ItemUtil.damageHeldItem(event.getPlayer());
                 }
         }
 
@@ -158,11 +133,11 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     List<ItemInfo> enabledBlocks;
     List<ItemInfo> enabledItems;
-    int maxSearchSize;
-    boolean allowDiagonals;
-    boolean enforceDataValues;
-    boolean placeSaplings;
-    boolean breakLeaves;
+    private int maxSearchSize;
+    private boolean allowDiagonals;
+    private boolean enforceDataValues;
+    private boolean placeSaplings;
+    private boolean breakLeaves;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

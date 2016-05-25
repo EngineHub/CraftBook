@@ -54,7 +54,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         }, 2L);
     }
 
-    boolean giveItem;
+    private boolean giveItem;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

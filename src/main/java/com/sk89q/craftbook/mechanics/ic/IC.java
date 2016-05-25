@@ -31,46 +31,46 @@ public interface IC {
     /**
      * @return the title of the IC.
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      * @return the title that is shown on the sign.
      */
-    public String getSignTitle();
+    String getSignTitle();
 
     /**
      * Called when the sign is right clicked.
      */
-    public void onRightClick(Player p);
+    void onRightClick(Player p);
 
     /**
      * Called when the sign is broken.
      * 
      * @param event The BlockBreakEvent.
      */
-    public void onICBreak(BlockBreakEvent event);
+    void onICBreak(BlockBreakEvent event);
 
     /**
      * Recieve a new state to process on.
      *
      * @param chip chip state.
      */
-    public void trigger(ChipState chip);
+    void trigger(ChipState chip);
 
     /**
      * Proceed to unload the IC.
      */
-    public void unload();
+    void unload();
 
     /**
      * Called on IC load, to cache the IC's settings.
      */
-    public void load();
+    void load();
 
     /**
      * Get's the IC's sign.
      * 
      * @return The IC's sign.
      */
-    public ChangedSign getSign();
+    ChangedSign getSign();
 }

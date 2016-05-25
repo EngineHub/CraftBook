@@ -1,13 +1,12 @@
 package com.sk89q.craftbook.mechanics.drops;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.util.ItemUtil;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CustomDropDefinition {
 
@@ -52,7 +51,7 @@ public abstract class CustomDropDefinition {
             if(drop.getChance() < CraftBookPlugin.inst().getRandom().nextInt(100)) continue;
             ItemStack stack = drop.getStack().clone();
             if(drop.getMaximum() >= 0 && drop.getMinimum() >= 0) {
-                int amount = drop.getMinimum() + (int)(CraftBookPlugin.inst().getRandom().nextDouble() * (drop.getMaximum() - drop.getMinimum() + 1));
+                int amount = drop.getMinimum() + CraftBookPlugin.inst().getRandom().nextInt(drop.getMaximum() - drop.getMinimum() + 1);
                 if(amount <= 0) continue; //Invalid stack.
                 stack.setAmount(amount);
             }

@@ -14,8 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
@@ -50,7 +48,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!(event.getEntity() instanceof LivingEntity)) return;
         if(playerKillsOnly && event.getEntity().getKiller() == null) return;
         if(event.getEntityType() == null) return;
 
@@ -82,7 +79,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             case PLAYER:
                 if(!enablePlayers)
                     return;
-                String playerName = ((Player) event.getEntity()).getName();
+                String playerName = event.getEntity().getName();
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
                 SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
                 meta.setOwner(playerName);
@@ -150,7 +147,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
-                player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + " " + skull.getOwner());
+                player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
                 skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
                 skull.update();
@@ -270,23 +267,23 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 return null;
 
             for(MobSkullType type : values())
-                if(type.getPlayerName().equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
+                if(type.playerName.equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
                     return EntityType.valueOf(type.name());
 
             return null;
         }
     }
 
-    boolean enableMobs;
-    boolean enablePlayers;
-    boolean playerKillsOnly;
-    boolean miningDrops;
-    boolean overrideNatural;
-    double dropRate;
-    double rateModifier;
-    boolean showNameClick;
-    HashMap<String, Double> customDropRates;
-    HashMap<String, String> customSkins;
+    private boolean enableMobs;
+    private boolean enablePlayers;
+    private boolean playerKillsOnly;
+    private boolean miningDrops;
+    private boolean overrideNatural;
+    private double dropRate;
+    private double rateModifier;
+    private boolean showNameClick;
+    private HashMap<String, Double> customDropRates;
+    private HashMap<String, String> customSkins;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

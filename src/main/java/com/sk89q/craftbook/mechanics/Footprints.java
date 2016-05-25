@@ -1,11 +1,10 @@
 package com.sk89q.craftbook.mechanics;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,15 +13,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 public class Footprints extends AbstractCraftBookMechanic {
 
-    public Set<String> footsteps;
+    private Set<String> footsteps;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerMove(final PlayerMoveEvent event) {
@@ -74,7 +73,6 @@ public class Footprints extends AbstractCraftBookMechanic {
                 }, event.getPlayer().isSprinting() ? 7 : 10);
             } catch (Throwable e) {
                 CraftBookPlugin.logger().log(Level.WARNING, "Failed to send footprints for " + event.getPlayer().getName(), e);
-                return;
             }
         }
     }

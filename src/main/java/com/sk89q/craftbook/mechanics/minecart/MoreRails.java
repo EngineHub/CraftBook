@@ -73,7 +73,7 @@ public class MoreRails extends AbstractCraftBookMechanic {
     }
 
     public boolean ladder;
-    double ladderVerticalVelocity;
+    private double ladderVerticalVelocity;
     public boolean pressurePlate;
 
     @Override

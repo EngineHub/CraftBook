@@ -253,9 +253,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     continue;
 
                 Dropper dropper = (Dropper) bl.getState();
-                List<ItemStack> newItems = new ArrayList<ItemStack>();
-
-                newItems.addAll(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
+                List<ItemStack> newItems = new ArrayList<ItemStack>(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
 
                 for(ItemStack stack : dropper.getInventory().getContents())
                     if(ItemUtil.isStackValid(stack))
@@ -270,7 +268,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    private boolean isValidPipeBlock(Material typeId) {
+    private static boolean isValidPipeBlock(Material typeId) {
 
         return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER || typeId == Material.THIN_GLASS || typeId == Material.STAINED_GLASS_PANE;
     }

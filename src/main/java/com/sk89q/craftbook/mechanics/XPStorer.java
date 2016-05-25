@@ -133,10 +133,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    boolean requireBottle;
-    int xpPerBottle;
-    ItemInfo block;
-    TernaryState sneakingState;
+    private boolean requireBottle;
+    private int xpPerBottle;
+    private ItemInfo block;
+    private TernaryState sneakingState;
 
     @Override
     public void loadConfiguration(YAMLProcessor config, String path) {

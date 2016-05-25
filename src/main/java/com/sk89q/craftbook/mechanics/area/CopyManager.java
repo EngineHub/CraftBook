@@ -16,18 +16,17 @@ package com.sk89q.craftbook.mechanics.area;
  * see <http://www.gnu.org/licenses/>.
  */
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.HistoryHashMap;
+import com.sk89q.worldedit.data.DataException;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.World;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.World;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.data.DataException;
 
 /**
  * Used to load, save, and cache cuboid copies.
@@ -196,7 +195,7 @@ public class CopyManager {
      *
      * @return -1 if the copy can be made, some other number for the count
      */
-    public int meetsQuota(World world, String namespace, String ignore, int quota) {
+    public static int meetsQuota(World world, String namespace, String ignore, int quota) {
 
         String ignoreFilename = ignore + getFileSuffix();
 

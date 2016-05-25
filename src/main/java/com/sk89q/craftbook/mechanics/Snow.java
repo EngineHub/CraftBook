@@ -44,7 +44,6 @@ public class Snow extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-
         if(meltSunlight || piling || realistic) {
             for(World world : Bukkit.getWorlds()) {
                 for(Chunk chunk : world.getLoadedChunks()) {

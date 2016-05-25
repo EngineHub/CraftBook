@@ -1,13 +1,5 @@
 package com.sk89q.craftbook.mechanics.variables;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
@@ -17,10 +9,17 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class VariableCommands {
 
-    CraftBookPlugin plugin;
+    private CraftBookPlugin plugin;
 
     public VariableCommands(CraftBookPlugin plugin) {
 
@@ -126,14 +125,14 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    public void resetICCache(String variable, String namespace) {
+    private static void resetICCache(String variable, String namespace) {
 
         if(ICManager.inst() != null) {//Make sure IC's are enabled.
 
             Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
             while(iterator.hasNext()) {
                 Entry<Location, IC> ic = iterator.next();
-                if(ic.getValue().getSign().hasVariable(namespace + "|" + variable) || ic.getValue().getSign().hasVariable(variable))
+                if(ic.getValue().getSign().hasVariable(namespace + '|' + variable) || ic.getValue().getSign().hasVariable(variable))
                     iterator.remove();
             }
         }
@@ -387,8 +386,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    public void checkModifyPermissions(CommandSender sender, String key, String var) throws CommandException {
-
+    private static void checkModifyPermissions(CommandSender sender, String key, String var) throws CommandException {
         if(!hasVariablePermission(sender, key, var, "modify"))
             throw new CommandPermissionsException();
     }
@@ -408,9 +406,9 @@ public class VariableCommands {
             if(sender.hasPermission("craftbook.variables." + action + ".self") || sender.hasPermission("craftbook.variables." + action + ".self." + var))
                 return true;
 
-        if(!sender.hasPermission("craftbook.variables." + action + "") && !sender.hasPermission("craftbook.variables." + action + "." + namespace) && !sender.hasPermission("craftbook.variables." + action + "." + namespace + "." + var))
-            return false;
+        return !(!sender.hasPermission("craftbook.variables." + action + "")
+                && !sender.hasPermission("craftbook.variables." + action + '.' + namespace)
+                && !sender.hasPermission("craftbook.variables." + action + '.' + namespace + '.' + var));
 
-        return true;
     }
 }
