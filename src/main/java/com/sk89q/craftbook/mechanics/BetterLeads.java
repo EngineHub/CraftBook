@@ -186,7 +186,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!(event.getEntity() instanceof LivingEntity)) return;
         if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
         if(!(event.getEntity() instanceof Tameable)) return;
-        if(!!((Tameable) event.getEntity()).isTamed()) return; // TODO is this right?
+        if(!((Tameable) event.getEntity()).isTamed()) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -194,11 +194,11 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    boolean leadsStopTarget;
-    boolean leadsOwnerBreakOnly;
-    boolean leadsHitchPersists;
-    boolean leadsMobRepellant;
-    List<String> leadsAllowedMobs;
+    private boolean leadsStopTarget;
+    private boolean leadsOwnerBreakOnly;
+    private boolean leadsHitchPersists;
+    private boolean leadsMobRepellant;
+    private List<String> leadsAllowedMobs;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
