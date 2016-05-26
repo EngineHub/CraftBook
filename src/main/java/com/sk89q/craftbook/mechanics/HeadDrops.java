@@ -103,6 +103,10 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
                 break;
+            case ENDER_DRAGON:
+                if(!enableMobs)
+                    return;
+                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) 5);
             default:
                 if(!enableMobs)
                     return;
@@ -225,13 +229,15 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         OCELOT("MHF_Ocelot", "scraftbrothers3"),
 
         //Unofficial/Community
-        BAT("coolwhip101", "bozzobrain"),
-        ENDER_DRAGON("KingEndermen", "KingEnderman"),
+        BAT("bozzobrain", "coolwhip101"),
         //SILVERFISH("Xzomag", "AlexVMiner"),
-        SNOWMAN("scraftbrothers2", "Koebasti"),
+        SNOWMAN("Koebasti", "scraftbrothers2"),
         HORSE("gavertoso"),
         WOLF("Budwolf"),
-        WITCH("scrafbrothers4");
+        WITCH("scrafbrothers4"),
+        RABBIT("rabbit2077"),
+        GUARDIAN("Guardian");
+        //POLAR_BEAR("_DmacK_");
 
         MobSkullType(String playerName, String ... oldNames) {
 
