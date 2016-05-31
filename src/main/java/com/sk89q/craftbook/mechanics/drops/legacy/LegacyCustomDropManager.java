@@ -16,34 +16,22 @@
 
 package com.sk89q.craftbook.mechanics.drops.legacy;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.logging.Level;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.drops.BlockCustomDropDefinition;
+import com.sk89q.craftbook.mechanics.drops.CustomDrops;
+import com.sk89q.craftbook.mechanics.drops.DropItemStack;
+import com.sk89q.craftbook.mechanics.drops.EntityCustomDropDefinition;
+import com.sk89q.craftbook.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.drops.BlockCustomDropDefinition;
-import com.sk89q.craftbook.mechanics.drops.CustomDrops;
-import com.sk89q.craftbook.mechanics.drops.DropItemStack;
-import com.sk89q.craftbook.mechanics.drops.EntityCustomDropDefinition;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.RegexUtil;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 
 /**
  * Storage class for custom drop definitions.
@@ -204,7 +192,7 @@ public final class LegacyCustomDropManager {
                                     append = true;
                             }
 
-                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, null, new ItemInfo(sourceId, data));
+                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, null, TernaryState.NONE, new ItemInfo(sourceId, data));
                             converted.setAppend(append);
 
                             ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);
@@ -239,7 +227,7 @@ public final class LegacyCustomDropManager {
                                     append = true;
                             }
 
-                            EntityCustomDropDefinition converted = new EntityCustomDropDefinition(def.getKey().toUpperCase() + "" + this.converted++, stacks, null, EntityType.valueOf(def.getKey().toUpperCase()));
+                            EntityCustomDropDefinition converted = new EntityCustomDropDefinition(def.getKey().toUpperCase() + "" + this.converted++, stacks, null, TernaryState.NONE, EntityType.valueOf(def.getKey().toUpperCase()));
                             converted.setAppend(append);
 
                             ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);

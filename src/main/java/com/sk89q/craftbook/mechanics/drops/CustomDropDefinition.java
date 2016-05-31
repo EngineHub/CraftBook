@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.drops;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.TernaryState;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -15,12 +16,14 @@ public abstract class CustomDropDefinition {
     private String name;
 
     private boolean append;
+    private TernaryState silkTouch;
 
-    public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards) {
+    public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
         if(extraRewards != null)
             this.extraRewards = extraRewards.toArray(new DropReward[extraRewards.size()]);
         this.name = name;
+        this.silkTouch = silkTouch;
     }
 
     public void setAppend(boolean append) {
@@ -61,6 +64,10 @@ public abstract class CustomDropDefinition {
         }
 
         return ndrops.toArray(new ItemStack[ndrops.size()]);
+    }
+
+    public TernaryState getSilkTouch() {
+        return this.silkTouch;
     }
 
     public String getName() {

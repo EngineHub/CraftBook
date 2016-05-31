@@ -1,10 +1,10 @@
 package com.sk89q.craftbook.mechanics.drops;
 
-import java.util.List;
-
+import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
+import com.sk89q.craftbook.util.TernaryState;
 import org.bukkit.entity.EntityType;
 
-import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
+import java.util.List;
 
 public class EntityCustomDropDefinition extends CustomDropDefinition {
 
@@ -13,8 +13,8 @@ public class EntityCustomDropDefinition extends CustomDropDefinition {
     /**
      * Instantiate an Entity-Type CustomDrop.
      */
-    public EntityCustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, EntityType entityType) {
-        super(name, drops, extraRewards);
+    public EntityCustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch, EntityType entityType) {
+        super(name, drops, extraRewards, silkTouch);
         this.entityType = entityType;
     }
 

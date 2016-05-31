@@ -10,6 +10,7 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -61,6 +62,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             String type = config.getString("custom-drops." + key + ".type");
 
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
+            TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -108,12 +110,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 EntityType ent = EntityType.valueOf(config.getString("custom-drops." + key + ".entity-type"));
 
-                def = new EntityCustomDropDefinition(key, drops, rewards, ent);
+                def = new EntityCustomDropDefinition(key, drops, rewards, silkTouch, ent);
             } else if(type.equalsIgnoreCase("block")) {
 
                 ItemInfo data = new ItemInfo(config.getString("custom-drops." + key + ".block"));
 
-                def = new BlockCustomDropDefinition(key, drops, rewards, data);
+                def = new BlockCustomDropDefinition(key, drops, rewards, silkTouch, data);
             }
 
             if(def != null) {
@@ -130,6 +132,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         for(CustomDropDefinition def : definitions) {
 
             config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
+            config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
 
             int i = 0;
             for(DropItemStack stack : def.getDrops()) {
@@ -180,13 +183,17 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event))
             return;
 
+        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
+            return;
+
         for(CustomDropDefinition def : definitions) {
             if(!(def instanceof BlockCustomDropDefinition)) continue; //Nope, we only want block drop definitions.
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
 
-            if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
-                return;
+            boolean isSilkTouch = event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            if(!def.getSilkTouch().doesPass(isSilkTouch))
+                continue;
 
             if(!def.getAppend()) {
                 event.setCancelled(true);
