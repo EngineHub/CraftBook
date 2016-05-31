@@ -67,10 +67,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     @Override
     public void unload() {
-        if(lastEntity != null) {
-            lastEntity.clear();
-            lastEntity = null;
-        }
+        lastEntity.clear();
     }
 
     private EnumMap<EntityType, Entity> lastEntity = new EnumMap<EntityType, Entity>(EntityType.class);
