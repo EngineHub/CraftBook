@@ -191,7 +191,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
 
-            boolean isSilkTouch = event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            boolean isSilkTouch = ((Player) event.getPlayer()).getItemInHand() != null && event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
@@ -223,7 +223,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType())) continue;
 
-            boolean isSilkTouch = event.getEntity() instanceof Player && ((Player) event.getEntity()).getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            boolean isSilkTouch = event.getEntity() instanceof Player && ((Player) event.getEntity()).getItemInHand() != null && ((Player) event.getEntity()).getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
