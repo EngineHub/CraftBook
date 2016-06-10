@@ -236,8 +236,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         WOLF("Budwolf"),
         WITCH("scrafbrothers4"),
         RABBIT("rabbit2077"),
-        GUARDIAN("Guardian");
-        //POLAR_BEAR("_DmacK_");
+        GUARDIAN("Guardian"),
+        POLAR_BEAR("_DmacK_");
 
         MobSkullType(String playerName, String ... oldNames) {
 
