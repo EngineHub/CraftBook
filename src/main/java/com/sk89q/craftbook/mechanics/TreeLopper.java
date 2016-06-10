@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.material.MaterialData;
+import org.bukkit.material.Sapling;
 import org.bukkit.material.Tree;
 
 import java.util.Arrays;
@@ -64,7 +65,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
                 @Override
                 public void run () {
                     usedBlock.setType(Material.SAPLING);
-                    ((Tree) usedBlock.getState().getData()).setSpecies(fspecies);
+                    ((Sapling) usedBlock.getState().getData()).setSpecies(fspecies);
                 }
 
             }, 2);
@@ -85,7 +86,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && breakLeaves) {
             MaterialData nw = toBreak.getState().getData();
-            Tree old = new Tree(originalBlock.getMaterialData().getItemType(), (byte) originalBlock.getData());
+            Tree old = new Tree(originalBlock.getType(), (byte) originalBlock.getData());
             if(!(nw instanceof Tree)) return false;
             if(enforceDataValues && ((Tree) nw).getSpecies() != old.getSpecies()) return false;
         } else {
