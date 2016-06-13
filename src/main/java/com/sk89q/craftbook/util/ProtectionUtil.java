@@ -83,10 +83,11 @@ public final class ProtectionUtil {
 
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
-
+            CompatabilityUtil.disableInterferences(player);
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             EventUtil.ignoreEvent(event);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
+            CompatabilityUtil.enableInterferences(player);
             return !event.isCancelled();
         }
         return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());

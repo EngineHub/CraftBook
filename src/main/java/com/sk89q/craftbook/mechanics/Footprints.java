@@ -31,6 +31,9 @@ public class Footprints extends AbstractCraftBookMechanic {
         if(event.getFrom().getX() == event.getTo().getX() && event.getFrom().getZ() == event.getTo().getZ())
             return;
 
+        if(!event.getPlayer().hasPermission("craftbook.mech.footprints.use"))
+            return;
+
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
@@ -47,9 +50,6 @@ public class Footprints extends AbstractCraftBookMechanic {
         if(blocks.contains(new ItemInfo(below))) {
 
             if(footsteps.contains(event.getPlayer().getName()))
-                return;
-
-            if(!event.getPlayer().hasPermission("craftbook.mech.footprints.use"))
                 return;
 
             try {
