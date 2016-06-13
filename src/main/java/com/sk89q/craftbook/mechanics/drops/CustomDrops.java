@@ -183,15 +183,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event))
             return;
 
-        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false))
-            return;
-
         for(CustomDropDefinition def : definitions) {
             if(!(def instanceof BlockCustomDropDefinition)) continue; //Nope, we only want block drop definitions.
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
 
-            boolean isSilkTouch = ((Player) event.getPlayer()).getItemInHand() != null && event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            boolean isSilkTouch = event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
