@@ -116,7 +116,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
             block.setType(Material.SAPLING);
-            ((Tree) block.getState().getData()).setSpecies(species);
+            ((Sapling) block.getState().getData()).setSpecies(species);
             hasPlanted = true;
         }
         visitedLocations.add(block.getLocation());
