@@ -46,7 +46,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
 
-@Plugin(id = "com.sk89q.craftbook", name = "CraftBook", version = "4.0")
+@Plugin(id = "craftbook", name = "CraftBook", version = "4.0")
 public class CraftBookPlugin extends CraftBookAPI {
 
     private MechanicDataCache cache;
