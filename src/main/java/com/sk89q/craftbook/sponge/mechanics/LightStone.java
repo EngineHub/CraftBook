@@ -28,6 +28,8 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -65,7 +67,10 @@ public class LightStone extends SpongeBlockMechanic implements DocumentationProv
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             int lightLevel = BlockUtil.getLightLevel(location);
-            if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == lightstoneItem.getValue().getItem()) {
+
+            HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
+
+            if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent() && player.getItemInHand(hand).get().getItem() == lightstoneItem.getValue().getItem()) {
                 player.sendMessage(getCurrentLine(lightLevel));
                 event.setCancelled(true);
             }

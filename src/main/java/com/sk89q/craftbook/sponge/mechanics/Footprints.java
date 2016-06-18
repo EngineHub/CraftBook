@@ -34,7 +34,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.util.Direction;
 
 import javax.annotation.Nonnull;
@@ -63,7 +63,7 @@ public class Footprints extends SpongeMechanic {
     private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new FootprintDataCacheLoader());
 
     @Listener
-    public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
+    public void onEntityMove(MoveEntityEvent event) {
         if(event.getTargetEntity().isOnGround()) {
             if(BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), event.getTargetEntity().getLocation().getRelative(Direction.DOWN).getBlock())) {
                 FootprintData data = getFootprintData(event.getTargetEntity().getUniqueId());

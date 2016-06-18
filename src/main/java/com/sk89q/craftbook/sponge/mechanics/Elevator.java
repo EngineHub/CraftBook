@@ -38,7 +38,7 @@ import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -100,7 +100,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onEntityMove(DisplaceEntityEvent.Move.TargetLiving event) {
+    public void onEntityMove(MoveEntityEvent event) {
 
         if(!LocationUtil.isLocationWithinRange(event.getToTransform().getLocation()))
             return;

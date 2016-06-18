@@ -30,6 +30,8 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.CoalTypes;
+import org.spongepowered.api.data.type.HandType;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -68,7 +70,9 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             int powerLevel = BlockUtil.getBlockPowerLevel(location).orElse(-1);
 
-            if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand().isPresent() && player.getItemInHand().get().getItem() == ammeterItem.getValue().getItem()) {
+            HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
+
+            if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent() && player.getItemInHand(hand).get().getItem() == ammeterItem.getValue().getItem()) {
                 player.sendMessage(getCurrentLine(powerLevel));
                 event.setCancelled(true);
             }
