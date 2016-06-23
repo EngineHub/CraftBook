@@ -65,7 +65,6 @@ public class ICType<T extends IC> {
     }
 
     public IC buildIC(Location block) {
-
         IC ic = null;
 
         try {
@@ -94,7 +93,6 @@ public class ICType<T extends IC> {
         ICType<?> icType = (ICType<?>) o;
 
         return modelId.equals(icType.modelId) && icClass.equals(icType.icClass);
-
     }
 
     @Override
