@@ -115,8 +115,15 @@ archivesZip.dependsOn(jar)
 
 // Translations Section
 
+if (project.hasProperty("crowdin_apikey")) {
+    build.dependsOn(crowdinUpload)
+    build.dependsOn(crowdinDownload)
+} else {
+    ext.crowdin_apikey = ""
+}
+
 crowdinDownload {
-    apiKey = project.hasProperty("crowdin_apikey")
+    apiKey = "${crowdin_apikey}"
     destination = "$projectDir/src/main/resources/strings"
     projectId = 'craftbook'
 
@@ -131,16 +138,11 @@ crowdinDownload {
 }
 
 crowdinUpload {
-    apiKey = project.hasProperty("crowdin_apikey")
+    apiKey = "${crowdin_apikey}"
     projectId = 'craftbook'
     sourceFiles = [
             ['strings.properties', "$projectDir/src/main/resources/strings/strings.properties"]
     ]
-}
-
-if (project.hasProperty("crowdin_apikey")) {
-    build.dependsOn(crowdinUpload)
-    build.dependsOn(crowdinDownload)
 }
 
 // Deployment Section
