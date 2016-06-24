@@ -19,6 +19,9 @@ package com.sk89q.craftbook.sponge.util.locale;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.spongepowered.api.text.TranslatableText;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.text.translation.locale.Locales;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 
@@ -30,16 +33,21 @@ import java.util.function.Function;
 
 public class TranslationsManager {
 
-    private Function<Locale, ResourceBundle> resourceBundleFunction;
+    //A few commonly used translated texts.
+    public static TranslatableText USE_PERMISSIONS;
 
-    private LoadingCache<Locale, ResourceBundle> resourceBundleCache = CacheBuilder.newBuilder().build(new ResourceBundleLoader());
+    private static Function<Locale, ResourceBundle> resourceBundleFunction;
 
-    public TranslationsManager() {
+    private static LoadingCache<Locale, ResourceBundle> resourceBundleCache = CacheBuilder.newBuilder().build(new ResourceBundleLoader());
+
+    public static void initialize() {
         resourceBundleFunction = locale -> Optional.of(resourceBundleCache.getUnchecked(locale)).orElse(resourceBundleCache.getUnchecked(Locales.EN_US));
+
+        USE_PERMISSIONS = TranslatableText.builder(new ResourceBundleTranslation("mechanic.use-permissions", resourceBundleFunction)).color(TextColors.RED).build();
     }
 
-    public Function<Locale, ResourceBundle> getResourceBundleFunction() {
-        return this.resourceBundleFunction;
+    public static Function<Locale, ResourceBundle> getResourceBundleFunction() {
+        return resourceBundleFunction;
     }
 
     private static class ResourceBundleLoader extends CacheLoader<Locale, ResourceBundle> {

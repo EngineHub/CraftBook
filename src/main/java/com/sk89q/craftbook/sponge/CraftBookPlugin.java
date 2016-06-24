@@ -46,7 +46,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
-import java.util.Locale;
 
 @Plugin(id = "craftbook", name = "CraftBook", version = "4.0")
 public class CraftBookPlugin extends CraftBookAPI {
@@ -71,8 +70,6 @@ public class CraftBookPlugin extends CraftBookAPI {
     protected SpongeConfiguration config;
 
     ConfigurationOptions configurationOptions;
-
-    public TranslationsManager translationsManager;
 
     /* Logging */
 
@@ -106,6 +103,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Loading Configuration");
 
         config.load();
+        TranslationsManager.initialize();
 
         if(config.dataOnlyMode.getValue()) {
             logger.info("Halting CraftBook Initialization - Data Only Mode!");
@@ -155,10 +153,6 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
 
         config.save(); //Do initial save of config.
-
-        translationsManager = new TranslationsManager();
-
-        System.out.println(translationsManager.getResourceBundleFunction().apply(Locale.ENGLISH).getString("test"));
     }
 
     @Listener

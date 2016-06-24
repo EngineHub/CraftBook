@@ -23,6 +23,7 @@ import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -38,8 +39,8 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.TranslatableText;
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -50,6 +51,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
+
 public abstract class SimpleArea extends SpongeSignMechanic {
 
     SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
@@ -57,6 +60,8 @@ public abstract class SimpleArea extends SpongeSignMechanic {
 
     ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
     ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
+
+    TranslatableText missingOtherEnd = TranslatableText.of(new ResourceBundleTranslation("area.missing-other-end", TranslationsManager.getResourceBundleFunction()));
 
     void loadCommonConfig(ConfigurationNode config) {
         allowedBlocks.load(config);
@@ -83,7 +88,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                             event.setCancelled(true);
                         }
                     } else if (human instanceof CommandSource) {
-                        ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                        ((CommandSource) human).sendMessage(USE_PERMISSIONS);
                     }
                 }));
             }
@@ -103,7 +108,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
             if(human != null && human instanceof Subject) {
                 if(!usePermissions.hasPermission((Subject) human)) {
                     if(human instanceof CommandSource)
-                        ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                        ((CommandSource) human).sendMessage(USE_PERMISSIONS);
                     return;
                 }
             }

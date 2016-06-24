@@ -27,6 +27,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -34,6 +35,8 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TranslatableText;
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -48,6 +51,8 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
     private ConfigValue<Integer> maximumLength = new ConfigValue<>("maximum-length", "The maximum length the bridge can be.", 16);
     private ConfigValue<Integer> maximumWidth = new ConfigValue<>("maximum-width", "The maximum width each side of the bridge can be. The overall max width is this*2 + 1.", 5);
+
+    private TranslatableText notAllowedMaterial = TranslatableText.of(new ResourceBundleTranslation("bridge.cant-use-material", TranslationsManager.getResourceBundleFunction()));
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -66,7 +71,7 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
             Location baseBlock = block.getRelative(Direction.DOWN);
 
             if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't use this material for a bridge!").build());
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(notAllowedMaterial);
                 return true;
             }
 

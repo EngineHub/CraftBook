@@ -28,6 +28,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -40,7 +41,6 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -74,7 +74,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock())) {
                 if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
                     if(human instanceof CommandSource)
-                        ((CommandSource) human).sendMessage(Text.of(TextColors.RED, "You do not have permission to use this mechanic"));
+                        ((CommandSource) human).sendMessage(TranslationsManager.USE_PERMISSIONS);
                     return;
                 }
 
