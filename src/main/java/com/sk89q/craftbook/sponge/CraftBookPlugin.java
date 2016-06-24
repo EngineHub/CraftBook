@@ -30,6 +30,7 @@ import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import com.sk89q.craftbook.sponge.util.data.CraftBookData;
+import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeSerializers;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -45,6 +46,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.File;
+import java.util.Locale;
 
 @Plugin(id = "craftbook", name = "CraftBook", version = "4.0")
 public class CraftBookPlugin extends CraftBookAPI {
@@ -69,6 +71,8 @@ public class CraftBookPlugin extends CraftBookAPI {
     protected SpongeConfiguration config;
 
     ConfigurationOptions configurationOptions;
+
+    public TranslationsManager translationsManager;
 
     /* Logging */
 
@@ -116,7 +120,7 @@ public class CraftBookPlugin extends CraftBookAPI {
             if (config.enabledMechanics.getValue().contains(input.getName())
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
-                logger.info("Enabled: " + input.getName());
+                logger.debug("Enabled: " + input.getName());
                 return true;
             }
 
@@ -151,6 +155,10 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
 
         config.save(); //Do initial save of config.
+
+        translationsManager = new TranslationsManager();
+
+        System.out.println(translationsManager.getResourceBundleFunction().apply(Locale.ENGLISH).getString("test"));
     }
 
     @Listener

@@ -7,6 +7,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "1.2.3"
     id "com.jfrog.artifactory" version "4.0.0"
     id "org.spongepowered.plugin" version "0.6"
+    id "com.mendhak.gradlecrowdin" version "0.0.9"
 }
 
 defaultTasks 'licenseFormat', 'build'
@@ -111,6 +112,36 @@ archivesZip.dependsOn(shadowJar)
 archivesZip.dependsOn(sourcesJar)
 archivesZip.dependsOn(javadocJar)
 archivesZip.dependsOn(jar)
+
+// Translations Section
+
+crowdinDownload {
+    apiKey = project.hasProperty("crowdin_apikey")
+    destination = "$projectDir/src/main/resources/strings"
+    projectId = 'craftbook'
+
+    //Optional
+    //Android projects
+    renameMapping  = [
+            from:  '^(.*)/(.*)$',
+            to:  /strings_\1_\2.properties/
+    ]
+    //Optional
+    excludePattern = '**/*.txt'
+}
+
+crowdinUpload {
+    apiKey = project.hasProperty("crowdin_apikey")
+    projectId = 'craftbook'
+    sourceFiles = [
+            ['strings.properties', "$projectDir/src/main/resources/strings/strings.properties"]
+    ]
+}
+
+if (project.hasProperty("crowdin_apikey")) {
+    build.dependsOn(crowdinUpload)
+    build.dependsOn(crowdinDownload)
+}
 
 // Deployment Section
 
