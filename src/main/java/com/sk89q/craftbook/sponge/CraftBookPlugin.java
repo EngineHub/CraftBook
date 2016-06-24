@@ -102,7 +102,6 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Loading Configuration");
 
         config.load();
-        config.save(); //Do initial save of config.
 
         if(config.dataOnlyMode.getValue()) {
             logger.info("Halting CraftBook Initialization - Data Only Mode!");
@@ -150,6 +149,8 @@ public class CraftBookPlugin extends CraftBookAPI {
 
             DocumentationGenerator.generateDocumentation(config);
         }
+
+        config.save(); //Do initial save of config.
     }
 
     @Listener
