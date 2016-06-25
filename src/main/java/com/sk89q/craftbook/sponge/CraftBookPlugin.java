@@ -76,6 +76,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Inject
     private Logger logger;
 
+    @Override
     public Logger getLogger() {
         return logger;
     }

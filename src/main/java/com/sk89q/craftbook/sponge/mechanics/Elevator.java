@@ -218,13 +218,6 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return new String[]{
-                ""
-        };
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 allowJumpLifts

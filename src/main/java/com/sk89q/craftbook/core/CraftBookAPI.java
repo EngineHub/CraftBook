@@ -18,6 +18,7 @@ package com.sk89q.craftbook.core;
 
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
+import org.slf4j.Logger;
 
 import java.io.File;
 
@@ -61,4 +62,11 @@ public abstract class CraftBookAPI {
      * @return The working directory
      */
     public abstract File getWorkingDirectory();
+
+    /**
+     * Gets the logger.
+     *
+     * @return The logger
+     */
+    public abstract Logger getLogger();
 }

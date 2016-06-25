@@ -213,13 +213,6 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return new String[]{
-                ""
-        };
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 allowedBlocks,

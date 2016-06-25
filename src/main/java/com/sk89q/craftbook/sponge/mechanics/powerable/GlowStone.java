@@ -58,13 +58,6 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return  new String[]{
-                "The *Glowstone* mechanic allows switching a configurable block (defaulted to glass) to glowstone using redstone. Put a tonne together and you can control your home's lighting with a regular redstone switch.",
-        };
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
                 offBlock

@@ -113,16 +113,6 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return new String[] {
-                "The ammeter allows you to get the current level in wires and redstone devices. ",
-                "",
-                "Right click any redstone device while holding coal to see the meter's output. " +
-                        "The current in wires decrease by one every block and source blocks emit a level of 15, giving us the wire length limit of 15 blocks."
-        };
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
                 ammeterItem

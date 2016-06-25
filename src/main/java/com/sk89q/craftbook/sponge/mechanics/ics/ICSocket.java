@@ -136,11 +136,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return "mechanics/ics";
     }
 
-    @Override
-    public String[] getMainDocumentation() {
-        return new String[0];
-    }
-
     public static class BaseICData extends SpongeMechanicData {
         public IC ic;
     }

@@ -287,11 +287,6 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return new String[0];
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 dispersionMode,

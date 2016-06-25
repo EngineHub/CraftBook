@@ -1,0 +1,7 @@
+===================
+Integrated Circuits
+===================
+
+%CONFIG%
+
+%PERMS%

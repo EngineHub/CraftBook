@@ -92,13 +92,6 @@ public class SpongeConfiguration implements DocumentationProvider {
     }
 
     @Override
-    public String[] getMainDocumentation() {
-        return new String[]{
-                "CraftBook has multiple configuration files, therefore this page will focus on the main one, rather than configuration files for each individual mechanic. To configure mechanics, see :doc:`mechanics/index`."
-        };
-    }
-
-    @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 enabledMechanics,

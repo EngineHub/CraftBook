@@ -40,15 +40,14 @@ public interface DocumentationProvider {
     String getPath();
 
     /**
-     * Gets the main documentation section.
+     * Allows documentation providers to provide their own content converters.
      *
-     * <p>
-     *     Each string in the array refers to a different line.
-     * </p>
-     *
-     * @return The main documentation section
+     * @param input The input string.
+     * @return The output string.
      */
-    String[] getMainDocumentation();
+    default String performCustomConversions(String input) {
+        return input;
+    }
 
     /**
      * Gets an array of all configuration nodes this mechanic uses.

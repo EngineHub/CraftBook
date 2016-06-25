@@ -1,0 +1,7 @@
+====
+Gate
+====
+
+%CONFIG%
+
+%PERMS%
