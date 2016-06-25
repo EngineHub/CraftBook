@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.world.Location;
 
@@ -24,8 +25,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-public class ICType<T extends IC> {
+public class ICType<T extends IC> implements DocumentationProvider {
 
+    String name;
+    String description;
     String modelId;
     String shorthandId;
     String defaultPinset;
@@ -34,16 +37,18 @@ public class ICType<T extends IC> {
     Object[] extraArguments = null;
     Class<?>[] argumentTypes = new Class<?>[2];
 
-    public ICType(String modelId, String shorthandId, Class<T> icClass) {
+    public ICType(String modelId, String shorthandId, String name, String description, Class<T> icClass) {
         this.modelId = modelId;
         this.shorthandId = shorthandId;
+        this.name = name;
+        this.description = description;
         this.icClass = icClass;
         argumentTypes[0] = ICType.class;
         argumentTypes[1] = Location.class;
     }
 
-    public ICType(String modelId, String shorthandId, Class<T> icClass, String defaultPinset) {
-        this(modelId, shorthandId, icClass);
+    public ICType(String modelId, String shorthandId, String name, String description, Class<T> icClass, String defaultPinset) {
+        this(modelId, shorthandId, name, description, icClass);
         this.defaultPinset = defaultPinset;
     }
 
@@ -79,6 +84,25 @@ public class ICType<T extends IC> {
         }
 
         return ic;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/ics/" + modelId;
+    }
+
+    @Override
+    public String getTemplatePath() {
+        return "mechanics/ics/template";
+    }
+
+    @Override
+    public String performCustomConversions(String input) {
+        return input.replace("%IC%", modelId);
     }
 
     @Override

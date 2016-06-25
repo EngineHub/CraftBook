@@ -33,7 +33,7 @@ public class DocumentationGenerator {
         File docFile = new File(docsFile, provider.getPath() + ".rst");
         docFile.getParentFile().mkdirs();
 
-        URL resource = DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getPath() + ".rst");
+        URL resource = DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst");
         if (resource == null) {
             CraftBookAPI.inst().getLogger().warn("Failed to find template for " + provider.getPath());
             return;

@@ -25,19 +25,22 @@ public interface DocumentationProvider {
     PermissionNode[] EMPTY_PERMISSION_NODES = new PermissionNode[0];
 
     /**
-     * Gets the name of this DocumentationProvider, used for the header.
-     *
-     * @return The name
-     */
-    String getName();
-
-    /**
-     * Gets the relative path inside the mechanics directory that this
+     * Gets the relative path inside the docs directory that this
      * documentation file goes in.
      *
      * @return The path.
      */
     String getPath();
+
+    /**
+     * Gets the relative path inside the docs directory that this
+     * documentation template file is in.
+     *
+     * @return The template path.
+     */
+    default String getTemplatePath() {
+        return getPath();
+    }
 
     /**
      * Allows documentation providers to provide their own content converters.

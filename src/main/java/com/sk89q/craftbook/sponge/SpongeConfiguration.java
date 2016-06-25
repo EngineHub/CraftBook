@@ -82,11 +82,6 @@ public class SpongeConfiguration implements DocumentationProvider {
     }
 
     @Override
-    public String getName() {
-        return "Configuration";
-    }
-
-    @Override
     public String getPath() {
         return "config";
     }

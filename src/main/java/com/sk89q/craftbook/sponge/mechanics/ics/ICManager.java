@@ -18,25 +18,32 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
 
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 class ICManager {
 
-    private static Set<ICType<? extends IC>> registeredICTypes = new HashSet<>();
+    private static SortedSet<ICType<? extends IC>> registeredICTypes = new TreeSet<>(new Comparator<ICType<? extends IC>>() {
+        @Override
+        public int compare(ICType<? extends IC> o1, ICType<? extends IC> o2) {
+            return o1.modelId.compareTo(o2.modelId);
+        }
+    });
 
     static {
         //SISO
-        registerICType(new ICType<>("MC1000", "REPEATER", Repeater.class));
-        registerICType(new ICType<>("MC1001", "INVERTER", Inverter.class));
+        registerICType(new ICType<>("MC1000", "REPEATER", "Repeater", "Repeats a redstone signal.", Repeater.class));
+        registerICType(new ICType<>("MC1001", "INVERTER", "Inverter", "Inverts a redstone signal.", Inverter.class));
 
-        registerICType(new ICType<>("MC1421", "CLOCK", Clock.class));
+        registerICType(new ICType<>("MC1421", "CLOCK", "Clock", "Outputs high every X ticks when input is high.", Clock.class));
 
         //3ISO
-        registerICType(new ICType<>("MC3002", "AND", AndGate.class, "3ISO"));
-        registerICType(new ICType<>("MC3003", "NAND", NandGate.class, "3ISO"));
-        registerICType(new ICType<>("MC3020", "XOR", XorGate.class, "3ISO"));
-        registerICType(new ICType<>("MC3021", "XNOR", XnorGate.class, "3ISO"));
+        registerICType(new ICType<>("MC3002", "AND", "And Gate", "Outputs high if all inputs are high.", AndGate.class, "3ISO"));
+        registerICType(new ICType<>("MC3003", "NAND", "Nand Gate", "Outputs high if all inputs are low.", NandGate.class, "3ISO"));
+        registerICType(new ICType<>("MC3020", "XOR", "Xor Gate", "Outputs high if the inputs are different", XorGate.class, "3ISO"));
+        registerICType(new ICType<>("MC3021", "XNOR", "Xnor Gate", "Outputs high if the inputs are the same", XnorGate.class, "3ISO"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {
@@ -53,5 +60,9 @@ class ICManager {
         }
 
         return null;
+    }
+
+    public static Set<ICType<? extends IC>> getICTypes() {
+        return registeredICTypes;
     }
 }
