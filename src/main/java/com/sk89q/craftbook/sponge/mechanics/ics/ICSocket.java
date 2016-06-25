@@ -159,8 +159,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 stLength = "Self Triggering".length();
 
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            if(icType.modelId.length() > idLength)
-                idLength = icType.modelId.length();
+            if((":doc:`ics/" + icType.modelId + "`").length() > idLength)
+                idLength = (":doc:`ics/" + icType.modelId + "`").length();
             if(icType.shorthandId.length() > shorthandLength)
                 shorthandLength = icType.shorthandId.length();
             if(icType.name.length() > nameLength)
@@ -189,7 +189,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 + padToLength("Self Triggering", stLength+1) + "\n");
         icTable.append(border + "\n");
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            icTable.append(padToLength(icType.modelId, idLength+1)
+            icTable.append(padToLength(":doc:`ics/" + icType.modelId + "`", idLength+1)
                     + padToLength(icType.shorthandId, shorthandLength+1)
                     + padToLength(icType.name, nameLength+1)
                     + padToLength(icType.description, descriptionLength+1)

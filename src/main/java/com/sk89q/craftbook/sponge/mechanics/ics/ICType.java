@@ -25,6 +25,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+
 public class ICType<T extends IC> implements DocumentationProvider {
 
     String name;
@@ -102,7 +104,8 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
     @Override
     public String performCustomConversions(String input) {
-        return input.replace("%IC%", modelId);
+        String icHeader = createStringOfLength(modelId.length(), '=') + '\n' + modelId + '\n' + createStringOfLength(modelId.length(), '=');
+        return input.replace("%IC_HEADER%", icHeader);
     }
 
     @Override
