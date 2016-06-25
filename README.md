@@ -3,8 +3,6 @@
 
 CraftBook is a heavily customizable plugin adding exciting new gameplay elements and advanced redstone functions!
 
-CraftBook is a heavily customizable plugin adding exciting new gameplay elements and advanced redstone functions!
-
 * Modular, and extremely light on your server.
 * Enable features that you need, disable ones that you don't. Even tweak features to your liking!
 * Redstone ICs (AND/OR gates, lightning striker gates)
