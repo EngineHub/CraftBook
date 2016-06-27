@@ -29,16 +29,20 @@ public class DocumentationGenerator {
 
     private static final Pattern PERMS_PATTERN = Pattern.compile("%PERMS%", Pattern.LITERAL);
     private static final Pattern CONFIG_PATTERN = Pattern.compile("%CONFIG%", Pattern.LITERAL);
+    private static final Pattern IMPORT_PATTERN = Pattern.compile("%IMPORT (.*)%");
 
-    public static void generateDocumentation(DocumentationProvider provider) {
-
+    public static File getDocsDir() {
         File docsDir = new File(CraftBookAPI.inst().getWorkingDirectory(), "documentation");
         if(!docsDir.exists() && !docsDir.mkdir()) {
             CraftBookAPI.inst().getLogger().error("Failed to generate documentation directory!");
-            return;
+            return null;
         }
 
-        File docFile = new File(docsDir, provider.getPath() + ".rst");
+        return docsDir;
+    }
+
+    public static void generateDocumentation(DocumentationProvider provider) {
+        File docFile = new File(getDocsDir(), provider.getPath() + ".rst");
         docFile.getParentFile().mkdirs();
 
         URL resource = DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst");
@@ -49,15 +53,31 @@ public class DocumentationGenerator {
 
         File template = new File(resource.getFile());
 
+        String output = makeReplacements(loadFile(template), provider);
+
+        try(PrintWriter writer = new PrintWriter(docFile)) {
+            writer.write(output);
+        } catch(IOException e) {
+            CraftBookAPI.inst().getLogger().error("An IO Exception occured.", e);
+        }
+    }
+
+    public static String loadFile(File inputFile) {
         String output = "";
-        try (BufferedReader reader = new BufferedReader(new FileReader(template))) {
-            String temp;
-            while((temp = reader.readLine()) != null)
-                output += temp + '\n';
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (inputFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+                String temp;
+                while ((temp = reader.readLine()) != null)
+                    output += temp + '\n';
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
+        return output;
+    }
+
+    public static String makeReplacements(String input, DocumentationProvider provider) {
         StringBuilder configSection = new StringBuilder();
 
         if(provider.getConfigurationNodes().length > 0) {
@@ -89,7 +109,7 @@ public class DocumentationGenerator {
             configSection.append(border).append('\n');
         }
 
-        output = CONFIG_PATTERN.matcher(output).replaceAll(Matcher.quoteReplacement(configSection.toString()));
+        input = CONFIG_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(configSection.toString()));
 
         StringBuilder permissionsSection = new StringBuilder();
 
@@ -120,15 +140,19 @@ public class DocumentationGenerator {
             permissionsSection.append(border).append('\n');
         }
 
-        output = PERMS_PATTERN.matcher(output).replaceAll(Matcher.quoteReplacement(permissionsSection.toString()));
+        input = PERMS_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(permissionsSection.toString()));
 
-        output = provider.performCustomConversions(output);
+        input = provider.performCustomConversions(input);
 
-        try(PrintWriter writer = new PrintWriter(docFile)) {
-            writer.write(output);
-        } catch(IOException e) {
-            CraftBookAPI.inst().getLogger().error("An IO Exception occured.", e);
+        Matcher importMatcher = IMPORT_PATTERN.matcher(input);
+        while(importMatcher.find()) {
+            String fileDir = importMatcher.group(1);
+            File file = new File(new File(DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst").getFile()).getParentFile(), fileDir + ".rst");
+            System.out.println(file.getAbsolutePath());
+            input = input.replace("%IMPORT " + fileDir + '%', makeReplacements(loadFile(file), provider));
         }
+
+        return input;
     }
 
     public static String createStringOfLength(int length, char character) {
