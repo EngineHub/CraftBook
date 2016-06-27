@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -39,9 +40,16 @@ import org.spongepowered.api.profile.GameProfile;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
 @Module(moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
-public class HeadDrops extends SpongeMechanic {
+public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
+
+    private static final Pattern HEAD_DROPS_TABLE_PATTERN = Pattern.compile("%CUSTOM_HEAD_TYPES%", Pattern.LITERAL);
 
     @Listener
     public void onItemDrops(DropItemEvent.Pre event, @First Entity entity) {
@@ -126,5 +134,42 @@ public class HeadDrops extends SpongeMechanic {
 
     private GameProfile getForEntity(EntityType entityType) {
         return mobSkullMap.get(entityType);
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/head_drops";
+    }
+
+    @Override
+    public String performCustomConversions(String input) {
+        StringBuilder headTable = new StringBuilder();
+
+        headTable.append("Custom Head Drops\n");
+        headTable.append("=================\n\n");
+
+        int mobTypeLength = "Mob".length(),
+                headImageLength = "Image".length();
+
+        for(Map.Entry<EntityType, GameProfile> entry : mobSkullMap.entrySet()) {
+            if(entry.getKey().getName().length() > mobTypeLength)
+                mobTypeLength = entry.getKey().getName().length();
+            if((".. image:: https://minotar.net/helm/" + entry.getValue().getName().orElse("") + "/64.png").length() > headImageLength)
+                headImageLength = (".. image:: https://minotar.net/helm/" + entry.getValue().getName().orElse("") + "/64.png").length();
+        }
+
+        String border = createStringOfLength(mobTypeLength, '=') + ' '
+                + createStringOfLength(headImageLength, '=');
+
+        headTable.append(border).append('\n');
+        headTable.append(padToLength("Mob", mobTypeLength + 1)).append(padToLength("Image", headImageLength + 1)).append('\n');
+        headTable.append(border).append('\n');
+        for(Map.Entry<EntityType, GameProfile> entry : mobSkullMap.entrySet()) {
+            headTable.append(padToLength(entry.getKey().getName(), mobTypeLength + 1))
+                    .append(padToLength(".. image:: https://minotar.net/helm/" + entry.getValue().getName().orElse("") + "/64.png", headImageLength + 1)).append('\n');
+        }
+        headTable.append(border).append('\n');
+
+        return HEAD_DROPS_TABLE_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(headTable.toString()));
     }
 }
