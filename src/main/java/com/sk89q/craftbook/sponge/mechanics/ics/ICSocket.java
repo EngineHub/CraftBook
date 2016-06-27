@@ -141,12 +141,19 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public String getPath() {
-        return "mechanics/ics";
+        return "mechanics/ics/index";
     }
 
     @Override
     public String performCustomConversions(String input) {
         StringBuilder icTable = new StringBuilder();
+
+        icTable.append(".. toctree::\n");
+        icTable.append("    :hidden:\n");
+        icTable.append("    :glob:\n");
+        icTable.append("    :titlesonly:\n\n");
+        icTable.append("    *\n\n");
+
 
         icTable.append("ICs\n");
         icTable.append("===\n\n");
@@ -159,7 +166,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 stLength = "Self Triggering".length();
 
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            if((":doc:`ics/" + icType.modelId + "`").length() > idLength)
+            if((":doc:`" + icType.modelId + "`").length() > idLength)
                 idLength = (":doc:`ics/" + icType.modelId + "`").length();
             if(icType.shorthandId.length() > shorthandLength)
                 shorthandLength = icType.shorthandId.length();
@@ -189,7 +196,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 + padToLength("Self Triggering", stLength+1) + "\n");
         icTable.append(border + "\n");
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            icTable.append(padToLength(":doc:`ics/" + icType.modelId + "`", idLength+1)
+            icTable.append(padToLength(":doc:`" + icType.modelId + "`", idLength+1)
                     + padToLength(icType.shorthandId, shorthandLength+1)
                     + padToLength(icType.name, nameLength+1)
                     + padToLength(icType.description, descriptionLength+1)
