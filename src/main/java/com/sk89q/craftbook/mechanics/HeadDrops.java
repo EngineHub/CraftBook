@@ -215,6 +215,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         CHICKEN("MHF_Chicken", "scraftbrothers1"),
         COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
         ENDERMAN("MHF_Enderman", "Violit"),
+        ENDERMITE("MHF_Endermite"),
+        ENDER_DRAGON("MHF_EnderDragon"),
         GHAST("MHF_Ghast", "_QuBra_"),
         MAGMA_CUBE("MHF_LavaSlime"),
         MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
@@ -227,16 +229,17 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         IRON_GOLEM("MHF_Golem", "zippie007"),
         SQUID("MHF_Squid", "squidette8"),
         OCELOT("MHF_Ocelot", "scraftbrothers3"),
+        WOLF("MHF_Wolf", "Budwolf"),
+        RABBIT("MHF_Rabbit", "rabbit2077"),
+        GUARDIAN("MHF_Guardian", "Guardian"),
+        SHULKER("MHF_Shulker"),
 
         //Unofficial/Community
         BAT("bozzobrain", "coolwhip101"),
         //SILVERFISH("Xzomag", "AlexVMiner"),
         SNOWMAN("Koebasti", "scraftbrothers2"),
         HORSE("gavertoso"),
-        WOLF("Budwolf"),
         WITCH("scrafbrothers4"),
-        RABBIT("rabbit2077"),
-        GUARDIAN("Guardian"),
         POLAR_BEAR("_DmacK_");
 
         MobSkullType(String playerName, String ... oldNames) {
