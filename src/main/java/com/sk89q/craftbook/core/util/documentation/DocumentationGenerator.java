@@ -22,15 +22,23 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 
 import java.io.*;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DocumentationGenerator {
 
+    private static final Pattern PERMS_PATTERN = Pattern.compile("%PERMS%", Pattern.LITERAL);
+    private static final Pattern CONFIG_PATTERN = Pattern.compile("%CONFIG%", Pattern.LITERAL);
+
     public static void generateDocumentation(DocumentationProvider provider) {
 
-        File docsFile = new File(CraftBookAPI.inst().getWorkingDirectory(), "documentation");
-        docsFile.mkdir();
+        File docsDir = new File(CraftBookAPI.inst().getWorkingDirectory(), "documentation");
+        if(!docsDir.exists() && !docsDir.mkdir()) {
+            CraftBookAPI.inst().getLogger().error("Failed to generate documentation directory!");
+            return;
+        }
 
-        File docFile = new File(docsFile, provider.getPath() + ".rst");
+        File docFile = new File(docsDir, provider.getPath() + ".rst");
         docFile.getParentFile().mkdirs();
 
         URL resource = DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst");
@@ -45,7 +53,7 @@ public class DocumentationGenerator {
         try (BufferedReader reader = new BufferedReader(new FileReader(template))) {
             String temp;
             while((temp = reader.readLine()) != null)
-                output += temp + "\n";
+                output += temp + '\n';
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,16 +80,16 @@ public class DocumentationGenerator {
 
             String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(commentLength, '=') + ' ' + createStringOfLength(typeLength, '=') + ' ' + createStringOfLength(defaultLength, '=');
 
-            configSection.append(border + "\n");
-            configSection.append(padToLength("Node", nodeLength+1) + padToLength("Comment", commentLength+1) + padToLength("Type", typeLength+1) + padToLength("Default", defaultLength+1) + "\n");
-            configSection.append(border + "\n");
+            configSection.append(border).append('\n');
+            configSection.append(padToLength("Node", nodeLength + 1)).append(padToLength("Comment", commentLength + 1)).append(padToLength("Type", typeLength + 1)).append(padToLength("Default", defaultLength + 1)).append('\n');
+            configSection.append(border).append('\n');
             for(ConfigValue<?> configValue : provider.getConfigurationNodes()) {
-                configSection.append(padToLength(configValue.getKey(), nodeLength+1) + padToLength(configValue.getComment(), commentLength+1) + padToLength(configValue.getTypeToken().getRawType().getSimpleName(), typeLength+1) + padToLength(configValue.getDefaultValue().toString(), defaultLength+1) + "\n");
+                configSection.append(padToLength(configValue.getKey(), nodeLength + 1)).append(padToLength(configValue.getComment(), commentLength + 1)).append(padToLength(configValue.getTypeToken().getRawType().getSimpleName(), typeLength + 1)).append(padToLength(configValue.getDefaultValue().toString(), defaultLength + 1)).append('\n');
             }
-            configSection.append(border + "\n");
+            configSection.append(border).append('\n');
         }
 
-        output = output.replace("%CONFIG%", configSection.toString());
+        output = CONFIG_PATTERN.matcher(output).replaceAll(Matcher.quoteReplacement(configSection.toString()));
 
         StringBuilder permissionsSection = new StringBuilder();
 
@@ -103,16 +111,16 @@ public class DocumentationGenerator {
 
             String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(descriptionLength, '=') + ' ' + createStringOfLength(defaultRoleLength, '=');
 
-            permissionsSection.append(border + "\n");
-            permissionsSection.append(padToLength("Node", nodeLength+1) + padToLength("Description", descriptionLength+1) + padToLength("Default Role", defaultRoleLength+1) + "\n");
-            permissionsSection.append(border + "\n");
+            permissionsSection.append(border).append('\n');
+            permissionsSection.append(padToLength("Node", nodeLength + 1)).append(padToLength("Description", descriptionLength + 1)).append(padToLength("Default Role", defaultRoleLength + 1)).append('\n');
+            permissionsSection.append(border).append('\n');
             for(PermissionNode permissionNode : provider.getPermissionNodes()) {
-                permissionsSection.append(padToLength(permissionNode.getNode(), nodeLength+1) + padToLength(permissionNode.getDescription(), descriptionLength+1) + padToLength(permissionNode.getDefaultRole(), defaultRoleLength+1) + "\n");
+                permissionsSection.append(padToLength(permissionNode.getNode(), nodeLength + 1)).append(padToLength(permissionNode.getDescription(), descriptionLength + 1)).append(padToLength(permissionNode.getDefaultRole(), defaultRoleLength + 1)).append('\n');
             }
-            permissionsSection.append(border + "\n");
+            permissionsSection.append(border).append('\n');
         }
 
-        output = output.replace("%PERMS%", permissionsSection.toString());
+        output = PERMS_PATTERN.matcher(output).replaceAll(Matcher.quoteReplacement(permissionsSection.toString()));
 
         output = provider.performCustomConversions(output);
 
