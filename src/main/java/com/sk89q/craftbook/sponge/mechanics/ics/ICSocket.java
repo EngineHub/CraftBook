@@ -44,6 +44,8 @@ import org.spongepowered.api.world.Location;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
@@ -52,6 +54,7 @@ import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
     static final HashMap<String, PinSet> PINSETS = new HashMap<>();
+    private static final Pattern IC_TABLE_PATTERN = Pattern.compile("%IC_TABLE%", Pattern.LITERAL);
 
     static {
         PINSETS.put("SISO", new PinsSISO());
@@ -166,8 +169,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 stLength = "Self Triggering".length();
 
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            if((":doc:`" + icType.modelId + "`").length() > idLength)
-                idLength = (":doc:`ics/" + icType.modelId + "`").length();
+            if((":doc:`" + icType.modelId + '`').length() > idLength)
+                idLength = (":doc:`ics/" + icType.modelId + '`').length();
             if(icType.shorthandId.length() > shorthandLength)
                 shorthandLength = icType.shorthandId.length();
             if(icType.name.length() > nameLength)
@@ -187,25 +190,25 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 + createStringOfLength(familiesLength, '=') + ' '
                 + createStringOfLength(stLength, '=');
 
-        icTable.append(border + "\n");
-        icTable.append(padToLength("IC ID", idLength+1)
-                + padToLength("Shorthand", shorthandLength+1)
-                + padToLength("Name", nameLength+1)
-                + padToLength("Description", descriptionLength+1)
-                + padToLength("Family", familiesLength+1)
-                + padToLength("Self Triggering", stLength+1) + "\n");
-        icTable.append(border + "\n");
+        icTable.append(border).append('\n');
+        icTable.append(padToLength("IC ID", idLength + 1))
+                .append(padToLength("Shorthand", shorthandLength + 1))
+                .append(padToLength("Name", nameLength + 1))
+                .append(padToLength("Description", descriptionLength + 1))
+                .append(padToLength("Family", familiesLength + 1))
+                .append(padToLength("Self Triggering", stLength + 1)).append('\n');
+        icTable.append(border).append('\n');
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
-            icTable.append(padToLength(":doc:`" + icType.modelId + "`", idLength+1)
-                    + padToLength(icType.shorthandId, shorthandLength+1)
-                    + padToLength(icType.name, nameLength+1)
-                    + padToLength(icType.description, descriptionLength+1)
-                    + padToLength(icType.getDefaultPinSet(), familiesLength+1)
-                    + padToLength((SelfTriggeringIC.class.isAssignableFrom(icType.icClass) ? "Yes" : "No"), stLength+1) + "\n");
+            icTable.append(padToLength(":doc:`" + icType.modelId + '`', idLength + 1))
+                    .append(padToLength(icType.shorthandId, shorthandLength + 1))
+                    .append(padToLength(icType.name, nameLength + 1))
+                    .append(padToLength(icType.description, descriptionLength + 1))
+                    .append(padToLength(icType.getDefaultPinSet(), familiesLength + 1))
+                    .append(padToLength((SelfTriggeringIC.class.isAssignableFrom(icType.icClass) ? "Yes" : "No"), stLength + 1)).append('\n');
         }
-        icTable.append(border + "\n");
+        icTable.append(border).append('\n');
 
-        return input.replace("%IC_TABLE%", icTable.toString());
+        return IC_TABLE_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icTable.toString()));
     }
 
     public static class BaseICData extends SpongeMechanicData {

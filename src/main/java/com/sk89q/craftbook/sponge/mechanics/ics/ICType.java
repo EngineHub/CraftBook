@@ -24,10 +24,14 @@ import org.spongepowered.api.world.Location;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 
 public class ICType<T extends IC> implements DocumentationProvider {
+
+    private static final Pattern IC_HEADER_PATTERN = Pattern.compile("%IC_HEADER%", Pattern.LITERAL);
 
     String name;
     String description;
@@ -105,7 +109,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
     @Override
     public String performCustomConversions(String input) {
         String icHeader = createStringOfLength(modelId.length(), '=') + '\n' + modelId + '\n' + createStringOfLength(modelId.length(), '=');
-        return input.replace("%IC_HEADER%", icHeader);
+        return IC_HEADER_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icHeader));
     }
 
     @Override

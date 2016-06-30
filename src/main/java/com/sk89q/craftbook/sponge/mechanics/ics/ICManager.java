@@ -25,12 +25,7 @@ import java.util.TreeSet;
 
 class ICManager {
 
-    private static SortedSet<ICType<? extends IC>> registeredICTypes = new TreeSet<>(new Comparator<ICType<? extends IC>>() {
-        @Override
-        public int compare(ICType<? extends IC> o1, ICType<? extends IC> o2) {
-            return o1.modelId.compareTo(o2.modelId);
-        }
-    });
+    private static SortedSet<ICType<? extends IC>> registeredICTypes = new TreeSet<>((o1, o2) -> o1.modelId.compareTo(o2.modelId));
 
     static {
         //SISO
