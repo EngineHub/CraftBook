@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.material.Leaves;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Sapling;
 import org.bukkit.material.Tree;
@@ -65,14 +66,16 @@ public class TreeLopper extends AbstractCraftBookMechanic {
                 @Override
                 public void run () {
                     usedBlock.setType(Material.SAPLING);
-                    ((Sapling) usedBlock.getState().getData()).setSpecies(fspecies);
+                    Sapling sapling = (Sapling) usedBlock.getState().getData();
+                    sapling.setSpecies(fspecies);
+                    usedBlock.getState().setData(sapling);
                 }
 
             }, 2);
             hasPlanted = true;
         }
 
-        for(Block block : allowDiagonals ? BlockUtil.getTouchingBlocks(usedBlock) : BlockUtil.getIndirectlyTouchingBlocks(usedBlock)) {
+        for(Block block : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(usedBlock) : BlockUtil.getTouchingBlocks(usedBlock)) {
             if(block == null) continue; //Top of map, etc.
             if(visitedLocations.contains(block.getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block))
@@ -87,8 +90,8 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && breakLeaves) {
             MaterialData nw = toBreak.getState().getData();
             Tree old = new Tree(originalBlock.getType(), (byte) originalBlock.getData());
-            if(!(nw instanceof Tree)) return false;
-            if(enforceDataValues && ((Tree) nw).getSpecies() != old.getSpecies()) return false;
+            if(!(nw instanceof Leaves)) return false;
+            if(enforceDataValues && ((Leaves) nw).getSpecies() != old.getSpecies()) return false;
         } else {
             if(toBreak.getType() != originalBlock.getType()) return false;
             if(enforceDataValues && toBreak.getData() != originalBlock.getData()) return false;
@@ -116,7 +119,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
             block.setType(Material.SAPLING);
-            ((Sapling) block.getState().getData()).setSpecies(species);
+            Sapling sapling = (Sapling) block.getState().getData();
+            sapling.setSpecies(species);
+            block.getState().setData(sapling);
             hasPlanted = true;
         }
         visitedLocations.add(block.getLocation());
