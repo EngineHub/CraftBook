@@ -16,9 +16,12 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area.complex;
 
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import com.sk89q.worldedit.sponge.SpongeWorld;
+import com.sk89q.worldedit.sponge.SpongeWorldEdit;
 import com.sk89q.worldedit.world.DataException;
 import org.spongepowered.api.world.World;
 
@@ -30,13 +33,11 @@ public class MCEditCuboidCopy extends CuboidCopy {
     private CuboidClipboard clipboard;
 
     public MCEditCuboidCopy(Vector origin, Vector size, World world) {
-
         super(origin, size, world);
         clipboard = new CuboidClipboard(size, origin);
     }
 
     protected MCEditCuboidCopy(World world) {
-
         // for loading from file
         this.world = world;
     }
@@ -58,36 +59,34 @@ public class MCEditCuboidCopy extends CuboidCopy {
 
     @Override
     public void paste() {
-        /*try {
-            EditSession editSession = new EditSession(new SpongeWorld(world), -1);
+        try {
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(SpongeWorldEdit.inst().getWorld(world), -1);
             editSession.enableQueue();
             clipboard.place(editSession, origin, false);
             editSession.flushQueue();
         } catch (MaxChangedBlocksException e) {
             // is never thrown because we are on infinite mode
-        }*/
+        }
     }
 
     @Override
     public void clear() {
-        /*try {
-            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1,
-                    size.getZ() - 1));
-            EditSession editSession = new EditSession(new BukkitWorld(world), -1);
+        try {
+            CuboidRegion region = new CuboidRegion(origin, origin.add(size.getX() - 1, size.getY() - 1, size.getZ() - 1));
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(SpongeWorldEdit.inst().getWorld(world), -1);
             editSession.enableQueue();
             editSession.setBlocks(region, new BaseBlock(0));
             editSession.flushQueue();
         } catch (MaxChangedBlocksException e) {
             // is never thrown
-        }*/
+        }
     }
 
     @Override
     public void copy() {
-        /*EditSession editSession = new EditSession(new BukkitWorld(world), -1);
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(SpongeWorldEdit.inst().getWorld(world), -1);
         editSession.enableQueue();
-        // -1 means no block limit
         clipboard.copy(editSession);
-        editSession.flushQueue();*/
+        editSession.flushQueue();
     }
 }

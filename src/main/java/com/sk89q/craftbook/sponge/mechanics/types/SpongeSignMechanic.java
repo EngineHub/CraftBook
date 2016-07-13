@@ -32,7 +32,6 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
 
     @Listener
     public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
-
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
                 if(!getCreatePermission().hasPermission(player)) {
@@ -41,6 +40,8 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
                 } else {
                     event.getText().lines().set(1, Text.of(line));
                 }
+
+                break;
             }
         }
     }
@@ -48,13 +49,9 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
     @Override
     public boolean isValid(Location location) {
         if (SignUtil.isSign(location)) {
-
             Sign sign = (Sign) location.getTileEntity().get();
 
-            for(String signLine : getValidSigns()) {
-                if(SignUtil.getTextRaw(sign, 1).equals(signLine))
-                    return true;
-            }
+            return isMechanicSign(sign);
         }
 
         return false;

@@ -37,7 +37,6 @@ public class CopyManager {
      * @return The Copy Manager Instance
      */
     public static CopyManager getInstance() {
-
         return INSTANCE;
     }
 
@@ -49,7 +48,6 @@ public class CopyManager {
      * @return If it is a valid name
      */
     public static boolean isValidName(String name) {
-
         // name needs to be between 1 and 13 letters long so we can fit the
         return !name.isEmpty() && name.length() <= 13 && NAME_PATTERN.matcher(name).matches();
     }

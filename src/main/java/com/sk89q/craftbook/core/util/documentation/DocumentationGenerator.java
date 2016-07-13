@@ -63,18 +63,18 @@ public class DocumentationGenerator {
     }
 
     public static String loadFile(File inputFile) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         if (inputFile.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
                 String temp;
                 while ((temp = reader.readLine()) != null)
-                    output += temp + '\n';
+                    output.append(temp).append('\n');
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        return output;
+        return output.toString();
     }
 
     public static String makeReplacements(String input, DocumentationProvider provider) {
@@ -156,17 +156,18 @@ public class DocumentationGenerator {
     }
 
     public static String createStringOfLength(int length, char character) {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
 
         for(int i = 0; i < length; i++)
-            ret += character;
+            ret.append(character);
 
-        return ret;
+        return ret.toString();
     }
 
-    public static String padToLength(String string, int length) {
-        while(string.length() < length)
-            string += ' ';
-        return string;
+    public static String padToLength(String input, int length) {
+        StringBuilder builder = new StringBuilder(input);
+        while(builder.length() < length)
+            builder.append(' ');
+        return builder.toString();
     }
 }

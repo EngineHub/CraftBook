@@ -137,14 +137,5 @@ public abstract class SimpleArea extends SpongeSignMechanic {
      */
     public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
 
-    @Override
-    public boolean isValid(Location location) {
-        if (SignUtil.isSign(location)) {
-            Sign sign = (Sign) location.getTileEntity().get();
-            return isMechanicSign(sign);
-        }
-        return false;
-    }
-
     public abstract List<BlockFilter> getDefaultBlocks();
 }

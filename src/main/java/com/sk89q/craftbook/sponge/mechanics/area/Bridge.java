@@ -77,7 +77,7 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
             Location otherSide = BlockUtil.getNextMatchingSign(block, SignUtil.getBack(block), maximumLength.getValue(), this::isMechanicSign);
             if (otherSide == null) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Missing other end!").build());
+                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(missingOtherEnd);
                 return true;
             }
             Location otherBase = otherSide.getRelative(Direction.DOWN);

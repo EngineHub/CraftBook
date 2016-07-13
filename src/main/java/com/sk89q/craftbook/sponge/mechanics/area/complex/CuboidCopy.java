@@ -19,11 +19,19 @@ package com.sk89q.craftbook.sponge.mechanics.area.complex;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.sponge.nms.IDHelper;
 import com.sk89q.worldedit.world.DataException;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.carrier.Chest;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 abstract class CuboidCopy {
 
@@ -60,8 +68,7 @@ abstract class CuboidCopy {
      */
     public static CuboidCopy load(File file, World world) throws CuboidCopyException {
         // we need to split off the file extenstion to check what class we need to use
-        int index = file.getName().lastIndexOf('.');
-        String extension = file.getName().substring(index);
+        String extension = file.getName().substring(file.getName().lastIndexOf('.'));
         CuboidCopy copy = null;
         if (extension.equalsIgnoreCase(".schematic")) {
             copy = new MCEditCuboidCopy(world);
@@ -75,26 +82,6 @@ abstract class CuboidCopy {
         }
         // make sure that null is never returned but an exception is thrown instead
         return copy;
-    }
-
-    /**
-     * Clear the area.
-     */
-    public void clear() {
-        if (world == null || origin == null) return;
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                for (int z = 0; z < length; z++) {
-                    Vector pt = origin.add(x, y, z);
-                    if (pt == null) {
-                        continue;
-                    }
-
-                    world.getLocation(pt.getX(), pt.getY(), pt.getZ()).removeBlock();
-                }
-            }
-        }
     }
 
     /**
@@ -135,6 +122,11 @@ abstract class CuboidCopy {
      * Pastes the cuboid copy into the world on its point of origin.
      */
     public abstract void paste();
+
+    /**
+     * Clear the area.
+     */
+    public abstract void clear();
 
     /**
      * Copies the cuboid from the world caching its state and blocks.
