@@ -35,6 +35,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -47,6 +49,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
@@ -123,9 +126,10 @@ public class ComplexArea extends SpongeSignMechanic {
                     player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
-                    event.getText().lines().set(1, Text.of(line));
+                    List<Text> lines = event.getText().lines().get();
+                    lines.set(1, Text.of(line));
 
-                    String namespace = event.getText().lines().get(0).toPlain();
+                    String namespace = lines.get(0).toPlain();
                     boolean personal = false;
                     if (namespace.toLowerCase().equals("global")) {
                         if (!createGlobalPermissions.hasPermission(player)) {
@@ -140,9 +144,9 @@ public class ComplexArea extends SpongeSignMechanic {
                         personal = true;
                     }
 
-                    event.getText().lines().set(0, Text.of(personal ? player.getName() : namespace));
+                    lines.set(0, Text.of(personal ? player.getName() : namespace));
 
-                    if(!isValidArea(namespace, event.getText().lines().get(2).toPlain(), event.getText().lines().get(3).toPlain())) {
+                    if(!isValidArea(namespace, lines.get(2).toPlain(), lines.get(3).toPlain())) {
                         player.sendMessage(Text.of(TextColors.RED, "This area is missing!"));
                         event.setCancelled(true);
                         return;
@@ -150,6 +154,9 @@ public class ComplexArea extends SpongeSignMechanic {
 
                     ComplexAreaData data = getData(ComplexAreaData.class, event.getTargetTile().getLocation());
                     data.namespace = namespace;
+
+                    event.getText().set(Keys.SIGN_LINES, lines);
+
                     player.sendMessage(Text.of(TextColors.YELLOW, "Created ToggleArea!"));
                 }
 
@@ -242,8 +249,10 @@ public class ComplexArea extends SpongeSignMechanic {
     private static void setToggleState(Sign sign, boolean state) {
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
-        sign.lines().set(toToggleOff, Text.of(sign.lines().get(toToggleOff).toPlain().replace("-", "")));
-        sign.lines().set(toToggleOn, Text.of("-", sign.lines().get(toToggleOn), "-"));
+        List<Text> lines = sign.lines().get();
+        lines.set(toToggleOff, Text.of(sign.lines().get(toToggleOff).toPlain().replace("-", "")));
+        lines.set(toToggleOn, Text.of("-", sign.lines().get(toToggleOn), "-"));
+        sign.offer(Keys.SIGN_LINES, lines);
     }
 
     public String[] getValidSigns() {
