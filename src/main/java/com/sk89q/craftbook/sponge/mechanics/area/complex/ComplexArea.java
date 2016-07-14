@@ -21,6 +21,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.area.complex.command.DeleteCommand;
 import com.sk89q.craftbook.sponge.mechanics.area.complex.command.ListCommand;
@@ -55,7 +57,7 @@ import java.util.regex.Pattern;
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
 @Module(moduleName = "Area", onEnable="onInitialize", onDisable="onDisable")
-public class ComplexArea extends SpongeSignMechanic {
+public class ComplexArea extends SpongeSignMechanic implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -270,6 +272,37 @@ public class ComplexArea extends SpongeSignMechanic {
     @Override
     public SpongePermissionNode getCreatePermission() {
         return createPermissions;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/togglearea";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                maxAreaSize,
+                maxPerUser
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[]{
+                createPermissions,
+                usePermissions,
+                createSavePermissions,
+                createGlobalPermissions,
+                createOtherPermissions,
+                commandSavePermissions,
+                commandSaveOtherPermissions,
+                commandSaveBypassLimitPermissions,
+                commandListPermissions,
+                commandListOtherPermissions,
+                commandDeletePermissions,
+                commandDeleteOtherPermissions
+        };
     }
 
     public static class ComplexAreaData extends SpongeMechanicData {
