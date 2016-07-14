@@ -125,7 +125,7 @@ public class Chair extends AbstractCraftBookMechanic {
     }
 
     private boolean hasChair(Player player) {
-        return chairs.containsKey(player.getName());
+        return player != null && chairs.containsKey(player.getName());
     }
 
     private boolean hasChair(Block block) {
