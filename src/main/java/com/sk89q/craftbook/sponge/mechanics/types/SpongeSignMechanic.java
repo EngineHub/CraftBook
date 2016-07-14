@@ -41,6 +41,7 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
                     event.getText().lines().set(1, Text.of(line));
                 }
 
+                player.sendMessage(Text.of(TextColors.YELLOW, "Created " + getName() + '!'));
                 break;
             }
         }

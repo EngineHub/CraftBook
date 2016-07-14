@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class CuboidCopy {
+public abstract class CuboidCopy {
 
     protected World world;
     Vector origin;
@@ -85,26 +85,12 @@ abstract class CuboidCopy {
     }
 
     /**
-     * Get the distance between a point and this cuboid.
-     *
-     * @param pos of the vector to compare
-     *
-     * @return distance between cuboid and point
-     */
-    public double distance(Vector pos) {
-        Vector max = origin.add(new Vector(width, height, length));
-        int closestX = Math.max(origin.getBlockX(), Math.min(max.getBlockX(), pos.getBlockX()));
-        int closestY = Math.max(origin.getBlockY(), Math.min(max.getBlockY(), pos.getBlockY()));
-        int closestZ = Math.max(origin.getBlockZ(), Math.min(max.getBlockZ(), pos.getBlockZ()));
-        return pos.distance(new Vector(closestX, closestY, closestZ));
-    }
-
-    /**
      * Saves the cuboid to file.
      *
      * @param file to save to
      *
-     * @throws IOException
+     * @throws IOException Thrown if there's an issue accessing the file
+     * @throws DataException Thrown if the data in the file is invalid
      */
     protected abstract void save(File file) throws IOException, DataException;
 
@@ -113,8 +99,9 @@ abstract class CuboidCopy {
      *
      * @param file to load from
      *
-     * @throws IOException
-     * @throws CuboidCopyException
+     * @throws IOException Thrown if there's an issue accessing the file
+     * @throws CuboidCopyException Thrown if the file is invalid
+     * @throws DataException Thrown if the file is invalid
      */
     protected abstract void loadFromFile(File file) throws IOException, CuboidCopyException, DataException;
 

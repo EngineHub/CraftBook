@@ -37,7 +37,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
         clipboard = new CuboidClipboard(size, origin);
     }
 
-    protected MCEditCuboidCopy(World world) {
+    MCEditCuboidCopy(World world) {
         // for loading from file
         this.world = world;
     }

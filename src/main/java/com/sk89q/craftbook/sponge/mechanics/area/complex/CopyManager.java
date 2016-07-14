@@ -28,17 +28,7 @@ import java.util.regex.Pattern;
 
 public class CopyManager {
 
-    private static final CopyManager INSTANCE = new CopyManager();
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-z0-9_]+$", Pattern.CASE_INSENSITIVE);
-
-    /**
-     * Gets the copy manager instance
-     *
-     * @return The Copy Manager Instance
-     */
-    public static CopyManager getInstance() {
-        return INSTANCE;
-    }
 
     /**
      * Checks to see whether a name is a valid copy name.
@@ -57,8 +47,10 @@ public class CopyManager {
      *
      * @param namespace to check
      * @param area to check
+     *
+     * @return If the area exists
      */
-    public static boolean isExistingArea(File dataFolder, String namespace, String area) {
+    static boolean isExistingArea(File dataFolder, String namespace, String area) {
         area = StringUtils.replace(area, "-", "") + getFileSuffix();
         File file = new File(dataFolder, "areas/" + namespace);
         return new File(file, area).exists();
@@ -70,17 +62,15 @@ public class CopyManager {
      * does not exist, an exception will be raised. An exception may be raised if the file exists but cannot be read
      * for whatever reason.
      *
-     * @param world
-     * @param namespace
-     * @param id
+     * @param world The world to load it into
+     * @param namespace The namespace
+     * @param id The area ID
      *
-     * @return
+     * @return The CuboidCopy
      *
-     * @throws IOException
-     * @throws CuboidCopyException
+     * @throws CuboidCopyException Thrown if the data was invalid
      */
-    public CuboidCopy load(World world, String namespace, String id) throws IOException, CuboidCopyException {
-
+    public static CuboidCopy load(World world, String namespace, String id) throws CuboidCopyException {
         id = id.toLowerCase(Locale.ENGLISH);
 
         File folder = new File(new File(CraftBookPlugin.inst().getWorkingDirectory(), "areas"), namespace);
@@ -90,13 +80,14 @@ public class CopyManager {
     /**
      * Save a copy to disk. The copy will be cached.
      *
-     * @param namespace
-     * @param id
-     * @param copy
+     * @param namespace The namespace
+     * @param id The area ID
+     * @param copy The CuboidCopy to save
      *
-     * @throws IOException
+     * @throws IOException Thrown if an IO error occured when saving
+     * @throws DataException Thrown if the data was invalid
      */
-    public void save(String namespace, String id, CuboidCopy copy) throws IOException, DataException {
+    public static void save(String namespace, String id, CuboidCopy copy) throws IOException, DataException {
 
         File folder = new File(new File(CraftBookPlugin.inst().getWorkingDirectory(), "areas"), namespace);
 
@@ -109,7 +100,41 @@ public class CopyManager {
         copy.save(new File(folder, id + getFileSuffix()));
     }
 
-    private static String getFileSuffix() {
+    /**
+     * Gets whether a copy can be made.
+     *
+     * @param namespace The namespace
+     * @param ignore A filename to ignore
+     * @param quota The maximum quota
+     *
+     * @return -1 if the copy can be made, some other number for the count
+     */
+    public static int meetsQuota(String namespace, String ignore, int quota) {
+        String ignoreFilename = ignore + getFileSuffix();
+
+        String[] files = new File(new File(CraftBookPlugin.inst().getWorkingDirectory(), "areas"), namespace).list();
+
+        if (files == null) return quota > 0 ? -1 : 0;
+        else if (ignore == null) return files.length < quota ? -1 : files.length;
+        else {
+            int count = 0;
+
+            for (String f : files) {
+                if (f.equals(ignoreFilename)) return -1;
+
+                count++;
+            }
+
+            return count < quota ? -1 : count;
+        }
+    }
+
+    /**
+     * Gets the suffix that the schematic files contain.
+     *
+     * @return The file suffix
+     */
+    public static String getFileSuffix() {
         return ".schematic";
     }
 }
