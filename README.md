@@ -22,4 +22,4 @@ Funções
 
 Há uma lista de todas as funções em inglês [the docs!](http://enginehub.github.io/CraftBookDocs/)
 
-* [Skype](douglas.biazus.21)
+* [Skype](skype://douglas.biazus.21)
