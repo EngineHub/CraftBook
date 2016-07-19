@@ -114,8 +114,13 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(!enabledItems.contains(player.getHeldItemInfo()))
             return false;
         TreeSpecies species = null;
-        if(placeSaplings && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
-            species = ((Tree) block.getState().getData()).getSpecies();
+        if(placeSaplings && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted) {
+            MaterialData data = block.getState().getData();
+            if (data instanceof Leaves)
+                species = ((Leaves) data).getSpecies();
+            else if (data instanceof Tree)
+                species = ((Tree) data).getSpecies();
+        }
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null) {
             block.setType(Material.SAPLING);
