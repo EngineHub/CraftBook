@@ -31,6 +31,8 @@ public class SelfTriggeringManager implements Listener {
     private final Collection<Location> thinkingMechanics = new HashSet<Location>();
 
     public void registerSelfTrigger(Chunk chunk) {
+        if (!chunk.getWorld().isChunkLoaded(chunk))
+            return;
         try {
             for(BlockState state : chunk.getTileEntities()) {
                 if(!(state instanceof Sign)) continue;
