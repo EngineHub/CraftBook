@@ -66,6 +66,8 @@ public class Chair extends AbstractCraftBookMechanic {
         if(chairs.containsKey(player.getName())) {
             ar = chairs.get(player.getName()).chairEntity;
             hasUpdated = true;
+        } else {
+            isNew = true;
         }
 
         ar = fixArrow(block, ar);
@@ -98,6 +100,8 @@ public class Chair extends AbstractCraftBookMechanic {
         final Entity ent = chairData.chairEntity;
         if(ent != null) {
             player.eject();
+            player.teleport(chairData.playerExitPoint);
+            player.setSneaking(false);
             ent.remove();
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
@@ -105,7 +109,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     player.teleport(chairData.playerExitPoint);
                     player.setSneaking(false);
                 }
-            }, 1L);
+            }, 2L);
         }
         chairs.remove(player.getName());
     }
