@@ -42,20 +42,37 @@ public class Chair extends AbstractCraftBookMechanic {
 
     private Map<String, ChairData> chairs;
 
+    private static Entity fixArrow(Block block, Entity arrow) {
+        if(arrow == null || !arrow.isValid() || arrow.isDead()) {
+            arrow = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
+        } else if(!arrow.getLocation().getBlock().equals(block)) {
+            arrow.teleport(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0));
+        }
+
+        arrow.setTicksLived(1);
+        arrow.setInvulnerable(true);
+        arrow.setGravity(false);
+        arrow.setSilent(true);
+
+        return arrow;
+    }
+
     private void addChair(final Player player, Block block) {
         Location exitPoint = player.getLocation().clone();
 
         Entity ar = null;
-        if(chairs.containsKey(player.getName()))
-            ar = chairs.get(player.getName()).chairEntity;
+        boolean hasUpdated = false;
         boolean isNew = false;
-
-        if(ar == null || !ar.isValid() || ar.isDead() || !ar.getLocation().getBlock().equals(block)) {
-            if(ar != null && !ar.getLocation().getBlock().equals(block))
-                ar.remove();
-            ar = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
-            isNew = true;
+        if(chairs.containsKey(player.getName())) {
+            ar = chairs.get(player.getName()).chairEntity;
+            hasUpdated = true;
         }
+
+        ar = fixArrow(block, ar);
+
+        if (hasUpdated && ar != chairs.get(player.getName()).chairEntity)
+            isNew = true;
+
         if (!chairs.containsKey(player.getName()))
             CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
         // Attach the player to said arrow.
@@ -71,8 +88,6 @@ public class Chair extends AbstractCraftBookMechanic {
             removeChair(player);
             return;
         }
-
-        ar.setTicksLived(1);
 
         chairs.put(player.getName(), new ChairData(ar, block, exitPoint));
     }
@@ -234,17 +249,17 @@ public class Chair extends AbstractCraftBookMechanic {
 
         @Override
         public void run() {
-            for (String pl : chairs.keySet()) {
-                Player p = Bukkit.getPlayerExact(pl);
+            for (Map.Entry<String, ChairData> pl : chairs.entrySet()) {
+                Player p = Bukkit.getPlayerExact(pl.getKey());
                 if (p == null  || p.isDead()) {
-                    chairs.remove(pl);
+                    chairs.remove(pl.getKey());
                     continue;
                 }
 
-                if (!chairBlocks.contains(new ItemInfo(getChair(p).location)) || !p.getWorld().equals(getChair(p).location.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), getChair(p).location.getLocation()) > 1.5)
+                if (!chairBlocks.contains(new ItemInfo(pl.getValue().location)) || !p.getWorld().equals(pl.getValue().location.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), pl.getValue().location.getLocation()) > 1.5)
                     removeChair(p);
                 else {
-                    addChair(p, getChair(p).location); // For any new players.
+                    addChair(p, pl.getValue().location); // For any new players.
 
                     if (chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getMaxHealth()));
