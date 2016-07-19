@@ -1,6 +1,7 @@
 ![CraftBook](http://static.sk89q.com/readme/craftbook.png)
 Brazilian portuguese translation
 ===========
+(Arquivo pt_BR.yml)
 
 CraftBook é um plugin originalmente feito por sk89q para servidores de minecraft, mas agora é mantido e desenvolvido por me4502
 Funções
@@ -21,5 +22,4 @@ Funções
 * E muito mais!
 
 Há uma lista de todas as funções em inglês [the docs!](http://enginehub.github.io/CraftBookDocs/)
-
-* [Skype](skype://douglas.biazus.21)
+* (Você pode me ver jogando no servidor SKCraft).
