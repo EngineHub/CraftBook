@@ -11,6 +11,7 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
@@ -363,7 +364,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     break current;
                 }
 
-                if (!player.hasPermission("craftbook.mech.commanditems.bypassconsumables")) {
+                if (!player.hasPermission("craftbook.mech.commanditems.bypassconsumables") && !player.getGameMode().equals(GameMode.CREATIVE)) {
                     for (ItemStack stack : def.consumables) {
 
                         boolean found = false;
