@@ -363,27 +363,29 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     break current;
                 }
 
-                for(ItemStack stack : def.consumables) {
+                if (!player.hasPermission("craftbook.mech.commanditems.bypassconsumables")) {
+                    for (ItemStack stack : def.consumables) {
 
-                    boolean found = false;
+                        boolean found = false;
 
-                    int amount = 0;
+                        int amount = 0;
 
-                    for(ItemStack tStack : player.getInventory().getContents()) {
-                        if(ItemUtil.areItemsIdentical(stack, tStack)) {
+                        for (ItemStack tStack : player.getInventory().getContents()) {
+                            if (ItemUtil.areItemsIdentical(stack, tStack)) {
 
-                            amount += tStack.getAmount();
+                                amount += tStack.getAmount();
 
-                            if(amount >=stack.getAmount()) {
-                                found = true;
-                                break;
+                                if (amount >= stack.getAmount()) {
+                                    found = true;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if(!found && !def.missingConsumableMessage.isEmpty()) {
-                        lplayer.printError(lplayer.translate(def.missingConsumableMessage).replace("%item%", stack.getAmount() + " " + stack.getType().name()));
-                        break current;
+                        if (!found && !def.missingConsumableMessage.isEmpty()) {
+                            lplayer.printError(lplayer.translate(def.missingConsumableMessage).replace("%item%", stack.getAmount() + " " + stack.getType().name()));
+                            break current;
+                        }
                     }
                 }
 
