@@ -121,9 +121,9 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                 }
             } else if (entity instanceof Pig) {
 
-                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.CARROT, 2))) {
+                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.CARROT_ITEM, 2))) {
 
-                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.CARROT, 2))) {
+                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.CARROT_ITEM, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
