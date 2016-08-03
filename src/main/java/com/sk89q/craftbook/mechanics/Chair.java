@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,24 +43,24 @@ public class Chair extends AbstractCraftBookMechanic {
 
     private Map<String, ChairData> chairs;
 
-    private static Entity fixArrow(Block block, Entity arrow) {
-        if(arrow == null || !arrow.isValid() || arrow.isDead()) {
-            arrow = block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
-        } else if(!arrow.getLocation().getBlock().equals(block)) {
-            arrow.teleport(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0));
+    private static Entity fixArrow(Block block, Entity chairEntity) {
+        if(chairEntity == null || !chairEntity.isValid() || chairEntity.isDead()) {
+            chairEntity = block.getWorld().spawn(BlockUtil.getBlockCentre(block).subtract(0, 1.5, 0), ArmorStand.class);
+            //block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
         }
 
-        arrow.setTicksLived(1);
-        arrow.setInvulnerable(true);
-        arrow.setGravity(false);
-        arrow.setSilent(true);
+        chairEntity.setTicksLived(1);
+        chairEntity.setInvulnerable(true);
+        chairEntity.setGravity(false);
+        chairEntity.setSilent(true);
 
-        return arrow;
+        if (chairEntity instanceof ArmorStand)
+            ((ArmorStand) chairEntity).setVisible(false);
+
+        return chairEntity;
     }
 
-    private void addChair(final Player player, Block block) {
-        Location exitPoint = player.getLocation().clone();
-
+    private void addChair(final Player player, Block block, final Location chairLoc) {
         Entity ar = null;
         boolean hasUpdated = false;
         boolean isNew = false;
@@ -77,12 +78,15 @@ public class Chair extends AbstractCraftBookMechanic {
 
         if (!chairs.containsKey(player.getName()))
             CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.sit");
+
         // Attach the player to said arrow.
         final Entity far = ar;
         if(ar.isEmpty() && isNew) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
+                    if (chairLoc != null)
+                        player.teleport(chairLoc);
                     far.setPassenger(player);
                 }
             });
@@ -91,7 +95,15 @@ public class Chair extends AbstractCraftBookMechanic {
             return;
         }
 
-        chairs.put(player.getName(), new ChairData(ar, block, exitPoint));
+        ChairData chairData;
+        if (chairs.containsKey(player.getName())) {
+            chairData = chairs.get(player.getName());
+            chairData.chairEntity = ar;
+        } else {
+            chairData = new ChairData(ar, block, player.getLocation().clone());
+        }
+
+        chairs.put(player.getName(), chairData);
     }
 
     private void removeChair(final Player player) {
@@ -100,8 +112,6 @@ public class Chair extends AbstractCraftBookMechanic {
         final Entity ent = chairData.chairEntity;
         if(ent != null) {
             player.eject();
-            player.teleport(chairData.playerExitPoint);
-            player.setSneaking(false);
             ent.remove();
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
                 @Override
@@ -109,7 +119,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     player.teleport(chairData.playerExitPoint);
                     player.setSneaking(false);
                 }
-            }, 2L);
+            }, 5L);
         }
         chairs.remove(player.getName());
     }
@@ -242,8 +252,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     chairLoc.setPitch(player.getPlayer().getLocation().getPitch());
                     chairLoc.setYaw(player.getPlayer().getLocation().getYaw());
                 }
-                player.getPlayer().teleport(chairLoc);
-                addChair(player.getPlayer(), event.getClickedBlock());
+                addChair(player.getPlayer(), event.getClickedBlock(), chairLoc);
                 event.setCancelled(true);
             }
         }
@@ -260,10 +269,10 @@ public class Chair extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                if (!chairBlocks.contains(new ItemInfo(pl.getValue().location)) || !p.getWorld().equals(pl.getValue().location.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), pl.getValue().location.getLocation()) > 1.5)
+                if (!chairBlocks.contains(new ItemInfo(pl.getValue().location)) || !p.getWorld().equals(pl.getValue().location.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), pl.getValue().location.getLocation()) > 2)
                     removeChair(p);
                 else {
-                    addChair(p, pl.getValue().location); // For any new players.
+                    addChair(p, pl.getValue().location, null); // For any new players.
 
                     if (chairHealth && p.getHealth() < p.getMaxHealth())
                         p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getMaxHealth()));
