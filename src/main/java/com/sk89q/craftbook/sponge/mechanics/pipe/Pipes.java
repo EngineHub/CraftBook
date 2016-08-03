@@ -98,7 +98,7 @@ public class Pipes extends SpongeBlockMechanic {
 
                 if(itemStack.getQuantity() > 0) {
                     for(ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
-                        Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition()).get();
+                        Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
                         item.offer(Keys.REPRESENTED_ITEM, snapshot);
                         location.getExtent().spawnEntity(item, Cause.of(NamedCause.source(location)));
                     }

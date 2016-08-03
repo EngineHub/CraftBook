@@ -85,7 +85,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
 
         if(data.isPresent() && data.get().equals(type)) { //Same tree type.
             block.getExtent().digBlockWith(block.getBlockPosition(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(null), Cause.of(NamedCause.simulated(player)));
-            block.removeBlock();
+            block.removeBlock(Cause.of(NamedCause.source(player)));
             for(Direction dir : BlockUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }

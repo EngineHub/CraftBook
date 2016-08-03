@@ -20,8 +20,11 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
@@ -44,7 +47,7 @@ public class Netherrack extends SimplePowerable {
     public void updateState(Location<?> location, boolean powered) {
         location = location.getRelative(Direction.UP);
         if(location.getBlockType() == BlockTypes.FIRE || location.getBlockType() == BlockTypes.AIR)
-            location.setBlock(powered ? BlockTypes.FIRE.getDefaultState() : BlockTypes.AIR.getDefaultState());
+            location.setBlock(powered ? BlockTypes.FIRE.getDefaultState() : BlockTypes.AIR.getDefaultState(), Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
     }
 
     @Override

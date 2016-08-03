@@ -34,6 +34,8 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
@@ -109,19 +111,19 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
             while (baseBlock.getBlockX() != otherSide.getBlockX() || baseBlock.getBlockZ() != otherSide.getBlockZ()) {
 
-                baseBlock.setBlock(type);
+                baseBlock.setBlock(type, Cause.of(NamedCause.source(human)));
 
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
 
                 for(int i = 0; i < leftBlocks; i++) {
-                    left.setBlock(type);
+                    left.setBlock(type, Cause.of(NamedCause.source(human)));
                     left = left.getRelative(SignUtil.getLeft(block));
                 }
 
                 right = baseBlock.getRelative(SignUtil.getRight(block));
 
                 for(int i = 0; i < rightBlocks; i++) {
-                    right.setBlock(type);
+                    right.setBlock(type, Cause.of(NamedCause.source(human)));
                     right = right.getRelative(SignUtil.getRight(block));
                 }
 

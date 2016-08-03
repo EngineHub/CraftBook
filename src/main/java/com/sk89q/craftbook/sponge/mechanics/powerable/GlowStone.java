@@ -23,9 +23,12 @@ import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "GlowStone", onEnable="onInitialize", onDisable="onDisable")
@@ -44,7 +47,7 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
 
     @Override
     public void updateState(Location<?> location, boolean powered) {
-        location.setBlock(powered ? BlockTypes.GLOWSTONE.getDefaultState() : offBlock.getValue());
+        location.setBlock(powered ? BlockTypes.GLOWSTONE.getDefaultState() : offBlock.getValue(), Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
     }
 
     @Override

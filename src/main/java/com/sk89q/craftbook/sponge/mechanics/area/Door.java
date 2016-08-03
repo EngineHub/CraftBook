@@ -24,6 +24,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -33,6 +34,8 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
@@ -123,19 +126,19 @@ public class Door extends SimpleArea implements DocumentationProvider {
             if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
             while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
-                baseBlock.setBlock(type);
+                baseBlock.setBlock(type, Cause.of(NamedCause.source(human)));
 
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
 
                 for(int i = 0; i < leftBlocks; i++) {
-                    left.setBlock(type);
+                    left.setBlock(type, Cause.of(NamedCause.source(human)));
                     left = left.getRelative(SignUtil.getLeft(block));
                 }
 
                 right = baseBlock.getRelative(SignUtil.getRight(block));
 
                 for(int i = 0; i < rightBlocks; i++) {
-                    right.setBlock(type);
+                    right.setBlock(type, Cause.of(NamedCause.source(human)));
                     right = right.getRelative(SignUtil.getRight(block));
                 }
 

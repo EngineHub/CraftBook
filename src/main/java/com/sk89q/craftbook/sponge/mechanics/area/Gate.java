@@ -25,6 +25,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -37,6 +38,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.Subject;
@@ -168,12 +170,12 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         if (on) {
             while (block.getBlockType() == BlockTypes.AIR) {
-                block.setBlock(gateType == null ? BlockTypes.FENCE.getDefaultState() : gateType);
+                block.setBlock(gateType == null ? BlockTypes.FENCE.getDefaultState() : gateType, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
                 block = block.getRelative(dir);
             }
         } else {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
-                block.setBlockType(BlockTypes.AIR);
+                block.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
                 block = block.getRelative(dir);
             }
         }
