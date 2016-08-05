@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
@@ -25,12 +26,15 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
 import org.spongepowered.api.data.type.SkullTypes;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
@@ -52,8 +56,8 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
     private static final Pattern HEAD_DROPS_TABLE_PATTERN = Pattern.compile("%CUSTOM_HEAD_TYPES%", Pattern.LITERAL);
 
     @Listener
-    public void onItemDrops(DropItemEvent.Pre event, @First Entity entity) {
-        EntityType type = entity.getType();
+    public void onItemDrops(DropItemEvent.Destruct event, @First EntitySpawnCause spawnCause) {
+        EntityType type = spawnCause.getEntity().getType();
 
         SkullData data = Sponge.getGame().getDataManager().getManipulatorBuilder(SkullData.class).get().create();
         GameProfile profile = null;
@@ -61,7 +65,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         if (type == EntityTypes.PLAYER) {
             // This be a player.
             data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-            profile = ((Player) entity).getProfile();
+            profile = ((Player) spawnCause.getEntity()).getProfile();
         } else if (type == EntityTypes.ZOMBIE) {
             // This be a zombie.
             data.set(Keys.SKULL_TYPE, SkullTypes.ZOMBIE);
@@ -85,7 +89,10 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
                 owner.set(Keys.REPRESENTED_PLAYER, profile);
                 stack.offer(owner);
             }
-            event.getDroppedItems().add(stack.createSnapshot());
+            Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
+            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location).get();
+            item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+            event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
         }
     }
 
