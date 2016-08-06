@@ -18,7 +18,6 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
 
-import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;

@@ -16,11 +16,10 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import org.spongepowered.api.world.Location;
-
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
 import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 public class Clock extends SelfTriggeringIC {

@@ -19,7 +19,6 @@ package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 public class Pins3ISO extends PinSet {
 

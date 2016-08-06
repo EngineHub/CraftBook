@@ -20,7 +20,6 @@ import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
-import com.sk89q.worldedit.sponge.SpongeWorld;
 import com.sk89q.worldedit.sponge.SpongeWorldEdit;
 import com.sk89q.worldedit.world.DataException;
 import org.spongepowered.api.world.World;

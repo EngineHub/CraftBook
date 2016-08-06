@@ -25,6 +25,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
+import org.spongepowered.api.data.manipulator.mutable.entity.SkinData;
+import org.spongepowered.api.data.type.SkeletonType;
+import org.spongepowered.api.data.type.SkeletonTypes;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -40,6 +43,8 @@ import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.GameProfile;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +79,13 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
             data.set(Keys.SKULL_TYPE, SkullTypes.CREEPER);
         } else if (type == EntityTypes.SKELETON) {
             // This be a skeleton.
-            data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
+            SkeletonType skeletonType = spawnCause.getEntity().get(Keys.SKELETON_TYPE).orElse(SkeletonTypes.NORMAL);
+            if (skeletonType.equals(SkeletonTypes.NORMAL))
+                data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
+            else if (skeletonType.equals(SkeletonTypes.WITHER))
+                data.set(Keys.SKULL_TYPE, SkullTypes.WITHER_SKELETON);
+        } else if (type == EntityTypes.ENDER_DRAGON) {
+            data.set(Keys.SKULL_TYPE, SkullTypes.ENDER_DRAGON);
         } else {
             // Add extra mob.
             profile = getForEntity(type);
@@ -85,9 +96,10 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         if (data.get(Keys.SKULL_TYPE).isPresent()) {
             ItemStack stack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
-                RepresentedPlayerData owner = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
-                owner.set(Keys.REPRESENTED_PLAYER, profile);
-                stack.offer(owner);
+                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
+                skinData.set(Keys.REPRESENTED_PLAYER, profile);
+                stack.offer(skinData);
+                stack.offer(Keys.DISPLAY_NAME, Text.of(TextStyles.RESET, type.getName().toUpperCase() + " Head"));
             }
             Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
             Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);

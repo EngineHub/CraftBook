@@ -100,7 +100,7 @@ public class Chairs extends SpongeBlockMechanic {
     private void removeChair(Chair<?> chair) {
         Player passenger = chair.chairEntity.getPassengers().stream().filter((entity -> entity instanceof Player)).map(e -> (Player) e).findFirst().orElse(null);
         if (passenger != null) {
-            chair.chairEntity.removePassenger(passenger);
+            chair.chairEntity.clearPassengers();
             passenger.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
             if (exitAtEntry.getValue()) {
                 Sponge.getScheduler().createTaskBuilder().delayTicks(5L).execute(() -> passenger.setLocation(chair.playerExitLocation)).submit(CraftBookPlugin.inst());
@@ -146,9 +146,9 @@ public class Chairs extends SpongeBlockMechanic {
 
             if (chairs.containsKey(player.getUniqueId())) {
                 removeChair(chairs.get(player.getUniqueId()));
-            } else {
-                addChair(player, location);
             }
+
+            addChair(player, location);
         });
     }
 
