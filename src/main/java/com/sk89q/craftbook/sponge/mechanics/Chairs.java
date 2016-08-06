@@ -51,6 +51,7 @@ public class Chairs extends SpongeBlockMechanic {
     public ConfigurationNode config;
 
     private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
+    private ConfigValue<Boolean> exitAtEntry = new ConfigValue<>("exit-at-last-position", "Moves player's to their entry position when they exit the chair.", false);
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.chairs.use", "Allows the user to sit in chairs.", PermissionDescription.ROLE_USER);
 
@@ -63,6 +64,7 @@ public class Chairs extends SpongeBlockMechanic {
         chairs = new HashMap<>();
 
         allowedBlocks.load(config);
+        exitAtEntry.load(config);
 
         usePermissions.register();
     }
@@ -100,7 +102,9 @@ public class Chairs extends SpongeBlockMechanic {
         if (passenger != null) {
             chair.chairEntity.removePassenger(passenger);
             passenger.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
-            Sponge.getScheduler().createTaskBuilder().delayTicks(5L).execute(() -> passenger.setLocation(chair.playerExitLocation)).submit(CraftBookPlugin.inst());
+            if (exitAtEntry.getValue()) {
+                Sponge.getScheduler().createTaskBuilder().delayTicks(5L).execute(() -> passenger.setLocation(chair.playerExitLocation)).submit(CraftBookPlugin.inst());
+            }
         }
         chair.chairEntity.remove();
         chairs.values().remove(chair);
@@ -152,7 +156,8 @@ public class Chairs extends SpongeBlockMechanic {
     public void onBlockBreak(ChangeBlockEvent.Break event) {
         event.getTransactions().forEach((transaction) -> transaction.getOriginal().getLocation().ifPresent((location) -> {
             Chair<?> chair = getChair(location);
-            removeChair(chair);
+            if (chair != null)
+                removeChair(chair);
         }));
     }
 

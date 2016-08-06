@@ -90,7 +90,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
                 stack.offer(owner);
             }
             Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
-            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location).get();
+            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
             item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
             event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
         }
