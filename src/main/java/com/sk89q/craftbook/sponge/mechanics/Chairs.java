@@ -6,6 +6,8 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
@@ -44,7 +46,7 @@ import java.util.stream.Collectors;
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
 @Module(moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
-public class Chairs extends SpongeBlockMechanic {
+public class Chairs extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -176,6 +178,26 @@ public class Chairs extends SpongeBlockMechanic {
                 .filter(blockType -> blockType.getName().toLowerCase().contains("stairs"))
                 .map(blockType -> new BlockFilter(blockType.getName())).collect(Collectors.toList()));
         return states;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/chairs";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue[]{
+                allowedBlocks,
+                exitAtEntry
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[]{
+                usePermissions
+        };
     }
 
     /**
