@@ -29,11 +29,13 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@NonnullByDefault
 public class ListCommand implements CommandExecutor {
 
     private ComplexArea area;

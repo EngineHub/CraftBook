@@ -27,10 +27,12 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.io.File;
 import java.util.Locale;
 
+@NonnullByDefault
 public class DeleteCommand implements CommandExecutor {
 
     private ComplexArea area;
