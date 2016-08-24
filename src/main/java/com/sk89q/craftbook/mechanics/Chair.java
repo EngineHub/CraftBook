@@ -72,7 +72,8 @@ public class Chair extends AbstractCraftBookMechanic {
         }
 
         ar = fixArrow(block, ar);
-        ar.getLocation().setYaw(chairLoc.getYaw());
+        if (chairLoc != null)
+            ar.getLocation().setYaw(chairLoc.getYaw());
 
         if (hasUpdated && ar != chairs.get(player.getName()).chairEntity)
             isNew = true;
@@ -86,7 +87,8 @@ public class Chair extends AbstractCraftBookMechanic {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
                 @Override
                 public void run () {
-                    player.teleport(chairLoc);
+                    if (chairLoc != null)
+                        player.teleport(chairLoc);
                     far.setPassenger(player);
                 }
             });
