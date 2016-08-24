@@ -265,7 +265,9 @@ public class Chair extends AbstractCraftBookMechanic {
             for (Map.Entry<String, ChairData> pl : chairs.entrySet()) {
                 Player p = Bukkit.getPlayerExact(pl.getKey());
                 if (p == null  || p.isDead()) {
-                    chairs.remove(pl.getKey());
+                    ChairData data = chairs.remove(pl.getKey());
+                    if (data != null && data.chairEntity != null)
+                        data.chairEntity.remove();
                     continue;
                 }
 
