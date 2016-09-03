@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
@@ -29,11 +30,17 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -68,7 +75,12 @@ public class TreeLopper extends SpongeMechanic {
 
         traversed.add(block);
 
+        Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, block.getBlockPosition().add(0.5, 0.5, 0.5)).get();
+        item.offer(Keys.REPRESENTED_ITEM, ItemStack.builder().fromBlockState(block.getBlock()).build().createSnapshot());
+        block.getExtent().spawnEntity(item, Cause.of(NamedCause.source(CraftBookPlugin.inst())));
+
         block.setBlockType(BlockTypes.AIR);
+
         for(Direction dir : BlockUtil.getDirectFaces()) {
             if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getRelative(dir).getBlock()))
                 checkBlocks(block.getRelative(dir), player, traversed);
