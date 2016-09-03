@@ -26,6 +26,7 @@ import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.living.player.Player;
@@ -58,25 +59,18 @@ public class TreeLopper extends SpongeMechanic {
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event, @Named(NamedCause.SOURCE) Player player) {
         event.getTransactions().stream().filter((t) -> BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), t.getOriginal().getState())).forEach((transaction) -> {
-            Optional<TreeType> treeType = transaction.getOriginal().get(Keys.TREE_TYPE);
-            if(treeType.isPresent())
-                checkBlocks(transaction.getOriginal().getLocation().get(), player, treeType.get(), new ArrayList<>());
+            checkBlocks(transaction.getOriginal().getLocation().get(), player, new ArrayList<>());
         });
     }
 
-    private static void checkBlocks(Location<World> block, Player player, TreeType type, List<Location> traversed) {
+    private static void checkBlocks(Location<World> block, Player player, List<Location> traversed) {
         if(traversed.contains(block)) return;
 
         traversed.add(block);
 
-        Optional<TreeType> data = block.getBlock().get(Keys.TREE_TYPE);
-
-        if(data.isPresent() && data.get().equals(type)) { //Same tree type.
-            //block.digBlockWith(player.getItemInHand().get());
-            block.removeBlock();
-            for(Direction dir : BlockUtil.getDirectFaces()) {
-                checkBlocks(block.getRelative(dir), player, type, traversed);
-            }
+        block.setBlockType(BlockTypes.AIR);
+        for(Direction dir : BlockUtil.getDirectFaces()) {
+            checkBlocks(block.getRelative(dir), player, traversed);
         }
     }
 
