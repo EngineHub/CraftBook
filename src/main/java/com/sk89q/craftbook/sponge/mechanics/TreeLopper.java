@@ -63,14 +63,15 @@ public class TreeLopper extends SpongeMechanic {
         });
     }
 
-    private static void checkBlocks(Location<World> block, Player player, List<Location> traversed) {
+    private void checkBlocks(Location<World> block, Player player, List<Location> traversed) {
         if(traversed.contains(block)) return;
 
         traversed.add(block);
 
         block.setBlockType(BlockTypes.AIR);
         for(Direction dir : BlockUtil.getDirectFaces()) {
-            checkBlocks(block.getRelative(dir), player, traversed);
+            if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getRelative(dir).getBlock()))
+                checkBlocks(block.getRelative(dir), player, traversed);
         }
     }
 
