@@ -51,6 +51,11 @@ public class Netherrack extends SimplePowerable {
     }
 
     @Override
+    public boolean getState(Location<?> location) {
+        return location.getRelative(Direction.UP).getBlock().getType() == BlockTypes.FIRE;
+    }
+
+    @Override
     public boolean isValid(Location location) {
         return location.getBlockType() == BlockTypes.NETHERRACK;
     }

@@ -23,6 +23,7 @@ import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -116,12 +117,12 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 }
             }
 
-            int power = BlockUtil.getBlockPowerLevel(block).orElse(-1);
-            int lastPower = block.get(CraftBookKeys.LAST_POWER).orElse(-1);
+            boolean isPowered = BlockUtil.getBlockPowerLevel(block).orElse(0) > 0;
+            boolean wasPowered = block.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
 
-            if (power != lastPower) {
-                triggerMechanic(block, sign, human, power > 0);
-                System.out.println(block.offer(CraftBookKeys.LAST_POWER, power).toString());
+            if (isPowered != wasPowered) {
+                triggerMechanic(block, sign, human, isPowered);
+                block.offer(new LastPowerData(isPowered ? 15 : 0));
             }
         }
     }

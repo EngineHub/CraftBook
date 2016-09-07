@@ -30,7 +30,6 @@ public class Repeater extends IC {
 
     @Override
     public void trigger() {
-
         for (int i = 0; i < getPinSet().getInputCount(); i++)
             getPinSet().setOutput(i, PinSet.getInput(i, this), this);
     }

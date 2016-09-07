@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.powerable;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.event.Listener;
@@ -35,18 +36,17 @@ abstract class SimplePowerable extends SpongeBlockMechanic {
 
     public abstract void updateState(Location<?> location, boolean powered);
 
+    public abstract boolean getState(Location<?> location);
+
     @Listener
     public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
         source.getLocation().ifPresent((location) -> {
             if(isValid(location)) {
-                boolean wasPowered = location.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
-                event.getNeighbors().entrySet().stream().map(
-                        (Function<Map.Entry<Direction, BlockState>, Location>) entry -> location.getRelative(entry.getKey())).
-                        collect(Collectors.toList()).stream().filter((block) -> wasPowered != (BlockUtil.getBlockPowerLevel(location, block).orElse(0) > 0)).findFirst().ifPresent(block -> {
-                    boolean isPowered = BlockUtil.getBlockPowerLevel(location, block).orElse(0) > 0;
+                boolean wasPowered = getState(location);
+                boolean isPowered = BlockUtil.getBlockPowerLevel(location).orElse(0) > 0;
+                if (isPowered != wasPowered) {
                     updateState(location, isPowered);
-                    location.offer(CraftBookKeys.LAST_POWER, isPowered ? 15 : 0);
-                });
+                }
             }
         });
     }

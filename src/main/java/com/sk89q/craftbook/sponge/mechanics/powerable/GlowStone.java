@@ -51,8 +51,13 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
     }
 
     @Override
+    public boolean getState(Location<?> location) {
+        return location.getBlock().getType() == BlockTypes.GLOWSTONE;
+    }
+
+    @Override
     public boolean isValid(Location location) {
-        return location.getBlockType() == BlockTypes.GLOWSTONE;
+        return location.getBlockType() == BlockTypes.GLOWSTONE || location.getBlock().equals(offBlock.getValue());
     }
 
     @Override

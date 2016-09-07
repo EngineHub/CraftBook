@@ -54,6 +54,11 @@ public class JackOLantern extends SimplePowerable {
     }
 
     @Override
+    public boolean getState(Location<?> location) {
+        return location.getBlock().getType() == BlockTypes.LIT_PUMPKIN;
+    }
+
+    @Override
     public boolean isValid(Location location) {
         return location.getBlockType() == BlockTypes.PUMPKIN || location.getBlockType() == BlockTypes.LIT_PUMPKIN;
     }
