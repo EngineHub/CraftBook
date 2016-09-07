@@ -43,10 +43,12 @@ import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -101,7 +103,8 @@ public abstract class SimpleArea extends SpongeSignMechanic {
             return;
 
         if(!SignUtil.isSign(source.getState())) return;
-        Sign sign = (Sign) source.getLocation().get().getTileEntity().get();
+        Location<World> block = source.getLocation().get();
+        Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {
             Humanoid human = event.getCause().get(NamedCause.SOURCE, Humanoid.class).orElse(null);
@@ -113,17 +116,13 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 }
             }
 
-            event.getNeighbors().entrySet().stream().map(
-                    (Function<Entry<Direction, BlockState>, Location>) entry -> source.getLocation().get().getRelative(entry.getKey()))
-                    .collect(Collectors.toList()).stream()
-                    .filter((block) -> BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).isPresent())
-                    .filter((block) -> source.getLocation().get().get(CraftBookKeys.LAST_POWER).orElse(0) != BlockUtil.getBlockPowerLevel(source.getLocation().get(), block).get())
-                    .findFirst().ifPresent(block -> {
-                Optional<Integer> powerOptional = BlockUtil.getBlockPowerLevel(source.getLocation().get(), block);
+            int power = BlockUtil.getBlockPowerLevel(block).orElse(-1);
+            int lastPower = block.get(CraftBookKeys.LAST_POWER).orElse(-1);
 
-                triggerMechanic(source.getLocation().get(), sign, human, powerOptional.get() > 0);
-                source.getLocation().get().offer(CraftBookKeys.LAST_POWER, powerOptional.get());
-            });
+            if (power != lastPower) {
+                triggerMechanic(block, sign, human, power > 0);
+                System.out.println(block.offer(CraftBookKeys.LAST_POWER, power).toString());
+            }
         }
     }
 

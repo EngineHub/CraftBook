@@ -27,7 +27,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.DataView;
-import org.spongepowered.api.data.translator.ConfigurateTranslator;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -113,16 +113,18 @@ public class TypeSerializers {
 
         @Override
         public ItemStack deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
-            final ConfigurateTranslator translator = ConfigurateTranslator.instance();
-            final DataView container = translator.translateFrom(value);
-            return ItemStack.builder().fromContainer(container).build();
+            //final ConfigurateTranslator translator = ConfigurateTranslator.instance();
+            //final DataView container = translator.translateFrom(value);
+            //return ItemStack.builder().fromContainer(container).build();
+            return ItemStack.of(ItemTypes.STONE, 1); // TODO FIXME
         }
 
         @Override
         public void serialize(TypeToken<?> type, ItemStack obj, ConfigurationNode value) throws ObjectMappingException {
-            final ConfigurateTranslator translator = ConfigurateTranslator.instance();
-            final DataView container = obj.toContainer();
-            translator.translateContainerToData(value, container);
+            //final ConfigurateTranslator translator = ConfigurateTranslator.instance();
+            //final DataView container = obj.toContainer();
+            //translator.translateContainerToData(value, container);
+            // TODO FIXME
         }
     }
 }

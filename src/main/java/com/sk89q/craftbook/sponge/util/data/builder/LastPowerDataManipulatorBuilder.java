@@ -22,13 +22,18 @@ import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.util.Optional;
 
 @NonnullByDefault
-public class LastPowerDataManipulatorBuilder implements DataManipulatorBuilder<LastPowerData, ImmutableLastPowerData> {
+public class LastPowerDataManipulatorBuilder extends AbstractDataBuilder<LastPowerData> implements DataManipulatorBuilder<LastPowerData, ImmutableLastPowerData> {
+
+    public LastPowerDataManipulatorBuilder() {
+        super(LastPowerData.class, 1);
+    }
 
     @Override
     public LastPowerData create() {
@@ -41,7 +46,7 @@ public class LastPowerDataManipulatorBuilder implements DataManipulatorBuilder<L
     }
 
     @Override
-    public Optional<LastPowerData> build(DataView container) throws InvalidDataException {
+    protected Optional<LastPowerData> buildContent(DataView container) throws InvalidDataException {
         if (container.contains(CraftBookKeys.LAST_POWER)) {
             final int lastPower = container.getInt(CraftBookKeys.LAST_POWER.getQuery()).get();
             return Optional.of(new LastPowerData(lastPower));

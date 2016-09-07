@@ -29,7 +29,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
-import org.spongepowered.api.event.entity.DismountEntityEvent;
+import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -164,7 +164,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     }
 
     @Listener
-    public void onDismount(DismountEntityEvent event) {
+    public void onDismount(RideEntityEvent.Dismount event) {
         if (event.getTargetEntity() instanceof ArmorStand) {
             Chair<?> chair = getChair(event.getTargetEntity());
             if (chair != null)
