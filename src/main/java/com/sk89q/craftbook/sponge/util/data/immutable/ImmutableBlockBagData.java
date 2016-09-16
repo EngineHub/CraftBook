@@ -43,11 +43,6 @@ public class ImmutableBlockBagData extends AbstractImmutableSingleData<Long, Imm
     }
 
     @Override
-    public int compareTo(ImmutableBlockBagData o) {
-        return Long.compare(getValue(), o.getValue());
-    }
-
-    @Override
     public int getContentVersion() {
         return 1;
     }

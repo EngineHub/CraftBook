@@ -25,10 +25,9 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
-import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -42,17 +41,11 @@ import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
@@ -61,7 +54,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new BlockFilterListTypeToken());
+    ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
     TranslatableText missingOtherEnd = TranslatableText.of(new ResourceBundleTranslation("area.missing-other-end", TranslationsManager.getResourceBundleFunction()));

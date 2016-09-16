@@ -30,9 +30,4 @@ public abstract class AbstractLongData<M extends DataManipulator<M, I>, I extend
     protected AbstractLongData(long value, Key<? extends BaseValue<Long>> usedKey) {
         super(value, usedKey);
     }
-
-    @Override
-    public int compareTo(M o) {
-        return Long.compare(o.get(this.usedKey).orElse(0L), this.getValue());
-    }
 }

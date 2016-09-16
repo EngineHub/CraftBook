@@ -17,9 +17,29 @@
 package com.sk89q.craftbook.sponge.util.type;
 
 import com.google.common.reflect.TypeToken;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
+import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
+import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-public class ItemStackListTypeToken extends TypeToken<List<ItemStack>> {
+public class TypeTokens {
+    public static class IntegerTypeToken extends TypeToken<Integer> {}
+
+    public static class MutableBoundedValueIntegerTypeToken extends TypeToken<MutableBoundedValue<Integer>> {}
+
+    public static class LongTypeToken extends TypeToken<Long> {}
+
+    public static class LongValueTypeToken extends TypeToken<Value<Long>> {}
+
+    public static class BlockFilterListTypeToken extends TypeToken<List<BlockFilter>> {}
+
+    public static class ItemStackListTypeToken extends TypeToken<List<ItemStack>> {}
+
+    public static class UUIDListTypeToken extends TypeToken<List<UUID>> {}
+
+    public static class VariableTypeToken extends TypeToken<Map<String, Map<String, String>>> {}
 }

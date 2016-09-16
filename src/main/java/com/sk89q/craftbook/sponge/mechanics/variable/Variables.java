@@ -28,7 +28,7 @@ import com.sk89q.craftbook.sponge.mechanics.variable.command.RemoveVariableComma
 import com.sk89q.craftbook.sponge.mechanics.variable.command.SetVariableCommand;
 import com.sk89q.craftbook.sponge.util.RegexUtil;
 import com.sk89q.craftbook.sponge.util.TextUtil;
-import com.sk89q.craftbook.sponge.util.type.VariableTypeToken;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
@@ -66,7 +66,7 @@ public class Variables extends SpongeMechanic {
 
         if(config.getValue() != null) {
             try {
-                variableStore = config.getNode("variables").getValue(new VariableTypeToken());
+                variableStore = config.getNode("variables").getValue(new TypeTokens.VariableTypeToken());
             } catch (ObjectMappingException e) {
                 CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to read variables! Resetting..", e);
                 variableStore = new HashMap<>();

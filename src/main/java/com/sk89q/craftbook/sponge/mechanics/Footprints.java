@@ -28,7 +28,7 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -49,7 +49,7 @@ public class Footprints extends SpongeMechanic {
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new BlockFilterListTypeToken());
+    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
 
     private ParticleEffect footprintParticle;
 

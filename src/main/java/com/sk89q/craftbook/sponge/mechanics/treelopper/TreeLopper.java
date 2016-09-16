@@ -31,9 +31,7 @@ import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.ItemUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
-import com.sk89q.craftbook.sponge.util.type.BlockFilterListTypeToken;
-import com.sk89q.craftbook.sponge.util.type.ItemStackListTypeToken;
-import com.sk89q.craftbook.sponge.util.type.UUIDListTypeToken;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
@@ -67,9 +65,9 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that are logs.", getDefaultBlocks(), new BlockFilterListTypeToken());
-    private ConfigValue<List<ItemStack>> allowedItems = new ConfigValue<>("allowed-items", "The list of items that can be used with this mechanic.", getDefaultItems(), new ItemStackListTypeToken());
-    public ConfigValue<List<UUID>> disabledPlayers = new ConfigValue<>("disabled-users", "A list of users that have disabled the mechanic.", new ArrayList<>(), new UUIDListTypeToken());
+    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that are logs.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
+    private ConfigValue<List<ItemStack>> allowedItems = new ConfigValue<>("allowed-items", "The list of items that can be used with this mechanic.", getDefaultItems(), new TypeTokens.ItemStackListTypeToken());
+    public ConfigValue<List<UUID>> disabledPlayers = new ConfigValue<>("disabled-users", "A list of users that have disabled the mechanic.", new ArrayList<>(), new TypeTokens.UUIDListTypeToken());
 
     private SpongePermissionNode usePermission = new SpongePermissionNode("craftbook.treelopper.use", "Allows the user to use TreeLopper.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode togglePermission = new SpongePermissionNode("craftbook.treelopper.toggle", "Allows the user to toggle TreeLopper on and off.", PermissionDescription.ROLE_USER);
