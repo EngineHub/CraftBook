@@ -8,6 +8,8 @@ import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,10 +24,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CustomDrops extends AbstractCraftBookMechanic {
 
@@ -36,7 +35,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        definitions = new HashSet<CustomDropDefinition>();
+        definitions = new LinkedHashSet<CustomDropDefinition>();
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
@@ -63,6 +62,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
             TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
+            String region = config.getString("custom-drops." + key + ".region", null);
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -120,6 +120,9 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(def != null) {
                 def.setAppend(append);
+                if (region != null) {
+                    def.setRegion(region);
+                }
                 definitions.add(def);
             }
         }
@@ -133,6 +136,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
             config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
+            if (def.getRegion() != null)
+                config.setProperty("custom-drops." + def.getName() + ".region", def.getRegion());
 
             int i = 0;
             for(DropItemStack stack : def.getDrops()) {
@@ -188,7 +193,15 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
 
-            boolean isSilkTouch = event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            if (def.getRegion() != null) {
+                ProtectedRegion region = WorldGuardPlugin.inst().getRegionManager(event.getBlock().getWorld())
+                        .getRegion(def.getRegion());
+                if (region == null || !region.contains(event.getBlock().getX(), event.getBlock().getY(),
+                        event.getBlock().getZ()))
+                    return;
+            }
+
+            boolean isSilkTouch = event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
@@ -220,7 +233,15 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType())) continue;
 
-            boolean isSilkTouch = event.getEntity() instanceof Player && ((Player) event.getEntity()).getItemInHand() != null && ((Player) event.getEntity()).getItemInHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            if (def.getRegion() != null) {
+                ProtectedRegion region = WorldGuardPlugin.inst().getRegionManager(event.getEntity().getWorld())
+                        .getRegion(def.getRegion());
+                if (region == null || !region.contains(event.getEntity().getLocation().getBlockX(),
+                        event.getEntity().getLocation().getBlockX(), event.getEntity().getLocation().getBlockX()))
+                    return;
+            }
+
+            boolean isSilkTouch = event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory().getItemInMainHand() != null && ((Player) event.getEntity()).getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 

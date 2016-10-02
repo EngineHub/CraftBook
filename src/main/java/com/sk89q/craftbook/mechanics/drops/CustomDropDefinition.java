@@ -11,12 +11,17 @@ import java.util.List;
 
 public abstract class CustomDropDefinition {
 
+    public static final DropReward[] EMPTY_DROP_REWARDS = new DropReward[0];
+
     private DropItemStack[] drops;
     private DropReward[] extraRewards;
     private String name;
 
     private boolean append;
     private TernaryState silkTouch;
+
+    // WorldGuard Integration
+    private String region;
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
@@ -27,18 +32,24 @@ public abstract class CustomDropDefinition {
     }
 
     public void setAppend(boolean append) {
-
         this.append = append;
     }
 
     public boolean getAppend() {
-
         return append;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public DropReward[] getRewards() {
         if(extraRewards == null)
-            extraRewards = new DropReward[0];
+            extraRewards = EMPTY_DROP_REWARDS;
         return extraRewards;
     }
 
