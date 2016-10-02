@@ -86,10 +86,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
-
         if (players.get(player.getUniqueId()) == null)
             return;
+
+        if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
 
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
