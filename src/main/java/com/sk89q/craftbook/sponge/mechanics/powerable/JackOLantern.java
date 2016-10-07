@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
@@ -31,7 +32,7 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "JackOLantern", onEnable="onInitialize", onDisable="onDisable")
-public class JackOLantern extends SimplePowerable {
+public class JackOLantern extends SimplePowerable implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -61,5 +62,10 @@ public class JackOLantern extends SimplePowerable {
     @Override
     public boolean isValid(Location location) {
         return location.getBlockType() == BlockTypes.PUMPKIN || location.getBlockType() == BlockTypes.LIT_PUMPKIN;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/jack_o_lantern";
     }
 }

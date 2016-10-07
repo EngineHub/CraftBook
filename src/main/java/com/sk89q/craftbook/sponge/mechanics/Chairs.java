@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -59,8 +61,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
-
 @Module(moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
 public class Chairs extends SpongeBlockMechanic implements DocumentationProvider {
 
@@ -102,7 +102,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     private Chair<?> addChair(Player player, Location<World> location) {
         Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
         entity.offer(Keys.INVISIBLE, true);
-        entity.offer(Keys.ARMOR_STAND_HAS_GRAVITY, false);
+        entity.offer(Keys.HAS_GRAVITY, false);
 
         location.getExtent().spawnEntity(entity, Cause.of(NamedCause.of("root", SpawnCause.builder().type(SpawnTypes.CUSTOM).build()), NamedCause.source(player)));
 

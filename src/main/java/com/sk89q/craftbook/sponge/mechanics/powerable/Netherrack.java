@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
@@ -29,7 +30,7 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 @Module(moduleName = "Netherrack", onEnable="onInitialize", onDisable="onDisable")
-public class Netherrack extends SimplePowerable {
+public class Netherrack extends SimplePowerable implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -58,5 +59,10 @@ public class Netherrack extends SimplePowerable {
     @Override
     public boolean isValid(Location location) {
         return location.getBlockType() == BlockTypes.NETHERRACK;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/netherrack";
     }
 }
