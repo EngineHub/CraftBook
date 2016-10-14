@@ -21,12 +21,12 @@ import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.TernaryState;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -44,6 +44,7 @@ public class TypeSerializers {
         options.getSerializers().registerType(TypeToken.of(BlockState.class), new BlockStateTypeSerializer());
         options.getSerializers().registerType(new TypeToken<Set<?>>(){}, new SetTypeSerializer());
         options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
+        options.getSerializers().registerType(TypeToken.of(TernaryState.class), new TernaryStateTypeSerializer());
     }
 
     private static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
@@ -55,6 +56,18 @@ public class TypeSerializers {
         @Override
         public void serialize(TypeToken<?> type, BlockState obj, ConfigurationNode value) {
             value.setValue(obj.toString());
+        }
+    }
+
+    private static class TernaryStateTypeSerializer implements TypeSerializer<TernaryState> {
+        @Override
+        public TernaryState deserialize(TypeToken<?> type, ConfigurationNode value) {
+            return TernaryState.getFromString(value.getString());
+        }
+
+        @Override
+        public void serialize(TypeToken<?> type, TernaryState obj, ConfigurationNode value) {
+            obj.name();
         }
     }
 
