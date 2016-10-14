@@ -87,6 +87,7 @@ shadowJar {
 
         include(dependency("com.owlike:genson"))
     }
+    exclude 'docs'
     exclude 'GradleStart**'
     exclude '.cache'
     exclude 'LICENSE*'
@@ -124,7 +125,7 @@ if (project.hasProperty("crowdin_apikey")) {
 
 crowdinDownload {
     apiKey = "${crowdin_apikey}"
-    destination = "$projectDir/src/main/resources/strings"
+    destination = "$projectDir/src/main/resources/assets.craftbook.strings"
     projectId = 'craftbook'
 
     //Optional
@@ -141,7 +142,7 @@ crowdinUpload {
     apiKey = "${crowdin_apikey}"
     projectId = 'craftbook'
     sourceFiles = [
-            ['strings.properties', "$projectDir/src/main/resources/strings/strings.properties"]
+            ['assets.craftbook.strings.properties', "$projectDir/src/main/resources/assets.craftbook.strings/assets.craftbook.strings.properties"]
     ]
 }
 

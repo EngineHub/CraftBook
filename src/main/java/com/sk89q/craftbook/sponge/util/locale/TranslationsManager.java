@@ -54,7 +54,7 @@ public class TranslationsManager {
         @Override
         @NonnullByDefault
         public ResourceBundle load(Locale key) throws Exception {
-            return PropertyResourceBundle.getBundle("strings/strings", key);
+            return PropertyResourceBundle.getBundle("assets/craftbook/strings/strings", key);
         }
     }
 }
