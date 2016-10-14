@@ -68,6 +68,8 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
         Asset books = CraftBookPlugin.<CraftBookPlugin>inst().getContainer().getAsset("bookshelf/books.txt").get();
         Path path = new File(CraftBookPlugin.inst().getWorkingDirectory(), "bookshelf/books.txt").toPath();
 
+        new File(CraftBookPlugin.inst().getWorkingDirectory(), "bookshelf").mkdirs();
+
         if (Files.notExists(path)) {
             try {
                 books.copyToFile(path);
