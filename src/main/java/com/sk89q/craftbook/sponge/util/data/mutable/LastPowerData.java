@@ -39,7 +39,11 @@ public class LastPowerData extends AbstractBoundedComparableData<Integer, LastPo
 
     @Override
     public Optional<LastPowerData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        return null;
+        dataHolder.get(LastPowerData.class).ifPresent((data) -> {
+            LastPowerData finalData = overlap.merge(this, data);
+            setValue(finalData.getValue());
+        });
+        return Optional.of(this);
     }
 
     @Override
@@ -53,12 +57,12 @@ public class LastPowerData extends AbstractBoundedComparableData<Integer, LastPo
 
     @Override
     public LastPowerData copy() {
-        return new LastPowerData(getValueGetter().get());
+        return new LastPowerData(getValue());
     }
 
     @Override
     public ImmutableLastPowerData asImmutable() {
-        return new ImmutableLastPowerData(getValueGetter().get());
+        return new ImmutableLastPowerData(getValue());
     }
 
     @Override

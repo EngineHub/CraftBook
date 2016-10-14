@@ -51,7 +51,11 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
 
     @Override
     public Optional<BlockBagData> fill(DataHolder dataHolder, MergeFunction overlap) {
-        return null;
+        dataHolder.get(BlockBagData.class).ifPresent((data) -> {
+            BlockBagData finalData = overlap.merge(this, data);
+            setValue(finalData.getValue());
+        });
+        return Optional.of(this);
     }
 
     @Override
@@ -65,12 +69,12 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
 
     @Override
     public BlockBagData copy() {
-        return new BlockBagData(getValueGetter().get());
+        return new BlockBagData(getValue());
     }
 
     @Override
     public ImmutableBlockBagData asImmutable() {
-        return new ImmutableBlockBagData(getValueGetter().get());
+        return new ImmutableBlockBagData(getValue());
     }
 
     @Override

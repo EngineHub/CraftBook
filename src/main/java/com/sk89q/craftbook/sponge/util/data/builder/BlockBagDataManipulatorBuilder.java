@@ -16,19 +16,23 @@
  */
 package com.sk89q.craftbook.sponge.util.data.builder;
 
-import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 import java.util.Optional;
 
 @NonnullByDefault
-public class BlockBagDataManipulatorBuilder implements DataManipulatorBuilder<BlockBagData, ImmutableBlockBagData> {
+public class BlockBagDataManipulatorBuilder extends AbstractDataBuilder<BlockBagData>  implements DataManipulatorBuilder<BlockBagData, ImmutableBlockBagData> {
+
+    public BlockBagDataManipulatorBuilder() {
+        super(BlockBagData.class, 1);
+    }
 
     @Override
     public BlockBagData create() {
@@ -37,15 +41,11 @@ public class BlockBagDataManipulatorBuilder implements DataManipulatorBuilder<Bl
 
     @Override
     public Optional<BlockBagData> createFrom(DataHolder dataHolder) {
-        return Optional.of(dataHolder.get(BlockBagData.class).orElse(new BlockBagData()));
+        return create().fill(dataHolder);
     }
 
     @Override
-    public Optional<BlockBagData> build(DataView container) throws InvalidDataException {
-        if (container.contains(CraftBookKeys.BLOCK_BAG)) {
-            final long blockBag = container.getLong(CraftBookKeys.BLOCK_BAG.getQuery()).get();
-            return Optional.of(new BlockBagData(blockBag));
-        }
-        return Optional.empty();
+    protected Optional<BlockBagData> buildContent(DataView container) throws InvalidDataException {
+        return create().from(container.getContainer());
     }
 }
