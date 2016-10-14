@@ -113,7 +113,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
 
     @Override
     public String getPath() {
-        return null;
+        return "mechanics/bookshelf";
     }
 
     @Override
