@@ -21,7 +21,7 @@ public abstract class CustomDropDefinition {
     private TernaryState silkTouch;
 
     // WorldGuard Integration
-    private String region;
+    private List<String> regions;
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
@@ -39,12 +39,12 @@ public abstract class CustomDropDefinition {
         return append;
     }
 
-    public String getRegion() {
-        return region;
+    public List<String> getRegions() {
+        return regions;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setRegions(List<String> regions) {
+        this.regions = regions;
     }
 
     public DropReward[] getRewards() {

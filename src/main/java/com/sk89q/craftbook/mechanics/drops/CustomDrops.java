@@ -62,7 +62,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
             TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
-            String region = config.getString("custom-drops." + key + ".region", null);
+            List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -120,8 +120,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(def != null) {
                 def.setAppend(append);
-                if (region != null) {
-                    def.setRegion(region);
+                if (regions != null) {
+                    def.setRegions(regions);
                 }
                 definitions.add(def);
             }
@@ -136,8 +136,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
             config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
-            if (def.getRegion() != null)
-                config.setProperty("custom-drops." + def.getName() + ".region", def.getRegion());
+            if (def.getRegions() != null)
+                config.setProperty("custom-drops." + def.getName() + ".regions", def.getRegions());
 
             int i = 0;
             for(DropItemStack stack : def.getDrops()) {
@@ -193,11 +193,18 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
 
-            if (def.getRegion() != null) {
-                ProtectedRegion region = WorldGuardPlugin.inst().getRegionManager(event.getBlock().getWorld())
-                        .getRegion(def.getRegion());
-                if (region == null || !region.contains(event.getBlock().getX(), event.getBlock().getY(),
-                        event.getBlock().getZ()))
+            if (def.getRegions() != null) {
+                boolean found = false;
+                for (String region : def.getRegions()) {
+                    ProtectedRegion r = WorldGuardPlugin.inst().getRegionManager(event.getBlock().getWorld())
+                            .getRegion(region);
+                    if (r != null && r.contains(event.getBlock().getX(), event.getBlock().getY(),
+                            event.getBlock().getZ())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
                     return;
             }
 
@@ -233,11 +240,19 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             if(!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType())) continue;
 
-            if (def.getRegion() != null) {
-                ProtectedRegion region = WorldGuardPlugin.inst().getRegionManager(event.getEntity().getWorld())
-                        .getRegion(def.getRegion());
-                if (region == null || !region.contains(event.getEntity().getLocation().getBlockX(),
-                        event.getEntity().getLocation().getBlockX(), event.getEntity().getLocation().getBlockX()))
+            if (def.getRegions() != null) {
+                boolean found = false;
+                for (String region : def.getRegions()) {
+                    ProtectedRegion r = WorldGuardPlugin.inst().getRegionManager(event.getEntity().getWorld())
+                            .getRegion(region);
+                    if (r != null && r.contains(event.getEntity().getLocation().getBlockX(),
+                            event.getEntity().getLocation().getBlockY(),
+                            event.getEntity().getLocation().getBlockZ())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
                     return;
             }
 
