@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -26,9 +27,11 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import com.sk89q.craftbook.sponge.util.TernaryState;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -58,6 +61,8 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
 
     private ConfigValue<Boolean> readWhenHoldingBlock = new ConfigValue<>("read-with-block",
             "Whether to allow the player to read a book whilst holding a block", false);
+    private ConfigValue<TernaryState> sneakState = new ConfigValue<>("sneak-state", "Sets how the player must be sneaking in order to use a bookshelf.", TernaryState.FALSE,
+            TypeToken.of(TernaryState.class));
 
     private String[] bookLines;
 
@@ -85,6 +90,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
         }
 
         readWhenHoldingBlock.load(config);
+        sneakState.load(config);
 
         usePermissions.register();
     }
@@ -92,7 +98,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().filter((this::isValid)).ifPresent(location -> {
-            if (!usePermissions.hasPermission(player)) {
+            if (!sneakState.getValue().doesPass(player.get(Keys.IS_SNEAKING).orElse(false) || !usePermissions.hasPermission(player))) {
                 return; //Don't alert the player with this mechanic.
             }
 
@@ -128,7 +134,8 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
-                readWhenHoldingBlock
+                readWhenHoldingBlock,
+                sneakState
         };
     }
 }
