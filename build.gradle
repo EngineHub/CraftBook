@@ -125,7 +125,7 @@ if (project.hasProperty("crowdin_apikey")) {
 
 crowdinDownload {
     apiKey = "${crowdin_apikey}"
-    destination = "$projectDir/src/main/resources/assets.craftbook.strings"
+    destination = "$projectDir/src/main/resources/assets/craftbook/strings"
     projectId = 'craftbook'
 
     //Optional
@@ -142,7 +142,7 @@ crowdinUpload {
     apiKey = "${crowdin_apikey}"
     projectId = 'craftbook'
     sourceFiles = [
-            ['assets.craftbook.strings.properties', "$projectDir/src/main/resources/assets.craftbook.strings/assets.craftbook.strings.properties"]
+            ['strings.properties', "$projectDir/src/main/resources/assets/craftbook/strings/strings.properties"]
     ]
 }
 
