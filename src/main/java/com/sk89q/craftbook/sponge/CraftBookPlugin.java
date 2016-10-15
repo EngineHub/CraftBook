@@ -26,6 +26,7 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
@@ -37,6 +38,7 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -44,6 +46,7 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.text.Text;
 
 import java.io.File;
 
@@ -114,6 +117,26 @@ public class CraftBookPlugin extends CraftBookAPI {
             logger.info("Halting CraftBook Initialization - Data Only Mode!");
             return;
         }
+
+        CommandSpec generateDocsCommandSpec = CommandSpec.builder()
+                .description(Text.of("Generates Documentation"))
+                .permission("craftbook.docs.generate")
+                .executor(new GenerateDocsCommand())
+                .build();
+
+        CommandSpec docsCommandSpec = CommandSpec.builder()
+                .description(Text.of("Docs Base Command"))
+                .permission("craftbook.docs")
+                .child(generateDocsCommandSpec, "generate", "make", "build")
+                .build();
+
+        CommandSpec craftBookCommandSpec = CommandSpec.builder()
+                .description(Text.of("CraftBook Base Command"))
+                .permission("craftbook.craftbook")
+                .child(docsCommandSpec, "docs", "manual", "man", "documentation", "doc")
+                .build();
+
+        Sponge.getCommandManager().register(this, craftBookCommandSpec, "cb", "craftbook");
 
         discoverMechanics();
 
@@ -214,6 +237,10 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Override
     public MechanicDataCache getCache() {
         return cache;
+    }
+
+    public SpongeConfiguration getConfig() {
+        return config;
     }
 
     @Override

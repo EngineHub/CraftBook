@@ -1,7 +1,0 @@
-==========
-ToggleArea
-==========
-
-%CONFIG%
-
-%PERMS%

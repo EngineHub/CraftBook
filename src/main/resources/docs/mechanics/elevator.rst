@@ -1,7 +1,0 @@
-========
-Elevator
-========
-
-%CONFIG%
-
-%PERMS%

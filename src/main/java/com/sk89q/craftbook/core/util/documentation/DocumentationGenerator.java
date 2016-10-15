@@ -31,27 +31,34 @@ public class DocumentationGenerator {
     private static final Pattern CONFIG_PATTERN = Pattern.compile("%CONFIG%", Pattern.LITERAL);
     private static final Pattern IMPORT_PATTERN = Pattern.compile("%IMPORT (.*)%");
 
-    public static File getDocsDir() {
-        File docsDir = new File(CraftBookAPI.inst().getWorkingDirectory(), "documentation");
-        if(!docsDir.exists() && !docsDir.mkdir()) {
-            CraftBookAPI.inst().getLogger().error("Failed to generate documentation directory!");
-            return null;
+    private static String[] searchLocations = {"../docs", "docs"};
+    private static File rootDirectory;
+
+    private static File getRootDirectory() {
+        if (rootDirectory == null) {
+            File wd = new File(".");
+            File rootDir;
+            for (String searchLocation : searchLocations) {
+                rootDir = new File(wd, searchLocation);
+                if (rootDir.exists()) {
+                    rootDirectory = rootDir;
+                    break;
+                }
+            }
         }
 
-        return docsDir;
+        return rootDirectory;
     }
 
     public static void generateDocumentation(DocumentationProvider provider) {
-        File docFile = new File(getDocsDir(), provider.getPath() + ".rst");
+        File docFile = new File(getRootDirectory(), "source/" + provider.getPath() + ".rst");
         docFile.getParentFile().mkdirs();
 
-        URL resource = DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst");
-        if (resource == null) {
+        File template = new File(getRootDirectory(), "templates/" + provider.getTemplatePath() + ".rst");
+        if (!template.exists()) {
             CraftBookAPI.inst().getLogger().warn("Failed to find template for " + provider.getPath());
             return;
         }
-
-        File template = new File(resource.getFile());
 
         String output = makeReplacements(loadFile(template), provider);
 
@@ -147,7 +154,7 @@ public class DocumentationGenerator {
         Matcher importMatcher = IMPORT_PATTERN.matcher(input);
         while(importMatcher.find()) {
             String fileDir = importMatcher.group(1);
-            File file = new File(new File(DocumentationGenerator.class.getClassLoader().getResource("docs/" + provider.getTemplatePath() + ".rst").getFile()).getParentFile(), fileDir + ".rst");
+            File file = new File(new File(getRootDirectory(), "templates/" + provider.getTemplatePath() + ".rst").getParentFile(), fileDir + ".rst");
             System.out.println(file.getAbsolutePath());
             input = input.replace("%IMPORT " + fileDir + '%', makeReplacements(loadFile(file), provider));
         }

@@ -1,7 +1,0 @@
-==========
-BetterSnow
-==========
-
-%CONFIG%
-
-%PERMS%
