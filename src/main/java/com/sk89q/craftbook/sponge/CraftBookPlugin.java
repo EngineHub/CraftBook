@@ -27,6 +27,7 @@ import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
+import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
 import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
@@ -124,16 +125,23 @@ public class CraftBookPlugin extends CraftBookAPI {
                 .executor(new GenerateDocsCommand())
                 .build();
 
+        CommandSpec getDocsCommandSpec = CommandSpec.builder()
+                .description(Text.of("Gets a Link to the Documentation"))
+                .permission("craftbook.docs.get")
+                .executor(new GetDocsCommand())
+                .build();
+
         CommandSpec docsCommandSpec = CommandSpec.builder()
                 .description(Text.of("Docs Base Command"))
                 .permission("craftbook.docs")
                 .child(generateDocsCommandSpec, "generate", "make", "build")
+                .child(getDocsCommandSpec, "get", "help", "link")
                 .build();
 
         CommandSpec craftBookCommandSpec = CommandSpec.builder()
                 .description(Text.of("CraftBook Base Command"))
                 .permission("craftbook.craftbook")
-                .child(docsCommandSpec, "docs", "manual", "man", "documentation", "doc")
+                .child(docsCommandSpec, "docs", "manual", "man", "documentation", "doc", "help")
                 .build();
 
         Sponge.getCommandManager().register(this, craftBookCommandSpec, "cb", "craftbook");
