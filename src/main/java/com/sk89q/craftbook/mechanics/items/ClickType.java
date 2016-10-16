@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -22,7 +23,7 @@ public enum ClickType {
 
     CLICK_LEFT,CLICK_RIGHT,CLICK_EITHER,CLICK_LEFT_BLOCK,CLICK_RIGHT_BLOCK,CLICK_EITHER_BLOCK,CLICK_LEFT_AIR,CLICK_RIGHT_AIR,CLICK_EITHER_AIR,
     ENTITY_RIGHT,ENTITY_LEFT,ENTITY_ARROW,ENTITY_PROJECTILE,ENTITY_EITHER,BLOCK_BREAK,BLOCK_PLACE,BLOCK_PROJECTILE_AIR,BLOCK_PROJECTILE_BLOCK,
-    BLOCK_PROJECTILE_EITHER,BLOCK_EITHER,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,
+    BLOCK_PROJECTILE_EITHER,PROJECTILE_LAUNCH,BLOCK_EITHER,ITEM_CONSUME,ITEM_DROP,ITEM_BREAK,ITEM_PICKUP,ITEM_CLICK_LEFT,ITEM_CLICK_RIGHT,ITEM_CLICK_EITHER,
     PLAYER_DEATH,PLAYER_CHAT,PASSIVE,ANY;
 
     public boolean doesPassType(Event event) {
@@ -65,6 +66,8 @@ public enum ClickType {
             case ENTITY_ARROW:
             case ENTITY_PROJECTILE:
                 return event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile;
+            case PROJECTILE_LAUNCH:
+                return event instanceof ProjectileLaunchEvent;
             case ENTITY_EITHER:
                 return event instanceof PlayerInteractEntityEvent || event instanceof EntityDamageByEntityEvent;
             case ENTITY_LEFT:

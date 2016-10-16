@@ -22,10 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
@@ -211,6 +208,22 @@ public class CommandItems extends AbstractCraftBookMechanic {
             return;
 
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+    }
+
+    @EventHandler(priority=EventPriority.HIGH)
+    public void onProjectileLaunch(final ProjectileLaunchEvent event) {
+        if(!(event.getEntity().getShooter() instanceof Player))
+            return;
+
+        if(((Player) event.getEntity().getShooter()).getItemInHand() == null)
+            return;
+
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+            @Override
+            public void run () {
+                performCommandItems(((Player) event.getEntity().getShooter()).getItemInHand(), (Player) event.getEntity().getShooter(), event);
+            }
+        }, 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
