@@ -66,7 +66,7 @@ public class LightStone extends SpongeBlockMechanic implements DocumentationProv
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
-            int lightLevel = BlockUtil.getLightLevel(location);
+            int lightLevel = BlockUtil.getLightLevel(location.getRelative(event.getTargetSide()));
 
             HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
 

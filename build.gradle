@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:5.0.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:5.0.0'
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.findbugs:jsr305:1.3.9'
     compile 'com.owlike:genson:1.3'
