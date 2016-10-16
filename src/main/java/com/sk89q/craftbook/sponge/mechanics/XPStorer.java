@@ -128,7 +128,7 @@ public class XPStorer extends SpongeBlockMechanic implements DocumentationProvid
                 Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
                 item.offer(Keys.REPRESENTED_ITEM, bottles.createSnapshot());
 
-                SpawnCause cause = Sponge.getRegistry().createBuilder(SpawnCause.SpawnCauseBuilder.class).type(SpawnTypes.DROPPED_ITEM).build();
+                SpawnCause cause = Sponge.getRegistry().createBuilder(SpawnCause.Builder.class).type(SpawnTypes.DROPPED_ITEM).build();
 
                 location.getExtent().spawnEntity(item, Cause.source(cause).build());
 
