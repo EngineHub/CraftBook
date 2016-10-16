@@ -122,7 +122,7 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
                     if (offset.getBlockType() == (state ? BlockTypes.REDSTONE_TORCH : BlockTypes.TORCH)) {
                         toggledLights ++;
 
-                        Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.inst());
+                        Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
                         if (player != null)
                             causeBuilder.notifier(player);
 
