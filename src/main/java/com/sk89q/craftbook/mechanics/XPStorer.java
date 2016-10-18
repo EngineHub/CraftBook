@@ -178,7 +178,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!autonomousMode) return;
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock())) return;
+        if(!SignUtil.isSign(event.getBlock()) && block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 
@@ -202,7 +202,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int xp = 0;
 
-        for (Entity entity : LocationUtil.getNearbyEntities(event.getBlock().getLocation(), new Vector(radius,radius,radius))) {
+        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(), new Vector(radius,radius,radius))) {
             if (entity instanceof ExperienceOrb && entity.getTicksLived() > 20) {
                 xp += ((ExperienceOrb) entity).getExperience();
                 entity.remove();
@@ -212,8 +212,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int max = Integer.MAX_VALUE;
         Inventory inventory = null;
 
-        if (InventoryUtil.doesBlockHaveInventory(event.getBlock().getRelative(BlockFace.UP))) {
-            inventory = ((InventoryHolder) event.getBlock().getState()).getInventory();
+        if (InventoryUtil.doesBlockHaveInventory(SignUtil.getBackBlock(event.getBlock()).getRelative(BlockFace.UP))) {
+            inventory = ((InventoryHolder) SignUtil.getBackBlock(event.getBlock()).getRelative(BlockFace.UP).getState()).getInventory();
             if (requireBottle) {
                 max = 0;
                 for (ItemStack stack : inventory.getContents()) {
@@ -234,10 +234,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
             ItemStack bottles = new ItemStack(Material.EXP_BOTTLE, Math.min(tempBottles, 64));
             if (inventory != null) {
                 for (ItemStack leftover : inventory.addItem(bottles).values()) {
-                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), leftover);
+                    event.getBlock().getWorld().dropItemNaturally(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), leftover);
                 }
             } else {
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), bottles);
+                event.getBlock().getWorld().dropItemNaturally(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), bottles);
             }
 
             tempBottles -= 64;
@@ -249,7 +249,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int remainingXP = xp - bottleCount * xpPerBottle;
         if (remainingXP > 0) {
-            ExperienceOrb orb = (ExperienceOrb) event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.EXPERIENCE_ORB);
+            ExperienceOrb orb = (ExperienceOrb) event.getBlock().getWorld().spawnEntity(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), EntityType.EXPERIENCE_ORB);
             orb.setExperience(remainingXP);
         }
     }
