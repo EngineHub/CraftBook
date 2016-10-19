@@ -148,7 +148,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!autonomousMode) return;
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[XP]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[XP]") || !block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
 
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -178,7 +178,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!autonomousMode) return;
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock()) && block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
+        if(!SignUtil.isSign(event.getBlock()) || !block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
 
         ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
 
