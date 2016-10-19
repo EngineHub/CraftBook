@@ -25,6 +25,9 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.util.yaml.YAMLProcessor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class XPStorer extends AbstractCraftBookMechanic {
 
     @EventHandler
@@ -200,12 +203,20 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         event.setHandled(true);
 
+        int signRadius = radius;
+        try {
+            signRadius = Math.max(radius, Integer.parseInt(sign.getLine(2)));
+        } catch (Exception e) {
+        }
+
         int xp = 0;
 
-        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(), new Vector(radius,radius,radius))) {
+        List<ExperienceOrb> orbs = new ArrayList<ExperienceOrb>();
+
+        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(), new Vector(signRadius,signRadius,signRadius))) {
             if (entity instanceof ExperienceOrb && entity.getTicksLived() > 20) {
                 xp += ((ExperienceOrb) entity).getExperience();
-                entity.remove();
+                orbs.add((ExperienceOrb) entity);
             }
         }
 
@@ -248,9 +259,13 @@ public class XPStorer extends AbstractCraftBookMechanic {
         }
 
         int remainingXP = xp - bottleCount * xpPerBottle;
-        if (remainingXP > 0) {
-            ExperienceOrb orb = (ExperienceOrb) event.getBlock().getWorld().spawnEntity(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), EntityType.EXPERIENCE_ORB);
-            orb.setExperience(remainingXP);
+        for (ExperienceOrb orb : orbs) {
+            if (remainingXP > 0) {
+                orb.setExperience(Math.min(5, remainingXP));
+                remainingXP -= 5;
+            } else {
+                orb.remove();
+            }
         }
     }
 
