@@ -105,7 +105,7 @@ public class Driller extends AbstractSelfTriggeredIC {
                 if (brokenType != Material.AIR && !BlockType.isNaturalTerrainBlock(brokenType.getId())) return false;
         }
 
-        ICUtil.collectItem(this, new Vector(0, 2, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
+        ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
 
         brokenType = blockToBreak.getType();
         blockToBreak.setType(Material.AIR);
