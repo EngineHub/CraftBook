@@ -387,7 +387,7 @@ public final class ICUtil {
         Block invHolder = backB.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
         if (InventoryUtil.doesBlockHaveInventory(invHolder)) {
             InventoryHolder c = (InventoryHolder) invHolder.getState();
-            results = c.getInventory().addItem(results.toArray(new ItemStack[results.size()])).values();
+            results = InventoryUtil.addItemsToInventory(c, results.toArray(new ItemStack[0]));
         }
 
         // Drop whatever results were not added to the chest
