@@ -381,8 +381,6 @@ public final class ICUtil {
         PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(items)), backB);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (!event.isValid()) return;
-
         Collection<ItemStack> results = event.getItems();
 
         // If there is a chest add the results to the chest
