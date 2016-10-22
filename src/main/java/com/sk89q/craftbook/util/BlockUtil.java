@@ -123,7 +123,7 @@ public final class BlockUtil {
                 drops.add(new ItemStack(Material.INK_SACK, 3, (short) 3));
                 break;
             default:
-                if(tool == null)
+                if(tool == null || ItemUtil.getMaxDurability(tool.getType()) > 0)
                     drops.addAll(block.getDrops());
                 else
                     drops.addAll(block.getDrops(tool));

@@ -678,9 +678,7 @@ public final class ItemUtil {
      * @return
      */
     public static short getMaxDurability(Material type) {
-
         switch(type) {
-
             case DIAMOND_AXE:
             case DIAMOND_HOE:
             case DIAMOND_PICKAXE:
@@ -711,8 +709,15 @@ public final class ItemUtil {
             case GOLD_SPADE:
             case GOLD_SWORD:
                 return 33;
+            case SHEARS:
+                return 238;
+            case FLINT_AND_STEEL:
+            case FISHING_ROD:
+                return 65;
+            case SHIELD:
+                return 337;
             default:
-                return 0;
+                return type.getMaxDurability();
         }
     }
 
