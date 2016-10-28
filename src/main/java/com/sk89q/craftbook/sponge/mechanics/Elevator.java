@@ -91,9 +91,9 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
                 Optional<Vector3d> interactionPoint = event.getInteractionPoint();
 
-                boolean down = SignUtil.getTextRaw(sign, 1).equals("[Lift Down]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && interactionPoint.isPresent() && interactionPoint.get().getY() < 0.5);
+                boolean down = "[Lift Down]".equals(SignUtil.getTextRaw(sign, 1)) || ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1)) && interactionPoint.isPresent() && interactionPoint.get().getY() < 0.5);
 
-                if (down || SignUtil.getTextRaw(sign, 1).equals("[Lift Up]") || (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]") && interactionPoint.isPresent() && interactionPoint.get().getY() > 0.5))
+                if (down || "[Lift Up]".equals(SignUtil.getTextRaw(sign, 1)) || ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1)) && interactionPoint.isPresent() && interactionPoint.get().getY() > 0.5))
                     transportEntity(human, location, down ? Direction.DOWN : Direction.UP);
             }
         });
@@ -119,7 +119,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         if(signLocation != null) {
             Sign sign = (Sign) signLocation.getTileEntity().get();
 
-            if (SignUtil.getTextRaw(sign, 1).equals("[Lift UpDown]")) {
+            if ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1))) {
                 if (event.getToTransform().getPosition().getY() > event.getFromTransform().getPosition().getY()) {
                     transportEntity(event.getTargetEntity(), signLocation, Direction.UP); //Jump is up
                 } else if(event.getTargetEntity().get(Keys.IS_SNEAKING).orElse(false)) {

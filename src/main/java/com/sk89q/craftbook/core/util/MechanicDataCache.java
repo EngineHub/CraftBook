@@ -19,25 +19,21 @@ package com.sk89q.craftbook.core.util;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 public abstract class MechanicDataCache {
 
-    private Cache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).expireAfterAccess(10, TimeUnit.MINUTES).removalListener(new RemovalListener<String, MechanicData>() {
-        @Override
-        public void onRemoval(@Nonnull RemovalNotification<String, MechanicData> notification) {
-            MechanicData value = notification.getValue();
-            if(value == null)
-                return;
-            saveToDisk((Class<MechanicData>) value.getClass(), notification.getKey(), value);
-        }
-    }).build();
+    private Cache<String, MechanicData> mechanicData = CacheBuilder.newBuilder().maximumSize(250).expireAfterAccess(10, TimeUnit.MINUTES).removalListener(
+            (RemovalListener<String, MechanicData>) notification -> {
+                MechanicData value = notification.getValue();
+                if(value == null)
+                    return;
+                saveToDisk((Class<MechanicData>) value.getClass(), notification.getKey(), value);
+            }).build();
 
     protected abstract <T extends MechanicData> T loadFromDisk(Class<T> clazz, String locationKey);
 

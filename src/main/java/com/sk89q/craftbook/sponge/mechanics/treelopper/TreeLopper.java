@@ -109,8 +109,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
         if(ItemUtil.doesStackPassFilters(allowedItems.getValue(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(null)) && !disabledPlayers.getValue().contains(player.getUniqueId())) {
             event.getTransactions().stream().filter((t) -> BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), t.getOriginal().getState())).forEach((transaction) -> {
                 Optional<TreeType> treeType = transaction.getOriginal().get(Keys.TREE_TYPE);
-                if (treeType.isPresent())
-                    checkBlocks(transaction.getOriginal().getLocation().get(), player, treeType.get(), new ArrayList<>());
+                treeType.ifPresent(treeType1 -> checkBlocks(transaction.getOriginal().getLocation().get(), player, treeType1, new ArrayList<>()));
             });
         }
     }

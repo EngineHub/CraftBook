@@ -74,10 +74,7 @@ public final class SignUtil {
     public static Direction getFront(Location<?> sign) {
         Optional<Direction> data = sign.get(Keys.DIRECTION);
 
-        if (data.isPresent())
-            return data.get();
-        else
-            return Direction.NONE;
+        return data.orElse(Direction.NONE);
     }
 
     public static Location<?> getFrontBlock(Location<?> sign) {

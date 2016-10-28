@@ -22,9 +22,9 @@ public enum TernaryState {
     public static TernaryState getFromString(String s) {
         s = s.toLowerCase();
 
-        if(s.equals("yes") || s.equals("true") || s.equals("y") || s.equals("t") || s.equals("1"))
+        if("yes".equals(s) || "true".equals(s) || "y".equals(s) || "t".equals(s) || "1".equals(s))
             return TRUE;
-        if(s.equals("no") || s.equals("false") || s.equals("n") || s.equals("f") || s.equals("0") || s.equals("not"))
+        if("no".equals(s) || "false".equals(s) || "n".equals(s) || "f".equals(s) || "0".equals(s) || "not".equals(s))
             return FALSE;
         return NONE;
     }

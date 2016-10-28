@@ -114,7 +114,7 @@ public class XPStorer extends SpongeBlockMechanic implements DocumentationProvid
                 return;
             }
 
-            int bottleCount = (int) Math.min(max.get(), Math.floor(xp / xpPerBottle.getValue()));
+            int bottleCount = (int) Math.min(max.get(), Math.floor(((float) xp) / xpPerBottle.getValue()));
 
             if(requireBottle.getValue()) {
                 bottleCount = player.getInventory().query(ItemTypes.GLASS_BOTTLE).poll(bottleCount).orElse(ItemStack.of(ItemTypes.GLASS_BOTTLE, 0)).getQuantity();

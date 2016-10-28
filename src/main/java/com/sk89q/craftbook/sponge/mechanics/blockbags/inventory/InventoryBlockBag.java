@@ -48,7 +48,7 @@ public abstract class InventoryBlockBag extends BlockBag {
         List<ItemStack> output = new ArrayList<>();
         for(ItemStack stack : itemStacks) {
             InventoryTransactionResult result = inventory.offer(stack);
-            if(result.getRejectedItems().size() > 0) {
+            if(!result.getRejectedItems().isEmpty()) {
                 output.addAll(result.getRejectedItems().stream().map(ItemStackSnapshot::createStack).collect(Collectors.toList()));
             }
         }

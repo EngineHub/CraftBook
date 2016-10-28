@@ -49,7 +49,7 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
     /**
      * An array of directions that snow can move in. In order of preference.
      */
-    private static final Direction[] VALID_SNOW_DIRECTIONS = new Direction[]{Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+    private static final Direction[] VALID_SNOW_DIRECTIONS = {Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
 
     @Inject
     @ModuleConfiguration

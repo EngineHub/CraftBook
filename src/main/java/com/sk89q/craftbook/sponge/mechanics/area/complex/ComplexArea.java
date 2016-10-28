@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area.complex;
 
+import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
+
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -53,8 +55,6 @@ import org.spongepowered.api.world.World;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
-
 @Module(moduleName = "Area", onEnable="onInitialize", onDisable="onDisable")
 public class ComplexArea extends SpongeSignMechanic implements DocumentationProvider {
 
@@ -79,7 +79,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     public ConfigValue<Integer> maxAreaSize = new ConfigValue<>("maximum-size", "The maximum amount of blocks that the saved areas can contain. -1 to disable limit.", 5000);
     public ConfigValue<Integer> maxPerUser = new ConfigValue<>("maximum-per-user", "The maximum amount of areas that a namespace can own. 0 to disable limit.", 30);
 
-    private static final Pattern MARKER_PATTERN = Pattern.compile("^\\-[A-Za-z0-9_]*?\\-$");
+    private static final Pattern MARKER_PATTERN = Pattern.compile("^-[A-Za-z0-9_]*?-$");
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -123,7 +123,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
-                if(!createPermissions.hasPermission(player) && !(line.equals("[SaveArea]") && createSavePermissions.hasPermission(player))) {
+                if(!createPermissions.hasPermission(player) && !("[SaveArea]".equals(line) && createSavePermissions.hasPermission(player))) {
                     player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
                 } else {
@@ -132,7 +132,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
 
                     String namespace = lines.get(0).toPlain();
                     boolean personal = false;
-                    if (namespace.toLowerCase().equals("global")) {
+                    if ("global".equals(namespace.toLowerCase())) {
                         if (!createGlobalPermissions.hasPermission(player)) {
                             player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create global ToggleAreas!"));
                             event.setCancelled(true);
@@ -186,7 +186,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     }
 
     public boolean triggerMechanic(Location<World> location, Sign sign) {
-        boolean save = SignUtil.getTextRaw(sign, 1).equals("[SaveArea]");
+        boolean save = "[SaveArea]".equals(SignUtil.getTextRaw(sign, 1));
 
         ComplexAreaData data = getData(ComplexAreaData.class, location);
 
@@ -205,7 +205,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
                     CopyManager.save(namespace, id, copy);
                 }
 
-                if (!inactiveID.isEmpty() && !inactiveID.equals("--")) {
+                if (!inactiveID.isEmpty() && !"--".equals(inactiveID)) {
                     copy = CopyManager.load(location.getExtent(), namespace, inactiveID);
                     copy.paste();
                 } else {
@@ -214,7 +214,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
 
                 setToggleState(sign, false);
             } else {
-                if (save && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
+                if (save && !inactiveID.isEmpty() && !"--".equals(inactiveID)) {
                     copy = CopyManager.load(location.getExtent(), namespace, inactiveID);
                     copy.copy();
                     CopyManager.save(namespace, inactiveID, copy);
@@ -235,7 +235,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
 
     private static boolean isValidArea(String namespace, String areaOn, String areaOff) {
         if (CopyManager.isExistingArea(CraftBookPlugin.inst().getWorkingDirectory(), namespace, areaOn)) {
-            if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return true;
+            if (areaOff == null || areaOff.isEmpty() || "--".equals(areaOff)) return true;
             if (CopyManager.isExistingArea(CraftBookPlugin.inst().getWorkingDirectory(), namespace, areaOff)) return true;
         }
         return false;
@@ -244,7 +244,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     private static boolean checkToggleState(Sign sign) {
         String line3 = SignUtil.getTextRaw(sign, 2).toLowerCase();
         String line4 = SignUtil.getTextRaw(sign, 3).toLowerCase();
-        return MARKER_PATTERN.matcher(line3).matches() || !(line4.equals("--") || MARKER_PATTERN.matcher(line4).matches());
+        return MARKER_PATTERN.matcher(line3).matches() || !("--".equals(line4) || MARKER_PATTERN.matcher(line4).matches());
     }
 
     private static void setToggleState(Sign sign, boolean state) {

@@ -126,7 +126,7 @@ public class Pipes extends SpongeBlockMechanic {
 
                 if(inventory.isPresent()) {
                     InventoryTransactionResult result = inventory.get().offer(itemStack);
-                    if(result.getRejectedItems().size() > 0) {
+                    if(!result.getRejectedItems().isEmpty()) {
                         for (ItemStackSnapshot snapshot : result.getRejectedItems()) {
                             itemStack = snapshot.createStack();
                         }

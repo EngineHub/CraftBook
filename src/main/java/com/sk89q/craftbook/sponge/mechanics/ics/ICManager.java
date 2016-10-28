@@ -18,13 +18,14 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 class ICManager {
 
-    private static SortedSet<ICType<? extends IC>> registeredICTypes = new TreeSet<>((o1, o2) -> o1.modelId.compareTo(o2.modelId));
+    private static SortedSet<ICType<? extends IC>> registeredICTypes = new TreeSet<>(Comparator.comparing(o -> o.modelId));
 
     static {
         //SISO

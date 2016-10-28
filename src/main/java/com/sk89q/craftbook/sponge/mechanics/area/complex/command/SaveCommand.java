@@ -94,7 +94,7 @@ public class SaveCommand implements CommandExecutor {
 
         // Check to make sure that a user doesn't have too many toggle
         // areas (to prevent flooding the server with files)
-        if (area.maxPerUser.getValue() >= 0 && !namespace.equals("global") && !area.commandSaveBypassLimitPermissions.hasPermission(src)) {
+        if (area.maxPerUser.getValue() >= 0 && !"global".equals(namespace) && !area.commandSaveBypassLimitPermissions.hasPermission(src)) {
             int count = CopyManager.meetsQuota(namespace, id, area.maxPerUser.getValue());
              if (count > -1) {
                  src.sendMessage(Text.of(TextColors.RED, "You are limited to " + area.maxPerUser.getValue() + " toggle area(s). You have " + count + " areas."));

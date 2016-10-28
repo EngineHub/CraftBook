@@ -34,7 +34,7 @@ public class MultiBlockBag extends BlockBag {
     @Override
     public boolean has(List<ItemStack> itemStacks) {
         for (BlockBag bag : bags) {
-            if (itemStacks.size() == 0) break;
+            if (itemStacks.isEmpty()) break;
             if (bag.has(itemStacks))
                 return true;
         }
@@ -45,7 +45,7 @@ public class MultiBlockBag extends BlockBag {
     @Override
     public List<ItemStack> add(List<ItemStack> itemStacks) {
         for (BlockBag bag : bags) {
-            if (itemStacks.size() == 0) break;
+            if (itemStacks.isEmpty()) break;
             itemStacks = bag.add(itemStacks);
         }
 
@@ -55,7 +55,7 @@ public class MultiBlockBag extends BlockBag {
     @Override
     public List<ItemStack> remove(List<ItemStack> itemStacks) {
         for (BlockBag bag : bags) {
-            if (itemStacks.size() == 0) break;
+            if (itemStacks.isEmpty()) break;
             itemStacks = bag.remove(itemStacks);
         }
 

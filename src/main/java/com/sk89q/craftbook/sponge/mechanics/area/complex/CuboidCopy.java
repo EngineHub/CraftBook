@@ -62,7 +62,7 @@ public abstract class CuboidCopy {
         // we need to split off the file extenstion to check what class we need to use
         String extension = file.getName().substring(file.getName().lastIndexOf('.'));
         CuboidCopy copy = null;
-        if (extension.equalsIgnoreCase(".schematic")) {
+        if (".schematic".equalsIgnoreCase(extension)) {
             copy = new MCEditCuboidCopy(world);
         }
         if (copy == null) throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");

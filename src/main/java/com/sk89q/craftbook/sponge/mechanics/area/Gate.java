@@ -90,7 +90,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                             Location searchLocation = location.getExtent().getLocation(x1, y1, z1);
                             Optional tileEntity = searchLocation.getTileEntity();
 
-                            if (SignUtil.isSign(searchLocation) && tileEntity.isPresent() && SignUtil.getTextRaw((Sign) tileEntity.get(), 1).equals("[Gate]")) {
+                            if (SignUtil.isSign(searchLocation) && tileEntity.isPresent()
+                                    && "[Gate]".equals(SignUtil.getTextRaw((Sign) tileEntity.get(), 1))) {
                                 Set<GateColumn> columns = new HashSet<>();
                                 BlockState state = findColumns(location, columns, location.getBlock());
                                 toggleColumns(state, columns, null);
@@ -183,13 +184,13 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     @Override
     public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
-        if (SignUtil.getTextRaw(sign, 1).equals("[Gate]")) {
+        if ("[Gate]".equals(SignUtil.getTextRaw(sign, 1))) {
 
             Set<GateColumn> columns = new HashSet<>();
 
             BlockState state = findColumns(block, columns, null);
 
-            if (columns.size() > 0) {
+            if (!columns.isEmpty()) {
                 toggleColumns(state, columns, forceState);
             } else {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't find a gate!").build());
@@ -231,7 +232,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         };
     }
 
-    private final static class GateColumn {
+    private static final class GateColumn {
 
         Location topBlock;
 

@@ -41,11 +41,12 @@ import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 @Module(moduleName = "Variables", onEnable="onInitialize", onDisable="onDisable")
 public class Variables extends SpongeMechanic {
@@ -147,7 +148,7 @@ public class Variables extends SpongeMechanic {
     public void removeVariable(String namespace, String key) {
         Map<String, String> map = variableStore.getOrDefault(namespace, new HashMap<>());
         map.remove(key);
-        if(map.size() > 0)
+        if(!map.isEmpty())
             variableStore.put(namespace, map);
         else
             variableStore.remove(namespace);
@@ -168,7 +169,7 @@ public class Variables extends SpongeMechanic {
                 name = possibleVariable;
             }
 
-            if(namespace.equals("global") && player != null && !explicit && getVariable(player.getUniqueId().toString(), name) != null)
+            if("global".equals(namespace) && player != null && !explicit && getVariable(player.getUniqueId().toString(), name) != null)
                 namespace = player.getUniqueId().toString();
 
             String variable = getVariable(namespace, name);
@@ -185,7 +186,7 @@ public class Variables extends SpongeMechanic {
         Player source = null;
         if(event.getCause().first(Player.class).isPresent())
             source = event.getCause().first(Player.class).get();
-        if(event.getArguments().length() > 0)
+        if(!event.getArguments().isEmpty())
             event.setArguments(parseVariables(event.getArguments(), source));
         event.setCommand(parseVariables(event.getCommand(), source));
     }
@@ -212,7 +213,7 @@ public class Variables extends SpongeMechanic {
 
         for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
             if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
-            if(!bit.trim().isEmpty() && !bit.trim().equals("|"))
+            if(!bit.trim().isEmpty() && !"|".equals(bit.trim()))
                 variables.add(bit.trim());
         }
 

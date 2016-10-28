@@ -18,19 +18,11 @@ package com.sk89q.craftbook.sponge.mechanics.powerable;
 
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
-import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 abstract class SimplePowerable extends SpongeBlockMechanic {
 
