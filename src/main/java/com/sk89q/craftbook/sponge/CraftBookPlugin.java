@@ -51,7 +51,8 @@ import org.spongepowered.api.text.Text;
 
 import java.io.File;
 
-@Plugin(id = "craftbook", name = "CraftBook", version = "4.0")
+@Plugin(id = "craftbook", name = "CraftBook", version = "4.0",
+        description = "CraftBook adds a number of new mechanics to Minecraft with no client mods required.")
 public class CraftBookPlugin extends CraftBookAPI {
 
     private MechanicDataCache cache;
@@ -209,6 +210,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);
         moduleController.setConfigurationOptions(configurationOptions);
+        moduleController.setOverrideConfigurationNode(true);
 
         //Standard Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.variable.Variables");

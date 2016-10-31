@@ -67,6 +67,9 @@ public class SpongeConfiguration implements DocumentationProvider {
 
     public void save() {
         try {
+            // Reload the actual config to account for changes. But don't load it back into the ConfigValues.
+            config = configManager.load(CraftBookPlugin.<CraftBookPlugin>inst().configurationOptions);
+
             enabledMechanics.save(config);
             dataOnlyMode.save(config);
 

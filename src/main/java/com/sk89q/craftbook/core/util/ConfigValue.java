@@ -23,6 +23,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
+import java.util.Objects;
+
 public class ConfigValue<T> {
 
     private String key;
@@ -31,6 +33,8 @@ public class ConfigValue<T> {
     private T value;
 
     private TypeToken<T> typeToken;
+
+    private boolean modified;
 
     public ConfigValue(String key, String comment, T value) {
         this(key, comment, value, null);
@@ -45,13 +49,23 @@ public class ConfigValue<T> {
 
     public ConfigValue<T> load(ConfigurationNode configurationNode) {
         this.value = getValueInternal(configurationNode);
-        save(configurationNode);
+        setValueInternal(configurationNode); // Directly bypass modified checks.
         return this;
     }
 
     public ConfigValue<T> save(ConfigurationNode configurationNode) {
-        setValueInternal(configurationNode);
+        if (this.modified) {
+            setValueInternal(configurationNode);
+        }
         return this;
+    }
+
+    public boolean isModified() {
+        return this.modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
     }
 
     public String getKey() {
@@ -79,6 +93,9 @@ public class ConfigValue<T> {
     }
 
     public void setValue(T value) {
+        if (!Objects.equals(value, this.value)) {
+            this.modified = true;
+        }
         this.value = value;
     }
 
