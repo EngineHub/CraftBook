@@ -28,9 +28,7 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
-import com.sk89q.craftbook.sponge.util.BlockUtil;
-import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import com.sk89q.craftbook.sponge.util.*;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
@@ -52,13 +50,11 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Module(moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
@@ -70,6 +66,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
 
     private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     private ConfigValue<Boolean> exitAtEntry = new ConfigValue<>("exit-at-last-position", "Moves player's to their entry position when they exit the chair.", false);
+    private ConfigValue<Boolean> requireSigns = new ConfigValue<>("require-sign", "Require signs on the chairs.", false);
+    private ConfigValue<Integer> maxSignDistance = new ConfigValue<Integer>("max-sign-distance", "The distance the sign can be from the clicked chair.", 3);
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.chairs.use", "Allows the user to sit in chairs.", PermissionDescription.ROLE_USER);
 
@@ -83,6 +81,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
 
         allowedBlocks.load(config);
         exitAtEntry.load(config);
+        requireSigns.load(config);
+        maxSignDistance.load(config);
 
         usePermissions.register();
     }
@@ -97,6 +97,32 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     @Override
     public boolean isValid(Location<?> location) {
         return BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock());
+    }
+
+    private boolean hasSign(Location<World> location, List<Location<World>> searched, Location<World> original) {
+        boolean found = false;
+
+        for (Direction face : BlockUtil.getDirectFaces()) {
+            Location<World> otherBlock = location.getRelative(face);
+
+            if (searched.contains(otherBlock)) continue;
+            searched.add(otherBlock);
+
+            if (found) break;
+
+            if (location.getPosition().distanceSquared(original.getPosition()) > Math.pow(maxSignDistance.getValue(), 2)) continue;
+
+            if (SignUtil.isSign(otherBlock) && SignUtil.getFront(otherBlock) == face) {
+                found = true;
+                break;
+            }
+
+            if (Objects.equals(location.getBlockType(), otherBlock.getBlockType())) {
+                found = hasSign(otherBlock, searched, original);
+            }
+        }
+
+        return found;
     }
 
     private Chair<?> addChair(Player player, Location<World> location) {
@@ -162,6 +188,10 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 return;
             }
 
+            if (requireSigns.getValue() && !hasSign(location, new ArrayList<>(), location)) {
+                return;
+            }
+
             if (chairs.containsKey(player.getUniqueId())) {
                 removeChair(chairs.get(player.getUniqueId()));
             }
@@ -205,7 +235,9 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue[]{
                 allowedBlocks,
-                exitAtEntry
+                exitAtEntry,
+                requireSigns,
+                maxSignDistance
         };
     }
 
