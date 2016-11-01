@@ -49,14 +49,11 @@ public class ConfigValue<T> {
 
     public ConfigValue<T> load(ConfigurationNode configurationNode) {
         this.value = getValueInternal(configurationNode);
-        setValueInternal(configurationNode); // Directly bypass modified checks.
         return this;
     }
 
     public ConfigValue<T> save(ConfigurationNode configurationNode) {
-        if (this.modified) {
-            setValueInternal(configurationNode);
-        }
+        setValueInternal(configurationNode);
         return this;
     }
 
@@ -109,20 +106,23 @@ public class ConfigValue<T> {
             ((CommentedConfigurationNode)node).setComment(comment);
         }
 
-        if(typeToken != null) {
-            try {
-                node.setValue(typeToken, value);
-            } catch (ObjectMappingException e) {
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map value!", e);
+        if (this.modified) {
+            if (typeToken != null) {
+                try {
+                    node.setValue(typeToken, value);
+                } catch (ObjectMappingException e) {
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map value!", e);
+                }
+            } else {
+                node.setValue(value);
             }
-        } else {
-            node.setValue(value);
         }
     }
 
     private T getValueInternal(ConfigurationNode configurationNode) {
         ConfigurationNode node = configurationNode.getNode(key);
         if(node.isVirtual()) {
+            this.modified = true;
             setValueInternal(configurationNode);
         }
 
