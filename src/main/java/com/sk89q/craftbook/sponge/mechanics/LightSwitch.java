@@ -47,9 +47,9 @@ import org.spongepowered.api.world.World;
 @Module(moduleName = "LightSwitch", onEnable="onInitialize", onDisable="onDisable")
 public class LightSwitch extends SpongeSignMechanic implements DocumentationProvider {
 
-    private SpongePermissionNode createPermission = new SpongePermissionNode("craftbook.mech.lightswitch", "Allows for creation of the light switch.",
+    private SpongePermissionNode createPermission = new SpongePermissionNode("craftbook.lightswitch", "Allows for creation of the light switch.",
             PermissionDescription.ROLE_STAFF);
-    private SpongePermissionNode usePermission = new SpongePermissionNode("craftbook.mech.lightswitch.use", "Allows for creation of the light switch.",
+    private SpongePermissionNode usePermission = new SpongePermissionNode("craftbook.lightswitch.use", "Allows for creation of the light switch.",
             PermissionDescription.ROLE_USER);
 
     private ConfigValue<Integer> maxRange = new ConfigValue<>("max-range", "The range that the mechanic searches.", 10);

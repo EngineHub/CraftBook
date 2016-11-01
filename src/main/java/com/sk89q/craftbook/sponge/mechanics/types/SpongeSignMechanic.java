@@ -28,7 +28,9 @@ import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
@@ -40,9 +42,14 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
                 if(!getCreatePermission().hasPermission(player)) {
                     player.sendMessage(Text.of(TextColors.RED, "You do not have permission to create this mechanic!"));
                     event.setCancelled(true);
+                    return;
                 } else {
                     List<Text> lines = event.getText().lines().get();
                     lines.set(1, Text.of(line));
+                    if (!verifyLines(event.getTargetTile().getLocation(), lines, player)) {
+                        event.setCancelled(true);
+                        return;
+                    }
                     event.getText().set(Keys.SIGN_LINES, lines);
                 }
 
@@ -50,6 +57,10 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
                 break;
             }
         }
+    }
+
+    public boolean verifyLines(Location<World> location, List<Text> lines, @Nullable Player player) {
+        return true;
     }
 
     @Override
