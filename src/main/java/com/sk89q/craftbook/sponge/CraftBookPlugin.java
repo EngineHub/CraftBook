@@ -210,7 +210,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);
         moduleController.setConfigurationOptions(configurationOptions);
-        moduleController.setOverrideConfigurationNode(true);
+        moduleController.setOverrideConfigurationNode(false);
 
         //Standard Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.variable.Variables");

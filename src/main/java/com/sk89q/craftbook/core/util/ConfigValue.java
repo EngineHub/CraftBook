@@ -49,6 +49,7 @@ public class ConfigValue<T> {
 
     public ConfigValue<T> load(ConfigurationNode configurationNode) {
         this.value = getValueInternal(configurationNode);
+        save(configurationNode);
         return this;
     }
 
@@ -90,9 +91,7 @@ public class ConfigValue<T> {
     }
 
     public void setValue(T value) {
-        if (!Objects.equals(value, this.value)) {
-            this.modified = true;
-        }
+        this.modified = true;
         this.value = value;
     }
 
@@ -116,6 +115,7 @@ public class ConfigValue<T> {
             } else {
                 node.setValue(value);
             }
+            this.modified = false;
         }
     }
 
@@ -123,7 +123,6 @@ public class ConfigValue<T> {
         ConfigurationNode node = configurationNode.getNode(key);
         if(node.isVirtual()) {
             this.modified = true;
-            setValueInternal(configurationNode);
         }
 
         if(comment != null && node instanceof CommentedConfigurationNode) {
