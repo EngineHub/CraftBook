@@ -379,7 +379,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
-                        if (item == null) continue;
+                        if (!ItemUtil.isStackValid(item)) continue;
                         block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
                     }
                 } else juke.setPlaying(null);
