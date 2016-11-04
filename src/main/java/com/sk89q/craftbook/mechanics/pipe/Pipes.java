@@ -365,24 +365,26 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 Jukebox juke = (Jukebox) fac.getState();
 
-                items.add(new ItemStack(juke.getPlaying()));
+                if (juke.getPlaying() != Material.AIR) {
+                    items.add(new ItemStack(juke.getPlaying()));
 
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
-                Bukkit.getPluginManager().callEvent(event);
-                items.clear();
-                items.addAll(event.getItems());
+                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
+                    Bukkit.getPluginManager().callEvent(event);
+                    items.clear();
+                    items.addAll(event.getItems());
 
-                if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
-                }
-
-                if (!items.isEmpty()) {
-                    for (ItemStack item : items) {
-                        if (!ItemUtil.isStackValid(item)) continue;
-                        block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
+                    if (!event.isCancelled()) {
+                        visitedPipes.add(fac.getLocation());
+                        searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                     }
-                } else juke.setPlaying(null);
+
+                    if (!items.isEmpty()) {
+                        for (ItemStack item : items) {
+                            if (!ItemUtil.isStackValid(item)) continue;
+                            block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
+                        }
+                    } else juke.setPlaying(null);
+                }
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
