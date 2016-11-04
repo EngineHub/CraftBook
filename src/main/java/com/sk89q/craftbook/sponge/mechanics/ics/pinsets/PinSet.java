@@ -16,10 +16,12 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -43,7 +45,7 @@ public abstract class PinSet {
 
             if (!block.supports(Keys.POWERED)) return; // Can't set this.
 
-            block.offer(Keys.POWERED, powered);
+            block.offer(Keys.POWERED, powered, Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named("ic", ic).build());
         }
     }
 

@@ -21,6 +21,7 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import org.apache.commons.lang3.text.WordUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
@@ -43,7 +44,9 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,16 +96,16 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         }
 
         if (data.get(Keys.SKULL_TYPE).isPresent()) {
-            ItemStack stack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
+            ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
             if (profile != null) {
                 RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
-                skinData.set(Keys.REPRESENTED_PLAYER, profile);
-                stack.offer(skinData);
-                stack.offer(Keys.DISPLAY_NAME, Text.of(TextStyles.RESET, type.getName().toUpperCase() + " Head"));
+                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
+                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + " Head"));
+                itemStack.offer(skinData);
             }
             Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
             Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
-            item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+            item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
             event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
         }
     }
