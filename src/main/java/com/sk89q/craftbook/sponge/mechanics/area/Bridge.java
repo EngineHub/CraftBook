@@ -71,11 +71,25 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
         if (!"[Bridge End]".equals(SignUtil.getTextRaw(sign, 1))) {
             Direction back = SignUtil.getBack(block);
 
-            Location baseBlock = block.getRelative(Direction.DOWN);
+            Direction bridgeDirection = Direction.DOWN;
+
+            Location baseBlock = block.getRelative(bridgeDirection);
+            if (block.getBlockType() == BlockTypes.WALL_SIGN) {
+                baseBlock = block.getRelative(SignUtil.getBack(block));
+            }
 
             if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(notAllowedMaterial);
-                return true;
+                if (block.getBlock() != BlockTypes.WALL_SIGN) {
+                    bridgeDirection = Direction.UP;
+                    baseBlock = block.getRelative(bridgeDirection);
+                    if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
+                        if (human instanceof CommandSource) ((CommandSource) human).sendMessage(notAllowedMaterial);
+                        return true;
+                    }
+                } else {
+                    if (human instanceof CommandSource) ((CommandSource) human).sendMessage(notAllowedMaterial);
+                    return true;
+                }
             }
 
             Location otherSide = BlockUtil.getNextMatchingSign(block, SignUtil.getBack(block), maximumLength.getValue(), this::isMechanicSign);
@@ -83,11 +97,26 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(missingOtherEnd);
                 return true;
             }
-            Location otherBase = otherSide.getRelative(Direction.DOWN);
+            Location otherBase = otherSide.getRelative(bridgeDirection);
+            if (otherSide.getBlockType() == BlockTypes.WALL_SIGN) {
+                otherBase = otherSide.getRelative(SignUtil.getBack(otherSide));
+            }
 
             if(!baseBlock.getBlock().equals(otherBase.getBlock())) {
-                if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Both ends must be the same material!").build());
-                return true;
+                if (block.getBlockType() != BlockTypes.WALL_SIGN && bridgeDirection == Direction.DOWN) {
+                    bridgeDirection = Direction.UP;
+                    otherBase = otherSide.getRelative(bridgeDirection);
+                    baseBlock = block.getRelative(bridgeDirection);
+                    if(!baseBlock.getBlock().equals(otherBase.getBlock())) {
+                        if (human instanceof CommandSource)
+                            ((CommandSource) human).sendMessage(Text.builder("Both ends must be the same material!").build());
+                        return true;
+                    }
+                } else {
+                    if (human instanceof CommandSource)
+                        ((CommandSource) human).sendMessage(Text.builder("Both ends must be the same material!").build());
+                    return true;
+                }
             }
 
             int leftBlocks, rightBlocks;
@@ -107,10 +136,13 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
             baseBlock = baseBlock.getRelative(back);
 
-            BlockState type = block.getRelative(Direction.DOWN).getBlock();
+            BlockState type = block.getRelative(bridgeDirection).getBlock();
+            if (block.getBlockType() == BlockTypes.WALL_SIGN) {
+                type = block.getRelative(SignUtil.getBack(block)).getBlock();
+            }
             if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
-            while (baseBlock.getBlockX() != otherSide.getBlockX() || baseBlock.getBlockZ() != otherSide.getBlockZ()) {
+            while (baseBlock.getBlockX() != otherBase.getBlockX() || baseBlock.getBlockZ() != otherBase.getBlockZ()) {
                 baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
 
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
