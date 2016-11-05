@@ -51,7 +51,7 @@ import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PER
 
 public abstract class SimpleArea extends SpongeSignMechanic {
 
-    SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".create", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
+    SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase(), "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
     ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());

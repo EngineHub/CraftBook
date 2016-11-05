@@ -62,7 +62,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.area.create", "Allows the user to create the ToggleArea mechanic.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.area", "Allows the user to create the ToggleArea mechanic.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode createSavePermissions = new SpongePermissionNode("craftbook.area.create.save", "Allows the user to create the ToggleArea Save-Only mechanic.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode createGlobalPermissions = new SpongePermissionNode("craftbook.area.create.global", "Allows the user to create global ToggleArea mechanics.", PermissionDescription.ROLE_STAFF);
     private SpongePermissionNode createOtherPermissions = new SpongePermissionNode("craftbook.area.create.other", "Allows the user to create ToggleArea mechanics with other namespaces.", PermissionDescription.ROLE_STAFF);

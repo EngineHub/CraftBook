@@ -39,6 +39,8 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -55,7 +57,8 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
 
     private ConfigValue<Boolean> allowAnySide = new ConfigValue<>("allow-any-side", "Allows the user to click any side of the attached block.", false);
 
-    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.hidden-switch.create", "Allows the user to create Hidden Switches", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.hidden-switch", "Allows the user to create Hidden Switches", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode usePermission = new SpongePermissionNode("craftbook.hidden-switch.use", "Allows the user to use Hidden Switches", PermissionDescription.ROLE_USER);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -64,6 +67,7 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
         allowAnySide.load(config);
 
         createPermissions.register();
+        usePermission.register();
     }
 
     @Listener
@@ -83,7 +87,12 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
                 if (SignUtil.isSign(signLocation)) {
                     Sign sign = (Sign) signLocation.getTileEntity().get();
                     if (isMechanicSign(sign)) {
-                        toggleSwitches(sign, player);
+                        if (!usePermission.hasPermission(player)) {
+                            return;
+                        }
+                        if (toggleSwitches(sign, player)) {
+                            player.sendMessage(Text.of(TextColors.YELLOW, "You hear the muffled click of a switch."));
+                        }
                         break;
                     }
                 }
@@ -91,13 +100,12 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
         });
     }
 
-    private static void toggleSwitches(Sign sign, Player player) {
-
+    private static boolean toggleSwitches(Sign sign, Player player) {
         Direction[] checkFaces = new Direction[4];
         checkFaces[0] = Direction.UP;
         checkFaces[1] = Direction.DOWN;
 
-        switch (sign.get(Keys.DIRECTION).orElse(Direction.NONE)) {
+        switch (SignUtil.getFacing(sign.getLocation())) {
             case EAST:
             case WEST:
                 checkFaces[2] = Direction.NORTH;
@@ -111,6 +119,8 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
                 break;
         }
 
+        boolean found = false;
+
         for (Direction direction : checkFaces) {
             if (direction == null) continue;
             Location<World> checkBlock = sign.getLocation().getRelative(direction);
@@ -118,12 +128,16 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
             if (checkBlock.getBlock().getType() == BlockTypes.LEVER) {
                 checkBlock.offer(Keys.POWERED, !checkBlock.get(Keys.POWERED).orElse(false),
                         Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named(NamedCause.notifier(player)).build());
+                found = true;
             } else if (checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON || checkBlock.getBlock().getType() == BlockTypes.WOODEN_BUTTON) {
                 checkBlock.offer(Keys.POWERED, true,
                         Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named(NamedCause.notifier(player)).build());
                 checkBlock.addScheduledUpdate(1, checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON ? 20 : 30);
+                found = true;
             }
         }
+
+        return found;
     }
 
     @Override
@@ -141,7 +155,8 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[] {
-                createPermissions
+                createPermissions,
+                usePermission
         };
     }
 

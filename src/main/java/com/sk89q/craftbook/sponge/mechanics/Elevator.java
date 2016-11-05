@@ -55,7 +55,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
     private ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
 
-    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator.create", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
 
     @Inject
     @ModuleConfiguration
