@@ -226,6 +226,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Bookshelf");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Footprints");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.HeadDrops");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.HiddenSwitch");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightStone");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.treelopper.TreeLopper");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.pipe.Pipes");
