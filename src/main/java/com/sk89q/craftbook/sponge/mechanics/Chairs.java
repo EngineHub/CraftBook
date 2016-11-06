@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -47,6 +48,7 @@ import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -55,6 +57,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Module(moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
@@ -85,6 +88,18 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         maxSignDistance.load(config);
 
         usePermissions.register();
+
+        Sponge.getGame().getScheduler().createTaskBuilder().intervalTicks(10).execute(task -> {
+            for (Map.Entry<UUID, Chair<?>> chair : new HashSet<>(chairs.entrySet())) {
+                Player player = Sponge.getGame().getServer().getPlayer(chair.getKey()).orElse(null);
+                if (player == null) {
+                    removeChair(chair.getValue());
+                    return;
+                }
+
+                chair.getValue().chairEntity.setRotation(new Vector3d(0, player.getRotation().getY(), 0));
+            }
+        }).submit(CraftBookPlugin.inst());
     }
 
     @Override
@@ -129,6 +144,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
+        entity.setRotation(new Vector3d(0, player.getRotation().getY(), 0));
 
         location.getExtent().spawnEntity(entity, Cause.of(NamedCause.of("root", SpawnCause.builder().type(SpawnTypes.CUSTOM).build()), NamedCause.source(player)));
 
