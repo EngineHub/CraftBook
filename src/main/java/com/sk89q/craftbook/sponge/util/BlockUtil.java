@@ -51,11 +51,11 @@ public final class BlockUtil {
         return null;
     }
 
-    public static Optional<Integer> getBlockPowerLevel(Location<?> ... blocks) {
+    public static Optional<Integer> getDirectBlockPowerLevel(Location<?> ... blocks) {
         int power = -1;
 
         for(Location<?> block : blocks) {
-            Optional<Integer> optional = getBlockPowerLevel(block);
+            Optional<Integer> optional = getDirectBlockPowerLevel(block);
             if(optional.isPresent()) {
                 if (power < optional.get()) {
                     power = optional.get();
@@ -70,7 +70,7 @@ public final class BlockUtil {
         }
     }
 
-    public static Optional<Integer> getBlockPowerLevel(Location<?> block) {
+    public static Optional<Integer> getDirectBlockPowerLevel(Location<?> block) {
         if (block.get(Keys.POWER).isPresent()) {
             return block.get(Keys.POWER);
         } else if (block.get(Keys.POWERED).isPresent()) {
@@ -81,15 +81,20 @@ public final class BlockUtil {
         return Optional.empty();
     }
 
-    public static Optional<Integer> getBlockIndirectPowerLevel(Location<?> block) {
-        if (block.getBlock().get(Keys.POWER).isPresent()) {
-            return Optional.of(block.getBlock().get(Keys.POWER).get());
-        } else if (block.getBlock().get(Keys.POWERED).isPresent()) {
-            return Optional.of(block.getBlock().get(Keys.POWERED).get() ? 15 : 0);
-        } else if (block.getProperty(IndirectlyPoweredProperty.class).isPresent()) {
-            return Optional.of(block.getProperty(IndirectlyPoweredProperty.class).get().getValue() ? 15 : 0);
+    public static Optional<Integer> getBlockPowerLevel(Location<?> block) {
+        if (getDirectBlockPowerLevel(block).isPresent()) {
+            return getDirectBlockPowerLevel(block);
         } else if (block.getProperty(PoweredProperty.class).isPresent()) {
             return Optional.of(block.getProperty(PoweredProperty.class).get().getValue() ? 15 : 0);
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Integer> getBlockIndirectPowerLevel(Location<?> block) {
+        if (getBlockPowerLevel(block).isPresent()) {
+            return getBlockPowerLevel(block);
+        } else if (block.getProperty(IndirectlyPoweredProperty.class).isPresent()) {
+            return Optional.of(block.getProperty(IndirectlyPoweredProperty.class).get().getValue() ? 15 : 0);
         }
 
         return Optional.empty();

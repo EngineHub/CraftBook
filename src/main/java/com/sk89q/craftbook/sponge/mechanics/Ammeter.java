@@ -68,7 +68,7 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
-            int powerLevel = BlockUtil.getBlockPowerLevel(location).orElse(-1);
+            int powerLevel = BlockUtil.getDirectBlockPowerLevel(location).orElse(-1);
 
             HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
 
