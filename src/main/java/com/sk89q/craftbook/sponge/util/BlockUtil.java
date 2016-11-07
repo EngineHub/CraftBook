@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.util;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
@@ -74,6 +75,8 @@ public final class BlockUtil {
             return block.get(Keys.POWER);
         } else if (block.get(Keys.POWERED).isPresent()) {
             return block.get(Keys.POWERED).map((powered -> powered ? 15 : 0));
+        } else if (block.getBlock().getType() == BlockTypes.POWERED_REPEATER || block.getBlock().getType() == BlockTypes.UNPOWERED_REPEATER) {
+            return Optional.of(block.getBlock().getType() == BlockTypes.POWERED_REPEATER ? 15 : 0);
         }
         return Optional.empty();
     }
