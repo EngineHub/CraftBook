@@ -22,6 +22,7 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
+import org.spongepowered.api.data.property.block.IndirectlyPoweredProperty;
 import org.spongepowered.api.data.property.block.PoweredProperty;
 import org.spongepowered.api.data.property.block.SkyLuminanceProperty;
 import org.spongepowered.api.util.Direction;
@@ -50,20 +51,40 @@ public final class BlockUtil {
     }
 
     public static Optional<Integer> getBlockPowerLevel(Location<?> ... blocks) {
+        int power = -1;
+
         for(Location<?> block : blocks) {
             Optional<Integer> optional = getBlockPowerLevel(block);
-            if(optional.isPresent())
-                return optional;
+            if(optional.isPresent()) {
+                if (power < optional.get()) {
+                    power = optional.get();
+                }
+            }
         }
 
-        return Optional.empty();
+        if (power == -1) {
+            return Optional.empty();
+        } else {
+            return Optional.of(power);
+        }
     }
 
     public static Optional<Integer> getBlockPowerLevel(Location<?> block) {
+        if (block.get(Keys.POWER).isPresent()) {
+            return block.get(Keys.POWER);
+        } else if (block.get(Keys.POWERED).isPresent()) {
+            return block.get(Keys.POWERED).map((powered -> powered ? 15 : 0));
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Integer> getBlockIndirectPowerLevel(Location<?> block) {
         if (block.getBlock().get(Keys.POWER).isPresent()) {
             return Optional.of(block.getBlock().get(Keys.POWER).get());
         } else if (block.getBlock().get(Keys.POWERED).isPresent()) {
             return Optional.of(block.getBlock().get(Keys.POWERED).get() ? 15 : 0);
+        } else if (block.getProperty(IndirectlyPoweredProperty.class).isPresent()) {
+            return Optional.of(block.getProperty(IndirectlyPoweredProperty.class).get().getValue() ? 15 : 0);
         } else if (block.getProperty(PoweredProperty.class).isPresent()) {
             return Optional.of(block.getProperty(PoweredProperty.class).get().getValue() ? 15 : 0);
         }

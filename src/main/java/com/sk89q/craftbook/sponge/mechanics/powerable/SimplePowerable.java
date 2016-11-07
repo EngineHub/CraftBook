@@ -22,9 +22,16 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+import java.util.List;
+import java.util.Optional;
 
 abstract class SimplePowerable extends SpongeBlockMechanic {
+
+    public static final Location[] EMPTY_LOCATION_ARRAY = new Location[0];
 
     public abstract void updateState(Location<?> location, boolean powered);
 
@@ -35,9 +42,14 @@ abstract class SimplePowerable extends SpongeBlockMechanic {
         source.getLocation().ifPresent((location) -> {
             if(isValid(location)) {
                 boolean wasPowered = getState(location);
-                boolean isPowered = BlockUtil.getBlockPowerLevel(location).orElse(0) > 0;
-                if (isPowered != wasPowered) {
-                    updateState(location, isPowered);
+                List<Location<World>> locations =  BlockUtil.getAdjacentExcept(location, Direction.NONE);
+                locations.add(location);
+                Optional<Integer> power = BlockUtil.getBlockPowerLevel(locations.toArray(EMPTY_LOCATION_ARRAY));
+                if (power.isPresent()) {
+                    boolean isPowered = power.get() > 0;
+                    if (isPowered != wasPowered) {
+                        updateState(location, isPowered);
+                    }
                 }
             }
         });
