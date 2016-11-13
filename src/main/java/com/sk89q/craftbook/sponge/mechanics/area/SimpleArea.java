@@ -75,7 +75,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
         event.getTargetBlock().getLocation().ifPresent(location -> {
             if (isValid(location)) {
                 location.getTileEntity().ifPresent((sign -> {

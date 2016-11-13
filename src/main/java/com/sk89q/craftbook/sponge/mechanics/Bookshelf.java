@@ -96,7 +96,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().filter((this::isValid)).ifPresent(location -> {
             if (!sneakState.getValue().doesPass(player.get(Keys.IS_SNEAKING).orElse(false) || !usePermissions.hasPermission(player))) {
                 return; //Don't alert the player with this mechanic.

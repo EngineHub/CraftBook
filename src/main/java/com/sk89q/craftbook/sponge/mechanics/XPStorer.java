@@ -80,7 +80,7 @@ public class XPStorer extends SpongeBlockMechanic implements DocumentationProvid
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().filter((this::isValid)).ifPresent(location -> {
             if (!sneakState.getValue().doesPass(player.get(Keys.IS_SNEAKING).orElse(false))
                     || player.get(Keys.EXPERIENCE_LEVEL).orElse(0) < 1

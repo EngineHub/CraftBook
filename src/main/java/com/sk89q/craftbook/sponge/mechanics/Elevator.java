@@ -83,8 +83,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Humanoid human) {
-
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             if (SignUtil.isSign(location)) {
                 Sign sign = (Sign) location.getTileEntity().get();
