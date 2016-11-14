@@ -32,6 +32,7 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -43,6 +44,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import java.util.Optional;
 
 @Module(moduleName = "LightSwitch", onEnable="onInitialize", onDisable="onDisable")
 public class LightSwitch extends SpongeSignMechanic implements DocumentationProvider {
@@ -110,7 +113,7 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
         });
     }
 
-    private void toggleSwitches(Location<World> location, boolean state, int maxRange, int maxLights, Player player) {
+    private static void toggleSwitches(Location<World> location, boolean state, int maxRange, int maxLights, Player player) {
         int toggledLights = 0;
         for (int x = -maxRange; x < maxRange; x++) {
             for (int y = -maxRange; y < maxRange; y++) {
@@ -122,11 +125,15 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
                     if (offset.getBlockType() == (state ? BlockTypes.REDSTONE_TORCH : BlockTypes.TORCH)) {
                         toggledLights ++;
 
+                        Optional<Direction> connectedDirection = offset.get(Keys.DIRECTION);
+
                         Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
                         if (player != null)
                             causeBuilder.notifier(player);
 
                         offset.setBlock((state ? BlockTypes.TORCH : BlockTypes.REDSTONE_TORCH).getDefaultState(), causeBuilder.build());
+
+                        connectedDirection.ifPresent((direction) -> offset.offer(Keys.DIRECTION, direction));
 
                         if (toggledLights > maxLights)
                             return;
