@@ -20,6 +20,7 @@ import com.me4502.modularframework.module.Module;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
@@ -137,7 +138,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 data.ic.type = icType;
             }
 
-            if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) SpongeSelfTriggerManager.register(this, block);
+            if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).register(this, block);
 
             return data;
         }
