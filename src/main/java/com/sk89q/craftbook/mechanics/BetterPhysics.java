@@ -33,7 +33,6 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
             return;
 
         checkForPhysics(event.getBlock());
-        checkForPhysics(event.getBlock().getRelative(BlockFace.UP));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -54,8 +53,10 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     }
 
     private static void checkForPhysics(Block block) {
-        if(FallingLadders.isValid(block))
+        if(FallingLadders.isValid(block)) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
+            checkForPhysics(block.getRelative(BlockFace.UP));
+        }
     }
 
     private static class FallingLadders implements Runnable {
