@@ -23,12 +23,13 @@ import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
+import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
-import com.sk89q.craftbook.sponge.st.SelfTriggerManager;
+import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import com.sk89q.craftbook.sponge.util.data.CraftBookData;
@@ -50,6 +51,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
+import java.util.Optional;
 
 @Plugin(id = "craftbook", name = "CraftBook", version = "4.0",
         description = "CraftBook adds a number of new mechanics to Minecraft with no client mods required.")
@@ -71,6 +73,8 @@ public class CraftBookPlugin extends CraftBookAPI {
     public PluginContainer container;
 
     public ModuleController moduleController;
+
+    private SelfTriggerManager selfTriggerManager;
 
     protected SpongeConfiguration config;
 
@@ -165,8 +169,9 @@ public class CraftBookPlugin extends CraftBookAPI {
         for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
             if (!module.isEnabled()) continue;
             try {
-                if (module.getModule() instanceof SelfTriggeringMechanic && !SelfTriggerManager.isInitialized) {
-                    SelfTriggerManager.initialize();
+                if (module.getModule() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
+                    this.selfTriggerManager = new SpongeSelfTriggerManager();
+                    getSelfTriggerManager().ifPresent(SelfTriggerManager::initialize);
                     break;
                 }
             } catch(ModuleNotInstantiatedException e) {
@@ -196,7 +201,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void onServerStopping(GameStoppingServerEvent event) {
         config.save();
 
-        SelfTriggerManager.unload();
+        getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
         moduleController.disableModules();
         cache.clearAll();
     }
@@ -250,6 +255,11 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Override
     public MechanicDataCache getCache() {
         return cache;
+    }
+
+    @Override
+    public Optional<SelfTriggerManager> getSelfTriggerManager() {
+        return Optional.ofNullable(this.selfTriggerManager);
     }
 
     public SpongeConfiguration getConfig() {

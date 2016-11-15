@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.st;
+package com.sk89q.craftbook.core.st;
 
-class SelfTriggerClock implements Runnable {
+import com.sk89q.craftbook.core.CraftBookAPI;
+
+public class SelfTriggerClock implements Runnable {
 
     @Override
     public void run() {
-        SelfTriggerManager.think();
+        CraftBookAPI.inst().getSelfTriggerManager().ifPresent(SelfTriggerManager::think);
     }
 }

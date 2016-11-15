@@ -17,10 +17,12 @@
 package com.sk89q.craftbook.core;
 
 import com.sk89q.craftbook.core.mechanics.MechanicData;
+import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.util.Optional;
 
 /**
  * The core class for all implementations of the CraftBook Core.
@@ -55,6 +57,13 @@ public abstract class CraftBookAPI {
      * @return The {@link MechanicDataCache}
      */
     public abstract MechanicDataCache getCache();
+
+    /**
+     * Gets the {@link SelfTriggerManager}.
+     *
+     * @return The SelfTriggerManager.
+     */
+    public abstract Optional<SelfTriggerManager> getSelfTriggerManager();
 
     /**
      * Gets the working directory of CraftBook.

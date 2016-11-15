@@ -19,6 +19,8 @@ package com.sk89q.craftbook.sponge.st;
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
+import com.sk89q.craftbook.core.st.SelfTriggerClock;
+import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
@@ -38,17 +40,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class SelfTriggerManager {
+public class SpongeSelfTriggerManager extends SelfTriggerManager {
 
-    public static boolean isInitialized = false;
+    public boolean isInitialized = false;
 
-    private static Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
+    private Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
 
-    public static void initialize() {
+    public void initialize() {
         Sponge.getGame().getScheduler().createTaskBuilder().intervalTicks(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
-        Sponge.getGame().getEventManager().registerListeners(CraftBookPlugin.inst(), new SelfTriggerManager());
-
-        isInitialized = true;
+        Sponge.getGame().getEventManager().registerListeners(CraftBookPlugin.inst(), new SpongeSelfTriggerManager());
 
         for(World world : Sponge.getGame().getServer().getWorlds()) {
             for(Chunk chunk : world.getLoadedChunks()) {
@@ -57,15 +57,15 @@ public class SelfTriggerManager {
         }
     }
 
-    public static void unload() {
+    public void unload() {
         selfTriggeringMechanics.clear();
     }
 
-    public static void register(SelfTriggeringMechanic mechanic, Location location) {
+    public void register(SelfTriggeringMechanic mechanic, Location location) {
         selfTriggeringMechanics.put(location, mechanic);
     }
 
-    private static void registerAll(Chunk chunk) {
+    private void registerAll(Chunk chunk) {
         for(TileEntity tileEntity : chunk.getTileEntities()) {
             for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
@@ -82,11 +82,11 @@ public class SelfTriggerManager {
         }
     }
 
-    private static void unregisterAll(Extent extent) {
+    private void unregisterAll(Extent extent) {
         new HashSet<>(selfTriggeringMechanics.keySet()).stream().filter(loc -> loc.inExtent(extent)).forEach(selfTriggeringMechanics::remove);
     }
 
-    static void think() {
+    public void think() {
         for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
         }
