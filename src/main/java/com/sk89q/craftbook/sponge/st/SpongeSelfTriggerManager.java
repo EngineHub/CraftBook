@@ -40,12 +40,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class SpongeSelfTriggerManager extends SelfTriggerManager {
-
-    public boolean isInitialized = false;
+public class SpongeSelfTriggerManager implements SelfTriggerManager {
 
     private Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
 
+    @Override
     public void initialize() {
         Sponge.getGame().getScheduler().createTaskBuilder().intervalTicks(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
         Sponge.getGame().getEventManager().registerListeners(CraftBookPlugin.inst(), new SpongeSelfTriggerManager());
@@ -57,6 +56,7 @@ public class SpongeSelfTriggerManager extends SelfTriggerManager {
         }
     }
 
+    @Override
     public void unload() {
         selfTriggeringMechanics.clear();
     }
@@ -86,6 +86,7 @@ public class SpongeSelfTriggerManager extends SelfTriggerManager {
         new HashSet<>(selfTriggeringMechanics.keySet()).stream().filter(loc -> loc.inExtent(extent)).forEach(selfTriggeringMechanics::remove);
     }
 
+    @Override
     public void think() {
         for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
