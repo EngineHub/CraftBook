@@ -50,42 +50,39 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         final Block usedBlock = event.getBlock();
 
         ItemInfo originalBlock = new ItemInfo(usedBlock);
-        boolean hasPlanted = false;
+        int planted = 0;
 
         if(!player.hasPermission("craftbook.mech.treelopper.sapling"))
-            hasPlanted = true;
+            planted = 100;
 
         TreeSpecies species = null;
-        if(placeSaplings && usedBlock.getState().getData() instanceof Tree && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted)
+        if(placeSaplings && usedBlock.getState().getData() instanceof Tree
+                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL))
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
-        usedBlock.breakNaturally(event.getPlayer().getItemInHand());
-        if(species != null) {
-            final TreeSpecies fspecies = species;
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run () {
-                    usedBlock.setType(Material.SAPLING);
-                    Sapling sapling = (Sapling) usedBlock.getState().getData();
-                    sapling.setSpecies(fspecies);
-                    usedBlock.getState().setData(sapling);
-                }
-
-            }, 2);
-            hasPlanted = true;
+        usedBlock.breakNaturally(event.getPlayer().getInventory().getItemInMainHand());
+        if(species != null && planted < maxSaplings(species)) {
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, species), 2);
+            planted ++;
         }
 
         for(Block block : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(usedBlock) : BlockUtil.getTouchingBlocks(usedBlock)) {
             if(block == null) continue; //Top of map, etc.
             if(visitedLocations.contains(block.getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block))
-                if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, hasPlanted)) {
+                if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, planted)) {
                     ItemUtil.damageHeldItem(event.getPlayer());
                 }
         }
     }
 
-    public boolean canBreakBlock(Player player, ItemInfo originalBlock, Block toBreak) {
+    private static int maxSaplings(TreeSpecies tree) {
+        if (tree == TreeSpecies.DARK_OAK || tree == TreeSpecies.JUNGLE)
+            return 4;
+        else
+            return 1;
+    }
+
+    private boolean canBreakBlock(Player player, ItemInfo originalBlock, Block toBreak) {
 
         if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && breakLeaves) {
             MaterialData nw = toBreak.getState().getData();
@@ -105,7 +102,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public boolean searchBlock(BlockBreakEvent event, Block block, LocalPlayer player, ItemInfo originalBlock, Set<Location> visitedLocations, int broken, boolean hasPlanted) {
+    private boolean searchBlock(BlockBreakEvent event, Block block, LocalPlayer player, ItemInfo originalBlock, Set<Location> visitedLocations, int broken, int planted) {
 
         if(visitedLocations.contains(block.getLocation()))
             return false;
@@ -114,7 +111,8 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(!enabledItems.contains(player.getHeldItemInfo()))
             return false;
         TreeSpecies species = null;
-        if(placeSaplings && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL) && !hasPlanted) {
+        if(placeSaplings
+                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL)) {
             MaterialData data = block.getState().getData();
             if (data instanceof Leaves)
                 species = ((Leaves) data).getSpecies();
@@ -122,19 +120,19 @@ public class TreeLopper extends AbstractCraftBookMechanic {
                 species = ((Tree) data).getSpecies();
         }
         block.breakNaturally(event.getPlayer().getItemInHand());
-        if(species != null) {
+        if(species != null && planted < maxSaplings(species)) {
             block.setType(Material.SAPLING);
             Sapling sapling = (Sapling) block.getState().getData();
             sapling.setSpecies(species);
             block.getState().setData(sapling);
-            hasPlanted = true;
+            planted ++;
         }
         visitedLocations.add(block.getLocation());
         broken += 1;
         for(BlockFace face : allowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
             if(visitedLocations.contains(block.getRelative(face).getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block.getRelative(face)))
-                if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, hasPlanted)) {
+                if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, planted)) {
                     ItemUtil.damageHeldItem(event.getPlayer());
                 }
         }
@@ -173,5 +171,24 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         config.setComment(path + "break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
         breakLeaves = config.getBoolean(path + "break-leaves", false);
+    }
+
+    private static class SaplingPlanter implements Runnable {
+        private final Block usedBlock;
+        private final TreeSpecies fspecies;
+
+        SaplingPlanter(Block usedBlock, TreeSpecies fspecies) {
+            this.usedBlock = usedBlock;
+            this.fspecies = fspecies;
+        }
+
+        @Override
+        public void run () {
+            usedBlock.setType(Material.SAPLING);
+            Sapling sapling = (Sapling) usedBlock.getState().getData();
+            sapling.setSpecies(fspecies);
+            usedBlock.getState().setData(sapling);
+        }
+
     }
 }
