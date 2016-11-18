@@ -22,10 +22,12 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -43,6 +45,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -57,11 +60,15 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
 
     private ConfigValue<ItemStack> signCopierItem = new ConfigValue<>("signcopier-item", "The item that triggers the Sign Copier mechanic.", ItemStack.builder().itemType(ItemTypes.DYE).add(Keys.DYE_COLOR, DyeColors.BLACK).build(), TypeToken.of(ItemStack.class));
 
+    private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.signcopier.use", "Allows the user to copy and paste signs.", PermissionDescription.ROLE_USER);
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
 
         signCopierItem.load(config);
+
+        usePermissions.register();
 
         signs = new HashMap<>();
     }
@@ -85,38 +92,42 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
             if (itemStack.getItem() == signCopierItem.getValue().getItem()) {
                 event.getTargetBlock().getLocation().ifPresent(location -> {
                     if (SignUtil.isSign(location)) {
-                        Sign sign = (Sign) location.getTileEntity().get();
-                        if (event instanceof InteractBlockEvent.Primary) {
-                            List<Text> lines = signs.get(player.getUniqueId());
-                            if (lines != null) {
-                                SignData signData = sign.getSignData().copy();
-                                signData = signData.set(Keys.SIGN_LINES, lines);
+                        if (usePermissions.hasPermission(player)) {
+                            Sign sign = (Sign) location.getTileEntity().get();
+                            if (event instanceof InteractBlockEvent.Primary) {
+                                List<Text> lines = signs.get(player.getUniqueId());
+                                if (lines != null) {
+                                    SignData signData = sign.getSignData().copy();
+                                    signData = signData.set(Keys.SIGN_LINES, lines);
 
-                                ChangeSignEvent changeSignEvent = SpongeEventFactory.createChangeSignEvent(
-                                        Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).notifier(player).build(),
-                                        sign.getSignData().asImmutable(),
-                                        signData,
-                                        sign
-                                );
+                                    ChangeSignEvent changeSignEvent = SpongeEventFactory.createChangeSignEvent(
+                                            Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).notifier(player).build(),
+                                            sign.getSignData().asImmutable(),
+                                            signData,
+                                            sign
+                                    );
 
-                                Sponge.getEventManager().post(changeSignEvent);
+                                    Sponge.getEventManager().post(changeSignEvent);
 
-                                if (!changeSignEvent.isCancelled()) {
-                                    sign.offer(Keys.SIGN_LINES, changeSignEvent.getText().lines().get());
-                                    player.sendMessage(Text.of(TextColors.YELLOW, "Pasted sign!"));
+                                    if (!changeSignEvent.isCancelled()) {
+                                        sign.offer(Keys.SIGN_LINES, changeSignEvent.getText().lines().get());
+                                        player.sendMessage(Text.of(TextColors.YELLOW, "Pasted sign!"));
+                                    } else {
+                                        player.sendMessage(Text.of(TextColors.RED, "Not allowed to paste sign!"));
+                                    }
+
                                 } else {
-                                    player.sendMessage(Text.of(TextColors.RED, "Not allowed to paste sign!"));
+                                    player.sendMessage(Text.of(TextColors.RED, "No sign data to paste!"));
                                 }
 
-                            } else {
-                                player.sendMessage(Text.of(TextColors.RED, "No sign data to paste!"));
+                                event.setCancelled(true);
+                            } else if (event instanceof InteractBlockEvent.Secondary) {
+                                signs.put(player.getUniqueId(), sign.lines().get());
+                                player.sendMessage(Text.of(TextColors.YELLOW, "Copied sign!"));
+                                event.setCancelled(true);
                             }
-
-                            event.setCancelled(true);
-                        } else if (event instanceof InteractBlockEvent.Secondary) {
-                            signs.put(player.getUniqueId(), sign.lines().get());
-                            player.sendMessage(Text.of(TextColors.YELLOW, "Copied sign!"));
-                            event.setCancelled(true);
+                        } else {
+                            player.sendMessage(Text.of(TextColors.RED, "You don't have permission to use this mechanic!"));
                         }
                     }
                 });
@@ -133,6 +144,13 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
                 signCopierItem
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                usePermissions
         };
     }
 }

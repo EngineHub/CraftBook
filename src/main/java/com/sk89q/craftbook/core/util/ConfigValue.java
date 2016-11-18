@@ -23,8 +23,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
-import java.util.Objects;
-
 public class ConfigValue<T> {
 
     private String key;
@@ -83,7 +81,10 @@ public class ConfigValue<T> {
     }
 
     public T getValue() {
-        return this.value == null ? this.defaultValue : this.value;
+        if (this.value == null) {
+            this.value = this.defaultValue;
+        }
+        return this.value;
     }
 
     public T getDefaultValue() {
@@ -96,7 +97,7 @@ public class ConfigValue<T> {
     }
 
     public TypeToken<T> getTypeToken() {
-        return this.typeToken == null ? TypeToken.of((Class<T>) defaultValue.getClass()) : typeToken;
+        return this.typeToken == null ? TypeToken.of((Class<T>) defaultValue.getClass()) : this.typeToken;
     }
 
     private void setValueInternal(ConfigurationNode configurationNode) {
@@ -136,6 +137,17 @@ public class ConfigValue<T> {
                 return node.getValue(new TypeToken<T>(defaultValue.getClass()){}, defaultValue);
         } catch(Exception e) {
             return defaultValue;
+        }
+    }
+
+    public void serializeDefault(ConfigurationNode node) {
+        try {
+            if(typeToken != null)
+                node.setValue(typeToken, defaultValue);
+            else
+                node.setValue(defaultValue);
+        } catch (ObjectMappingException e) {
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map value!", e);
         }
     }
 }

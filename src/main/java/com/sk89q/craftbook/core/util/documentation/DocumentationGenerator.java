@@ -16,9 +16,14 @@
  */
 package com.sk89q.craftbook.core.util.documentation;
 
+import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.PermissionNode;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.ConfigurationOptions;
+import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -100,8 +105,12 @@ public class DocumentationGenerator {
                     commentLength = configValue.getComment().length();
                 if(configValue.getTypeToken().getRawType().getSimpleName().length() > typeLength)
                     typeLength = configValue.getTypeToken().getRawType().getSimpleName().length();
-                if(configValue.getDefaultValue().toString().length() > defaultLength)
-                    defaultLength = configValue.getDefaultValue().toString().length();
+
+                ConfigurationNode node = SimpleCommentedConfigurationNode.root();
+                configValue.serializeDefault(node);
+
+                if(node.getString("null").length() > defaultLength)
+                    defaultLength = node.getString("null").length();
             }
 
             String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(commentLength, '=') + ' ' + createStringOfLength(typeLength, '=') + ' ' + createStringOfLength(defaultLength, '=');
@@ -110,7 +119,10 @@ public class DocumentationGenerator {
             configSection.append(padToLength("Node", nodeLength + 1)).append(padToLength("Comment", commentLength + 1)).append(padToLength("Type", typeLength + 1)).append(padToLength("Default", defaultLength + 1)).append('\n');
             configSection.append(border).append('\n');
             for(ConfigValue<?> configValue : provider.getConfigurationNodes()) {
-                configSection.append(padToLength(configValue.getKey(), nodeLength + 1)).append(padToLength(configValue.getComment(), commentLength + 1)).append(padToLength(configValue.getTypeToken().getRawType().getSimpleName(), typeLength + 1)).append(padToLength(configValue.getDefaultValue().toString(), defaultLength + 1)).append('\n');
+                ConfigurationNode node = SimpleCommentedConfigurationNode.root();
+                configValue.serializeDefault(node);
+
+                configSection.append(padToLength(configValue.getKey(), nodeLength + 1)).append(padToLength(configValue.getComment(), commentLength + 1)).append(padToLength(configValue.getTypeToken().getRawType().getSimpleName(), typeLength + 1)).append(padToLength(node.getString("null"), defaultLength + 1)).append('\n');
             }
             configSection.append(border).append('\n');
         }

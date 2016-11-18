@@ -23,9 +23,9 @@ import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.TernaryState;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -37,14 +37,15 @@ import java.util.Set;
 public class TypeSerializers {
 
     public static void registerDefaults() {
-        ninja.leaping.configurate.objectmapping.serialize.TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(BlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
+        register(ninja.leaping.configurate.objectmapping.serialize.TypeSerializers.getDefaultSerializers());
     }
 
-    public static void register(ConfigurationOptions options) {
-        options.getSerializers().registerType(TypeToken.of(BlockState.class), new BlockStateTypeSerializer());
-        options.getSerializers().registerType(new TypeToken<Set<?>>(){}, new SetTypeSerializer());
-        options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
-        options.getSerializers().registerType(TypeToken.of(TernaryState.class), new TernaryStateTypeSerializer());
+    public static void register(TypeSerializerCollection serializers) {
+        serializers.registerType(TypeToken.of(BlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
+        //options.getSerializers().registerType(TypeToken.of(BlockState.class), new BlockStateTypeSerializer());
+        serializers.registerType(new TypeToken<Set<?>>(){}, new SetTypeSerializer());
+        //options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
+        serializers.registerType(TypeToken.of(TernaryState.class), new TernaryStateTypeSerializer());
     }
 
     private static class BlockStateTypeSerializer implements TypeSerializer<BlockState> {
@@ -67,7 +68,7 @@ public class TypeSerializers {
 
         @Override
         public void serialize(TypeToken<?> type, TernaryState obj, ConfigurationNode value) {
-            obj.name();
+            value.setValue(obj.name());
         }
     }
 
@@ -119,25 +120,6 @@ public class TypeSerializers {
             for (Object ent : obj) {
                 entrySerial.serialize(entryType, ent, value.getAppendedNode());
             }
-        }
-    }
-
-    private static class ItemStackTypeSerializer implements TypeSerializer<ItemStack> {
-
-        @Override
-        public ItemStack deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
-            //final ConfigurateTranslator translator = ConfigurateTranslator.instance();
-            //final DataView container = translator.translateFrom(value);
-            //return ItemStack.builder().fromContainer(container).build();
-            return ItemStack.of(ItemTypes.STONE, 1); // TODO FIXME
-        }
-
-        @Override
-        public void serialize(TypeToken<?> type, ItemStack obj, ConfigurationNode value) throws ObjectMappingException {
-            //final ConfigurateTranslator translator = ConfigurateTranslator.instance();
-            //final DataView container = obj.toContainer();
-            //translator.translateContainerToData(value, container);
-            // TODO FIXME
         }
     }
 }
