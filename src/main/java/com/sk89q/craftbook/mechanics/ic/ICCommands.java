@@ -89,7 +89,7 @@ public class ICCommands {
                 return;
             }
         } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
+            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + '"');
             return;
         }
 
@@ -121,11 +121,11 @@ public class ICCommands {
         try {
             accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
             if (accessedPage < 0 || accessedPage >= pages) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
+                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + '"');
                 return;
             }
         } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
+            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + '"');
             return;
         }
 

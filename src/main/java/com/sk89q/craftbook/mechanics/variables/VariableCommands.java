@@ -4,6 +4,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -14,7 +15,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class VariableCommands {
@@ -114,6 +117,63 @@ public class VariableCommands {
             sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
+    }
+
+    @Command(aliases = "list", desc = "Lists variables", flags="an:p:", usage = "-p <page> -n <Namespace> -a")
+    public void list(CommandContext context, CommandSender sender) throws CommandException {
+
+        if (VariableManager.instance == null) {
+            sender.sendMessage(ChatColor.RED + "Variables are not enabled!");
+            return;
+        }
+
+        String key = "global";
+
+        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+            key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
+
+        if(context.hasFlag('n'))
+            key = context.getFlag('n');
+
+        if (context.hasFlag('a'))
+            key = null;
+
+        List<String> variablesLines = new ArrayList<String>();
+
+        for (Entry<Tuple2<String, String>, String> entry : VariableManager.instance.getVariableStore().entrySet()) {
+            if (key != null && !entry.getKey().a.equals(key)) {
+                continue;
+            }
+
+            String keyName = entry.getKey().b;
+            if (key == null) {
+                keyName = entry.getKey().a + '|' + keyName;
+            }
+
+            variablesLines.add(ChatColor.YELLOW + keyName + ChatColor.WHITE + ": " + ChatColor.GREEN + entry.getValue());
+        }
+
+        String[] lines = variablesLines.toArray(new String[variablesLines.size()]);
+        int pages = (lines.length - 1) / 9 + 1;
+        int accessedPage;
+
+        try {
+            accessedPage = !context.hasFlag('p') ? 0 : context.getFlagInteger('p') - 1;
+            if (accessedPage < 0 || accessedPage >= pages) {
+                sender.sendMessage(ChatColor.RED + "Invalid page \"" + context.getFlagInteger('p') + '"');
+                return;
+            }
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid page \"" + context.getFlag('p') + '"');
+            return;
+        }
+
+        sender.sendMessage(ChatColor.BLUE + "  ");
+        sender.sendMessage(ChatColor.BLUE + "Variables (Page " + (accessedPage + 1) + " of " + pages + "):");
+
+        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
+            sender.sendMessage(lines[i]);
+        }
     }
 
     @Command(aliases = {"erase","remove","delete","rm"}, desc = "Erase a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
