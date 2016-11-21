@@ -101,8 +101,9 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     }
 
     public boolean isInAboveContainer(ItemStack item) {
-
-        return InventoryUtil.doesBlockHaveInventory(chestBlock) && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), false, new ItemStack(item.getType(), 1, item.getDurability()));
+        ItemStack itemClone = item.clone();
+        itemClone.setAmount(1);
+        return InventoryUtil.doesBlockHaveInventory(chestBlock) && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), false, itemClone);
     }
 
     public static class Factory extends AbstractICFactory {

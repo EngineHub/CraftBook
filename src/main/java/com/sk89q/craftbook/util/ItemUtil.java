@@ -10,6 +10,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
@@ -299,6 +300,36 @@ public final class ItemUtil {
         }
 
         CraftBookPlugin.logDebugMessage("Enchants are the same", "item-checks.meta.enchants");
+
+        //StoredEnchants
+        if (meta instanceof EnchantmentStorageMeta) {
+            if (!(meta2 instanceof EnchantmentStorageMeta))
+                return false; // meta type mismatch
+
+            EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) meta;
+            List<Enchantment> storedEnchantments = new ArrayList<Enchantment>();
+            if (storageMeta.hasStoredEnchants())
+                storedEnchantments.addAll(storageMeta.getStoredEnchants().keySet());
+
+            EnchantmentStorageMeta storageMeta2 = (EnchantmentStorageMeta) meta2;
+            List<Enchantment> storedEnchantments2 = new ArrayList<Enchantment>();
+            if (storageMeta2.hasStoredEnchants())
+                storedEnchantments2.addAll(storageMeta2.getStoredEnchants().keySet());
+
+            if (storedEnchantments.size() != storedEnchantments2.size())
+                return false; // mismatch enchantment counts
+            CraftBookPlugin.logDebugMessage("Has same stored enchantment lengths", "item-checks.meta.enchants");
+
+            for (Enchantment ench : storedEnchantments) {
+                if (!storedEnchantments2.contains(ench))
+                    return false; // mismatch stored enchantments
+                if (storageMeta.getStoredEnchantLevel(ench) != storageMeta2.getStoredEnchantLevel(ench))
+                    return false; // mismatch stored enchantment levels
+            }
+
+            CraftBookPlugin.logDebugMessage("Stored enchants are the same", "item-checks.meta.enchants");
+        } else if (meta2 instanceof EnchantmentStorageMeta)
+            return false; // meta type mismatch
 
         return true;
     }
