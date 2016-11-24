@@ -174,7 +174,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                         checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                     }
                 };
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, 20L);
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, checkBlock.getType() == Material.STONE_BUTTON ? 20L : 30L);
             }
         }
     }
