@@ -476,6 +476,10 @@ public final class ItemUtil {
                 return new ItemStack(Material.HARD_CLAY);
             case QUARTZ_ORE:
                 return new ItemStack(Material.QUARTZ);
+            case SPONGE:
+                if (item.getData().getData() == 0)
+                    return null;
+                else return new ItemStack(Material.SPONGE);
             default:
                 return null;
         }
