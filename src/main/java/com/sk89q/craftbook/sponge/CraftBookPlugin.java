@@ -112,7 +112,6 @@ public class CraftBookPlugin extends CraftBookAPI {
         config = new SpongeConfiguration(this, mainConfig, configManager);
 
         configurationOptions = ConfigurationOptions.defaults();
-        TypeSerializers.register(configurationOptions);
 
         logger.info("Loading Configuration");
 
@@ -235,6 +234,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.HiddenSwitch");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightStone");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.treelopper.TreeLopper");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.PaintingSwitcher");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.pipe.Pipes");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightSwitch");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.signcopier.SignCopier");

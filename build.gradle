@@ -4,7 +4,7 @@ plugins {
     id "eclipse"
     id "idea"
     id "com.github.hierynomus.license" version "0.12.1"
-    id "com.github.johnrengelman.shadow" version "1.2.3"
+    id "com.github.johnrengelman.shadow" version "1.2.4"
     id "com.jfrog.artifactory" version "4.0.0"
     id "org.spongepowered.plugin" version "0.6"
     id "com.mendhak.gradlecrowdin" version "0.0.9"
