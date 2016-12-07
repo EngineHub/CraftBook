@@ -45,6 +45,9 @@ public abstract class CustomDropDefinition {
 
     public void setRegions(List<String> regions) {
         this.regions = regions;
+        if (this.regions.isEmpty()) {
+            this.regions = null;
+        }
     }
 
     public DropReward[] getRewards() {
