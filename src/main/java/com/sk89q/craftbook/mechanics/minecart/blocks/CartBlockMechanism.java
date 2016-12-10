@@ -150,7 +150,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     lineFound = sign;
                     lineNum = 1;
                     break;
-                } else if (getName().equalsIgnoreCase("messager") && lines[0].equalsIgnoreCase("[" + sign + "]")) {
+                } else if (this instanceof CartMessenger && lines[0].equalsIgnoreCase("[" + sign + "]")) {
                     found = true;
                     lineFound = sign;
                     lineNum = 0;

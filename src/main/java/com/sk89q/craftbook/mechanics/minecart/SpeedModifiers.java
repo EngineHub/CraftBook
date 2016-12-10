@@ -31,8 +31,8 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
-        config.setComment(path + "max-speed", "Sets the max speed of carts. Normal max speed speed is 0.4D");
-        maxSpeed = config.getDouble(path + "max-speed", 0.4);
+        config.setComment(path + "max-speed", "Sets the max speed modifier of carts. Normal max speed speed is 0.4D");
+        maxSpeed = config.getDouble(path + "max-speed", 1);
 
         config.setComment(path + "off-rail-speed", "Sets the off-rail speed modifier of carts. 0 is none.");
         offRail = config.getDouble(path + "off-rail-speed", 0);
