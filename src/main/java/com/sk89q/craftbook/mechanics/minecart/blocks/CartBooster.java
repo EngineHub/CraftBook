@@ -1,13 +1,11 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import org.bukkit.entity.Minecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.util.Vector;
-
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.util.Vector;
 
 public class CartBooster extends CartBlockMechanism {
 
