@@ -25,12 +25,15 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.signcopier.command.EditSignCommand;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.data.type.DyeColors;
@@ -61,6 +64,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
     private ConfigValue<ItemStack> signCopierItem = new ConfigValue<>("signcopier-item", "The item that triggers the Sign Copier mechanic.", ItemStack.builder().itemType(ItemTypes.DYE).add(Keys.DYE_COLOR, DyeColors.BLACK).build(), TypeToken.of(ItemStack.class));
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.signcopier.use", "Allows the user to copy and paste signs.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode editPermissions = new SpongePermissionNode("craftbook.signcopier.edit", "Allows the user to use the sign edit command.", PermissionDescription.ROLE_USER);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -71,6 +75,18 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
         usePermissions.register();
 
         signs = new HashMap<>();
+
+        CommandSpec signEditCommand = CommandSpec.builder()
+                .permission(editPermissions.getNode())
+                .arguments(GenericArguments.integer(Text.of("line")), GenericArguments.remainingJoinedStrings(Text.of("text")))
+                .executor(new EditSignCommand(this))
+                .description(Text.of("Allows editing the currently copied sign!"))
+                .build();
+
+        Sponge.getCommandManager().register(CraftBookPlugin.<CraftBookPlugin>inst().getContainer(), CommandSpec.builder()
+                .child(signEditCommand, "edit")
+                .description(Text.of("Base command of the SignCopier mechanic"))
+                .build(), "sign", "signcopier");
     }
 
     @Override
@@ -81,6 +97,10 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
     }
 
     private Map<UUID, List<Text>> signs;
+
+    public Map<UUID, List<Text>> getSigns() {
+        return signs;
+    }
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent event, @First Player player) {
@@ -150,7 +170,8 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[] {
-                usePermissions
+                usePermissions,
+                editPermissions
         };
     }
 }
