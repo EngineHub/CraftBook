@@ -21,5 +21,5 @@ import com.owlike.genson.GensonBuilder;
 import com.owlike.genson.reflect.VisibilityFilter;
 
 public class SerializationUtil {
-    public static Genson jsonConverter = new GensonBuilder().useFields(true, VisibilityFilter.PACKAGE_PUBLIC).useMethods(false).useRuntimeType(true).useClassMetadata(true).useConstructorWithArguments(true).create();
+    public static Genson jsonConverter = new GensonBuilder().useFields(true, VisibilityFilter.PRIVATE).useMethods(false).useRuntimeType(true).useClassMetadata(true).useConstructorWithArguments(true).create();
 }

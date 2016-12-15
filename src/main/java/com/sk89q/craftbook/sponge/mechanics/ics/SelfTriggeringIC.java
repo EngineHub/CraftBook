@@ -36,5 +36,6 @@ public abstract class SelfTriggeringIC extends IC {
 
     @Override
     public void trigger() {
+
     }
 }

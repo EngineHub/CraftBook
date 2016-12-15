@@ -35,7 +35,7 @@ abstract class AnyInputLogicGate extends IC {
             if (getPinSet().isValid(i, this)) {
                 valid++;
 
-                if (PinSet.getInput(i, this)) {
+                if (getPinSet().getInput(i, this)) {
                     on++;
                 }
             }

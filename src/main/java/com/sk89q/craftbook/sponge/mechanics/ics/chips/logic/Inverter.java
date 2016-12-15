@@ -32,7 +32,7 @@ public class Inverter extends IC {
     public void trigger() {
 
         for (int i = 0; i < getPinSet().getInputCount(); i++)
-            getPinSet().setOutput(i, !PinSet.getInput(i, this), this);
+            getPinSet().setOutput(i, !getPinSet().getInput(i, this), this);
     }
 
 }

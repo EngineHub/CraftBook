@@ -166,7 +166,6 @@ public class DocumentationGenerator {
         while(importMatcher.find()) {
             String fileDir = importMatcher.group(1);
             File file = new File(new File(getRootDirectory(), "templates/" + provider.getTemplatePath() + ".rst").getParentFile(), fileDir + ".rst");
-            System.out.println(file.getAbsolutePath());
             input = input.replace("%IMPORT " + fileDir + '%', makeReplacements(loadFile(file), provider));
         }
 

@@ -32,6 +32,7 @@ import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator
 public class ICType<T extends IC> implements DocumentationProvider {
 
     private static final Pattern IC_HEADER_PATTERN = Pattern.compile("%IC_HEADER%", Pattern.LITERAL);
+    private static final Pattern IC_ID_PATTERN = Pattern.compile("%IC_ID%", Pattern.LITERAL);
 
     String name;
     String description;
@@ -83,8 +84,6 @@ public class ICType<T extends IC> implements DocumentationProvider {
             if (extraArguments != null && extraArguments.length > 0)
                 ic = construct.newInstance(this, block, extraArguments);
             else ic = construct.newInstance(this, block);
-
-            ic.load();
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
             CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments), e);
         }
@@ -108,6 +107,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
     @Override
     public String performCustomConversions(String input) {
+        input = IC_ID_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(modelId));
         String icHeader = createStringOfLength(modelId.length(), '=') + '\n' + modelId + '\n' + createStringOfLength(modelId.length(), '=');
         return IC_HEADER_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icHeader));
     }

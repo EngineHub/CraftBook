@@ -39,8 +39,15 @@ public final class SpongeDataCache extends MechanicDataCache {
                 }
             }
 
-            if(data == null || !clazz.isInstance(data))
+            if(data == null || !clazz.isInstance(data)) {
+                if (file.exists()) {
+                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Warning: Resetting data for " + locationKey);
+                    if (data != null) {
+                        CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Wanted class " + clazz.getName() + " but got " + data.getClass().getName());
+                    }
+                }
                 data = clazz.newInstance();
+            }
 
             return data;
         } catch (InstantiationException | IllegalAccessException e) {

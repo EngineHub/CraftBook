@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util.data.builder;
 
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
 import org.spongepowered.api.data.DataHolder;
@@ -46,6 +47,10 @@ public class BlockBagDataManipulatorBuilder extends AbstractDataBuilder<BlockBag
 
     @Override
     protected Optional<BlockBagData> buildContent(DataView container) throws InvalidDataException {
-        return create().from(container.getContainer());
+        if (container.contains(CraftBookKeys.BLOCK_BAG.getQuery())) {
+            return Optional.of(new BlockBagData(container.getLong(CraftBookKeys.BLOCK_BAG.getQuery()).get()));
+        }
+
+        return Optional.empty();
     }
 }

@@ -200,7 +200,10 @@ public final class SignUtil {
     }
 
     public static String getTextRaw(SignData sign, int line) {
-        Text text = getText(sign, line);
+        return getTextRaw(getText(sign, line));
+    }
+
+    public static String getTextRaw(Text text) {
         String raw = text.toPlain();
         if(Variables.instance != null)
             raw = Variables.instance.parseVariables(raw, null);

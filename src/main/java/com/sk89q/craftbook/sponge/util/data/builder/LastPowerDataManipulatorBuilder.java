@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util.data.builder;
 
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableLastPowerData;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.data.DataHolder;
@@ -46,6 +47,10 @@ public class LastPowerDataManipulatorBuilder extends AbstractDataBuilder<LastPow
 
     @Override
     protected Optional<LastPowerData> buildContent(DataView container) throws InvalidDataException {
-        return create().from(container.getContainer());
+        if (container.contains(CraftBookKeys.LAST_POWER.getQuery())) {
+            return Optional.of(new LastPowerData(container.getInt(CraftBookKeys.LAST_POWER.getQuery()).get()));
+        }
+
+        return Optional.empty();
     }
 }

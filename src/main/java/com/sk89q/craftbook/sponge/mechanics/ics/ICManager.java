@@ -17,6 +17,8 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -31,6 +33,9 @@ class ICManager {
         //SISO
         registerICType(new ICType<>("MC1000", "REPEATER", "Repeater", "Repeats a redstone signal.", Repeater.class));
         registerICType(new ICType<>("MC1001", "INVERTER", "Inverter", "Inverts a redstone signal.", Inverter.class));
+
+        registerICType(new ICType<>("MC1110", "TRANSMITTER", "Wireless Transmitter", "Transmits a wireless redstone signal.", WirelessTransmitter.class));
+        registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", WirelessReceiver.class));
 
         registerICType(new ICType<>("MC1421", "CLOCK", "Clock", "Outputs high every X ticks when input is high.", Clock.class));
 

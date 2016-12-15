@@ -17,13 +17,26 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
+
 public abstract class IC {
+
+    /*
+     * Due to the way the IC data system works,
+     * all non-serializable or non-serialized fields should be transient.
+     */
 
     public transient ICType<? extends IC> type;
     public transient Location<?> block;
+    private transient Sign sign;
+
     private boolean[] pinstates;
 
     public IC() {}
@@ -41,9 +54,38 @@ public abstract class IC {
         return ICSocket.PINSETS.get(getPinSetName());
     }
 
-    public void load() {
+    /**
+     * Called whenever an IC is created for the first time. Setup constant data here.
+     *
+     * @param player The creating player
+     * @param lines The sign lines
+     * @throws InvalidICException Thrown if there is an issue with this IC
+     */
+    public void create(Player player, List<Text> lines) throws InvalidICException {
         PinSet set = getPinSet();
         pinstates = new boolean[set.getInputCount()]; // Just input for now.
+    }
+
+    /**
+     * Called when an IC is loaded into the world.
+     */
+    public void load() {
+    }
+
+    public Sign getSign() {
+        if (sign == null) {
+            sign = (Sign) block.getTileEntity().orElseThrow(() -> new IllegalStateException("IC given block that is not a sign!"));
+        }
+
+        return sign;
+    }
+
+    public String getLine(int line) {
+        return SignUtil.getTextRaw(getSign(), line);
+    }
+
+    public void setLine(int line, Text text) {
+        getSign().lines().set(line, text);
     }
 
     public Location<?> getBlock() {

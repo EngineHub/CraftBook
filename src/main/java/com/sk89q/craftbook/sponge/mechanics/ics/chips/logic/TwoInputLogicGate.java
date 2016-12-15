@@ -37,7 +37,7 @@ public abstract class TwoInputLogicGate extends IC {
         // New input handling: any/first two valid inputs discovered. Moar flexibility!
         for (int i = 0; i < getPinSet().getInputCount(); i++) {
             if (getPinSet().isValid(i, this)) {
-                boolean pinval = PinSet.getInput(i, this);
+                boolean pinval = getPinSet().getInput(i, this);
                 // Got pin value, assign to first free variable, break if got both.
                 if (a == null) {
                     a = pinval;

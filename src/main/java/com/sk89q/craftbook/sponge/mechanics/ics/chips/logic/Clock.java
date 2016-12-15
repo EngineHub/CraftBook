@@ -18,23 +18,42 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
+
 public class Clock extends SelfTriggeringIC {
 
-    public int ticks;
+    private int ticks;
+    private int limit;
 
     public Clock(ICType<? extends IC> type, Location<World> block) {
         super(type, block);
     }
 
     @Override
-    public void think() {
+    public void create(Player player, List<Text> lines) throws InvalidICException {
+        super.create(player, lines);
 
+        try {
+            limit = Math.max(5, Math.min(1000, Integer.parseInt(SignUtil.getTextRaw(lines.get(2)))));
+        } catch (Exception e) {
+            limit = 20;
+        }
+
+        lines.set(2, Text.of(limit));
+    }
+
+    @Override
+    public void think() {
         ticks++;
-        if (ticks == 20) {
+        if (ticks == limit) {
             ticks = 0;
             getPinSet().setOutput(0, !getPinSet().getOutput(0, this), this);
         }
