@@ -18,7 +18,7 @@ public class RedstoneJukebox extends AbstractCraftBookMechanic {
         Jukebox juke = (org.bukkit.block.Jukebox) event.getBlock().getState();
         if(!event.isOn()) {
             //FIXME byte data = juke.getRawData();
-            //juke.setPlaying(null);
+            //juke.setPlaying(Material.AIR);
             //event.getBlock().setTypeIdAndData(BlockID.JUKEBOX, data, false);
         } else
             juke.setPlaying(juke.getPlaying());

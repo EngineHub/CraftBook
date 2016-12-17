@@ -383,7 +383,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                             if (!ItemUtil.isStackValid(item)) continue;
                             block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
                         }
-                    } else juke.setPlaying(null);
+                    } else juke.setPlaying(Material.AIR);
                 }
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
