@@ -106,21 +106,28 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
             if (entity.isValid() && entity instanceof Item) {
                 if (LocationUtil.isWithinRadius(centre, entity.getLocation(), radius)) {
 
-                    stackCheck: {
                     ItemStack stack = ((Item) entity).getItemStack();
 
                     if(!ItemUtil.isStackValid(stack))
                         return false;
 
-                    for(ItemStack filter : filters) {
+                    boolean passed = !include;
 
+                    for(ItemStack filter : filters) {
                         if(!ItemUtil.isStackValid(filter))
                             continue;
 
-                        if(include && !ItemUtil.areItemsIdentical(filter, stack))
-                            break stackCheck;
-                        else if(!include && ItemUtil.areItemsIdentical(filter, stack))
-                            break stackCheck;
+                        if(include && ItemUtil.areItemsIdentical(filter, stack)) {
+                            passed = true;
+                            break;
+                        } else if(!include && ItemUtil.areItemsIdentical(filter, stack)) {
+                            passed = false;
+                            break;
+                        }
+                    }
+
+                    if (!passed) {
+                        continue;
                     }
 
                     BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
@@ -148,7 +155,6 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                             return true;
                         }
                     }
-                }
                 }
             }
         }
