@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.variable;
 
+import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -26,11 +28,12 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.GetVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.RemoveVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.SetVariableCommand;
-import com.sk89q.craftbook.sponge.util.RegexUtil;
 import com.sk89q.craftbook.sponge.util.TextUtil;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -41,15 +44,18 @@ import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Module(moduleName = "Variables", onEnable="onInitialize", onDisable="onDisable")
 public class Variables extends SpongeMechanic {
+
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9]+)\\|)*([a-zA-Z0-9]+)%");
 
     public static Variables instance;
 
@@ -65,16 +71,10 @@ public class Variables extends SpongeMechanic {
 
         instance = this;
 
-        if(config.getValue() != null) {
-            try {
-                variableStore = config.getNode("variables").getValue(new TypeTokens.VariableTypeToken());
-            } catch (ObjectMappingException e) {
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to read variables! Resetting..", e);
-                variableStore = new HashMap<>();
-            }
-        }
-
-        if (variableStore != null){
+        try {
+            variableStore = config.getNode("variables").getValue(new TypeTokens.VariableTypeToken(), Maps.newHashMap());
+        } catch (ObjectMappingException e) {
+            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to read variables! Resetting..", e);
             variableStore = new HashMap<>();
         }
 
@@ -131,7 +131,11 @@ public class Variables extends SpongeMechanic {
     public void onDisable() {
         super.onDisable();
 
-        config.getNode("variables").setValue(variableStore);
+        try {
+            config.getNode("variables").setValue(new TypeToken<Map<String, Map<String, String>>>() {}, variableStore);
+        } catch (ObjectMappingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addVariable(String namespace, String key, String value) {
@@ -155,18 +159,14 @@ public class Variables extends SpongeMechanic {
     }
 
     public String parseVariables(String line, @Nullable Player player) {
-        for(String possibleVariable : getPossibleVariables(line)) {
-            String namespace, name;
-            boolean explicit = false;
+        for(Pair<String, String> possibleVariable : getPossibleVariables(line)) {
+            String namespace = possibleVariable.getLeft();
+            String name = possibleVariable.getRight();
 
-            if(possibleVariable.contains("|")) {
-                String[] bits = RegexUtil.PIPE_PATTERN.split(possibleVariable, 2);
-                namespace = bits[0];
-                name = bits[1];
-                explicit = true;
-            } else {
+            boolean explicit = true;
+            if (namespace == null) {
                 namespace = "global";
-                name = possibleVariable;
+                explicit = false;
             }
 
             if("global".equals(namespace) && player != null && !explicit && getVariable(player.getUniqueId().toString(), name) != null)
@@ -174,8 +174,10 @@ public class Variables extends SpongeMechanic {
 
             String variable = getVariable(namespace, name);
 
-            if(variable != null)
-                line = line.replace('%' + possibleVariable + '%', getVariable(namespace, name));
+            if(variable != null) {
+                String variableText = (explicit ? (namespace + '|') : "") + name;
+                line = line.replace('%' + variableText + '%', getVariable(namespace, name));
+            }
         }
 
         return line;
@@ -196,25 +198,25 @@ public class Variables extends SpongeMechanic {
         event.setMessage(TextUtil.transform(event.getMessage(), old -> {
             if (old instanceof LiteralText) {
                 LiteralText literal = (LiteralText) old;
-                return literal.toBuilder().content(parseVariables(literal.getContent(), event.getCause().first(Player.class).orElse(null)));
+                return literal.toBuilder().content(parseVariables(literal.getContent(), event.getCause().first(Player.class).orElse(null))).toText();
             }
 
             return old;
         }));
     }
 
-    public static Set<String> getPossibleVariables(String line) {
-        Set<String> variables = new HashSet<>();
+    public static Set<Pair<String, String>> getPossibleVariables(String line) {
+        Set<Pair<String, String>> variables = new HashSet<>();
 
         if(!line.contains("%"))
             return variables;
 
-        //FIXME
+        Matcher matcher = VARIABLE_PATTERN.matcher(line);
 
-        for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
-            if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;
-            if(!bit.trim().isEmpty() && !"|".equals(bit.trim()))
-                variables.add(bit.trim());
+        while (matcher.find()) {
+            String namespace = matcher.group(1);
+            String key = matcher.group(2);
+            variables.add(new ImmutablePair<>(namespace, key));
         }
 
         return variables;
