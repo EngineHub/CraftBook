@@ -170,7 +170,7 @@ public class ReportWriter {
 
         int i = CraftBookPlugin.inst().getMechanics().size();
         log.put("Mechanics Loaded", "%d", i);
-        log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
+        log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager() == null ? 0 : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
 
         append(log);
         appendln();
