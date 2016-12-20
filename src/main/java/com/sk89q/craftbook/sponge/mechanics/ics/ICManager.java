@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ProgrammableFireworksDisplay;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
 
@@ -36,6 +37,8 @@ class ICManager {
 
         registerICType(new ICType<>("MC1110", "TRANSMITTER", "Wireless Transmitter", "Transmits a wireless redstone signal.", WirelessTransmitter.class));
         registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", WirelessReceiver.class));
+
+        registerICType(new ICType<>("MC1253", "FIREWORK", "Programmable Firework Display", "Plays a firework show from a file.", ProgrammableFireworksDisplay.class));
 
         registerICType(new ICType<>("MC1421", "CLOCK", "Clock", "Outputs high every X ticks when input is high.", Clock.class));
 

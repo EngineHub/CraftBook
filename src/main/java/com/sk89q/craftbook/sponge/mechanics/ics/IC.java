@@ -34,7 +34,7 @@ public abstract class IC {
      */
 
     public transient ICType<? extends IC> type;
-    public transient Location<?> block;
+    public transient Location<World> block;
     private transient Sign sign;
 
     private boolean[] pinstates;
@@ -88,7 +88,7 @@ public abstract class IC {
         getSign().lines().set(line, text);
     }
 
-    public Location<?> getBlock() {
+    public Location<World> getBlock() {
         return block;
     }
 

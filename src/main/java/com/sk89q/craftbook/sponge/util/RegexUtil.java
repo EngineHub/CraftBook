@@ -20,8 +20,10 @@ import java.util.regex.Pattern;
 
 public final class RegexUtil {
     public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
+    public static final Pattern SEMICOLON_PATTERN = Pattern.compile(";", Pattern.LITERAL);
     public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
     public static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
     public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
+    public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
 }

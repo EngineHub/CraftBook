@@ -30,6 +30,7 @@ import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -40,15 +41,18 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,7 +124,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public void onThink(Location<?> block) {
-        BaseICData data = getICData(block);
+        BaseICData data = getICData((Location<World>) block);
         if (data == null) return;
         if (!(data.ic instanceof SelfTriggeringIC)) return;
         ((SelfTriggeringIC) data.ic).think();
@@ -128,10 +132,10 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public boolean isValid(Location<?> location) {
-        return getICData(location) != null;
+        return getICData((Location<World>) location) != null;
     }
 
-    private void createICData(Location<?> block, List<Text> lines, Player player) throws InvalidICException {
+    private void createICData(Location<World> block, List<Text> lines, Player player) throws InvalidICException {
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(lines.get(1)));
             if (icType == null) {
@@ -142,13 +146,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             data.ic = icType.buildIC(block);
 
             data.ic.create(player, lines);
-            data.ic.load();
+            Sponge.getScheduler().createTaskBuilder().execute(task -> {
+                data.ic.load();
+                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).register(this, block);
+            }).submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
         } else {
             throw new InvalidICException("Block is not a sign");
         }
     }
 
-    private BaseICData getICData(Location<?> block) {
+    private BaseICData getICData(Location<World> block) {
         if (block.getBlockType() == BlockTypes.WALL_SIGN) {
             Sign sign = (Sign) block.getTileEntity().get();
             ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
@@ -167,9 +174,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 data.ic.type = icType;
 
                 data.ic.load();
+                if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).register(this, block);
             }
-
-            if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).register(this, block);
 
             return data;
         }
