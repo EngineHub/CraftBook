@@ -58,6 +58,8 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
     private ConfigValue<Boolean> dispersionMode = new ConfigValue<>("dispersion-mode", "A realistic version of snow that disperses as it piles.", false);
     private ConfigValue<Boolean> highPiling = new ConfigValue<>("high-piling", "Allows snow to pile up multiple blocks.", false);
     private ConfigValue<Boolean> waterFreezing = new ConfigValue<>("water-freezing", "Allows snow to freeze water beneath it.", false);
+    private ConfigValue<Boolean> meltInSunlight = new ConfigValue<>("melt-in-sunlight", "Allows snow to melt when in sunlight.", false);
+    private ConfigValue<Boolean> partialMeltOnly = new ConfigValue<>("partial-melt-only", "When `melt-in-sunlight` is enabled, only melt to vanilla height.", false);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -70,6 +72,8 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
         dispersionMode.load(config);
         highPiling.load(config);
         waterFreezing.load(config);
+        meltInSunlight.load(config);
+        partialMeltOnly.load(config);
     }
 
     @Listener
@@ -80,9 +84,9 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
                     //Only increase snow at valid blocks, where snow could actually fall.
                     if (location.getBlockType() == BlockTypes.SNOW_LAYER && canSnowReach(location))
                         increaseSnow(location, true);
-                } else if (!isBlockBuried(location) && getTemperature(location) == TemperatureType.WARM) {
+                } else if (meltInSunlight.getValue() && !isBlockBuried(location) && getTemperature(location) == TemperatureType.WARM) {
                     //Only melt if on top, and too hot.
-                    if(location.get(Keys.LAYER).orElse(0) == 1) {
+                    if(partialMeltOnly.getValue() && location.get(Keys.LAYER).orElse(0) == 1) {
                         return;
                     }
 
@@ -293,7 +297,9 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
         return new ConfigValue<?>[]{
                 dispersionMode,
                 highPiling,
-                waterFreezing
+                waterFreezing,
+                meltInSunlight,
+                partialMeltOnly
         };
     }
 }
