@@ -120,7 +120,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                 @Override
                 public void run () {
-
                     for(Player player : Bukkit.getOnlinePlayers()) {
                         if(player.getInventory().getItemInMainHand() != null)
                             performCommandItems(player.getInventory().getItemInMainHand(), player, null);
@@ -308,7 +307,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     its.add(ItemSyntax.getStringFromItem(stack));
                     items.put(event.getEntity().getName(), its);
                     CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
-                    break;
                 }
             }
         }
