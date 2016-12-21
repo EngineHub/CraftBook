@@ -1,20 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
@@ -31,6 +16,19 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.worldedit.Vector;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RangedCollector extends AbstractSelfTriggeredIC {
 
@@ -111,7 +109,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     if(!ItemUtil.isStackValid(stack))
                         return false;
 
-                    boolean passed = !include;
+                    boolean passed = filters.isEmpty() || !include;
 
                     for(ItemStack filter : filters) {
                         if(!ItemUtil.isStackValid(filter))
