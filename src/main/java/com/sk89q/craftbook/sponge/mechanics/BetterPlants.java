@@ -74,7 +74,6 @@ public class BetterPlants extends SpongeBlockMechanic implements DocumentationPr
                 .filter(snapshot -> snapshot.getState().get(Keys.DOUBLE_PLANT_TYPE).orElse(DoublePlantTypes.GRASS).equals(DoublePlantTypes.FERN))
                 .filter(snapshot -> snapshot.getState().get(Keys.PORTION_TYPE).orElse(PortionTypes.BOTTOM).equals(PortionTypes.TOP))
                 .forEach(snapshot -> Sponge.getScheduler().createTaskBuilder().execute(task -> {
-                    System.out.println(snapshot.getLocation().get().toString());
                     snapshot.getLocation().get().getRelative(Direction.DOWN)
                             .setBlock(BlockState.builder().blockType(BlockTypes.TALLGRASS).add(Keys.SHRUB_TYPE, ShrubTypes.FERN).build(),
                                     CraftBookPlugin.spongeInst().getCause().build());
