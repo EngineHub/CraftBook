@@ -42,7 +42,7 @@ public final class SpongePermissionNode extends PermissionNode {
     public void register() {
         ProviderRegistration<PermissionService> provider = Sponge.getServiceManager().getRegistration(PermissionService.class).orElse(null);
         if(provider == null) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Missing Permissions Provider. Permissions will not work as expected!");
+            CraftBookPlugin.spongeInst().getLogger().warn("Missing Permissions Provider. Permissions will not work as expected!");
             return;
         }
 

@@ -127,7 +127,7 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
 
                         Optional<Direction> connectedDirection = offset.get(Keys.DIRECTION);
 
-                        Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+                        Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.spongeInst().getContainer());
                         if (player != null)
                             causeBuilder.notifier(player);
 

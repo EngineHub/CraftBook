@@ -54,7 +54,7 @@ public class SpongeConfiguration implements DocumentationProvider {
                 mainConfig.createNewFile();
             }
 
-            config = configManager.load(CraftBookPlugin.<CraftBookPlugin>inst().configurationOptions);
+            config = configManager.load(CraftBookPlugin.spongeInst().configurationOptions);
 
             enabledMechanics.load(config);
             dataOnlyMode.load(config);
@@ -68,7 +68,7 @@ public class SpongeConfiguration implements DocumentationProvider {
     public void save() {
         try {
             // Reload the actual config to account for changes. But don't load it back into the ConfigValues.
-            config = configManager.load(CraftBookPlugin.<CraftBookPlugin>inst().configurationOptions);
+            config = configManager.load(CraftBookPlugin.spongeInst().configurationOptions);
 
             enabledMechanics.save(config);
             dataOnlyMode.save(config);
@@ -80,7 +80,7 @@ public class SpongeConfiguration implements DocumentationProvider {
 
             configManager.save(config);
         } catch (IOException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("The CraftBook configuration could not be saved!", e);
+            CraftBookPlugin.spongeInst().getLogger().error("The CraftBook configuration could not be saved!", e);
         }
     }
 

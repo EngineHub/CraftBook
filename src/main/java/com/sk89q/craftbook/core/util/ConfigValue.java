@@ -111,7 +111,7 @@ public class ConfigValue<T> {
                 try {
                     node.setValue(typeToken, value);
                 } catch (ObjectMappingException e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map value!", e);
+                    CraftBookAPI.inst().getLogger().error("Failed to map value!", e);
                 }
             } else {
                 node.setValue(value);
@@ -147,7 +147,7 @@ public class ConfigValue<T> {
             else
                 node.setValue(defaultValue);
         } catch (ObjectMappingException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map value!", e);
+            CraftBookPlugin.spongeInst().getLogger().error("Failed to map value!", e);
         }
     }
 }

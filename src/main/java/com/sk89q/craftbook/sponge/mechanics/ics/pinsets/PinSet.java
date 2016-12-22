@@ -45,7 +45,7 @@ public abstract class PinSet {
 
             if (!block.supports(Keys.POWERED)) return; // Can't set this.
 
-            block.offer(Keys.POWERED, powered, Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named("ic", ic).build());
+            block.offer(Keys.POWERED, powered, Cause.source(CraftBookPlugin.spongeInst().getContainer()).named("ic", ic).build());
         }
     }
 

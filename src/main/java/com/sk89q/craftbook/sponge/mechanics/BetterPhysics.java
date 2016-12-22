@@ -108,7 +108,7 @@ public class BetterPhysics extends SpongeBlockMechanic implements DocumentationP
         if(fallingLadders.getValue() && FallingLadders.isValid(block)) {
             Sponge.getScheduler().createTaskBuilder()
                     .execute(new FallingLadders(this, block))
-                    .submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+                    .submit(CraftBookPlugin.spongeInst().getContainer());
         }
     }
 
@@ -131,7 +131,7 @@ public class BetterPhysics extends SpongeBlockMechanic implements DocumentationP
             FallingBlock fallingBlock = (FallingBlock) ladder.getExtent().createEntity(EntityTypes.FALLING_BLOCK, ladder.getPosition().add(0.5, 0, 0.5));
             fallingBlock.offer(Keys.FALLING_BLOCK_STATE, ladder.getBlock());
             fallingBlock.offer(Keys.CAN_PLACE_AS_BLOCK, true);
-            ladder.getExtent().spawnEntity(fallingBlock, Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).build());
+            ladder.getExtent().spawnEntity(fallingBlock, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
 
             physics.checkForPhysics(ladder.getRelative(Direction.UP));
         }

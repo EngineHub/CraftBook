@@ -171,12 +171,12 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         if (on) {
             while (block.getBlockType() == BlockTypes.AIR) {
-                block.setBlock(gateType == null ? BlockTypes.FENCE.getDefaultState() : gateType, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+                block.setBlock(gateType == null ? BlockTypes.FENCE.getDefaultState() : gateType, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                 block = block.getRelative(dir);
             }
         } else {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
-                block.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+                block.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                 block = block.getRelative(dir);
             }
         }

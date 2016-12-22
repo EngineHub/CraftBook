@@ -74,7 +74,7 @@ public class Variables extends SpongeMechanic {
         try {
             variableStore = config.getNode("variables").getValue(new TypeTokens.VariableTypeToken(), Maps.newHashMap());
         } catch (ObjectMappingException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to read variables! Resetting..", e);
+            CraftBookPlugin.spongeInst().getLogger().warn("Failed to read variables! Resetting..", e);
             variableStore = new HashMap<>();
         }
 
@@ -124,7 +124,7 @@ public class Variables extends SpongeMechanic {
                 .child(removeGlobalVariable, "rmglobal", "delglobal", "removeglobal")
                 .build();
 
-        Sponge.getGame().getCommandManager().register(CraftBookPlugin.<CraftBookPlugin>inst(), variableCommand, "var", "variable", "variables");
+        Sponge.getGame().getCommandManager().register(CraftBookPlugin.spongeInst(), variableCommand, "var", "variable", "variables");
     }
 
     @Override

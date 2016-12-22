@@ -85,7 +85,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
                 ic = construct.newInstance(this, block, extraArguments);
             else ic = construct.newInstance(this, block);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments), e);
+            CraftBookPlugin.spongeInst().getLogger().error("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments), e);
         }
 
         return ic;

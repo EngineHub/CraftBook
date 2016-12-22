@@ -62,7 +62,7 @@ public final class BlockFilter {
             }
 
             if(blockType == null) {
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Missing type for filter rule: " + rule);
+                CraftBookPlugin.spongeInst().getLogger().warn("Missing type for filter rule: " + rule);
                 return cache;
             }
 
@@ -91,7 +91,7 @@ public final class BlockFilter {
                     if(state != null) {
                         cache.add(state);
                     } else {
-                        CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + rule + "' is correct?");
+                        CraftBookPlugin.spongeInst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + rule + "' is correct?");
                     }
 
                     counter[0] += 1;

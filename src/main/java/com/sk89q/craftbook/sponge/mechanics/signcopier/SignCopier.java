@@ -83,7 +83,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                 .description(Text.of("Allows editing the currently copied sign!"))
                 .build();
 
-        Sponge.getCommandManager().register(CraftBookPlugin.<CraftBookPlugin>inst().getContainer(), CommandSpec.builder()
+        Sponge.getCommandManager().register(CraftBookPlugin.spongeInst().getContainer(), CommandSpec.builder()
                 .child(signEditCommand, "edit")
                 .description(Text.of("Base command of the SignCopier mechanic"))
                 .build(), "sign", "signcopier");
@@ -121,7 +121,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                                     signData = signData.set(Keys.SIGN_LINES, lines);
 
                                     ChangeSignEvent changeSignEvent = SpongeEventFactory.createChangeSignEvent(
-                                            Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).notifier(player).build(),
+                                            Cause.source(CraftBookPlugin.spongeInst().getContainer()).notifier(player).build(),
                                             sign.getSignData().asImmutable(),
                                             signData,
                                             sign

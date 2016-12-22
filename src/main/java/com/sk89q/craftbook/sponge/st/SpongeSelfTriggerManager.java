@@ -67,7 +67,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
 
     private void registerAll(Chunk chunk) {
         for(TileEntity tileEntity : chunk.getTileEntities()) {
-            for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+            for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
                     SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
@@ -76,7 +76,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
                             register((SelfTriggeringMechanic) mechanic, tileEntity.getLocation());
                     }
                 } catch (ModuleNotInstantiatedException e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to register self-triggering mechanic for module: " + module.getName(), e);
+                    CraftBookPlugin.spongeInst().getLogger().error("Failed to register self-triggering mechanic for module: " + module.getName(), e);
                 }
             }
         }

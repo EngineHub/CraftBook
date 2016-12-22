@@ -149,7 +149,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             Sponge.getScheduler().createTaskBuilder().execute(task -> {
                 data.ic.load();
                 if (data.ic instanceof SelfTriggeringIC && (((SelfTriggeringIC) data.ic).canThink())) ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).register(this, block);
-            }).submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+            }).submit(CraftBookPlugin.spongeInst().getContainer());
         } else {
             throw new InvalidICException("Block is not a sign");
         }
@@ -165,9 +165,9 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             if (data.ic == null || (data.ic.type != null && !icType.equals(data.ic.type))) {
                 // Found broken IC.
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Warning: Found broken IC at " + block.toString());
+                CraftBookPlugin.spongeInst().getLogger().error("Warning: Found broken IC at " + block.toString());
                 if (data.ic != null && data.ic.type != null) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Wrong type. Excepted " + icType.name + " and got " + data.ic.type.name);
+                    CraftBookPlugin.spongeInst().getLogger().error("Wrong type. Excepted " + icType.name + " and got " + data.ic.type.name);
                 }
             } else if(data.ic.block == null) {
                 data.ic.block = block;

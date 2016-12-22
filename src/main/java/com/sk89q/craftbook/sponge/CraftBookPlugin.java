@@ -43,6 +43,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -165,7 +166,7 @@ public class CraftBookPlugin extends CraftBookAPI {
             return false;
         });
 
-        for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+        for (ModuleWrapper module : moduleController.getModules()) {
             if (!module.isEnabled()) continue;
             try {
                 if (module.getModule() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
@@ -174,19 +175,19 @@ public class CraftBookPlugin extends CraftBookAPI {
                     break;
                 }
             } catch(ModuleNotInstantiatedException e) {
-                CraftBookAPI.<CraftBookPlugin>inst().logger.error("Failed to initialize module: " + module.getName(), e);
+                logger.error("Failed to initialize module: " + module.getName(), e);
             }
         }
 
         if("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
-            for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+            for (ModuleWrapper module : moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
                     Mechanic mechanic = (Mechanic) module.getModule();
                     if(mechanic instanceof DocumentationProvider)
                         DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
                 } catch (ModuleNotInstantiatedException e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().logger.error("Failed to generate docs for module: " + module.getName(), e);
+                    logger.error("Failed to generate docs for module: " + module.getName(), e);
                 }
             }
 
@@ -254,6 +255,10 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Found " + moduleController.getModules().size());
     }
 
+    public Cause.Builder getCause() {
+        return Cause.source(this.container);
+    }
+
     @Override
     public MechanicDataCache getCache() {
         return cache;
@@ -273,4 +278,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         return mainConfig.getParentFile();
     }
 
+    public static CraftBookPlugin spongeInst() {
+        return inst();
+    }
 }

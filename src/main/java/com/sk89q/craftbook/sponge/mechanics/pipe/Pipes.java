@@ -93,7 +93,7 @@ public class Pipes extends SpongeBlockMechanic {
                 try {
                     itemStack = doPipeIteration(location, itemStack, direction, traversed);
                 } catch(StackOverflowError e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Pipe overflow. Please report this issue to the developers with images of setup.", e);
+                    CraftBookPlugin.spongeInst().getLogger().error("Pipe overflow. Please report this issue to the developers with images of setup.", e);
                 }
 
                 if(itemStack.getQuantity() > 0) {

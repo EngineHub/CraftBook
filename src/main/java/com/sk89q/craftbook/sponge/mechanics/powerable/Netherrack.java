@@ -48,7 +48,7 @@ public class Netherrack extends SimplePowerable implements DocumentationProvider
     public void updateState(Location<?> location, boolean powered) {
         location = location.getRelative(Direction.UP);
         if(location.getBlockType() == BlockTypes.FIRE || location.getBlockType() == BlockTypes.AIR)
-            location.setBlock(powered ? BlockTypes.FIRE.getDefaultState() : BlockTypes.AIR.getDefaultState(), Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+            location.setBlock(powered ? BlockTypes.FIRE.getDefaultState() : BlockTypes.AIR.getDefaultState(), Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
     }
 
     @Override

@@ -138,7 +138,7 @@ public class ProgrammableFireworksDisplay extends IC {
                 show = new BasicShowInterpreter();
             else
                 show = new FyrestoneInterpreter();
-            task = Sponge.getScheduler().createTaskBuilder().execute(show).submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+            task = Sponge.getScheduler().createTaskBuilder().execute(show).submit(CraftBookPlugin.spongeInst().getContainer());
         }
 
         private class FyrestoneInterpreter implements ShowInterpreter {
@@ -211,7 +211,7 @@ public class ProgrammableFireworksDisplay extends IC {
                     } else if (line.startsWith("wait ")) {
                         FyrestoneInterpreter nshow = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);
                         nshow.isRunning = isRunning;
-                        task = Sponge.getScheduler().createTaskBuilder().delayTicks(Long.parseLong(line.replace("wait ", ""))).execute(nshow).submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+                        task = Sponge.getScheduler().createTaskBuilder().delayTicks(Long.parseLong(line.replace("wait ", ""))).execute(nshow).submit(CraftBookPlugin.spongeInst().getContainer());
                         show = nshow;
                         return;
                     } else if (line.startsWith("sound ")) {
@@ -267,7 +267,7 @@ public class ProgrammableFireworksDisplay extends IC {
                             } else {
                                 firework.offer(Keys.FIREWORK_FLIGHT_MODIFIER, (int) duration * 2);
                             }
-                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).build());
+                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
                         }
                     }
                 }
@@ -306,7 +306,7 @@ public class ProgrammableFireworksDisplay extends IC {
 
                     if (bits[0].equalsIgnoreCase("wait")) {
                         BasicShowInterpreter show = new BasicShowInterpreter();
-                        task = Sponge.getScheduler().createTaskBuilder().delayTicks(Long.parseLong(line.replace("wait ", ""))).execute(show).submit(CraftBookPlugin.<CraftBookPlugin>inst().getContainer());
+                        task = Sponge.getScheduler().createTaskBuilder().delayTicks(Long.parseLong(line.replace("wait ", ""))).execute(show).submit(CraftBookPlugin.spongeInst().getContainer());
                         return;
                     } else if (bits[0].equalsIgnoreCase("launch")) {
                         String errorLocation = "Unknown";
@@ -361,7 +361,7 @@ public class ProgrammableFireworksDisplay extends IC {
                             firework.offer(Keys.FIREWORK_EFFECTS, fireworkEffects);
 
                             firework.offer(Keys.FIREWORK_FLIGHT_MODIFIER, (int) duration * 2);
-                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).build());
+                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
                         } catch (Exception e) {
                             CraftBookPlugin.inst().getLogger().warn("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + showName + '!');
                             e.printStackTrace();

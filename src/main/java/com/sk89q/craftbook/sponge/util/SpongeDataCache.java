@@ -35,15 +35,15 @@ public final class SpongeDataCache extends MechanicDataCache {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     data = SerializationUtil.jsonConverter.deserialize(reader, clazz);
                 } catch (IOException e) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to deserialize data " + locationKey, e);
+                    CraftBookPlugin.spongeInst().getLogger().error("Failed to deserialize data " + locationKey, e);
                 }
             }
 
             if(data == null || !clazz.isInstance(data)) {
                 if (file.exists()) {
-                    CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Warning: Resetting data for " + locationKey);
+                    CraftBookPlugin.spongeInst().getLogger().error("Warning: Resetting data for " + locationKey);
                     if (data != null) {
-                        CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Wanted class " + clazz.getName() + " but got " + data.getClass().getName());
+                        CraftBookPlugin.spongeInst().getLogger().error("Wanted class " + clazz.getName() + " but got " + data.getClass().getName());
                     }
                 }
                 data = clazz.newInstance();
@@ -51,7 +51,7 @@ public final class SpongeDataCache extends MechanicDataCache {
 
             return data;
         } catch (InstantiationException | IllegalAccessException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to create data object: " + locationKey, e);
+            CraftBookPlugin.spongeInst().getLogger().error("Failed to create data object: " + locationKey, e);
         }
 
         return null;
@@ -64,7 +64,7 @@ public final class SpongeDataCache extends MechanicDataCache {
         try(PrintWriter writer = new PrintWriter(file)) {
             writer.print(SerializationUtil.jsonConverter.serialize(data));
         } catch (FileNotFoundException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to write data: " + locationKey, e);
+            CraftBookPlugin.spongeInst().getLogger().error("Failed to write data: " + locationKey, e);
         }
     }
 }

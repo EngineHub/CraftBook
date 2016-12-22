@@ -33,18 +33,18 @@ public class GenerateDocsCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        for (ModuleWrapper module : CraftBookPlugin.<CraftBookPlugin>inst().moduleController.getModules()) {
+        for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
             if(!module.isEnabled()) continue;
             try {
                 Mechanic mechanic = (Mechanic) module.getModule();
                 if(mechanic instanceof DocumentationProvider)
                     DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
             } catch (ModuleNotInstantiatedException e) {
-                CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to generate docs for module: " + module.getName(), e);
+                CraftBookPlugin.spongeInst().getLogger().error("Failed to generate docs for module: " + module.getName(), e);
             }
         }
 
-        DocumentationGenerator.generateDocumentation(CraftBookPlugin.<CraftBookPlugin>inst().getConfig());
+        DocumentationGenerator.generateDocumentation(CraftBookPlugin.spongeInst().getConfig());
 
         return CommandResult.success();
     }

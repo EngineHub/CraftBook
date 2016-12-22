@@ -70,7 +70,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
 
-        Asset books = CraftBookPlugin.<CraftBookPlugin>inst().getContainer().getAsset("bookshelf/books.txt").get();
+        Asset books = CraftBookPlugin.spongeInst().getContainer().getAsset("bookshelf/books.txt").get();
         Path path = new File(CraftBookPlugin.inst().getWorkingDirectory(), "bookshelf/books.txt").toPath();
 
         new File(CraftBookPlugin.inst().getWorkingDirectory(), "bookshelf").mkdirs();

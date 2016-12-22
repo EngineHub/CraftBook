@@ -143,19 +143,19 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
             if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
             while (baseBlock.getBlockX() != otherBase.getBlockX() || baseBlock.getBlockZ() != otherBase.getBlockZ()) {
-                baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+                baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
 
                 left = baseBlock.getRelative(SignUtil.getLeft(block));
 
                 for(int i = 0; i < leftBlocks; i++) {
-                    left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+                    left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                     left = left.getRelative(SignUtil.getLeft(block));
                 }
 
                 right = baseBlock.getRelative(SignUtil.getRight(block));
 
                 for(int i = 0; i < rightBlocks; i++) {
-                    right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+                    right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                     right = right.getRelative(SignUtil.getRight(block));
                 }
 

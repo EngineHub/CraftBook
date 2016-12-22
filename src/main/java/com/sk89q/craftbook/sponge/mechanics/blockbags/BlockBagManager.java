@@ -52,7 +52,7 @@ public class BlockBagManager extends SpongeMechanic {
                 blockBags[i] = BlockBag.createFromString(blockBagList.get(i));
             }
         } catch (ObjectMappingException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to map object.", e);
+            CraftBookPlugin.spongeInst().getLogger().error("Failed to map object.", e);
         }
     }
 

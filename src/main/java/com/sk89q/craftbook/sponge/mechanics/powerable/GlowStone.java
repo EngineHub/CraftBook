@@ -47,7 +47,7 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
 
     @Override
     public void updateState(Location<?> location, boolean powered) {
-        location.setBlock(powered ? BlockTypes.GLOWSTONE.getDefaultState() : offBlock.getValue(), Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+        location.setBlock(powered ? BlockTypes.GLOWSTONE.getDefaultState() : offBlock.getValue(), Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
     }
 
     @Override

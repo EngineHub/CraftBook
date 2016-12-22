@@ -69,7 +69,7 @@ public abstract class CuboidCopy {
         try {
             copy.loadFromFile(file);
         } catch (IOException | DataException e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().warn("Failed to load cuboid region: " + file.getAbsolutePath(), e);
+            CraftBookPlugin.spongeInst().getLogger().warn("Failed to load cuboid region: " + file.getAbsolutePath(), e);
             throw new CuboidCopyException(e.getMessage());
         }
         // make sure that null is never returned but an exception is thrown instead

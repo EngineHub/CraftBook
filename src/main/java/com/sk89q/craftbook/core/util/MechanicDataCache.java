@@ -46,7 +46,7 @@ public abstract class MechanicDataCache {
         try {
             data = (T) mechanicData.getIfPresent(locationKey);
         } catch(Throwable e) {
-            CraftBookAPI.<CraftBookPlugin>inst().getLogger().error("Failed to load some data: " + locationKey, e);
+            CraftBookAPI.inst().getLogger().error("Failed to load some data: " + locationKey, e);
         }
 
         if (data == null || !clazz.isInstance(data)) {

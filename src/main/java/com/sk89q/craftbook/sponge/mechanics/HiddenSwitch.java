@@ -127,11 +127,11 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
 
             if (checkBlock.getBlock().getType() == BlockTypes.LEVER) {
                 checkBlock.offer(Keys.POWERED, !checkBlock.get(Keys.POWERED).orElse(false),
-                        Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named(NamedCause.notifier(player)).build());
+                        Cause.source(CraftBookPlugin.spongeInst().getContainer()).named(NamedCause.notifier(player)).build());
                 found = true;
             } else if (checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON || checkBlock.getBlock().getType() == BlockTypes.WOODEN_BUTTON) {
                 checkBlock.offer(Keys.POWERED, true,
-                        Cause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer()).named(NamedCause.notifier(player)).build());
+                        Cause.source(CraftBookPlugin.spongeInst().getContainer()).named(NamedCause.notifier(player)).build());
                 checkBlock.addScheduledUpdate(1, checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON ? 20 : 30);
                 found = true;
             }

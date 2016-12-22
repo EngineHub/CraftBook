@@ -51,7 +51,7 @@ public class JackOLantern extends SimplePowerable implements DocumentationProvid
         Direction direction = location.get(Keys.DIRECTION).orElse(Direction.NORTH);
         BlockState state = BlockState.builder().blockType(powered ? BlockTypes.LIT_PUMPKIN : BlockTypes.PUMPKIN).build();
         state = state.with(Keys.DIRECTION, direction).orElse(state);
-        location.setBlock(state, Cause.of(NamedCause.source(CraftBookPlugin.<CraftBookPlugin>inst().getContainer())));
+        location.setBlock(state, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
     }
 
     @Override
