@@ -89,8 +89,12 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         include = !getLine(3).startsWith("-");
 
         for(String bit : getLine(3).replace("-","").split(",")) {
-
-            filters.add(ItemSyntax.getItem(bit));
+            if (bit.trim().length() > 0) {
+                ItemStack item = ItemSyntax.getItem(bit);
+                if (ItemUtil.isStackValid(item)) {
+                    filters.add(ItemSyntax.getItem(bit));
+                }
+            }
         }
 
         chest = getBackBlock().getRelative(0, 1, 0);
