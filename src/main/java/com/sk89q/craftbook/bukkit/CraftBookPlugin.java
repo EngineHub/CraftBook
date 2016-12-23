@@ -412,20 +412,6 @@ public class CraftBookPlugin extends JavaPlugin {
         }
     }
 
-    public boolean updateAvailable = false;
-    private String latestVersion = null;
-    private long updateSize = 0;
-
-    public String getLatestVersion() {
-
-        return latestVersion;
-    }
-
-    public boolean isUpdateAvailable() {
-
-        return updateAvailable;
-    }
-
     private YAMLProcessor mechanismsConfig;
 
     /**
@@ -610,12 +596,6 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Registring managers!", "startup");
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
-        if(config.updateNotifier) {
-
-            logDebugMessage("Performing update checks!", "startup");
-            checkForUpdates();
-        }
-
         if(config.easterEggs) {
             Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 
@@ -685,51 +665,6 @@ public class CraftBookPlugin extends JavaPlugin {
             }
         } catch (Throwable e1) {
             BukkitUtil.printStacktrace(e1);
-        }
-    }
-
-    public void checkForUpdates() {
-
-        boolean exempt = false;
-
-        try {
-            int ver = Integer.parseInt(getDescription().getVersion().split(":")[1].split("-")[0]);
-            if (ver < 1541) //Not valid prior to this version.
-                exempt = true;
-        }
-        catch(Exception e) {
-            exempt = true;
-        }
-
-        if(!exempt) {
-            final Updater updater = new Updater(this, getUpdaterID(), getFile(), Updater.UpdateType.NO_DOWNLOAD, true); // Start Updater but just do a version check
-            updateAvailable = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE; // Determine if there is an update ready for us
-            latestVersion = updater.getLatestName();
-
-            getLogger().info(latestVersion + " is the latest version available, and the updatability of it is: " + updater.getResult().name() + ". You currently have version " + latestVersion + " installed.");
-
-            if(updateAvailable) {
-
-                for (Player player : getServer().getOnlinePlayers()) {
-                    if (hasPermission(player, "craftbook.update")) {
-                        player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
-                        player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
-                    }
-                }
-
-                getServer().getPluginManager().registerEvents(new Listener() {
-                    @EventHandler
-                    public void onPlayerJoin (PlayerJoinEvent event) {
-                        Player player = event.getPlayer();
-                        if (hasPermission(player, "craftbook.update")) {
-                            player.sendMessage(ChatColor.YELLOW + "An update is available: " + latestVersion + "(" + updateSize + " bytes)");
-                            player.sendMessage(ChatColor.YELLOW + "Type /cb update if you would like to update.");
-                        }
-                    }
-                }, CraftBookPlugin.inst());
-            }
-        } else {
-            getLogger().info("The Auto-Updater is disabled for your version!");
         }
     }
 

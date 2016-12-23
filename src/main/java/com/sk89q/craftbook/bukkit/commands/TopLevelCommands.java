@@ -8,8 +8,6 @@ import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.ReportWriter;
-import com.sk89q.craftbook.bukkit.Updater;
-import com.sk89q.craftbook.bukkit.Updater.UpdateResult;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.area.AreaCommands;
 import com.sk89q.craftbook.mechanics.cauldron.CauldronCommands;
@@ -98,34 +96,6 @@ public class TopLevelCommands {
                 return;
             }
             sender.sendMessage("The CraftBook config has been reloaded.");
-        }
-
-        @Command(aliases = "update", desc = "Updates CraftBook.", flags = "c", max = 0)
-        @CommandPermissions("craftbook.update")
-        public void update(CommandContext context, CommandSender sender) {
-
-            if(!CraftBookPlugin.inst().getConfiguration().updateNotifier) {
-                sender.sendMessage("Functionality disabled!");
-                return;
-            }
-
-            if (context.hasFlag('c')) {
-
-                CraftBookPlugin.inst().checkForUpdates();
-                sender.sendMessage(CraftBookPlugin.inst().getLatestVersion() + " is the latest version available, and the updatability of it is: " + CraftBookPlugin.inst().isUpdateAvailable());
-            } else {
-
-                if(!CraftBookPlugin.inst().updateAvailable) {
-                    sender.sendMessage("No updates are available!");
-                    return;
-                }
-                Updater updater = new Updater(CraftBookPlugin.inst(), CraftBookPlugin.getUpdaterID(), CraftBookPlugin.inst().getFile(), Updater.UpdateType.DEFAULT, true);
-                if(updater.getResult() == UpdateResult.NO_UPDATE)
-                    sender.sendMessage("No updates are available!");
-                else {
-                    sender.sendMessage("Update found! Check console for download progress.");
-                }
-            }
         }
 
         @Command(aliases = "about", desc = "Gives info about craftbook.")

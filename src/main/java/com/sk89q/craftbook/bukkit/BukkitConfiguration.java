@@ -29,7 +29,6 @@ public class BukkitConfiguration {
     public long signClickTimeout;
     public boolean convertNamesToCBID;
 
-    public boolean updateNotifier;
     public boolean easterEggs;
     public boolean realisticRandoms;
 
@@ -99,9 +98,6 @@ public class BukkitConfiguration {
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
-
-        config.setComment("notify-updates", "Enables the update notifier. This checks for updates on start, and notifies anyone with the permission when they join. They can then use /cb update to download the update.");
-        updateNotifier = config.getBoolean("notify-updates", true);
 
         config.setComment("safe-destruction", "Causes many mechanics to require sufficient blocks to function, for example gates, bridges and doors.");
         safeDestruction = config.getBoolean("safe-destruction", true);
