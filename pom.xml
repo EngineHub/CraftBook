@@ -264,6 +264,25 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>com.lukegb.mojo</groupId>
+                <artifactId>gitdescribe-maven-plugin</artifactId>
+                <version>3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>gitdescribe</goal>
+                        </goals>
+                        <id>git-describe</id>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <extraArguments>
+                                <param>--exact-match</param>
+                            </extraArguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

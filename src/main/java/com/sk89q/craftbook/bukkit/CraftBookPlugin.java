@@ -52,6 +52,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -227,24 +228,9 @@ public class CraftBookPlugin extends JavaPlugin {
         instance = this;
     }
 
+    @Nullable
     public static String getVersion() {
-
-        return "3.9";
-    }
-
-    /**
-     * Gets the build equivalent of the last stable version.
-     * 
-     * @return the build number
-     */
-    public static String getStableBuild() {
-
-        return "DISABLE";//"3895";
-    }
-
-    public static int getUpdaterID() {
-
-        return 31055;
+        return null;
     }
 
     public List<CraftBookMechanic> getMechanics() {
