@@ -46,7 +46,7 @@ public class LocationUtil {
         return Optional.ofNullable(inventory);
     }
 
-    public static boolean isLocationWithinRange(Location location) {
+    public static boolean isLocationWithinWorld(Location location) {
         return location.getBlockY() < location.getExtent().getBlockMax().getY() && location.getBlockY() >= location.getExtent().getBlockMin().getY();
     }
 

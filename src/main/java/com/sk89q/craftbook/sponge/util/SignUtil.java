@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.sponge.mechanics.variable.Variables;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -25,7 +26,9 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,6 +54,18 @@ public final class SignUtil {
      */
     public static boolean isSign(BlockState block) {
         return block.getType() == BlockTypes.STANDING_SIGN || block.getType() == BlockTypes.WALL_SIGN;
+    }
+
+    public static List<Location<World>> getAttachedSigns(Location<World> block) {
+        List<Location<World>> attachedSigns = Lists.newArrayList();
+
+        for (Direction directFace : BlockUtil.getDirectFaces()) {
+            if (SignUtil.isSign(block.getRelative(directFace))) {
+                attachedSigns.add(block.getRelative(directFace));
+            }
+        }
+
+        return attachedSigns;
     }
 
     /**

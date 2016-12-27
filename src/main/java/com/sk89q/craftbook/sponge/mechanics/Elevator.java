@@ -100,30 +100,27 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
     @Listener
     public void onEntityMove(MoveEntityEvent event) {
-
-        if(!LocationUtil.isLocationWithinRange(event.getToTransform().getLocation()))
+        if(!allowJumpLifts.getValue())
             return;
 
-        if(!allowJumpLifts.getValue())
+        if(!LocationUtil.isLocationWithinWorld(event.getToTransform().getLocation()))
             return;
 
         Location<World> groundLocation = event.getToTransform().getLocation().getRelative(Direction.DOWN);
 
-        Location<World> signLocation = null;
 
         //Look for dat sign
-        if(LocationUtil.isLocationWithinRange(groundLocation.getRelative(Direction.DOWN)) && SignUtil.isSign(groundLocation.getRelative(Direction.DOWN)))
-            signLocation = groundLocation.getRelative(Direction.DOWN);
+        for (Location<World> location : SignUtil.getAttachedSigns(groundLocation)) {
+            Sign sign = location.getTileEntity().map(tile -> (Sign) tile).orElse(null);
 
-        if(signLocation != null) {
-            Sign sign = (Sign) signLocation.getTileEntity().get();
-
-            if ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1))) {
+            if (sign != null && "[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1))) {
                 if (event.getToTransform().getPosition().getY() > event.getFromTransform().getPosition().getY()) {
-                    transportEntity(event.getTargetEntity(), signLocation, Direction.UP); //Jump is up
-                } else if(event.getTargetEntity().get(Keys.IS_SNEAKING).orElse(false)) {
-                    transportEntity(event.getTargetEntity(), signLocation, Direction.DOWN); //Sneak is down
+                    transportEntity(event.getTargetEntity(), location, Direction.UP); //Jump is up
+                } else if (event.getTargetEntity().get(Keys.IS_SNEAKING).orElse(false)) {
+                    transportEntity(event.getTargetEntity(), location, Direction.DOWN); //Sneak is down
                 }
+
+                break;
             }
         }
     }
@@ -141,7 +138,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
         Location<World> floor = destination.getExtent().getLocation((int) Math.floor(entity.getLocation().getBlockX()), destination.getBlockY() + 1, (int) Math.floor(entity.getLocation().getBlockZ()));
         // well, unless that's already a ceiling.
-        if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() == MatterProperty.Matter.SOLID) {
+        if (floor.getBlockType().getProperty(MatterProperty.class).map(MatterProperty::getValue).orElse(MatterProperty.Matter.GAS) == MatterProperty.Matter.SOLID) {
             floor = floor.getRelative(Direction.DOWN);
         }
 
@@ -150,7 +147,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (floor.getBlockType().getProperty(MatterProperty.class).get().getValue() != MatterProperty.Matter.SOLID || SignUtil.isSign(floor)) {
+            if (floor.getBlockType().getProperty(MatterProperty.class).map(MatterProperty::getValue).orElse(MatterProperty.Matter.GAS) != MatterProperty.Matter.SOLID || SignUtil.isSign(floor)) {
                 foundFree++;
             } else {
                 foundGround = true;
@@ -170,9 +167,6 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
             if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("Obstructed!"));
             return;
         }
-
-        // entity.setLocation(new Location(floor.getExtent(), new Vector3d(entity.getLocation().getPosition().getX(),
-        // floor.getLocation().getPosition().getY()+1, entity.getLocation().getPosition().getZ())));
 
         entity.setLocationAndRotation(new Location<>(destination.getExtent(), new Vector3d(0, destination.getY() - 1, 0)), new Vector3d(0, 0, 0), EnumSet.of(RelativePositions.X, RelativePositions.Z, RelativePositions.PITCH, RelativePositions.YAW));
         if (entity instanceof CommandSource) ((CommandSource) entity).sendMessage(Text.of("You've gone " + (direction == Direction.DOWN ? "down" : "up") + " a floor!"));
