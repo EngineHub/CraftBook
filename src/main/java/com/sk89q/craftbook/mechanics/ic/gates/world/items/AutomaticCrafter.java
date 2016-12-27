@@ -128,7 +128,6 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getType().name() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
 
-
         items.add(result);
 
         Block pipe = ((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing());
@@ -153,7 +152,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         return true;
     }
 
-    public boolean collect(InventoryHolder disp) {
+    private boolean collect(InventoryHolder disp) {
 
         for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
 
@@ -187,26 +186,25 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     }
 
     /**
-     * @param craft
-     * @param collect
+     * @param craft Whether to craft.
+     * @param collect Whether to collect.
      *
-     * @return
+     * @return If it performed an action
      */
-    public boolean doStuff(boolean craft, boolean collect) {
+    private boolean doStuff(boolean craft, boolean collect) {
 
         boolean ret = false;
         Block crafter = getBackBlock().getRelative(0, 1, 0);
         if (crafter.getType() == Material.DISPENSER || crafter.getType() == Material.DROPPER) {
             if (collect)
-                collect((InventoryHolder) crafter.getState());
+                ret = collect((InventoryHolder) crafter.getState());
             if (craft)
-                craft((InventoryHolder) crafter.getState());
+                ret = craft((InventoryHolder) crafter.getState());
         }
         return ret;
     }
 
-    public boolean isValidRecipe(Recipe r, Inventory inv) {
-
+    private boolean isValidRecipe(Recipe r, Inventory inv) {
         if (r instanceof ShapedRecipe && (recipe == null || recipe instanceof ShapedRecipe)) {
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character, ItemStack> ingredientMap = shape.getIngredientMap();
@@ -255,6 +253,9 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
             List<ItemStack> ing = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(shape.getIngredientList()));
+            if (ing.isEmpty()) {
+                return false; // If it's empty already, something is wrong with the recipe.
+            }
             for (ItemStack it : inv.getContents()) {
                 if (!ItemUtil.isStackValid(it)) continue;
                 if(ing.isEmpty())
@@ -314,8 +315,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             InventoryHolder disp = (InventoryHolder) crafter.getState();
 
             boolean delete = true;
-            List<ItemStack> newItems = new ArrayList<ItemStack>();
-            newItems.addAll(event.getItems());
+            List<ItemStack> newItems = new ArrayList<ItemStack>(event.getItems());
             for (ItemStack ite : event.getItems()) {
                 if (!ItemUtil.isStackValid(ite)) continue;
                 int iteind = newItems.indexOf(ite);
