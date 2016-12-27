@@ -114,10 +114,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         if(definitions.size() > 0) {
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
-
                 @Override
                 public void run () {
-
                     Iterator<Entry<Tuple2<String, String>, Integer>> iterator = cooldownPeriods.entrySet().iterator();
 
                     while(iterator.hasNext()) {
@@ -129,7 +127,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             iterator.remove();
                     }
                 }
-            }, 1, 20);
+            }, 0, 20);
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
 
                 @Override
@@ -532,8 +530,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
-    public static String parseLine(String command, Event event, Player player) {
-
+    static String parseLine(String command, Event event, Player player) {
         if(command == null) return null;
 
         if(event instanceof EntityDamageByEntityEvent) {
