@@ -1,0 +1,154 @@
+mech:
+    gate:
+        create: Portal Criado!
+        toggle: Portal Toggled!
+        not-found: Falha ao tentar achar um portal!
+        válido-item: 'O bloco especificado na linha 1 não existe, provavelmente o nome está errado'
+    cauldron:
+        permissions: Erro de permiss\ões, fale com a equipe do servidor.
+        leaky: O caldeir\ão esta estragado!
+        create: Caldeir\ão criado!'
+        legacy-not-a-recipe: 'O que você tentou criar não existe.
+        cook: Você fez no caldeir\ão:'
+        stir: Você mexeu no caldeir\ão, mas não aconteceu nada...
+        legacy-not-in-group: 'Você n\ão parece saber fazer isso...
+        too-small: Este caldeir\ão é muito pequeno'
+        no-lava: Para o caldeir\ão funcionar ele precisa de lava
+        legacy-create: Em um passe de magia negra você fez
+    area:
+        create: \Área que se alterna criada!
+        missing: A \área especificada não existe.
+    bridge:
+        end-create: O fim da ponte foi criado!
+        other-sign: A ponte precisa de uma placa no final, se existe, est\á muito longe.
+        create: Ponte criada!
+        material: A ponte inteira precisa ser do mesmo material
+        unusable: Com esse material n\ão d\á para fazer pontes!
+        toggle: Você interferiu na ponte!
+    door:
+        unusable: Não d\á para criar uma porta com esse material
+        material: A porta inteira precisa ser do mesmo material!
+        other-sign: A porta precisa de uma placa na outra extremidade, se existe, est\á muito longe.
+        create: A Porta foi criada!
+        toggle: A Porta foi aberta ou fechada!
+    map:
+        create: Trocador de mapas criado!
+        invalid: A ID do mapa \é invalida
+    chairs:
+        sit: Voc\ê est\á sentado!
+        stand: Voc\ê se levantou!
+        floating: Essa cadeira n\ão tem nada abaixo!
+        obstructed: A cadeira est\á obstru\ída!
+        in-use: A cadeira est\á em uso!
+        too-far: Essa cadeira est\á meio longe, voc\ê \é um trapa\çeiro?!
+    hiddenswitch:
+        toggle: Voc\ê ouviu um pequeno som de alguma coisa se mexendo!
+        key: A chave n\ão entra na fechadura!
+    painting:
+        editing: Voc\ê est\á trocando a pintura!
+        used: Algu\ém j\á est\á trocando essa pintura!
+        range: Essa pintura est\á meio longe, voc\ê \é um trapa\çeiro?!
+        stop: Voc\ê parou de trocar a pintura!
+    pay:
+        create: Pagamento criado!
+        success: 'Pagamento realizado! Voc\ê pagou: '
+        failed-to-pay: O pagamento falhou, voc\ê não perdeu dinheiro algum.
+        not-enough-money: O pagamento falhou, voc\ê não tem dinheiro suficiente!
+    pistons:
+        supersticky:
+            created: Pist\ão que puxa de longe criado!
+        superpush:
+            created: Pist\ão que empurra para longe criado!
+        bounce:
+            created: Pist\ão pula-pula criado!
+        crush:
+            created: Pist\ão que esmaga criado!
+    group: Voc\ê não est\á no grupo de permiss\ões certo para fazer isso!!!
+    bounceblocks:
+        create: Bloco pula-pula criado!
+        invalid-velocity: Coloque uma velocidade v\álida na terceira linha!
+    command:
+        create: Placa que executa comandos criada!
+    command-items:
+        out-of-sync: O inventário ficou fora de sincronia!
+        need: Voc\ê precisa da %item% para usar esse comando!
+        wait: Voc\ê tem que esperar %time% a %item% de novo!
+    teleport:
+        create: Teletransportador criado!
+        alert: Voc\ê se teletransportou!
+        invalidcoords: As coordenadas do teletransporte est\ão inv\álidas!
+        sign: N\ão h\á nenhuma placa no destino!
+        obstruct: O destino est\á obstru\ído.
+        arriveonly: Voc\ê s\ó pode chegar nesse teletransportador!
+        range: Fora de alcance.
+    lightswitch:
+        create: Alavanca incandesente criada!
+    bookcase:
+        read-line: Voc\ê pegou um livro...
+        fail-file: Falha ao ler o arquivo de livros do servidor.
+        fail-line: Falha ao carregar uma linha do arquivo de livros do servidor.
+    cook:
+        create: Panela criada!
+        ouch: Aii! Esta panela est\á quente!
+        add-fuel: Você colocou carv\ão na panela e viu o fogo rugir.
+    restock: Os itens do mecanismo foram repostos!
+    lift:
+        no-depart: Este elevador \é s\ó de \ída.
+        leave: Voc\ê saiu do elevador!
+        floor: Ch\ão
+        obstruct: O destino est\á obstru\ído.
+        up: Voc\ê subiu de andar!
+        busy: Elevador ocupado!
+        up-sign-created: Placa de subir para elevador criada.
+        target-sign-created: Placa de destino do elevador criada.
+        no-floor: N\ão h\á piso no destino.
+        no-destination: Este elevador n\ão est\á configurado.
+        down-sign-created: Placa de descer para elevador criada.
+        down: Voc\ê desceu de andar!
+    anchor:
+        create: \Âncora de terreno criada! 16x16x256
+        already-anchored: Essa parte do terreno j\á est\á \âncorada!
+    headdrops:
+        click-message: Voc\ê degolou uma cabeça de um:
+        break-permission: Voc\ê n\ão tem permiss\ão para quebrar cabe\ças!
+    xp-storer:
+        bottle: Voc\ê precisa de uma garrafa vazia para isso.
+        not-enough-xp: Voc\ê precisa de mais experi\ência para encher uma garrafa.
+        success: Voc\ê guardou sua experi\ência em uma garrafa!
+    signcopy:
+        paste: Voc\ê colou o conteúdo de uma placa!
+        copy: Voc\ê copiou o conteúdo de uma placa!
+    use-permission: Voc\ê n\ão tem permiss\ão para isso.
+    lightstone:
+        lightstone: 'LightStone:'
+    create-permission: Voc\ê n\ão tem permiss\ão para isso.
+    dgate:
+        create: Portal pequeno criado!
+    not-enough-blocks: Falta alguns blocos no estoque para isto funcionar
+    restock-permission: Voc\ê n\ão tem permiss\ão para isso.
+    ammeter:
+        ammeter: Ammeter
+    custom-crafting:
+        recipe-permission: Voc\ê n\ão tem permiss\ão para isso.
+worldedit:
+    ic:
+        unsupported: WorldEdit selection type currently unsupported for IC's!
+        notfound: WorldEdit not found!
+        noselection: No selection was found!
+variable:
+    missing: Essa v\áriavel está faltando ou sequer n\ão existe!
+    use-permissions: Voc\ê n\ão tem permiss\ão para usar esta v\áriavel
+area:
+    break-permissions: Voc\ê n\ão tem permiss\ão para quebrar isso.
+    permissions: Voc\ê n\ão tem permiss\ão para isso nesta \área.
+    use-permissions: Voc\ê n\ão tem permiss\ão para isso nesta \área.
+circuits:
+    pipes:
+        create: Cano criado!
+        pipe-not-found: Falha ao achar o cano!
+vehicles:
+    create-permission: Voc\ê n\ão tem permiss\ão para criar ve\ículos, que chato hein?
+#
+# Tradução feita por Douglas Biazus
+# RS, Brasil
+# Skype: Douglas.biazus.21
