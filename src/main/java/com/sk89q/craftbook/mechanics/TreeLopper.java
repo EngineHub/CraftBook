@@ -8,6 +8,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -121,10 +122,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null && planted < maxSaplings(species)) {
-            block.setType(Material.SAPLING);
-            Sapling sapling = (Sapling) block.getState().getData();
-            sapling.setSpecies(species);
-            block.getState().setData(sapling);
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, species), 2);
             planted ++;
         }
         visitedLocations.add(block.getLocation());
@@ -185,9 +183,12 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         @Override
         public void run () {
             usedBlock.setType(Material.SAPLING);
-            Sapling sapling = (Sapling) usedBlock.getState().getData();
+            BlockState state = usedBlock.getState();
+            Sapling sapling = (Sapling) state.getData();
+            System.out.println(fspecies.name());
             sapling.setSpecies(fspecies);
-            usedBlock.getState().setData(sapling);
+            state.setData(sapling);
+            state.update();
         }
 
     }
