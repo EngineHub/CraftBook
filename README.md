@@ -21,6 +21,15 @@ CraftBook is a heavily customizable plugin adding exciting new gameplay elements
 
 An extensive list of features is available on [the docs!](http://enginehub.github.io/CraftBookDocs/)
 
+Branch Structure
+----------------
+
+Currently the 'master' branch contains CraftBook 4, the next version of CraftBook. Currently this version only supports Sponge.
+
+For the prior version of CraftBook for Bukkit and Spigot, the '3.x' branch is what you want.
+
+Starting from CraftBook 4, there are 'version' branches that contain the last supported version for a branch. This is used for backporting reasons. The format is as follows, `version/1.x`.
+
 Compiling
 ---------
 
