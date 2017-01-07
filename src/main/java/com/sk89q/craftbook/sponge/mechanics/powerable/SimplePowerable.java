@@ -45,12 +45,12 @@ abstract class SimplePowerable extends SpongeBlockMechanic {
                 List<Location<World>> locations =  BlockUtil.getAdjacentExcept(location, Direction.NONE);
                 locations.add(location);
                 Optional<Integer> power = BlockUtil.getDirectBlockPowerLevel(locations.toArray(EMPTY_LOCATION_ARRAY));
-                if (power.isPresent()) {
-                    boolean isPowered = power.get() > 0;
+                power.ifPresent(integer -> {
+                    boolean isPowered = integer > 0;
                     if (isPowered != wasPowered) {
                         updateState(location, isPowered);
                     }
-                }
+                });
             }
         });
     }

@@ -16,14 +16,11 @@
  */
 package com.sk89q.craftbook.core.util.documentation;
 
-import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 
 import java.io.*;
 import java.util.regex.Matcher;

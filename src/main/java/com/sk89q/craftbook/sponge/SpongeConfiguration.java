@@ -17,7 +17,6 @@
 package com.sk89q.craftbook.sponge;
 
 import com.me4502.modularframework.module.ModuleWrapper;
-import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;

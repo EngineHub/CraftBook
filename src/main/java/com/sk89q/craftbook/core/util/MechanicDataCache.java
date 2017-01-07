@@ -21,7 +21,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 
 import java.util.concurrent.TimeUnit;
 

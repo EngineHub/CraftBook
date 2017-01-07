@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.world.Location;

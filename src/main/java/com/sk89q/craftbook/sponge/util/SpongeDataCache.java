@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
-import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;

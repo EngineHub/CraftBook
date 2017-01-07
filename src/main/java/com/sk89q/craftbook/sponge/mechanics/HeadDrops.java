@@ -26,8 +26,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
 import org.spongepowered.api.data.manipulator.mutable.SkullData;
-import org.spongepowered.api.data.type.SkeletonType;
-import org.spongepowered.api.data.type.SkeletonTypes;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
@@ -45,8 +43,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,22 +66,16 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         GameProfile profile = null;
 
         if (type == EntityTypes.PLAYER) {
-            // This be a player.
             data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
             profile = ((Player) spawnCause.getEntity()).getProfile();
         } else if (type == EntityTypes.ZOMBIE) {
-            // This be a zombie.
             data.set(Keys.SKULL_TYPE, SkullTypes.ZOMBIE);
         } else if (type == EntityTypes.CREEPER) {
-            // This be a creeper.
             data.set(Keys.SKULL_TYPE, SkullTypes.CREEPER);
         } else if (type == EntityTypes.SKELETON) {
-            // This be a skeleton.
-            SkeletonType skeletonType = spawnCause.getEntity().get(Keys.SKELETON_TYPE).orElse(SkeletonTypes.NORMAL);
-            if (skeletonType.equals(SkeletonTypes.NORMAL))
-                data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
-            else if (skeletonType.equals(SkeletonTypes.WITHER))
-                data.set(Keys.SKULL_TYPE, SkullTypes.WITHER_SKELETON);
+            data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
+        } else if (type == EntityTypes.WITHER_SKELETON) {
+            data.set(Keys.SKULL_TYPE, SkullTypes.WITHER_SKELETON);
         } else if (type == EntityTypes.ENDER_DRAGON) {
             data.set(Keys.SKULL_TYPE, SkullTypes.ENDER_DRAGON);
         } else {

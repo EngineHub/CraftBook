@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area.complex;
 
-import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.world.DataException;

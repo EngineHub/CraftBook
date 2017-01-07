@@ -18,7 +18,6 @@ package com.sk89q.craftbook.sponge.st;
 
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
-import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.st.SelfTriggerClock;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;

@@ -28,13 +28,10 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 
 @Module(moduleName = "BetterPhysics", onEnable="onInitialize", onDisable="onDisable")
 public class BetterPlants extends SpongeBlockMechanic implements DocumentationProvider {
