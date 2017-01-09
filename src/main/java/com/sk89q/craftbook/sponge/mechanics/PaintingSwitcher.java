@@ -40,7 +40,7 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 
-@Module(moduleName = "PaintingSwitcher", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "paintingswitcher", moduleName = "PaintingSwitcher", onEnable="onInitialize", onDisable="onDisable")
 public class PaintingSwitcher extends SpongeMechanic implements DocumentationProvider {
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.paintingswitcher.use", "Allows the user to switch paintings.", PermissionDescription.ROLE_USER);

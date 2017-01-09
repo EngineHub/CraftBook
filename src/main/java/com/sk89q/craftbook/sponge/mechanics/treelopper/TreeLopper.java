@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Module(moduleName = "TreeLopper", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "treelopper", moduleName = "TreeLopper", onEnable="onInitialize", onDisable="onDisable")
 public class TreeLopper extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

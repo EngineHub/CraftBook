@@ -33,7 +33,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 
-@Module(moduleName = "MinecartEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "minecartemptydecay", moduleName = "MinecartEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
 public class EmptyDecay extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

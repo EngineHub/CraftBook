@@ -54,7 +54,7 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 
-@Module(moduleName = "SignCopier", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "signcopier", moduleName = "SignCopier", onEnable="onInitialize", onDisable="onDisable")
 public class SignCopier extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

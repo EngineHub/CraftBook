@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Module(moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "footprints", moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic {
 
     @Inject

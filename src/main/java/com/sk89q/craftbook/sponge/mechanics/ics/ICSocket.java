@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
-@Module(moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "icsocket", moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
     static final HashMap<String, PinSet> PINSETS = new HashMap<>();

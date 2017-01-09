@@ -45,7 +45,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
-@Module(moduleName = "Ammeter", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "ammeter", moduleName = "Ammeter", onEnable = "onInitialize", onDisable = "onDisable")
 public class Ammeter extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

@@ -31,7 +31,7 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 
-@Module(moduleName = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "blockbag", moduleName = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
 public class BlockBagManager extends SpongeMechanic {
 
     @Inject

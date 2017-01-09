@@ -48,7 +48,7 @@ import org.spongepowered.api.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-@Module(moduleName = "HiddenSwitch", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "hiddenswitch", moduleName = "HiddenSwitch", onEnable="onInitialize", onDisable="onDisable")
 public class HiddenSwitch extends SpongeSignMechanic implements DocumentationProvider {
 
     @Inject

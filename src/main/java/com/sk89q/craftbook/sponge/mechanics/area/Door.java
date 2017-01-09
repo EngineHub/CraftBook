@@ -42,7 +42,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.List;
 
-@Module(moduleName = "Door", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "door", moduleName = "Door", onEnable="onInitialize", onDisable="onDisable")
 public class Door extends SimpleArea implements DocumentationProvider {
 
     @Inject

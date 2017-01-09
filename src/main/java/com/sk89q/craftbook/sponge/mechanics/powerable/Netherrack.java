@@ -29,7 +29,7 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-@Module(moduleName = "Netherrack", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "netherrack", moduleName = "Netherrack", onEnable="onInitialize", onDisable="onDisable")
 public class Netherrack extends SimplePowerable implements DocumentationProvider {
 
     @Inject

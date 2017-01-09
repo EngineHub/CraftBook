@@ -45,7 +45,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.*;
 
-@Module(moduleName = "Pipes", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "pipes", moduleName = "Pipes", onEnable="onInitialize", onDisable="onDisable")
 public class Pipes extends SpongeBlockMechanic {
 
     private PipePart[] pipeParts;

@@ -58,7 +58,7 @@ import org.spongepowered.api.world.World;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Module(moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "chairs", moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
 public class Chairs extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

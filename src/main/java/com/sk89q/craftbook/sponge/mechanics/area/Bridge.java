@@ -45,7 +45,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.List;
 
-@Module(moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "bridge", moduleName = "Bridge", onEnable="onInitialize", onDisable="onDisable")
 public class Bridge extends SimpleArea implements DocumentationProvider {
 
     @Inject

@@ -52,7 +52,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Module(moduleName = "XPStorer", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "xpstorer", moduleName = "XPStorer", onEnable="onInitialize", onDisable="onDisable")
 public class XPStorer extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

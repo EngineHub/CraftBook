@@ -55,7 +55,7 @@ import org.spongepowered.api.world.World;
 import java.util.List;
 import java.util.regex.Pattern;
 
-@Module(moduleName = "Area", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "area", moduleName = "Area", onEnable="onInitialize", onDisable="onDisable")
 public class ComplexArea extends SpongeSignMechanic implements DocumentationProvider {
 
     @Inject

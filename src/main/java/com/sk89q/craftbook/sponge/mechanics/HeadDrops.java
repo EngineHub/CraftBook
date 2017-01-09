@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
-@Module(moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "headdrops", moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
 
     private static final Pattern HEAD_DROPS_TABLE_PATTERN = Pattern.compile("%CUSTOM_HEAD_TYPES%", Pattern.LITERAL);

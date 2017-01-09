@@ -31,7 +31,7 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 
-@Module(moduleName = "JackOLantern", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "jackolantern", moduleName = "JackOLantern", onEnable="onInitialize", onDisable="onDisable")
 public class JackOLantern extends SimplePowerable implements DocumentationProvider {
 
     @Inject

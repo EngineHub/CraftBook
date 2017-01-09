@@ -50,7 +50,7 @@ import org.spongepowered.api.world.World;
 import java.util.EnumSet;
 import java.util.Optional;
 
-@Module(moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "elevator", moduleName = "Elevator", onEnable="onInitialize", onDisable="onDisable")
 public class Elevator extends SpongeSignMechanic implements DocumentationProvider {
 
     private ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);

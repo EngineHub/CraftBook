@@ -40,7 +40,7 @@ import org.spongepowered.api.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Module(moduleName = "ChunkAnchor", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "chunkanchor", moduleName = "ChunkAnchor", onEnable="onInitialize", onDisable="onDisable")
 public class ChunkAnchor extends SpongeSignMechanic implements DocumentationProvider {
 
     @Inject
