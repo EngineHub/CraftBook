@@ -29,19 +29,22 @@ import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.util.RelativePositions;
 import org.spongepowered.api.world.Location;
@@ -54,8 +57,10 @@ import java.util.Optional;
 public class Elevator extends SpongeSignMechanic implements DocumentationProvider {
 
     private ConfigValue<Boolean> allowJumpLifts = new ConfigValue<>("allow-jump-lifts", "Allow lifts that the user can control by jumping, or sneaking.", true);
+    private ConfigValue<Boolean> allowButtonLifts = new ConfigValue<>("allow-button-lifts", "Allow lifts to be controlled by buttons opposite the sign.", true);
 
     private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.elevator", "Allows the user to create Elevators", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.elevator.use", "Allows the user to use Elevators", PermissionDescription.ROLE_USER);
 
     @Inject
     @ModuleConfiguration
@@ -66,8 +71,10 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         super.onInitialize();
 
         allowJumpLifts.load(config);
+        allowButtonLifts.load(config);
 
         createPermissions.register();
+        usePermissions.register();
     }
 
     @Override
@@ -83,17 +90,31 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
-            if (SignUtil.isSign(location)) {
-                Sign sign = (Sign) location.getTileEntity().get();
+            Location<World> signLocation = location;
+
+            if (allowButtonLifts.getValue() &&
+                    signLocation.getBlockType() == BlockTypes.STONE_BUTTON || signLocation.getBlockType() == BlockTypes.WOODEN_BUTTON) {
+                Direction backDir = SignUtil.getBack(signLocation);
+                signLocation = signLocation.getRelative(backDir).getRelative(backDir);
+            }
+
+            if (SignUtil.isSign(signLocation)) {
+                Sign sign = (Sign) signLocation.getTileEntity().get();
 
                 Optional<Vector3d> interactionPoint = event.getInteractionPoint();
 
                 boolean down = "[Lift Down]".equals(SignUtil.getTextRaw(sign, 1)) || ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1)) && interactionPoint.isPresent() && interactionPoint.get().getY() < 0.5);
 
-                if (down || "[Lift Up]".equals(SignUtil.getTextRaw(sign, 1)) || ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1)) && interactionPoint.isPresent() && interactionPoint.get().getY() > 0.5))
-                    transportEntity(human, location, down ? Direction.DOWN : Direction.UP);
+                if (down || "[Lift Up]".equals(SignUtil.getTextRaw(sign, 1)) || ("[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1)) && interactionPoint.isPresent() && interactionPoint.get().getY() > 0.5)) {
+                    if (!usePermissions.hasPermission(player)) {
+                        player.sendMessage(Text.of(TextColors.RED, "You don't have permission to use this mechanic!"));
+                        return;
+                    }
+
+                    transportEntity(player, location, down ? Direction.DOWN : Direction.UP);
+                }
             }
         });
     }
@@ -108,12 +129,17 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
         Location<World> groundLocation = event.getToTransform().getLocation().getRelative(Direction.DOWN);
 
-
         //Look for dat sign
         for (Location<World> location : SignUtil.getAttachedSigns(groundLocation)) {
             Sign sign = location.getTileEntity().map(tile -> (Sign) tile).orElse(null);
 
             if (sign != null && "[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1))) {
+                if (event.getTargetEntity() instanceof Subject) {
+                    if (!usePermissions.hasPermission((Subject) event.getTargetEntity())) {
+                        return;
+                    }
+                }
+
                 if (event.getToTransform().getPosition().getY() > event.getFromTransform().getPosition().getY()) {
                     transportEntity(event.getTargetEntity(), location, Direction.UP); //Jump is up
                 } else if (event.getTargetEntity().get(Keys.IS_SNEAKING).orElse(false)) {
@@ -184,16 +210,19 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
         int y = block.getBlockY();
 
         if (direction == Direction.UP || direction == Direction.DOWN) {
-
             while (direction == Direction.UP ? y < 255 : y > 0) {
-
                 y += direction == Direction.UP ? 1 : -1;
 
                 Location<World> test = block.getExtent().getLocation(block.getBlockX(), y, block.getBlockZ());
 
+                if (allowButtonLifts.getValue() &&
+                        test.getBlockType() == BlockTypes.STONE_BUTTON || test.getBlockType() == BlockTypes.WOODEN_BUTTON) {
+                    Direction backDir = SignUtil.getBack(test);
+                    test = test.getRelative(backDir).getRelative(backDir);
+                }
+
                 if (SignUtil.isSign(test)) {
                     // It's a sign.
-
                     if(isValid(test))
                         return test;
                 }
@@ -213,14 +242,16 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
-                allowJumpLifts
+                allowJumpLifts,
+                allowButtonLifts
         };
     }
 
     @Override
     public PermissionNode[] getPermissionNodes() {
         return new PermissionNode[]{
-            createPermissions
+                createPermissions,
+                usePermissions
         };
     }
 }
