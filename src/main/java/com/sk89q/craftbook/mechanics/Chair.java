@@ -272,7 +272,9 @@ public class Chair extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                pl.getValue().chairEntity.getLocation().setYaw(p.getLocation().getYaw());
+                Location newYaw = pl.getValue().chairEntity.getLocation();
+                newYaw.setYaw(p.getLocation().getYaw());
+                pl.getValue().chairEntity.teleport(newYaw);
 
                 if (!chairBlocks.contains(new ItemInfo(pl.getValue().location)) || !p.getWorld().equals(pl.getValue().location.getWorld()) || LocationUtil.getDistanceSquared(p.getLocation(), pl.getValue().location.getLocation()) > 2)
                     removeChair(p);
