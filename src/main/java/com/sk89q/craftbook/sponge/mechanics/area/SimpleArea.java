@@ -31,6 +31,7 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
@@ -101,11 +102,10 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {
-            Humanoid human = event.getCause().get(NamedCause.SOURCE, Humanoid.class).orElse(null);
-            if(human != null && human instanceof Subject) {
-                if(!usePermissions.hasPermission((Subject) human)) {
-                    if(human instanceof CommandSource)
-                        ((CommandSource) human).sendMessage(USE_PERMISSIONS);
+            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            if(player != null) {
+                if(!usePermissions.hasPermission(player)) {
+                    player.sendMessage(USE_PERMISSIONS);
                     return;
                 }
             }
@@ -114,7 +114,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
             boolean wasPowered = block.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
 
             if (isPowered != wasPowered) {
-                triggerMechanic(block, sign, human, isPowered);
+                triggerMechanic(block, sign, player, isPowered);
                 block.offer(new LastPowerData(isPowered ? 15 : 0));
             }
         }

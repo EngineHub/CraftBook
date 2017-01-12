@@ -64,6 +64,10 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
         selfTriggeringMechanics.put(location, mechanic);
     }
 
+    public void unregister(SelfTriggeringMechanic mechanic, Location location) {
+        selfTriggeringMechanics.remove(location, mechanic);
+    }
+
     private void registerAll(Chunk chunk) {
         for(TileEntity tileEntity : chunk.getTileEntities()) {
             for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
