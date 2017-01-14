@@ -27,6 +27,7 @@ import java.util.Map;
 public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
     private static boolean hasWarned = false;
+    private static boolean hasWarnedNoResult = false;
 
     public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
 
@@ -97,7 +98,10 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         ItemStack result = CustomCrafting.craftItem(recipe);
 
         if(!ItemUtil.isStackValid(result)) {
-            CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit has an invalid recipe!");
+            if (!hasWarnedNoResult) {
+                CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit has an invalid recipe!");
+                hasWarnedNoResult = true;
+            }
             return false;
         }
 
@@ -244,9 +248,11 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                     return false;
                 }
             }
-            if (validRecipeItems == 0 && !hasWarned) {
-                CraftBookPlugin.logger().warning("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe ingredients are air. Recipe result: " + recipe.getResult().toString());
-                hasWarned = true;
+            if (validRecipeItems == 0) {
+                if (!hasWarned) {
+                    CraftBookPlugin.logger().warning("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe ingredients are air. Recipe result: " + r.getResult().toString());
+                    hasWarned = true;
+                }
                 return false;
             }
 
