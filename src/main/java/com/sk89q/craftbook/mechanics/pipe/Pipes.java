@@ -180,7 +180,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                 HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
 
                 if(sign != null) {
-
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
                         pFilters.add(ItemSyntax.getItem(line3.trim()));
                     }
@@ -188,8 +187,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                         pExceptions.add(ItemSyntax.getItem(line4.trim()));
                     }
 
-                    pFilters.removeAll(Collections.singleton(null));
-                    pExceptions.removeAll(Collections.singleton(null));
+                    pFilters.removeAll(Collections.<ItemStack>singleton(null));
+                    pExceptions.removeAll(Collections.<ItemStack>singleton(null));
                 }
 
                 List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
@@ -200,31 +199,35 @@ public class Pipes extends AbstractCraftBookMechanic {
                 List<ItemStack> newItems = new ArrayList<ItemStack>();
 
                 Block fac = bl.getRelative(p.getFacing());
-                if (InventoryUtil.doesBlockHaveInventory(fac)) {
-                    newItems.addAll(InventoryUtil.addItemsToInventory((InventoryHolder) fac.getState(), filteredItems.toArray(new ItemStack[filteredItems.size()])));
-                } else if(fac.getType() == Material.JUKEBOX) {
-                    Jukebox juke = (Jukebox) fac.getState();
-                    List<ItemStack> its = new ArrayList<ItemStack>(filteredItems);
-                    if(!juke.isPlaying()) {
-                        Iterator<ItemStack> iter = its.iterator();
-                        while(iter.hasNext()) {
-                            ItemStack st = iter.next();
-                            if(!st.getType().isRecord()) continue;
-                            juke.setPlaying(st.getType());
-                            iter.remove();
-                            break;
+
+                PipePutEvent event = new PipePutEvent(bl, new ArrayList<ItemStack>(filteredItems), fac);
+                Bukkit.getPluginManager().callEvent(event);
+
+                if (!event.isCancelled()) {
+                    if (InventoryUtil.doesBlockHaveInventory(fac)) {
+                        InventoryHolder holder = (InventoryHolder) fac.getState();
+                        newItems.addAll(InventoryUtil.addItemsToInventory(holder, event.getItems().toArray(new ItemStack[event.getItems().size()])));
+                    } else if (fac.getType() == Material.JUKEBOX) {
+                        Jukebox juke = (Jukebox) fac.getState();
+                        List<ItemStack> its = new ArrayList<ItemStack>(event.getItems());
+                        if (!juke.isPlaying()) {
+                            Iterator<ItemStack> iter = its.iterator();
+                            while (iter.hasNext()) {
+                                ItemStack st = iter.next();
+                                if (!st.getType().isRecord()) continue;
+                                juke.setPlaying(st.getType());
+                                iter.remove();
+                                break;
+                            }
                         }
+                        newItems.addAll(its);
+                    } else {
+                        newItems.addAll(event.getItems());
                     }
-                    newItems.addAll(its);
-                } else {
-                    PipePutEvent event = new PipePutEvent(bl, new ArrayList<ItemStack>(filteredItems), fac);
-                    Bukkit.getPluginManager().callEvent(event);
 
-                    newItems.addAll(event.getItems());
+                    items.removeAll(filteredItems);
+                    items.addAll(newItems);
                 }
-
-                items.removeAll(filteredItems);
-                items.addAll(newItems);
 
                 if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
             } else if (bl.getType() == Material.DROPPER) {
@@ -235,7 +238,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                 HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
 
                 if(sign != null) {
-
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
                         pFilters.add(ItemSyntax.getItem(line3.trim()));
                     }
@@ -243,8 +245,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                         pExceptions.add(ItemSyntax.getItem(line4.trim()));
                     }
 
-                    pFilters.removeAll(Collections.singleton(null));
-                    pExceptions.removeAll(Collections.singleton(null));
+                    pFilters.removeAll(Collections.<ItemStack>singleton(null));
+                    pExceptions.removeAll(Collections.<ItemStack>singleton(null));
                 }
 
                 List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
@@ -269,11 +271,10 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private static boolean isValidPipeBlock(Material typeId) {
-
         return typeId == Material.GLASS || typeId == Material.STAINED_GLASS || typeId == Material.PISTON_BASE || typeId == Material.PISTON_STICKY_BASE || typeId == Material.WALL_SIGN || typeId == Material.DROPPER || typeId == Material.THIN_GLASS || typeId == Material.STAINED_GLASS_PANE;
     }
 
-    public void startPipe(Block block, List<ItemStack> items, boolean request) {
+    private void startPipe(Block block, List<ItemStack> items, boolean request) {
 
         Set<ItemStack> filters = new HashSet<ItemStack>();
         Set<ItemStack> exceptions = new HashSet<ItemStack>();
@@ -281,19 +282,16 @@ public class Pipes extends AbstractCraftBookMechanic {
         ChangedSign sign = getSignOnPiston(block);
 
         if(sign != null) {
-
             for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-
                 filters.add(ItemSyntax.getItem(line3.trim()));
             }
             for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-
                 exceptions.add(ItemSyntax.getItem(line4.trim()));
             }
         }
 
-        filters.removeAll(Collections.singleton(null));
-        exceptions.removeAll(Collections.singleton(null));
+        filters.removeAll(Collections.<ItemStack>singleton(null));
+        exceptions.removeAll(Collections.<ItemStack>singleton(null));
 
         Set<Location> visitedPipes = new HashSet<Location>();
 
