@@ -55,6 +55,8 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
 
     private ConfigValue<Boolean> requireFuel = new ConfigValue<>("require-fuel", "Causes the cooking pot to require fuel to cook. Otherwise fuel speeds up cooking.", true);
     private ConfigValue<Boolean> redstoneFuel = new ConfigValue<>("redstone-fuel", "Allows for a pulsing redstone signal to be used as a fuel source.", false);
+    private ConfigValue<Boolean> superFast = new ConfigValue<>("super-fast", "Removes the cap for 5 fuel to be used per tick, making the cooking pot faster.", false);
+    private ConfigValue<Boolean> cookFoodOnly = new ConfigValue<>("food-only", "Caused the cooking pot to only cook food. Food is defined as anything that gives hunger points.", true);
 
     //private List<FurnaceRecipe> recipesCache = new ArrayList<>();
 
@@ -65,6 +67,8 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
 
         requireFuel.load(config);
         redstoneFuel.load(config);
+        superFast.load(config);
+        cookFoodOnly.load(config);
 
         // TODO Fill recipesCache - FoodRestorationProperty for determining if food.
 
@@ -189,7 +193,11 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                 if (items.size() > 0) {
                     if (lastTick < 500) {
                         int multiplier = getMultiplier(sign);
-                        lastTick += Math.min(multiplier, 5);
+                        if (superFast.getValue()) {
+                            lastTick += multiplier;
+                        } else {
+                            lastTick += Math.min(multiplier, 5);
+                        }
                         if (multiplier > 0) {
                             setMultiplier(sign, multiplier - 1);
                         }
@@ -266,7 +274,9 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
                 requireFuel,
-                redstoneFuel
+                redstoneFuel,
+                superFast,
+                cookFoodOnly
         };
     }
 
