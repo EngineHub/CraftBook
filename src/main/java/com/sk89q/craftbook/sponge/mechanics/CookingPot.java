@@ -17,7 +17,6 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
@@ -36,6 +35,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tuple;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -128,12 +128,12 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
         if(!redstoneFuel.getValue())
             return;
 
-        if(!SignUtil.isSign(source.getState())) return;
-        Location<World> block = source.getLocation().get();
+        if(!SignUtil.isSign(source.getBlockState())) return;
+        Location<World> block = source.getLocation();
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {

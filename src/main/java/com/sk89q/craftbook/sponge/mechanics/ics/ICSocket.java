@@ -31,7 +31,6 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -44,6 +43,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -103,15 +103,15 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
-        if(source.getState().getType() != BlockTypes.WALL_SIGN) return;
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
+        if(source.getBlockState().getType() != BlockTypes.WALL_SIGN) return;
 
-        getIC(source.getLocation().get()).ifPresent(ic -> {
+        getIC(source.getLocation()).ifPresent(ic -> {
             for(Entry<Direction, BlockState> entries : event.getNeighbors().entrySet()) {
                 boolean powered = entries.getValue().get(Keys.POWER).orElse(0) > 0;
 
-                if (powered != ic.getPinSet().getInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().get().getRelative(entries.getKey())), ic)) {
-                    ic.getPinSet().setInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().get().getRelative(entries.getKey())), powered, ic);
+                if (powered != ic.getPinSet().getInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().getRelative(entries.getKey())), ic)) {
+                    ic.getPinSet().setInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().getRelative(entries.getKey())), powered, ic);
                     ic.trigger();
                 }
             }

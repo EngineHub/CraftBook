@@ -25,7 +25,6 @@ import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PipePart;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
@@ -35,11 +34,13 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -61,18 +62,11 @@ public class Pipes extends SpongeBlockMechanic {
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event) {
-
-        BlockSnapshot source;
-        if(event.getCause().first(BlockSnapshot.class).isPresent())
-            source = event.getCause().first(BlockSnapshot.class).get();
-        else
-            return;
-
-        if(isValid(source.getLocation().get())) {
-            PoweredProperty poweredProperty = source.getLocation().get().getProperty(PoweredProperty.class).orElse(null);
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
+        if(isValid(source.getLocation())) {
+            PoweredProperty poweredProperty = source.getLocation().getProperty(PoweredProperty.class).orElse(null);
             if(poweredProperty.getValue() != null && poweredProperty.getValue())
-                performPipeAction(source.getLocation().get());
+                performPipeAction(source.getLocation());
         }
     }
 

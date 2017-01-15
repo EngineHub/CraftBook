@@ -26,7 +26,6 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.LocatableSnapshot;
 import org.spongepowered.api.data.Transaction;
@@ -39,6 +38,7 @@ import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -98,10 +98,10 @@ public class BetterPhysics extends SpongeBlockMechanic implements DocumentationP
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
-        source.getLocation().ifPresent((location -> event.getNeighbors().entrySet().stream()
-                .map((directionBlockStateEntry -> location.getRelative(directionBlockStateEntry.getKey())))
-                .forEach(this::checkForPhysics)));
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
+        event.getNeighbors().entrySet().stream()
+                .map((directionBlockStateEntry -> source.getLocation().getRelative(directionBlockStateEntry.getKey())))
+                .forEach(this::checkForPhysics);
     }
 
     private void checkForPhysics(Location<World> block) {

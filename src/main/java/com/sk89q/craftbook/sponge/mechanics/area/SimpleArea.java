@@ -27,7 +27,6 @@ import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -42,6 +41,7 @@ import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -93,12 +93,12 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
         if(!allowRedstone.getValue())
             return;
 
-        if(!SignUtil.isSign(source.getState())) return;
-        Location<World> block = source.getLocation().get();
+        if(!SignUtil.isSign(source.getBlockState())) return;
+        Location<World> block = source.getLocation();
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {

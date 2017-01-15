@@ -18,11 +18,11 @@ package com.sk89q.craftbook.sponge.mechanics.powerable;
 
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -38,20 +38,18 @@ abstract class SimplePowerable extends SpongeBlockMechanic {
     public abstract boolean getState(Location<?> location);
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First BlockSnapshot source) {
-        source.getLocation().ifPresent((location) -> {
-            if(isValid(location)) {
-                boolean wasPowered = getState(location);
-                List<Location<World>> locations =  BlockUtil.getAdjacentExcept(location, Direction.NONE);
-                locations.add(location);
-                Optional<Integer> power = BlockUtil.getDirectBlockPowerLevel(locations.toArray(EMPTY_LOCATION_ARRAY));
-                power.ifPresent(integer -> {
-                    boolean isPowered = integer > 0;
-                    if (isPowered != wasPowered) {
-                        updateState(location, isPowered);
-                    }
-                });
-            }
-        });
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
+        if(isValid(source.getLocation())) {
+            boolean wasPowered = getState(source.getLocation());
+            List<Location<World>> locations =  BlockUtil.getAdjacentExcept(source.getLocation(), Direction.NONE);
+            locations.add(source.getLocation());
+            Optional<Integer> power = BlockUtil.getDirectBlockPowerLevel(locations.toArray(EMPTY_LOCATION_ARRAY));
+            power.ifPresent(integer -> {
+                boolean isPowered = integer > 0;
+                if (isPowered != wasPowered) {
+                    updateState(source.getLocation(), isPowered);
+                }
+            });
+        }
     }
 }
