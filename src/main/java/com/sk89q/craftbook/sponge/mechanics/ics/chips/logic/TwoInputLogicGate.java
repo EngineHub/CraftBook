@@ -17,14 +17,14 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 public abstract class TwoInputLogicGate extends IC {
 
-    public TwoInputLogicGate(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public TwoInputLogicGate(ICFactory<? extends TwoInputLogicGate> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override

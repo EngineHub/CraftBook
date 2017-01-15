@@ -18,7 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
 import com.google.common.collect.Sets;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;
@@ -39,8 +39,8 @@ public class WirelessTransmitter extends IC {
 
     private transient Tuple<String, String> cachedTuple;
 
-    public WirelessTransmitter(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public WirelessTransmitter(ICFactory<WirelessTransmitter> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
@@ -70,6 +70,14 @@ public class WirelessTransmitter extends IC {
             wirelessStates.add(cachedTuple);
         } else {
             wirelessStates.remove(cachedTuple);
+        }
+    }
+
+    public static class Factory extends ICFactory<WirelessTransmitter> {
+
+        @Override
+        public WirelessTransmitter createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new WirelessTransmitter(this, location);
         }
     }
 }

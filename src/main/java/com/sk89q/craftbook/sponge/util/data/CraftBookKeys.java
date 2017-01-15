@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util.data;
 
+import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
@@ -31,4 +32,7 @@ public class CraftBookKeys {
 
     public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
             new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
+
+    public static Key<Value<IC>> IC_DATA = makeSingleKey(new TypeTokens.ICTypeToken(),
+            new TypeTokens.ICValueTypeToken(), of("IC"), "craftbook:ic", "IC");
 }

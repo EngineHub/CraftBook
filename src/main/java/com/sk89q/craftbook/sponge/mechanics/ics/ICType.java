@@ -17,12 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import org.spongepowered.api.world.Location;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,65 +28,49 @@ public class ICType<T extends IC> implements DocumentationProvider {
     private static final Pattern IC_HEADER_PATTERN = Pattern.compile("%IC_HEADER%", Pattern.LITERAL);
     private static final Pattern IC_ID_PATTERN = Pattern.compile("%IC_ID%", Pattern.LITERAL);
 
-    String name;
-    String description;
-    String modelId;
-    String shorthandId;
-    String defaultPinset;
+    private String name;
+    private String description;
+    private String modelId;
+    private String shorthandId;
+    private String defaultPinset;
 
-    Class<T> icClass;
-    Object[] extraArguments = null;
-    Class<?>[] argumentTypes = new Class<?>[2];
+    private ICFactory<T> icFactory;
 
-    public ICType(String modelId, String shorthandId, String name, String description, Class<T> icClass) {
+    public ICType(String modelId, String shorthandId, String name, String description, ICFactory<T> icFactory) {
         this.modelId = modelId;
         this.shorthandId = shorthandId;
         this.name = name;
         this.description = description;
-        this.icClass = icClass;
-        argumentTypes[0] = ICType.class;
-        argumentTypes[1] = Location.class;
+        this.icFactory = icFactory;
     }
 
-    public ICType(String modelId, String shorthandId, String name, String description, Class<T> icClass, String defaultPinset) {
-        this(modelId, shorthandId, name, description, icClass);
+    public ICType(String modelId, String shorthandId, String name, String description, ICFactory<T> icFactory, String defaultPinset) {
+        this(modelId, shorthandId, name, description, icFactory);
         this.defaultPinset = defaultPinset;
-    }
-
-    public ICType<T> setExtraArguments(Object... args) {
-        extraArguments = args;
-
-        argumentTypes = new Class<?>[extraArguments.length + 2];
-        argumentTypes[0] = ICType.class;
-        argumentTypes[1] = Location.class;
-        int num = 2;
-        for (Object obj : args)
-            argumentTypes[num++] = obj.getClass();
-
-        return this;
     }
 
     public String getDefaultPinSet() {
         return defaultPinset != null ? defaultPinset : "SISO";
     }
 
-    public IC buildIC(Location block) {
-        IC ic = null;
-
-        try {
-            Constructor<? extends IC> construct = icClass.getConstructor(argumentTypes);
-            if (extraArguments != null && extraArguments.length > 0)
-                ic = construct.newInstance(this, block, extraArguments);
-            else ic = construct.newInstance(this, block);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
-            CraftBookPlugin.spongeInst().getLogger().error("FAILED TO CREATE IC: " + icClass.getName() + ". WITH ARGS: " + Arrays.toString(extraArguments), e);
-        }
-
-        return ic;
-    }
-
     public String getName() {
         return this.name;
+    }
+
+    public String getModel() {
+        return this.modelId;
+    }
+
+    public String getShorthand() {
+        return this.shorthandId;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public ICFactory<T> getFactory() {
+        return this.icFactory;
     }
 
     @Override
@@ -122,13 +101,11 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
         ICType<?> icType = (ICType<?>) o;
 
-        return modelId.equals(icType.modelId) && icClass.equals(icType.icClass);
+        return modelId.equals(icType.modelId);
     }
 
     @Override
     public int hashCode() {
-        int result = modelId.hashCode();
-        result = 31 * result + icClass.hashCode();
-        return result;
+        return modelId.hashCode();
     }
 }

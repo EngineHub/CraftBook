@@ -16,19 +16,31 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
+
 public class AndGate extends AnyInputLogicGate {
 
-    public AndGate(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public AndGate(ICFactory<AndGate> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
     public boolean getResult(int wires, int on) {
         return wires == on;
+    }
+
+    public static class Factory extends ICFactory<AndGate> {
+
+        @Override
+        public AndGate createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new AndGate(this, location);
+        }
     }
 }

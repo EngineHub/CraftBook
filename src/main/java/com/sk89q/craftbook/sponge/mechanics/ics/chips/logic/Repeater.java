@@ -17,19 +17,32 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
+
 public class Repeater extends IC {
 
-    public Repeater(ICType<IC> type, Location<World> block) {
-        super(type, block);
+    public Repeater(ICFactory<Repeater> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
     public void trigger() {
         for (int i = 0; i < getPinSet().getInputCount(); i++)
             getPinSet().setOutput(i, getPinSet().getInput(i, this), this);
+    }
+
+    public static class Factory extends ICFactory<Repeater> {
+
+        @Override
+        public Repeater createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new Repeater(this, location);
+        }
     }
 }

@@ -17,14 +17,19 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.List;
+
 public class Inverter extends IC {
 
-    public Inverter(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public Inverter(ICFactory<Inverter> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
@@ -34,4 +39,11 @@ public class Inverter extends IC {
             getPinSet().setOutput(i, !getPinSet().getInput(i, this), this);
     }
 
+    public static class Factory extends ICFactory<Inverter> {
+
+        @Override
+        public Inverter createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new Inverter(this, location);
+        }
+    }
 }

@@ -17,41 +17,61 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
+import com.sk89q.craftbook.sponge.util.SerializationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.data.*;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.util.annotation.NonnullByDefault;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 
-public abstract class IC {
+public abstract class IC implements DataSerializable {
 
     /*
      * Due to the way the IC data system works,
      * all non-serializable or non-serialized fields should be transient.
      */
 
-    public transient ICType<? extends IC> type;
+    private transient ICFactory<? extends IC> icFactory;
     public transient Location<World> block;
     private transient Sign sign;
+    private transient PinSet pinSet;
 
     private boolean[] pinstates;
 
-    public IC() {}
+    private transient boolean loaded = false;
 
-    public IC(ICType<? extends IC> type, Location<World> block) {
-        this.type = type;
-        this.block = block;
+    public IC() {
     }
 
-    public String getPinSetName() {
-        return type.getDefaultPinSet();
+    public IC(ICFactory<? extends IC> icFactory, Location<World> block) {
+        this.icFactory = icFactory;
+        this.block = block;
+
+        this.loaded = true;
+    }
+
+    public void loadICData(ICFactory<? extends IC> icFactory, Location<World> block) {
+        this.icFactory = icFactory;
+        this.block = block;
+
+        this.loaded = true;
     }
 
     public PinSet getPinSet() {
-        return ICSocket.PINSETS.get(getPinSetName());
+        if (pinSet == null) {
+            pinSet = ICSocket.PINSETS.get(ICManager.getICType(icFactory).getDefaultPinSet());
+        }
+        return pinSet;
     }
 
     /**
@@ -74,7 +94,7 @@ public abstract class IC {
 
     public Sign getSign() {
         if (sign == null) {
-            sign = (Sign) block.getTileEntity().orElseThrow(() -> new IllegalStateException("IC given block that is not a sign!"));
+            sign = (Sign) block.getTileEntity().orElseThrow(() -> new IllegalStateException("IC given block that is not a sign! (" + block.getBlockPosition().toString() + ") in world " + block.getExtent().getName()));
         }
 
         return sign;
@@ -85,20 +105,54 @@ public abstract class IC {
     }
 
     public void setLine(int line, Text text) {
-        getSign().lines().set(line, text);
+        List<Text> lines = getSign().lines().get();
+        lines.set(line, text);
+        getSign().offer(Keys.SIGN_LINES, lines);
     }
 
     public Location<World> getBlock() {
-        return block;
+        return this.block;
     }
 
-    public ICType<? extends IC> getType() {
-        return type;
+    public ICFactory<? extends IC> getFactory() {
+        return this.icFactory;
     }
 
     public abstract void trigger();
 
     public boolean[] getPinStates() {
-        return pinstates;
+        return this.pinstates;
+    }
+
+    public boolean hasLoaded() {
+        return this.loaded;
+    }
+
+    @Override
+    public int getContentVersion() {
+        return 1;
+    }
+
+    @Override
+    @Nonnull
+    public DataContainer toContainer() {
+        return new MemoryDataContainer()
+                .set(Queries.CONTENT_VERSION, getContentVersion())
+                .set(Queries.JSON, SerializationUtil.jsonConverter.serialize(this));
+    }
+
+    @NonnullByDefault
+    public static class ICDataBuilder extends AbstractDataBuilder<IC> {
+
+        public ICDataBuilder() {
+            super(IC.class, 1);
+        }
+
+        @Override
+        protected Optional<IC> buildContent(DataView container) throws InvalidDataException {
+            String string = (String) container.get(Queries.JSON).get();
+
+            return Optional.of(SerializationUtil.jsonConverter.deserialize(string, IC.class));
+        }
     }
 }

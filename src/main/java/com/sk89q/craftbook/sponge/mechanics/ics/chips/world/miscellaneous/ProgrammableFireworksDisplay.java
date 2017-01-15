@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.sponge.util.RegexUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -58,8 +58,8 @@ public class ProgrammableFireworksDisplay extends IC {
     private transient FireworkShowHandler handler;
     private transient boolean stopOnLow;
 
-    public ProgrammableFireworksDisplay(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public ProgrammableFireworksDisplay(ICFactory<ProgrammableFireworksDisplay> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
@@ -407,5 +407,13 @@ public class ProgrammableFireworksDisplay extends IC {
         void setRunning(boolean isRunning);
 
         boolean isRunning();
+    }
+
+    public static class Factory extends ICFactory<ProgrammableFireworksDisplay> {
+
+        @Override
+        public ProgrammableFireworksDisplay createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new ProgrammableFireworksDisplay(this, location);
+        }
     }
 }

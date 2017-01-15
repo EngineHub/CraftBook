@@ -16,10 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
-import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
-import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
+import com.sk89q.craftbook.sponge.mechanics.ics.*;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -28,13 +25,13 @@ import org.spongepowered.api.world.World;
 
 import java.util.List;
 
-public class Clock extends SelfTriggeringIC {
+public class Clock extends IC implements SelfTriggeringIC {
 
     private int ticks;
     private int limit;
 
-    public Clock(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public Clock(ICFactory<Clock> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
@@ -51,6 +48,10 @@ public class Clock extends SelfTriggeringIC {
     }
 
     @Override
+    public void trigger() {
+    }
+
+    @Override
     public void think() {
         ticks++;
         if (ticks == limit) {
@@ -60,7 +61,15 @@ public class Clock extends SelfTriggeringIC {
     }
 
     @Override
-    public boolean canThink() {
+    public boolean isAlwaysST() {
         return true;
+    }
+
+    public static class Factory extends ICFactory<Clock> {
+
+        @Override
+        public Clock createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new Clock(this, location);
+        }
     }
 }

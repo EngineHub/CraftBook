@@ -16,10 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICType;
-import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
-import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
+import com.sk89q.craftbook.sponge.mechanics.ics.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -29,15 +27,15 @@ import org.spongepowered.api.world.World;
 
 import java.util.List;
 
-public class WirelessReceiver extends SelfTriggeringIC {
+public class WirelessReceiver extends IC implements SelfTriggeringIC {
 
     private String wideband;
     private String shortband;
 
     private transient Tuple<String, String> cachedTuple;
 
-    public WirelessReceiver(ICType<? extends IC> type, Location<World> block) {
-        super(type, block);
+    public WirelessReceiver(ICFactory<WirelessReceiver> icFactory, Location<World> block) {
+        super(icFactory, block);
     }
 
     @Override
@@ -68,5 +66,13 @@ public class WirelessReceiver extends SelfTriggeringIC {
     @Override
     public void trigger() {
         getPinSet().setOutput(0, WirelessTransmitter.wirelessStates.contains(cachedTuple), this);
+    }
+
+    public static class Factory extends ICFactory<WirelessReceiver> {
+
+        @Override
+        public WirelessReceiver createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+            return new WirelessReceiver(this, location);
+        }
     }
 }
