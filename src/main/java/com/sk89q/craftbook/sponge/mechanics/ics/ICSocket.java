@@ -29,6 +29,7 @@ import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
@@ -119,10 +120,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public void onThink(Location<?> block) {
-        getIC(block)
-                .filter(ic -> ic instanceof SelfTriggeringIC)
-                .map(ic -> (SelfTriggeringIC) ic)
-                .ifPresent(SelfTriggeringIC::think);
+        Optional<IC> icOptional = getIC(block);
+
+        if (!icOptional.isPresent()) {
+            ((SpongeSelfTriggerManager) CraftBookPlugin.spongeInst().getSelfTriggerManager().get()).unregister(this, block);
+            return;
+        }
+
+        icOptional.filter(ic -> ic instanceof SelfTriggeringIC)
+                    .map(ic -> (SelfTriggeringIC) ic)
+                    .ifPresent(SelfTriggeringIC::think);
     }
 
     @Override
@@ -139,13 +146,12 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     private Optional<IC> getIC(Location<?> location) {
         Optional<IC> icOptional = location.get(CraftBookKeys.IC_DATA);
-        icOptional.ifPresent(ic -> {
-            if (!ic.hasLoaded()) {
-                Sign sign = (Sign) location.getTileEntity().get();
-                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-                ic.loadICData(icType.getFactory(), (Location<World>) location);
-                ic.load();
-            }
+
+        icOptional.filter(ic -> !ic.hasLoaded()).ifPresent(ic -> {
+            Sign sign = (Sign) location.getTileEntity().get();
+            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
+            ic.loadICData(icType.getFactory(), (Location<World>) location);
+            ic.load();
         });
 
         return icOptional;
@@ -161,6 +167,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             IC ic = icType.getFactory().createIC(player, lines, block);
 
             ic.create(player, lines);
+
+            block.offer(new ICData(ic));
 
             Sponge.getScheduler().createTaskBuilder().execute(task -> {
                 ic.load();
