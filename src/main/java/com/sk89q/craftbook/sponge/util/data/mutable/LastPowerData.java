@@ -66,6 +66,12 @@ public class LastPowerData extends AbstractBoundedComparableData<Integer, LastPo
     }
 
     @Override
+    public DataContainer toContainer() {
+        return super.toContainer()
+                .set(CraftBookKeys.LAST_POWER, this.getValue());
+    }
+
+    @Override
     public int getContentVersion() {
         return 1;
     }

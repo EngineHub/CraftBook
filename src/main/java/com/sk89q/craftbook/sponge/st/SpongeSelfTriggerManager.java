@@ -34,14 +34,14 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SpongeSelfTriggerManager implements SelfTriggerManager {
 
-    private Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new HashMap<>();
+    private Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new ConcurrentHashMap<>();
 
     @Override
     public void initialize() {

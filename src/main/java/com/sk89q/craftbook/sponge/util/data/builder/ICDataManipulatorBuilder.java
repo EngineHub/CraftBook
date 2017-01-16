@@ -33,7 +33,8 @@ public class ICDataManipulatorBuilder extends AbstractDataBuilder<ICData> implem
     @Override
     protected Optional<ICData> buildContent(DataView container) throws InvalidDataException {
         if (container.contains(CraftBookKeys.IC_DATA.getQuery())) {
-            return Optional.of(new ICData(container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), IC.class).get()));
+            IC ic = container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), IC.class).get();
+            return Optional.of(new ICData(ic));
         }
 
         return Optional.empty();

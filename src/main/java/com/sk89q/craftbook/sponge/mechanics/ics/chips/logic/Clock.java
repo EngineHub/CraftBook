@@ -68,7 +68,7 @@ public class Clock extends IC implements SelfTriggeringIC {
     public static class Factory extends ICFactory<Clock> {
 
         @Override
-        public Clock createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        public Clock createInstance(Location<World> location) {
             return new Clock(this, location);
         }
     }

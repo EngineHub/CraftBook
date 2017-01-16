@@ -16,8 +16,10 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.*;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -71,7 +73,7 @@ public class WirelessReceiver extends IC implements SelfTriggeringIC {
     public static class Factory extends ICFactory<WirelessReceiver> {
 
         @Override
-        public WirelessReceiver createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        public WirelessReceiver createInstance(Location<World> location) {
             return new WirelessReceiver(this, location);
         }
     }

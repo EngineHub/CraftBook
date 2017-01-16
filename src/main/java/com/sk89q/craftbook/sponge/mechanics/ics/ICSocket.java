@@ -122,10 +122,10 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public void onThink(Location<?> block) {
         Optional<IC> icOptional = getIC(block);
 
-        if (!icOptional.isPresent()) {
-            ((SpongeSelfTriggerManager) CraftBookPlugin.spongeInst().getSelfTriggerManager().get()).unregister(this, block);
-            return;
-        }
+        //if (!icOptional.isPresent()) {
+        //    ((SpongeSelfTriggerManager) CraftBookPlugin.spongeInst().getSelfTriggerManager().get()).unregister(this, block);
+        //    return;
+        //}
 
         icOptional.filter(ic -> ic instanceof SelfTriggeringIC)
                     .map(ic -> (SelfTriggeringIC) ic)
@@ -134,25 +134,31 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public boolean isValid(Location<?> location) {
-        if (location.getBlockType() == BlockTypes.WALL_SIGN) {
-            Sign sign = (Sign) location.getTileEntity().get();
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-
-            return icType != null;
-        }
-
-        return false;
+        return location.get(CraftBookKeys.IC_DATA).isPresent();
     }
 
     private Optional<IC> getIC(Location<?> location) {
         Optional<IC> icOptional = location.get(CraftBookKeys.IC_DATA);
 
-        icOptional.filter(ic -> !ic.hasLoaded()).ifPresent(ic -> {
-            Sign sign = (Sign) location.getTileEntity().get();
-            ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-            ic.loadICData(icType.getFactory(), (Location<World>) location);
-            ic.load();
+        icOptional.ifPresent(ic -> {
+            if (!ic.hasLoaded()) {
+                Sign sign = (Sign) location.getTileEntity().get();
+                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
+                ic.loadICData(icType.getFactory(), (Location<World>) location);
+                ic.load();
+            }
         });
+
+        if (!icOptional.isPresent()) {
+            // Repair broken ICs.
+            if (location.getBlockType() == BlockTypes.WALL_SIGN) {
+                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(location.getTileEntity().get().get(Keys.SIGN_LINES).get().get(1)));
+                if (icType != null) {
+                    icOptional = Optional.of(icType.getFactory().createInstance((Location<World>) location));
+                    location.offer(new ICData(icOptional.get()));
+                }
+            }
+        }
 
         return icOptional;
     }
@@ -164,7 +170,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 throw new InvalidICException("Invalid IC Type");
             }
 
-            IC ic = icType.getFactory().createIC(player, lines, block);
+            IC ic = icType.getFactory().create(player, lines, block);
 
             ic.create(player, lines);
 
@@ -204,8 +210,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 shorthandLength = "Shorthand".length(),
                 nameLength = "Name".length(),
                 descriptionLength = "Description".length(),
-                familiesLength = "Family".length();
-                //stLength = "Self Triggering".length();
+                familiesLength = "Family".length(),
+                stLength = "Self Triggering".length();
 
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
             if((":doc:`" + icType.getModel() + '`').length() > idLength)
@@ -218,16 +224,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 descriptionLength = icType.getDescription().length();
             if(icType.getDefaultPinSet().length() > familiesLength)
                 familiesLength = icType.getDefaultPinSet().length();
-            //if((SelfTriggeringIC.class.isAssignableFrom(icType.icClass) ? "Yes" : "No").length() > stLength)
-            //    stLength = (SelfTriggeringIC.class.isAssignableFrom(icType.icClass) ? "Yes" : "No").length();
+            if((SelfTriggeringIC.class.isAssignableFrom(icType.getFactory().createInstance(null).getClass()) ? "Yes" : "No").length() > stLength)
+                stLength = (SelfTriggeringIC.class.isAssignableFrom(icType.getFactory().createInstance(null).getClass()) ? "Yes" : "No").length();
         }
 
         String border = createStringOfLength(idLength, '=') + ' '
                 + createStringOfLength(shorthandLength, '=') + ' '
                 + createStringOfLength(nameLength, '=') + ' '
                 + createStringOfLength(descriptionLength, '=') + ' '
-                + createStringOfLength(familiesLength, '='); //+ ' '
-                //+ createStringOfLength(stLength, '=');
+                + createStringOfLength(familiesLength, '=') + ' '
+                + createStringOfLength(stLength, '=');
 
         icTable.append(border).append('\n');
         icTable.append(padToLength("IC ID", idLength + 1))
@@ -235,7 +241,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 .append(padToLength("Name", nameLength + 1))
                 .append(padToLength("Description", descriptionLength + 1))
                 .append(padToLength("Family", familiesLength + 1))
-                //.append(padToLength("Self Triggering", stLength + 1))
+                .append(padToLength("Self Triggering", stLength + 1))
                 .append('\n');
         icTable.append(border).append('\n');
         for(ICType<? extends IC> icType : ICManager.getICTypes()) {
@@ -244,7 +250,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                     .append(padToLength(icType.getName(), nameLength + 1))
                     .append(padToLength(icType.getDescription(), descriptionLength + 1))
                     .append(padToLength(icType.getDefaultPinSet(), familiesLength + 1))
-                    //.append(padToLength((SelfTriggeringIC.class.isAssignableFrom(icType.icClass) ? "Yes" : "No"), stLength + 1))
+                    .append(padToLength((SelfTriggeringIC.class.isAssignableFrom(icType.getFactory().createInstance(null).getClass()) ? "Yes" : "No"), stLength + 1))
                     .append('\n');
         }
         icTable.append(border).append('\n');

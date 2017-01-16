@@ -31,10 +31,10 @@ import org.spongepowered.api.Sponge;
 public class CraftBookData {
 
     public static void registerData() {
+        Sponge.getDataManager().registerBuilder(IC.class, new IC.ICDataBuilder());
+
         Sponge.getDataManager().register(LastPowerData.class, ImmutableLastPowerData.class, new LastPowerDataManipulatorBuilder());
         Sponge.getDataManager().register(BlockBagData.class, ImmutableBlockBagData.class, new BlockBagDataManipulatorBuilder());
         Sponge.getDataManager().register(ICData.class, ImmutableICData.class, new ICDataManipulatorBuilder());
-
-        Sponge.getDataManager().registerBuilder(IC.class, new IC.ICDataBuilder());
     }
 }

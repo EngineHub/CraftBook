@@ -17,13 +17,8 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
-import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-
-import java.util.List;
 
 public class XnorGate extends TwoInputLogicGate {
 
@@ -39,7 +34,7 @@ public class XnorGate extends TwoInputLogicGate {
     public static class Factory extends ICFactory<XnorGate> {
 
         @Override
-        public XnorGate createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        public XnorGate createInstance(Location<World> location) {
             return new XnorGate(this, location);
         }
     }

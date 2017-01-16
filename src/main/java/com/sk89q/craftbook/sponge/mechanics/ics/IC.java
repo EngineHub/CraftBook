@@ -57,7 +57,7 @@ public abstract class IC implements DataSerializable {
         this.icFactory = icFactory;
         this.block = block;
 
-        this.loaded = true;
+        this.loaded = icFactory != null;
     }
 
     public void loadICData(ICFactory<? extends IC> icFactory, Location<World> block) {

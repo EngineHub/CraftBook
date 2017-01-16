@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.util.data.immutable;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
@@ -40,6 +41,12 @@ public class ImmutableBlockBagData extends AbstractImmutableSingleData<Long, Imm
     @Override
     public BlockBagData asMutable() {
         return new BlockBagData(getValue());
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        return super.toContainer()
+                .set(CraftBookKeys.BLOCK_BAG, this.getValue());
     }
 
     @Override

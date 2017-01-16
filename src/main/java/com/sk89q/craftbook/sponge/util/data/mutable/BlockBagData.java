@@ -78,6 +78,12 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
     }
 
     @Override
+    public DataContainer toContainer() {
+        return super.toContainer()
+                .set(CraftBookKeys.BLOCK_BAG, this.getValue());
+    }
+
+    @Override
     public int getContentVersion() {
         return 1;
     }

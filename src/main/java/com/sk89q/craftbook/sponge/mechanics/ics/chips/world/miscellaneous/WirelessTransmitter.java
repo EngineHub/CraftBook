@@ -76,7 +76,7 @@ public class WirelessTransmitter extends IC {
     public static class Factory extends ICFactory<WirelessTransmitter> {
 
         @Override
-        public WirelessTransmitter createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        public WirelessTransmitter createInstance(Location<World> location) {
             return new WirelessTransmitter(this, location);
         }
     }

@@ -412,7 +412,7 @@ public class ProgrammableFireworksDisplay extends IC {
     public static class Factory extends ICFactory<ProgrammableFireworksDisplay> {
 
         @Override
-        public ProgrammableFireworksDisplay createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        public ProgrammableFireworksDisplay createInstance(Location<World> location) {
             return new ProgrammableFireworksDisplay(this, location);
         }
     }

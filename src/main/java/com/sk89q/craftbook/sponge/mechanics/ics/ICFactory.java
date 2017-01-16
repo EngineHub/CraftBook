@@ -9,5 +9,9 @@ import java.util.List;
 
 public abstract class ICFactory<T extends IC> {
 
-    public abstract T createIC(Player player, List<Text> lines, Location<World> location) throws InvalidICException;
+    public T create(Player player, List<Text> lines, Location<World> location) throws InvalidICException {
+        return createInstance(location);
+    }
+
+    public abstract T createInstance(Location<World> location);
 }

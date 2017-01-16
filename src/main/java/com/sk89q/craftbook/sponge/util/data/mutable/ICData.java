@@ -46,6 +46,7 @@ public class ICData extends AbstractSingleData<IC, ICData, ImmutableICData> {
     @Override
     public Optional<ICData> from(DataContainer container) {
         if (container.contains(CraftBookKeys.IC_DATA.getQuery())) {
+            System.out.println(container.getString(CraftBookKeys.IC_DATA.getQuery()));
             return Optional.of(new ICData(container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), IC.class).get()));
         }
 
@@ -60,6 +61,11 @@ public class ICData extends AbstractSingleData<IC, ICData, ImmutableICData> {
     @Override
     public ImmutableICData asImmutable() {
         return new ImmutableICData(getValue());
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        return super.toContainer().set(CraftBookKeys.IC_DATA, getValue());
     }
 
     @Override
