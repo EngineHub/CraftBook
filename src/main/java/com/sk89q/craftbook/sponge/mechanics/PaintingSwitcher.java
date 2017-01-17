@@ -94,7 +94,10 @@ public class PaintingSwitcher extends SpongeMechanic implements DocumentationPro
 
             System.out.println(current);
 
-            painting.offer(Keys.ART, artsCollection.get(current));
+            while (!painting.offer(Keys.ART, artsCollection.get(current)).isSuccessful()) {
+                current += offset;
+                current %= artsCollection.size();
+            }
         });
     }
 
