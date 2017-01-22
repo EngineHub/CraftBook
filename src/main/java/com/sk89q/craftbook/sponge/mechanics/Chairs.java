@@ -91,7 +91,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
             for (Map.Entry<UUID, Chair<?>> chair : new HashSet<>(chairs.entrySet())) {
                 Player player = Sponge.getGame().getServer().getPlayer(chair.getKey()).orElse(null);
                 if (player == null) {
-                    removeChair(chair.getValue());
+                    removeChair(chair.getValue(), false);
                     return;
                 }
 
@@ -155,9 +155,9 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         return chair;
     }
 
-    private void removeChair(Chair<?> chair) {
+    private void removeChair(Chair<?> chair, boolean clearPassengers) {
         Player passenger = chair.chairEntity.getPassengers().stream().filter((entity -> entity instanceof Player)).map(e -> (Player) e).findFirst().orElse(null);
-        if (passenger != null) {
+        if (passenger != null && clearPassengers) {
             chair.chairEntity.clearPassengers();
             passenger.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
             if (exitAtEntry.getValue()) {
@@ -207,7 +207,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
             }
 
             if (chairs.containsKey(player.getUniqueId())) {
-                removeChair(chairs.get(player.getUniqueId()));
+                removeChair(chairs.get(player.getUniqueId()), true);
             }
 
             addChair(player, location);
@@ -219,7 +219,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         event.getTransactions().forEach((transaction) -> transaction.getOriginal().getLocation().ifPresent((location) -> {
             Chair<?> chair = getChair(location);
             if (chair != null)
-                removeChair(chair);
+                removeChair(chair, true);
         }));
     }
 
@@ -228,7 +228,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         if (event.getTargetEntity() instanceof ArmorStand) {
             Chair<?> chair = getChair(event.getTargetEntity());
             if (chair != null)
-                removeChair(chair);
+                removeChair(chair, false);
         }
     }
 
