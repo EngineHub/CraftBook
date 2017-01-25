@@ -27,18 +27,21 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.Art;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.hanging.Painting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
+import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Module(moduleId = "paintingswitcher", moduleName = "PaintingSwitcher", onEnable="onInitialize", onDisable="onDisable")
 public class PaintingSwitcher extends SpongeMechanic implements DocumentationProvider {
@@ -63,21 +66,19 @@ public class PaintingSwitcher extends SpongeMechanic implements DocumentationPro
     }
 
     @Listener
-    public void onPlayerClick(InteractEntityEvent.Secondary.MainHand event, @First Player player) {
-        if (event.getTargetEntity().getType() == EntityTypes.PAINTING) {
-            if (usePermissions.hasPermission(player)) {
-                if (paintings.containsKey(player.getUniqueId()) && paintings.get(player.getUniqueId()).equals(event.getTargetEntity().getUniqueId())) {
-                    paintings.remove(player.getUniqueId());
-                    player.sendMessage(Text.of(TextColors.YELLOW, "Finished editing painting."));
-                } else {
-                    paintings.put(player.getUniqueId(), event.getTargetEntity().getUniqueId());
-                    player.sendMessage(Text.of(TextColors.YELLOW, "Editing painting."));
-                }
-
-                event.setCancelled(true);
+    public void onPlayerClick(InteractEntityEvent.Secondary.MainHand event, @First Player player, @Getter("getTargetEntity") Painting painting) {
+        if (usePermissions.hasPermission(player)) {
+            if (paintings.containsKey(player.getUniqueId()) && paintings.get(player.getUniqueId()).equals(painting.getUniqueId())) {
+                paintings.remove(player.getUniqueId());
+                player.sendMessage(Text.of(TextColors.YELLOW, "Finished editing painting."));
             } else {
-                player.sendMessage(Text.of(TextColors.RED, "You don't have permission to edit paintings!"));
+                paintings.put(player.getUniqueId(), painting.getUniqueId());
+                player.sendMessage(Text.of(TextColors.YELLOW, "Editing painting."));
             }
+
+            event.setCancelled(true);
+        } else {
+            player.sendMessage(Text.of(TextColors.RED, "You don't have permission to edit paintings!"));
         }
     }
 
