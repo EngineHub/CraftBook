@@ -30,9 +30,12 @@ import com.sk89q.craftbook.sponge.mechanics.area.complex.command.DeleteCommand;
 import com.sk89q.craftbook.sponge.mechanics.area.complex.command.ListCommand;
 import com.sk89q.craftbook.sponge.mechanics.area.complex.command.SaveCommand;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.SpongeMechanicData;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
+import com.sk89q.craftbook.sponge.util.data.mutable.NamespaceData;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.Sponge;
@@ -43,12 +46,15 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -78,6 +84,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
 
     public ConfigValue<Integer> maxAreaSize = new ConfigValue<>("maximum-size", "The maximum amount of blocks that the saved areas can contain. -1 to disable limit.", 5000);
     public ConfigValue<Integer> maxPerUser = new ConfigValue<>("maximum-per-user", "The maximum amount of areas that a namespace can own. 0 to disable limit.", 30);
+    public ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
     private static final Pattern MARKER_PATTERN = Pattern.compile("^-[A-Za-z0-9_]*?-$");
 
@@ -87,6 +94,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
 
         maxAreaSize.load(config);
         maxPerUser.load(config);
+        allowRedstone.load(config);
 
         CommandSpec saveCommand = CommandSpec.builder()
                 .description(Text.of("Command to save selected WorldEdit regions."))
@@ -153,8 +161,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
                         return;
                     }
 
-                    ComplexAreaData data = getData(ComplexAreaData.class, event.getTargetTile().getLocation());
-                    data.namespace = namespace;
+                    event.getTargetTile().offer(new NamespaceData(namespace));
 
                     event.getText().set(Keys.SIGN_LINES, lines);
 
@@ -167,12 +174,40 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     }
 
     @Listener
+    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
+        if(!allowRedstone.getValue())
+            return;
+
+        if(!SignUtil.isSign(source.getBlockState())) return;
+        Location<World> block = source.getLocation();
+        Sign sign = (Sign) block.getTileEntity().get();
+
+        if (isMechanicSign(sign)) {
+            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            if(player != null) {
+                if(!usePermissions.hasPermission(player)) {
+                    player.sendMessage(USE_PERMISSIONS);
+                    return;
+                }
+            }
+
+            boolean isPowered = BlockUtil.getBlockPowerLevel(block).orElse(0) > 0;
+            boolean wasPowered = block.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;
+
+            if (isPowered != wasPowered) {
+                triggerMechanic(block, sign, isPowered);
+                block.offer(new LastPowerData(isPowered ? 15 : 0));
+            }
+        }
+    }
+
+    @Listener
     public void onRightClick(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player human) {
         event.getTargetBlock().getLocation().ifPresent(location -> {
             if (isValid(location)) {
                 location.getTileEntity().ifPresent((sign -> {
                     if (human == null || usePermissions.hasPermission(human)) {
-                        if (triggerMechanic(location, (Sign) sign)) {
+                        if (triggerMechanic(location, (Sign) sign, null)) {
                             event.setCancelled(true);
                             if (human != null)
                                 human.sendMessage(Text.of(TextColors.YELLOW, "Toggled!"));
@@ -185,19 +220,22 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
         });
     }
 
-    public boolean triggerMechanic(Location<World> location, Sign sign) {
+    public boolean triggerMechanic(Location<World> location, Sign sign, Boolean forceState) {
         boolean save = "[SaveArea]".equals(SignUtil.getTextRaw(sign, 1));
 
-        ComplexAreaData data = getData(ComplexAreaData.class, location);
-
-        String namespace = data.namespace;
+        String namespace = sign.get(CraftBookKeys.NAMESPACE).orElse(null);
         String id = StringUtils.replace(SignUtil.getTextRaw(sign, 2), "-", "").toLowerCase();
         String inactiveID = StringUtils.replace(SignUtil.getTextRaw(sign, 3), "-", "").toLowerCase();
 
         try {
             CuboidCopy copy;
 
-            if (checkToggleState(sign)) {
+            boolean state = checkToggleState(sign);
+            if (forceState != null) {
+                state = forceState;
+            }
+
+            if (state) {
                 copy = CopyManager.load(location.getExtent(), namespace, id);
 
                 if (save) {
@@ -282,7 +320,8 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[]{
                 maxAreaSize,
-                maxPerUser
+                maxPerUser,
+                allowRedstone
         };
     }
 
@@ -302,9 +341,5 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
                 commandDeletePermissions,
                 commandDeleteOtherPermissions
         };
-    }
-
-    public static class ComplexAreaData extends SpongeMechanicData {
-        public String namespace;
     }
 }
