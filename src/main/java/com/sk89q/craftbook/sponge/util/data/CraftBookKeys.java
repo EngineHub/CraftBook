@@ -16,13 +16,14 @@
  */
 package com.sk89q.craftbook.sponge.util.data;
 
+import static org.spongepowered.api.data.DataQuery.of;
+import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
+
+import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.data.value.mutable.Value;
-
-import static org.spongepowered.api.data.DataQuery.of;
-import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
 
 public class CraftBookKeys {
 
@@ -31,4 +32,7 @@ public class CraftBookKeys {
 
     public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
             new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
+
+    public static Key<Value<String>> NAMESPACE = makeSingleKey(TypeToken.of(String.class),
+            new TypeToken<Value<String>>(){}, of("Namespace"), "craftbook:namespace", "Namespace");
 }
