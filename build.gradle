@@ -3,6 +3,7 @@ plugins {
     id "maven"
     id "eclipse"
     id "idea"
+    id "signing"
     id "com.github.hierynomus.license" version "0.12.1"
     id "com.github.johnrengelman.shadow" version "1.2.4"
     id "com.jfrog.artifactory" version "4.0.0"
@@ -81,6 +82,11 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 jar {
     classifier 'original'
+}
+
+signing {
+    required false
+    sign shadowJar
 }
 
 shadowJar {
