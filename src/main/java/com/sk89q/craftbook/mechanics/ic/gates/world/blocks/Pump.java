@@ -89,7 +89,7 @@ public class Pump extends AbstractSelfTriggeredIC {
 
         if (((Factory) getFactory()).buckets) {
             if (c.getInventory().contains(Material.BUCKET)) {
-                c.getInventory().remove(new ItemStack(Material.BUCKET));
+                c.getInventory().removeItem(new ItemStack(Material.BUCKET));
                 if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()) == Material.LAVA ? Material.LAVA_BUCKET : Material.WATER_BUCKET, 1)).isEmpty()) {
                     return true;
                 } else {
