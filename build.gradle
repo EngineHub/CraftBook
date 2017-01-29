@@ -39,6 +39,10 @@ dependencies {
     testCompile 'junit:junit:5.+'
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 if (JavaVersion.current().isJava8Compatible()) {
     // Java 8 turns on doclint which we fail
     tasks.withType(Javadoc) {
@@ -53,6 +57,7 @@ license {
 
     header = file('HEADER.txt')
     include '**/*.java'
+    exclude '**/Metrics.java'
 
     ignoreFailures = false
     strictCheck = true
