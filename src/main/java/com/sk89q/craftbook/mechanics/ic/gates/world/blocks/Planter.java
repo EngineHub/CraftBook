@@ -158,6 +158,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
             case WATER_LILY:
+            case BEETROOT_SEEDS:
                 return true;
             case INK_SACK:
                 return ((Dye)item.getData()).getColor() == DyeColor.BROWN;
@@ -178,6 +179,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case PUMPKIN_SEEDS:
             case POTATO_ITEM:
             case CARROT_ITEM:
+            case BEETROOT_SEEDS:
                 return block.getRelative(0, -1, 0).getType() == Material.SOIL;
             case NETHER_STALK:
                 return block.getRelative(0, -1, 0).getType() == Material.SOUL_SAND;
@@ -231,6 +233,9 @@ public class Planter extends AbstractSelfTriggeredIC {
                 return true;
             case CARROT_ITEM:
                 block.setTypeIdAndData(Material.CARROT.getId(), (byte) 0, true);
+                return true;
+            case BEETROOT_SEEDS:
+                block.setTypeIdAndData(Material.BEETROOT_BLOCK.getId(), (byte) 0, true);
                 return true;
             case INK_SACK:
                 if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
