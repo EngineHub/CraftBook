@@ -138,6 +138,10 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Collections.singletonList(stack)), getBackBlock());
                     Bukkit.getPluginManager().callEvent(event);
 
+                    if (event.isCancelled()) {
+                        continue;
+                    }
+
                     if(event.getItems().isEmpty()) {
                         entity.remove();
                         return true;
