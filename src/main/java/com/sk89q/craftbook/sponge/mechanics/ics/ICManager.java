@@ -38,6 +38,8 @@ class ICManager {
         registerICType(new ICType<>("MC1017", "RE T FLIP", "Toggle Flip Flop RE", "Toggles output on high.", new ToggleFlipFlop.Factory(true)));
         registerICType(new ICType<>("MC1018", "FE T FLIP", "Toggle Flip Flip FE", "Toggles output on low.", new ToggleFlipFlop.Factory(false)));
 
+        registerICType(new ICType<>("MC1025", "TIME MODULUS", "World Time Modulus", "Outputs high when the world time is odd.", new WorldTimeModulus.Factory()));
+
         registerICType(new ICType<>("MC1110", "TRANSMITTER", "Wireless Transmitter", "Transmits a wireless redstone signal.", new WirelessTransmitter.Factory()));
         registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", new WirelessReceiver.Factory()));
 
