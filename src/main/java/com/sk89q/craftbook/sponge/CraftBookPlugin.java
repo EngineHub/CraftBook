@@ -31,6 +31,7 @@ import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
 import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
+import com.sk89q.craftbook.sponge.util.Metrics;
 import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import com.sk89q.craftbook.sponge.util.data.CraftBookData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
@@ -65,6 +66,9 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Inject
     @DefaultConfig(sharedRoot = false)
     private File mainConfig;
+
+    @Inject
+    private Metrics metrics;
 
     @Inject
     @DefaultConfig(sharedRoot = false)
