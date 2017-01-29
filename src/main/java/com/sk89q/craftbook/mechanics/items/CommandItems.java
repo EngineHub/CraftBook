@@ -433,6 +433,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     }
                 }
 
+                for(CommandItemAction action : comdef.actions)
+                    if(action.stage == ActionRunStage.BEFORE)
+                        if(!action.runAction(comdef, event, player))
+                            break current;
+
                 for(ItemStack stack : def.consumables) {
 
                     boolean found = false;
@@ -482,11 +487,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 }
 
                 player.updateInventory();
-
-                for(CommandItemAction action : comdef.actions)
-                    if(action.stage == ActionRunStage.BEFORE)
-                        if(!action.runAction(comdef, event, player))
-                            break current;
 
                 for(String command : comdef.commands)
                     doCommand(command, event, comdef, player);
