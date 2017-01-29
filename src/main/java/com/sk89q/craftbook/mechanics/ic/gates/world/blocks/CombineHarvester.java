@@ -76,6 +76,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
             case CARROT:
             case POTATO:
                 return block.getData() >= 0x7;
+            case BEETROOT_BLOCK:
+                return block.getData() >= 0x3;
             case CACTUS:
                 return below == Material.CACTUS && above != Material.CACTUS;
             case SUGAR_CANE_BLOCK:
