@@ -25,6 +25,8 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
@@ -43,7 +45,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Module(moduleId = "footprints", moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
-public class Footprints extends SpongeMechanic {
+public class Footprints extends SpongeMechanic implements DocumentationProvider {
 
     @Inject
     @ModuleConfiguration
@@ -54,13 +56,15 @@ public class Footprints extends SpongeMechanic {
     private ParticleEffect footprintParticle;
 
     @Override
-    public void onInitialize() {
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+
         footprintParticle = Sponge.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.FOOTSTEP).build();
 
         allowedBlocks.load(config);
     }
 
-    private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterWrite(1L, TimeUnit.MINUTES).build(new FootprintDataCacheLoader());
+    private LoadingCache<UUID, FootprintData> footprintDataCache = CacheBuilder.newBuilder().expireAfterAccess(1L, TimeUnit.MINUTES).build(new FootprintDataCacheLoader());
 
     @Listener
     public void onEntityMove(MoveEntityEvent event) {
@@ -91,6 +95,18 @@ public class Footprints extends SpongeMechanic {
 
     private FootprintData getFootprintData(UUID uuid) {
         return footprintDataCache.getUnchecked(uuid);
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/footprints";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[] {
+                allowedBlocks
+        };
     }
 
     private static class FootprintData {
