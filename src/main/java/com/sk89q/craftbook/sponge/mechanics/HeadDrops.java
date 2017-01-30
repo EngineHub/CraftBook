@@ -16,104 +16,103 @@
  */
 package com.sk89q.craftbook.sponge.mechanics;
 
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
+
 import com.flowpowered.math.vector.Vector3d;
+import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.text.WordUtils;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.Skull;
+import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.RepresentedPlayerData;
-import org.spongepowered.api.data.manipulator.mutable.SkullData;
+import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.data.type.SkullType;
 import org.spongepowered.api.data.type.SkullTypes;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
+import org.spongepowered.api.item.Enchantments;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.GameProfile;
+import org.spongepowered.api.service.permission.PermissionDescription;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
-import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
 @Module(moduleId = "headdrops", moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
 
     private static final Pattern HEAD_DROPS_TABLE_PATTERN = Pattern.compile("%CUSTOM_HEAD_TYPES%", Pattern.LITERAL);
 
-    @Listener
-    public void onItemDrops(DropItemEvent.Destruct event, @First EntitySpawnCause spawnCause) {
-        EntityType type = spawnCause.getEntity().getType();
-
-        SkullData data = Sponge.getGame().getDataManager().getManipulatorBuilder(SkullData.class).get().create();
-        GameProfile profile = null;
-
-        if (type == EntityTypes.PLAYER) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-            profile = ((Player) spawnCause.getEntity()).getProfile();
-        } else if (type == EntityTypes.ZOMBIE) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.ZOMBIE);
-        } else if (type == EntityTypes.CREEPER) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.CREEPER);
-        } else if (type == EntityTypes.SKELETON) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.SKELETON);
-        } else if (type == EntityTypes.WITHER_SKELETON) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.WITHER_SKELETON);
-        } else if (type == EntityTypes.ENDER_DRAGON) {
-            data.set(Keys.SKULL_TYPE, SkullTypes.ENDER_DRAGON);
-        } else {
-            // Add extra mob.
-            profile = getForEntity(type);
-            if(profile != null)
-                data.set(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-        }
-
-        if (data.get(Keys.SKULL_TYPE).isPresent()) {
-            ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).itemData(data).build();
-            if (profile != null) {
-                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
-                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
-                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + " Head"));
-                itemStack.offer(skinData);
-            }
-            Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
-            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
-            item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
-        }
-    }
-
-    @Listener
-    public void onBlockPlace(ChangeBlockEvent.Place event) {
-
-    }
-
-    @Listener
-    public void onBlockBreak(ChangeBlockEvent.Break event) {
-
-    }
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
 
     private Map<EntityType, GameProfile> mobSkullMap = new HashMap<>();
 
+    private ConfigValue<Boolean> playerKillsOnly = new ConfigValue<>("player-kills-only", "Only drop heads when mobs are killed by a player.",true);
+    private ConfigValue<Double> dropRate = new ConfigValue<>("drop-rate", "Drop chance out of 1.", 0.05, TypeToken.of(Double.class));
+    private ConfigValue<Double> lootingRateModifier = new ConfigValue<>("looting-rate-modifier",
+            "Added chance for each looting level.", 0.05, TypeToken.of(Double.class));
+    private ConfigValue<Boolean> showNameClick = new ConfigValue<>("show-name-on-click", "Show the name of the owner of a head on right click.",true);
+    private ConfigValue<Boolean> playerHeads = new ConfigValue<>("player-heads", "Allow players to drop their heads on death.", true);
+    private ConfigValue<Boolean> mobHeads = new ConfigValue<>("mob-heads", "Allow mobs to drop their heads on death.", true);
+
+    private SpongePermissionNode killPermission = new SpongePermissionNode("craftbook.headdrops.kill",
+            "Allow the player to get a HeadDrop from killing an entity.", PermissionDescription.ROLE_USER);
+
     @Override
     public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+
+        killPermission.register();
+
+        playerKillsOnly.load(config);
+        dropRate.load(config);
+        lootingRateModifier.load(config);
+        showNameClick.load(config);
+        playerHeads.load(config);
+        mobHeads.load(config);
+
         mobSkullMap.clear();
 
         // Official or Guaranteed Static - Vanilla
@@ -143,6 +142,147 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.VILLAGER, GameProfile.of(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
     }
 
+    @Listener
+    public void onItemDrops(DropItemEvent.Destruct event, @First EntitySpawnCause spawnCause) {
+        EntityType type = spawnCause.getEntity().getType();
+
+        EntityDamageSource damageSource = event.getCause().first(EntityDamageSource.class).orElse(null);
+        Entity killer = null;
+
+        if (damageSource != null) {
+            killer = damageSource.getSource();
+            if (killer instanceof Subject && !killPermission.hasPermission((Subject) killer)) {
+                return;
+            }
+        }
+
+        if (playerKillsOnly.getValue() && !(killer instanceof Player)) {
+            return;
+        }
+
+        double chance = Math.min(1, dropRate.getValue());
+
+        if (killer != null && killer instanceof Player) {
+            int level = ((Player) killer).getItemInHand(HandTypes.MAIN_HAND).filter(item -> item.get(Keys.ITEM_ENCHANTMENTS).isPresent())
+                    .map(item -> item.get(Keys.ITEM_ENCHANTMENTS).get().stream()
+                            .filter(enchant -> enchant.getEnchantment().equals(Enchantments.LOOTING)).findFirst())
+                    .filter(Optional::isPresent).map(enchant -> enchant.get().getLevel()).orElse(0);
+            chance = Math.min(1, chance + (lootingRateModifier.getValue() * level));
+        }
+
+        if (ThreadLocalRandom.current().nextDouble() > chance) {
+            return;
+        }
+
+        SkullType skullType = null;
+        GameProfile profile = null;
+
+        if (type == EntityTypes.PLAYER) {
+            if (playerHeads.getValue()) {
+                skullType = SkullTypes.PLAYER;
+                profile = ((Player) spawnCause.getEntity()).getProfile();
+            }
+        } else if (mobHeads.getValue()) {
+            if (type == EntityTypes.ZOMBIE) {
+                skullType = SkullTypes.ZOMBIE;
+            } else if (type == EntityTypes.CREEPER) {
+                skullType = SkullTypes.CREEPER;
+            } else if (type == EntityTypes.SKELETON) {
+                skullType = SkullTypes.SKELETON;
+            } else if (type == EntityTypes.WITHER_SKELETON) {
+                skullType = SkullTypes.WITHER_SKELETON;
+            } else if (type == EntityTypes.ENDER_DRAGON) {
+                skullType = SkullTypes.ENDER_DRAGON;
+            } else {
+                // Add extra mob.
+                profile = getForEntity(type);
+                if (profile != null) {
+                    skullType = SkullTypes.PLAYER;
+                }
+            }
+        }
+
+        if (skullType != null) {
+            ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
+                    .add(Keys.SKULL_TYPE, skullType).build();
+            if (profile != null) {
+                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
+                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
+                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + " Head"));
+                itemStack.offer(skinData);
+            }
+            Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
+            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
+            item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+            event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
+        }
+    }
+
+    @Listener
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+        if (!showNameClick.getValue()) {
+            return;
+        }
+        event.getTargetBlock().getLocation().filter(location -> location.getBlockType() == BlockTypes.SKULL).ifPresent(location -> {
+            Skull skull = (Skull) location.getTileEntity().get();
+            if (skull.skullType().get() == SkullTypes.PLAYER) {
+                GameProfile profile = skull.get(Keys.REPRESENTED_PLAYER).orElse(null);
+                if (profile != null) {
+                    if (mobSkullMap.containsValue(profile)) {
+                        EntityType entityType = mobSkullMap.entrySet().stream().filter(entry -> entry.getValue().equals(profile)).findFirst().get().getKey();
+                        profile.getName().ifPresent(name -> player.sendMessage(Text.of(TextColors.YELLOW, "The severed head of a " + entityType.getName())));
+                    } else {
+                        profile.getName().ifPresent(name -> player.sendMessage(Text.of(TextColors.YELLOW, "The severed head of " + name)));
+                    }
+                }
+            }
+        });
+    }
+
+    @Listener
+    public void onBlockBreak(ChangeBlockEvent.Break event) {
+        event.getTransactions().stream()
+                .filter(transaction -> transaction.getOriginal().getState().getType() == BlockTypes.SKULL)
+                .map(Transaction::getOriginal)
+                .forEach(snapshot -> {
+                    Location<World> location = snapshot.getLocation().get();
+                    if (snapshot.get(Keys.SKULL_TYPE).get() == SkullTypes.PLAYER) {
+                        GameProfile profile = snapshot.get(Keys.REPRESENTED_PLAYER).orElse(null);
+                        if (profile != null) {
+                            String name;
+
+                            if (mobSkullMap.containsValue(profile)) {
+                                EntityType entityType = mobSkullMap.entrySet().stream().filter(entry -> entry.getValue().equals(profile)).findFirst().get().getKey();
+                                name = WordUtils.capitalize(entityType.getName());
+                            } else {
+                                name = profile.getName().orElse(null);
+                                if (name != null) {
+                                    name += "'s";
+                                }
+                            }
+
+                            if (name != null) {
+                                ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
+                                        .add(Keys.SKULL_TYPE, SkullTypes.PLAYER).build();
+                                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
+
+                                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
+                                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, name + " Head"));
+                                itemStack.offer(skinData);
+                                Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
+                                item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+                                event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root",
+                                        SpawnCause.builder().type(SpawnTypes.DROPPED_ITEM).build())));
+
+                                event.setCancelled(true);
+                                Sponge.getScheduler().createTaskBuilder().execute(() ->
+                                        location.setBlockType(BlockTypes.AIR, CraftBookPlugin.spongeInst().getCause().build())).submit(CraftBookPlugin.spongeInst().container);
+                            }
+                        }
+                    }
+                });
+    }
+
     private GameProfile getForEntity(EntityType entityType) {
         return mobSkullMap.get(entityType);
     }
@@ -156,8 +296,10 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
     public String performCustomConversions(String input) {
         StringBuilder headTable = new StringBuilder();
 
-        headTable.append("Custom Head Drops\n");
+        headTable.append("Mob Head Drops\n");
         headTable.append("=================\n\n");
+
+        headTable.append("HeadDrops supports all mob heads in the base game, as well as many more.\n\n");
 
         int mobTypeLength = "Mob".length(),
                 headImageLength = "Image".length();
@@ -182,5 +324,24 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         headTable.append(border).append('\n');
 
         return HEAD_DROPS_TABLE_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(headTable.toString()));
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[]{
+                playerKillsOnly,
+                dropRate,
+                lootingRateModifier,
+                showNameClick,
+                playerHeads,
+                mobHeads
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                killPermission
+        };
     }
 }
