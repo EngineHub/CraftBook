@@ -32,7 +32,7 @@ public class DocumentationGenerator {
     private static final Pattern CONFIG_PATTERN = Pattern.compile("%CONFIG%", Pattern.LITERAL);
     private static final Pattern IMPORT_PATTERN = Pattern.compile("%IMPORT (.*)%");
 
-    private static String[] searchLocations = {"../docs", "docs"};
+    private static String[] searchLocations = {"../docs", "docs", "config/craftbook/docs", "../config/craftbook/docs"};
     private static File rootDirectory;
 
     private static File getRootDirectory() {
