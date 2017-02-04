@@ -27,6 +27,8 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.TreeType;
+import org.spongepowered.api.data.type.TreeTypes;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
@@ -34,6 +36,7 @@ import org.spongepowered.api.entity.vehicle.Boat;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -94,7 +97,23 @@ public class ExitRemover extends SpongeMechanic implements DocumentationProvider
             if(boat.isRemoved()) return;
 
             if(giveItem.getValue()) {
-                ItemStack stack = ItemStack.of(ItemTypes.BOAT, 1); // TODO Use type of boat.
+                ItemType boatType = ItemTypes.BOAT;
+                TreeType treeType = boat.get(Keys.TREE_TYPE).orElse(TreeTypes.OAK);
+                if (treeType == TreeTypes.OAK) {
+                    boatType = ItemTypes.BOAT;
+                } else if (treeType == TreeTypes.ACACIA) {
+                    boatType = ItemTypes.ACACIA_BOAT;
+                } else if (treeType == TreeTypes.BIRCH) {
+                    boatType = ItemTypes.BIRCH_BOAT;
+                } else if (treeType == TreeTypes.DARK_OAK) {
+                    boatType = ItemTypes.DARK_OAK_BOAT;
+                } else if (treeType == TreeTypes.JUNGLE) {
+                    boatType = ItemTypes.JUNGLE_BOAT;
+                } else if (treeType == TreeTypes.SPRUCE) {
+                    boatType = ItemTypes.SPRUCE_BOAT;
+                }
+
+                ItemStack stack = ItemStack.of(boatType, 1);
 
                 if(!((Player) player).getInventory().offer(stack).getRejectedItems().isEmpty()) {
                     Item item = (Item) player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition().add(0, 1, 0));
