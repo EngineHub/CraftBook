@@ -21,7 +21,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.GetVariableCommand;
@@ -52,7 +54,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Module(moduleId = "variables", moduleName = "Variables", onEnable="onInitialize", onDisable="onDisable")
-public class Variables extends SpongeMechanic {
+public class Variables extends SpongeMechanic implements DocumentationProvider {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9]+)\\|)*([a-zA-Z0-9]+)%");
 
@@ -63,6 +65,9 @@ public class Variables extends SpongeMechanic {
     @Inject
     @ModuleConfiguration
     public ConfigurationNode config;
+
+    private ConfigValue<Boolean> defaultToGlobal = new ConfigValue<>("default-to-global", "If no namespace is provided, default to global. "
+            + "Otherwise personal namespace", true);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -76,6 +81,8 @@ public class Variables extends SpongeMechanic {
             CraftBookPlugin.spongeInst().getLogger().warn("Failed to read variables! Resetting..", e);
             variableStore = new HashMap<>();
         }
+
+        defaultToGlobal.load(config);
 
         CommandSpec setVariable = CommandSpec.builder()
                 .description(Text.of("Set the value of a variable"))
@@ -164,12 +171,20 @@ public class Variables extends SpongeMechanic {
 
             boolean explicit = true;
             if (namespace == null) {
-                namespace = "global";
+                if (defaultToGlobal.getValue()) {
+                    namespace = "global";
+                    if(player != null && getVariable(player.getUniqueId().toString(), name) != null) {
+                        namespace = player.getUniqueId().toString();
+                    }
+                } else {
+                    if (player != null) {
+                        namespace = player.getUniqueId().toString();
+                    } else {
+                        continue;
+                    }
+                }
                 explicit = false;
             }
-
-            if("global".equals(namespace) && player != null && !explicit && getVariable(player.getUniqueId().toString(), name) != null)
-                namespace = player.getUniqueId().toString();
 
             String variable = getVariable(namespace, name);
 
@@ -223,5 +238,17 @@ public class Variables extends SpongeMechanic {
 
     public static boolean isValidVariableKey(String key) {
         return !key.contains("|") && !key.contains("%");
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/variables";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue[] {
+                defaultToGlobal
+        };
     }
 }
