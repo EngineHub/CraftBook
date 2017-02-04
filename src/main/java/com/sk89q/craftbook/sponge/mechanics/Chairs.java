@@ -29,7 +29,10 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.*;
+import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
@@ -55,7 +58,13 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Module(moduleId = "chairs", moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
@@ -158,6 +167,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     private void removeChair(Chair<?> chair, boolean clearPassengers) {
         Player passenger = chair.chairEntity.getPassengers().stream().filter((entity -> entity instanceof Player)).map(e -> (Player) e).findFirst().orElse(null);
         if (passenger != null && clearPassengers) {
+            passenger.setVehicle(null);
             chair.chairEntity.clearPassengers();
             passenger.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
             if (exitAtEntry.getValue()) {
@@ -224,11 +234,16 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     }
 
     @Listener
-    public void onDismount(RideEntityEvent.Dismount event) {
+    public void onDismount(RideEntityEvent.Dismount event, @First Player player) {
         if (event.getTargetEntity() instanceof ArmorStand) {
             Chair<?> chair = getChair(event.getTargetEntity());
-            if (chair != null)
-                removeChair(chair, false);
+            if (chair != null) {
+                player.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
+                Sponge.getScheduler().createTaskBuilder().execute(() -> {
+                    removeChair(chair, false);
+                    Sponge.getGame().getTeleportHelper().getSafeLocation(chair.chairLocation).ifPresent(player::setLocation);
+                }).submit(CraftBookPlugin.inst());
+            }
         }
     }
 
