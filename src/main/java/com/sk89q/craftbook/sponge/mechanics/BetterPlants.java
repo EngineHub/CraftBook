@@ -49,7 +49,7 @@ import org.spongepowered.api.world.Location;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-@Module(moduleId = "betterplants", moduleName = "BetterPhysics", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleId = "betterplants", moduleName = "BetterPlants", onEnable="onInitialize", onDisable="onDisable")
 public class BetterPlants extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

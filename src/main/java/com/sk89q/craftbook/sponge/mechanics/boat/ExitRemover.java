@@ -39,7 +39,7 @@ public class ExitRemover extends SpongeMechanic implements DocumentationProvider
 
     @Listener
     public void onDismount(RideEntityEvent.Dismount event, @First Player player) {
-        if (event instanceof Boat) {
+        if (event.getTargetEntity() instanceof Boat) {
             Sponge.getScheduler().createTaskBuilder().delayTicks(2)
                     .execute(new BoatRemover(player, (Boat) event.getTargetEntity()))
                     .submit(CraftBookPlugin.spongeInst());
