@@ -259,6 +259,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.EmptyDecay");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.ExitRemover");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.LandBoats");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.RemoveEntities");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.SpeedModifiers");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.WaterPlaceOnly");
         //Minecart
