@@ -16,9 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util.data.mutable;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
-import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableICData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableNamespaceData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -32,7 +30,7 @@ import java.util.Optional;
 public class NamespaceData extends AbstractSingleData<String, NamespaceData, ImmutableNamespaceData> {
 
     public NamespaceData() {
-        this(null);
+        this("");
     }
 
     public NamespaceData(String value) {

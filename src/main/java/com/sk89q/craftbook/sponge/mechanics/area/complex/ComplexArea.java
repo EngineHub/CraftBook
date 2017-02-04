@@ -227,6 +227,10 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
         String id = StringUtils.replace(SignUtil.getTextRaw(sign, 2), "-", "").toLowerCase();
         String inactiveID = StringUtils.replace(SignUtil.getTextRaw(sign, 3), "-", "").toLowerCase();
 
+        if (namespace == null) {
+            return false;
+        }
+
         try {
             CuboidCopy copy;
 

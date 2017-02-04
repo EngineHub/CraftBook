@@ -241,7 +241,9 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 player.sendMessage(Text.of(TextColors.YELLOW, "You stand up!"));
                 Sponge.getScheduler().createTaskBuilder().execute(() -> {
                     removeChair(chair, false);
-                    Sponge.getGame().getTeleportHelper().getSafeLocation(chair.chairLocation).ifPresent(player::setLocation);
+                    if (!exitAtEntry.getValue()) {
+                        Sponge.getGame().getTeleportHelper().getSafeLocation(chair.chairLocation).ifPresent(player::setLocation);
+                    }
                 }).submit(CraftBookPlugin.inst());
             }
         }

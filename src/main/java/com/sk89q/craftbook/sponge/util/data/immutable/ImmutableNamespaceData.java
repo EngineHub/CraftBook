@@ -26,7 +26,7 @@ import org.spongepowered.api.data.value.immutable.ImmutableValue;
 public class ImmutableNamespaceData extends AbstractImmutableSingleData<String, ImmutableNamespaceData, NamespaceData> {
 
     public ImmutableNamespaceData() {
-        this(null);
+        this("");
     }
 
     public ImmutableNamespaceData(String value) {
