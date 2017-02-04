@@ -257,6 +257,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         //Vehicle Mechanics
         //Boat
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.EmptyDecay");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.ExitRemover");
         //Minecart
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
 
