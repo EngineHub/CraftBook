@@ -384,7 +384,9 @@ public class Chair extends AbstractCraftBookMechanic {
         chairHealAmount = config.getDouble(path + "regen-health-amount", 1);
 
         config.setComment(path + "blocks", "A list of blocks that can be sat on.");
-        chairBlocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("WOOD_STAIRS", "COBBLESTONE_STAIRS", "BRICK_STAIRS", "SMOOTH_STAIRS", "NETHER_BRICK_STAIRS", "SANDSTONE_STAIRS", "SPRUCE_WOOD_STAIRS", "BIRCH_WOOD_STAIRS", "JUNGLE_WOOD_STAIRS", "QUARTZ_STAIRS", "ACACIA_STAIRS")));
+        chairBlocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("WOOD_STAIRS", "COBBLESTONE_STAIRS",
+                "BRICK_STAIRS", "SMOOTH_STAIRS", "NETHER_BRICK_STAIRS", "SANDSTONE_STAIRS", "SPRUCE_WOOD_STAIRS", "BIRCH_WOOD_STAIRS",
+                "JUNGLE_WOOD_STAIRS", "QUARTZ_STAIRS", "ACACIA_STAIRS", "DARK_OAK_STAIRS", "PURPUR_STAIRS", "RED_SANDSTONE_STAIRS")));
 
         config.setComment(path + "face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean(path + "face-correct-direction", true);
