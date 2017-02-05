@@ -104,7 +104,8 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
         if(slot == -1 && !inHand)
             return e.getInventory().containsAtLeast(item, item.getAmount());
         else if (inHand) { //Eclipse messes with indentation without these {'s
-            return e.getItemInHand() != null && ItemUtil.areItemsIdentical(e.getItemInHand(), item) && e.getItemInHand().getAmount() >= item.getAmount();
+            return (e.getInventory().getItemInMainHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInMainHand(), item) && e.getInventory().getItemInMainHand().getAmount() >= item.getAmount())
+                    || (e.getInventory().getItemInOffHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInOffHand(), item) && e.getInventory().getItemInOffHand().getAmount() >= item.getAmount());
         }
         else if (slot > -1) {
             return e.getInventory().getItem(slot) != null && ItemUtil.areItemsIdentical(e.getInventory().getItem(slot), item) && e.getInventory().getItem(slot).getAmount() >= item.getAmount();
