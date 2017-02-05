@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 import java.util.Arrays;
 import java.util.Collections;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -109,9 +110,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
     public boolean harvestAnimal(Entity entity) {
 
         if (entity instanceof Cow) {
-
             if(doesChestContain(Material.BUCKET)) {
-
                 removeFromChest(Material.BUCKET);
                 if(!addToChest(new ItemStack(Material.MILK_BUCKET, 1))) {
                     addToChest(new ItemStack(Material.BUCKET, 1));
@@ -123,14 +122,14 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         }
 
         if (entity instanceof Sheep) {
-
             if(doesChestContain(Material.SHEARS)) {
-
                 Sheep sh = (Sheep) entity;
                 if(sh.isSheared())
                     return false;
-                sh.setSheared(true);
-                return addToChest(new ItemStack(Material.WOOL, 3, sh.getColor().getWoolData()));
+                if (addToChest(new ItemStack(Material.WOOL, CraftBookPlugin.inst().getRandom().nextInt(2) + 1, sh.getColor().getWoolData()))) {
+                    sh.setSheared(true);
+                    return true;
+                }
             }
         }
 
@@ -143,17 +142,6 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
             Chest c = (Chest) chest.getState();
             return c.getInventory().contains(item);
-        }
-
-        return false;
-    }
-
-    public boolean addToChest(Material item) {
-
-        if (chest.getType() == Material.CHEST) {
-
-            Chest c = (Chest) chest.getState();
-            return c.getInventory().addItem(new ItemStack(item, 1)).isEmpty();
         }
 
         return false;
