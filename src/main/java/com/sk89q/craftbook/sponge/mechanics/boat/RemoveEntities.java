@@ -34,7 +34,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.entity.CollideEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-@Module(moduleId = "boatremoveentities", moduleName = "BoatRemoveEntities", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "boatremoveentities", name = "BoatRemoveEntities", onEnable="onInitialize", onDisable="onDisable")
 public class RemoveEntities extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

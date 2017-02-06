@@ -78,7 +78,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Module(moduleId = "headdrops", moduleName = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "headdrops", name = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
 
     private static final Pattern HEAD_DROPS_TABLE_PATTERN = Pattern.compile("%CUSTOM_HEAD_TYPES%", Pattern.LITERAL);

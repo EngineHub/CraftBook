@@ -30,7 +30,7 @@ import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-@Module(moduleId = "boatwaterplaceonly", moduleName = "WaterPlaceOnly", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "boatwaterplaceonly", name = "WaterPlaceOnly", onEnable="onInitialize", onDisable="onDisable")
 public class WaterPlaceOnly extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Module(moduleId = "gate", moduleName = "Gate", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "gate", name = "Gate", onEnable="onInitialize", onDisable="onDisable")
 public class Gate extends SimpleArea implements DocumentationProvider {
 
     @Inject

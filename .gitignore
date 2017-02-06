@@ -88,3 +88,4 @@ crashlytics-build.properties
 
 # Mac
 .DS_STORE
+/test/

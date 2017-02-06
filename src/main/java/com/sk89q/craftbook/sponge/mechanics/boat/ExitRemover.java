@@ -40,7 +40,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
-@Module(moduleId = "boatexitremover", moduleName = "BoatExitRemover", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "boatexitremover", name = "BoatExitRemover", onEnable="onInitialize", onDisable="onDisable")
 public class ExitRemover extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

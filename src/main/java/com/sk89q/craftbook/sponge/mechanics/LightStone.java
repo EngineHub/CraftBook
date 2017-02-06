@@ -43,7 +43,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
-@Module(moduleId = "lightstone", moduleName = "LightStone", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "lightstone", name = "LightStone", onEnable="onInitialize", onDisable="onDisable")
 public class LightStone extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

@@ -44,7 +44,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
-@Module(moduleId = "betterphysics", moduleName = "BetterPhysics", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "betterphysics", name = "BetterPhysics", onEnable="onInitialize", onDisable="onDisable")
 public class BetterPhysics extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

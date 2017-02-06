@@ -29,7 +29,7 @@ import org.spongepowered.api.entity.vehicle.Boat;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 
-@Module(moduleId = "boatspeedmodifiers", moduleName = "BoatSpeedModifiers", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "boatspeedmodifiers", name = "BoatSpeedModifiers", onEnable="onInitialize", onDisable="onDisable")
 public class SpeedModifiers extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

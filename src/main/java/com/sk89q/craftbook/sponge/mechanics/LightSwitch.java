@@ -47,7 +47,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 
-@Module(moduleId = "lightswitch", moduleName = "LightSwitch", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "lightswitch", name = "LightSwitch", onEnable="onInitialize", onDisable="onDisable")
 public class LightSwitch extends SpongeSignMechanic implements DocumentationProvider {
 
     private SpongePermissionNode createPermission = new SpongePermissionNode("craftbook.lightswitch", "Allows for creation of the light switch.",

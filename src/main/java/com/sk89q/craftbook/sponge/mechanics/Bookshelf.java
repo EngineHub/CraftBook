@@ -50,7 +50,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Module(moduleId = "bookshelf", moduleName = "Bookshelf", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "bookshelf", name = "Bookshelf", onEnable="onInitialize", onDisable="onDisable")
 public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject

@@ -77,7 +77,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Inject
     public PluginContainer container;
 
-    public ModuleController moduleController;
+    public ModuleController<CraftBookPlugin> moduleController;
 
     private SelfTriggerManager selfTriggerManager;
 
@@ -173,7 +173,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         for (ModuleWrapper module : moduleController.getModules()) {
             if (!module.isEnabled()) continue;
             try {
-                if (module.getModule() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
+                if (module.getModuleUnchecked() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
                     this.selfTriggerManager = new SpongeSelfTriggerManager();
                     getSelfTriggerManager().ifPresent(SelfTriggerManager::initialize);
                     break;
@@ -187,7 +187,7 @@ public class CraftBookPlugin extends CraftBookAPI {
             for (ModuleWrapper module : moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
-                    Mechanic mechanic = (Mechanic) module.getModule();
+                    Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
                     if(mechanic instanceof DocumentationProvider)
                         DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
                 } catch (ModuleNotInstantiatedException e) {
@@ -214,7 +214,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
         logger.info("Enumerating Mechanics");
 
-        moduleController = ShadedModularFramework.registerModuleController(this, Sponge.getGame());
+        moduleController = ShadedModularFramework.<CraftBookPlugin>registerModuleController(this, Sponge.getGame());
         File configDir = new File(getWorkingDirectory(), "mechanics");
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);

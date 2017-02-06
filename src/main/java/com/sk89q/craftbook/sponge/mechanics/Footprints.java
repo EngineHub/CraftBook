@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Module(moduleId = "footprints", moduleName = "Footprints", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "footprints", name = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

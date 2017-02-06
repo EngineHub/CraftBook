@@ -59,7 +59,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Module(moduleId = "cookingpot", moduleName = "CookingPot", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "cookingpot", name = "CookingPot", onEnable="onInitialize", onDisable="onDisable")
 public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
     @Inject
@@ -174,7 +174,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
     }
 
     @Override
-    public void onThink(Location<?> location) {
+    public void onThink(Location<World> location) {
         if (!isValid(location)) {
             ((SpongeSelfTriggerManager) CraftBookPlugin.spongeInst().getSelfTriggerManager().get()).unregister(this, location);
             return;

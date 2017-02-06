@@ -43,7 +43,7 @@ import org.spongepowered.api.world.weather.Weathers;
 
 import java.util.Optional;
 
-@Module(moduleId = "snow", moduleName = "Snow", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "snow", name = "Snow", onEnable="onInitialize", onDisable="onDisable")
 public class Snow extends SpongeMechanic implements DocumentationProvider {
 
     /**

@@ -33,7 +33,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 
-@Module(moduleId = "boatemptydecay", moduleName = "BoatEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "boatemptydecay", name = "BoatEmptyDecay", onEnable="onInitialize", onDisable="onDisable")
 public class EmptyDecay extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

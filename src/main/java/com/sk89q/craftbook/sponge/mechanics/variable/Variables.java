@@ -53,7 +53,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Module(moduleId = "variables", moduleName = "Variables", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "variables", name = "Variables", onEnable="onInitialize", onDisable="onDisable")
 public class Variables extends SpongeMechanic implements DocumentationProvider {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9]+)\\|)*([a-zA-Z0-9]+)%");

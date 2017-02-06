@@ -35,7 +35,7 @@ public class GenerateDocsCommand implements CommandExecutor {
         for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
             if(!module.isEnabled()) continue;
             try {
-                Mechanic mechanic = (Mechanic) module.getModule();
+                Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
                 if(mechanic instanceof DocumentationProvider)
                     DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
             } catch (ModuleNotInstantiatedException e) {

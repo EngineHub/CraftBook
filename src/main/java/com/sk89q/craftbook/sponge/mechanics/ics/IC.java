@@ -114,6 +114,10 @@ public abstract class IC implements DataSerializable {
         return this.block;
     }
 
+    public Location<World> getBackBlock() {
+        return SignUtil.getBackBlock(this.block);
+    }
+
     public ICFactory<? extends IC> getFactory() {
         return this.icFactory;
     }

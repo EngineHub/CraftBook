@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Module(moduleId = "paintingswitcher", moduleName = "PaintingSwitcher", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "paintingswitcher", name = "PaintingSwitcher", onEnable="onInitialize", onDisable="onDisable")
 public class PaintingSwitcher extends SpongeMechanic implements DocumentationProvider {
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.paintingswitcher.use", "Allows the user to switch paintings.", PermissionDescription.ROLE_USER);

@@ -26,7 +26,7 @@ import org.spongepowered.api.entity.vehicle.Boat;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 
-@Module(moduleId = "landboats", moduleName = "LandBoats", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "landboats", name = "LandBoats", onEnable="onInitialize", onDisable="onDisable")
 public class LandBoats extends SpongeMechanic implements DocumentationProvider {
 
     @Inject

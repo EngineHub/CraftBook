@@ -16,7 +16,11 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
@@ -30,6 +34,7 @@ import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -57,7 +62,7 @@ import java.util.regex.Pattern;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
-@Module(moduleId = "icsocket", moduleName = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "icsocket", name = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
 
     static final HashMap<String, PinSet> PINSETS = new HashMap<>();
@@ -68,9 +73,17 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         PINSETS.put("3ISO", new Pins3ISO());
     }
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    public ConfigValue<Double> maxRadius = new ConfigValue<>("max-radius", "Maximum radius of IC mechanics.", 10d, TypeToken.of(Double.class));
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
+
+        maxRadius.load(config);
 
         if ("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
             ICManager.getICTypes().forEach(DocumentationGenerator::generateDocumentation);
@@ -119,7 +132,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Override
-    public void onThink(Location<?> block) {
+    public void onThink(Location<World> block) {
         Optional<IC> icOptional = getIC(block);
 
         //if (!icOptional.isPresent()) {
@@ -190,6 +203,13 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     @Override
     public String getPath() {
         return "mechanics/ics/index";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue[] {
+                maxRadius
+        };
     }
 
     @Override

@@ -42,7 +42,7 @@ public final class SignUtil {
      * @param block The location to check
      * @return If it is a sign
      */
-    public static boolean isSign(Location<?> block) {
+    public static boolean isSign(Location<World> block) {
         return isSign(block.getBlock());
     }
 
@@ -75,7 +75,7 @@ public final class SignUtil {
      * @return the direction a player would be facing when reading the sign; i.e. the face that is actually the back
      * side of the sign.
      */
-    public static Direction getFacing(Location<?> sign) {
+    public static Direction getFacing(Location<World> sign) {
         return getBack(sign);
     }
 
@@ -86,13 +86,13 @@ public final class SignUtil {
      * @return the side of the sign containing the text (in other words, when a player places a new sign,
      * while facing north, this will return south).
      */
-    public static Direction getFront(Location<?> sign) {
+    public static Direction getFront(Location<World> sign) {
         Optional<Direction> data = sign.get(Keys.DIRECTION);
 
         return data.orElse(Direction.NONE);
     }
 
-    public static Location<?> getFrontBlock(Location<?> sign) {
+    public static Location<World> getFrontBlock(Location<World> sign) {
         return sign.getRelative(getFront(sign));
     }
 
@@ -104,19 +104,19 @@ public final class SignUtil {
      * the block in this direction is the block to which the sign is
      * attached. This is also the direction a player would be facing when reading the sign; see {@link #getFront(Location)}.
      */
-    public static Direction getBack(Location sign) {
+    public static Direction getBack(Location<World> sign) {
         Direction front = getFront(sign);
         if (front == null) return Direction.NONE;
 
         return front.getOpposite();
     }
 
-    public static Location<?> getBackBlock(Location<?> sign) {
+    public static Location<World> getBackBlock(Location<World> sign) {
         return sign.getRelative(getBack(sign));
     }
 
-    public static Location<?> getNextSign(Location<?> sign, String criterea, int searchRadius) {
-        Location otherBlock = sign;
+    public static Location<World> getNextSign(Location<World> sign, String criterea, int searchRadius) {
+        Location<World> otherBlock = sign;
         Direction way = getBack(sign);
         boolean found = false;
         for (int i = 0; i < searchRadius; i++) {
@@ -140,14 +140,14 @@ public final class SignUtil {
      * oriented in a further direction,
      * the result is rounded to the nearest ordinal direction.
      */
-    public static Direction getRight(Location<?> sign) {
+    public static Direction getRight(Location<World> sign) {
         Direction front = getFront(sign);
         if (front == null) return Direction.NONE;
 
         return getClockWise(front);
     }
 
-    public static Location<?> getLeftBlock(Location<?> sign) {
+    public static Location<World> getLeftBlock(Location<World> sign) {
         return sign.getRelative(getLeft(sign));
     }
 
@@ -159,14 +159,14 @@ public final class SignUtil {
      * oriented in a further direction, the
      * result is rounded to the nearest ordinal direction.
      */
-    public static Direction getLeft(Location<?> sign) {
+    public static Direction getLeft(Location<World> sign) {
         Direction front = getFront(sign);
         if (front == null) return Direction.NONE;
 
         return getCounterClockWise(front);
     }
 
-    public static Location<?> getRightBlock(Location<?> sign) {
+    public static Location<World> getRightBlock(Location<World> sign) {
         return sign.getRelative(getRight(sign));
     }
 

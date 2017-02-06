@@ -31,7 +31,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
 
-@Module(moduleId = "glowstone", moduleName = "GlowStone", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "glowstone", name = "GlowStone", onEnable="onInitialize", onDisable="onDisable")
 public class GlowStone extends SimplePowerable implements DocumentationProvider {
 
     @Inject

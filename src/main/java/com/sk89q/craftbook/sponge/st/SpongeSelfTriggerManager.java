@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SpongeSelfTriggerManager implements SelfTriggerManager {
 
-    private Map<Location, SelfTriggeringMechanic> selfTriggeringMechanics = new ConcurrentHashMap<>();
+    private Map<Location<World>, SelfTriggeringMechanic> selfTriggeringMechanics = new ConcurrentHashMap<>();
 
     @Override
     public void initialize() {
@@ -60,11 +60,11 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
         selfTriggeringMechanics.clear();
     }
 
-    public void register(SelfTriggeringMechanic mechanic, Location location) {
+    public void register(SelfTriggeringMechanic mechanic, Location<World> location) {
         selfTriggeringMechanics.put(location, mechanic);
     }
 
-    public void unregister(SelfTriggeringMechanic mechanic, Location location) {
+    public void unregister(SelfTriggeringMechanic mechanic, Location<World> location) {
         selfTriggeringMechanics.remove(location, mechanic);
     }
 
@@ -73,7 +73,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
             for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
-                    SpongeMechanic mechanic = (SpongeMechanic) module.getModule();
+                    SpongeMechanic mechanic = (SpongeMechanic) module.getModuleUnchecked();
                     if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
                         if (((SpongeBlockMechanic) mechanic).isValid(tileEntity.getLocation()))
                             register((SelfTriggeringMechanic) mechanic, tileEntity.getLocation());
@@ -91,7 +91,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
 
     @Override
     public void think() {
-        for (Entry<Location, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
+        for (Entry<Location<World>, SelfTriggeringMechanic> entry : selfTriggeringMechanics.entrySet()) {
             entry.getValue().onThink(entry.getKey());
         }
     }

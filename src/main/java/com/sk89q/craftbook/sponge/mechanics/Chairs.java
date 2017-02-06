@@ -67,7 +67,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Module(moduleId = "chairs", moduleName = "Chairs", onEnable="onInitialize", onDisable="onDisable")
+@Module(id = "chairs", name = "Chairs", onEnable="onInitialize", onDisable="onDisable")
 public class Chairs extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject
