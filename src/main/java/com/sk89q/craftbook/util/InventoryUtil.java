@@ -13,6 +13,7 @@ import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 /**
  * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
@@ -126,13 +127,17 @@ public class InventoryUtil {
         if(itemsToFind.isEmpty())
             return true;
 
-        for (ItemStack item : inv.getContents()) {
+        List<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(inv.getContents()));
+        if (inv instanceof PlayerInventory) {
+            items.addAll(Arrays.asList(((PlayerInventory) inv).getArmorContents()));
+            items.add(((PlayerInventory) inv).getItemInOffHand());
+        }
 
+        for (ItemStack item : inv.getContents()) {
             if(!ItemUtil.isStackValid(item))
                 continue;
 
             for(ItemStack base : stacks) {
-
                 if(!itemsToFind.contains(base))
                     continue;
 
@@ -142,7 +147,6 @@ public class InventoryUtil {
                 }
 
                 if(ItemUtil.areItemsIdentical(base, item)) {
-
                     if(exact && base.getAmount() != item.getAmount())
                         continue;
 

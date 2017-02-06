@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.sensors;
 
+import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -102,7 +103,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
     public boolean testPlayer(Player e) {
 
         if(slot == -1 && !inHand)
-            return e.getInventory().containsAtLeast(item, item.getAmount());
+            return InventoryUtil.doesInventoryContain(e.getInventory(), false, item);
         else if (inHand) { //Eclipse messes with indentation without these {'s
             return (e.getInventory().getItemInMainHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInMainHand(), item) && e.getInventory().getItemInMainHand().getAmount() >= item.getAmount())
                     || (e.getInventory().getItemInOffHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInOffHand(), item) && e.getInventory().getItemInOffHand().getAmount() >= item.getAmount());
