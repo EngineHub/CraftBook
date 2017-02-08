@@ -228,7 +228,7 @@ public final class BlockUtil {
         return Math.min(getLength(firstBlock, testState, direction, maximum), getLength(secondBlock, testState, direction, maximum));
     }
 
-    public static Location getNextMatchingSign(Location block, Direction back, int maximumLength, Predicate<Sign> predicate) {
+    public static Location<World> getNextMatchingSign(Location<World> block, Direction back, int maximumLength, Predicate<Sign> predicate) {
         for (int i = 0; i < maximumLength; i++) {
             block = block.getRelative(back);
             if (SignUtil.isSign(block)) {

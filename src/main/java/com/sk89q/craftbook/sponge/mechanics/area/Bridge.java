@@ -42,6 +42,7 @@ import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.List;
 
@@ -67,13 +68,13 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
+    public boolean triggerMechanic(Location<World> block, Sign sign, Humanoid human, Boolean forceState) {
         if (!"[Bridge End]".equals(SignUtil.getTextRaw(sign, 1))) {
             Direction back = SignUtil.getBack(block);
 
             Direction bridgeDirection = Direction.DOWN;
 
-            Location baseBlock = block.getRelative(bridgeDirection);
+            Location<World> baseBlock = block.getRelative(bridgeDirection);
             if (block.getBlockType() == BlockTypes.WALL_SIGN) {
                 baseBlock = block.getRelative(SignUtil.getBack(block));
             }
@@ -92,12 +93,12 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
                 }
             }
 
-            Location otherSide = BlockUtil.getNextMatchingSign(block, SignUtil.getBack(block), maximumLength.getValue(), this::isMechanicSign);
+            Location<World> otherSide = BlockUtil.getNextMatchingSign(block, SignUtil.getBack(block), maximumLength.getValue(), this::isMechanicSign);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(missingOtherEnd);
                 return true;
             }
-            Location otherBase = otherSide.getRelative(bridgeDirection);
+            Location<World> otherBase = otherSide.getRelative(bridgeDirection);
             if (otherSide.getBlockType() == BlockTypes.WALL_SIGN) {
                 otherBase = otherSide.getRelative(SignUtil.getBack(otherSide));
             }
@@ -121,16 +122,16 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
 
             int leftBlocks, rightBlocks;
 
-            Location left = baseBlock.getRelative(SignUtil.getLeft(block));
-            Location right = baseBlock.getRelative(SignUtil.getRight(block));
+            Location<World> left = baseBlock.getRelative(SignUtil.getLeft(block));
+            Location<World> right = baseBlock.getRelative(SignUtil.getRight(block));
 
             //Calculate left distance
-            Location otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
+            Location<World> otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
 
             leftBlocks = BlockUtil.getMinimumLength(left, otherLeft, baseBlock.getBlock(), SignUtil.getLeft(block), maximumWidth.getValue());
 
             //Calculate right distance
-            Location otherRight = otherBase.getRelative(SignUtil.getRight(block));
+            Location<World> otherRight = otherBase.getRelative(SignUtil.getRight(block));
 
             rightBlocks = BlockUtil.getMinimumLength(right, otherRight, baseBlock.getBlock(), SignUtil.getRight(block), maximumWidth.getValue());
 

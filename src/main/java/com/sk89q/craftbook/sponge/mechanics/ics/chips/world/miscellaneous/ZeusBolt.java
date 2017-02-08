@@ -31,9 +31,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ZeusBolt extends IC {
 
-    private Location<World> center;
-    private Vector3d radius;
-    private int chance;
+    private transient Location<World> center;
+    private transient Vector3d radius;
+    private transient int chance;
 
     public ZeusBolt(ICFactory<ZeusBolt> icFactory, Location<World> block) {
         super(icFactory, block);

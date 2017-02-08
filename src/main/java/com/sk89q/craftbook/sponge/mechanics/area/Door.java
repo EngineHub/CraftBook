@@ -39,6 +39,7 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.List;
 
@@ -62,25 +63,25 @@ public class Door extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
+    public boolean triggerMechanic(Location<World> block, Sign sign, Humanoid human, Boolean forceState) {
         if (!"[Door]".equals(SignUtil.getTextRaw(sign, 1))) {
 
             Direction back = "[Door Up]".equals(SignUtil.getTextRaw(sign, 1)) ? Direction.UP : Direction.DOWN;
 
-            Location baseBlock = block.getRelative(back);
+            Location<World> baseBlock = block.getRelative(back);
 
             if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Can't use this material for a door!").build());
                 return true;
             }
 
-            Location otherSide = BlockUtil.getNextMatchingSign(block, back, maximumLength.getValue(), this::isMechanicSign);
+            Location<World> otherSide = BlockUtil.getNextMatchingSign(block, back, maximumLength.getValue(), this::isMechanicSign);
             if (otherSide == null) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(missingOtherEnd);
                 return true;
             }
 
-            Location otherBase = otherSide.getRelative(back.getOpposite());
+            Location<World> otherBase = otherSide.getRelative(back.getOpposite());
 
             if(!baseBlock.getBlock().equals(otherBase.getBlock())) {
                 if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Both ends must be the same material!").build());
@@ -89,11 +90,11 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
             int leftBlocks = 0, rightBlocks = 0; //Default to 0. Single width bridge is the default.
 
-            Location left = baseBlock.getRelative(SignUtil.getLeft(block));
-            Location right = baseBlock.getRelative(SignUtil.getRight(block));
+            Location<World> left = baseBlock.getRelative(SignUtil.getLeft(block));
+            Location<World> right = baseBlock.getRelative(SignUtil.getRight(block));
 
             //Calculate left distance
-            Location otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
+            Location<World> otherLeft = otherBase.getRelative(SignUtil.getLeft(block));
 
             while(true) {
                 if(leftBlocks >= maximumWidth.getValue()) break;
@@ -107,7 +108,7 @@ public class Door extends SimpleArea implements DocumentationProvider {
             }
 
             //Calculate right distance
-            Location otherRight = otherBase.getRelative(SignUtil.getRight(block));
+            Location<World> otherRight = otherBase.getRelative(SignUtil.getRight(block));
 
             while(true) {
                 if(rightBlocks >= maximumWidth.getValue()) break;

@@ -128,7 +128,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
      * @param human The triggering human, if applicable
      * @param forceState If the mechanic should forcibly enter a specific state
      */
-    public abstract boolean triggerMechanic(Location block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
+    public abstract boolean triggerMechanic(Location<World> block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
 
     public abstract List<BlockFilter> getDefaultBlocks();
 }

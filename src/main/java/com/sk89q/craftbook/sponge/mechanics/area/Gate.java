@@ -45,6 +45,7 @@ import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.HashSet;
 import java.util.List;
@@ -87,7 +88,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                 for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
                     for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
                         for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
-                            Location searchLocation = location.getExtent().getLocation(x1, y1, z1);
+                            Location<World> searchLocation = location.getExtent().getLocation(x1, y1, z1);
                             Optional tileEntity = searchLocation.getTileEntity();
 
                             if (SignUtil.isSign(searchLocation) && tileEntity.isPresent()
@@ -104,12 +105,12 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         });
     }
 
-    private BlockState findColumns(Location block, Set<GateColumn> columns, BlockState state) {
+    private BlockState findColumns(Location<World> block, Set<GateColumn> columns, BlockState state) {
         int x = block.getBlockX();
         int y = block.getBlockY();
         int z = block.getBlockZ();
 
-        Location closestColumn = null;
+        Location<World> closestColumn = null;
         Vector3d blockFlat = new Vector3d(block.getX(), 0, block.getZ());
 
         for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
@@ -136,11 +137,11 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return state;
     }
 
-    private BlockState searchColumn(Location block, Set<GateColumn> columns, BlockState state) {
+    private BlockState searchColumn(Location<World> block, Set<GateColumn> columns, BlockState state) {
         if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
             GateColumn column = new GateColumn(block, allowedBlocks);
 
-            Location temp = column.topBlock;
+            Location<World> temp = column.topBlock;
 
             if(temp.getBlockType() != BlockTypes.AIR) {
                 if(state == null)
@@ -164,7 +165,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return state;
     }
 
-    private void toggleColumn(Location block, boolean on, BlockState gateType) {
+    private void toggleColumn(Location<World> block, boolean on, BlockState gateType) {
         Direction dir = Direction.DOWN;
 
         block = block.getRelative(dir);
@@ -183,7 +184,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public boolean triggerMechanic(Location block, Sign sign, Humanoid human, Boolean forceState) {
+    public boolean triggerMechanic(Location<World> block, Sign sign, Humanoid human, Boolean forceState) {
         if ("[Gate]".equals(SignUtil.getTextRaw(sign, 1))) {
 
             Set<GateColumn> columns = new HashSet<>();
@@ -202,7 +203,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     private void toggleColumns(BlockState state, Set<GateColumn> columns, Boolean forceState) {
         for (GateColumn vec : columns) {
-            Location col = vec.getBlock();
+            Location<World> col = vec.getBlock();
             if (forceState == null) {
                 forceState = !BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), col.getRelative(Direction.DOWN).getBlock());
             }
@@ -234,9 +235,9 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
     private static final class GateColumn {
 
-        Location topBlock;
+        Location<World> topBlock;
 
-        GateColumn(Location topBlock, ConfigValue<List<BlockFilter>> allowedBlocks) {
+        GateColumn(Location<World> topBlock, ConfigValue<List<BlockFilter>> allowedBlocks) {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
@@ -246,7 +247,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             this.topBlock = topBlock;
         }
 
-        public Location getBlock() {
+        public Location<World> getBlock() {
             return topBlock;
         }
 
