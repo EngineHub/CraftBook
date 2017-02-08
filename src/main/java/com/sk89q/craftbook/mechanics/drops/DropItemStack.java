@@ -6,7 +6,7 @@ public class DropItemStack {
 
     private ItemStack stack;
 
-    private double chance = 100;
+    private double chance = 100d;
     private int minA = -1, maxA = -1;
     private String name;
 

@@ -76,7 +76,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 stack.setName(drop);
 
-                stack.setChance(config.getInt("custom-drops." + key + ".drops." + drop + ".chance", 100));
+                stack.setChance(config.getDouble("custom-drops." + key + ".drops." + drop + ".chance", 100d));
                 stack.setMinimum(config.getInt("custom-drops." + key + ".drops." + drop + ".minimum-amount", -1));
                 stack.setMaximum(config.getInt("custom-drops." + key + ".drops." + drop + ".maximum-amount", -1));
 
