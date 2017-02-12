@@ -22,13 +22,8 @@ import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Jukebox;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.world.Location;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.spongepowered.api.world.World;
 
 @Module(id = "redstonejukebox", name = "RedstoneJukebox", onEnable="onInitialize", onDisable="onDisable")
 public class RedstoneJukebox extends SimplePowerable implements DocumentationProvider {
@@ -39,7 +34,7 @@ public class RedstoneJukebox extends SimplePowerable implements DocumentationPro
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.JUKEBOX;
     }
 

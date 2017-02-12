@@ -66,7 +66,7 @@ public class BetterPhysics extends SpongeBlockMechanic implements DocumentationP
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return fallingLadders.getValue() && FallingLadders.isValid(location);
     }
 

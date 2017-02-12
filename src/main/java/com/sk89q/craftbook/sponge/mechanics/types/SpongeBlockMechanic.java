@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.types;
 
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public abstract class SpongeBlockMechanic extends SpongeMechanic {
 
@@ -29,5 +30,5 @@ public abstract class SpongeBlockMechanic extends SpongeMechanic {
      * @param location The location to check at.
      * @return If the block is an instance of this mechanic
      */
-    public abstract boolean isValid(Location<?> location);
+    public abstract boolean isValid(Location<World> location);
 }

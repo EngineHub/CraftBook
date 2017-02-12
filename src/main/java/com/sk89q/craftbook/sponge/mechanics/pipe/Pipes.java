@@ -142,7 +142,7 @@ public class Pipes extends SpongeBlockMechanic {
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.STICKY_PISTON;
     }
 }

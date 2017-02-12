@@ -117,7 +117,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock());
     }
 

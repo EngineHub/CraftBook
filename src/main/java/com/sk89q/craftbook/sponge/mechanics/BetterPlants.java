@@ -46,6 +46,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -118,7 +119,7 @@ public class BetterPlants extends SpongeBlockMechanic implements DocumentationPr
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return isValidFernFarming(location);
     }
 }

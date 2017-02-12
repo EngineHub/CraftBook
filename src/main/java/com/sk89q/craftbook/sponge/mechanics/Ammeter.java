@@ -44,6 +44,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 @Module(id = "ammeter", name = "Ammeter", onEnable = "onInitialize", onDisable = "onDisable")
 public class Ammeter extends SpongeBlockMechanic implements DocumentationProvider {
@@ -103,7 +104,7 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<World> location) {
         return location.get(Keys.POWER).isPresent();
     }
 

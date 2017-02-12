@@ -64,7 +64,7 @@ public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<World> location) {
         if (SignUtil.isSign(location)) {
             Sign sign = (Sign) location.getTileEntity().get();
 

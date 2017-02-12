@@ -49,6 +49,7 @@ import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -164,7 +165,7 @@ public class XPStorer extends SpongeBlockMechanic implements DocumentationProvid
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlock().equals(block.getValue());
     }
 }

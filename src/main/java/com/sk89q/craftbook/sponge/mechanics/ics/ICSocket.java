@@ -146,7 +146,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return location.get(CraftBookKeys.IC_DATA).isPresent();
     }
 

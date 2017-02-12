@@ -30,6 +30,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 @Module(id = "glowstone", name = "GlowStone", onEnable="onInitialize", onDisable="onDisable")
 public class GlowStone extends SimplePowerable implements DocumentationProvider {
@@ -56,7 +57,7 @@ public class GlowStone extends SimplePowerable implements DocumentationProvider 
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.GLOWSTONE || location.getBlock().equals(offBlock.getValue());
     }
 

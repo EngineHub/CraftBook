@@ -28,6 +28,7 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 @Module(id = "netherrack", name = "Netherrack", onEnable="onInitialize", onDisable="onDisable")
 public class Netherrack extends SimplePowerable implements DocumentationProvider {
@@ -57,7 +58,7 @@ public class Netherrack extends SimplePowerable implements DocumentationProvider
     }
 
     @Override
-    public boolean isValid(Location location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.NETHERRACK;
     }
 

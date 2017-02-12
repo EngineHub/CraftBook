@@ -43,6 +43,7 @@ import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +116,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     }
 
     @Override
-    public boolean isValid(Location<?> location) {
+    public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.BOOKSHELF;
     }
 
