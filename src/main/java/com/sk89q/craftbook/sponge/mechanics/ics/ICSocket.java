@@ -150,14 +150,14 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return location.get(CraftBookKeys.IC_DATA).isPresent();
     }
 
-    private Optional<IC> getIC(Location<?> location) {
+    private Optional<IC> getIC(Location<World> location) {
         Optional<IC> icOptional = location.get(CraftBookKeys.IC_DATA);
 
         icOptional.ifPresent(ic -> {
             if (!ic.hasLoaded()) {
                 Sign sign = (Sign) location.getTileEntity().get();
                 ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-                ic.loadICData(icType.getFactory(), (Location<World>) location);
+                ic.loadICData(icType.getFactory(), location);
                 ic.load();
             }
         });
@@ -167,8 +167,16 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             if (location.getBlockType() == BlockTypes.WALL_SIGN) {
                 ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(location.getTileEntity().get().get(Keys.SIGN_LINES).get().get(1)));
                 if (icType != null) {
-                    icOptional = Optional.of(icType.getFactory().createInstance((Location<World>) location));
-                    location.offer(new ICData(icOptional.get()));
+                    try {
+                        icOptional = Optional.of(icType.getFactory().createInstance((Location<World>) location));
+                        IC ic = icOptional.get();
+                        List<Text> lines = location.getTileEntity().get().get(Keys.SIGN_LINES).get();
+                        ic.create(null, lines);
+                        location.getTileEntity().get().offer(Keys.SIGN_LINES, lines);
+                        location.offer(new ICData(ic));
+                    } catch (Exception e) {
+                        CraftBookPlugin.spongeInst().getLogger().warn("Failed to repair corrupt IC at " + location.toString() + " as it requires a player.");
+                    }
                 }
             }
         }
