@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.util;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICSocket;
 import org.apache.commons.lang3.StringUtils;

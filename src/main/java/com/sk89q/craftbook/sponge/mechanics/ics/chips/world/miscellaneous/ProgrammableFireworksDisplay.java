@@ -22,7 +22,7 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
-import com.sk89q.craftbook.sponge.util.RegexUtil;
+import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;

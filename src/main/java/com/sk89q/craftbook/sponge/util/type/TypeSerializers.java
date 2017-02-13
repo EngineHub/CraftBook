@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
-import com.sk89q.craftbook.sponge.util.TernaryState;
+import com.sk89q.craftbook.core.util.TernaryState;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;

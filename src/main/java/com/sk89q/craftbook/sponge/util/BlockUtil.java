@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.util.RegexUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;

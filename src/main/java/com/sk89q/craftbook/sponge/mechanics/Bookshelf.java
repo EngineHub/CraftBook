@@ -27,7 +27,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
-import com.sk89q.craftbook.sponge.util.TernaryState;
+import com.sk89q.craftbook.core.util.TernaryState;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.block.BlockTypes;

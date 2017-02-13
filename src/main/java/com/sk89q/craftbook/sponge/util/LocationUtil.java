@@ -16,8 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.util.RegexUtil;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;

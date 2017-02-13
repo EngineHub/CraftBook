@@ -14,16 +14,28 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util;
+package com.sk89q.craftbook.core.util.jinglenote;
 
-import java.util.regex.Pattern;
+public class Note {
+    private Instrument instrument;
+    private byte note;
+    private float velocity;
 
-public final class RegexUtil {
-    public static final Pattern COLON_PATTERN = Pattern.compile(":", Pattern.LITERAL);
-    public static final Pattern SEMICOLON_PATTERN = Pattern.compile(";", Pattern.LITERAL);
-    public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
-    public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
-    public static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
-    public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
-    public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
+    public Note(Instrument instrument, byte note, float velocity) {
+        this.instrument = instrument;
+        this.note = note;
+        this.velocity = velocity;
+    }
+
+    public Instrument getInstrument() {
+        return this.instrument;
+    }
+
+    public float getNote() {
+        return (float) Math.pow(2.0D, (this.note - 12) / 12.0D);
+    }
+
+    public float getVelocity() {
+        return this.velocity;
+    }
 }

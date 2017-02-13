@@ -14,31 +14,23 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util;
+package com.sk89q.craftbook.core.util.jinglenote;
 
-public enum TernaryState {
-    TRUE,FALSE,NONE;
+import java.util.Set;
 
-    public static TernaryState getFromString(String s) {
-        s = s.toLowerCase();
+public interface JingleSequencer {
 
-        if("yes".equals(s) || "true".equals(s) || "y".equals(s) || "t".equals(s) || "1".equals(s))
-            return TRUE;
-        if("no".equals(s) || "false".equals(s) || "n".equals(s) || "f".equals(s) || "0".equals(s) || "not".equals(s))
-            return FALSE;
-        return NONE;
-    }
+    void run() throws InterruptedException;
 
-    public boolean doesPass(boolean value) {
-        switch (this) {
-            case TRUE:
-                return value;
-            case FALSE:
-                return !value;
-            case NONE:
-                return true;
-            default:
-                return false;
-        }
-    }
+    void stop();
+
+    void stop(JingleNotePlayer player);
+
+    boolean isPlaying();
+
+    boolean hasPlayedBefore();
+
+    void play(JingleNotePlayer player);
+
+    Set<JingleNotePlayer> getPlayers();
 }
