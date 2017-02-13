@@ -40,6 +40,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
@@ -86,6 +87,8 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     public ConfigValue<Integer> maxPerUser = new ConfigValue<>("maximum-per-user", "The maximum amount of areas that a namespace can own. 0 to disable limit.", 30);
     public ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
+    private CommandMapping areaCommandMapping;
+
     private static final Pattern MARKER_PATTERN = Pattern.compile("^-[A-Za-z0-9_]*?-$");
 
     @Override
@@ -124,7 +127,16 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
                 .child(listCommand, "list")
                 .build();
 
-        Sponge.getCommandManager().register(CraftBookPlugin.inst(), mainAreaCommand, "area", "togglearea");
+        areaCommandMapping = Sponge.getCommandManager().register(CraftBookPlugin.inst(), mainAreaCommand, "area", "togglearea").orElse(null);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+
+        if (areaCommandMapping != null) {
+            Sponge.getCommandManager().removeMapping(areaCommandMapping);
+        }
     }
 
     @Listener

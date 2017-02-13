@@ -34,6 +34,7 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
@@ -71,6 +72,8 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
     private SpongePermissionNode usePermission = new SpongePermissionNode("craftbook.treelopper.use", "Allows the user to use TreeLopper.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode togglePermission = new SpongePermissionNode("craftbook.treelopper.toggle", "Allows the user to toggle TreeLopper on and off.", PermissionDescription.ROLE_USER);
 
+    private CommandMapping treelopperCommandMapping;
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -93,7 +96,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
                 .child(toggleCommand, "toggle")
                 .build();
 
-        Sponge.getCommandManager().register(CraftBookPlugin.inst(), treeLopperCommand, "treelopper", "timber");
+        treelopperCommandMapping = Sponge.getCommandManager().register(CraftBookPlugin.inst(), treeLopperCommand, "treelopper", "timber").orElse(null);
     }
 
     @Override
@@ -101,6 +104,10 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
         super.onDisable();
 
         disabledPlayers.save(config);
+
+        if (treelopperCommandMapping != null) {
+            Sponge.getCommandManager().removeMapping(treelopperCommandMapping);
+        }
     }
 
     @Listener

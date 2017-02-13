@@ -32,6 +32,7 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
@@ -66,6 +67,8 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.signcopier.use", "Allows the user to copy and paste signs.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode editPermissions = new SpongePermissionNode("craftbook.signcopier.edit", "Allows the user to use the sign edit command.", PermissionDescription.ROLE_USER);
 
+    private CommandMapping signCommandManager;
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -83,10 +86,10 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                 .description(Text.of("Allows editing the currently copied sign!"))
                 .build();
 
-        Sponge.getCommandManager().register(CraftBookPlugin.spongeInst().getContainer(), CommandSpec.builder()
+        signCommandManager = Sponge.getCommandManager().register(CraftBookPlugin.spongeInst().getContainer(), CommandSpec.builder()
                 .child(signEditCommand, "edit")
                 .description(Text.of("Base command of the SignCopier mechanic"))
-                .build(), "sign", "signcopier");
+                .build(), "sign", "signcopier").orElse(null);
     }
 
     @Override
@@ -94,6 +97,10 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
         super.onDisable();
 
         signs.clear();
+
+        if (signCommandManager != null) {
+            Sponge.getCommandManager().removeMapping(signCommandManager);
+        }
     }
 
     private Map<UUID, List<Text>> signs;

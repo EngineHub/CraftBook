@@ -36,6 +36,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
@@ -68,6 +69,8 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
 
     private ConfigValue<Boolean> defaultToGlobal = new ConfigValue<>("default-to-global", "If no namespace is provided, default to global. "
             + "Otherwise personal namespace", true);
+
+    private CommandMapping variableCommandMapping;
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -130,7 +133,7 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
                 .child(removeGlobalVariable, "rmglobal", "delglobal", "removeglobal")
                 .build();
 
-        Sponge.getGame().getCommandManager().register(CraftBookPlugin.spongeInst(), variableCommand, "var", "variable", "variables");
+        variableCommandMapping = Sponge.getGame().getCommandManager().register(CraftBookPlugin.spongeInst(), variableCommand, "var", "variable", "variables").orElse(null);
     }
 
     @Override
@@ -141,6 +144,10 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
             config.getNode("variables").setValue(new TypeToken<Map<String, Map<String, String>>>() {}, variableStore);
         } catch (ObjectMappingException e) {
             e.printStackTrace();
+        }
+
+        if (variableCommandMapping != null) {
+            Sponge.getCommandManager().removeMapping(variableCommandMapping);
         }
     }
 

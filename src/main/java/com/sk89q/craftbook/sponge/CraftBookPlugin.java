@@ -45,6 +45,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -114,17 +115,11 @@ public class CraftBookPlugin extends CraftBookAPI {
         new File("craftbook-data").mkdir();
 
         logger.info("Starting CraftBook");
-        config = new SpongeConfiguration(this, mainConfig, configManager);
 
-        configurationOptions = ConfigurationOptions.defaults();
-
-        logger.info("Loading Configuration");
-
-        config.load();
-        TranslationsManager.initialize();
+        loadConfig();
 
         if(config.dataOnlyMode.getValue()) {
-            logger.info("Halting CraftBook Initialization - Data Only Mode!");
+            logger.info("Halting CraftBook Initialization - Data Only Mode! Note: Nothing will work.");
             return;
         }
 
@@ -159,55 +154,38 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         cache = new SpongeDataCache();
 
-        moduleController.enableModules(input -> {
-            if (config.enabledMechanics.getValue().contains(input.getName())
-                    || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
-                    || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
-                logger.debug("Enabled: " + input.getName());
-                return true;
-            }
+        loadMechanics();
 
-            return false;
-        });
+        saveConfig(); //Do initial save of config.
+    }
 
-        for (ModuleWrapper module : moduleController.getModules()) {
-            if (!module.isEnabled()) continue;
-            try {
-                if (module.getModuleUnchecked() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
-                    this.selfTriggerManager = new SpongeSelfTriggerManager();
-                    getSelfTriggerManager().ifPresent(SelfTriggerManager::initialize);
-                    break;
-                }
-            } catch(ModuleNotInstantiatedException e) {
-                logger.error("Failed to initialize module: " + module.getName(), e);
-            }
-        }
-
-        if("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
-            for (ModuleWrapper module : moduleController.getModules()) {
-                if(!module.isEnabled()) continue;
-                try {
-                    Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
-                    if(mechanic instanceof DocumentationProvider)
-                        DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
-                } catch (ModuleNotInstantiatedException e) {
-                    logger.error("Failed to generate docs for module: " + module.getName(), e);
-                }
-            }
-
-            DocumentationGenerator.generateDocumentation(config);
-        }
-
-        config.save(); //Do initial save of config.
+    @Listener
+    public void onServerReload(GameReloadEvent event) {
+        disableMechanics();
+        loadConfig();
+        loadMechanics();
     }
 
     @Listener
     public void onServerStopping(GameStoppingServerEvent event) {
-        config.save();
+        saveConfig();
 
-        getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
-        moduleController.disableModules();
-        cache.clearAll();
+        disableMechanics();
+    }
+
+    public void loadConfig() {
+        config = new SpongeConfiguration(this, mainConfig, configManager);
+
+        configurationOptions = ConfigurationOptions.defaults();
+
+        logger.info("Loading Configuration");
+
+        config.load();
+        TranslationsManager.initialize();
+    }
+
+    public void saveConfig() {
+        config.save();
     }
 
     @Override
@@ -268,6 +246,54 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
 
         logger.info("Found " + moduleController.getModules().size());
+    }
+
+    public void loadMechanics() {
+        moduleController.enableModules(input -> {
+            if (config.enabledMechanics.getValue().contains(input.getName())
+                    || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
+                    || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
+                logger.debug("Enabled: " + input.getName());
+                return true;
+            }
+
+            return false;
+        });
+
+        for (ModuleWrapper module : moduleController.getModules()) {
+            if (!module.isEnabled()) continue;
+            try {
+                if (module.getModuleUnchecked() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
+                    this.selfTriggerManager = new SpongeSelfTriggerManager();
+                    getSelfTriggerManager().ifPresent(SelfTriggerManager::initialize);
+                    break;
+                }
+            } catch(ModuleNotInstantiatedException e) {
+                logger.error("Failed to initialize module: " + module.getName(), e);
+            }
+        }
+
+        if("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
+            for (ModuleWrapper module : moduleController.getModules()) {
+                if(!module.isEnabled()) continue;
+                try {
+                    Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
+                    if(mechanic instanceof DocumentationProvider)
+                        DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
+                } catch (ModuleNotInstantiatedException e) {
+                    logger.error("Failed to generate docs for module: " + module.getName(), e);
+                }
+            }
+
+            DocumentationGenerator.generateDocumentation(config);
+        }
+    }
+
+    public void disableMechanics() {
+        getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
+        this.selfTriggerManager = null;
+        moduleController.disableModules();
+        cache.clearAll();
     }
 
     public Cause.Builder getCause() {

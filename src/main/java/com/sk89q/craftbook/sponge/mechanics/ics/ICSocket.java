@@ -157,8 +157,12 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             if (!ic.hasLoaded()) {
                 Sign sign = (Sign) location.getTileEntity().get();
                 ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-                ic.loadICData(icType.getFactory(), location);
-                ic.load();
+                try {
+                    ic.loadICData(icType.getFactory(), location);
+                    ic.load();
+                } catch (Exception e) {
+                    CraftBookPlugin.spongeInst().getLogger().warn("Failed to load IC at " + location.toString() + '.');
+                }
             }
         });
 
