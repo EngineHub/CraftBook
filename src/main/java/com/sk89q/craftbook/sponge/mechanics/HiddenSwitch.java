@@ -76,14 +76,12 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
             List<Location<World>> signLocations = new ArrayList<>();
 
             if (allowAnySide.getValue()) {
-                for (Location<World> adjacent : BlockUtil.getAdjacentExcept(location, event.getTargetSide())) {
-                    signLocations.add(adjacent);
-                }
+                signLocations.addAll(BlockUtil.getAdjacentExcept(location, event.getTargetSide()));
             } else {
                 signLocations.add(location.getRelative(event.getTargetSide().getOpposite()));
             }
 
-            for (Location signLocation : signLocations) {
+            for (Location<World> signLocation : signLocations) {
                 if (SignUtil.isSign(signLocation)) {
                     Sign sign = (Sign) signLocation.getTileEntity().get();
                     if (isMechanicSign(sign)) {

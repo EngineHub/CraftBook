@@ -244,6 +244,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.boat.WaterPlaceOnly");
         //Minecart
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.MoreRails");
 
         logger.info("Found " + moduleController.getModules().size());
     }
