@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.minecart;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -40,7 +41,8 @@ public class EmptyDecay extends SpongeMechanic implements DocumentationProvider 
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<Long> emptyTicks = new ConfigValue<>("empty-ticks", "The amount of time that the cart must be empty before it decays, in ticks.", 40L);
+    private ConfigValue<Long> emptyTicks = new ConfigValue<>("empty-ticks", "The amount of time that the cart must be empty before it decays, in ticks.",
+            40L, TypeToken.of(Long.class));
     private ConfigValue<Boolean> onlyOnExit = new ConfigValue<>("only-on-exit", "Only start the decay timer on exit, preventing carts being incorrectly removed.", true);
 
     @Override
