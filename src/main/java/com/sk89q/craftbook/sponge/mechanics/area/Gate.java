@@ -60,6 +60,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     public ConfigurationNode config;
 
     private ConfigValue<Integer> searchRadius = new ConfigValue<>("search-radius", "The maximum area around the sign the gate can search.", 5);
+    private ConfigValue<Boolean> indirectAccess = new ConfigValue<>("indirect-access", "Allows toggling of gates by clicking the gate material "
+            + "rather than the sign.", true);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -67,42 +69,45 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         super.registerCommonPermissions();
 
         searchRadius.load(config);
+        indirectAccess.load(config);
     }
 
     @Listener
     public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
-        event.getTargetBlock().getLocation().ifPresent((location) -> {
-            super.onPlayerInteract(event, human);
+        super.onPlayerInteract(event, human);
 
-            if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock())) {
-                if(((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
-                    if(human instanceof CommandSource)
-                        ((CommandSource) human).sendMessage(TranslationsManager.USE_PERMISSIONS);
-                    return;
-                }
+        if (indirectAccess.getValue()) {
+            event.getTargetBlock().getLocation().ifPresent((location) -> {
+                if (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock())) {
+                    if (((human instanceof Subject) && !usePermissions.hasPermission((Subject) human))) {
+                        if (human instanceof CommandSource)
+                            ((CommandSource) human).sendMessage(TranslationsManager.USE_PERMISSIONS);
+                        return;
+                    }
 
-                int x = location.getBlockX();
-                int y = location.getBlockY();
-                int z = location.getBlockZ();
+                    int x = location.getBlockX();
+                    int y = location.getBlockY();
+                    int z = location.getBlockZ();
 
-                for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
-                    for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
-                        for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
-                            Location<World> searchLocation = location.getExtent().getLocation(x1, y1, z1);
-                            Optional tileEntity = searchLocation.getTileEntity();
+                    for (int x1 = x - searchRadius.getValue(); x1 <= x + searchRadius.getValue(); x1++) {
+                        for (int y1 = y - searchRadius.getValue(); y1 <= y + searchRadius.getValue() * 2; y1++) {
+                            for (int z1 = z - searchRadius.getValue(); z1 <= z + searchRadius.getValue(); z1++) {
+                                Location<World> searchLocation = location.getExtent().getLocation(x1, y1, z1);
+                                Optional tileEntity = searchLocation.getTileEntity();
 
-                            if (SignUtil.isSign(searchLocation) && tileEntity.isPresent()
-                                    && "[Gate]".equals(SignUtil.getTextRaw((Sign) tileEntity.get(), 1))) {
-                                Set<GateColumn> columns = new HashSet<>();
-                                BlockState state = findColumns(location, columns, location.getBlock());
-                                toggleColumns(state, columns, null);
-                                return;
+                                if (SignUtil.isSign(searchLocation) && tileEntity.isPresent()
+                                        && "[Gate]".equals(SignUtil.getTextRaw((Sign) tileEntity.get(), 1))) {
+                                    Set<GateColumn> columns = new HashSet<>();
+                                    BlockState state = findColumns(location, columns, location.getBlock());
+                                    toggleColumns(state, columns, null);
+                                    return;
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private BlockState findColumns(Location<World> block, Set<GateColumn> columns, BlockState state) {
@@ -221,7 +226,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         return new ConfigValue<?>[]{
                 allowedBlocks,
                 allowRedstone,
-                searchRadius
+                searchRadius,
+                indirectAccess
         };
     }
 
