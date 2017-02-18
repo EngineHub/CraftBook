@@ -16,6 +16,9 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
+
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -25,6 +28,7 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
@@ -42,25 +46,24 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
-import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
+import java.util.stream.Collectors;
 
 @Module(id = "icsocket", name = "ICSocket", onEnable="onInitialize", onDisable="onDisable")
 public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMechanic, DocumentationProvider {
@@ -79,6 +82,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     public ConfigValue<Double> maxRadius = new ConfigValue<>("max-radius", "Maximum radius of IC mechanics.", 10d, TypeToken.of(Double.class));
 
+    private Map<Location<World>, IC> loadedICs = new HashMap<>();
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -88,6 +93,19 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         if ("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
             ICManager.getICTypes().forEach(DocumentationGenerator::generateDocumentation);
         }
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+
+        loadedICs.forEach((worldLocation, ic) -> {
+            ic.unload();
+            if (ic.getFactory() instanceof SerializedICFactory) {
+                ic.getBlock().offer(new ICData(((SerializedICFactory) ic.getFactory()).getData(ic)));
+            }
+        });
+        loadedICs.clear();
     }
 
     @Override
@@ -116,17 +134,75 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     }
 
     @Listener
-    public void onBlockUpdate(NotifyNeighborBlockEvent event, @First LocatableBlock source) {
-        if(source.getBlockState().getType() != BlockTypes.WALL_SIGN) return;
-
-        getIC(source.getLocation()).ifPresent(ic -> {
-            for(Entry<Direction, BlockState> entries : event.getNeighbors().entrySet()) {
-                boolean powered = entries.getValue().get(Keys.POWER).orElse(0) > 0;
-
-                if (powered != ic.getPinSet().getInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().getRelative(entries.getKey())), ic)) {
-                    ic.getPinSet().setInput(ic.getPinSet().getPinForLocation(ic, source.getLocation().getRelative(entries.getKey())), powered, ic);
-                    ic.trigger();
+    public void onBlockBreak(ChangeBlockEvent.Break event) {
+        event.getTransactions().stream().map(transaction -> transaction.getOriginal().getLocation().get()).forEach(location -> {
+            if (loadedICs.containsKey(location)) {
+                IC ic = loadedICs.remove(location);
+                ic.unload();
+                if (ic instanceof SelfTriggeringIC) {
+                    ((SpongeSelfTriggerManager) CraftBookPlugin.inst().getSelfTriggerManager().get()).unregister(this, location);
                 }
+            }
+        });
+    }
+
+    @Listener
+    public void onBlockChange(ChangeBlockEvent.Post event) {
+        event.getTransactions().forEach(blockSnapshotTransaction -> {
+            Location<World> baseLocation = blockSnapshotTransaction.getFinal().getLocation().get();
+            BlockState originalState = blockSnapshotTransaction.getOriginal().getExtendedState();
+            List<Location<World>> icCheckSpots = new ArrayList<>();
+            boolean wasPowered = false;
+
+            if (originalState.getType() == BlockTypes.REDSTONE_WIRE) {
+                wasPowered = originalState.get(Keys.POWER).orElse(0) > 0;
+                icCheckSpots.addAll(blockSnapshotTransaction.getFinal().get(Keys.WIRE_ATTACHMENTS).map(Map::keySet).orElse(EnumSet.noneOf(Direction.class))
+                                .stream().map(baseLocation::getRelative)
+                                .collect(Collectors.toList()));
+                // TODO REMOVE
+                icCheckSpots.add(baseLocation.getRelative(Direction.NORTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.SOUTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.EAST));
+                icCheckSpots.add(baseLocation.getRelative(Direction.WEST));
+            } else if (originalState.getType() == BlockTypes.POWERED_REPEATER ||
+                    originalState.getType() == BlockTypes.UNPOWERED_REPEATER ||
+                    originalState.getType() == BlockTypes.POWERED_COMPARATOR ||
+                    originalState.getType() == BlockTypes.UNPOWERED_COMPARATOR) {
+                //TODO icCheckSpots.add(baseLocation.getRelative(blockSnapshotTransaction.getFinal().getState().get(Keys.DIRECTION).get()));
+                wasPowered = originalState.getType() == BlockTypes.POWERED_REPEATER || originalState.getType() == BlockTypes.POWERED_COMPARATOR;
+
+                // TODO REMOVE
+                icCheckSpots.add(baseLocation.getRelative(Direction.NORTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.SOUTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.EAST));
+                icCheckSpots.add(baseLocation.getRelative(Direction.WEST));
+            } else if (originalState.getType() == BlockTypes.LEVER) {
+                wasPowered = originalState.get(Keys.POWERED).orElse(false);
+
+                icCheckSpots.add(baseLocation.getRelative(Direction.NORTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.SOUTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.EAST));
+                icCheckSpots.add(baseLocation.getRelative(Direction.WEST));
+            } else if (originalState.getType() == BlockTypes.REDSTONE_TORCH || originalState.getType() == BlockTypes.UNLIT_REDSTONE_TORCH) {
+                wasPowered = originalState.getType() == BlockTypes.REDSTONE_TORCH;
+
+                icCheckSpots.add(baseLocation.getRelative(Direction.NORTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.SOUTH));
+                icCheckSpots.add(baseLocation.getRelative(Direction.EAST));
+                icCheckSpots.add(baseLocation.getRelative(Direction.WEST));
+            }
+
+            for (Location<World> location : icCheckSpots) {
+                boolean powered = wasPowered;
+                getIC(location).ifPresent(ic -> {
+                    int pin = ic.getPinSet().getPinForLocation(ic, baseLocation);
+
+                    if (pin >= 0) {
+                        if (powered != ic.getPinSet().getInput(pin, ic)) {
+                            Sponge.getScheduler().createTaskBuilder().execute(ic::trigger).submit(CraftBookPlugin.spongeInst().container);
+                        }
+                    }
+                });
             }
         });
     }
@@ -135,11 +211,6 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
     public void onThink(Location<World> block) {
         Optional<IC> icOptional = getIC(block);
 
-        //if (!icOptional.isPresent()) {
-        //    ((SpongeSelfTriggerManager) CraftBookPlugin.spongeInst().getSelfTriggerManager().get()).unregister(this, block);
-        //    return;
-        //}
-
         icOptional.filter(ic -> ic instanceof SelfTriggeringIC)
                     .map(ic -> (SelfTriggeringIC) ic)
                     .ifPresent(SelfTriggeringIC::think);
@@ -147,45 +218,35 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     @Override
     public boolean isValid(Location<World> location) {
-        return location.get(CraftBookKeys.IC_DATA).isPresent();
+        return SignUtil.isSign(location) && ICManager.getICType(SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1)) != null;
     }
 
     private Optional<IC> getIC(Location<World> location) {
-        Optional<IC> icOptional = location.get(CraftBookKeys.IC_DATA);
-
-        icOptional.ifPresent(ic -> {
-            if (!ic.hasLoaded()) {
-                Sign sign = (Sign) location.getTileEntity().get();
-                ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(sign, 1));
-                try {
-                    ic.loadICData(icType.getFactory(), location);
-                    ic.load();
-                } catch (Exception e) {
-                    CraftBookPlugin.spongeInst().getLogger().warn("Failed to load IC at " + location.toString() + '.');
-                }
-            }
-        });
-
-        if (!icOptional.isPresent()) {
-            // Repair broken ICs.
+        if (loadedICs.get(location) == null) {
             if (location.getBlockType() == BlockTypes.WALL_SIGN) {
                 ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(location.getTileEntity().get().get(Keys.SIGN_LINES).get().get(1)));
                 if (icType != null) {
-                    try {
-                        icOptional = Optional.of(icType.getFactory().createInstance((Location<World>) location));
-                        IC ic = icOptional.get();
-                        List<Text> lines = location.getTileEntity().get().get(Keys.SIGN_LINES).get();
-                        ic.create(null, lines);
-                        location.getTileEntity().get().offer(Keys.SIGN_LINES, lines);
-                        location.offer(new ICData(ic));
-                    } catch (Exception e) {
-                        CraftBookPlugin.spongeInst().getLogger().warn("Failed to repair corrupt IC at " + location.toString() + " as it requires a player.");
+                    IC ic = icType.getFactory().createInstance((Location<World>) location);
+                    if (ic.getFactory() instanceof SerializedICFactory) {
+                        SerializedICData data = location.get(CraftBookKeys.IC_DATA).orElse(null);
+                        if (data != null) {
+                            ((SerializedICFactory) ic.getFactory()).setData(ic, data);
+                        } else {
+                            CraftBookPlugin.inst().getLogger().warn("Broken IC at " + location.toString());
+                            location.removeBlock(CraftBookPlugin.spongeInst().getCause().build());
+                            return Optional.empty();
+                        }
                     }
+                    ic.load();
+                    loadedICs.put(location, ic);
+                    return Optional.of(ic);
                 }
+            } else {
+                return Optional.empty();
             }
         }
 
-        return icOptional;
+        return Optional.ofNullable(loadedICs.get(location));
     }
 
     private void createICData(Location<World> block, List<Text> lines, Player player) throws InvalidICException {
@@ -199,7 +260,9 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
             ic.create(player, lines);
 
-            block.offer(new ICData(ic));
+            if (icType.getFactory() instanceof SerializedICFactory) {
+                block.offer(new ICData(((SerializedICFactory) icType.getFactory()).getData(ic)));
+            }
 
             Sponge.getScheduler().createTaskBuilder().execute(task -> {
                 ic.load();

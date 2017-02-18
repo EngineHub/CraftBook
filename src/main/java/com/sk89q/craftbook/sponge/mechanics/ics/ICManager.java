@@ -16,11 +16,22 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.NandGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.ToggleFlipFlop;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.WorldTimeModulus;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XnorGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XorGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ProgrammableFireworksDisplay;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ZeusBolt;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
+import org.spongepowered.api.Sponge;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -59,6 +70,10 @@ class ICManager {
 
     public static void registerICType(ICType<? extends IC> ic) {
         registeredICTypes.add(ic);
+
+        if (ic.getFactory() instanceof SerializedICFactory) {
+            Sponge.getDataManager().registerBuilder(((SerializedICFactory) ic.getFactory()).getRequiredClass(), ((SerializedICFactory) ic.getFactory()));
+        }
     }
 
     public static ICType<? extends IC> getICType(String id) {

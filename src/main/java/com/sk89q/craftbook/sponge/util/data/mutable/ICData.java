@@ -16,12 +16,13 @@
  */
 package com.sk89q.craftbook.sponge.util.data.mutable;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableICData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractSingleData;
 import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.value.mutable.Value;
@@ -30,23 +31,23 @@ import org.spongepowered.api.util.annotation.NonnullByDefault;
 import java.util.Optional;
 
 @NonnullByDefault
-public class ICData extends AbstractSingleData<IC, ICData, ImmutableICData> {
+public class ICData extends AbstractSingleData<SerializedICData, ICData, ImmutableICData> {
 
     public ICData() {
         this(null);
     }
 
-    public ICData(IC value) {
+    public ICData(SerializedICData value) {
         super(value, CraftBookKeys.IC_DATA);
     }
 
-    public Value<IC> ic() {
+    public Value<SerializedICData> ic() {
         return Sponge.getRegistry().getValueFactory()
                 .createValue(CraftBookKeys.IC_DATA, getValue());
     }
 
     @Override
-    protected Value<IC> getValueGetter() {
+    protected Value<SerializedICData> getValueGetter() {
         return ic();
     }
 
@@ -62,8 +63,12 @@ public class ICData extends AbstractSingleData<IC, ICData, ImmutableICData> {
     @Override
     public Optional<ICData> from(DataContainer container) {
         if (container.contains(CraftBookKeys.IC_DATA.getQuery())) {
-            System.out.println(container.getString(CraftBookKeys.IC_DATA.getQuery()));
-            return Optional.of(new ICData(container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), IC.class).get()));
+            try {
+                Class<SerializedICData> clazz = (Class<SerializedICData>) Class.forName(container.getString(DataQuery.of("ICDataClass")).orElse(SerializedICData.class.getName()));
+                return Optional.of(new ICData(container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), clazz).get()));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         return Optional.empty();
@@ -81,7 +86,9 @@ public class ICData extends AbstractSingleData<IC, ICData, ImmutableICData> {
 
     @Override
     public DataContainer toContainer() {
-        return super.toContainer().set(CraftBookKeys.IC_DATA, getValue());
+        return super.toContainer()
+                .set(DataQuery.of("ICDataClass"), getValue().getClass().getName())
+                .set(CraftBookKeys.IC_DATA, getValue());
     }
 
     @Override

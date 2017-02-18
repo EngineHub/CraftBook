@@ -20,7 +20,7 @@ import static org.spongepowered.api.data.DataQuery.of;
 import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
 
 import com.google.common.reflect.TypeToken;
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
@@ -34,7 +34,7 @@ public class CraftBookKeys {
     public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
             new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
 
-    public static Key<Value<IC>> IC_DATA = makeSingleKey(new TypeTokens.ICTypeToken(),
+    public static Key<Value<SerializedICData>> IC_DATA = makeSingleKey(new TypeTokens.ICTypeToken(),
             new TypeTokens.ICValueTypeToken(), of("IC"), "craftbook:ic", "IC");
 
     public static Key<Value<String>> NAMESPACE = makeSingleKey(TypeToken.of(String.class),

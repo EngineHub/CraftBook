@@ -16,28 +16,29 @@
  */
 package com.sk89q.craftbook.sponge.util.data.immutable;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 
 @NonnullByDefault
-public class ImmutableICData extends AbstractImmutableSingleData<IC, ImmutableICData, ICData> {
+public class ImmutableICData extends AbstractImmutableSingleData<SerializedICData, ImmutableICData, ICData> {
 
     public ImmutableICData() {
         this(null);
     }
 
-    public ImmutableICData(IC value) {
+    public ImmutableICData(SerializedICData value) {
         super(value, CraftBookKeys.IC_DATA);
     }
 
     @Override
-    protected ImmutableValue<IC> getValueGetter() {
+    protected ImmutableValue<SerializedICData> getValueGetter() {
         return Sponge.getRegistry().getValueFactory()
                 .createValue(CraftBookKeys.IC_DATA, getValue())
                 .asImmutable();
@@ -50,7 +51,9 @@ public class ImmutableICData extends AbstractImmutableSingleData<IC, ImmutableIC
 
     @Override
     public DataContainer toContainer() {
-        return super.toContainer().set(CraftBookKeys.IC_DATA, getValue());
+        return super.toContainer()
+                .set(DataQuery.of("ICDataClass"), getValue().getClass().getName())
+                .set(CraftBookKeys.IC_DATA, getValue());
     }
 
     @Override

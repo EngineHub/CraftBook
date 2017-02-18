@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -409,7 +409,7 @@ public class ProgrammableFireworksDisplay extends IC {
         boolean isRunning();
     }
 
-    public static class Factory extends ICFactory<ProgrammableFireworksDisplay> {
+    public static class Factory implements ICFactory<ProgrammableFireworksDisplay> {
 
         @Override
         public ProgrammableFireworksDisplay createInstance(Location<World> location) {

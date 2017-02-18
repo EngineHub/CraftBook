@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -48,6 +49,17 @@ public class Clock extends IC implements SelfTriggeringIC {
     }
 
     @Override
+    public void load() {
+        super.load();
+
+        try {
+            limit = Math.max(5, Math.min(1000, Integer.parseInt(getLine(2))));
+        } catch (Exception e) {
+            limit = 20;
+        }
+    }
+
+    @Override
     public void trigger() {
     }
 
@@ -65,7 +77,7 @@ public class Clock extends IC implements SelfTriggeringIC {
         return true;
     }
 
-    public static class Factory extends ICFactory<Clock> {
+    public static class Factory implements ICFactory<Clock> {
 
         @Override
         public Clock createInstance(Location<World> location) {

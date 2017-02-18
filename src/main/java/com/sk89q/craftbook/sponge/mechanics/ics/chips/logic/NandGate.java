@@ -16,7 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -31,7 +31,7 @@ public class NandGate extends AnyInputLogicGate {
         return wires > 0 && on != wires;
     }
 
-    public static class Factory extends ICFactory<NandGate> {
+    public static class Factory implements ICFactory<NandGate> {
 
         @Override
         public NandGate createInstance(Location<World> location) {

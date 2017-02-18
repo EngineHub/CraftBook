@@ -31,11 +31,6 @@ public abstract class PinSet {
 
     public abstract int getOutputCount();
 
-    public void setInput(int inputId, boolean powered, IC ic) {
-        if(inputId == -1) return;
-        ic.getPinStates()[inputId] = powered;
-    }
-
     public void setOutput(int outputId, boolean powered, IC ic) {
 
         if(outputId == -1) return;
@@ -57,7 +52,11 @@ public abstract class PinSet {
     }
 
     public boolean getInput(int inputId, IC ic) {
-        return inputId != -1 && ic.getPinStates()[inputId];
+        Location<World> pinLocation = getPinLocation(inputId, ic);
+        return inputId != -1 && (pinLocation.get(Keys.POWERED).orElse(false)
+                || pinLocation.get(Keys.POWER).orElse(0) > 0)
+                || pinLocation.getBlockType() == BlockTypes.POWERED_REPEATER
+                || pinLocation.getBlockType() == BlockTypes.POWERED_COMPARATOR;
     }
 
     public boolean getOutput(int outputId, IC ic) {
@@ -72,5 +71,5 @@ public abstract class PinSet {
 
     public abstract String getName();
 
-    public abstract Location<?> getPinLocation(int id, IC ic);
+    public abstract Location<World> getPinLocation(int id, IC ic);
 }

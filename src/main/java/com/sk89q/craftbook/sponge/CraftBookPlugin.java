@@ -24,15 +24,13 @@ import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
-import com.sk89q.craftbook.core.util.MechanicDataCache;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
-import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
+import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.Metrics;
-import com.sk89q.craftbook.sponge.util.SpongeDataCache;
 import com.sk89q.craftbook.sponge.util.data.CraftBookData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeSerializers;
@@ -40,6 +38,7 @@ import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
+import org.spongepowered.api.GameState;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
@@ -59,8 +58,6 @@ import java.util.Optional;
 @Plugin(id = "craftbook", name = "CraftBook", version = "4.0",
         description = "CraftBook adds a number of new mechanics to Minecraft with no client mods required.")
 public class CraftBookPlugin extends CraftBookAPI {
-
-    private MechanicDataCache cache;
 
     /* Configuration Data */
 
@@ -102,19 +99,13 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     @Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
+        logger.info("Performing Pre-Initialization");
         setInstance(this);
 
-        logger.info("Performing Pre-Initialization");
-        CraftBookData.registerData();
-    }
-
-    @Listener
-    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
         TypeSerializers.registerDefaults();
+        CraftBookData.registerData();
 
-        new File("craftbook-data").mkdir();
-
-        logger.info("Starting CraftBook");
+        discoverMechanics();
 
         loadConfig();
 
@@ -122,6 +113,18 @@ public class CraftBookPlugin extends CraftBookAPI {
             logger.info("Halting CraftBook Initialization - Data Only Mode! Note: Nothing will work.");
             return;
         }
+
+        loadMechanics(event.getState());
+    }
+
+    @Listener
+    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
+        if(config.dataOnlyMode.getValue()) {
+            logger.info("Halting CraftBook Initialization - Data Only Mode! Note: Nothing will work.");
+            return;
+        }
+
+        logger.info("Starting CraftBook");
 
         CommandSpec generateDocsCommandSpec = CommandSpec.builder()
                 .description(Text.of("Generates Documentation"))
@@ -150,11 +153,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         Sponge.getCommandManager().register(this, craftBookCommandSpec, "cb", "craftbook");
 
-        discoverMechanics();
-
-        cache = new SpongeDataCache();
-
-        loadMechanics();
+        loadMechanics(event.getState());
 
         saveConfig(); //Do initial save of config.
     }
@@ -163,7 +162,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void onServerReload(GameReloadEvent event) {
         disableMechanics();
         loadConfig();
-        loadMechanics();
+        loadMechanics(GameState.SERVER_STARTED);
     }
 
     @Listener
@@ -200,7 +199,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.setOverrideConfigurationNode(false);
 
         //Standard Mechanics
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.variable.Variables");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.variable.Variables", GameState.PRE_INITIALIZATION);
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPhysics");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPlants");
@@ -228,7 +227,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         //Circuit Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Ammeter");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ics.ICSocket", GameState.PRE_INITIALIZATION);
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.GlowStone");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.Netherrack");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.powerable.JackOLantern");
@@ -250,11 +249,11 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Found " + moduleController.getModules().size());
     }
 
-    public void loadMechanics() {
+    public void loadMechanics(GameState loadState) {
         moduleController.enableModules(input -> {
-            if (config.enabledMechanics.getValue().contains(input.getName())
+            if (loadState.equals(input.getLoadState()) && (config.enabledMechanics.getValue().contains(input.getName())
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
-                    || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
+                    || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs")))) {
                 logger.debug("Enabled: " + input.getName());
                 return true;
             }
@@ -295,16 +294,10 @@ public class CraftBookPlugin extends CraftBookAPI {
         getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
         this.selfTriggerManager = null;
         moduleController.disableModules();
-        cache.clearAll();
     }
 
     public Cause.Builder getCause() {
         return Cause.source(this.container);
-    }
-
-    @Override
-    public MechanicDataCache getCache() {
-        return cache;
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.event.world.UnloadWorldEvent;
 import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
@@ -46,7 +47,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
     @Override
     public void initialize() {
         Sponge.getGame().getScheduler().createTaskBuilder().intervalTicks(2L).execute(new SelfTriggerClock()).submit(CraftBookPlugin.inst());
-        Sponge.getGame().getEventManager().registerListeners(CraftBookPlugin.inst(), new SpongeSelfTriggerManager());
+        Sponge.getGame().getEventManager().registerListeners(CraftBookPlugin.inst(), this);
 
         for(World world : Sponge.getGame().getServer().getWorlds()) {
             for(Chunk chunk : world.getLoadedChunks()) {
@@ -68,6 +69,12 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
         selfTriggeringMechanics.remove(location, mechanic);
     }
 
+    private void registerAll(World world) {
+        for (Chunk chunk : world.getLoadedChunks()) {
+            registerAll(chunk);
+        }
+    }
+
     private void registerAll(Chunk chunk) {
         for(TileEntity tileEntity : chunk.getTileEntities()) {
             for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
@@ -75,8 +82,9 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
                 try {
                     SpongeMechanic mechanic = (SpongeMechanic) module.getModuleUnchecked();
                     if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
-                        if (((SpongeBlockMechanic) mechanic).isValid(tileEntity.getLocation()))
+                        if (((SpongeBlockMechanic) mechanic).isValid(tileEntity.getLocation())) {
                             register((SelfTriggeringMechanic) mechanic, tileEntity.getLocation());
+                        }
                     }
                 } catch (ModuleNotInstantiatedException e) {
                     CraftBookPlugin.spongeInst().getLogger().error("Failed to register self-triggering mechanic for module: " + module.getName(), e);
@@ -104,6 +112,11 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
     @Listener
     public void onChunkUnload(UnloadChunkEvent event) {
         unregisterAll(event.getTargetChunk());
+    }
+
+    @Listener
+    public void onWorldLoad(LoadWorldEvent event) {
+        registerAll(event.getTargetWorld());
     }
 
     @Listener

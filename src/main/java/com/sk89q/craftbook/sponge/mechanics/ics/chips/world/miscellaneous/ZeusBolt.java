@@ -19,7 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.ParsingUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.EntityTypes;
@@ -45,10 +45,11 @@ public class ZeusBolt extends IC {
 
         if (!getLine(2).isEmpty()) {
             radius = ParsingUtil.parseRadius(getSign());
-            if(getLine(2).contains("="))
+            if(getLine(2).contains("=")) {
                 center = ParsingUtil.parseBlockLocation(getSign());
-            else
+            } else {
                 center = getBackBlock();
+            }
         } else {
             center = getBackBlock();
             radius = new Vector3d(1, 1, 1);
@@ -86,7 +87,7 @@ public class ZeusBolt extends IC {
         }
     }
 
-    public static class Factory extends ICFactory<ZeusBolt> {
+    public static class Factory implements ICFactory<ZeusBolt> {
 
         @Override
         public ZeusBolt createInstance(Location<World> location) {

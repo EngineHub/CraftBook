@@ -16,7 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -31,7 +31,7 @@ public class AndGate extends AnyInputLogicGate {
         return wires == on;
     }
 
-    public static class Factory extends ICFactory<AndGate> {
+    public static class Factory implements ICFactory<AndGate> {
 
         @Override
         public AndGate createInstance(Location<World> location) {

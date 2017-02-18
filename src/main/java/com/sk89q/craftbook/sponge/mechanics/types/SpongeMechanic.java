@@ -20,6 +20,8 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import org.spongepowered.api.GameState;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -42,15 +44,8 @@ public abstract class SpongeMechanic implements Mechanic {
 
     }
 
-    public <T extends MechanicData> T getData(Class<T> clazz, Location block) {
-        StringBuilder builder = new StringBuilder();
-
-        if (block.getExtent() instanceof World) builder.append(((World) block.getExtent()).getName()).append('.');
-        builder.append(block.getX()).append('.');
-        builder.append(block.getY()).append('.');
-        builder.append(block.getZ());
-
-        return CraftBookPlugin.inst().getCache().getMechanicData(clazz, builder.toString());
+    public GameState getStartPoint() {
+        return GameState.SERVER_STARTED;
     }
 
 }

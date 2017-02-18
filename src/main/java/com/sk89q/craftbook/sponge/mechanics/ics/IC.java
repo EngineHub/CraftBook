@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.util.SerializationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class IC implements DataSerializable {
+public abstract class IC {
 
     /*
      * Due to the way the IC data system works,
@@ -45,8 +46,6 @@ public abstract class IC implements DataSerializable {
     public transient Location<World> block;
     private transient Sign sign;
     private transient PinSet pinSet;
-
-    private boolean[] pinstates;
 
     private transient boolean loaded = false;
 
@@ -82,14 +81,15 @@ public abstract class IC implements DataSerializable {
      * @throws InvalidICException Thrown if there is an issue with this IC
      */
     public void create(Player player, List<Text> lines) throws InvalidICException {
-        PinSet set = getPinSet();
-        pinstates = new boolean[set.getInputCount()]; // Just input for now.
     }
 
     /**
      * Called when an IC is loaded into the world.
      */
     public void load() {
+    }
+
+    public void unload() {
     }
 
     public Sign getSign() {
@@ -124,39 +124,7 @@ public abstract class IC implements DataSerializable {
 
     public abstract void trigger();
 
-    public boolean[] getPinStates() {
-        return this.pinstates;
-    }
-
     public boolean hasLoaded() {
         return this.loaded;
-    }
-
-    @Override
-    public int getContentVersion() {
-        return 1;
-    }
-
-    @Override
-    @Nonnull
-    public DataContainer toContainer() {
-        return new MemoryDataContainer()
-                .set(Queries.CONTENT_VERSION, getContentVersion())
-                .set(Queries.JSON, SerializationUtil.jsonConverter.serialize(this));
-    }
-
-    @NonnullByDefault
-    public static class ICDataBuilder extends AbstractDataBuilder<IC> {
-
-        public ICDataBuilder() {
-            super(IC.class, 1);
-        }
-
-        @Override
-        protected Optional<IC> buildContent(DataView container) throws InvalidDataException {
-            String string = (String) container.get(Queries.JSON).get();
-
-            return Optional.of(SerializationUtil.jsonConverter.deserialize(string, IC.class));
-        }
     }
 }

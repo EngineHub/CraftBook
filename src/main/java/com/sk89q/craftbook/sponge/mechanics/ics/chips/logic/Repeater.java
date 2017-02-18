@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -33,7 +33,7 @@ public class Repeater extends IC {
             getPinSet().setOutput(i, getPinSet().getInput(i, this), this);
     }
 
-    public static class Factory extends ICFactory<Repeater> {
+    public static class Factory implements ICFactory<Repeater> {
 
         @Override
         public Repeater createInstance(Location<World> location) {

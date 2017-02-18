@@ -16,9 +16,7 @@
  */
 package com.sk89q.craftbook.core;
 
-import com.sk89q.craftbook.core.mechanics.MechanicData;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
-import com.sk89q.craftbook.core.util.MechanicDataCache;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -50,13 +48,6 @@ public abstract class CraftBookAPI {
      * Called to discover available mechanics.
      */
     public abstract void discoverMechanics();
-
-    /**
-     * Gets the cache that stores {@link MechanicData}.
-     *
-     * @return The {@link MechanicDataCache}
-     */
-    public abstract MechanicDataCache getCache();
 
     /**
      * Gets the {@link SelfTriggerManager}.

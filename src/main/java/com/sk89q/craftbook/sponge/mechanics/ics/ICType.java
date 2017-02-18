@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -16,11 +16,12 @@
  */
 package com.sk89q.craftbook.sponge.util.data.builder;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableICData;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
@@ -49,8 +50,12 @@ public class ICDataManipulatorBuilder extends AbstractDataBuilder<ICData> implem
     @Override
     protected Optional<ICData> buildContent(DataView container) throws InvalidDataException {
         if (container.contains(CraftBookKeys.IC_DATA.getQuery())) {
-            IC ic = container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), IC.class).get();
-            return Optional.of(new ICData(ic));
+            try {
+                Class<SerializedICData> clazz = (Class<SerializedICData>) Class.forName(container.getString(DataQuery.of("ICDataClass")).orElse(SerializedICData.class.getName()));
+                return Optional.of(new ICData(container.getSerializable(CraftBookKeys.IC_DATA.getQuery(), clazz).get()));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         return Optional.empty();

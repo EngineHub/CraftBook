@@ -16,7 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.ICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -31,7 +31,7 @@ public class XorGate extends TwoInputLogicGate {
         return a != b;
     }
 
-    public static class Factory extends ICFactory<XorGate> {
+    public static class Factory implements ICFactory<XorGate> {
 
         @Override
         public XorGate createInstance(Location<World> location) {
