@@ -46,7 +46,7 @@ import java.util.Map;
 
 public class ProgrammableFireworksDisplay extends IC {
 
-    private static transient File fireworksFolder;
+    private static File fireworksFolder;
 
     static {
         fireworksFolder = new File(CraftBookPlugin.inst().getWorkingDirectory(), "fireworks");
@@ -55,8 +55,8 @@ public class ProgrammableFireworksDisplay extends IC {
         }
     }
 
-    private transient FireworkShowHandler handler;
-    private transient boolean stopOnLow;
+    private FireworkShowHandler handler;
+    private boolean stopOnLow;
 
     public ProgrammableFireworksDisplay(ICFactory<ProgrammableFireworksDisplay> icFactory, Location<World> block) {
         super(icFactory, block);

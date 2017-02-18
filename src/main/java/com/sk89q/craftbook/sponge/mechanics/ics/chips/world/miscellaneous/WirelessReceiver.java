@@ -38,7 +38,7 @@ public class WirelessReceiver extends IC implements SelfTriggeringIC {
 
     private WirelessTransmitter.Factory.WirelessData wirelessData;
 
-    private transient Tuple<String, String> cachedTuple;
+    private Tuple<String, String> cachedTuple;
 
     public WirelessReceiver(ICFactory<WirelessReceiver> icFactory, Location<World> block) {
         super(icFactory, block);

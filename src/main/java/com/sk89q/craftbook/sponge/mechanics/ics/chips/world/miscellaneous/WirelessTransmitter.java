@@ -43,7 +43,7 @@ public class WirelessTransmitter extends IC {
 
     private Factory.WirelessData wirelessData;
 
-    private transient Tuple<String, String> cachedTuple;
+    private Tuple<String, String> cachedTuple;
 
     public WirelessTransmitter(ICFactory<WirelessTransmitter> icFactory, Location<World> block) {
         super(icFactory, block);

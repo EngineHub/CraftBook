@@ -37,17 +37,10 @@ import java.util.Optional;
 
 public abstract class IC {
 
-    /*
-     * Due to the way the IC data system works,
-     * all non-serializable or non-serialized fields should be transient.
-     */
-
-    private transient ICFactory<? extends IC> icFactory;
-    public transient Location<World> block;
-    private transient Sign sign;
-    private transient PinSet pinSet;
-
-    private transient boolean loaded = false;
+    private ICFactory<? extends IC> icFactory;
+    public Location<World> block;
+    private Sign sign;
+    private PinSet pinSet;
 
     public IC() {
     }
@@ -55,15 +48,6 @@ public abstract class IC {
     public IC(ICFactory<? extends IC> icFactory, Location<World> block) {
         this.icFactory = icFactory;
         this.block = block;
-
-        this.loaded = icFactory != null;
-    }
-
-    public void loadICData(ICFactory<? extends IC> icFactory, Location<World> block) {
-        this.icFactory = icFactory;
-        this.block = block;
-
-        this.loaded = true;
     }
 
     public PinSet getPinSet() {
@@ -123,8 +107,4 @@ public abstract class IC {
     }
 
     public abstract void trigger();
-
-    public boolean hasLoaded() {
-        return this.loaded;
-    }
 }
