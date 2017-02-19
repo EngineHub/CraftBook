@@ -33,6 +33,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.command.ShowDataCommand;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSI3O;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
@@ -77,6 +78,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     static {
         PINSETS.put("SISO", new PinsSISO());
+        PINSETS.put("SI3O", new PinsSI3O());
         PINSETS.put("3ISO", new Pins3ISO());
     }
 

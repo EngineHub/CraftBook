@@ -58,11 +58,16 @@ class ICManager {
 
         registerICType(new ICType<>("MC1421", "CLOCK", "Clock", "Outputs high every X ticks when input is high.", new Clock.Factory()));
 
+        //SI3O
+        registerICType(new ICType<>("MC2300", "ROM GET", "ROM Get", "Gets the memory state from a file for usage in the MemorySetter/Access IC group.", new MemoryAccess.Factory(), "SI3O"));
+
         //3ISO
         registerICType(new ICType<>("MC3002", "AND", "And Gate", "Outputs high if all inputs are high.", new AndGate.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3003", "NAND", "Nand Gate", "Outputs high if all inputs are low.", new NandGate.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3020", "XOR", "Xor Gate", "Outputs high if the inputs are different", new XorGate.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3021", "XNOR", "Xnor Gate", "Outputs high if the inputs are the same", new XnorGate.Factory(), "3ISO"));
+
+        registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {
