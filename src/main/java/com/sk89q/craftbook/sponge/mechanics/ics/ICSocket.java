@@ -28,6 +28,8 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.ics.command.SetDataCommand;
+import com.sk89q.craftbook.sponge.mechanics.ics.command.ShowDataCommand;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
@@ -43,6 +45,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -93,6 +97,32 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         if ("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
             ICManager.getICTypes().forEach(DocumentationGenerator::generateDocumentation);
         }
+
+        CommandSpec showDataCommand = CommandSpec.builder()
+                .arguments(GenericArguments.optional(GenericArguments.location(Text.of("block"))))
+                .executor(new ShowDataCommand(this))
+                .build();
+
+        CommandSpec setDataCommand = CommandSpec.builder()
+                .arguments(
+                        GenericArguments.string(Text.of("variable")),
+                        GenericArguments.string(Text.of("value")),
+                        GenericArguments.optional(GenericArguments.location(Text.of("block")))
+                )
+                .executor(new SetDataCommand(this))
+                .build();
+
+        CommandSpec dataCommand = CommandSpec.builder()
+                .child(showDataCommand, "show")
+                .child(setDataCommand, "set")
+                .build();
+
+        CommandSpec icCommand = CommandSpec.builder()
+                .description(Text.of("Base command for Integrated Circuits."))
+                .child(dataCommand, "data")
+                .build();
+
+        Sponge.getCommandManager().register(CraftBookPlugin.spongeInst(), icCommand, "ic", "ics", "integratedcircuit");
     }
 
     @Override
@@ -221,7 +251,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         return SignUtil.isSign(location) && ICManager.getICType(SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1)) != null;
     }
 
-    private Optional<IC> getIC(Location<World> location) {
+    public Optional<IC> getIC(Location<World> location) {
         if (loadedICs.get(location) == null) {
             if (location.getBlockType() == BlockTypes.WALL_SIGN) {
                 ICType<? extends IC> icType = ICManager.getICType(SignUtil.getTextRaw(location.getTileEntity().get().get(Keys.SIGN_LINES).get().get(1)));

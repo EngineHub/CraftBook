@@ -16,15 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.NandGate;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.ToggleFlipFlop;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.WorldTimeModulus;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XnorGate;
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XorGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.block.BlockReplacer;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ProgrammableFireworksDisplay;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
@@ -56,6 +49,8 @@ class ICManager {
         registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", new WirelessReceiver.Factory()));
 
         registerICType(new ICType<>("MC1203", "ZEUS BOLT", "Zeus Bolt", "Strikes a location with lightning.", new ZeusBolt.Factory()));
+
+        registerICType(new ICType<>("MC1249", "BLOCK REPLACER", "Block Replacer", "Searches a nearby area and replaces blocks accordingly.", new BlockReplacer.Factory()));
 
         registerICType(new ICType<>("MC1253", "FIREWORK", "Programmable Firework Display", "Plays a firework show from a file.", new ProgrammableFireworksDisplay.Factory()));
 
