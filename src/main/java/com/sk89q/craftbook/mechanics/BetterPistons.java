@@ -81,6 +81,12 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             } else if (event.getLine(1).equalsIgnoreCase("[Bounce]") && Types.isEnabled(Types.BOUNCE)) {
                 event.setLine(1, "[Bounce]");
                 type = Types.BOUNCE;
+                double velocity = 1.0d;
+                try {
+                    velocity = Double.parseDouble(event.getLine(2));
+                } catch (Exception e) {}
+                velocity = Math.min(Math.max(velocity, -pistonBounceMaxVelocity), pistonBounceMaxVelocity);
+                event.setLine(2, String.valueOf(velocity));
             } else if (event.getLine(1).equalsIgnoreCase("[SuperPush]") && Types.isEnabled(Types.SUPERPUSH)) {
                 event.setLine(1, "[SuperPush]");
                 type = Types.SUPERPUSH;
@@ -190,6 +196,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         } catch (Exception e) {
             mult = 1;
         }
+
+        mult = Math.min(Math.max(mult, -pistonBounceMaxVelocity), pistonBounceMaxVelocity);
 
         Vector vel = new Vector(piston.getFacing().getModX(), piston.getFacing().getModY(), piston.getFacing().getModZ()).multiply(mult);
         if (trigger.getRelative(piston.getFacing()).getType() == Material.AIR || trigger.getRelative(piston.getFacing()).getState() != null && InventoryUtil.doesBlockHaveInventory(trigger.getRelative(piston.getFacing())) || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_EXTENSION || pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
@@ -389,6 +397,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private List<ItemInfo> pistonsMovementBlacklist;
     private boolean pistonsBounce;
     private List<ItemInfo> pistonsBounceBlacklist;
+    private double pistonBounceMaxVelocity;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -419,5 +428,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         config.setComment(path + "max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt(path + "max-distance", 12);
+
+        config.setComment(path + "bounce-max-velocity", "The maximum velocity bounce pistons can provide.");
+        pistonBounceMaxVelocity = config.getDouble(path + "bounce-max-velocity", 5.0);
     }
 }
