@@ -524,6 +524,7 @@ public final class ItemUtil {
             case BLAZE_ROD:
             case LAVA_BUCKET:
             case BOOKSHELF:
+            case WOOL:
                 return true;
             default:
                 return false;
