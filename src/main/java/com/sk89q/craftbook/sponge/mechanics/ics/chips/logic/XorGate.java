@@ -37,5 +37,17 @@ public class XorGate extends TwoInputLogicGate {
         public XorGate createInstance(Location<World> location) {
             return new XorGate(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "The XOR Operand"
+                    },
+                    new String[] {
+                            "Outputs high if the inputs are not equal"
+                    }
+            };
+        }
     }
 }

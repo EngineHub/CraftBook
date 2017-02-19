@@ -170,6 +170,26 @@ public class BlockReplacer extends IC {
         }
 
         @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "",
+                    "delay:mode:physics"
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Clock"
+                    },
+                    new String[] {
+                            "None"
+                    }
+            };
+        }
+
+        @Override
         public void setData(BlockReplacer ic, BlockTypeData data) {
             ic.blockTypeData = data;
         }

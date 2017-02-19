@@ -40,5 +40,17 @@ public class WorldTimeModulus extends IC {
         public WorldTimeModulus createInstance(Location<World> location) {
             return new WorldTimeModulus(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Input"
+                    },
+                    new String[] {
+                            "Outputs high if world time is odd"
+                    }
+            };
+        }
     }
 }

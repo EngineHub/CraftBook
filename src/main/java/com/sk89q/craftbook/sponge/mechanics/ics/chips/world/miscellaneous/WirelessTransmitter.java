@@ -93,6 +93,26 @@ public class WirelessTransmitter extends IC {
         }
 
         @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Shortband",
+                    "Optional Wideband"
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Wireless Input"
+                    },
+                    new String[] {
+                            "None"
+                    }
+            };
+        }
+
+        @Override
         protected Optional<WirelessData> buildContent(DataView container) throws InvalidDataException {
             WirelessData wirelessData = new WirelessData();
 

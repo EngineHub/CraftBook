@@ -81,5 +81,27 @@ public class MemorySetter extends IC {
         public MemorySetter createInstance(Location<World> location) {
             return new MemorySetter(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Accessed Filename",
+                    ""
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "First digit of file",
+                            "Second digit of file",
+                            "Third digit of file"
+                    },
+                    new String[] {
+                            "None"
+                    }
+            };
+        }
     }
 }

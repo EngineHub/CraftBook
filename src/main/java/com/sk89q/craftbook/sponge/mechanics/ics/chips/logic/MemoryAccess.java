@@ -89,5 +89,27 @@ public class MemoryAccess extends IC {
         public MemoryAccess createInstance(Location<World> location) {
             return new MemoryAccess(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Accessed Filename",
+                    ""
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "High to read from file"
+                    },
+                    new String[] {
+                            "First digit of file",
+                            "Second digit of file",
+                            "Third digit of file"
+                    }
+            };
+        }
     }
 }

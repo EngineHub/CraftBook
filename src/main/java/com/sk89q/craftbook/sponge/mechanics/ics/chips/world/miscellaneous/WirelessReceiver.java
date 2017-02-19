@@ -88,6 +88,26 @@ public class WirelessReceiver extends IC implements SelfTriggeringIC {
         }
 
         @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Shortband",
+                    "Optional Wideband"
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Clock"
+                    },
+                    new String[] {
+                            "Wireless Output"
+                    }
+            };
+        }
+
+        @Override
         protected Optional<WirelessTransmitter.Factory.WirelessData> buildContent(DataView container) throws InvalidDataException {
             WirelessTransmitter.Factory.WirelessData wirelessData = new WirelessTransmitter.Factory.WirelessData();
 

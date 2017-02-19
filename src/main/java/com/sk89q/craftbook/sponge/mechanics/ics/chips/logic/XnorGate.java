@@ -37,5 +37,17 @@ public class XnorGate extends TwoInputLogicGate {
         public XnorGate createInstance(Location<World> location) {
             return new XnorGate(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "The XNOR Operand"
+                    },
+                    new String[] {
+                            "Outputs high if all or no inputs are high"
+                    }
+            };
+        }
     }
 }

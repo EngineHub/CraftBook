@@ -93,5 +93,25 @@ public class ZeusBolt extends IC {
         public ZeusBolt createInstance(Location<World> location) {
             return new ZeusBolt(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "radius=x,z,y",
+                    "Optional chance (Out of 100)"
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Strike lightning on high"
+                    },
+                    new String[] {
+                            "None"
+                    }
+            };
+        }
     }
 }

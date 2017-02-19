@@ -85,5 +85,25 @@ public class Clock extends IC implements SelfTriggeringIC {
         public Clock createInstance(Location<World> location) {
             return new Clock(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Ticks per cycle",
+                    ""
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "High to disable the clock"
+                    },
+                    new String[] {
+                            "Toggles every X ticks"
+                    }
+            };
+        }
     }
 }

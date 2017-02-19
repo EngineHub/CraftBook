@@ -32,4 +32,13 @@ public interface ICFactory<T extends IC> {
     }
 
     T createInstance(Location<World> location);
+
+    default String[] getLineHelp() {
+        return new String[] {
+                "",
+                ""
+        };
+    }
+
+    String[][] getPinHelp();
 }

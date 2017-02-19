@@ -40,5 +40,17 @@ public class Inverter extends IC {
         public Inverter createInstance(Location<World> location) {
             return new Inverter(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "NOT Operand"
+                    },
+                    new String[] {
+                            "Opposite of input"
+                    }
+            };
+        }
     }
 }

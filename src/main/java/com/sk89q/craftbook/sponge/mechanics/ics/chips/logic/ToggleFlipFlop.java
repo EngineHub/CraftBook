@@ -50,5 +50,17 @@ public class ToggleFlipFlop extends IC {
         public ToggleFlipFlop createInstance(Location<World> location) {
             return new ToggleFlipFlop(this, location, risingEdge);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                        "Toggle output on high"
+                    },
+                    new String[] {
+                        "Output"
+                    }
+            };
+        }
     }
 }

@@ -39,5 +39,17 @@ public class Repeater extends IC {
         public Repeater createInstance(Location<World> location) {
             return new Repeater(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Input"
+                    },
+                    new String[] {
+                            "Outputs input"
+                    }
+            };
+        }
     }
 }

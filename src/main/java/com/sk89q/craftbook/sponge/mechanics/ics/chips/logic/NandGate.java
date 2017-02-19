@@ -37,5 +37,17 @@ public class NandGate extends AnyInputLogicGate {
         public NandGate createInstance(Location<World> location) {
             return new NandGate(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "The NAND Operand"
+                    },
+                    new String[] {
+                            "Outputs high if not all inputs are high"
+                    }
+            };
+        }
     }
 }

@@ -27,6 +27,8 @@ import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator
 public class ICType<T extends IC> implements DocumentationProvider {
 
     private static final Pattern IC_HEADER_PATTERN = Pattern.compile("%IC_HEADER%", Pattern.LITERAL);
+    private static final Pattern IC_PINS_PATTERN = Pattern.compile("%IC_PINS%", Pattern.LITERAL);
+    private static final Pattern IC_LINES_PATTERN = Pattern.compile("%IC_LINES%", Pattern.LITERAL);
     private static final Pattern IC_ID_PATTERN = Pattern.compile("%IC_ID%", Pattern.LITERAL);
 
     private String name;
@@ -87,6 +89,38 @@ public class ICType<T extends IC> implements DocumentationProvider {
     @Override
     public String performCustomConversions(String input) {
         input = IC_ID_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(modelId));
+
+        StringBuilder icPins = new StringBuilder();
+        icPins.append("IC Pins\n").append("=======\n\n");
+        icPins.append("\nInputs\n").append("~~~~~~\n\n");
+        for (int i = 0; i < icFactory.getPinHelp()[0].length; i++) {
+            String line = icFactory.getPinHelp()[0][i];
+            if (line.isEmpty()) {
+                line = "None";
+            }
+            icPins.append("- ").append(line).append('\n');
+        }
+        icPins.append("\nOutputs\n").append("~~~~~~~\n\n");
+        for (int i = 0; i < icFactory.getPinHelp()[1].length; i++) {
+            String line = icFactory.getPinHelp()[1][i];
+            if (line.isEmpty()) {
+                line = "None";
+            }
+            icPins.append("- ").append(line).append('\n');
+        }
+        input = IC_PINS_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icPins.toString()));
+
+        StringBuilder icLines = new StringBuilder();
+        icLines.append("Sign Lines\n").append("==========\n\n");
+        for (int i = 3; i < 4; i++) {
+            String line = icFactory.getLineHelp()[i-3];
+            if (line.isEmpty()) {
+                line = "Blank";
+            }
+            icLines.append(i).append(". ").append(line).append('\n');
+        }
+        input = IC_LINES_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icLines.toString()));
+
         String icHeader = createStringOfLength(modelId.length(), '=') + '\n' + modelId + '\n' + createStringOfLength(modelId.length(), '=');
         return IC_HEADER_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icHeader));
     }

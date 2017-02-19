@@ -95,5 +95,25 @@ public class RandomBit extends IC {
         public RandomBit createInstance(Location<World> location) {
             return new RandomBit(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Min On:Max On",
+                    ""
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                        "High to output random state"
+                    },
+                    new String[] {
+                        "Outputs random state"
+                    }
+            };
+        }
     }
 }

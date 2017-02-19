@@ -37,5 +37,17 @@ public class AndGate extends AnyInputLogicGate {
         public AndGate createInstance(Location<World> location) {
             return new AndGate(this, location);
         }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "AND operand"
+                    },
+                    new String[] {
+                            "Outputs high if all inputs are high"
+                    }
+            };
+        }
     }
 }

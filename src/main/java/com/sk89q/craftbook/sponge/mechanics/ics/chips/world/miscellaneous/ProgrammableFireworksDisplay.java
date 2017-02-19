@@ -415,5 +415,25 @@ public class ProgrammableFireworksDisplay extends IC {
         public ProgrammableFireworksDisplay createInstance(Location<World> location) {
             return new ProgrammableFireworksDisplay(this, location);
         }
+
+        @Override
+        public String[] getLineHelp() {
+            return new String[] {
+                    "Firework Script Name",
+                    "Stop on Low (true/false)"
+            };
+        }
+
+        @Override
+        public String[][] getPinHelp() {
+            return new String[][] {
+                    new String[] {
+                            "Runs script on high"
+                    },
+                    new String[] {
+                            "None"
+                    }
+            };
+        }
     }
 }
