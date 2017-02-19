@@ -246,6 +246,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.EmptyDecay");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.MoreRails");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.NoCollide");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.minecart.RemoveEntities");
 
         logger.info("Found " + moduleController.getModules().size());
     }

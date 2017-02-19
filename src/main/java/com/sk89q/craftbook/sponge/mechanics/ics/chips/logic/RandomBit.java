@@ -78,13 +78,11 @@ public class RandomBit extends IC {
                         state = false;
                     }
                     if (state && !getPinSet().getOutput(i, this)) {
-                        getPinSet().setOutput(i, state, this); //Only change if needed
+                        getPinSet().setOutput(i, true, this); //Only change if needed
                         changed = true;
                     }
                     if (state && changed) {
                         on++;
-                    } else if (!state && changed) {
-                        on--;
                     }
                 }
                 first = false;
