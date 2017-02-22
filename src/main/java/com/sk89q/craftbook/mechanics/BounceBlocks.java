@@ -90,15 +90,19 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
                             CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
 
-                            double x = 0,y = 0,z = 0;
+                            double x = 0,y,z = 0;
                             boolean straight = s.getLine(2).startsWith("!");
 
                             String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
-                            if(bits.length == 0)
+                            if (bits.length == 0) {
                                 y = 0.5;
-                            if(bits.length == 1)
-                                y = Double.parseDouble(bits[0]);
-                            else {
+                            } if (bits.length == 1) {
+                                try {
+                                    y = Double.parseDouble(bits[0]);
+                                } catch (NumberFormatException e) {
+                                    y = 0.5;
+                                }
+                            } else {
                                 x = Double.parseDouble(bits[0]);
                                 y = Double.parseDouble(bits[1]);
                                 z = Double.parseDouble(bits[2]);
