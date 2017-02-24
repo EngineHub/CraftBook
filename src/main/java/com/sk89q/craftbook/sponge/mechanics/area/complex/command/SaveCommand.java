@@ -61,6 +61,8 @@ public class SaveCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
+        id = id.toLowerCase();
+
         if (!personal && !area.commandSaveOtherPermissions.hasPermission(src)) {
             src.sendMessage(Text.of("You do not have permission to use this namespace!"));
             return CommandResult.empty();
@@ -109,7 +111,7 @@ public class SaveCommand implements CommandExecutor {
 
         // Save
         try {
-            CopyManager.save(namespace, id.toLowerCase(), copy);
+            CopyManager.save(namespace, id, copy);
             src.sendMessage(Text.of(TextColors.YELLOW, "Area saved as '" + id + "' under the '" + namespace + "' namespace."));
             return CommandResult.success();
         } catch (IOException | DataException e) {
