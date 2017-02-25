@@ -20,6 +20,7 @@ import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PER
 
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -37,6 +38,7 @@ import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -78,6 +80,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     private ConfigValue<Boolean> exitAtEntry = new ConfigValue<>("exit-at-last-position", "Moves player's to their entry position when they exit the chair.", false);
     private ConfigValue<Boolean> requireSigns = new ConfigValue<>("require-sign", "Require signs on the chairs.", false);
     private ConfigValue<Integer> maxSignDistance = new ConfigValue<>("max-sign-distance", "The distance the sign can be from the clicked chair.", 3);
+    private ConfigValue<Boolean> healPassenger = new ConfigValue<>("heal-passenger", "Heal the player when they're sitting in the chair.", false);
+    private ConfigValue<Double> healAmount = new ConfigValue<>("heal-amount", "Amount to heal the player by.", 1.0d, TypeToken.of(Double.class));
 
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.chairs.use", "Allows the user to sit in chairs.", PermissionDescription.ROLE_USER);
 
@@ -93,6 +97,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         exitAtEntry.load(config);
         requireSigns.load(config);
         maxSignDistance.load(config);
+        healPassenger.load(config);
+        healAmount.load(config);
 
         usePermissions.register();
 
@@ -102,6 +108,16 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 if (player == null) {
                     removeChair(chair.getValue(), false);
                     return;
+                }
+
+                if (healPassenger.getValue()) {
+                    if (player.get(Keys.HEALTH).orElse(0d) < player.get(Keys.MAX_HEALTH).orElse(0d)) {
+                        player.offer(Keys.HEALTH, Math.min(player.get(Keys.HEALTH).orElse(0d) + healAmount.getValue(), player.get(Keys.MAX_HEALTH).orElse(0d)));
+                    }
+                }
+
+                if (player.get(Keys.EXHAUSTION).orElse(-20d) > -20d) {
+                    player.offer(Keys.EXHAUSTION, player.get(Keys.EXHAUSTION).orElse(-20d) - 0.1d);
                 }
 
                 chair.getValue().chairEntity.setRotation(new Vector3d(0, player.getRotation().getY(), 0));
@@ -118,7 +134,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
 
     @Override
     public boolean isValid(Location<World> location) {
-        return BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock());
+        return BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock()) &&
+                (location.getBlockY() == 0 || !location.getRelative(Direction.DOWN).getBlockType().equals(BlockTypes.AIR));
     }
 
     private boolean hasSign(Location<World> location, List<Location<World>> searched, Location<World> original) {
@@ -147,7 +164,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         return found;
     }
 
-    private Chair<?> addChair(Player player, Location<World> location) {
+    private void addChair(Player player, Location<World> location) {
         Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
@@ -161,7 +178,6 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         player.sendMessage(Text.of(TextColors.YELLOW, "You sit down!"));
 
         chairs.put(player.getUniqueId(), chair);
-        return chair;
     }
 
     private void removeChair(Chair<?> chair, boolean clearPassengers) {
@@ -200,7 +216,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
 
     @Listener
     public void onBlockClick(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
-        event.getTargetBlock().getLocation().ifPresent((location) -> {
+        event.getTargetBlock().getLocation().ifPresent(location -> {
             if (!isValid(location))
                 return;
 
@@ -268,7 +284,9 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 allowedBlocks,
                 exitAtEntry,
                 requireSigns,
-                maxSignDistance
+                maxSignDistance,
+                healPassenger,
+                healAmount
         };
     }
 
