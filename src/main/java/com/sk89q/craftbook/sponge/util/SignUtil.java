@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.util;
 
 import com.google.common.collect.Lists;
+import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.sponge.mechanics.variable.Variables;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -43,7 +44,14 @@ public final class SignUtil {
      * @return If it is a sign
      */
     public static boolean isSign(Location<World> block) {
-        return isSign(block.getBlock());
+        if (isSign(block.getBlock())) {
+            if (!block.getTileEntity().isPresent()) {
+                CraftBookAPI.inst().getLogger().warn("Corrupted tile entity (Sign) at " + block.getBlockPosition() + " in world " + block.getExtent().getName());
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

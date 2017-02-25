@@ -148,7 +148,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         if(!redstoneFuel.getValue())
             return;
 
-        if(!SignUtil.isSign(source.getBlockState())) return;
+        if(!SignUtil.isSign(source.getLocation())) return;
         Location<World> block = source.getLocation();
         Sign sign = (Sign) block.getTileEntity().get();
 
