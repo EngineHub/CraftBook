@@ -162,7 +162,9 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void onServerReload(GameReloadEvent event) {
         disableMechanics();
         loadConfig();
-        loadMechanics(GameState.SERVER_STARTED);
+        for (GameState state : GameState.values()) {
+            loadMechanics(state);
+        }
     }
 
     @Listener
