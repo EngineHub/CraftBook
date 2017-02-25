@@ -99,7 +99,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         if(!ItemUtil.isStackValid(result)) {
             if (!hasWarnedNoResult) {
-                CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit has an invalid recipe!");
+                CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
+                        + " has an invalid recipe! Result: " + result);
                 hasWarnedNoResult = true;
             }
             return false;
