@@ -232,6 +232,11 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 return;
             }
 
+            if (getChair(location) != null) {
+                player.sendMessage(Text.of(TextColors.RED, "Chair already occupied!"));
+                return;
+            }
+
             if (chairs.containsKey(player.getUniqueId())) {
                 removeChair(chairs.get(player.getUniqueId()), true);
             }
