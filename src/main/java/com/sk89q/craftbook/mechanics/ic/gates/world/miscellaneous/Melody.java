@@ -70,8 +70,8 @@ public class Melody extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getLine(3).toUpperCase().contains(":START")) getSign().setLine(3, getLine(3).toUpperCase().replace(":START", ";START"));
-        if(getLine(3).toUpperCase().contains(":LOOP")) getSign().setLine(3, getLine(3).toUpperCase().replace(":LOOP", ";LOOP"));
+        if(getLine(3).contains(":START")) getSign().setLine(3, getLine(3).replace(":START", ";START"));
+        if(getLine(3).contains(":LOOP")) getSign().setLine(3, getLine(3).replace(":LOOP", ";LOOP"));
 
         String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
 
