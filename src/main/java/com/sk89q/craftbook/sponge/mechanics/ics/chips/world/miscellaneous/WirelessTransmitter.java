@@ -95,8 +95,8 @@ public class WirelessTransmitter extends IC {
         @Override
         public String[] getLineHelp() {
             return new String[] {
-                    "Shortband",
-                    "Optional Wideband"
+                    "The channel name (narrowband)",
+                    "Optional wideband. Defaults to UUID if blank"
             };
         }
 

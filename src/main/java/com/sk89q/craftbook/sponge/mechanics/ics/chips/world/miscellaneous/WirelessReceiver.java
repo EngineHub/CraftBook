@@ -90,8 +90,8 @@ public class WirelessReceiver extends IC implements SelfTriggeringIC {
         @Override
         public String[] getLineHelp() {
             return new String[] {
-                    "Shortband",
-                    "Optional Wideband"
+                    "The channel name (narrowband)",
+                    "Optional wideband. Defaults to UUID if blank"
             };
         }
 

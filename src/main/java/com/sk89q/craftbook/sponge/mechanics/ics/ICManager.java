@@ -22,6 +22,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.Progra
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ZeusBolt;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.sensor.DaySensor;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import org.spongepowered.api.Sponge;
@@ -51,6 +52,8 @@ class ICManager {
         registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", new WirelessReceiver.Factory()));
 
         registerICType(new ICType<>("MC1203", "ZEUS BOLT", "Zeus Bolt", "Strikes a location with lightning.", new ZeusBolt.Factory()));
+
+        registerICType(new ICType<>("MC1230", "SENSE DAY", "Daylight Sensor", "Outputs high if it is day.", new DaySensor.Factory()));
 
         registerICType(new ICType<>("MC1249", "BLOCK REPLACER", "Block Replacer", "Searches a nearby area and replaces blocks accordingly.", new BlockReplacer.Factory()));
 
