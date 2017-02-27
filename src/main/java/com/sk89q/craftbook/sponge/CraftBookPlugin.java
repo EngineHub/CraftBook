@@ -205,6 +205,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPhysics");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPlants");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BounceBlocks");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Chairs");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ChunkAnchor");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.CookingPot");

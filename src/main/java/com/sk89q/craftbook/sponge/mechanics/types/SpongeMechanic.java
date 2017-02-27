@@ -18,7 +18,6 @@ package com.sk89q.craftbook.sponge.mechanics.types;
 
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.CraftBookException;
-import org.spongepowered.api.GameState;
 
 public abstract class SpongeMechanic implements Mechanic {
 
