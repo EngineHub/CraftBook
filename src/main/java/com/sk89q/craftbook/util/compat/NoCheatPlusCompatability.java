@@ -11,7 +11,13 @@ import java.util.Map;
 public class NoCheatPlusCompatability implements CraftBookCompatability {
 
     private Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
-    private CheckType[] toDisable = new CheckType[]{CheckType.BLOCKBREAK,CheckType.BLOCKINTERACT,CheckType.COMBINED,CheckType.MOVING, CheckType.BLOCKINTERACT_VISIBLE};
+    private CheckType[] toDisable = new CheckType[]{
+            CheckType.BLOCKBREAK,
+            CheckType.BLOCKINTERACT,
+            CheckType.COMBINED,
+            CheckType.MOVING,
+            CheckType.BLOCKPLACE
+    };
 
     @Override
     public void enable (Player player) {
