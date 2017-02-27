@@ -49,11 +49,15 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
             double x = 0,y = 0,z = 0;
 
             String[] bits = RegexUtil.COMMA_PATTERN.split(config.getString(path + "auto-blocks." + key));
-            if(bits.length == 0)
+            if (bits.length == 0) {
                 y = 0.5;
-            if(bits.length == 1)
-                y = Double.parseDouble(bits[0]);
-            else {
+            } else if (bits.length == 1) {
+                try {
+                    y = Double.parseDouble(bits[0]);
+                } catch (NumberFormatException e) {
+                    y = 0.5;
+                }
+            } else {
                 x = Double.parseDouble(bits[0]);
                 y = Double.parseDouble(bits[1]);
                 z = Double.parseDouble(bits[2]);
@@ -96,7 +100,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                             String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
                             if (bits.length == 0) {
                                 y = 0.5;
-                            } if (bits.length == 1) {
+                            } else if (bits.length == 1) {
                                 try {
                                     y = Double.parseDouble(bits[0]);
                                 } catch (NumberFormatException e) {
