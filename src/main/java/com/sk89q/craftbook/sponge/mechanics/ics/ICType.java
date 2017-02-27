@@ -112,7 +112,9 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
         StringBuilder icLines = new StringBuilder();
         icLines.append("Sign Lines\n").append("==========\n\n");
-        for (int i = 3; i < 4; i++) {
+        icLines.append("1. ").append(this.shorthandId.toUpperCase()).append('\n');
+        icLines.append("2. ").append('[').append(this.modelId).append(']').append('\n');
+        for (int i = 3; i < 5; i++) {
             String line = icFactory.getLineHelp()[i-3];
             if (line.isEmpty()) {
                 line = "Blank";
