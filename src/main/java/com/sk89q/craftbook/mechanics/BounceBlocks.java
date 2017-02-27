@@ -167,14 +167,13 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
         try {
             String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(event.getLine(2), "!", ""));
-            if(bits.length == 0)
-                if(bits.length == 1)
-                    Double.parseDouble(bits[0]);
-                else {
-                    Double.parseDouble(bits[0]);
-                    Double.parseDouble(bits[1]);
-                    Double.parseDouble(bits[2]);
-                }
+            if (bits.length == 1) {
+                Double.parseDouble(bits[0]);
+            } else if (bits.length > 1) {
+                Double.parseDouble(bits[0]);
+                Double.parseDouble(bits[1]);
+                Double.parseDouble(bits[2]);
+            }
         } catch(Exception e){
             lplayer.printError("mech.bounceblocks.invalid-velocity");
             SignUtil.cancelSign(event);
