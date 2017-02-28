@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import com.google.common.collect.Lists;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
@@ -25,10 +26,10 @@ import java.util.List;
  */
 public class MultiBlockBag extends BlockBag {
 
-    BlockBag[] bags;
+    private List<BlockBag> bags;
 
     public MultiBlockBag(BlockBag... bags) {
-        this.bags = bags;
+        this.bags = Lists.newArrayList(bags);
     }
 
     @Override

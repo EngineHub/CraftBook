@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.blockbags;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -26,9 +27,54 @@ import java.util.UUID;
  */
 public abstract class BlockBag {
 
-    public long blockBagId;
-    public String simpleName;
-    public UUID creator;
+    private long blockBagId;
+    private String simpleName;
+    private UUID creator;
+
+    /**
+     * Gets the ID of this Block Bag.
+     *
+     * @return The ID
+     */
+    public long getId() {
+        return this.blockBagId;
+    }
+
+    /**
+     * Sets the ID of this Block Bag.
+     *
+     * @param id The id
+     */
+    public void setId(long id) {
+        this.blockBagId = id;
+    }
+
+    /**
+     * Gets the simple name of this Block Bag.
+     *
+     * @return The simple name
+     */
+    public String getSimpleName() {
+        return this.simpleName;
+    }
+
+    /**
+     * Gets the creator of this Block Bag.
+     *
+     * @return The creator
+     */
+    public UUID getCreator() {
+        return this.creator;
+    }
+
+    /**
+     * Sets the creator of this Block Bag.
+     *
+     * @param creator The creator
+     */
+    public void setCreator(UUID creator) {
+        this.creator = creator;
+    }
 
     /**
      * Determines if this {@link BlockBag} contains the requested {@link ItemStack}s.
@@ -53,4 +99,9 @@ public abstract class BlockBag {
      * @return All items that could not be removed
      */
     public abstract List<ItemStack> remove(List<ItemStack> itemStacks);
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.blockBagId, this.simpleName, this.creator);
+    }
 }

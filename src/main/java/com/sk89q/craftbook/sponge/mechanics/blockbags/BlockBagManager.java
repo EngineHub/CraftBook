@@ -16,60 +16,80 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import static org.spongepowered.api.data.DataQuery.of;
+import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
+
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 @Module(id = "blockbag", name = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
 public class BlockBagManager extends SpongeMechanic {
 
+    public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = makeSingleKey(new TypeToken<EmbeddedBlockBag>() {},
+            new TypeToken<Value<EmbeddedBlockBag>>() {}, of("EmbeddedBlockBag"), "craftbook:embeddedblockbag",
+            "EmbeddedBlockBag");
+
     @Inject
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private BlockBag[] blockBags;
+    private Set<BlockBag> blockBags = new HashSet<>();
 
     private Random random = new Random();
 
+    @Override
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+
+        Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
+        Sponge.getDataManager().register(EmbeddedBlockBagData.class, ImmutableEmbeddedBlockBagData.class, new EmbeddedBlockBagDataBuilder());
+    }
+
     private long getUnusedID() {
         long id = random.nextLong();
-        while(getBlockBag(id) != null)
+        while(getBlockBag(id) != null) {
             id = random.nextLong();
+        }
         return id;
     }
 
     public BlockBag getBlockBag(long id) {
-        for(BlockBag bag : blockBags)
-            if(bag.blockBagId == id)
-                return bag;
-        return null;
+        return blockBags.stream().filter(bag -> bag.getId() == id).findFirst().orElse(null);
     }
 
     public BlockBag getBlockBag(UUID creator, String name) {
-        for(BlockBag bag : blockBags)
-            if(bag.simpleName.equals(name) && bag.creator.equals(creator))
-                return bag;
-        return null;
+        return blockBags.stream().filter(bag -> bag.getSimpleName().equals(name))
+                .filter(bag -> bag.getCreator().equals(creator))
+                .findFirst().orElse(null);
     }
 
     public void createBlockBag(Player creator, BlockBag blockBag) {
-        if(getBlockBag(creator.getUniqueId(), blockBag.simpleName) != null) {
+        if(getBlockBag(creator.getUniqueId(), blockBag.getSimpleName()) != null) {
             creator.sendMessage(Text.of(TextColors.RED, "A blockbag with this name already exists!"));
             return;
         }
 
-        blockBag.blockBagId = getUnusedID();
+        blockBag.setId(getUnusedID());
 
-        blockBags = Arrays.copyOf(blockBags, blockBags.length + 1);
-        blockBags[blockBags.length-1] = blockBag;
+        blockBags.add(blockBag);
     }
 }

@@ -202,7 +202,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
         //Standard Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.variable.Variables", GameState.PRE_INITIALIZATION);
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager", GameState.PRE_INITIALIZATION);
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPhysics");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BetterPlants");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BounceBlocks");

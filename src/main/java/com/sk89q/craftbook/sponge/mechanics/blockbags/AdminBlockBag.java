@@ -20,8 +20,24 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AdminBlockBag extends BlockBag {
+
+    public AdminBlockBag() {
+        this.setCreator(new UUID(0, 0));
+    }
+
+    @Override
+    public long getId() {
+        return -1;
+    }
+
+    @Override
+    public String getSimpleName() {
+        return "Admin";
+    }
+
     @Override
     public boolean has(List<ItemStack> itemStacks) {
         return true;

@@ -18,12 +18,13 @@ package com.sk89q.craftbook.sponge.mechanics.blockbags.inventory;
 
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class BlockInventoryBlockBag extends InventoryBlockBag {
 
-    public Location<?> location;
+    public Location<World> location;
 
-    public BlockInventoryBlockBag(Location<?> location) {
+    public BlockInventoryBlockBag(Location<World> location) {
         super(((Carrier)location.getTileEntity().get()).getInventory());
 
         this.location = location;
