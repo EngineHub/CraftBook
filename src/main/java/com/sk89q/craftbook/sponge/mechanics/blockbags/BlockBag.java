@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
-import com.sk89q.craftbook.sponge.util.SerializationUtil;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
@@ -54,12 +53,4 @@ public abstract class BlockBag {
      * @return All items that could not be removed
      */
     public abstract List<ItemStack> remove(List<ItemStack> itemStacks);
-
-    public String toString() {
-        return SerializationUtil.jsonConverter.serialize(this);
-    }
-
-    public static BlockBag createFromString(String blockBagString) {
-        return SerializationUtil.jsonConverter.deserialize(blockBagString, BlockBag.class);
-    }
 }

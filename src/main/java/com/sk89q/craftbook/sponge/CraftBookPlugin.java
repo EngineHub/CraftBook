@@ -174,7 +174,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         disableMechanics();
     }
 
-    public void loadConfig() {
+    private void loadConfig() {
         config = new SpongeConfiguration(this, mainConfig, configManager);
 
         configurationOptions = ConfigurationOptions.defaults();
@@ -193,7 +193,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void discoverMechanics() {
         logger.info("Enumerating Mechanics");
 
-        moduleController = ShadedModularFramework.<CraftBookPlugin>registerModuleController(this, Sponge.getGame());
+        moduleController = ShadedModularFramework.registerModuleController(this, Sponge.getGame());
         File configDir = new File(getWorkingDirectory(), "mechanics");
         configDir.mkdir();
         moduleController.setConfigurationDirectory(configDir);
@@ -255,9 +255,9 @@ public class CraftBookPlugin extends CraftBookAPI {
         logger.info("Found " + moduleController.getModules().size());
     }
 
-    public void loadMechanics(GameState loadState) {
+    private void loadMechanics(GameState loadState) {
         moduleController.enableModules(input -> {
-            if (loadState.equals(input.getLoadState()) && (config.enabledMechanics.getValue().contains(input.getName())
+            if (loadState == input.getLoadState() && (config.enabledMechanics.getValue().contains(input.getName())
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs")))) {
                 logger.debug("Enabled: " + input.getName());
@@ -296,7 +296,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         }
     }
 
-    public void disableMechanics() {
+    private void disableMechanics() {
         getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
         this.selfTriggerManager = null;
         moduleController.disableModules();

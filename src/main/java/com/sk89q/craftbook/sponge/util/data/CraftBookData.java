@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.util.data;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.util.data.builder.BlockBagDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.ICDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;

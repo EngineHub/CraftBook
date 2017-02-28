@@ -46,13 +46,14 @@ import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 @Module(id = "variables", name = "Variables", onEnable="onInitialize", onDisable="onDisable")
 public class Variables extends SpongeMechanic implements DocumentationProvider {

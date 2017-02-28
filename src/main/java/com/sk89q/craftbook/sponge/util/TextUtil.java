@@ -16,14 +16,14 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextRepresentable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class TextUtil {
 

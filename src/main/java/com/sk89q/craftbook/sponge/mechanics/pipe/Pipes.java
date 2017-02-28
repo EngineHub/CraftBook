@@ -44,7 +44,11 @@ import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Module(id = "pipes", name = "Pipes", onEnable="onInitialize", onDisable="onDisable")
 public class Pipes extends SpongeBlockMechanic {

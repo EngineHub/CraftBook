@@ -18,11 +18,11 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
-import com.sk89q.craftbook.core.util.RegexUtil;
+import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -40,7 +40,11 @@ import org.spongepowered.api.util.Color;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 

@@ -39,10 +39,11 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.util.Direction;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 @Module(id = "footprints", name = "Footprints", onEnable="onInitialize", onDisable="onDisable")
 public class Footprints extends SpongeMechanic implements DocumentationProvider {

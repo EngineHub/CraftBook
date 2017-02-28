@@ -16,20 +16,18 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
-import com.sk89q.craftbook.core.util.CraftBookException;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.UUID;
 
 @Module(id = "blockbag", name = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
 public class BlockBagManager extends SpongeMechanic {
@@ -39,32 +37,6 @@ public class BlockBagManager extends SpongeMechanic {
     public ConfigurationNode config;
 
     private BlockBag[] blockBags;
-
-    @Override
-    public void onInitialize() throws CraftBookException {
-        super.onInitialize();
-
-        try {
-            List<String> blockBagList = config.getNode("blockbags").getList(TypeToken.of(String.class));
-            blockBags = new BlockBag[blockBagList.size()];
-            for(int i = 0; i < blockBagList.size(); i++) {
-                blockBags[i] = BlockBag.createFromString(blockBagList.get(i));
-            }
-        } catch (ObjectMappingException e) {
-            CraftBookPlugin.spongeInst().getLogger().error("Failed to map object.", e);
-        }
-    }
-
-    @Override
-    public void onDisable() {
-        super.onDisable();
-
-        List<String> blockBagList = new ArrayList<>();
-        for(BlockBag blockBag : blockBags)
-            blockBagList.add(blockBag.toString());
-
-        config.getNode("blockbags").setValue(blockBagList);
-    }
 
     private Random random = new Random();
 

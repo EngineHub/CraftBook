@@ -16,7 +16,18 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemoryAccess;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemorySetter;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.NandGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.RandomBit;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.ToggleFlipFlop;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.WorldTimeModulus;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XnorGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XorGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.block.BlockReplacer;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ProgrammableFireworksDisplay;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;

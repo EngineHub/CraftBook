@@ -55,9 +55,10 @@ import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 @Module(id = "cookingpot", name = "CookingPot", onEnable="onInitialize", onDisable="onDisable")
 public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMechanic, DocumentationProvider {

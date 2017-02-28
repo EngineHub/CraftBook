@@ -16,7 +16,9 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.logic;
 
-import com.sk89q.craftbook.sponge.mechanics.ics.*;
+import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import com.sk89q.craftbook.sponge.mechanics.ics.SelfTriggeringIC;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.entity.living.player.Player;

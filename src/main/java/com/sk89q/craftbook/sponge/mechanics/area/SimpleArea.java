@@ -16,6 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.area;
 
+import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
+
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
@@ -45,10 +47,9 @@ import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
+import javax.annotation.Nullable;
 
 public abstract class SimpleArea extends SpongeSignMechanic {
 

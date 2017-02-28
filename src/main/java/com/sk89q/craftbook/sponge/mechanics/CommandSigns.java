@@ -47,7 +47,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import javax.annotation.Nullable;
-import javax.inject.Named;
 
 @Module(id = "commandsigns", name = "CommandSigns", onEnable="onInitialize", onDisable="onDisable")
 public class CommandSigns extends SpongeSignMechanic implements DocumentationProvider {

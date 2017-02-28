@@ -53,7 +53,10 @@ import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Module(id = "signcopier", name = "SignCopier", onEnable="onInitialize", onDisable="onDisable")
 public class SignCopier extends SpongeMechanic implements DocumentationProvider {

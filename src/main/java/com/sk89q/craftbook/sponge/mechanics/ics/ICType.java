@@ -16,13 +16,13 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.ics;
 
+import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 
 public class ICType<T extends IC> implements DocumentationProvider {
 
