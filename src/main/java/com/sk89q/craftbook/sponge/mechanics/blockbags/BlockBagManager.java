@@ -24,10 +24,14 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
@@ -47,6 +51,9 @@ public class BlockBagManager extends SpongeMechanic {
     public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = makeSingleKey(new TypeToken<EmbeddedBlockBag>() {},
             new TypeToken<Value<EmbeddedBlockBag>>() {}, of("EmbeddedBlockBag"), "craftbook:embeddedblockbag",
             "EmbeddedBlockBag");
+    
+    public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
+            new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
 
     @Inject
     @ModuleConfiguration
@@ -62,6 +69,7 @@ public class BlockBagManager extends SpongeMechanic {
 
         Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
         Sponge.getDataManager().register(EmbeddedBlockBagData.class, ImmutableEmbeddedBlockBagData.class, new EmbeddedBlockBagDataBuilder());
+        Sponge.getDataManager().register(BlockBagData.class, ImmutableBlockBagData.class, new BlockBagDataManipulatorBuilder());
     }
 
     private long getUnusedID() {
