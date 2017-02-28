@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
@@ -30,6 +31,12 @@ public abstract class BlockBag {
     private long blockBagId;
     private String simpleName;
     private UUID creator;
+
+    public BlockBag() {
+        BlockBagManager manager = ((BlockBagManager) CraftBookPlugin.spongeInst().moduleController.getModule("blockbag").get().getModule().get());
+
+        this.blockBagId = manager.getUnusedId();
+    }
 
     /**
      * Gets the ID of this Block Bag.

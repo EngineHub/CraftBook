@@ -18,7 +18,15 @@ package com.sk89q.craftbook.sponge.mechanics.area;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
+import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.AdminBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
@@ -41,6 +49,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.world.LocatableBlock;
@@ -48,6 +57,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -119,6 +129,45 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 block.offer(new LastPowerData(isPowered ? 15 : 0));
             }
         }
+    }
+
+    @Override
+    public boolean verifyLines(Location<World> location, List<Text> lines, @Nullable Player player) {
+        String line0 = SignUtil.getTextRaw(lines.get(0));
+        if (!line0.isEmpty()) {
+            Optional<ModuleWrapper> moduleWrapper = CraftBookPlugin.spongeInst().moduleController.getModule("blockbag");
+            if (moduleWrapper.isPresent() && moduleWrapper.get().isEnabled()) {
+                if ("ADMIN".equals(line0) && (player == null || ((BlockBagManager) moduleWrapper.get().getModule().get()).adminPermissions.hasPermission(player))) {
+                    location.offer(new BlockBagData(-1));
+                }
+            }
+
+            lines.set(0, Text.of());
+        }
+
+        return super.verifyLines(location, lines, player);
+    }
+
+    public BlockBag getBlockBag(Location<World> location) {
+        Optional<ModuleWrapper> moduleWrapper = CraftBookPlugin.spongeInst().moduleController.getModule("blockbag");
+        if (moduleWrapper.isPresent() && moduleWrapper.get().isEnabled()) {
+            BlockBagManager manager = ((BlockBagManager) moduleWrapper.get().getModule().get());
+            Optional<Long> blockBag = location.get(BlockBagManager.BLOCK_BAG);
+            if (blockBag.isPresent()) {
+                Optional<BlockBag> foundBlockBag = blockBag.map(manager::getBlockBag);
+                if (foundBlockBag.isPresent()) {
+                    return foundBlockBag.get();
+                }
+            }
+
+            EmbeddedBlockBag actualBlockBag = new EmbeddedBlockBag();
+            manager.addBlockBag(actualBlockBag);
+            location.offer(new EmbeddedBlockBagData(actualBlockBag));
+            location.offer(new BlockBagData(actualBlockBag.getId()));
+            return actualBlockBag;
+        }
+
+        return AdminBlockBag.INSTANCE;
     }
 
     /**

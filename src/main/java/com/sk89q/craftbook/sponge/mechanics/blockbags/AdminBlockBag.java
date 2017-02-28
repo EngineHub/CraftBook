@@ -24,6 +24,8 @@ import java.util.UUID;
 
 public class AdminBlockBag extends BlockBag {
 
+    public static final AdminBlockBag INSTANCE = new AdminBlockBag();
+
     public AdminBlockBag() {
         this.setCreator(new UUID(0, 0));
     }

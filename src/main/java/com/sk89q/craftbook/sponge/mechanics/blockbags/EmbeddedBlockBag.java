@@ -20,6 +20,7 @@ public class EmbeddedBlockBag extends BlockBag implements DataSerializable {
     private List<ItemStack> itemStacks;
 
     public EmbeddedBlockBag() {
+        super();
         itemStacks = new ArrayList<>();
     }
 

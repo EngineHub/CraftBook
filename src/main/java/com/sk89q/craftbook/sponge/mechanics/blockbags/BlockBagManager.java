@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
@@ -31,14 +33,13 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataB
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.Value;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.service.permission.PermissionDescription;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -46,14 +47,17 @@ import java.util.Set;
 import java.util.UUID;
 
 @Module(id = "blockbag", name = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
-public class BlockBagManager extends SpongeMechanic {
+public class BlockBagManager extends SpongeMechanic implements DocumentationProvider {
 
     public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = makeSingleKey(new TypeToken<EmbeddedBlockBag>() {},
             new TypeToken<Value<EmbeddedBlockBag>>() {}, of("EmbeddedBlockBag"), "craftbook:embeddedblockbag",
             "EmbeddedBlockBag");
-    
+
     public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
             new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
+
+    public SpongePermissionNode adminPermissions = new SpongePermissionNode("craftbook.blockbag.admin",
+            "Allows usage of admin block bags.", PermissionDescription.ROLE_ADMIN);
 
     @Inject
     @ModuleConfiguration
@@ -67,12 +71,14 @@ public class BlockBagManager extends SpongeMechanic {
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
 
+        adminPermissions.register();
+
         Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
         Sponge.getDataManager().register(EmbeddedBlockBagData.class, ImmutableEmbeddedBlockBagData.class, new EmbeddedBlockBagDataBuilder());
         Sponge.getDataManager().register(BlockBagData.class, ImmutableBlockBagData.class, new BlockBagDataManipulatorBuilder());
     }
 
-    private long getUnusedID() {
+    public long getUnusedId() {
         long id = random.nextLong();
         while(getBlockBag(id) != null) {
             id = random.nextLong();
@@ -90,14 +96,21 @@ public class BlockBagManager extends SpongeMechanic {
                 .findFirst().orElse(null);
     }
 
-    public void createBlockBag(Player creator, BlockBag blockBag) {
-        if(getBlockBag(creator.getUniqueId(), blockBag.getSimpleName()) != null) {
-            creator.sendMessage(Text.of(TextColors.RED, "A blockbag with this name already exists!"));
-            return;
-        }
-
-        blockBag.setId(getUnusedID());
+    public void addBlockBag(BlockBag blockBag) {
+        blockBag.setId(getUnusedId());
 
         blockBags.add(blockBag);
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/block_bags";
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                adminPermissions
+        };
     }
 }

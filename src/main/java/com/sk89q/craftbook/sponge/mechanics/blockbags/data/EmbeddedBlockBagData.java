@@ -17,7 +17,7 @@ public class EmbeddedBlockBagData extends AbstractSingleData<EmbeddedBlockBag, E
         this(null);
     }
 
-    protected EmbeddedBlockBagData(EmbeddedBlockBag value) {
+    public EmbeddedBlockBagData(EmbeddedBlockBag value) {
         super(value, BlockBagManager.EMBEDDED_BLOCK_BAG);
     }
 
