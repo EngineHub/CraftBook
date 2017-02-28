@@ -68,7 +68,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             for(String drop : config.getKeys("custom-drops." + key + ".drops")) {
 
-                ItemStack item = ItemSyntax.getItem(config.getString("custom-drops." + key + ".drops." + drop + ".item"));
+                ItemStack item = ItemUtil.makeItemValid(ItemSyntax.getItem(config.getString("custom-drops." + key + ".drops." + drop + ".item")));
 
                 if(item == null) continue; //Invalid Drop.
 
