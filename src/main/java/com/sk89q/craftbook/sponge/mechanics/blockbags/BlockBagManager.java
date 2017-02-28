@@ -87,6 +87,9 @@ public class BlockBagManager extends SpongeMechanic implements DocumentationProv
     }
 
     public BlockBag getBlockBag(long id) {
+        if (id == -1) {
+            return AdminBlockBag.INSTANCE;
+        }
         return blockBags.stream().filter(bag -> bag.getId() == id).findFirst().orElse(null);
     }
 

@@ -12,6 +12,7 @@ import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +27,73 @@ public class EmbeddedBlockBag extends BlockBag implements DataSerializable {
 
     @Override
     public boolean has(List<ItemStack> itemStacks) {
-        return false;
+        List<ItemStack> testList = new ArrayList<>(itemStacks);
+        Iterator<ItemStack> testIterator = testList.iterator();
+        while (testIterator.hasNext()) {
+            ItemStack testStack = testIterator.next();
+            for (ItemStack itemStack : this.itemStacks) {
+                if (itemStack.getItem() == testStack.getItem()) {
+                    int newQuantity = testStack.getQuantity();
+                    newQuantity -= itemStack.getQuantity();
+                    if (newQuantity > 0) {
+                        testStack.setQuantity(newQuantity);
+                    } else {
+                        testIterator.remove();
+                    }
+                }
+            }
+        }
+        return testList.isEmpty();
     }
 
     @Override
     public List<ItemStack> add(List<ItemStack> itemStacks) {
-        return null;
+        for (ItemStack itemStack : itemStacks) {
+            itemAdd:
+            {
+                for (ItemStack existingStack : this.itemStacks) {
+                    if (itemStack.getItem() == existingStack.getItem()) {
+                        existingStack.setQuantity(existingStack.getQuantity() + itemStack.getQuantity());
+                        break itemAdd;
+                    }
+                }
+
+                this.itemStacks.add(itemStack);
+            }
+        }
+        return Lists.newArrayList();
     }
 
     @Override
     public List<ItemStack> remove(List<ItemStack> itemStacks) {
-        return null;
+        List<ItemStack> unremovable = new ArrayList<>(itemStacks);
+        Iterator<ItemStack> itemIterator = unremovable.iterator();
+        while (itemIterator.hasNext()) {
+            ItemStack itemStack = itemIterator.next();
+            int newQuantity = itemStack.getQuantity();
+
+            Iterator<ItemStack> existingIterator = this.itemStacks.iterator();
+            while (existingIterator.hasNext()) {
+                ItemStack existingStack = existingIterator.next();
+                if (itemStack.getItem() == existingStack.getItem()) {
+                    int numToRemove = Math.min(existingStack.getQuantity(), newQuantity);
+                    newQuantity -=  numToRemove;
+                    if (existingStack.getQuantity() - numToRemove <= 0) {
+                        existingIterator.remove();
+                    } else {
+                        existingStack.setQuantity(existingStack.getQuantity() - numToRemove);
+                    }
+                }
+            }
+
+            if (newQuantity <= 0) {
+                itemIterator.remove();
+            } else {
+                itemStack.setQuantity(newQuantity);
+            }
+        }
+
+        return unremovable;
     }
 
     @Override

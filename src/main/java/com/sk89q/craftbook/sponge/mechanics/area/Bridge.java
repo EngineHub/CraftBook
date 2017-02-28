@@ -25,6 +25,10 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -35,8 +39,10 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TranslatableText;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
@@ -143,24 +149,53 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
             }
             if (baseBlock.getBlock().equals(type) || (forceState != null && !forceState)) type = BlockTypes.AIR.getDefaultState();
 
+            ItemStack blockBagItem = ItemStack.builder().fromBlockState(otherBase.getBlock()).quantity(1).build();
+            BlockBag blockBag = getBlockBag(sign.getLocation());
+
             while (baseBlock.getBlockX() != otherBase.getBlockX() || baseBlock.getBlockZ() != otherBase.getBlockZ()) {
-                baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                if (type.getType() == BlockTypes.AIR || blockBag.has(Lists.newArrayList(blockBagItem))) {
+                    if (type.getType() == BlockTypes.AIR && baseBlock.getBlock().equals(otherBase.getBlock())) {
+                        blockBag.add(Lists.newArrayList(blockBagItem));
+                    } else if (type.getType() != BlockTypes.AIR && !baseBlock.getBlock().equals(otherBase.getBlock())) {
+                        blockBag.remove(Lists.newArrayList(blockBagItem));
+                    }
+                    baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
 
-                left = baseBlock.getRelative(SignUtil.getLeft(block));
+                    left = baseBlock.getRelative(SignUtil.getLeft(block));
 
-                for(int i = 0; i < leftBlocks; i++) {
-                    left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
-                    left = left.getRelative(SignUtil.getLeft(block));
+                    for(int i = 0; i < leftBlocks; i++) {
+                        if (type.getType() == BlockTypes.AIR && left.getBlock().equals(otherBase.getBlock())) {
+                            blockBag.add(Lists.newArrayList(blockBagItem));
+                        } else if (type.getType() != BlockTypes.AIR && !left.getBlock().equals(otherBase.getBlock())) {
+                            blockBag.remove(Lists.newArrayList(blockBagItem));
+                        }
+                        left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        left = left.getRelative(SignUtil.getLeft(block));
+                    }
+
+                    right = baseBlock.getRelative(SignUtil.getRight(block));
+
+                    for(int i = 0; i < rightBlocks; i++) {
+                        if (type.getType() == BlockTypes.AIR && right.getBlock().equals(otherBase.getBlock())) {
+                            blockBag.add(Lists.newArrayList(blockBagItem));
+                        } else if (type.getType() != BlockTypes.AIR && !right.getBlock().equals(otherBase.getBlock())) {
+                            blockBag.remove(Lists.newArrayList(blockBagItem));
+                        }
+                        right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        right = right.getRelative(SignUtil.getRight(block));
+                    }
+
+                    baseBlock = baseBlock.getRelative(back);
+                } else {
+                    if (human instanceof Player) {
+                        ((Player) human).sendMessage(Text.of("Out of blocks!"));
+                    }
+                    break;
                 }
+            }
 
-                right = baseBlock.getRelative(SignUtil.getRight(block));
-
-                for(int i = 0; i < rightBlocks; i++) {
-                    right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
-                    right = right.getRelative(SignUtil.getRight(block));
-                }
-
-                baseBlock = baseBlock.getRelative(back);
+            if (blockBag instanceof EmbeddedBlockBag) {
+                sign.getLocation().offer(new EmbeddedBlockBagData((EmbeddedBlockBag) blockBag));
             }
         } else {
             if (human instanceof CommandSource) ((CommandSource) human).sendMessage(Text.builder("Bridge not activatable from here!").build());
@@ -168,6 +203,20 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
         }
 
         return true;
+    }
+
+    @Override
+    public BlockBag getBlockBag(Location<World> location) {
+        BlockBag mainBlockBag = super.getBlockBag(location);
+        Location<World> next = BlockUtil.getNextMatchingSign(location, SignUtil.getBack(location), maximumLength.getValue(), this::isMechanicSign);
+        if (next != null) {
+            BlockBag nextBlockBag = super.getBlockBag(next);
+            if (nextBlockBag != null) {
+                return new MultiBlockBag(mainBlockBag, nextBlockBag);
+            }
+        }
+
+        return mainBlockBag;
     }
 
     @Override

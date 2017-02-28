@@ -67,6 +67,6 @@ public abstract class InventoryBlockBag extends BlockBag {
             //}
         }
         //TODO
-        return itemStacks;
+        return output;
     }
 }

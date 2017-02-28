@@ -37,6 +37,7 @@ import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -160,10 +161,14 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 }
             }
 
+            Optional<EmbeddedBlockBag> embeddedBlockBag = location.get(BlockBagManager.EMBEDDED_BLOCK_BAG);
+            if (embeddedBlockBag.isPresent()) {
+                return embeddedBlockBag.get();
+            }
+
             EmbeddedBlockBag actualBlockBag = new EmbeddedBlockBag();
             manager.addBlockBag(actualBlockBag);
             location.offer(new EmbeddedBlockBagData(actualBlockBag));
-            location.offer(new BlockBagData(actualBlockBag.getId()));
             return actualBlockBag;
         }
 
