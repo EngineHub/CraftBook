@@ -20,15 +20,10 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class AdminBlockBag extends BlockBag {
+public class AdminBlockBag implements IdentifiableBlockBag {
 
     public static final AdminBlockBag INSTANCE = new AdminBlockBag();
-
-    public AdminBlockBag() {
-        this.setCreator(new UUID(0, 0));
-    }
 
     @Override
     public long getId() {
@@ -36,8 +31,7 @@ public class AdminBlockBag extends BlockBag {
     }
 
     @Override
-    public String getSimpleName() {
-        return "Admin";
+    public void setId(long id) {
     }
 
     @Override

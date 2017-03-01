@@ -25,6 +25,7 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.AdminBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
@@ -37,7 +38,6 @@ import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -155,7 +155,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
             BlockBagManager manager = ((BlockBagManager) moduleWrapper.get().getModule().get());
             Optional<Long> blockBag = location.get(BlockBagManager.BLOCK_BAG);
             if (blockBag.isPresent()) {
-                Optional<BlockBag> foundBlockBag = blockBag.map(manager::getBlockBag);
+                Optional<IdentifiableBlockBag> foundBlockBag = blockBag.map(manager::getBlockBag);
                 if (foundBlockBag.isPresent()) {
                     return foundBlockBag.get();
                 }

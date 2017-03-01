@@ -42,9 +42,8 @@ import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.service.permission.PermissionDescription;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Module(id = "blockbag", name = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
 public class BlockBagManager extends SpongeMechanic implements DocumentationProvider {
@@ -65,8 +64,6 @@ public class BlockBagManager extends SpongeMechanic implements DocumentationProv
 
     private Set<BlockBag> blockBags = new HashSet<>();
 
-    private Random random = new Random();
-
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -79,29 +76,24 @@ public class BlockBagManager extends SpongeMechanic implements DocumentationProv
     }
 
     public long getUnusedId() {
-        long id = random.nextLong();
+        long id = ThreadLocalRandom.current().nextLong();
         while(getBlockBag(id) != null) {
-            id = random.nextLong();
+            id = ThreadLocalRandom.current().nextLong();
         }
         return id;
     }
 
-    public BlockBag getBlockBag(long id) {
+    public IdentifiableBlockBag getBlockBag(long id) {
         if (id == -1) {
             return AdminBlockBag.INSTANCE;
         }
-        return blockBags.stream().filter(bag -> bag.getId() == id).findFirst().orElse(null);
-    }
-
-    public BlockBag getBlockBag(UUID creator, String name) {
-        return blockBags.stream().filter(bag -> bag.getSimpleName().equals(name))
-                .filter(bag -> bag.getCreator().equals(creator))
+        return blockBags.stream().filter(blockBag -> blockBag instanceof IdentifiableBlockBag)
+                .map(blockBag -> (IdentifiableBlockBag) blockBag)
+                .filter(bag -> bag.getId() == id)
                 .findFirst().orElse(null);
     }
 
     public void addBlockBag(BlockBag blockBag) {
-        blockBag.setId(getUnusedId());
-
         blockBags.add(blockBag);
     }
 
