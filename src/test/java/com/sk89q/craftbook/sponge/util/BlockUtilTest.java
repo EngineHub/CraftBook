@@ -28,8 +28,7 @@ public class BlockUtilTest {
 
     @Test
     public void getFacingTest() {
-
-        for(Direction direction : BlockUtil.getDirectFaces()) {
+        for (Direction direction : BlockUtil.getDirectFaces()) {
             Location loc = new Location<>(mock(World.class), 0, 0, 0);
             assertTrue(BlockUtil.getFacing(loc, loc.getRelative(direction)) == direction);
         }
