@@ -71,6 +71,11 @@ public final class ItemSyntax {
                     builder.append('|').append(s);
             }
             ItemMeta meta = item.getItemMeta();
+
+            if (meta.isUnbreakable()) {
+                builder.append("/unbreakable:true");
+            }
+
             if (meta instanceof SkullMeta) {
                 if(((SkullMeta) meta).hasOwner())
                     builder.append("/player:").append(((SkullMeta) meta).getOwner());
@@ -197,11 +202,9 @@ public final class ItemSyntax {
                     else if(bits[0].equalsIgnoreCase("page") && meta instanceof BookMeta)
                         ((BookMeta) meta).addPage(bits[1]);
                     else if(bits[0].equalsIgnoreCase("color") && meta instanceof LeatherArmorMeta) {
-
                         String[] cols = COMMA_PATTERN.split(bits[1]);
                         ((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(Integer.parseInt(cols[0]),Integer.parseInt(cols[1]),Integer.parseInt(cols[2])));
                     } else if(bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
-
                         String[] effects = SEMICOLON_PATTERN.split(bits[1]);
                         try {
                             PotionEffect effect = new PotionEffect(PotionEffectType.getByName(effects[0]), Integer.parseInt(effects[1]), Integer.parseInt(effects[2]));
@@ -215,6 +218,9 @@ public final class ItemSyntax {
                                 ench = Enchantment.getById(Integer.parseInt(sp[0]));
                             ((EnchantmentStorageMeta) meta).addStoredEnchant(ench, Integer.parseInt(sp[1]), true);
                         } catch(Exception ignored){}
+                    } else if (bits[0].equalsIgnoreCase("unbreakable")) {
+                        boolean unbreakable = Boolean.parseBoolean(bits[1]);
+                        meta.setUnbreakable(unbreakable);
                     }
                 }
                 rVal.setItemMeta(meta);
