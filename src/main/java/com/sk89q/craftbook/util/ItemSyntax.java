@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.material.MaterialData;
@@ -17,6 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +76,15 @@ public final class ItemSyntax {
 
             if (meta.isUnbreakable()) {
                 builder.append("/unbreakable:true");
+            }
+            List<String> flags = new ArrayList<String>();
+            for (ItemFlag flag : ItemFlag.values()) {
+                if (meta.hasItemFlag(flag)) {
+                    flags.add(flag.name());
+                }
+            }
+            if (!flags.isEmpty()) {
+                builder.append("/flags:").append(StringUtils.join(flags, ","));
             }
 
             if (meta instanceof SkullMeta) {
@@ -221,6 +232,11 @@ public final class ItemSyntax {
                     } else if (bits[0].equalsIgnoreCase("unbreakable")) {
                         boolean unbreakable = Boolean.parseBoolean(bits[1]);
                         meta.setUnbreakable(unbreakable);
+                    } else if (bits[0].equalsIgnoreCase("flags")) {
+                        List<String> flags = Arrays.asList(COMMA_PATTERN.split(bits[1]));
+                        for (String flag : flags) {
+                            meta.addItemFlags(ItemFlag.valueOf(flag));
+                        }
                     }
                 }
                 rVal.setItemMeta(meta);
