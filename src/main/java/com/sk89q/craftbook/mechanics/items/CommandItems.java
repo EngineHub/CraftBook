@@ -377,8 +377,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
-
-        if (event != null && !EventUtil.passesFilter(event))
+        if (event == null || !EventUtil.passesFilter(event))
             return;
 
         LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
@@ -478,6 +477,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             player.getInventory().getItemInOffHand().setAmount(player.getInventory().getItemInOffHand().getAmount() - 1);
                         else
                             player.getInventory().setItemInOffHand(null);
+                    } else if (event instanceof PlayerPickupItemEvent) {
+                        ((PlayerPickupItemEvent) event).getItem().remove();
+                        ((PlayerPickupItemEvent) event).setCancelled(true);
                     } else {
                         if (player.getInventory().getItemInMainHand().getAmount() > 1)
                             player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);

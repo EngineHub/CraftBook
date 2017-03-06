@@ -273,7 +273,7 @@ public class RecipeManager {
             if(type != RecipeType.SHAPED) {
                 LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
                 for(CraftingItemStack stack : ingredients) {
-                    resz.put(stack.toString(), stack.getItemStack().getAmount());
+                    resz.put(stack.toString() + ' ', stack.getItemStack().getAmount());
                 }
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
