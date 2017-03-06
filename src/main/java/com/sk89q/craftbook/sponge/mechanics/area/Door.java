@@ -37,6 +37,9 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
@@ -138,9 +141,15 @@ public class Door extends SimpleArea implements DocumentationProvider {
             while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
                 if (type.getType() == BlockTypes.AIR || blockBag.has(Lists.newArrayList(blockBagItem))) {
                     if (type.getType() == BlockTypes.AIR && baseBlock.getBlock().equals(otherBase.getBlock())) {
-                        blockBag.add(Lists.newArrayList(blockBagItem));
+                        for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                            Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
+                            item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
+                            block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                        }
                     } else if (type.getType() != BlockTypes.AIR && !baseBlock.getBlock().equals(otherBase.getBlock())) {
-                        blockBag.remove(Lists.newArrayList(blockBagItem));
+                        if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                            continue;
+                        }
                     }
                     baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
 
@@ -148,9 +157,15 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
                     for (int i = 0; i < leftBlocks; i++) {
                         if (type.getType() == BlockTypes.AIR && left.getBlock().equals(otherBase.getBlock())) {
-                            blockBag.add(Lists.newArrayList(blockBagItem));
+                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                                Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
+                                item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
+                                block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                            }
                         } else if (type.getType() != BlockTypes.AIR && !left.getBlock().equals(otherBase.getBlock())) {
-                            blockBag.remove(Lists.newArrayList(blockBagItem));
+                            if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                                continue;
+                            }
                         }
                         left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                         left = left.getRelative(SignUtil.getLeft(block));
@@ -160,9 +175,15 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
                     for (int i = 0; i < rightBlocks; i++) {
                         if (type.getType() == BlockTypes.AIR && right.getBlock().equals(otherBase.getBlock())) {
-                            blockBag.add(Lists.newArrayList(blockBagItem));
+                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                                Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
+                                item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
+                                block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                            }
                         } else if (type.getType() != BlockTypes.AIR && !right.getBlock().equals(otherBase.getBlock())) {
-                            blockBag.remove(Lists.newArrayList(blockBagItem));
+                            if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                                continue;
+                            }
                         }
                         right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                         right = right.getRelative(SignUtil.getRight(block));
@@ -191,11 +212,14 @@ public class Door extends SimpleArea implements DocumentationProvider {
     @Override
     public BlockBag getBlockBag(Location<World> location) {
         BlockBag mainBlockBag = super.getBlockBag(location);
-        Location<World> next = BlockUtil.getNextMatchingSign(location, SignUtil.getBack(location), maximumLength.getValue(), this::isMechanicSign);
-        if (next != null) {
-            BlockBag nextBlockBag = super.getBlockBag(next);
-            if (nextBlockBag != null) {
-                return new MultiBlockBag(mainBlockBag, nextBlockBag);
+        if (SignUtil.isSign(location)) {
+            Direction back = "[Door Up]".equals(SignUtil.getTextRaw((Sign) location.getTileEntity().get(), 1)) ? Direction.UP : Direction.DOWN;
+            Location<World> next = BlockUtil.getNextMatchingSign(location, back, maximumLength.getValue() + 2, this::isMechanicSign);
+            if (next != null) {
+                BlockBag nextBlockBag = super.getBlockBag(next);
+                if (nextBlockBag != null) {
+                    return new MultiBlockBag(mainBlockBag, nextBlockBag);
+                }
             }
         }
 

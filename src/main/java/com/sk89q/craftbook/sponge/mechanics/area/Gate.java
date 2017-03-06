@@ -39,6 +39,9 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -188,9 +191,10 @@ public class Gate extends SimpleArea implements DocumentationProvider {
         if (on) {
             while (block.getBlockType() == BlockTypes.AIR) {
                 if (blockBag.has(Lists.newArrayList(blockBagItem))) {
-                    blockBag.remove(Lists.newArrayList(blockBagItem));
-                    block.setBlock(gateType, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
-                    block = block.getRelative(dir);
+                    if (blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                        block.setBlock(gateType, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        block = block.getRelative(dir);
+                    }
                 } else {
                     if (human != null && human instanceof CommandSource) {
                         ((CommandSource) human).sendMessage(Text.of("Out of Blocks"));
@@ -200,7 +204,11 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             }
         } else {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
-                blockBag.add(Lists.newArrayList(blockBagItem));
+                for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                    Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
+                    item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
+                    block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                }
                 block.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                 block = block.getRelative(dir);
             }
