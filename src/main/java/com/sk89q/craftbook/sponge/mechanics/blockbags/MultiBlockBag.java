@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * An interface for accessing multiple block bags at the same time.
  */
-public class MultiBlockBag extends BlockBag {
+public class MultiBlockBag implements BlockBag {
 
     private List<BlockBag> bags;
 

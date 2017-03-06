@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-public class EmbeddedBlockBag extends BlockBag implements DataSerializable {
+public class EmbeddedBlockBag implements DataSerializable, BlockBag {
 
     private List<ItemStack> itemStacks;
 
