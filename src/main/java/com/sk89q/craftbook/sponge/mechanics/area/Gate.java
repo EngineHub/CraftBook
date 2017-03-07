@@ -190,8 +190,8 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         if (on) {
             while (block.getBlockType() == BlockTypes.AIR) {
-                if (blockBag.has(Lists.newArrayList(blockBagItem))) {
-                    if (blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                if (blockBag.has(Lists.newArrayList(blockBagItem.copy()))) {
+                    if (blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                         block.setBlock(gateType, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
                         block = block.getRelative(dir);
                     }
@@ -204,7 +204,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             }
         } else {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), block.getBlock())) {
-                for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                     Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                     item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
                     block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());

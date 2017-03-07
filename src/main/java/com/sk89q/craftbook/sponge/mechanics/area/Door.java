@@ -139,15 +139,15 @@ public class Door extends SimpleArea implements DocumentationProvider {
             BlockBag blockBag = getBlockBag(sign.getLocation());
 
             while (baseBlock.getBlockY() != otherSide.getBlockY() + (back == Direction.UP ? -1 : 1)) {
-                if (type.getType() == BlockTypes.AIR || blockBag.has(Lists.newArrayList(blockBagItem))) {
+                if (type.getType() == BlockTypes.AIR || blockBag.has(Lists.newArrayList(blockBagItem.copy()))) {
                     if (type.getType() == BlockTypes.AIR && baseBlock.getBlock().equals(otherBase.getBlock())) {
-                        for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                        for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                             Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                             item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
                             block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
                         }
                     } else if (type.getType() != BlockTypes.AIR && !baseBlock.getBlock().equals(otherBase.getBlock())) {
-                        if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                        if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                             continue;
                         }
                     }
@@ -157,13 +157,13 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
                     for (int i = 0; i < leftBlocks; i++) {
                         if (type.getType() == BlockTypes.AIR && left.getBlock().equals(otherBase.getBlock())) {
-                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                                 Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                                 item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
                                 block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
                             }
                         } else if (type.getType() != BlockTypes.AIR && !left.getBlock().equals(otherBase.getBlock())) {
-                            if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                            if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                                 continue;
                             }
                         }
@@ -175,13 +175,13 @@ public class Door extends SimpleArea implements DocumentationProvider {
 
                     for (int i = 0; i < rightBlocks; i++) {
                         if (type.getType() == BlockTypes.AIR && right.getBlock().equals(otherBase.getBlock())) {
-                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem))) {
+                            for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                                 Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                                 item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
                                 block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
                             }
                         } else if (type.getType() != BlockTypes.AIR && !right.getBlock().equals(otherBase.getBlock())) {
-                            if (!blockBag.remove(Lists.newArrayList(blockBagItem)).isEmpty()) {
+                            if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                                 continue;
                             }
                         }
