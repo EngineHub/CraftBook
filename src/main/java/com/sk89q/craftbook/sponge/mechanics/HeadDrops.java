@@ -134,9 +134,12 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.RABBIT, GameProfile.of(UUID.fromString("fbec11d4-80a7-4c1c-9de3-4136a16f1de0"), "MHF_Rabbit"));
         mobSkullMap.put(EntityTypes.SHEEP, GameProfile.of(UUID.fromString("dfaad551-4e7e-45a1-a6f7-c6fc5ec823ac"), "MHF_Sheep"));
         mobSkullMap.put(EntityTypes.SHULKER, GameProfile.of(UUID.fromString("160f7d8a-c6b0-4fc8-8925-9e9d6c9c57d5"), "MHF_Shulker"));
+        mobSkullMap.put(EntityTypes.SILVERFISH, GameProfile.of(UUID.fromString("6a4c6f38-243f-4c40-8342-749fa1009351"), "MHF_Silverfish"));
         mobSkullMap.put(EntityTypes.SLIME, GameProfile.of(UUID.fromString("870aba93-40e8-48b3-89c5-32ece00d6630"), "MHF_Slime"));
+        mobSkullMap.put(EntityTypes.SNOWMAN, GameProfile.of(UUID.fromString("217f9e5e-601f-4a3d-879b-e10d30e3e59b"), "MHF_SnowGolem"));
         mobSkullMap.put(EntityTypes.SPIDER, GameProfile.of(UUID.fromString("5ad55f34-41b6-4bd2-9c32-18983c635936"), "MHF_Spider"));
         mobSkullMap.put(EntityTypes.SQUID, GameProfile.of(UUID.fromString("72e64683-e313-4c36-a408-c66b64e94af5"), "MHF_Squid"));
+        mobSkullMap.put(EntityTypes.WITCH, GameProfile.of(UUID.fromString("fef85c49-2fdf-47f8-9132-552046243223"), "MHF_Witch"));
         mobSkullMap.put(EntityTypes.WITHER, GameProfile.of(UUID.fromString("39af6844-6809-4d2f-8ba4-7e92d087be18"), "MHF_Wither"));
         mobSkullMap.put(EntityTypes.WOLF, GameProfile.of(UUID.fromString("8d2d1d6d-8034-4c89-bd86-809a31fd5193"), "MHF_Wolf"));
         mobSkullMap.put(EntityTypes.VILLAGER, GameProfile.of(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
