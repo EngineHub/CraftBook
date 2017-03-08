@@ -63,6 +63,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
             TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
             List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
+            List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -123,6 +124,13 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 if (regions != null) {
                     def.setRegions(regions);
                 }
+                if (requiredItems != null) {
+                    List<ItemStack> items = new ArrayList<ItemStack>();
+                    for (String requiredItem : requiredItems) {
+                        items.add(ItemSyntax.getItem(requiredItem));
+                    }
+                    def.setItems(items);
+                }
                 definitions.add(def);
             }
         }
@@ -138,6 +146,13 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
             if (def.getRegions() != null)
                 config.setProperty("custom-drops." + def.getName() + ".regions", def.getRegions());
+            if (def.getItems() != null) {
+                List<String> itemsList = new ArrayList<String>();
+                for (ItemStack itemStack : def.getItems()) {
+                    itemsList.add(ItemSyntax.getStringFromItem(itemStack));
+                }
+                config.setProperty("custom-drops." + def.getName() + ".required-items", itemsList);
+            }
 
             int i = 0;
             for(DropItemStack stack : def.getDrops()) {
@@ -208,6 +223,21 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     return;
             }
 
+            if (def.getItems() != null) {
+                boolean found = false;
+
+                for (ItemStack item : def.getItems()) {
+                    if (ItemUtil.areItemsIdentical(event.getPlayer().getItemInHand(), item)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    return;
+                }
+            }
+
             boolean isSilkTouch = event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
@@ -256,7 +286,26 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     return;
             }
 
-            boolean isSilkTouch = event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory().getItemInMainHand() != null && ((Player) event.getEntity()).getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            Player killer = event.getEntity().getKiller();
+
+            if (def.getItems() != null) {
+                boolean found = false;
+
+                if (killer != null) {
+                    for (ItemStack item : def.getItems()) {
+                        if (ItemUtil.areItemsIdentical(killer.getInventory().getItemInMainHand(), item)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!found) {
+                    return;
+                }
+            }
+
+            boolean isSilkTouch = killer != null && killer.getInventory().getItemInMainHand() != null && killer.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
             if(!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
@@ -269,8 +318,6 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             for(ItemStack stack : def.getRandomDrops()) {
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), stack);
             }
-
-            Player killer = event.getEntity().getKiller();
 
             for(DropReward reward : def.getRewards()) {
                 if(killer == null && reward.doesRequirePlayer()) continue;

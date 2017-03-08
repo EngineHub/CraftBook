@@ -22,6 +22,7 @@ public abstract class CustomDropDefinition {
 
     // WorldGuard Integration
     private List<String> regions;
+    private List<ItemStack> items;
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
@@ -47,6 +48,17 @@ public abstract class CustomDropDefinition {
         this.regions = regions;
         if (this.regions.isEmpty()) {
             this.regions = null;
+        }
+    }
+
+    public List<ItemStack> getItems() {
+        return this.items;
+    }
+
+    public void setItems(List<ItemStack> items) {
+        this.items = items;
+        if (this.items.isEmpty()) {
+            this.items = null;
         }
     }
 
