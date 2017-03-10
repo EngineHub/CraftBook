@@ -123,6 +123,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.ENDERMAN, GameProfile.of(UUID.fromString("40ffb372-12f6-4678-b3f2-2176bf56dd4b"), "MHF_Enderman"));
         mobSkullMap.put(EntityTypes.ENDERMITE, GameProfile.of(UUID.fromString("3df6a050-b93e-4d8b-8fa4-b5228a797b84"), "MHF_Endermite"));
         mobSkullMap.put(EntityTypes.ENDER_DRAGON, GameProfile.of(UUID.fromString("bd3802bb-be48-438c-bafb-cb9510e2aa2d"), "MHF_EnderDragon"));
+        mobSkullMap.put(EntityTypes.EVOCATION_ILLAGER, GameProfile.of(UUID.fromString("8b7d6844-f679-4c85-ab4d-0f99301f1899"), "MHF_Evoker"));
         mobSkullMap.put(EntityTypes.GHAST, GameProfile.of(UUID.fromString("063085a6-797f-4785-be1a-21cd7580f752"), "MHF_Ghast"));
         mobSkullMap.put(EntityTypes.GUARDIAN, GameProfile.of(UUID.fromString("4005cac1-a16a-45aa-9e72-7fb514335717"), "MHF_Guardian"));
         mobSkullMap.put(EntityTypes.IRON_GOLEM, GameProfile.of(UUID.fromString("757f90b2-2344-4b8d-8dac-824232e2cece"), "MHF_Golem"));
@@ -138,10 +139,12 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.SLIME, GameProfile.of(UUID.fromString("870aba93-40e8-48b3-89c5-32ece00d6630"), "MHF_Slime"));
         mobSkullMap.put(EntityTypes.SNOWMAN, GameProfile.of(UUID.fromString("217f9e5e-601f-4a3d-879b-e10d30e3e59b"), "MHF_SnowGolem"));
         mobSkullMap.put(EntityTypes.SPIDER, GameProfile.of(UUID.fromString("5ad55f34-41b6-4bd2-9c32-18983c635936"), "MHF_Spider"));
+        mobSkullMap.put(EntityTypes.STRAY, GameProfile.of(UUID.fromString("ed33403b-be7f-4a38-915c-abea93ebc9bc"), "MHF_Stray"));
         mobSkullMap.put(EntityTypes.SQUID, GameProfile.of(UUID.fromString("72e64683-e313-4c36-a408-c66b64e94af5"), "MHF_Squid"));
         mobSkullMap.put(EntityTypes.WITCH, GameProfile.of(UUID.fromString("fef85c49-2fdf-47f8-9132-552046243223"), "MHF_Witch"));
         mobSkullMap.put(EntityTypes.WITHER, GameProfile.of(UUID.fromString("39af6844-6809-4d2f-8ba4-7e92d087be18"), "MHF_Wither"));
         mobSkullMap.put(EntityTypes.WOLF, GameProfile.of(UUID.fromString("8d2d1d6d-8034-4c89-bd86-809a31fd5193"), "MHF_Wolf"));
+        mobSkullMap.put(EntityTypes.VEX, GameProfile.of(UUID.fromString("f5f20997-217f-4426-8ab9-c6db6cce023f"), "MHF_Vex"));
         mobSkullMap.put(EntityTypes.VILLAGER, GameProfile.of(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
     }
 
