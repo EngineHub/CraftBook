@@ -217,6 +217,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         ENDERMAN("MHF_Enderman", "Violit"),
         ENDERMITE("MHF_Endermite"),
         ENDER_DRAGON("MHF_EnderDragon"),
+        EVOKER("MFH_Evoker"),
         GHAST("MHF_Ghast", "_QuBra_"),
         MAGMA_CUBE("MHF_LavaSlime"),
         MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
@@ -227,12 +228,14 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         SPIDER("MHF_Spider", "Kelevra_V"),
         VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9"),
         IRON_GOLEM("MHF_Golem", "zippie007"),
+        STRAY("MHF_Stray"),
         SQUID("MHF_Squid", "squidette8"),
         OCELOT("MHF_Ocelot", "scraftbrothers3"),
         WOLF("MHF_Wolf", "Budwolf"),
         RABBIT("MHF_Rabbit", "rabbit2077"),
         GUARDIAN("MHF_Guardian", "Guardian"),
         SHULKER("MHF_Shulker"),
+        VEX("MHF_Vex"),
 
         //Unofficial/Community
         BAT("bozzobrain", "coolwhip101"),
