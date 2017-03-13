@@ -138,12 +138,14 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         if (!line0.isEmpty()) {
             Optional<ModuleWrapper> moduleWrapper = CraftBookPlugin.spongeInst().moduleController.getModule("blockbag");
             if (moduleWrapper.isPresent() && moduleWrapper.get().isEnabled()) {
-                if ("ADMIN".equals(line0) && (player == null || ((BlockBagManager) moduleWrapper.get().getModule().get()).adminPermissions.hasPermission(player))) {
-                    location.offer(new BlockBagData(-1));
+                if ("ADMIN".equals(line0)) {
+                    if ((player == null || ((BlockBagManager) moduleWrapper.get().getModule().get()).adminPermissions.hasPermission(player))) {
+                        location.offer(new BlockBagData(-1));
+                    } else {
+                        lines.set(0, Text.of());
+                    }
                 }
             }
-
-            lines.set(0, Text.of());
         }
 
         return super.verifyLines(location, lines, player);
