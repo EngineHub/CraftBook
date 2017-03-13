@@ -125,10 +125,10 @@ public final class ItemSyntax {
             int amount = 1;
 
             String[] advMetadataSplit = FSLASH_PATTERN.split(line);
-            String[] nameLoreSplit = PIPE_PATTERN.split(advMetadataSplit[0]);
-            String[] enchantSplit = SEMICOLON_PATTERN.split(nameLoreSplit[0]);
-            String[] amountSplit = ASTERISK_PATTERN.split(enchantSplit[0], 2);
-            String[] dataSplit = COLON_PATTERN.split(amountSplit[0], 2);
+            String[] nameLoreSplit = PIPE_PATTERN.split(advMetadataSplit[0].replace("\\/", "/"));
+            String[] enchantSplit = SEMICOLON_PATTERN.split(nameLoreSplit[0].replace("\\;", ";"));
+            String[] amountSplit = ASTERISK_PATTERN.split(enchantSplit[0].replace("\\*", "*"), 2);
+            String[] dataSplit = COLON_PATTERN.split(amountSplit[0].replace("\\:", ":"), 2);
 
             try {
                 material = Material.getMaterial(Integer.parseInt(dataSplit[0]));
