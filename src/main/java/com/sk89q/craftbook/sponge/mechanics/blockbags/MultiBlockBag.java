@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import com.google.common.collect.Lists;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.List;
@@ -23,12 +24,12 @@ import java.util.List;
 /**
  * An interface for accessing multiple block bags at the same time.
  */
-public class MultiBlockBag extends BlockBag {
+public class MultiBlockBag implements BlockBag {
 
-    BlockBag[] bags;
+    private List<BlockBag> bags;
 
     public MultiBlockBag(BlockBag... bags) {
-        this.bags = bags;
+        this.bags = Lists.newArrayList(bags);
     }
 
     @Override

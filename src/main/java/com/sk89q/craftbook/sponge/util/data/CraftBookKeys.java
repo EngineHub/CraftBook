@@ -31,9 +31,6 @@ public class CraftBookKeys {
     public static Key<MutableBoundedValue<Integer>> LAST_POWER = makeSingleKey(new TypeTokens.IntegerTypeToken(),
             new TypeTokens.MutableBoundedValueIntegerTypeToken(), of("LastPower"), "craftbook:lastpower", "LastPower");
 
-    public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
-            new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
-
     public static Key<Value<SerializedICData>> IC_DATA = makeSingleKey(new TypeTokens.ICTypeToken(),
             new TypeTokens.ICValueTypeToken(), of("IC"), "craftbook:ic", "IC");
 

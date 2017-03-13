@@ -16,36 +16,21 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
-import org.spongepowered.api.item.inventory.ItemStack;
+import java.util.UUID;
 
-import java.util.List;
-
-/**
- * Represents an object that contains an inventory, and can be used as a source of blocks for CraftBook mechanics.
- */
-public interface BlockBag {
+public interface OwnedBlockBag extends BlockBag {
 
     /**
-     * Determines if this {@link BlockBag} contains the requested {@link ItemStack}s.
+     * Gets the owner of this Block Bag.
      *
-     * @param itemStacks The requested items
-     * @return if it contains the items
+     * @return The owner
      */
-    boolean has(List<ItemStack> itemStacks);
+    UUID getOwner();
 
     /**
-     * Adds the given {@link ItemStack}s to this {@link BlockBag}.
+     * Sets the owner of this Block Bag.
      *
-     * @param itemStacks The items to add
-     * @return All items that could not be added
+     * @param owner The owner
      */
-    List<ItemStack> add(List<ItemStack> itemStacks);
-
-    /**
-     * Removes the given {@link ItemStack}s from this {@link BlockBag}.
-     *
-     * @param itemStacks The items to remove
-     * @return All items that could not be removed
-     */
-    List<ItemStack> remove(List<ItemStack> itemStacks);
+    void setOwner(UUID owner);
 }

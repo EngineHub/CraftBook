@@ -16,60 +16,96 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags;
 
+import static org.spongepowered.api.data.DataQuery.of;
+import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
+
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Key;
+import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.service.permission.PermissionDescription;
 
-import java.util.Arrays;
-import java.util.Random;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Module(id = "blockbag", name = "BlockBag", onEnable="onInitialize", onDisable="onDisable")
-public class BlockBagManager extends SpongeMechanic {
+public class BlockBagManager extends SpongeMechanic implements DocumentationProvider {
+
+    public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = makeSingleKey(new TypeToken<EmbeddedBlockBag>() {},
+            new TypeToken<Value<EmbeddedBlockBag>>() {}, of("EmbeddedBlockBag"), "craftbook:embeddedblockbag",
+            "EmbeddedBlockBag");
+
+    public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
+            new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
+
+    public SpongePermissionNode adminPermissions = new SpongePermissionNode("craftbook.blockbag.admin",
+            "Allows usage of admin block bags.", PermissionDescription.ROLE_ADMIN);
 
     @Inject
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private BlockBag[] blockBags;
+    private Set<BlockBag> blockBags = new HashSet<>();
 
-    private Random random = new Random();
+    @Override
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
 
-    private long getUnusedID() {
-        long id = random.nextLong();
-        while(getBlockBag(id) != null)
-            id = random.nextLong();
+        adminPermissions.register();
+
+        Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
+        Sponge.getDataManager().register(EmbeddedBlockBagData.class, ImmutableEmbeddedBlockBagData.class, new EmbeddedBlockBagDataBuilder());
+        Sponge.getDataManager().register(BlockBagData.class, ImmutableBlockBagData.class, new BlockBagDataManipulatorBuilder());
+    }
+
+    public long getUnusedId() {
+        long id = ThreadLocalRandom.current().nextLong();
+        while(getBlockBag(id) != null) {
+            id = ThreadLocalRandom.current().nextLong();
+        }
         return id;
     }
 
-    public BlockBag getBlockBag(long id) {
-        for(BlockBag bag : blockBags)
-            if(bag.blockBagId == id)
-                return bag;
-        return null;
-    }
-
-    public BlockBag getBlockBag(UUID creator, String name) {
-        for(BlockBag bag : blockBags)
-            if(bag.simpleName.equals(name) && bag.creator.equals(creator))
-                return bag;
-        return null;
-    }
-
-    public void createBlockBag(Player creator, BlockBag blockBag) {
-        if(getBlockBag(creator.getUniqueId(), blockBag.simpleName) != null) {
-            creator.sendMessage(Text.of(TextColors.RED, "A blockbag with this name already exists!"));
-            return;
+    public IdentifiableBlockBag getBlockBag(long id) {
+        if (id == -1) {
+            return AdminBlockBag.INSTANCE;
         }
+        return blockBags.stream().filter(blockBag -> blockBag instanceof IdentifiableBlockBag)
+                .map(blockBag -> (IdentifiableBlockBag) blockBag)
+                .filter(bag -> bag.getId() == id)
+                .findFirst().orElse(null);
+    }
 
-        blockBag.blockBagId = getUnusedID();
+    public void addBlockBag(BlockBag blockBag) {
+        blockBags.add(blockBag);
+    }
 
-        blockBags = Arrays.copyOf(blockBags, blockBags.length + 1);
-        blockBags[blockBags.length-1] = blockBag;
+    @Override
+    public String getPath() {
+        return "mechanics/block_bags";
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                adminPermissions
+        };
     }
 }

@@ -16,16 +16,40 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.blockbags.inventory;
 
+import com.me4502.modularframework.module.ModuleWrapper;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-public class BlockInventoryBlockBag extends InventoryBlockBag {
+import java.util.Optional;
 
-    public Location<?> location;
+public class BlockInventoryBlockBag extends InventoryBlockBag implements IdentifiableBlockBag {
 
-    public BlockInventoryBlockBag(Location<?> location) {
+    public Location<World> location;
+
+    private long id;
+
+    public BlockInventoryBlockBag(Location<World> location) {
         super(((Carrier)location.getTileEntity().get()).getInventory());
 
         this.location = location;
+        Optional<ModuleWrapper> moduleWrapper = CraftBookPlugin.spongeInst().moduleController.getModule("blockbag");
+        if (moduleWrapper.isPresent() && moduleWrapper.get().isEnabled()) {
+            BlockBagManager manager = ((BlockBagManager) moduleWrapper.get().getModule().get());
+            this.id = manager.getUnusedId();
+        }
+    }
+
+    @Override
+    public long getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 }

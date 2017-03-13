@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util.data.mutable;
+package com.sk89q.craftbook.sponge.mechanics.blockbags.data;
 
-import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
-import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.util.data.util.AbstractLongData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -36,12 +35,12 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
     }
 
     public BlockBagData(long value) {
-        super(value, CraftBookKeys.BLOCK_BAG);
+        super(value, BlockBagManager.BLOCK_BAG);
     }
 
     public Value<Long> blockBag() {
         return Sponge.getRegistry().getValueFactory()
-                .createValue(CraftBookKeys.BLOCK_BAG, getValue());
+                .createValue(BlockBagManager.BLOCK_BAG, getValue());
     }
 
     @Override
@@ -60,8 +59,8 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
 
     @Override
     public Optional<BlockBagData> from(DataContainer container) {
-        if (container.contains(CraftBookKeys.BLOCK_BAG.getQuery())) {
-            return Optional.of(new BlockBagData(container.getLong(CraftBookKeys.BLOCK_BAG.getQuery()).get()));
+        if (container.contains(BlockBagManager.BLOCK_BAG.getQuery())) {
+            return Optional.of(new BlockBagData(container.getLong(BlockBagManager.BLOCK_BAG.getQuery()).get()));
         }
 
         return Optional.empty();
@@ -80,7 +79,7 @@ public class BlockBagData extends AbstractLongData<BlockBagData, ImmutableBlockB
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(CraftBookKeys.BLOCK_BAG, this.getValue());
+                .set(BlockBagManager.BLOCK_BAG, this.getValue());
     }
 
     @Override

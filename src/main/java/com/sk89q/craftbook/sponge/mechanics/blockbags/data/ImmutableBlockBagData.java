@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.util.data.immutable;
+package com.sk89q.craftbook.sponge.mechanics.blockbags.data;
 
-import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
-import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
@@ -28,13 +27,13 @@ import org.spongepowered.api.util.annotation.NonnullByDefault;
 public class ImmutableBlockBagData extends AbstractImmutableSingleData<Long, ImmutableBlockBagData, BlockBagData> {
 
     public ImmutableBlockBagData(Long value) {
-        super(value, CraftBookKeys.BLOCK_BAG);
+        super(value, BlockBagManager.BLOCK_BAG);
     }
 
     @Override
     protected ImmutableValue<Long> getValueGetter() {
         return Sponge.getRegistry().getValueFactory()
-                .createValue(CraftBookKeys.BLOCK_BAG, getValue())
+                .createValue(BlockBagManager.BLOCK_BAG, getValue())
                 .asImmutable();
     }
 
@@ -46,7 +45,7 @@ public class ImmutableBlockBagData extends AbstractImmutableSingleData<Long, Imm
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(CraftBookKeys.BLOCK_BAG, this.getValue());
+                .set(BlockBagManager.BLOCK_BAG, this.getValue());
     }
 
     @Override

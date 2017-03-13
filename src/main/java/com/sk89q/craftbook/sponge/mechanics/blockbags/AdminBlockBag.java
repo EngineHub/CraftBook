@@ -21,7 +21,19 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminBlockBag extends BlockBag {
+public class AdminBlockBag implements IdentifiableBlockBag {
+
+    public static final AdminBlockBag INSTANCE = new AdminBlockBag();
+
+    @Override
+    public long getId() {
+        return -1;
+    }
+
+    @Override
+    public void setId(long id) {
+    }
+
     @Override
     public boolean has(List<ItemStack> itemStacks) {
         return true;

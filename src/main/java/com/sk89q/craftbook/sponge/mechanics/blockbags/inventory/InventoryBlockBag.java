@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class InventoryBlockBag extends BlockBag {
+public abstract class InventoryBlockBag implements BlockBag {
 
     private Inventory inventory;
 
@@ -67,6 +67,6 @@ public abstract class InventoryBlockBag extends BlockBag {
             //}
         }
         //TODO
-        return itemStacks;
+        return output;
     }
 }
