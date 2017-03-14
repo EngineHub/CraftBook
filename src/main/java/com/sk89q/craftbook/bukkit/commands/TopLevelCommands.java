@@ -2,6 +2,7 @@ package com.sk89q.craftbook.bukkit.commands;
 import java.io.File;
 import java.io.IOException;
 
+import com.sk89q.craftbook.mechanics.headdrops.HeadDropsCommands;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -43,6 +44,11 @@ public class TopLevelCommands {
     @Command(aliases = {"area", "togglearea"}, desc = "Commands to manage Craftbook Areas")
     @NestedCommand(AreaCommands.class)
     public void area(CommandContext context, CommandSender sender) {
+    }
+
+    @Command(aliases = {"headdrops", "hd"}, desc = "Commands to manage Craftbook Head Drops")
+    @NestedCommand(HeadDropsCommands.class)
+    public void headdrops(CommandContext context, CommandSender sender) {
     }
 
     @Command(aliases = {"recp", "recps"}, desc = "Commands to manage Craftbook Custom Recipes")
