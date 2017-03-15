@@ -21,7 +21,7 @@ public class HeadDropsCommands {
 
     }
 
-    @Command(aliases = {"give"}, desc = "Gives the player the headdrops item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name> [-a amount] [-s]", min = 1)
+    @Command(aliases = {"give"}, desc = "Gives the player the headdrops item.", flags = "p:a:s", usage = "[-p player] <Entity Name> [-a amount] " + "[-s]", min = 1)
     public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
         Player player;
 
