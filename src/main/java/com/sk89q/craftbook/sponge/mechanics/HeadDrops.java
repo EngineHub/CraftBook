@@ -78,6 +78,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 @Module(id = "headdrops", name = "HeadDrops", onEnable="onInitialize", onDisable="onDisable")
 public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
 
@@ -148,10 +150,54 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.VILLAGER, GameProfile.of(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
     }
 
+    private Optional<ItemStack> getStackForEntity(EntityType type, @Nullable GameProfile profile) {
+        SkullType skullType = null;
+
+        if (type == EntityTypes.PLAYER) {
+            if (playerHeads.getValue()) {
+                skullType = SkullTypes.PLAYER;
+            }
+        } else if (mobHeads.getValue()) {
+            if (type == EntityTypes.ZOMBIE) {
+                skullType = SkullTypes.ZOMBIE;
+            } else if (type == EntityTypes.CREEPER) {
+                skullType = SkullTypes.CREEPER;
+            } else if (type == EntityTypes.SKELETON) {
+                skullType = SkullTypes.SKELETON;
+            } else if (type == EntityTypes.WITHER_SKELETON) {
+                skullType = SkullTypes.WITHER_SKELETON;
+            } else if (type == EntityTypes.ENDER_DRAGON) {
+                skullType = SkullTypes.ENDER_DRAGON;
+            } else {
+                // Add extra mob.
+                profile = getForEntity(type);
+                if (profile != null) {
+                    skullType = SkullTypes.PLAYER;
+                }
+            }
+        }
+
+        if (skullType != null) {
+            ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
+                    .add(Keys.SKULL_TYPE, skullType).build();
+            if (profile != null) {
+                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
+                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
+                if (type == EntityTypes.PLAYER) {
+                    itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + "'s Head"));
+                } else {
+                    itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + " Head"));
+                }
+                itemStack.offer(skinData);
+                return Optional.of(itemStack);
+            }
+        }
+
+        return Optional.empty();
+    }
+
     @Listener
     public void onItemDrops(DropItemEvent.Destruct event, @First EntitySpawnCause spawnCause) {
-        EntityType type = spawnCause.getEntity().getType();
-
         EntityDamageSource damageSource = event.getCause().first(EntityDamageSource.class).orElse(null);
         Entity killer = null;
 
@@ -180,48 +226,17 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
             return;
         }
 
-        SkullType skullType = null;
         GameProfile profile = null;
-
-        if (type == EntityTypes.PLAYER) {
-            if (playerHeads.getValue()) {
-                skullType = SkullTypes.PLAYER;
-                profile = ((Player) spawnCause.getEntity()).getProfile();
-            }
-        } else if (mobHeads.getValue()) {
-            if (type == EntityTypes.ZOMBIE) {
-                skullType = SkullTypes.ZOMBIE;
-            } else if (type == EntityTypes.CREEPER) {
-                skullType = SkullTypes.CREEPER;
-            } else if (type == EntityTypes.SKELETON) {
-                skullType = SkullTypes.SKELETON;
-            } else if (type == EntityTypes.WITHER_SKELETON) {
-                skullType = SkullTypes.WITHER_SKELETON;
-            } else if (type == EntityTypes.ENDER_DRAGON) {
-                skullType = SkullTypes.ENDER_DRAGON;
-            } else {
-                // Add extra mob.
-                profile = getForEntity(type);
-                if (profile != null) {
-                    skullType = SkullTypes.PLAYER;
-                }
-            }
+        if (spawnCause.getEntity() instanceof Player) {
+            profile = ((Player) spawnCause.getEntity()).getProfile();
         }
 
-        if (skullType != null) {
-            ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
-                    .add(Keys.SKULL_TYPE, skullType).build();
-            if (profile != null) {
-                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
-                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
-                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, WordUtils.capitalize(type.getName()) + " Head"));
-                itemStack.offer(skinData);
-            }
+        getStackForEntity(spawnCause.getEntity().getType(), profile).ifPresent(itemStack -> {
             Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
             Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
             event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
-        }
+        });
     }
 
     @Listener
@@ -255,34 +270,27 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
                     if (snapshot.get(Keys.SKULL_TYPE).get() == SkullTypes.PLAYER) {
                         GameProfile profile = snapshot.get(Keys.REPRESENTED_PLAYER).orElse(null);
                         if (profile != null) {
-                            String name;
+                            EntityType entityType = null;
 
                             if (mobSkullMap.containsValue(profile)) {
-                                EntityType entityType = mobSkullMap.entrySet().stream().filter(entry -> entry.getValue().equals(profile)).findFirst().get().getKey();
-                                name = WordUtils.capitalize(entityType.getName());
+                                entityType = mobSkullMap.entrySet().stream().filter(entry -> entry.getValue().equals(profile)).findFirst().get().getKey();
                             } else {
-                                name = profile.getName().orElse(null);
-                                if (name != null) {
-                                    name += "'s";
+                                if (profile.getName().isPresent()) {
+                                    entityType = EntityTypes.PLAYER;
                                 }
                             }
 
-                            if (name != null) {
-                                ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
-                                        .add(Keys.SKULL_TYPE, SkullTypes.PLAYER).build();
-                                RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
+                            if (entityType != null) {
+                                getStackForEntity(entityType, profile).ifPresent(itemStack -> {
+                                    Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
+                                    item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+                                    event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root",
+                                            SpawnCause.builder().type(SpawnTypes.DROPPED_ITEM).build())));
 
-                                skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
-                                itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RESET, name + " Head"));
-                                itemStack.offer(skinData);
-                                Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
-                                item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-                                event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root",
-                                        SpawnCause.builder().type(SpawnTypes.DROPPED_ITEM).build())));
-
-                                event.setCancelled(true);
-                                Sponge.getScheduler().createTaskBuilder().execute(() ->
-                                        location.setBlockType(BlockTypes.AIR, CraftBookPlugin.spongeInst().getCause().build())).submit(CraftBookPlugin.spongeInst().container);
+                                    event.setCancelled(true);
+                                    Sponge.getScheduler().createTaskBuilder().execute(() ->
+                                            location.setBlockType(BlockTypes.AIR, CraftBookPlugin.spongeInst().getCause().build())).submit(CraftBookPlugin.spongeInst().container);
+                                });
                             }
                         }
                     }
