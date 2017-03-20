@@ -24,6 +24,7 @@ import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
+import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.command.AboutCommand;
@@ -111,10 +112,12 @@ public class CraftBookPlugin extends CraftBookAPI {
         container.getAsset("build.txt").ifPresent(asset -> {
             try {
                 for (String line : asset.readLines()) {
-                    if (line.startsWith("build=")) {
-                        BUILD_NUMBER = line.substring(6);
-                    } else if (line.startsWith("hash=")) {
-                        GIT_HASH = line.substring(5);
+                    if (line.startsWith("hash=")) {
+                        if (line.contains("-")) {
+                            String[] bits = RegexUtil.MINUS_PATTERN.split(line.substring(5));
+                            BUILD_NUMBER = bits[0];
+                            GIT_HASH = bits[1];
+                        }
                     }
                 }
             } catch (IOException e) {

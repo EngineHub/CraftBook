@@ -25,5 +25,6 @@ public final class RegexUtil {
     public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
     public static final Pattern PERCENT_PATTERN = Pattern.compile("%", Pattern.LITERAL);
     public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
+    public static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
 }

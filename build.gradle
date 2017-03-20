@@ -44,7 +44,6 @@ dependencies {
 
 processResources {
     filter ReplaceTokens, tokens: [
-            "build.number": project.hasProperty("build.number") ? project.property("build.number") : "UNKNOWN",
             "build.hash": project.hasProperty("gitCommitHash") ? project.property("gitCommitHash") : "UNKNOWN"
     ]
 }

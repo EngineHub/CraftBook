@@ -33,7 +33,7 @@ public class AboutCommand implements CommandExecutor {
         src.sendMessage(Text.of("==============="));
         src.sendMessage(Text.of("Version: " + CraftBookPlugin.spongeInst().container.getVersion().orElse("UNKNOWN")));
         src.sendMessage(Text.of("Build: " + CraftBookPlugin.BUILD_NUMBER));
-        src.sendMessage(Text.of("Hash: " + CraftBookPlugin.GIT_HASH));
+        src.sendMessage(Text.of("Commit: " + CraftBookPlugin.GIT_HASH));
         return CommandResult.success();
     }
 }
