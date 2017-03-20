@@ -1,0 +1,2 @@
+build=@build.number@
+hash=@build.hash@

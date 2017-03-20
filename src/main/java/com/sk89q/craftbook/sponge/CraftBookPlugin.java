@@ -26,6 +26,7 @@ import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
+import com.sk89q.craftbook.sponge.command.AboutCommand;
 import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
@@ -53,6 +54,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Plugin(id = "craftbook", name = "CraftBook", version = "4.0",
@@ -83,6 +85,9 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     ConfigurationOptions configurationOptions;
 
+    public static String BUILD_NUMBER = "UNKNOWN";
+    public static String GIT_HASH = "UNKNOWN";
+
     /* Logging */
 
     @Inject
@@ -101,6 +106,21 @@ public class CraftBookPlugin extends CraftBookAPI {
     public void onPreInitialization(GamePreInitializationEvent event) {
         logger.info("Performing Pre-Initialization");
         setInstance(this);
+
+        // Load build information.
+        container.getAsset("build.txt").ifPresent(asset -> {
+            try {
+                for (String line : asset.readLines()) {
+                    if (line.startsWith("build=")) {
+                        BUILD_NUMBER = line.substring(6);
+                    } else if (line.startsWith("hash=")) {
+                        GIT_HASH = line.substring(5);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         TypeSerializers.registerDefaults();
         CraftBookData.registerData();
@@ -145,10 +165,17 @@ public class CraftBookPlugin extends CraftBookAPI {
                 .child(getDocsCommandSpec, "get", "help", "link")
                 .build();
 
+        CommandSpec aboutCommandSpec = CommandSpec.builder()
+                .description(Text.of("CraftBook About Command"))
+                .permission("craftbook.about")
+                .executor(new AboutCommand())
+                .build();
+
         CommandSpec craftBookCommandSpec = CommandSpec.builder()
                 .description(Text.of("CraftBook Base Command"))
                 .permission("craftbook.craftbook")
                 .child(docsCommandSpec, "docs", "manual", "man", "documentation", "doc", "help")
+                .child(aboutCommandSpec, "about", "version", "ver")
                 .build();
 
         Sponge.getCommandManager().register(this, craftBookCommandSpec, "cb", "craftbook");

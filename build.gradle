@@ -11,6 +11,8 @@ plugins {
     id "com.mendhak.gradlecrowdin" version "0.0.9"
 }
 
+import org.apache.tools.ant.filters.*
+
 defaultTasks 'licenseFormat', 'build'
 
 group = 'com.sk89q.craftbook'
@@ -38,6 +40,13 @@ dependencies {
     compile 'com.sk89q.worldedit:worldedit-sponge:6.1.7-SNAPSHOT'
     testCompile 'org.mockito:mockito-core:2.+'
     testCompile 'junit:junit:5.+'
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "build.number": project.hasProperty("build.number") ? project.property("build.number") : "UNKNOWN",
+            "build.hash": project.hasProperty("gitCommitHash") ? project.property("gitCommitHash") : "UNKNOWN"
+    ]
 }
 
 tasks.withType(JavaCompile) {
