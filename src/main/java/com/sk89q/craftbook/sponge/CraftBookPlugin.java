@@ -28,6 +28,7 @@ import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.command.AboutCommand;
+import com.sk89q.craftbook.sponge.command.ReportCommand;
 import com.sk89q.craftbook.sponge.command.docs.GenerateDocsCommand;
 import com.sk89q.craftbook.sponge.command.docs.GetDocsCommand;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
@@ -42,6 +43,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.GameState;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
@@ -97,6 +99,11 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    @Override
+    public String getVersionString() {
+        return this.container.getVersion().orElse("UNKNOWN") + '-' + BUILD_NUMBER + '-' + GIT_HASH;
     }
 
     public PluginContainer getContainer() {
@@ -174,11 +181,21 @@ public class CraftBookPlugin extends CraftBookAPI {
                 .executor(new AboutCommand())
                 .build();
 
+        CommandSpec reportCommandSpec = CommandSpec.builder()
+                .description(Text.of("CraftBook Report Command"))
+                .permission("craftbook.report")
+                .arguments(
+                        GenericArguments.flags().permissionFlag("craftbook.report.pastebin", "p").buildWith(GenericArguments.none())
+                )
+                .executor(new ReportCommand())
+                .build();
+
         CommandSpec craftBookCommandSpec = CommandSpec.builder()
                 .description(Text.of("CraftBook Base Command"))
                 .permission("craftbook.craftbook")
                 .child(docsCommandSpec, "docs", "manual", "man", "documentation", "doc", "help")
                 .child(aboutCommandSpec, "about", "version", "ver")
+                .child(reportCommandSpec, "report", "dump")
                 .build();
 
         Sponge.getCommandManager().register(this, craftBookCommandSpec, "cb", "craftbook");

@@ -69,4 +69,12 @@ public abstract class CraftBookAPI {
      * @return The logger
      */
     public abstract Logger getLogger();
+
+    /**
+     * Gets the version as a string. This should be identifiable
+     * with build information.
+     *
+     * @return The version string
+     */
+    public abstract String getVersionString();
 }

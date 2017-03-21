@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.st;
 
+import com.google.common.collect.ImmutableMap;
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.st.SelfTriggerClock;
@@ -59,6 +60,10 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
     @Override
     public void unload() {
         selfTriggeringMechanics.clear();
+    }
+
+    public Map<Location<World>,SelfTriggeringMechanic> getSelfTriggeringMechanics() {
+        return ImmutableMap.copyOf(selfTriggeringMechanics);
     }
 
     public void register(SelfTriggeringMechanic mechanic, Location<World> location) {
