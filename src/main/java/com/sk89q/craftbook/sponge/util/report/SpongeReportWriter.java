@@ -18,10 +18,13 @@ package com.sk89q.craftbook.sponge.util.report;
 
 import com.me4502.modularframework.module.ModuleWrapper;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.core.util.report.LogListBlock;
 import com.sk89q.craftbook.core.util.report.ReportWriter;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -38,6 +41,7 @@ public class SpongeReportWriter extends ReportWriter {
         appendPluginInformation();
         appendCraftBookInformation();
         appendGlobalConfiguration();
+        appendModuleConfigurations();
     }
 
     private void appendGlobalConfiguration() {
@@ -47,8 +51,12 @@ public class SpongeReportWriter extends ReportWriter {
         LogListBlock configLog = log.putChild("Configuration");
 
         for (ConfigValue config : CraftBookPlugin.spongeInst().getConfig().getConfigurationNodes()) {
-            configLog.put(config.getKey(), config.getValue());
+            ConfigurationNode node = SimpleCommentedConfigurationNode.root();
+            config.serializeDefault(node);
+
+            configLog.put(config.getKey(), node.getString("UNKNOWN"));
         }
+
         append(log);
         appendln();
     }
@@ -75,9 +83,7 @@ public class SpongeReportWriter extends ReportWriter {
         //log.put("Server ID", Sponge.getServer().getServerId());
         //log.put("Server name", Sponge.getServerName());
         log.put("Platform", Sponge.getPlatform().getType().name());
-        //log.put("Platform version", Sponge.getServer().);
         log.put("Game version", Sponge.getPlatform().getMinecraftVersion().getName());
-        //log.put("Address", server.getIp(), server.getPort());
         log.put("Player count", "%d/%d", Sponge.getServer().getOnlinePlayers().size(), Sponge.getServer().getMaxPlayers());
 
         append(log);
@@ -107,8 +113,9 @@ public class SpongeReportWriter extends ReportWriter {
 
         log = new LogListBlock();
 
-        for(ModuleWrapper<?> mech : enabledModules)
-            log.put(mech.getName(), mech.getVersion());
+        for(ModuleWrapper<?> mech : enabledModules) {
+            log.put(mech.getName(), mech.getId() + '-' + mech.getVersion());
+        }
 
         append(log);
         appendln();
@@ -122,6 +129,33 @@ public class SpongeReportWriter extends ReportWriter {
 
         for (PluginContainer plugin : plugins) {
             log.put(plugin.getName(), plugin.getVersion().orElse("UNKNOWN"));
+        }
+
+        append(log);
+        appendln();
+    }
+
+    private void appendModuleConfigurations() {
+        appendHeader("Module Configurations");
+
+        LogListBlock log = new LogListBlock();
+
+        List<ModuleWrapper> enabledModules = CraftBookPlugin.spongeInst().moduleController.getModules().stream()
+                .filter(ModuleWrapper::isEnabled).collect(Collectors.toList());
+
+        for (ModuleWrapper<?> moduleWrapper : enabledModules) {
+            Object module = moduleWrapper.getModule().orElse(null);
+            if (module == null || !(module instanceof DocumentationProvider)) {
+                continue;
+            }
+            LogListBlock configLog = log.putChild(moduleWrapper.getName());
+
+            for (ConfigValue config : ((DocumentationProvider) module).getConfigurationNodes()) {
+                ConfigurationNode node = SimpleCommentedConfigurationNode.root();
+                config.serializeDefault(node);
+
+                configLog.put(config.getKey(), node.getString("UNKNOWN"));
+            }
         }
 
         append(log);
