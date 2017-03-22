@@ -37,9 +37,9 @@
             <url>http://maven.sk89q.com/repo</url>
         </repository>
         <repository>
-            <id>comphenix-rep</id>
-            <name>Comphenix Repository</name>
-            <url>http://assets.comphenix.net/plugin/repository/everything/</url>
+            <id>dmulloy2-repo</id>
+            <name>dmulloy2 Repository</name>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
         <repository>
             <id>md_5-rep</id>

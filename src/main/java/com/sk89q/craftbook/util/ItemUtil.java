@@ -248,7 +248,7 @@ public final class ItemUtil {
         if(meta2.hasDisplayName())
             displayName2 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta2.getDisplayName().trim()));
         else
-            displayName2 = "$IGNORE";
+            displayName2 = "";
 
         if(!displayName1.equals(displayName2)) {
             if(!displayName1.equals("$IGNORE") && !displayName2.equals("$IGNORE"))
