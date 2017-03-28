@@ -62,7 +62,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                 minimum = Short.parseShort(getLine(3).split(">")[1].trim());
             else if(minMode == 3)
                 minimum = Short.parseShort(getLine(3).split("<=")[1].trim());
-            else if(minMode == 4)
+            else
                 minimum = Short.parseShort(getLine(3).split("<")[1].trim());
         } catch (Exception e) {
             minimum = 1;

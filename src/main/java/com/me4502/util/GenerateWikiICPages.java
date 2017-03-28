@@ -263,8 +263,6 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                             Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
                             if(failed.length() > 0)
                                 Bukkit.getLogger().warning("Failed to upload ICs: " + failed);
-                        } catch (FailedLoginException e) {
-                            Bukkit.getLogger().warning("Failed to login to wiki!");
                         } catch (LoginException e) {
                             e.printStackTrace();
                             Bukkit.getLogger().warning("Failed to login to wiki!");
