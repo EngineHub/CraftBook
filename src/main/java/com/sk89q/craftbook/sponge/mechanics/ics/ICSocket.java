@@ -46,6 +46,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.data.key.Keys;
@@ -90,6 +91,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
     private Map<Location<World>, IC> loadedICs = new HashMap<>();
 
+    private CommandMapping icCommandMapping;
+
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
@@ -124,7 +127,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                 .child(dataCommand, "data")
                 .build();
 
-        Sponge.getCommandManager().register(CraftBookPlugin.spongeInst(), icCommand, "ic", "ics", "integratedcircuit");
+        icCommandMapping = Sponge.getCommandManager().register(CraftBookPlugin.spongeInst(), icCommand, "ic", "ics", "integratedcircuit").orElse(null);
     }
 
     @Override
@@ -138,6 +141,10 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
             }
         });
         loadedICs.clear();
+
+        if (icCommandMapping != null) {
+            Sponge.getCommandManager().removeMapping(icCommandMapping);
+        }
     }
 
     @Override
