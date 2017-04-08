@@ -275,6 +275,10 @@ public class Door extends CuboidToggleMechanic {
 
     @Override
     public CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException {
+        double distance = proximalBaseCenter.getLocation().distanceSquared(distalBaseCenter.getLocation());
+        if (distance <= 2*2) {
+            throw new InvalidMechanismException("Door too short!");
+        }
         // Select the togglable region
         CuboidRegion toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
         ChangedSign sign = BukkitUtil.toChangedSign(trigger);
