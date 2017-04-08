@@ -4,6 +4,7 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
@@ -25,12 +26,11 @@ import java.util.List;
 public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerClick(PlayerInteractEntityEvent event) {
-
-        if(!ItemUtil.isStackValid(event.getPlayer().getItemInHand())) return;
+    public void onPlayerClick(final PlayerInteractEntityEvent event) {
+        if(!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()))) return;
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
         LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(player.getHeldItemInfo().getType() != Material.LEASH) return;
+        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEASH) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -64,21 +64,25 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
 
         CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
-        if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer()))
-            CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
-        else {
-            if(event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
-                ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
-            event.setCancelled(true);
-            if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
-                return;
-            if(event.getPlayer().getItemInHand().getAmount() == 1)
-                event.getPlayer().setItemInHand(null);
-            else {
-                ItemStack newStack = event.getPlayer().getItemInHand();
-                newStack.setAmount(newStack.getAmount() - 1);
-                event.getPlayer().setItemInHand(newStack);
+        if(event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
+            ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
+        event.setCancelled(true);
+        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
+            @Override
+            public void run() {
+                if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
+                    CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
+                }
             }
+        });
+        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
+            return;
+        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getAmount() == 1)
+            InventoryUtil.setItemInHand(event.getPlayer(), event.getHand(), null);
+        else {
+            ItemStack newStack = InventoryUtil.getItemInHand(event.getPlayer(), event.getHand());
+            newStack.setAmount(newStack.getAmount() - 1);
+            InventoryUtil.setItemInHand(event.getPlayer(), event.getHand(), newStack);
         }
     }
 
@@ -98,6 +102,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
                 event.setTarget(null);
                 event.setCancelled(true);
+                return;
             }
         }
 
@@ -109,7 +114,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
                 if(((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
                     event.setTarget(null);
                     event.setCancelled(true);
-                    break;
+                    return;
                 }
             }
         }

@@ -9,7 +9,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -215,6 +217,24 @@ public class InventoryUtil {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public static ItemStack getItemInHand(Player player, EquipmentSlot slot) {
+        if (slot == EquipmentSlot.HAND) {
+            return player.getInventory().getItemInMainHand();
+        } else if (slot == EquipmentSlot.OFF_HAND) {
+            return player.getInventory().getItemInOffHand();
+        }
+
+        return null;
+    }
+
+    public static void setItemInHand(Player player, EquipmentSlot slot, ItemStack itemStack) {
+        if (slot == EquipmentSlot.HAND) {
+            player.getInventory().setItemInMainHand(itemStack);
+        } else if (slot == EquipmentSlot.OFF_HAND) {
+            player.getInventory().setItemInOffHand(itemStack);
         }
     }
 }
