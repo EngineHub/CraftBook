@@ -17,7 +17,13 @@ public class WaterPlaceOnly extends AbstractCraftBookMechanic {
     public void playerInteractEvent(PlayerInteractEvent event) {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() != EquipmentSlot.HAND) {
-            if(event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.BOAT) {
+            if(event.getPlayer().getItemInHand() != null
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT_ACACIA
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT_BIRCH
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT_DARK_OAK
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT_JUNGLE
+                    && event.getPlayer().getItemInHand().getType() == Material.BOAT_SPRUCE) {
                 Block above = event.getClickedBlock().getRelative(0,1,0);
                 if ((!isWater(above) || event.getClickedBlock().getY() == event.getClickedBlock().getWorld().getMaxHeight() - 1) && !isWater(event.getClickedBlock())) {
                     event.setCancelled(true);
