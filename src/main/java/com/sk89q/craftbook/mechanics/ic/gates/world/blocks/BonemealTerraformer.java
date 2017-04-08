@@ -97,7 +97,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.NETHER_WARTS && b.getData() < 0x3) {
+        if ((b.getType() == Material.NETHER_WARTS || b.getType() == Material.BEETROOT_BLOCK) && b.getData() < 0x3) {
             if (consumeBonemeal()) {
                 b.setData((byte) (b.getData() + 0x1));
             }
