@@ -170,11 +170,9 @@ public final class SearchArea {
     public boolean isWithinArea(Location location) {
 
         if(hasRegion()) {
-
-            if(region.contains(BukkitUtil.toVector(location)) && location.getWorld().equals(world))
+            if(!region.isPhysicalArea() || region.contains(BukkitUtil.toVector(location)) && location.getWorld().equals(world))
                 return true;
         } else if(hasRadiusAndCenter()) {
-
             if(LocationUtil.isWithinRadius(location, center, radius))
                 return true;
         } else
