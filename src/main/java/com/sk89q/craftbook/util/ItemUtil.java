@@ -374,7 +374,7 @@ public final class ItemUtil {
     }
 
     public static boolean isStackValid(ItemStack item) {
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0 && (getMaxDurability(item.getType()) == 0 || item.getDurability() < getMaxDurability(item.getType()));
+        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
     }
 
     /**
