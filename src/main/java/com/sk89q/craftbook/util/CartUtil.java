@@ -37,20 +37,22 @@ public final class CartUtil {
 
         if(type == EntityType.MINECART_CHEST) {
             toCart = cart.getWorld().spawn(destination, StorageMinecart.class);
-            ((StorageMinecart)toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
+            ((StorageMinecart) toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
+            ((StorageMinecart) cart).getInventory().clear();
         } else if(type == EntityType.MINECART_FURNACE) {
             toCart = cart.getWorld().spawn(destination, PoweredMinecart.class);
         } else if(type == EntityType.MINECART_HOPPER) {
             toCart = cart.getWorld().spawn(destination, HopperMinecart.class);
-            ((HopperMinecart)toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
+            ((HopperMinecart) toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
+            ((HopperMinecart) cart).getInventory().clear();
         } else if(type == EntityType.MINECART_MOB_SPAWNER) {
             toCart = cart.getWorld().spawn(destination, SpawnerMinecart.class);
         } else if(type == EntityType.MINECART_TNT)
             toCart = cart.getWorld().spawn(destination, ExplosiveMinecart.class);
         else if(type == EntityType.MINECART_COMMAND) {
             toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
-            ((CommandMinecart)toCart).setCommand(((CommandMinecart)toCart).getCommand());
-            ((CommandMinecart)toCart).setName(toCart.getName());
+            ((CommandMinecart) toCart).setCommand(((CommandMinecart)toCart).getCommand());
+            ((CommandMinecart) toCart).setName(toCart.getName());
         } else
             toCart = cart.getWorld().spawn(destination, RideableMinecart.class);
 
@@ -62,7 +64,6 @@ public final class CartUtil {
 
                 @Override
                 public void run() {
-
                     toCart.setPassenger(passenger);
                     passenger.setVelocity(cart.getVelocity());
                 }
