@@ -136,8 +136,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     } else
                         tests2 = recipe.getIngredients().toArray(new CraftingItemStack[recipe.getIngredients().size()]);
 
-                    ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
-                    leftovers.addAll(Arrays.asList(tests));
+                    ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(Arrays.asList(tests));
                     leftovers.removeAll(Collections.singleton(null));
 
                     for(ItemStack it : tests) {
@@ -373,7 +372,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         return res;
     }
 
-    private static boolean checkFurnaceRecipes(FurnaceRecipe rec1, ItemStack source, ItemStack result) throws InvalidCraftingException {
+    private static boolean checkFurnaceRecipes(FurnaceRecipe rec1, ItemStack source, ItemStack result) {
 
         if(ItemUtil.areBaseItemsIdentical(rec1.getInput(), source))
             if(ItemUtil.areBaseItemsIdentical(rec1.getResult(), result))

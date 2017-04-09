@@ -158,11 +158,10 @@ public class LightSwitch extends AbstractCraftBookMechanic {
                             if (changed >= maximum) return true;
 
                             if (on) {
-                                relBlock.setType(Material.TORCH);
+                                relBlock.setTypeIdAndData(Material.TORCH.getId(), data, false);
                             } else {
-                                relBlock.setType(Material.REDSTONE_TORCH_ON);
+                                relBlock.setTypeIdAndData(Material.REDSTONE_TORCH_ON.getId(), data, false);
                             }
-                            relBlock.setData(data);
                             changed++;
                         }
                     }

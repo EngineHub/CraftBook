@@ -19,7 +19,6 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     private HashMap<String, Object> advancedData = new HashMap<String, Object>();
 
     public HashMap<String, Object> getAllAdvancedData() {
-
         return advancedData;
     }
 
@@ -41,7 +40,6 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     public CraftingItemStack(ItemStack item) {
-
         this.item = item;
         if(item != null && item.hasItemMeta()) //We have some advanced data to set.
             addAdvancedData("item-meta", true);
@@ -53,24 +51,21 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     public CraftingItemStack add(CraftingItemStack stack) {
-
         if (stack.isSameType(this)) {
-            ItemUtil.addToStack(item, stack.getItemStack());
-            advancedData.putAll(stack.getAllAdvancedData());
+            ItemUtil.addToStack(item, stack.item);
+            advancedData.putAll(stack.advancedData);
         }
         return this;
     }
 
     public boolean isSameType(CraftingItemStack stack) {
-
         return ItemUtil.areItemsIdentical(item, stack.item);
     }
 
     @Override
     public int compareTo(CraftingItemStack stack) {
-
-        if (stack.getItemStack().getAmount() > item.getAmount()) return 1;
-        if (stack.getItemStack().getAmount() == item.getAmount()) return 0;
+        if (stack.item.getAmount() > item.getAmount()) return 1;
+        if (stack.item.getAmount() == item.getAmount()) return 0;
         return -1;
     }
 
@@ -96,18 +91,16 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
             for(String key : advancedData.keySet())
                 if(!stack.hasAdvancedData(key))
                     return false;
-            return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
+            return isSameType(stack) && stack.item.getAmount() == item.getAmount();
         }
         return false;
     }
 
     @Override
     public String toString() {
-
-        String it = ItemSyntax.getStringFromItem(getItemStack());
-
+        String it = ItemSyntax.getStringFromItem(item);
         if(hasAdvancedData("chance"))
-            it = it + "%" + getAdvancedData("chance");
+            it = it + '%' + getAdvancedData("chance");
         return it;
     }
 }
