@@ -337,7 +337,7 @@ public final class ItemUtil {
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if(!isStackValid(item) || !isStackValid(item2)) {
-            CraftBookPlugin.logDebugMessage("An invalid item was compared", "item-checks");
+            CraftBookPlugin.logDebugMessage("An invalid item was compared. Was first? " + isStackValid(item), "item-checks");
             return !isStackValid(item) && !isStackValid(item2);
         }
         else {
@@ -374,7 +374,17 @@ public final class ItemUtil {
     }
 
     public static boolean isStackValid(ItemStack item) {
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
+        if (item == null) {
+            CraftBookPlugin.logDebugMessage("item-checks", "Item is null.");
+            return false;
+        } else if (item.getAmount() <= 0) {
+            CraftBookPlugin.logDebugMessage("item-checks", "Item has amount of " + item.getAmount());
+            return false;
+        } else if (item.getTypeId() <= 0) {
+            CraftBookPlugin.logDebugMessage("item-checks", "Item has type ID of " + item.getTypeId());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -663,16 +673,16 @@ public final class ItemUtil {
     public static ItemStack makeItemValid(ItemStack invalid) {
 
         if(invalid == null)
-            return null;
+            return new ItemStack(Material.STONE);
 
         ItemStack valid = invalid.clone();
 
         if(valid.getDurability() < 0)
             valid.setDurability((short) 0);
-        if(valid.getData().getData() < 0)
-            valid.getData().setData((byte) 0);
         if(valid.getType() == null || valid.getType() == Material.PISTON_MOVING_PIECE)
             valid.setType(Material.STONE);
+        if(valid.getData().getData() < 0)
+            valid.setData(new MaterialData(valid.getType().getId(), (byte) 0));
         if(valid.getAmount() < 1)
             valid.setAmount(1);
 

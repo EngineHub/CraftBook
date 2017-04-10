@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.crafting;
 
+import com.google.common.base.*;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -141,8 +142,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
                     for(ItemStack it : tests) {
 
-                        if(!ItemUtil.isStackValid(it))
+                        if(!ItemUtil.isStackValid(it)) {
+                            CraftBookPlugin.logDebugMessage("Invalid item in recipe: " + com.google.common.base.Objects.toStringHelper(it).toString(), "advanced-data");
                             continue;
+                        }
                         for(CraftingItemStack cit : tests2) {
 
                             if(ItemUtil.areBaseItemsIdentical(cit.getItemStack(), it)) {
