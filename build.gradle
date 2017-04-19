@@ -37,7 +37,6 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.findbugs:jsr305:1.3.9'
     compile 'com.me4502:ModularFramework:1.8.4'
-    compile 'org.bstats:bstats-sponge:1.1'
     compile 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
     compile 'com.sk89q.worldedit:worldedit-sponge:6.1.7-SNAPSHOT'
     testCompile 'org.mockito:mockito-core:2.+'
@@ -105,9 +104,6 @@ shadowJar {
         relocate ("com.me4502.modularframework", "com.sk89q.craftbook.util.modularframework") {
             include(dependency("com.me4502:ModularFramework"))
             exclude "com.me4502.modularframework.ModularFramework"
-        }
-        relocate ("org.bstats", "com.sk89q.craftbook.sponge.util") {
-            include(dependency("org.bstats:bstats-sponge"))
         }
 
         include(dependency("com.owlike:genson"))

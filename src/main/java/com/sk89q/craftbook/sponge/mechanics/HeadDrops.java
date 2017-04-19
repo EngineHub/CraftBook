@@ -232,10 +232,10 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         }
 
         getStackForEntity(spawnCause.getEntity().getType(), profile).ifPresent(itemStack -> {
-            Vector3d location = event.getEntities().stream().findFirst().orElse(spawnCause.getEntity()).getLocation().getPosition();
-            Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location);
+            Vector3d location = spawnCause.getEntity().getLocation().getPosition();
+            Item item = (Item) spawnCause.getEntity().getWorld().createEntity(EntityTypes.ITEM, location);
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
+            spawnCause.getEntity().getWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
         });
     }
 
@@ -282,9 +282,9 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
 
                             if (entityType != null) {
                                 getStackForEntity(entityType, profile).ifPresent(itemStack -> {
-                                    Item item = (Item) event.getTargetWorld().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
+                                    Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
                                     item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-                                    event.getTargetWorld().spawnEntity(item, Cause.of(NamedCause.of("root",
+                                    location.getExtent().spawnEntity(item, Cause.of(NamedCause.of("root",
                                             SpawnCause.builder().type(SpawnTypes.DROPPED_ITEM).build())));
 
                                     event.setCancelled(true);

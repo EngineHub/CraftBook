@@ -16,25 +16,53 @@
  */
 package com.sk89q.craftbook.sponge.util.data;
 
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.util.data.builder.ICDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.NamespaceDataBuilder;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableICData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableLastPowerData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableNamespaceData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.data.mutable.NamespaceData;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataRegistration;
 
 public class CraftBookData {
 
     public static void registerData() {
-        Sponge.getDataManager().register(LastPowerData.class, ImmutableLastPowerData.class, new LastPowerDataManipulatorBuilder());
-        Sponge.getDataManager().register(ICData.class, ImmutableICData.class, new ICDataManipulatorBuilder());
-        Sponge.getDataManager().register(NamespaceData.class, ImmutableNamespaceData.class, new NamespaceDataBuilder());
+        DataRegistration<LastPowerData, ImmutableLastPowerData> lastPowerData =
+                DataRegistration.<LastPowerData, ImmutableLastPowerData>builder()
+                        .dataClass(LastPowerData.class)
+                        .immutableClass(ImmutableLastPowerData.class)
+                        .builder(new LastPowerDataManipulatorBuilder())
+                        .manipulatorId("last_power")
+                        .dataName("LastPower")
+                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
+
+        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData", lastPowerData);
+
+        DataRegistration<ICData, ImmutableICData> icData =
+                DataRegistration.<ICData, ImmutableICData>builder()
+                        .dataClass(ICData.class)
+                        .immutableClass(ImmutableICData.class)
+                        .builder(new ICDataManipulatorBuilder())
+                        .manipulatorId("ic")
+                        .dataName("IC")
+                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
+
+        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.ICData", icData);
+
+        DataRegistration<NamespaceData, ImmutableNamespaceData> namespaceData =
+                DataRegistration.<NamespaceData, ImmutableNamespaceData>builder()
+                        .dataClass(NamespaceData.class)
+                        .immutableClass(ImmutableNamespaceData.class)
+                        .builder(new NamespaceDataBuilder())
+                        .manipulatorId("namespace")
+                        .dataName("Namespace")
+                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
+
+        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.NamespaceData", namespaceData);
     }
 }
