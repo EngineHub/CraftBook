@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.headdrops;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -30,6 +31,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
@@ -80,6 +82,9 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if(!enablePlayers)
                     return;
                 String playerName = event.getEntity().getName();
+                if (ignoredNames.contains(playerName)) {
+                    return;
+                }
                 toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
                 SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
                 meta.setOwner(playerName);
@@ -173,6 +178,9 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(!skull.hasOwner())
                 return;
             String playerName = ChatColor.stripColor(skull.getOwner());
+            if (ignoredNames.contains(playerName)) {
+                return;
+            }
             LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             EntityType type = MobSkullType.getEntityType(playerName);
@@ -296,6 +304,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     private boolean showNameClick;
     private HashMap<String, Double> customDropRates;
     private HashMap<String, String> customSkins;
+    private List<String> ignoredNames;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -336,5 +345,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 customSkins.put(key.toUpperCase(), config.getString(path + "custom-mob-skins." + key));
         } else
             config.addNode(path + "custom-mob-skins");
+
+        config.setComment(path + "ignored-names", "List of usernames to ignore when the head is touched.");
+        ignoredNames = config.getStringList(path + "ignored-names", Lists.newArrayList("cscorelib"));
     }
 }
