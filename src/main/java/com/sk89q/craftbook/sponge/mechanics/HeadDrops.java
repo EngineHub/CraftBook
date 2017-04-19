@@ -20,6 +20,7 @@ import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
@@ -71,6 +72,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -98,6 +100,8 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
     private ConfigValue<Boolean> showNameClick = new ConfigValue<>("show-name-on-click", "Show the name of the owner of a head on right click.",true);
     private ConfigValue<Boolean> playerHeads = new ConfigValue<>("player-heads", "Allow players to drop their heads on death.", true);
     private ConfigValue<Boolean> mobHeads = new ConfigValue<>("mob-heads", "Allow mobs to drop their heads on death.", true);
+    private ConfigValue<List<String>> ignoredNames = new ConfigValue<>("ignored-names", "List of usernames to ignore when the head is touched.",
+            Lists.newArrayList("cscorelib"), new TypeToken<List<String>>() {});
 
     private SpongePermissionNode killPermission = new SpongePermissionNode("craftbook.headdrops.kill",
             "Allow the player to get a HeadDrop from killing an entity.", PermissionDescription.ROLE_USER);
@@ -114,6 +118,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         showNameClick.load(config);
         playerHeads.load(config);
         mobHeads.load(config);
+        ignoredNames.load(config);
 
         mobSkullMap.clear();
 
@@ -181,6 +186,9 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
             ItemStack itemStack = Sponge.getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL)
                     .add(Keys.SKULL_TYPE, skullType).build();
             if (profile != null) {
+                if (profile.getName().isPresent() && ignoredNames.getValue().contains(profile.getName().get())) {
+                    return Optional.empty();
+                }
                 RepresentedPlayerData skinData = Sponge.getGame().getDataManager().getManipulatorBuilder(RepresentedPlayerData.class).get().create();
                 skinData = skinData.set(Keys.REPRESENTED_PLAYER, profile);
                 if (type == EntityTypes.PLAYER) {
@@ -348,7 +356,8 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
                 lootingRateModifier,
                 showNameClick,
                 playerHeads,
-                mobHeads
+                mobHeads,
+                ignoredNames
         };
     }
 
