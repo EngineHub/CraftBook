@@ -26,8 +26,8 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
@@ -155,7 +155,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         Optional<ModuleWrapper> moduleWrapper = CraftBookPlugin.spongeInst().moduleController.getModule("blockbag");
         if (moduleWrapper.isPresent() && moduleWrapper.get().isEnabled()) {
             BlockBagManager manager = ((BlockBagManager) moduleWrapper.get().getModule().get());
-            Optional<Long> blockBag = location.get(BlockBagManager.BLOCK_BAG);
+            Optional<Long> blockBag = location.get(CraftBookKeys.BLOCK_BAG);
             if (blockBag.isPresent()) {
                 Optional<IdentifiableBlockBag> foundBlockBag = blockBag.map(manager::getBlockBag);
                 if (foundBlockBag.isPresent()) {
@@ -163,7 +163,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
                 }
             }
 
-            Optional<EmbeddedBlockBag> embeddedBlockBag = location.get(BlockBagManager.EMBEDDED_BLOCK_BAG);
+            Optional<EmbeddedBlockBag> embeddedBlockBag = location.get(CraftBookKeys.EMBEDDED_BLOCK_BAG);
             if (embeddedBlockBag.isPresent()) {
                 return embeddedBlockBag.get();
             }

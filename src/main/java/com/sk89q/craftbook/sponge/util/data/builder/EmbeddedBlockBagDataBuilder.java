@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.mechanics.blockbags.data;
+package com.sk89q.craftbook.sponge.util.data.builder;
 
-import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableEmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
@@ -45,8 +47,8 @@ public class EmbeddedBlockBagDataBuilder extends AbstractDataBuilder<EmbeddedBlo
 
     @Override
     protected Optional<EmbeddedBlockBagData> buildContent(DataView container) throws InvalidDataException {
-        if (container.contains(BlockBagManager.EMBEDDED_BLOCK_BAG.getQuery())) {
-            return Optional.of(new EmbeddedBlockBagData(container.getSerializable(BlockBagManager.EMBEDDED_BLOCK_BAG.getQuery(),
+        if (container.contains(CraftBookKeys.EMBEDDED_BLOCK_BAG.getQuery())) {
+            return Optional.of(new EmbeddedBlockBagData(container.getSerializable(CraftBookKeys.EMBEDDED_BLOCK_BAG.getQuery(),
                     EmbeddedBlockBag.class).get()));
         }
 

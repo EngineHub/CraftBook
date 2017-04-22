@@ -14,28 +14,29 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.mechanics.blockbags.data;
+package com.sk89q.craftbook.sponge.util.data.immutable;
 
-import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableSingleData;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 
 public class ImmutableEmbeddedBlockBagData extends AbstractImmutableSingleData<EmbeddedBlockBag, ImmutableEmbeddedBlockBagData, EmbeddedBlockBagData> {
 
-    protected ImmutableEmbeddedBlockBagData() {
+    public ImmutableEmbeddedBlockBagData() {
         this(null);
     }
 
-    protected ImmutableEmbeddedBlockBagData(EmbeddedBlockBag value) {
-        super(value, BlockBagManager.EMBEDDED_BLOCK_BAG);
+    public ImmutableEmbeddedBlockBagData(EmbeddedBlockBag value) {
+        super(value, CraftBookKeys.EMBEDDED_BLOCK_BAG);
     }
 
     @Override
     protected ImmutableValue<EmbeddedBlockBag> getValueGetter() {
         return Sponge.getRegistry().getValueFactory()
-                .createValue(BlockBagManager.EMBEDDED_BLOCK_BAG, getValue())
+                .createValue(CraftBookKeys.EMBEDDED_BLOCK_BAG, getValue())
                 .asImmutable();
     }
 

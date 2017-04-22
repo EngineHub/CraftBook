@@ -28,7 +28,7 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;

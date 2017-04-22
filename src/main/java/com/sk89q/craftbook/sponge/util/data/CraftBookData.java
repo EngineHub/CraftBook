@@ -18,12 +18,12 @@ package com.sk89q.craftbook.sponge.util.data;
 
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
+import com.sk89q.craftbook.sponge.util.data.builder.BlockBagDataManipulatorBuilder;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.builder.EmbeddedBlockBagDataBuilder;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.builder.ICDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.NamespaceDataBuilder;

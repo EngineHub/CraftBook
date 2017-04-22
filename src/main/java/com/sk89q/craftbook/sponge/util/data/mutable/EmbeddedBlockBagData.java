@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
-package com.sk89q.craftbook.sponge.mechanics.blockbags.data;
+package com.sk89q.craftbook.sponge.util.data.mutable;
 
-import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableEmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -34,12 +35,12 @@ public class EmbeddedBlockBagData extends AbstractSingleData<EmbeddedBlockBag, E
     }
 
     public EmbeddedBlockBagData(EmbeddedBlockBag value) {
-        super(value, BlockBagManager.EMBEDDED_BLOCK_BAG);
+        super(value, CraftBookKeys.EMBEDDED_BLOCK_BAG);
     }
 
     public Value<EmbeddedBlockBag> embeddedBlockBag() {
         return Sponge.getRegistry().getValueFactory()
-                .createValue(BlockBagManager.EMBEDDED_BLOCK_BAG, getValue());
+                .createValue(CraftBookKeys.EMBEDDED_BLOCK_BAG, getValue());
     }
 
     @Override
@@ -58,8 +59,8 @@ public class EmbeddedBlockBagData extends AbstractSingleData<EmbeddedBlockBag, E
 
     @Override
     public Optional<EmbeddedBlockBagData> from(DataContainer container) {
-        if (container.contains(BlockBagManager.EMBEDDED_BLOCK_BAG.getQuery())) {
-            return Optional.of(new EmbeddedBlockBagData(container.getSerializable(BlockBagManager.EMBEDDED_BLOCK_BAG.getQuery(),
+        if (container.contains(CraftBookKeys.EMBEDDED_BLOCK_BAG.getQuery())) {
+            return Optional.of(new EmbeddedBlockBagData(container.getSerializable(CraftBookKeys.EMBEDDED_BLOCK_BAG.getQuery(),
                     EmbeddedBlockBag.class).get()));
         }
 
@@ -79,7 +80,7 @@ public class EmbeddedBlockBagData extends AbstractSingleData<EmbeddedBlockBag, E
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(BlockBagManager.EMBEDDED_BLOCK_BAG, getValue());
+                .set(CraftBookKeys.EMBEDDED_BLOCK_BAG, getValue());
     }
 
     @Override
