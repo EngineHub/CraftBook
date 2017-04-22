@@ -17,6 +17,13 @@
 package com.sk89q.craftbook.sponge.util.data;
 
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
+import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.builder.ICDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.NamespaceDataBuilder;
@@ -32,6 +39,7 @@ import org.spongepowered.api.data.DataRegistration;
 public class CraftBookData {
 
     public static void registerData() {
+        // Generic Data
         DataRegistration<LastPowerData, ImmutableLastPowerData> lastPowerData =
                 DataRegistration.<LastPowerData, ImmutableLastPowerData>builder()
                         .dataClass(LastPowerData.class)
@@ -43,6 +51,7 @@ public class CraftBookData {
 
         Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData", lastPowerData);
 
+        // IC Data
         DataRegistration<ICData, ImmutableICData> icData =
                 DataRegistration.<ICData, ImmutableICData>builder()
                         .dataClass(ICData.class)
@@ -54,6 +63,7 @@ public class CraftBookData {
 
         Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.ICData", icData);
 
+        // Area Data
         DataRegistration<NamespaceData, ImmutableNamespaceData> namespaceData =
                 DataRegistration.<NamespaceData, ImmutableNamespaceData>builder()
                         .dataClass(NamespaceData.class)
@@ -64,5 +74,30 @@ public class CraftBookData {
                         .buildAndRegister(CraftBookPlugin.spongeInst().container);
 
         Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.util.data.mutable.NamespaceData", namespaceData);
+
+        // BlockBag Data
+        Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
+
+        DataRegistration<EmbeddedBlockBagData, ImmutableEmbeddedBlockBagData> embeddedBlockBagData =
+                DataRegistration.<EmbeddedBlockBagData, ImmutableEmbeddedBlockBagData>builder()
+                        .dataClass(EmbeddedBlockBagData.class)
+                        .immutableClass(ImmutableEmbeddedBlockBagData.class)
+                        .builder(new EmbeddedBlockBagDataBuilder())
+                        .manipulatorId("embedded_blockbag")
+                        .dataName("EmbeddedBlockBag")
+                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
+
+        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData", embeddedBlockBagData);
+
+        DataRegistration<BlockBagData, ImmutableBlockBagData> blockBagData =
+                DataRegistration.<BlockBagData, ImmutableBlockBagData>builder()
+                        .dataClass(BlockBagData.class)
+                        .immutableClass(ImmutableBlockBagData.class)
+                        .builder(new BlockBagDataManipulatorBuilder())
+                        .manipulatorId("blockbag")
+                        .dataName("BlockBag")
+                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
+
+        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData", blockBagData);
     }
 }

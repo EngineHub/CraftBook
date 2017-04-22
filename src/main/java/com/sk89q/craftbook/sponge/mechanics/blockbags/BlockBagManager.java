@@ -26,22 +26,10 @@ import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagDataManipulatorBuilder;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagDataBuilder;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableBlockBagData;
-import com.sk89q.craftbook.sponge.mechanics.blockbags.data.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
-import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;
-import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableLastPowerData;
-import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.DataRegistration;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -74,30 +62,6 @@ public class BlockBagManager extends SpongeMechanic implements DocumentationProv
         super.onInitialize();
 
         adminPermissions.register();
-
-        Sponge.getDataManager().registerBuilder(EmbeddedBlockBag.class, new EmbeddedBlockBag.EmbeddedBlockBagBuilder());
-
-        DataRegistration<EmbeddedBlockBagData, ImmutableEmbeddedBlockBagData> embeddedBlockBagData =
-                DataRegistration.<EmbeddedBlockBagData, ImmutableEmbeddedBlockBagData>builder()
-                        .dataClass(EmbeddedBlockBagData.class)
-                        .immutableClass(ImmutableEmbeddedBlockBagData.class)
-                        .builder(new EmbeddedBlockBagDataBuilder())
-                        .manipulatorId("embedded_blockbag")
-                        .dataName("EmbeddedBlockBag")
-                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
-
-        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.mechanics.blockbags.data.EmbeddedBlockBagData", embeddedBlockBagData);
-
-        DataRegistration<BlockBagData, ImmutableBlockBagData> blockBagData =
-                DataRegistration.<BlockBagData, ImmutableBlockBagData>builder()
-                        .dataClass(BlockBagData.class)
-                        .immutableClass(ImmutableBlockBagData.class)
-                        .builder(new BlockBagDataManipulatorBuilder())
-                        .manipulatorId("blockbag")
-                        .dataName("BlockBag")
-                        .buildAndRegister(CraftBookPlugin.spongeInst().container);
-
-        Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData", blockBagData);
     }
 
     public long getUnusedId() {

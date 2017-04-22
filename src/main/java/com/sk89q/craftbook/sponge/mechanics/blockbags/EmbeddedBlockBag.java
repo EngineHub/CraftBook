@@ -126,7 +126,7 @@ public class EmbeddedBlockBag implements DataSerializable, BlockBag {
 
     public static class EmbeddedBlockBagBuilder extends AbstractDataBuilder<EmbeddedBlockBag> {
 
-        EmbeddedBlockBagBuilder() {
+        public EmbeddedBlockBagBuilder() {
             super(EmbeddedBlockBag.class, 1);
         }
 
