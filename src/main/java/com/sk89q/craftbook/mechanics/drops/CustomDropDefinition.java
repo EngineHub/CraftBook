@@ -26,7 +26,7 @@ public abstract class CustomDropDefinition {
 
     // Requirements
     private List<ItemStack> items;
-    private Biome biome;
+    private List<Biome> biomes;
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
@@ -55,12 +55,12 @@ public abstract class CustomDropDefinition {
         }
     }
 
-    public Biome getBiome() {
-        return this.biome;
+    public List<Biome> getBiomes() {
+        return this.biomes;
     }
 
-    public void setBiome(Biome biome) {
-        this.biome = biome;
+    public void setBiomes(List<Biome> biomes) {
+        this.biomes = biomes;
     }
 
     public List<ItemStack> getItems() {

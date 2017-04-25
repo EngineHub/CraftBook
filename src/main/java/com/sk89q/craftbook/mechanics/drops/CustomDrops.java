@@ -65,7 +65,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
             List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
             List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
-            String biomeString = config.getString("custom-drops." + key + ".biome", null);
+            List<String> biomeStrings = config.getStringList("custom-drops." + key + ".biomes", null);
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -133,13 +133,17 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     }
                     def.setItems(items);
                 }
-                if (biomeString != null) {
-                    try {
-                        Biome biome = Biome.valueOf(biomeString);
-                        def.setBiome(biome);
-                    } catch (IllegalArgumentException e) {
-                        CraftBookPlugin.logger().warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                if (biomeStrings != null) {
+                    List<Biome> biomes = new ArrayList<Biome>();
+                    for (String biomeString : biomeStrings) {
+                        try {
+                            Biome biome = Biome.valueOf(biomeString);
+                            biomes.add(biome);
+                        } catch (IllegalArgumentException e) {
+                            CraftBookPlugin.logger().warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                        }
                     }
+                    def.setBiomes(biomes);
                 }
                 definitions.add(def);
             }
@@ -163,8 +167,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
                 config.setProperty("custom-drops." + def.getName() + ".required-items", itemsList);
             }
-            if (def.getBiome() != null) {
-                config.setProperty("custom-drops." + def.getName() + ".biome", def.getBiome());
+            if (def.getBiomes() != null) {
+                List<String> biomeStringList = new ArrayList<String>();
+                for (Biome biome : def.getBiomes()) {
+                    biomeStringList.add(biome.name());
+                }
+                config.setProperty("custom-drops." + def.getName() + ".biomes", biomeStringList);
             }
 
             int i = 0;
@@ -236,8 +244,17 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     return;
             }
 
-            if (def.getBiome() != null) {
-                if (!event.getBlock().getBiome().equals(def.getBiome())) {
+            if (def.getBiomes() != null) {
+                boolean found = false;
+
+                for (Biome biome : def.getBiomes()) {
+                    if (event.getBlock().getBiome().equals(biome)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
                     return;
                 }
             }
@@ -305,8 +322,17 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     return;
             }
 
-            if (def.getBiome() != null) {
-                if (!event.getEntity().getLocation().getBlock().getBiome().equals(def.getBiome())) {
+            if (def.getBiomes() != null) {
+                boolean found = false;
+
+                for (Biome biome : def.getBiomes()) {
+                    if (event.getEntity().getLocation().getBlock().getBiome().equals(biome)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
                     return;
                 }
             }
