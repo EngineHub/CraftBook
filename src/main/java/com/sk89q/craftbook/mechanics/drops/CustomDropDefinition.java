@@ -4,6 +4,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
+import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -22,7 +23,10 @@ public abstract class CustomDropDefinition {
 
     // WorldGuard Integration
     private List<String> regions;
+
+    // Requirements
     private List<ItemStack> items;
+    private Biome biome;
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
@@ -49,6 +53,14 @@ public abstract class CustomDropDefinition {
         if (this.regions.isEmpty()) {
             this.regions = null;
         }
+    }
+
+    public Biome getBiome() {
+        return this.biome;
+    }
+
+    public void setBiome(Biome biome) {
+        this.biome = biome;
     }
 
     public List<ItemStack> getItems() {

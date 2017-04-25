@@ -12,6 +12,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
@@ -64,6 +65,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
             List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
             List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
+            String biomeString = config.getString("custom-drops." + key + ".biome", null);
 
             List<DropItemStack> drops = new ArrayList<DropItemStack>();
 
@@ -131,6 +133,14 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     }
                     def.setItems(items);
                 }
+                if (biomeString != null) {
+                    try {
+                        Biome biome = Biome.valueOf(biomeString);
+                        def.setBiome(biome);
+                    } catch (IllegalArgumentException e) {
+                        CraftBookPlugin.logger().warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                    }
+                }
                 definitions.add(def);
             }
         }
@@ -152,6 +162,9 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     itemsList.add(ItemSyntax.getStringFromItem(itemStack));
                 }
                 config.setProperty("custom-drops." + def.getName() + ".required-items", itemsList);
+            }
+            if (def.getBiome() != null) {
+                config.setProperty("custom-drops." + def.getName() + ".biome", def.getBiome());
             }
 
             int i = 0;
@@ -223,6 +236,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     return;
             }
 
+            if (def.getBiome() != null) {
+                if (!event.getBlock().getBiome().equals(def.getBiome())) {
+                    return;
+                }
+            }
+
             if (def.getItems() != null) {
                 boolean found = false;
 
@@ -284,6 +303,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
                 if (!found)
                     return;
+            }
+
+            if (def.getBiome() != null) {
+                if (!event.getEntity().getLocation().getBlock().getBiome().equals(def.getBiome())) {
+                    return;
+                }
             }
 
             Player killer = event.getEntity().getKiller();
