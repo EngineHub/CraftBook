@@ -33,6 +33,10 @@ public class SignEditCommands {
         int line = context.getInteger(0, 0);
         String text = context.getString(1, "");
 
+        if (line < 1 || line > 4) {
+            throw new FastCommandException("Line out of bounds. Must be between 1 and 4.");
+        }
+
         String[] signCache = SignCopier.signs.get(sender.getName());
         signCache[line - 1] = text;
         SignCopier.signs.put(sender.getName(), signCache);
