@@ -63,6 +63,22 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         state.setOutput(0, doStuff(true, true));
     }
 
+    private void computeRecipe(InventoryHolder disp) {
+        Iterator<Recipe> recipes = Bukkit.recipeIterator();
+        try {
+            while (recipes.hasNext()) {
+                Recipe temprecipe = recipes.next();
+                if (isValidRecipe(temprecipe, disp.getInventory())) {
+                    recipe = temprecipe;
+                    break; //There should only be 1 valid recipe.
+                }
+            }
+        } catch (Exception e) {
+            BukkitUtil.printStacktrace(e);
+            disp.getInventory().setContents(disp.getInventory().getContents());
+        }
+    }
+
     public boolean craft(InventoryHolder disp) {
 
         Inventory inv = disp.getInventory();
@@ -73,19 +89,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         }
 
         if (recipe == null) {
-            Iterator<Recipe> recipes = Bukkit.recipeIterator();
-            try {
-                while (recipes.hasNext()) {
-                    Recipe temprecipe = recipes.next();
-                    if (isValidRecipe(temprecipe, inv)) {
-                        recipe = temprecipe;
-                        break; //There should only be 1 valid recipe.
-                    }
-                }
-            } catch (Exception e) {
-                BukkitUtil.printStacktrace(e);
-                disp.getInventory().setContents(inv.getContents());
-            }
+            computeRecipe(disp);
         }
 
         if (recipe == null) return false;
@@ -149,9 +153,14 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     }
 
     private boolean collect(InventoryHolder disp) {
+        if (recipe == null) {
+            computeRecipe(disp);
+            if (recipe == null) {
+                return false; // Only collect items if valid recipe.
+            }
+        }
 
         for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
-
             boolean delete = true;
 
             ItemStack stack = item.getItemStack();
