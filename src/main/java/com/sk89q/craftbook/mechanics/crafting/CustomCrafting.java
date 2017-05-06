@@ -143,7 +143,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     for(ItemStack it : tests) {
 
                         if(!ItemUtil.isStackValid(it)) {
-                            CraftBookPlugin.logDebugMessage("Invalid item in recipe: " + com.google.common.base.Objects.toStringHelper(it).toString(), "advanced-data");
+                            if (it != null) {
+                                CraftBookPlugin.logDebugMessage("Invalid item in recipe: " +
+                                                com.google.common.base.Objects.toStringHelper(it).toString(), "advanced-data");
+                            }
                             continue;
                         }
                         for(CraftingItemStack cit : tests2) {
