@@ -49,6 +49,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
@@ -405,6 +406,17 @@ final class MechanicListenerAdapter implements Listener {
                         event.setCancelled(true);
                 } catch (InvalidMechanismException ignored) {
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onSignChange(SignChangeEvent event) {
+        for (int i = 0; i < 4; i++) {
+            String line = event.getLine(i);
+            if (line.startsWith("&0")) {
+                line = line.substring(2);
+                event.setLine(i, line);
             }
         }
     }
