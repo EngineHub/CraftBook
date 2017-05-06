@@ -241,7 +241,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     }
                 }
                 if (!found)
-                    return;
+                    continue;
             }
 
             if (def.getBiomes() != null) {
@@ -255,7 +255,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
 
                 if (!found) {
-                    return;
+                    continue;
                 }
             }
 
@@ -270,7 +270,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
 
                 if (!found) {
-                    return;
+                    continue;
                 }
             }
 
@@ -319,7 +319,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     }
                 }
                 if (!found)
-                    return;
+                    continue;
             }
 
             if (def.getBiomes() != null) {
@@ -333,7 +333,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
 
                 if (!found) {
-                    return;
+                    continue;
                 }
             }
 
@@ -352,7 +352,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
 
                 if (!found) {
-                    return;
+                    continue;
                 }
             }
 
