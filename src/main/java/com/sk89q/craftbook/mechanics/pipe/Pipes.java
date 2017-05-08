@@ -5,13 +5,27 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.InventoryUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -19,8 +33,15 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Directional;
 import org.bukkit.material.PistonBaseMaterial;
+import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
@@ -73,8 +94,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return block.getType() == Material.PISTON_BASE || block.getType() == Material.PISTON_STICKY_BASE;
     }
 
-    public static ChangedSign getSignOnPiston(Block block) {
-
+    private static ChangedSign getSignOnPiston(Block block) {
         BlockState state = block.getState();
         BlockFace facing = BlockFace.SELF;
         if(state.getData() instanceof Directional)
@@ -98,8 +118,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return null;
     }
 
-    public void searchNearbyPipes(Block block, Set<Location> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions) {
-
+    private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions) {
         LinkedList<Block> searchQueue = new LinkedList<Block>();
 
         //Enumerate the search queue.
@@ -144,21 +163,25 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     if (!isValidPipeBlock(off.getType())) continue;
 
-                    if (visitedPipes.contains(off.getLocation())) continue;
+                    if (visitedPipes.contains(off.getLocation().toVector())) continue;
 
-                    visitedPipes.add(off.getLocation());
+                    visitedPipes.add(off.getLocation().toVector());
 
                     if(block.getType() == Material.STAINED_GLASS && off.getType() == Material.STAINED_GLASS && block.getData() != off.getData()) continue;
 
                     if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
                         searchQueue.add(off);
                     else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
-                        if (!isValidPipeBlock(off.getRelative(x, y, z).getType())) continue;
-                        if (visitedPipes.contains(off.getRelative(x, y, z).getLocation())) continue;
+                        Block offsetBlock = off.getRelative(x, y, z);
+                        if (!isValidPipeBlock(offsetBlock.getType())) continue;
+                        if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
                         if(off.getType() == Material.STAINED_GLASS_PANE) {
-                            if((block.getType() == Material.STAINED_GLASS || block.getType() == Material.STAINED_GLASS_PANE) && off.getData() != block.getData() || (off.getRelative(x, y, z).getType() == Material.STAINED_GLASS || off.getRelative(x, y, z).getType() == Material.STAINED_GLASS_PANE) && off.getData() != off.getRelative(x, y, z).getData()) continue;
+                            if((block.getType() == Material.STAINED_GLASS
+                                    || block.getType() == Material.STAINED_GLASS_PANE) && off.getData() != block.getData()
+                                    || (offsetBlock.getType() == Material.STAINED_GLASS
+                                    || offsetBlock.getType() == Material.STAINED_GLASS_PANE) && off.getData() != offsetBlock.getData()) continue;
                         }
-                        visitedPipes.add(off.getRelative(x, y, z).getLocation());
+                        visitedPipes.add(offsetBlock.getLocation().toVector());
                         searchQueue.add(off.getRelative(x, y, z));
                     } else if(off.getType() == Material.PISTON_BASE)
                         searchQueue.add(0, off); //Pistons are treated with higher priority.
@@ -168,9 +191,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         //Use the queue to search blocks.
         for(Block bl : searchQueue) {
-            if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS)
+            if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS) {
                 searchNearbyPipes(bl, visitedPipes, items, filters, exceptions);
-            else if (bl.getType() == Material.PISTON_BASE) {
+            } else if (bl.getType() == Material.PISTON_BASE) {
 
                 PistonBaseMaterial p = (PistonBaseMaterial) bl.getState().getData();
 
@@ -293,7 +316,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         filters.removeAll(Collections.<ItemStack>singleton(null));
         exceptions.removeAll(Collections.<ItemStack>singleton(null));
 
-        Set<Location> visitedPipes = new HashSet<Location>();
+        Set<Vector> visitedPipes = new HashSet<Vector>();
 
         if (block.getType() == Material.PISTON_STICKY_BASE) {
 
@@ -323,7 +346,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
+                    visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                 }
 
@@ -346,7 +369,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation());
+                    visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                 }
 
@@ -372,7 +395,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     items.addAll(event.getItems());
 
                     if (!event.isCancelled()) {
-                        visitedPipes.add(fac.getLocation());
+                        visitedPipes.add(fac.getLocation().toVector());
                         searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                     }
 
@@ -389,7 +412,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.clear();
                 items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
-                    visitedPipes.add(fac.getLocation());
+                    visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items, filters, exceptions);
                 }
                 leftovers.addAll(items);
