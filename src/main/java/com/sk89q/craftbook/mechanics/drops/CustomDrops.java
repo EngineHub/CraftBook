@@ -133,7 +133,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     }
                     def.setItems(items);
                 }
-                if (biomeStrings != null) {
+                if (biomeStrings != null && !biomeStrings.isEmpty()) {
                     List<Biome> biomes = new ArrayList<Biome>();
                     for (String biomeString : biomeStrings) {
                         try {
