@@ -24,9 +24,9 @@ import org.spongepowered.api.world.World;
 
 import java.util.List;
 
-public abstract class PipePart {
+public interface PipePart {
 
-    public abstract boolean isValid(BlockState blockState);
+    boolean isValid(BlockState blockState);
 
     /**
      * Finds all locations that this pipe part is able to output items to.
@@ -38,5 +38,5 @@ public abstract class PipePart {
      * @param inputSide The side that the input has come from.
      * @return A list of possible output locations.
      */
-    public abstract List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide);
+    List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide);
 }

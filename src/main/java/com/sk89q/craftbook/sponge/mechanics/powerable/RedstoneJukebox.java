@@ -46,7 +46,7 @@ public class RedstoneJukebox extends SimplePowerable implements DocumentationPro
         if (powered) {
             jukebox.playRecord();
         } else {
-            //jukebox.stopPlaying();
+            jukebox.stopRecord();
         }
     }
 

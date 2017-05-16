@@ -279,8 +279,7 @@ public class ProgrammableFireworksDisplay extends IC {
                         if(effects.containsKey(line.replace("launch ", ""))) {
                             final Firework firework = (Firework) location.getExtent().createEntity(EntityTypes.FIREWORK, location.getPosition());
                             List<FireworkEffect> fireworkEffects = Lists.newArrayList();
-                            for(FireworkEffect effect : effects.get(line.replace("launch ", "")))
-                                fireworkEffects.add(effect);
+                            fireworkEffects.addAll(effects.get(line.replace("launch ", "")));
                             firework.offer(Keys.FIREWORK_EFFECTS, fireworkEffects);
                             if (preciseDuration) {
                                 firework.offer(Keys.FUSE_DURATION, (int) duration * 2);

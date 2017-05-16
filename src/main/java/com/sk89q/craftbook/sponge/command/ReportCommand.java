@@ -55,7 +55,6 @@ public class ReportCommand implements CommandExecutor {
         if (args.hasAny("p")) {
             src.sendMessage(Text.of(TextColors.YELLOW, "Now uploading to Pastebin..."));
             PastebinPoster.paste(report.toString(), new PastebinPoster.PasteCallback() {
-
                 @Override
                 public void handleSuccess(String url) {
                     // Hope we don't have a thread safety issue here

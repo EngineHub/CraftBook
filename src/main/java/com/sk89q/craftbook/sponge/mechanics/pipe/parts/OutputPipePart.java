@@ -27,7 +27,7 @@ import org.spongepowered.api.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputPipePart extends PipePart {
+public class OutputPipePart implements PipePart {
 
     @Override
     public boolean isValid(BlockState blockState) {

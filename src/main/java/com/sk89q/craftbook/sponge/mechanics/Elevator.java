@@ -131,7 +131,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
 
         //Look for dat sign
         for (Location<World> location : SignUtil.getAttachedSigns(groundLocation)) {
-            Sign sign = location.getTileEntity().map(tile -> (Sign) tile).orElse(null);
+            Sign sign = (Sign) location.getTileEntity().orElse(null);
 
             if (sign != null && "[Lift UpDown]".equals(SignUtil.getTextRaw(sign, 1))) {
                 if (event.getTargetEntity() instanceof Subject) {

@@ -26,7 +26,7 @@ import org.spongepowered.api.world.World;
 
 import java.util.List;
 
-public class PassthroughPipePart extends PipePart {
+public class PassthroughPipePart implements PipePart {
 
     @Override
     public boolean isValid(BlockState blockState) {

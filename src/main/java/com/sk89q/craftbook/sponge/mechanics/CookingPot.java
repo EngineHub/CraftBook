@@ -135,9 +135,8 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                         }
                     } else {
                         Location<?> chestBlock = SignUtil.getBackBlock(location).add(0, 2, 0);
-                        chestBlock.getTileEntity().filter(tileEntity -> tileEntity instanceof Chest).map(tileEntity -> (Chest) tileEntity).ifPresent(chest -> {
-                            player.openInventory(chest.getInventory(), CraftBookPlugin.spongeInst().getCause().build());
-                        });
+                        chestBlock.getTileEntity().filter(tileEntity -> tileEntity instanceof Chest).map(tileEntity -> (Chest) tileEntity).ifPresent(chest ->
+                                player.openInventory(chest.getInventory(), CraftBookPlugin.spongeInst().getCause().build()));
                     }
                 });
             }
