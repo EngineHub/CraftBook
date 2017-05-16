@@ -3,8 +3,9 @@ import java.io.File;
 import java.io.IOException;
 
 import com.sk89q.craftbook.mechanics.headdrops.HeadDropsCommands;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -25,10 +26,8 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.NestedCommand;
+import org.bukkit.entity.Player;
 
-/**
- * Author: Turtle9598
- */
 public class TopLevelCommands {
 
     public TopLevelCommands(CraftBookPlugin plugin) {
@@ -115,9 +114,23 @@ public class TopLevelCommands {
             sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by Me4502 & Dark_Arc");
         }
 
+        @Command(aliases = {"iteminfo", "itemsyntax"}, desc = "Provides item syntax for held item.")
+        public void itemInfo(CommandContext context, CommandSender sender) throws CommandException {
+
+            if(!(sender instanceof Player)) {
+                throw new CommandException("Only players can use this command!");
+            }
+            if (((Player) sender).getInventory().getItemInMainHand() != null) {
+                sender.sendMessage(ChatColor.YELLOW + "Main hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInMainHand()));
+            }
+            if (((Player) sender).getInventory().getItemInOffHand() != null) {
+                sender.sendMessage(ChatColor.YELLOW + "Off hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInOffHand()));
+            }
+        }
+
         @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "pi", max = 0)
         @CommandPermissions({"craftbook.report"})
-        public void report(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+        public void report(CommandContext args, final CommandSender sender) throws CommandException {
 
             File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
             ReportWriter report = new ReportWriter(CraftBookPlugin.inst());
