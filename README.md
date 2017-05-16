@@ -58,9 +58,9 @@ Links
 
 * [Mailing list](https://groups.google.com/d/forum/sk-dev-discuss)
 * [IRC channel](http://skq.me/irc/irc.esper.net/sk89q/) (#sk89q on irc.esper.net)
-* [Discord Server](https://discord.gg/wvneRVm)
+* [Discord Guild](https://discord.gg/wvneRVm)
 * [Issue tracker](http://youtrack.sk89q.com/issues/CRAFTBOOK)
-* [Continuous integration](http://builds.enginehub.org) [![Build Status](https://travis-ci.org/sk89q/CraftBook.svg?branch=master)](https://travis-ci.org/sk89q/CraftBook)
+* [Continuous integration](http://builds.enginehub.org) [![Build Status](https://travis-ci.org/EngineHub/CraftBook.svg?branch=master)](https://travis-ci.org/EngineHub/CraftBook)
 * [End-user documentation](http://enginehub.github.io/CraftBookDocs/)
 
 Sponsors
