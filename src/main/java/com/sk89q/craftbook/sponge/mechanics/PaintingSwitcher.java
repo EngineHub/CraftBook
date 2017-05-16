@@ -34,6 +34,7 @@ import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -85,7 +86,17 @@ public class PaintingSwitcher extends SpongeMechanic implements DocumentationPro
     @Listener
     public void onInventoryChange(ChangeInventoryEvent.Held event, @First Player player) {
         getPainting(player).ifPresent(painting -> {
-            int offset = 1; // TODO when this is supported.
+            if (event.getTransactions().size() != 2) {
+                return;
+            }
+            int oldSlot = event.getTransactions().get(0).getSlot().getProperty(SlotIndex.class, "slotindex").get().getValue();
+            int newSlot = event.getTransactions().get(1).getSlot().getProperty(SlotIndex.class, "slotindex").get().getValue();
+            if (oldSlot < 2 && newSlot > 6) {
+                oldSlot += 9;
+            } else if (oldSlot > 6 && newSlot < 2) {
+                oldSlot -= 9;
+            }
+            int offset = newSlot - oldSlot;
             List<Art> artsCollection = new ArrayList<>(Sponge.getRegistry().getAllOf(Art.class));
 
             int current = artsCollection.indexOf(painting.art().get());
