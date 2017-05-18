@@ -108,12 +108,16 @@ public class FlexibleSetBlock extends AbstractIC {
         y = body.getY();
         z = body.getZ();
 
-        if (axis.equals("X")) {
-            x += dist;
-        } else if (axis.equals("Y")) {
-            y += dist;
-        } else {
-            z += dist;
+        switch (axis) {
+            case "X":
+                x += dist;
+                break;
+            case "Y":
+                y += dist;
+                break;
+            default:
+                z += dist;
+                break;
         }
     }
 

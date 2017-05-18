@@ -21,8 +21,8 @@ public class LogicICTests {
                 throw new AssertionError();
     }
 
-    public static interface LogicICTest {
+    public interface LogicICTest {
 
-        public boolean testIC();
+        boolean testIC();
     }
 }

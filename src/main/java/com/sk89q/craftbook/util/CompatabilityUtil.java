@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public final class CompatabilityUtil {
 
-    private static Set<CraftBookCompatability> compatChecks = new HashSet<CraftBookCompatability>();
+    private static Set<CraftBookCompatability> compatChecks = new HashSet<>();
 
     /**
      * The initialization method for this Util.

@@ -168,12 +168,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             } else if (checkBlock.getType() == Material.STONE_BUTTON || checkBlock.getType() == Material.WOOD_BUTTON) {
                 checkBlock.setData((byte) (checkBlock.getData() | 0x8));
 
-                Runnable turnOff = new Runnable() {
-                    @Override
-                    public void run() {
-                        checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
-                    }
-                };
+                Runnable turnOff = () -> checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, checkBlock.getType() == Material.STONE_BUTTON ? 20L : 30L);
             }
         }

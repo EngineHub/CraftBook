@@ -36,7 +36,7 @@ public class InventoryUtil {
         } else if(container instanceof BrewingStand) {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
-            ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>(container.getInventory().addItem(stacks).values());
+            ArrayList<ItemStack> leftovers = new ArrayList<>(container.getInventory().addItem(stacks).values());
             if(container instanceof BlockState)
                 ((BlockState) container).update();
             return leftovers;
@@ -52,7 +52,7 @@ public class InventoryUtil {
      */
     public static ArrayList<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> leftovers = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
@@ -89,7 +89,7 @@ public class InventoryUtil {
      */
     public static ArrayList<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> leftovers = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
@@ -124,12 +124,12 @@ public class InventoryUtil {
      */
     public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> itemsToFind = new ArrayList<ItemStack>(Arrays.asList(stacks));
+        ArrayList<ItemStack> itemsToFind = new ArrayList<>(Arrays.asList(stacks));
 
         if(itemsToFind.isEmpty())
             return true;
 
-        List<ItemStack> items = new ArrayList<ItemStack>(Arrays.asList(inv.getContents()));
+        List<ItemStack> items = new ArrayList<>(Arrays.asList(inv.getContents()));
         if (inv instanceof PlayerInventory) {
             items.addAll(Arrays.asList(((PlayerInventory) inv).getArmorContents()));
             items.add(((PlayerInventory) inv).getItemInOffHand());
@@ -170,13 +170,11 @@ public class InventoryUtil {
      */
     public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack ... stacks) {
 
-        List<ItemStack> leftovers = new ArrayList<ItemStack>(inv.getInventory().removeItem(stacks).values());
+        List<ItemStack> leftovers = new ArrayList<>(inv.getInventory().removeItem(stacks).values());
 
         if(!leftovers.isEmpty()) {
-            List<ItemStack> itemsToAdd = new ArrayList<ItemStack>(Arrays.asList(stacks));
-            for(ItemStack left : leftovers) {
-                itemsToAdd.remove(left);
-            }
+            List<ItemStack> itemsToAdd = new ArrayList<>(Arrays.asList(stacks));
+            itemsToAdd.removeAll(leftovers);
 
             inv.getInventory().addItem(itemsToAdd.toArray(new ItemStack[itemsToAdd.size()]));
         }

@@ -65,7 +65,7 @@ public class Spigot extends AbstractIC {
     public boolean search() {
 
         Block off = offset.getBlock();
-        ArrayList<Location> searched = new ArrayList<Location>();
+        ArrayList<Location> searched = new ArrayList<>();
         return searchAt(searched, off);
     }
 

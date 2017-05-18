@@ -16,7 +16,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     private ItemStack item;
 
     //Advanced data
-    private HashMap<String, Object> advancedData = new HashMap<String, Object>();
+    private HashMap<String, Object> advancedData = new HashMap<>();
 
     public HashMap<String, Object> getAllAdvancedData() {
         return advancedData;

@@ -9,7 +9,6 @@ import com.sk89q.worldedit.Vector;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -211,7 +210,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int xp = 0;
 
-        List<ExperienceOrb> orbs = new ArrayList<ExperienceOrb>();
+        List<ExperienceOrb> orbs = new ArrayList<>();
 
         for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(), new Vector(signRadius,signRadius,signRadius))) {
             if (entity instanceof ExperienceOrb && entity.getTicksLived() > 20) {

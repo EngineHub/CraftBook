@@ -70,7 +70,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         lastEntity.clear();
     }
 
-    private EnumMap<EntityType, Entity> lastEntity = new EnumMap<EntityType, Entity>(EntityType.class);
+    private EnumMap<EntityType, Entity> lastEntity = new EnumMap<>(EntityType.class);
 
     public boolean breed() {
 

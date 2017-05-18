@@ -61,7 +61,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         for (Entry<UUID, List<ItemStack>> deathPersistEntry : deathPersistItems.entrySet()) {
             Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
             List<String> its = items.get(deathPersistEntry.getKey().toString());
-            if (its == null) its = new ArrayList<String>();
+            if (its == null) its = new ArrayList<>();
             for (ItemStack stack : deathPersistEntry.getValue()) {
                 its.add(ItemSyntax.getStringFromItem(stack));
             }
@@ -80,8 +80,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         INSTANCE = this;
 
-        definitions = new HashSet<CommandItemDefinition>();
-        cooldownPeriods = new HashMap<Tuple2<String, String>, Integer>();
+        definitions = new HashSet<>();
+        cooldownPeriods = new HashMap<>();
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
@@ -113,34 +113,27 @@ public class CommandItems extends AbstractCraftBookMechanic {
         CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
 
         if(definitions.size() > 0) {
-            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    Iterator<Entry<Tuple2<String, String>, Integer>> iterator = cooldownPeriods.entrySet().iterator();
+            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
+                Iterator<Entry<Tuple2<String, String>, Integer>> iterator = cooldownPeriods.entrySet().iterator();
 
-                    while(iterator.hasNext()) {
+                while(iterator.hasNext()) {
 
-                        Entry<Tuple2<String, String>, Integer> entry = iterator.next();
-                        if(entry.getValue() > 1)
-                            cooldownPeriods.put(entry.getKey(), entry.getValue() - 1);
-                        else
-                            iterator.remove();
-                    }
+                    Entry<Tuple2<String, String>, Integer> entry = iterator.next();
+                    if(entry.getValue() > 1)
+                        cooldownPeriods.put(entry.getKey(), entry.getValue() - 1);
+                    else
+                        iterator.remove();
                 }
             }, 0, 20);
-            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run () {
-                    for(Player player : Bukkit.getOnlinePlayers()) {
-                        if(player.getInventory().getItemInMainHand() != null)
-                            performCommandItems(player.getInventory().getItemInMainHand(), player, null);
-                        if(player.getInventory().getItemInOffHand() != null)
-                            performCommandItems(player.getInventory().getItemInOffHand(), player, null);
-                        for(ItemStack stack : player.getInventory().getArmorContents())
-                            if(stack != null)
-                                performCommandItems(stack, player, null);
-                    }
+            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    if(player.getInventory().getItemInMainHand() != null)
+                        performCommandItems(player.getInventory().getItemInMainHand(), player, null);
+                    if(player.getInventory().getItemInOffHand() != null)
+                        performCommandItems(player.getInventory().getItemInOffHand(), player, null);
+                    for(ItemStack stack : player.getInventory().getArmorContents())
+                        if(stack != null)
+                            performCommandItems(stack, player, null);
                 }
             }, 10, 10);
         }
@@ -246,12 +239,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-            @Override
-            public void run () {
-                performCommandItems(item, shooter, event);
-            }
-        }, 5L);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -266,12 +254,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-            @Override
-            public void run () {
-                performCommandItems(item, shooter, event);
-            }
-        }, 5L);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -400,9 +383,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 if(event instanceof Cancellable && comdef.cancelAction)
                     ((Cancellable) event).setCancelled(true);
 
-                if(cooldownPeriods.containsKey(new Tuple2<String, String>(lplayer.getName(), comdef.name))) {
+                if(cooldownPeriods.containsKey(new Tuple2<>(lplayer.getName(), comdef.name))) {
                     if(def.clickType != ClickType.PASSIVE && !def.cooldownMessage.isEmpty())
-                        lplayer.printError(lplayer.translate(def.cooldownMessage).replace("%time%", String.valueOf(cooldownPeriods.get(new Tuple2<String, String>(lplayer.getName(), comdef.name)))));
+                        lplayer.printError(lplayer.translate(def.cooldownMessage).replace("%time%", String.valueOf(cooldownPeriods.get(
+                                new Tuple2<>(lplayer.getName(), comdef.name)))));
                     break current;
                 }
 
@@ -498,16 +482,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         action.runAction(comdef, event, player);
 
                 if(comdef.cooldown > 0 && !lplayer.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
-                    cooldownPeriods.put(new Tuple2<String, String>(lplayer.getName(), comdef.name), comdef.cooldown);
+                    cooldownPeriods.put(new Tuple2<>(lplayer.getName(), comdef.name), comdef.cooldown);
 
                 if(comdef.delayedCommands.length > 0)
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                        @Override
-                        public void run () {
-                            for(String command : comdef.delayedCommands)
-                                doCommand(command, event, comdef, player);
-                        }
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                        for(String command : comdef.delayedCommands)
+                            doCommand(command, event, comdef, player);
                     }, comdef.delay);
             }
         }
@@ -553,7 +533,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.u", ((EntityDamageByEntityEvent) event).getEntity().getUniqueId().toString());
             if(((EntityDamageByEntityEvent) event).getEntity() instanceof Player) {
                 command = StringUtils.replace(command, "@d.i", CraftBookPlugin.inst().getUUIDMappings().getCBID(((EntityDamageByEntityEvent) event).getEntity().getUniqueId()));
-                command = StringUtils.replace(command, "@d", ((Player) ((EntityDamageByEntityEvent) event).getEntity()).getName());
+                command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getName());
             } else
                 command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getType().name());
         }
@@ -569,7 +549,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.u", ((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId().toString());
             if(((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player) {
                 command = StringUtils.replace(command, "@d.i", CraftBookPlugin.inst().getUUIDMappings().getCBID(((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId()));
-                command = StringUtils.replace(command, "@d", ((Player) ((PlayerInteractEntityEvent) event).getRightClicked()).getName());
+                command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getName());
             } else
                 command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
         }

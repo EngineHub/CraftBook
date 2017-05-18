@@ -218,27 +218,23 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
 
 
-            Runnable runnable = new Runnable() {
+            Runnable runnable = () -> {
 
-                @Override
-                public void run() {
-
-                    if (block.getType() != Material.WALL_SIGN) return;
-                    try {
-                        ChipState chipState = ((ICFamily) icData[1]).detect(BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign(block));
-                        int cnt = 0;
-                        for (int i = 0; i < chipState.getInputCount(); i++) {
-                            if (chipState.isTriggered(i)) {
-                                cnt++;
-                            }
+                if (block.getType() != Material.WALL_SIGN) return;
+                try {
+                    ChipState chipState = ((ICFamily) icData[1]).detect(BukkitUtil.toWorldVector(source), BukkitUtil.toChangedSign(block));
+                    int cnt = 0;
+                    for (int i = 0; i < chipState.getInputCount(); i++) {
+                        if (chipState.isTriggered(i)) {
+                            cnt++;
                         }
-                        if (cnt > 0) {
-                            ((IC) icData[2]).trigger(chipState);
-                        }
-                    } catch (IllegalArgumentException ex) {
-                        // Exclude these exceptions so that we don't spam consoles because of Bukkit
-                        if (!ex.getMessage().contains("Null ChangedSign found")) throw ex;
                     }
+                    if (cnt > 0) {
+                        ((IC) icData[2]).trigger(chipState);
+                    }
+                } catch (IllegalArgumentException ex) {
+                    // Exclude these exceptions so that we don't spam consoles because of Bukkit
+                    if (!ex.getMessage().contains("Null ChangedSign found")) throw ex;
                 }
             };
             // FIXME: these should be registered with a global scheduler so we can end up with one runnable actually
@@ -438,39 +434,35 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 return;
             }
 
-            Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
+            Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
 
-                @Override
-                public void run () {
+                ChangedSign sign = new ChangedSign((Sign) event.getBlock().getState(), event.getLines());
 
-                    ChangedSign sign = new ChangedSign((Sign) event.getBlock().getState(), event.getLines());
+                //WorldEdit offset/radius tools.
+                ICUtil.parseSignFlags(player, sign);
 
-                    //WorldEdit offset/radius tools.
-                    ICUtil.parseSignFlags(player, sign);
-
-                    try {
-                        factory.verify(sign);
-                        factory.checkPlayer(sign, player);
-                    } catch (ICVerificationException e) {
-                        player.printError(e.getMessage());
-                        event.getBlock().breakNaturally();
-                        return;
-                    }
-
-                    IC ic = registration.getFactory().create(sign);
-                    ic.load();
-
-                    sign.setLine(1, "[" + registration.getId() + "]" + suffix);
-                    if (!shortHand)
-                        sign.setLine(0, ic.getSignTitle());
-
-                    sign.update(false);
-
-                    if (ic instanceof SelfTriggeredIC && (event.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
-                        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
-
-                    player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
+                try {
+                    factory.verify(sign);
+                    factory.checkPlayer(sign, player);
+                } catch (ICVerificationException e) {
+                    player.printError(e.getMessage());
+                    event.getBlock().breakNaturally();
+                    return;
                 }
+
+                IC ic = registration.getFactory().create(sign);
+                ic.load();
+
+                sign.setLine(1, "[" + registration.getId() + "]" + suffix);
+                if (!shortHand)
+                    sign.setLine(0, ic.getSignTitle());
+
+                sign.update(false);
+
+                if (ic instanceof SelfTriggeredIC && (event.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST()))
+                    CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
+
+                player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
             });
 
             return;
@@ -562,7 +554,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         keepLoaded = config.getBoolean(path + "keep-loaded", false);
 
         config.setComment(path + "disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
-        disabledICs = config.getStringList(path + "disallowed-ics", new ArrayList<String>());
+        disabledICs = config.getStringList(path + "disallowed-ics", new ArrayList<>());
 
         config.setComment(path + "default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
         defaultCoordinates = LocationCheckType.getTypeFromName(config.getString(path + "default-coordinate-system", "RELATIVE"));

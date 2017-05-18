@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class TemporaryCart extends AbstractCraftBookMechanic {
 
-    private Set<RideableMinecart> minecarts = new HashSet<RideableMinecart>();
+    private Set<RideableMinecart> minecarts = new HashSet<>();
 
     public Set<RideableMinecart> getMinecarts() {
 
@@ -73,12 +73,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
 
         if(!minecarts.contains(event.getVehicle())) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-            @Override
-            public void run () {
-                event.getVehicle().remove();
-            }
-        }, 2L);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
     }
 
     @Override

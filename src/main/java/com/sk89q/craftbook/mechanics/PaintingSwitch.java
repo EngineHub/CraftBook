@@ -28,8 +28,8 @@ import java.util.UUID;
  */
 public class PaintingSwitch extends AbstractCraftBookMechanic {
 
-    private Map<Painting, UUID> paintings = new HashMap<Painting, UUID>();
-    private Map<UUID, Painting> players = new HashMap<UUID, Painting>();
+    private Map<Painting, UUID> paintings = new HashMap<>();
+    private Map<UUID, Painting> players = new HashMap<>();
 
     public boolean isBeingEdited(Painting paint) {
 

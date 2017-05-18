@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class LanguageManager {
 
-    private Map<String, YAMLProcessor> languageMap = new HashMap<String, YAMLProcessor>();
+    private Map<String, YAMLProcessor> languageMap = new HashMap<>();
 
     public void init() {
         checkForLanguages();

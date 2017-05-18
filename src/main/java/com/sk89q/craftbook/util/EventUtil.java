@@ -6,13 +6,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 public final class EventUtil {
 
-    private static final Map<Event, Long> ignoredEvents = new WeakHashMap<Event, Long>();
+    private static final Map<Event, Long> ignoredEvents = new WeakHashMap<>();
 
-    private static Set<Class<?>> ignoredEventTypes = new HashSet<Class<?>>();
+    private static Set<Class<?>> ignoredEventTypes = new HashSet<>();
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
@@ -51,15 +50,7 @@ public final class EventUtil {
     public static void garbageCollectEvents() {
 
         lastGarbageCollect = 0;
-        Iterator<Entry<Event, Long>> iter = ignoredEvents.entrySet().iterator();
-
-        while(iter.hasNext()) {
-
-            Entry<Event, Long> bit = iter.next();
-
-            if(System.currentTimeMillis() - bit.getValue() > 1000*5)
-                iter.remove();
-        }
+        ignoredEvents.entrySet().removeIf(bit -> System.currentTimeMillis() - bit.getValue() > 1000 * 5);
     }
 
 

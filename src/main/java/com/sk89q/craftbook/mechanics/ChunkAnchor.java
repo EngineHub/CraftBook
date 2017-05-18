@@ -91,14 +91,8 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             if (!foundSign) return;
             if (!isOn && allowRedstone) return;
             event.setCancelled(true);
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run () {
-                    event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true);
-                }
-
-            }, 2L);
+            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                    () -> event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true), 2L);
         } catch(Throwable t) {
             CraftBookPlugin.logger().warning("A chunk failed to be kept in memory. Is the chunk corrupt? (X:" + event.getChunk().getX() + ", Z:" + event.getChunk().getZ() + ")");
             if(CraftBookPlugin.inst().getConfiguration().debugMode)

@@ -256,7 +256,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         MobSkullType(String playerName, String ... oldNames) {
 
             this.playerName = playerName;
-            this.oldNames = new HashSet<String>(Arrays.asList(oldNames));
+            this.oldNames = new HashSet<>(Arrays.asList(oldNames));
         }
 
         private String playerName;
@@ -333,13 +333,13 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         config.setComment(path + "show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
         showNameClick = config.getBoolean(path + "show-name-right-click", true);
 
-        customDropRates = new HashMap<String, Double>();
+        customDropRates = new HashMap<>();
         if(config.getKeys(path + "drop-rates") != null) {
             for(String key : config.getKeys(path + "drop-rates"))
                 customDropRates.put(key.toUpperCase(), config.getDouble(path + "drop-rates." + key));
         } else
             config.addNode(path + "drop-rates");
-        customSkins = new HashMap<String, String>();
+        customSkins = new HashMap<>();
         if(config.getKeys(path + "custom-mob-skins") != null) {
             for(String key : config.getKeys(path + "custom-mob-skins"))
                 customSkins.put(key.toUpperCase(), config.getString(path + "custom-mob-skins." + key));

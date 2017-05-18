@@ -44,7 +44,7 @@ public final class LegacyCustomDropManager {
     public static final int DATA_VALUE_COUNT = 127;
 
     private CustomItemDrop[] blockDropDefinitions = new CustomItemDrop[BLOCK_ID_COUNT];
-    private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<String, DropDefinition[]>();
+    private Map<String, DropDefinition[]> mobDropDefinitions = new TreeMap<>();
 
     public LegacyCustomDropManager(File source) {
 
@@ -99,8 +99,7 @@ public final class LegacyCustomDropManager {
         String prelude = "on unknown line";
         try {
             CustomItemDrop[] blockDropDefinitions = isMobDrop ? null : new CustomItemDrop[BLOCK_ID_COUNT];
-            Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<String,
-                    DropDefinition[]>() : null;
+            Map<String, DropDefinition[]> mobDropDefinitions = isMobDrop ? new TreeMap<>() : null;
                     BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
                     String line;
                     int currentLine = 0;
@@ -178,7 +177,7 @@ public final class LegacyCustomDropManager {
                                 drop.drops[data] = drops;
                             }
 
-                            List<DropItemStack> stacks = new ArrayList<DropItemStack>();
+                            List<DropItemStack> stacks = new ArrayList<>();
 
                             boolean append = false;
 
@@ -213,7 +212,7 @@ public final class LegacyCustomDropManager {
 
                         for(Entry<String, DropDefinition[]> def : mobDropDefinitions.entrySet()) {
 
-                            List<DropItemStack> stacks = new ArrayList<DropItemStack>();
+                            List<DropItemStack> stacks = new ArrayList<>();
 
                             boolean append = false;
 
@@ -254,7 +253,7 @@ public final class LegacyCustomDropManager {
 
         String[] split = RegexUtil.X_PATTERN.split(RegexUtil.PERCENT_PATTERN.split(s)[0]);
         if(split.length > 2) {
-            List<String> temp = new ArrayList<String>();
+            List<String> temp = new ArrayList<>();
             for(int i = 0; i < split.length; i++) {
                 if(temp.isEmpty())
                     temp.add(split[i]);

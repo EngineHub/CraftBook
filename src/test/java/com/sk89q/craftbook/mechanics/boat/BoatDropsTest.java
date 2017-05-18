@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.inventory.ItemStack;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -36,6 +35,6 @@ public class BoatDropsTest {
 
         verify(event).setCancelled(true);
         verify(boat).remove();
-        verify(world).dropItemNaturally(org.mockito.Mockito.eq(loc), org.mockito.Mockito.<ItemStack>any());
+        verify(world).dropItemNaturally(org.mockito.Mockito.eq(loc), org.mockito.Mockito.any());
     }
 }

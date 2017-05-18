@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -46,8 +46,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         speed = 0.8f;
         types = EntityType.getDetected(getSign().getLine(2).split(":")[0]);
         if(types == null || types.isEmpty()) {
-            types = new HashSet<EntityType>();
-            types.add(EntityType.MOB_HOSTILE);
+            types = EnumSet.of(EntityType.MOB_HOSTILE);
         }
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
@@ -76,7 +75,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        if (((Factory)getFactory()).inverted ? chip.getInput(0) : !chip.getInput(0)) {
+        if (((Factory) getFactory()).inverted == chip.getInput(0)) {
             trigger(chip);
         }
     }

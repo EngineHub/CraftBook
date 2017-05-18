@@ -91,7 +91,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if(!isApplicableSign(sign.getLine(1))) return;
 
-        List<ItemStack> leftovers = new ArrayList<ItemStack>();
+        List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getOrigin());
             for(ItemStack stack : event.getItems()) {
@@ -118,7 +118,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if(!isApplicableSign(sign.getLine(1))) return;
 
-        List<ItemStack> leftovers = new ArrayList<ItemStack>();
+        List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getPuttingBlock());
             for(ItemStack stack : event.getItems()) {

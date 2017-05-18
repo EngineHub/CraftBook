@@ -119,7 +119,7 @@ public final class SearchArea {
      */
     public List<Player> getPlayersInArea() {
 
-        List<Player> players = new ArrayList<Player>();
+        List<Player> players = new ArrayList<>();
 
         for(Player player : Bukkit.getOnlinePlayers())
             if(isWithinArea(player.getLocation()))
@@ -136,7 +136,7 @@ public final class SearchArea {
      */
     public List<Entity> getEntitiesInArea(Collection<EntityType> types) {
 
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<>();
 
         for(Chunk chunk : getChunksInArea())
             for(Entity ent : chunk.getEntities()) {
@@ -188,7 +188,7 @@ public final class SearchArea {
      */
     public Set<Chunk> getChunksInArea() {
 
-        Set<Chunk> chunks = new HashSet<Chunk>();
+        Set<Chunk> chunks = new HashSet<>();
 
         if(hasRegion()) {
 

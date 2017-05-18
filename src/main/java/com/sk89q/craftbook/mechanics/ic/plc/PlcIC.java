@@ -146,9 +146,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                 hex.append(byteHex);
             }
             return hex.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("insane JVM implementation", e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             throw new RuntimeException("insane JVM implementation", e);
         }
     }
@@ -168,8 +166,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         if (!getStorageLocation().exists()) return; // Prevent error spam
 
-        DataInputStream in = new DataInputStream(new FileInputStream(getStorageLocation()));
-        try {
+        try (DataInputStream in = new DataInputStream(new FileInputStream(getStorageLocation()))) {
             switch (in.readInt()) {
                 case 1:
                     error = in.readBoolean();
@@ -190,8 +187,6 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                 default:
                     throw new IOException("incompatible version");
             }
-        } finally {
-            in.close();
         }
     }
 
@@ -207,8 +202,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private void saveState() throws IOException {
 
-        DataOutputStream out = new DataOutputStream(new FileOutputStream(getStorageLocation()));
-        try {
+        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(getStorageLocation()))) {
             out.writeInt(PLC_STORE_VERSION);
             out.writeBoolean(error);
             out.writeUTF(errorString);
@@ -216,8 +210,6 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             out.writeUTF(error ? "(error)" : getID());
             out.writeUTF(hashCode(codeString));
             lang.writeState(state, out);
-        } finally {
-            out.close();
         }
     }
 

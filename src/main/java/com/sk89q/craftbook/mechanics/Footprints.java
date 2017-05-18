@@ -64,13 +64,8 @@ public class Footprints extends AbstractCraftBookMechanic {
                 }
 
                 footsteps.add(event.getPlayer().getName());
-                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                    @Override
-                    public void run () {
-                        footsteps.remove(event.getPlayer().getName());
-                    }
-                }, event.getPlayer().isSprinting() ? 7 : 10);
+                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                        () -> footsteps.remove(event.getPlayer().getName()), event.getPlayer().isSprinting() ? 7 : 10);
             } catch (Throwable e) {
                 CraftBookPlugin.logger().log(Level.WARNING, "Failed to send footprints for " + event.getPlayer().getName(), e);
             }
@@ -80,7 +75,7 @@ public class Footprints extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
-        footsteps = new HashSet<String>();
+        footsteps = new HashSet<>();
         return true;
     }
 

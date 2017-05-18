@@ -312,7 +312,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
     private static Collection<Item> getItems(Block block) {
 
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         for (Entity entity : block.getChunk().getEntities()) {
             if (entity instanceof Item) {
                 if (EntityUtil.isEntityInBlock(entity, block) || EntityUtil.isEntityInBlock(entity, block.getRelative(BlockFace.UP))) {

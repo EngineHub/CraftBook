@@ -92,7 +92,7 @@ public final class ItemInfo {
 
     public static List<ItemInfo> parseListFromString(List<String> strings) {
 
-        List<ItemInfo> infos = new ArrayList<ItemInfo>();
+        List<ItemInfo> infos = new ArrayList<>();
 
         for(String string: strings)
             infos.add(new ItemInfo(string));
@@ -102,7 +102,7 @@ public final class ItemInfo {
 
     public static List<String> toStringList(List<ItemInfo> items) {
 
-        List<String> infos = new ArrayList<String>();
+        List<String> infos = new ArrayList<>();
 
         for(ItemInfo string: items)
             infos.add(string.toString());

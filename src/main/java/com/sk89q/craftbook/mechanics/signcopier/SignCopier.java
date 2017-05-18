@@ -26,7 +26,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        signs = new HashMap<String, String[]>();
+        signs = new HashMap<>();
         return true;
     }
 

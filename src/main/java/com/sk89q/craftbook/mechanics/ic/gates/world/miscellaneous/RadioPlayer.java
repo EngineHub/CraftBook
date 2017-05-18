@@ -37,7 +37,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         else
             area = SearchArea.createEmptyArea();
 
-        listening = new HashMap<String, SearchArea>();
+        listening = new HashMap<>();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         if(chip.getInput(0)) {
             if(area.getPlayersInArea().size() != listening.size()) {
 
-                Map<String, SearchArea> removals = new HashMap<String, SearchArea>();
+                Map<String, SearchArea> removals = new HashMap<>();
 
                 for(Entry<String, SearchArea> key : listening.entrySet()) {
                     boolean found = false;

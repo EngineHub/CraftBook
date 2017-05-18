@@ -11,7 +11,7 @@ import org.bukkit.inventory.Recipe;
 public abstract class AbstractArrow implements ElementalArrow {
 
     @SuppressWarnings("unused")
-    private List<Integer> arrows = new ArrayList<Integer>();
+    private List<Integer> arrows = new ArrayList<>();
 
     Recipe recipe;
 

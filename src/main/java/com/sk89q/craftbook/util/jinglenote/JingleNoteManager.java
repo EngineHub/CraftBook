@@ -22,7 +22,7 @@ public class JingleNoteManager {
     /**
      * List of instances.
      */
-    private final Map<String, JingleNotePlayer> instances = new HashMap<String, JingleNotePlayer>();
+    private final Map<String, JingleNotePlayer> instances = new HashMap<>();
 
     public boolean isPlaying(String player) {
 

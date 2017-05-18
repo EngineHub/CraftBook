@@ -67,9 +67,7 @@ public class GenerateConfiguration extends ExternalUtilityBase {
             e.printStackTrace();
         }
 
-        List<String> mechs = new ArrayList<String>();
-
-        mechs.addAll(CraftBookPlugin.availableMechanics.keySet());
+        List<String> mechs = new ArrayList<>(CraftBookPlugin.availableMechanics.keySet());
 
         Collections.sort(mechs);
 

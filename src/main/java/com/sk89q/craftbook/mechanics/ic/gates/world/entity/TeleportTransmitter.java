@@ -22,8 +22,8 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    protected static final HistoryHashMap<String, Tuple2<Long, String>> memory = new HistoryHashMap<String, Tuple2<Long, String>>(50);
-    protected static HistoryHashMap<String, Location> lastKnownLocations = new HistoryHashMap<String, Location>(50);
+    protected static final HistoryHashMap<String, Tuple2<Long, String>> memory = new HistoryHashMap<>(50);
+    protected static HistoryHashMap<String, Location> lastKnownLocations = new HistoryHashMap<>(50);
 
     protected String band;
 
@@ -85,7 +85,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         }
         if (closest != null && lastKnownLocations.containsKey(band))
             lastKnownLocations.get(band).getChunk().load();
-        if (closest != null && !setValue(band, new Tuple2<Long, String>(System.currentTimeMillis(), closest.getName())))
+        if (closest != null && !setValue(band, new Tuple2<>(System.currentTimeMillis(), closest.getName())))
             closest.sendMessage(ChatColor.RED + "This Teleporter Frequency is currently busy! Try again soon (3s)!");
         else
             return true;
@@ -172,7 +172,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
             if(CraftBookPlugin.inst().getPersistentStorage().has("teleport-ic-locations.list")) {
 
-                Set<String> list = new HashSet<String>((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations.list"));
+                Set<String> list = new HashSet<>((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations.list"));
 
                 for(String ent : list) {
                     String locString = (String) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations." + ent);
@@ -188,7 +188,8 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
             if(!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
 
-            CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list", new HashSet<String>(TeleportTransmitter.lastKnownLocations.keySet()));
+            CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list",
+                    new HashSet<>(TeleportTransmitter.lastKnownLocations.keySet()));
 
             for(Entry<String, Location> locations : TeleportTransmitter.lastKnownLocations.entrySet()) {
                 if(locations == null || locations.getValue() == null)

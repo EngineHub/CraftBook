@@ -239,7 +239,8 @@ public class Planter extends AbstractSelfTriggeredIC {
                 return true;
             case INK_SACK:
                 if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
-                List<BlockFace> faces = new ArrayList<BlockFace>(Arrays.asList(new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH}));
+                List<BlockFace> faces =
+                        new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
                 for(BlockFace face : faces) {
                     if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE) {

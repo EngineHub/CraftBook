@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class NoCheatPlusCompatability implements CraftBookCompatability {
 
-    private Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<String, EnumSet<CheckType>>();
+    private Map<String, EnumSet<CheckType>> disabledChecks = new HashMap<>();
     private CheckType[] toDisable = new CheckType[]{
             CheckType.BLOCKBREAK,
             CheckType.BLOCKINTERACT,

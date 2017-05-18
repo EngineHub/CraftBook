@@ -7,7 +7,6 @@ import com.sk89q.worldedit.blocks.ItemID;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -61,15 +58,15 @@ public class TreeLopperTest extends BaseTestCase {
         when(block.getData()).thenReturn((byte) 0);
         when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
 
-        lopper.enabledBlocks = new ArrayList<ItemInfo>();
+        lopper.enabledBlocks = new ArrayList<>();
         lopper.enabledBlocks.add(new ItemInfo(Material.LOG, 0));
 
-        lopper.enabledItems = new ArrayList<ItemInfo>();
+        lopper.enabledItems = new ArrayList<>();
         lopper.enabledItems.add(new ItemInfo(Material.DIAMOND_AXE, -1));
 
         getConfig().showPermissionMessages = true;
 
-        when(CraftBookPlugin.inst().hasPermission(Matchers.<CommandSender>any(), Matchers.anyString())).thenReturn(false);
+        when(CraftBookPlugin.inst().hasPermission(Matchers.any(), Matchers.anyString())).thenReturn(false);
 
         final BlockBreakEvent event = mock(BlockBreakEvent.class);
         when(event.getPlayer()).thenReturn(player);
@@ -79,19 +76,16 @@ public class TreeLopperTest extends BaseTestCase {
 
         Mockito.verify(player, Mockito.times(1)).sendMessage(ChatColor.RED + "mech.use-permission");
 
-        when(CraftBookPlugin.inst().hasPermission(Matchers.<CommandSender>any(), Matchers.anyString())).thenReturn(true);
+        when(CraftBookPlugin.inst().hasPermission(Matchers.any(), Matchers.anyString())).thenReturn(true);
 
-        when(block.getRelative(Matchers.<BlockFace>any())).thenAnswer(new Answer<Block>() {
-            @Override
-            public Block answer(InvocationOnMock invocation) throws Throwable {
-                Object[] args = invocation.getArguments();
-                BlockFace face = (BlockFace) args[0];
+        when(block.getRelative(Matchers.any())).thenAnswer(invocation -> {
+            Object[] args = invocation.getArguments();
+            BlockFace face = (BlockFace) args[0];
 
-                block.getLocation().setX(block.getLocation().getX() + face.getModX());
-                block.getLocation().setY(block.getLocation().getY() + face.getModY());
-                block.getLocation().setZ(block.getLocation().getZ() + face.getModZ());
-                return block;
-            }
+            block.getLocation().setX(block.getLocation().getX() + face.getModX());
+            block.getLocation().setY(block.getLocation().getY() + face.getModY());
+            block.getLocation().setZ(block.getLocation().getZ() + face.getModZ());
+            return block;
         });
 
         lopper.onBlockBreak(event);

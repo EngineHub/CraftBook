@@ -52,18 +52,18 @@ public final class PlayerUtil {
             for (Player player : players) {
                 if (player.getName().equalsIgnoreCase(filter) || useDisplayNames
                         && ChatColor.stripColor(player.getDisplayName()).equalsIgnoreCase(filter)) {
-                    List<Player> list = new ArrayList<Player>();
+                    List<Player> list = new ArrayList<>();
                     list.add(player);
                     return list;
                 }
             }
 
-            return new ArrayList<Player>();
+            return new ArrayList<>();
             // Allow partial name matching
         } else if (filter.charAt(0) == '*' && filter.length() >= 2) {
             filter = filter.substring(1);
 
-            List<Player> list = new ArrayList<Player>();
+            List<Player> list = new ArrayList<>();
 
             for (Player player : players) {
                 if (player.getName().toLowerCase(Locale.ENGLISH).contains(filter) || useDisplayNames
@@ -76,7 +76,7 @@ public final class PlayerUtil {
 
             // Start with name matching
         } else {
-            List<Player> list = new ArrayList<Player>();
+            List<Player> list = new ArrayList<>();
 
             for (Player player : players) {
                 if (player.getName().toLowerCase(Locale.ENGLISH).startsWith(filter) || useDisplayNames
@@ -126,7 +126,7 @@ public final class PlayerUtil {
         if (filter.charAt(0) == '#') // Handle #world, which matches player of the same world as the
             // calling source
             if (filter.equalsIgnoreCase("#world")) {
-                List<Player> players = new ArrayList<Player>();
+                List<Player> players = new ArrayList<>();
                 Player sourcePlayer = checkPlayer(source);
                 World sourceWorld = sourcePlayer.getWorld();
 
@@ -140,7 +140,7 @@ public final class PlayerUtil {
 
                 // Handle #near, which is for nearby players.
             } else if (filter.equalsIgnoreCase("#near")) {
-                List<Player> players = new ArrayList<Player>();
+                List<Player> players = new ArrayList<>();
                 Player sourcePlayer = checkPlayer(source);
 
                 for (Player player : CraftBookPlugin.server().getOnlinePlayers()) {

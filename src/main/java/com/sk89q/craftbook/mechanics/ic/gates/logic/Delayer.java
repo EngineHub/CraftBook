@@ -54,13 +54,7 @@ public class Delayer extends AbstractIC {
         long tdelay = delay * 20;
         if (tickDelay) tdelay = delay;
         if (chip.getInput(0)) {
-            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run() {
-                    chip.setOutput(0, true);
-                }
-            }, tdelay);
+            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> chip.setOutput(0, true), tdelay);
         } else {
             if(taskId != null && !stayOnLow)
                 taskId.cancel();

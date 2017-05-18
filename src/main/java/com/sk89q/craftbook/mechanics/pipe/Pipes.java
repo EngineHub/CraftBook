@@ -120,7 +120,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions,
             int depth) {
-        LinkedList<Block> searchQueue = new LinkedList<Block>();
+        LinkedList<Block> searchQueue = new LinkedList<>();
 
         //Enumerate the search queue.
         for (int x = -1; x < 2; x++) {
@@ -205,8 +205,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 ChangedSign sign = getSignOnPiston(bl);
 
-                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
-                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
+                HashSet<ItemStack> pFilters = new HashSet<>();
+                HashSet<ItemStack> pExceptions = new HashSet<>();
 
                 if(sign != null) {
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
@@ -220,16 +220,16 @@ public class Pipes extends AbstractCraftBookMechanic {
                     pExceptions.removeAll(Collections.<ItemStack>singleton(null));
                 }
 
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+                List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;
 
-                List<ItemStack> newItems = new ArrayList<ItemStack>();
+                List<ItemStack> newItems = new ArrayList<>();
 
                 Block fac = bl.getRelative(p.getFacing());
 
-                PipePutEvent event = new PipePutEvent(bl, new ArrayList<ItemStack>(filteredItems), fac);
+                PipePutEvent event = new PipePutEvent(bl, new ArrayList<>(filteredItems), fac);
                 Bukkit.getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {
@@ -238,7 +238,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         newItems.addAll(InventoryUtil.addItemsToInventory(holder, event.getItems().toArray(new ItemStack[event.getItems().size()])));
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
-                        List<ItemStack> its = new ArrayList<ItemStack>(event.getItems());
+                        List<ItemStack> its = new ArrayList<>(event.getItems());
                         if (!juke.isPlaying()) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
@@ -263,8 +263,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 ChangedSign sign = getSignOnPiston(bl);
 
-                HashSet<ItemStack> pFilters = new HashSet<ItemStack>();
-                HashSet<ItemStack> pExceptions = new HashSet<ItemStack>();
+                HashSet<ItemStack> pFilters = new HashSet<>();
+                HashSet<ItemStack> pExceptions = new HashSet<>();
 
                 if(sign != null) {
                     for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
@@ -278,13 +278,14 @@ public class Pipes extends AbstractCraftBookMechanic {
                     pExceptions.removeAll(Collections.<ItemStack>singleton(null));
                 }
 
-                List<ItemStack> filteredItems = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
+                List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;
 
                 Dropper dropper = (Dropper) bl.getState();
-                List<ItemStack> newItems = new ArrayList<ItemStack>(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
+                List<ItemStack> newItems =
+                        new ArrayList<>(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
 
                 for(ItemStack stack : dropper.getInventory().getContents())
                     if(ItemUtil.isStackValid(stack))
@@ -305,8 +306,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {
 
-        Set<ItemStack> filters = new HashSet<ItemStack>();
-        Set<ItemStack> exceptions = new HashSet<ItemStack>();
+        Set<ItemStack> filters = new HashSet<>();
+        Set<ItemStack> exceptions = new HashSet<>();
 
         ChangedSign sign = getSignOnPiston(block);
 
@@ -322,11 +323,11 @@ public class Pipes extends AbstractCraftBookMechanic {
         filters.removeAll(Collections.<ItemStack>singleton(null));
         exceptions.removeAll(Collections.<ItemStack>singleton(null));
 
-        Set<Vector> visitedPipes = new HashSet<Vector>();
+        Set<Vector> visitedPipes = new HashSet<>();
 
         if (block.getType() == Material.PISTON_STICKY_BASE) {
 
-            List<ItemStack> leftovers = new ArrayList<ItemStack>();
+            List<ItemStack> leftovers = new ArrayList<>();
 
             PistonBaseMaterial p = (PistonBaseMaterial) block.getState().getData();
             Block fac = block.getRelative(p.getFacing());
@@ -347,7 +348,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -370,7 +371,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.add(f.getInventory().getResult());
                 if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
 
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -395,7 +396,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if (juke.getPlaying() != Material.AIR) {
                     items.add(new ItemStack(juke.getPlaying()));
 
-                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
+                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                     Bukkit.getPluginManager().callEvent(event);
                     items.clear();
                     items.addAll(event.getItems());
@@ -413,7 +414,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else juke.setPlaying(Material.AIR);
                 }
             } else {
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<ItemStack>(items), fac);
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
@@ -451,7 +452,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             if(!EventUtil.passesFilter(event)) return;
 
-            startPipe(event.getBlock(), new ArrayList<ItemStack>(), false);
+            startPipe(event.getBlock(), new ArrayList<>(), false);
         }
     }
 

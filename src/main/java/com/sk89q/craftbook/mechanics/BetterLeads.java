@@ -67,12 +67,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
             ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
         event.setCancelled(true);
-        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-            @Override
-            public void run() {
-                if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
-                    CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
-                }
+        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
+                CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
             }
         });
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
@@ -137,12 +134,8 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
 
         if(amountConnected == 0) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    event.getEntity().remove(); //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
-                }
-            });
+            //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
         }
     }
 
@@ -175,12 +168,8 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
 
         if(!leadsHitchPersists && amountConnected == 0) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    event.getEntity().remove(); //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
-                }
-            });
+            //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
         }
     }
 

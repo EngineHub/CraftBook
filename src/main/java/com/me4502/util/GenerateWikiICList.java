@@ -76,9 +76,7 @@ public class GenerateWikiICList extends ExternalUtilityBase {
             writer.println("<strong style=\"color: red\">*</strong>Requires the permission '''craftbook.ic.restricted.*''' or the respective '''craftbook.ic.mc''XXXX''''' permission.");
 
             writer.close();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
     }

@@ -322,10 +322,10 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if(!realistic) return false;
 
-            List<BlockFace> faces = new LinkedList<BlockFace>(Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST));
+            List<BlockFace> faces = new LinkedList<>(Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST));
 
             if(snow.getType() == Material.SNOW && canLandOn(snow.getRelative(0, -2, 0)) && isReplacable(snow.getRelative(0, -1, 0)))
-                faces = new LinkedList<BlockFace>(Collections.singletonList(BlockFace.DOWN));
+                faces = new LinkedList<>(Collections.singletonList(BlockFace.DOWN));
             else {
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
                 faces.add(0, BlockFace.DOWN);
@@ -468,7 +468,7 @@ public class Snow extends AbstractCraftBookMechanic {
         }
     }
 
-    private Set<SnowBlock> queue = new HashSet<SnowBlock>();
+    private Set<SnowBlock> queue = new HashSet<>();
 
     private static class SnowBlock {
 

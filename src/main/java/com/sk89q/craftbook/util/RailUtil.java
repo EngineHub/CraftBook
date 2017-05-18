@@ -15,7 +15,7 @@ public final class RailUtil {
         int x = body.getX();
         int y = body.getY();
         int z = body.getZ();
-        List<Chest> containers = new ArrayList<Chest>();
+        List<Chest> containers = new ArrayList<>();
         if (body.getWorld().getBlockAt(x, y, z).getType() == Material.CHEST || body.getWorld().getBlockAt(x, y, z).getType() == Material.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z).getState());
         }

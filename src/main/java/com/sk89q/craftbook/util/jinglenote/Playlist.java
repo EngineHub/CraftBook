@@ -19,7 +19,7 @@ public class Playlist {
 
     private String playlist;
 
-    private List<String> lines = new ArrayList<String>();
+    private List<String> lines = new ArrayList<>();
 
     private BukkitTask task;
 
@@ -95,8 +95,8 @@ public class Playlist {
 
         PlaylistInterpreter() {
             position = 0;
-            players = new HashMap<String, SearchArea>();
-            lastPlayers = new HashMap<String, SearchArea>();
+            players = new HashMap<>();
+            lastPlayers = new HashMap<>();
 
             CraftBookPlugin.logDebugMessage("Created new playlist interpreter!", "playlist");
         }
@@ -106,7 +106,7 @@ public class Playlist {
 
         public synchronized void setPlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(players);
+            lastPlayers = new HashMap<>(players);
             players.clear();
             players.putAll(newPlayers);
             CraftBookPlugin.logDebugMessage("Reset player list!", "playlist");
@@ -114,14 +114,14 @@ public class Playlist {
 
         public synchronized void addPlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(players);
+            lastPlayers = new HashMap<>(players);
             players.putAll(newPlayers);
             CraftBookPlugin.logDebugMessage("Added player list!", "playlist");
         }
 
         public synchronized void removePlayers(Map<String, SearchArea> newPlayers) {
 
-            lastPlayers = new HashMap<String, SearchArea>(players);
+            lastPlayers = new HashMap<>(players);
             for(String player : newPlayers.keySet()) {
                 players.remove(player);
             }
@@ -159,7 +159,7 @@ public class Playlist {
                             CraftBookPlugin.logDebugMessage("Added player to sequencer: " + p.getKey(), "playlist");
                         }
 
-                        lastPlayers = new HashMap<String, SearchArea>(players);
+                        lastPlayers = new HashMap<>(players);
 
                         try {
                             Thread.sleep(10L);
@@ -249,18 +249,14 @@ public class Playlist {
                             CraftBookPlugin.logDebugMessage("Added player to midi sequencer upon creation: " + player.getKey(), "playlist");
                         }
 
-                        lastPlayers = new HashMap<String, SearchArea>(players);
+                        lastPlayers = new HashMap<>(players);
 
                         try {
                             Thread.sleep(1000L);
                         } catch (InterruptedException e) {
                             BukkitUtil.printStacktrace(e);
                         }
-                    } catch (MidiUnavailableException e) {
-                        BukkitUtil.printStacktrace(e);
-                    } catch (InvalidMidiDataException e) {
-                        BukkitUtil.printStacktrace(e);
-                    } catch (IOException e) {
+                    } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
                         BukkitUtil.printStacktrace(e);
                     }
                 } else if (line.startsWith("tune ")) {
@@ -274,7 +270,7 @@ public class Playlist {
                         CraftBookPlugin.logDebugMessage("Added player to string sequencer upon creation: " + player.getKey(), "playlist");
                     }
 
-                    lastPlayers = new HashMap<String, SearchArea>(players);
+                    lastPlayers = new HashMap<>(players);
 
                     try {
                         Thread.sleep(1000L);

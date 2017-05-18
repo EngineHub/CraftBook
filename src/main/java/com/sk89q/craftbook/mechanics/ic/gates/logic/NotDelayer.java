@@ -42,14 +42,10 @@ public class NotDelayer extends AbstractIC {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
-            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-                @Override
-                public void run() {
-
-                    if (chip.getInput(0)) {
-                        chip.setOutput(0, false);
-                    }
+                if (chip.getInput(0)) {
+                    chip.setOutput(0, false);
                 }
             }, delay * 20);
         } else {

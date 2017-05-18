@@ -28,7 +28,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     public boolean enable () {
 
         instance = this;
-        recipes = new HashSet<Recipe>();
+        recipes = new HashSet<>();
         if(xpShooterEnable) addRecipe(new XPShooter());
         if(snowShooterEnable) addRecipe(new SnowShooter());
         if(fireArrowsEnable) addRecipe(new FireArrows());

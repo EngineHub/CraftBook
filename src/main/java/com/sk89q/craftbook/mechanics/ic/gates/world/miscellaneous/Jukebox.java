@@ -50,7 +50,7 @@ public class Jukebox extends AbstractSelfTriggeredIC {
         if(!playlists.containsKey(getBackBlock().getLocation()))
             playlists.put(getBackBlock().getLocation(), new Playlist(plist));
 
-        players = new HashMap<String, SearchArea>();
+        players = new HashMap<>();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Jukebox extends AbstractSelfTriggeredIC {
         public Factory(Server server) {
 
             super(server);
-            playlists = new HashMap<Location, Playlist>();
+            playlists = new HashMap<>();
         }
 
         @Override

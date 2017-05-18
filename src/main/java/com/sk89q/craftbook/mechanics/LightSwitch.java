@@ -48,7 +48,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        recentLightToggles = new HistoryHashMap<Location, Long>(20);
+        recentLightToggles = new HistoryHashMap<>(20);
         return true;
     }
 

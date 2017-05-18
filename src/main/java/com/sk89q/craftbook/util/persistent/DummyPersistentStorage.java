@@ -9,7 +9,7 @@ public class DummyPersistentStorage extends PersistentStorage {
 
     @Override
     public void open () {
-        map = new HashMap<String, Object>();
+        map = new HashMap<>();
     }
 
     @Override

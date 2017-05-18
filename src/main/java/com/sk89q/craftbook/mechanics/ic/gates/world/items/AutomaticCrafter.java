@@ -110,7 +110,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             return false;
         }
 
-        List<ItemStack> items = new ArrayList<ItemStack>();
+        List<ItemStack> items = new ArrayList<>();
 
         ItemStack[] replace = new ItemStack[9];
         for (int i = 0; i < disp.getInventory().getContents().length; i++) {
@@ -269,7 +269,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             return true;
         } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
             ShapelessRecipe shape = (ShapelessRecipe) r;
-            List<ItemStack> ing = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(shape.getIngredientList()));
+            List<ItemStack> ing = new ArrayList<>(VerifyUtil.withoutNulls(shape.getIngredientList()));
             if (ing.isEmpty()) {
                 return false; // If it's empty already, something is wrong with the recipe.
             }
@@ -332,7 +332,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             InventoryHolder disp = (InventoryHolder) crafter.getState();
 
             boolean delete = true;
-            List<ItemStack> newItems = new ArrayList<ItemStack>(event.getItems());
+            List<ItemStack> newItems = new ArrayList<>(event.getItems());
             for (ItemStack ite : event.getItems()) {
                 if (!ItemUtil.isStackValid(ite)) continue;
                 int iteind = newItems.indexOf(ite);

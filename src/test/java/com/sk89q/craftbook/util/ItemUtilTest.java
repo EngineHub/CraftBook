@@ -46,15 +46,15 @@ public class ItemUtilTest {
     @Test
     public void testFilterItems() {
 
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> items = new ArrayList<>();
         items.add(newMockItemStack(Material.GRASS,(byte) 0,1));
         items.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
         items.add(newMockItemStack(Material.STONE,(byte) 0,1));
-        HashSet<ItemStack> inclusions = new HashSet<ItemStack>();
+        HashSet<ItemStack> inclusions = new HashSet<>();
         inclusions.add(newMockItemStack(Material.GRASS,(byte) 0,1));
         List<ItemStack> filtered = ItemUtil.filterItems(items, inclusions, null);
         assertTrue(filtered.size() == 1);
-        HashSet<ItemStack> exclusions = new HashSet<ItemStack>();
+        HashSet<ItemStack> exclusions = new HashSet<>();
         exclusions.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
         filtered = ItemUtil.filterItems(items, null, exclusions);
         assertTrue(filtered.size() == 2);

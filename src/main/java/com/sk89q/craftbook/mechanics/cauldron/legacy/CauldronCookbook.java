@@ -75,7 +75,7 @@ public class CauldronCookbook {
     /**
      * For fast recipe lookup.
      */
-    private final List<Recipe> recipes = new ArrayList<Recipe>();
+    private final List<Recipe> recipes = new ArrayList<>();
 
     /**
      * Adds a recipe.
@@ -166,7 +166,7 @@ public class CauldronCookbook {
 
         String[] parts = RegexUtil.COMMA_PATTERN.split(list);
 
-        List<ItemInfo> out = new ArrayList<ItemInfo>();
+        List<ItemInfo> out = new ArrayList<>();
 
         for (String part : parts) {
             int multiplier = 1;
@@ -221,7 +221,7 @@ public class CauldronCookbook {
         /**
          * Stores a list of ingredients.
          */
-        private final Map<ItemInfo, Integer> ingredientLookup = new HashMap<ItemInfo, Integer>();
+        private final Map<ItemInfo, Integer> ingredientLookup = new HashMap<>();
         /**
          * List of resulting items or blocks.
          */

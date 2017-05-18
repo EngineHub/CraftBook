@@ -60,13 +60,9 @@ public final class CartUtil {
         if (passenger != null) {
             cart.eject();
             passenger.teleport(destination);
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run() {
-                    toCart.setPassenger(passenger);
-                    passenger.setVelocity(cart.getVelocity());
-                }
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+                toCart.setPassenger(passenger);
+                passenger.setVelocity(cart.getVelocity());
             });
         }
         toCart.getLocation().setYaw(cart.getLocation().getYaw());

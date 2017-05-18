@@ -88,7 +88,7 @@ public final class BlockUtil {
      */
     public static ItemStack[] getBlockDrops(Block block, ItemStack tool) {
 
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+        List<ItemStack> drops = new ArrayList<>();
 
         switch(block.getType()) {
             case SNOW:
@@ -135,7 +135,7 @@ public final class BlockUtil {
 
     public static Block[] getTouchingBlocks(Block block) {
 
-        List<Block> blocks = new ArrayList<Block>();
+        List<Block> blocks = new ArrayList<>();
         for(BlockFace face : LocationUtil.getDirectFaces())
             blocks.add(block.getRelative(face));
 
@@ -144,7 +144,7 @@ public final class BlockUtil {
 
     public static Block[] getIndirectlyTouchingBlocks(Block block) {
 
-        List<Block> blocks = new ArrayList<Block>();
+        List<Block> blocks = new ArrayList<>();
         for(int x = -1; x < 2; x++)
             for(int y = -1; y < 2; y++)
                 for(int z = -1; z < 2; z++)

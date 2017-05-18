@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.StringUtils;
@@ -48,7 +47,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
         try {
 
             boolean upload = false;
-            final List<String> toUpload = new ArrayList<String>();
+            final List<String> toUpload = new ArrayList<>();
 
             for(String arg : args) {
 
@@ -76,7 +75,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
             int missingComments = 0;
 
-            final Set<String> missingDocuments = new HashSet<String>();
+            final Set<String> missingDocuments = new HashSet<>();
 
             for(RegisteredICFactory ric : ICManager.inst().getICList()) {
 
@@ -208,73 +207,67 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
             if(upload) {
 
-                Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), new Runnable() {
+                Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), () -> {
+                    Bukkit.getLogger().info("Starting Upload");
+                    Wiki wiki = new Wiki("wiki.sk89q.com");
+                    wiki.setMaxLag(0);
+                    wiki.setThrottle(5000);
+                    wiki.setResolveRedirects(true);
 
-                    @Override
-                    public void run () {
-                        Bukkit.getLogger().info("Starting Upload");
-                        Wiki wiki = new Wiki("wiki.sk89q.com");
-                        wiki.setMaxLag(0);
-                        wiki.setThrottle(5000);
-                        wiki.setResolveRedirects(true);
+                    try {
+                        Bukkit.getLogger().info("Logging In");
+                        wiki.login(username, password);
+                        Bukkit.getLogger().info("Logged in Successfully!");
 
-                        try {
-                            Bukkit.getLogger().info("Logging In");
-                            wiki.login(username, password);
-                            Bukkit.getLogger().info("Logged in Successfully!");
+                        int amount = 0;
+                        String failed = "";
 
-                            int amount = 0;
-                            String failed = "";
+                        for(RegisteredICFactory ric : ICManager.inst().getICList()) {
+                            if(toUpload.contains("ALL") || toUpload.contains(ric.getId())) {
 
-                            for(RegisteredICFactory ric : ICManager.inst().getICList()) {
-                                if(toUpload.contains("ALL") || toUpload.contains(ric.getId())) {
-
-                                    if(missingDocuments.contains(ric.getId())) {
-                                        if(failed.length() == 0)
-                                            failed = ric.getId();
-                                        else
-                                            failed = failed + "," + ric.getId();
-                                        continue; //Ignore this, bad docs.
-                                    }
-
-                                    Bukkit.getLogger().info("Uploading " + ric.getId() + "...");
-
-                                    StringBuilder builder = new StringBuilder();
-
-                                    BufferedReader reader = new BufferedReader(new FileReader(new File(file, ric.getId() + ".txt")));
-
-                                    String line = null;
-
-                                    while((line = reader.readLine()) != null) {
-                                        builder.append(line);
-                                        builder.append("\n");
-                                    }
-
-                                    reader.close();
-
-                                    wiki.edit("CraftBook/" + ric.getId(), builder.toString(), "Automated update of '" + ric.getId() + "' by " + username);
-
-                                    Bukkit.getLogger().info("Uploaded: " + ric.getId());
-
-                                    amount++;
+                                if(missingDocuments.contains(ric.getId())) {
+                                    if(failed.length() == 0)
+                                        failed = ric.getId();
+                                    else
+                                        failed = failed + "," + ric.getId();
+                                    continue; //Ignore this, bad docs.
                                 }
-                            }
 
-                            Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
-                            if(failed.length() > 0)
-                                Bukkit.getLogger().warning("Failed to upload ICs: " + failed);
-                        } catch (LoginException e) {
-                            e.printStackTrace();
-                            Bukkit.getLogger().warning("Failed to login to wiki!");
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                Bukkit.getLogger().info("Uploading " + ric.getId() + "...");
+
+                                StringBuilder builder = new StringBuilder();
+
+                                BufferedReader reader = new BufferedReader(new FileReader(new File(file, ric.getId() + ".txt")));
+
+                                String line = null;
+
+                                while((line = reader.readLine()) != null) {
+                                    builder.append(line);
+                                    builder.append("\n");
+                                }
+
+                                reader.close();
+
+                                wiki.edit("CraftBook/" + ric.getId(), builder.toString(), "Automated update of '" + ric.getId() + "' by " + username);
+
+                                Bukkit.getLogger().info("Uploaded: " + ric.getId());
+
+                                amount++;
+                            }
                         }
+
+                        Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
+                        if(failed.length() > 0)
+                            Bukkit.getLogger().warning("Failed to upload ICs: " + failed);
+                    } catch (LoginException e) {
+                        e.printStackTrace();
+                        Bukkit.getLogger().warning("Failed to login to wiki!");
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
             }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
     }

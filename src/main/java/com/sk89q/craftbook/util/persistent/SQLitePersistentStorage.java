@@ -110,11 +110,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             if(!results.next()) return null;
 
             return fromString(results.getString(2));
-        } catch(SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch(SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         } finally {
             close(results);
@@ -139,9 +135,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             statement.setObject(2, toString(data));
 
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch(SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             close(statement);
@@ -237,7 +231,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     @Override
     public Map<String, Object> exportData () {
 
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
 
         PreparedStatement statement = null;
         ResultSet results = null;

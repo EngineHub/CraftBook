@@ -49,14 +49,14 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, ((Factory) getFactory()).invert ? !hasBlock() : hasBlock());
+            chip.setOutput(0, ((Factory) getFactory()).invert != hasBlock());
         }
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, ((Factory) getFactory()).invert ? !hasBlock() : hasBlock());
+        chip.setOutput(0, ((Factory) getFactory()).invert != hasBlock());
     }
 
     /**

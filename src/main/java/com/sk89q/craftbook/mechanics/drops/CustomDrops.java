@@ -36,7 +36,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        definitions = new LinkedHashSet<CustomDropDefinition>();
+        definitions = new LinkedHashSet<>();
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
@@ -67,7 +67,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
             List<String> biomeStrings = config.getStringList("custom-drops." + key + ".biomes", null);
 
-            List<DropItemStack> drops = new ArrayList<DropItemStack>();
+            List<DropItemStack> drops = new ArrayList<>();
 
             for(String drop : config.getKeys("custom-drops." + key + ".drops")) {
 
@@ -86,7 +86,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 drops.add(stack);
             }
 
-            List<DropReward> rewards = new ArrayList<DropReward>();
+            List<DropReward> rewards = new ArrayList<>();
 
             if(config.getKeys("custom-drops." + key + ".rewards") != null) {
                 for(String reward : config.getKeys("custom-drops." + key + ".rewards")) {
@@ -127,14 +127,14 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                     def.setRegions(regions);
                 }
                 if (requiredItems != null) {
-                    List<ItemStack> items = new ArrayList<ItemStack>();
+                    List<ItemStack> items = new ArrayList<>();
                     for (String requiredItem : requiredItems) {
                         items.add(ItemSyntax.getItem(requiredItem));
                     }
                     def.setItems(items);
                 }
                 if (biomeStrings != null && !biomeStrings.isEmpty()) {
-                    List<Biome> biomes = new ArrayList<Biome>();
+                    List<Biome> biomes = new ArrayList<>();
                     for (String biomeString : biomeStrings) {
                         try {
                             Biome biome = Biome.valueOf(biomeString);
@@ -161,14 +161,14 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if (def.getRegions() != null)
                 config.setProperty("custom-drops." + def.getName() + ".regions", def.getRegions());
             if (def.getItems() != null) {
-                List<String> itemsList = new ArrayList<String>();
+                List<String> itemsList = new ArrayList<>();
                 for (ItemStack itemStack : def.getItems()) {
                     itemsList.add(ItemSyntax.getStringFromItem(itemStack));
                 }
                 config.setProperty("custom-drops." + def.getName() + ".required-items", itemsList);
             }
             if (def.getBiomes() != null) {
-                List<String> biomeStringList = new ArrayList<String>();
+                List<String> biomeStringList = new ArrayList<>();
                 for (Biome biome : def.getBiomes()) {
                     biomeStringList.add(biome.name());
                 }

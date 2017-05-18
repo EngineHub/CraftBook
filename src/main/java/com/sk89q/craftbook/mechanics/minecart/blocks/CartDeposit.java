@@ -41,7 +41,7 @@ public class CartDeposit extends CartBlockMechanism {
         boolean collecting = event.getBlocks().matches("collect");
 
         // go
-        List<Tuple2<ItemInfo, Integer>> items = new ArrayList<Tuple2<ItemInfo, Integer>>();
+        List<Tuple2<ItemInfo, Integer>> items = new ArrayList<>();
         for(String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
             int itemID = -1;
             short itemData = -1;
@@ -58,14 +58,14 @@ public class CartDeposit extends CartBlockMechanism {
                 continue;
             }
 
-            items.add(new Tuple2<ItemInfo, Integer>(new ItemInfo(itemID, itemData), amount));
+            items.add(new Tuple2<>(new ItemInfo(itemID, itemData), amount));
         }
 
         Inventory cartinventory = ((StorageMinecart) event.getMinecart()).getInventory();
-        ArrayList<ItemStack> leftovers = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> leftovers = new ArrayList<>();
 
         // search for containers
-        List<Chest> containers = new ArrayList<Chest>(RailUtil.getNearbyChests(event.getBlocks().base));
+        List<Chest> containers = new ArrayList<>(RailUtil.getNearbyChests(event.getBlocks().base));
         containers.addAll(RailUtil.getNearbyChests(event.getBlocks().rail));
 
         // are there any containers?
@@ -73,7 +73,7 @@ public class CartDeposit extends CartBlockMechanism {
 
         if (collecting) {
             // collecting
-            ArrayList<ItemStack> transferItems = new ArrayList<ItemStack>();
+            ArrayList<ItemStack> transferItems = new ArrayList<>();
             if (!items.isEmpty()) {
                 for (ItemStack item : cartinventory.getContents()) {
                     if (!ItemUtil.isStackValid(item))
@@ -91,10 +91,10 @@ public class CartDeposit extends CartBlockMechanism {
                                     if(item.getAmount() > inf.b) {
                                         stack.setAmount(inf.b);
                                         iter.remove();
-                                        items.add(new Tuple2<ItemInfo, Integer>(inf.a, 0));
+                                        items.add(new Tuple2<>(inf.a, 0));
                                     } else {
                                         iter.remove();
-                                        items.add(new Tuple2<ItemInfo, Integer>(inf.a, inf.b - stack.getAmount()));
+                                        items.add(new Tuple2<>(inf.a, inf.b - stack.getAmount()));
                                     }
                                     transferItems.add(stack.clone());
                                     cartinventory.removeItem(stack);
@@ -142,7 +142,7 @@ public class CartDeposit extends CartBlockMechanism {
             CraftBookPlugin.logDebugMessage("collection done. " + transferItems.size() + " stacks wouldn't fit back.", "cart-deposit.collect");
         } else {
             // depositing
-            ArrayList<ItemStack> transferitems = new ArrayList<ItemStack>();
+            ArrayList<ItemStack> transferitems = new ArrayList<>();
 
             for (Chest container : containers) {
                 Inventory containerinventory = container.getInventory();
@@ -163,10 +163,10 @@ public class CartDeposit extends CartBlockMechanism {
                                         if(item.getAmount() > inf.b) {
                                             stack.setAmount(inf.b);
                                             iter.remove();
-                                            items.add(new Tuple2<ItemInfo, Integer>(inf.a, 0));
+                                            items.add(new Tuple2<>(inf.a, 0));
                                         } else {
                                             iter.remove();
-                                            items.add(new Tuple2<ItemInfo, Integer>(inf.a, inf.b - stack.getAmount()));
+                                            items.add(new Tuple2<>(inf.a, inf.b - stack.getAmount()));
                                         }
                                         transferitems.add(stack.clone());
                                         cartinventory.removeItem(stack);

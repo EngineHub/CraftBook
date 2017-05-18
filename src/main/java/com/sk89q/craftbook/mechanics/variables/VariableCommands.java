@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.variables;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
@@ -11,12 +10,10 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -138,7 +135,7 @@ public class VariableCommands {
         if (context.hasFlag('a'))
             key = null;
 
-        List<String> variablesLines = new ArrayList<String>();
+        List<String> variablesLines = new ArrayList<>();
 
         for (Entry<Tuple2<String, String>, String> entry : VariableManager.instance.getVariableStore().entrySet()) {
             if (key != null && !entry.getKey().a.equals(key)) {
@@ -209,12 +206,8 @@ public class VariableCommands {
 
         if(ICManager.inst() != null) {//Make sure IC's are enabled.
 
-            Iterator<Entry<Location, IC>> iterator = ICManager.getCachedICs().entrySet().iterator();
-            while(iterator.hasNext()) {
-                Entry<Location, IC> ic = iterator.next();
-                if(ic.getValue().getSign().hasVariable(namespace + '|' + variable) || ic.getValue().getSign().hasVariable(variable))
-                    iterator.remove();
-            }
+            ICManager.getCachedICs().entrySet()
+                    .removeIf(ic -> ic.getValue().getSign().hasVariable(namespace + '|' + variable) || ic.getValue().getSign().hasVariable(variable));
         }
     }
 

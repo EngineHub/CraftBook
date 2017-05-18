@@ -60,7 +60,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
     private static final Object PLAYER_LOCK = new Object();
 
-    private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
+    private Set<JingleNotePlayer> players = new HashSet<>();
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
         try {
@@ -70,13 +70,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
             sequencer.setSequence(seq);
             if(loop)
                 sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-        } catch (MidiUnavailableException e) {
-            stop();
-            throw e;
-        } catch (InvalidMidiDataException e) {
-            stop();
-            throw e;
-        } catch (IOException e) {
+        } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
             stop();
             throw e;
         }
@@ -85,7 +79,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void run() {
 
-        final Map<Integer, Integer> patches = new HashMap<Integer, Integer>();
+        final Map<Integer, Integer> patches = new HashMap<>();
 
         try {
             if(sequencer == null || sequencer.getSequence() == null)

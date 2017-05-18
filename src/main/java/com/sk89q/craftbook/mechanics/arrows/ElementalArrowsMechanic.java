@@ -23,7 +23,7 @@ public class ElementalArrowsMechanic implements Listener {
      * entityID to the list. On hit, we check the list for entityID. If it's there, we do the stuff and remove it.
      */
 
-    private List<ElementalArrow> arrows = new ArrayList<ElementalArrow>();
+    private List<ElementalArrow> arrows = new ArrayList<>();
 
     public ElementalArrowsMechanic() {
 

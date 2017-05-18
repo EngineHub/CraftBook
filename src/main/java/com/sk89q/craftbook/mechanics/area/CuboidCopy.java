@@ -68,10 +68,7 @@ public abstract class CuboidCopy {
         if (copy == null) throw new CuboidCopyException("The file " + file.getAbsolutePath() + " does not exist.");
         try {
             copy.loadFromFile(file);
-        } catch (IOException e) {
-            BukkitUtil.printStacktrace(e);
-            throw new CuboidCopyException(e.getMessage());
-        } catch (DataException e) {
+        } catch (IOException | DataException e) {
             BukkitUtil.printStacktrace(e);
             throw new CuboidCopyException(e.getMessage());
         }
@@ -85,7 +82,7 @@ public abstract class CuboidCopy {
     public void clear() {
 
         if (world == null || origin == null) return;
-        List<Vector> queued = new ArrayList<Vector>();
+        List<Vector> queued = new ArrayList<>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {

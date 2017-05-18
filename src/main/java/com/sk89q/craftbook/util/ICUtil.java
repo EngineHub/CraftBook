@@ -270,8 +270,7 @@ public final class ICUtil {
 
         try {
             offsets = parseUnsafeBlockLocation(line);
-        } catch (NumberFormatException ignored) {
-        } catch (ArrayIndexOutOfBoundsException ignored) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
         }
 
         if(offsets.getBlockX() == 0 && offsets.getBlockY() == 0 && offsets.getBlockZ() == 0)
@@ -378,7 +377,7 @@ public final class ICUtil {
         Block pipe = backB.getRelative(back);
 
         // Handle the event
-        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Arrays.asList(items)), backB);
+        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Arrays.asList(items)), backB);
         Bukkit.getPluginManager().callEvent(event);
 
         Collection<ItemStack> results = event.getItems();

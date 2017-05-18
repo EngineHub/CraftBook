@@ -86,21 +86,16 @@ public class FlameThrower extends AbstractIC {
             for (int i = 0; i < distance; i++) {
 
                 final int fi = i;
-                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-                    @Override
-                    public void run () {
-
-                        Block fire = block.getRelative(direction, 2+fi);
-                        if (make) {
-                            if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
-                                fire.setType(Material.FIRE);
-                            }
-                        } else if (fire.getType() == Material.FIRE) {
-                            fire.setType(Material.AIR);
+                    Block fire = block.getRelative(direction, 2+fi);
+                    if (make) {
+                        if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
+                            fire.setType(Material.FIRE);
                         }
+                    } else if (fire.getType() == Material.FIRE) {
+                        fire.setType(Material.AIR);
                     }
-
                 }, delay*fi);
             }
         }

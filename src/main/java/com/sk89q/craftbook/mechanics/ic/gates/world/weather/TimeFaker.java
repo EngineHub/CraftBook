@@ -72,7 +72,7 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        players = new HashSet<String>();
+        players = new HashSet<>();
 
         area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
 

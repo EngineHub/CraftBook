@@ -54,7 +54,7 @@ public final class ItemUtil {
      */
     public static List<ItemStack> filterItems(List<ItemStack> stacks, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
 
-        List<ItemStack> ret = new ArrayList<ItemStack>();
+        List<ItemStack> ret = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
@@ -151,14 +151,14 @@ public final class ItemUtil {
                 ShapedRecipe recipe2 = (ShapedRecipe) rec2;
                 if(recipe1.getShape().length == recipe2.getShape().length) {
                     CraftBookPlugin.logDebugMessage("Same size!", "advanced-data.compare-recipes.shaped");
-                    List<ItemStack> stacks1 = new ArrayList<ItemStack>();
+                    List<ItemStack> stacks1 = new ArrayList<>();
 
                     for(String s : recipe1.getShape())
                         for(char c : s.toCharArray())
                             for(Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
                                 if(entry.getKey() == c)
                                     stacks1.add(entry.getValue());
-                    List<ItemStack> stacks2 = new ArrayList<ItemStack>();
+                    List<ItemStack> stacks2 = new ArrayList<>();
 
                     for(String s : recipe2.getShape())
                         for(char c : s.toCharArray())
@@ -170,7 +170,7 @@ public final class ItemUtil {
                         CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shaped");
                         return false;
                     }
-                    List<ItemStack> test = new ArrayList<ItemStack>(stacks1);
+                    List<ItemStack> test = new ArrayList<>(stacks1);
                     if(test.size() == 0) {
                         CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shaped");
                         return true;
@@ -197,12 +197,12 @@ public final class ItemUtil {
 
                 CraftBookPlugin.logDebugMessage("Same Size!", "advanced-data.compare-recipes.shapeless");
 
-                List<ItemStack> test = new ArrayList<ItemStack>(VerifyUtil.withoutNulls(recipe1.getIngredientList()));
+                List<ItemStack> test = new ArrayList<>(VerifyUtil.withoutNulls(recipe1.getIngredientList()));
                 if(test.size() == 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shapeless");
                     return true;
                 }
-                if(!test.removeAll(VerifyUtil.<ItemStack>withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
+                if(!test.removeAll(VerifyUtil.withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shapeless");
                     return false;
                 }
@@ -257,12 +257,12 @@ public final class ItemUtil {
         CraftBookPlugin.logDebugMessage("Display names are the same", "item-checks.meta.names");
 
         //Lore
-        List<String> lore1 = new ArrayList<String>();
+        List<String> lore1 = new ArrayList<>();
         if(meta.hasLore())
             for(String lore : meta.getLore())
                 lore1.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
 
-        List<String> lore2 = new ArrayList<String>();
+        List<String> lore2 = new ArrayList<>();
         if(meta2.hasLore())
             for(String lore : meta2.getLore())
                 lore2.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
@@ -280,11 +280,11 @@ public final class ItemUtil {
         CraftBookPlugin.logDebugMessage("Lore is the same", "item-checks.meta.lores");
 
         //Enchants
-        List<Enchantment> ench1 = new ArrayList<Enchantment>();
+        List<Enchantment> ench1 = new ArrayList<>();
         if(meta.hasEnchants())
             ench1.addAll(meta.getEnchants().keySet());
 
-        List<Enchantment> ench2 = new ArrayList<Enchantment>();
+        List<Enchantment> ench2 = new ArrayList<>();
         if(meta2.hasEnchants())
             ench2.addAll(meta2.getEnchants().keySet());
 
@@ -307,12 +307,12 @@ public final class ItemUtil {
                 return false; // meta type mismatch
 
             EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) meta;
-            List<Enchantment> storedEnchantments = new ArrayList<Enchantment>();
+            List<Enchantment> storedEnchantments = new ArrayList<>();
             if (storageMeta.hasStoredEnchants())
                 storedEnchantments.addAll(storageMeta.getStoredEnchants().keySet());
 
             EnchantmentStorageMeta storageMeta2 = (EnchantmentStorageMeta) meta2;
-            List<Enchantment> storedEnchantments2 = new ArrayList<Enchantment>();
+            List<Enchantment> storedEnchantments2 = new ArrayList<>();
             if (storageMeta2.hasStoredEnchants())
                 storedEnchantments2.addAll(storageMeta2.getStoredEnchants().keySet());
 
@@ -575,7 +575,7 @@ public final class ItemUtil {
 
     public static List<ItemStack> getRawFood(Inventory inv) {
 
-        List<ItemStack> ret = new ArrayList<ItemStack>();
+        List<ItemStack> ret = new ArrayList<>();
 
         for (ItemStack it : inv.getContents()) {
             if (isStackValid(it) && isCookable(it))
@@ -595,7 +595,7 @@ public final class ItemUtil {
 
     public static List<ItemStack> getRawMinerals(Inventory inv) {
 
-        List<ItemStack> ret = new ArrayList<ItemStack>();
+        List<ItemStack> ret = new ArrayList<>();
 
         for (ItemStack it : inv.getContents()) {
             if (isStackValid(it) && isSmeltable(it))
@@ -615,7 +615,7 @@ public final class ItemUtil {
 
     public static List<ItemStack> getRawMaterials(Inventory inv) {
 
-        List<ItemStack> ret = new ArrayList<ItemStack>();
+        List<ItemStack> ret = new ArrayList<>();
 
         for (ItemStack it : inv.getContents()) {
             if (isStackValid(it) && isFurnacable(it))
@@ -697,7 +697,7 @@ public final class ItemUtil {
      */
     public static List<Item> getItemsAtBlock(Block block) {
 
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
 
         for (Entity en : block.getChunk().getEntities()) {
             if (!(en instanceof Item)) {

@@ -38,7 +38,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         instance = this;
-        variableStore = new HashMap<Tuple2<String, String>, String>();
+        variableStore = new HashMap<>();
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
 
         try {
@@ -71,22 +71,22 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     public boolean hasVariable(String variable, String namespace) {
 
-        return variableStore.containsKey(new Tuple2<String, String>(variable, namespace));
+        return variableStore.containsKey(new Tuple2<>(variable, namespace));
     }
 
     public String getVariable(String variable, String namespace) {
 
-        return variableStore.get(new Tuple2<String, String>(variable, namespace));
+        return variableStore.get(new Tuple2<>(variable, namespace));
     }
 
     public String setVariable(String variable, String namespace, String value) {
 
-        return variableStore.put(new Tuple2<String, String>(variable, namespace), value);
+        return variableStore.put(new Tuple2<>(variable, namespace), value);
     }
 
     public String removeVariable(String variable, String namespace) {
 
-        return variableStore.remove(new Tuple2<String, String>(variable, namespace));
+        return variableStore.remove(new Tuple2<>(variable, namespace));
     }
 
     public HashMap<Tuple2<String, String>, String> getVariableStore() {

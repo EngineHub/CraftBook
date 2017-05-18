@@ -86,7 +86,7 @@ public abstract class CustomDropDefinition {
 
     public ItemStack[] getRandomDrops() {
 
-        List<ItemStack> ndrops = new ArrayList<ItemStack>();
+        List<ItemStack> ndrops = new ArrayList<>();
 
         for(DropItemStack drop : drops) {
             if(drop.getChance() < CraftBookPlugin.inst().getRandom().nextDouble()*100d) continue;

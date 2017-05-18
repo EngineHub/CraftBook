@@ -23,5 +23,5 @@ public interface PersistentIC extends IC {
      *
      * @return if this {@link IC} is valid.
      */
-    public abstract boolean isActive();
+    boolean isActive();
 }

@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.Server;
@@ -75,8 +75,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         try {
             types = EntityType.getDetected(RegexUtil.EQUALS_PATTERN.split(getLine(2),2)[1]);
         } catch(Exception e) {
-            types = new HashSet<EntityType>();
-            types.add(EntityType.PLAYER);
+            types = EnumSet.of(EntityType.PLAYER);
         }
 
         //Converter.

@@ -24,7 +24,7 @@ import java.util.Map;
 
 public final class LogListBlock {
     private LinkedHashMap <String, Object> items
-    = new LinkedHashMap<String, Object>();
+    = new LinkedHashMap<>();
     private int maxKeyLength = 0;
 
     private void updateKey(String key) {

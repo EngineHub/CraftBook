@@ -2,7 +2,6 @@ package com.sk89q.craftbook.bukkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -86,7 +85,7 @@ public class BukkitConfiguration {
         config.setComment("enabled-mechanics", "List of mechanics to enable! If they aren't in this list, the server won't load them!");
         enabledMechanics = config.getStringList("enabled-mechanics", Collections.singletonList("Variables"));
 
-        List<String> disabledMechanics = new ArrayList<String>();
+        List<String> disabledMechanics = new ArrayList<>();
 
         for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
             if(!enabledMechanics.contains(mech))
@@ -139,7 +138,7 @@ public class BukkitConfiguration {
         debugLogToFile = config.getBoolean("debug-mode-file-logging", false);
 
         config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
-        debugFlags = config.getStringList("debug-flags", new ArrayList<String>());
+        debugFlags = config.getStringList("debug-flags", new ArrayList<>());
 
         config.setComment("easter-eggs", "Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)");
         easterEggs = config.getBoolean("easter-eggs", true);
@@ -163,7 +162,7 @@ public class BukkitConfiguration {
 
         config.setProperty("enabled-mechanics", enabledMechanics);
 
-        List<String> disabledMechanics = new ArrayList<String>();
+        List<String> disabledMechanics = new ArrayList<>();
 
         for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
             if(!enabledMechanics.contains(mech))

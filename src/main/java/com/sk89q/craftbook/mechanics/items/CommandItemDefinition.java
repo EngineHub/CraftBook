@@ -75,21 +75,21 @@ public class CommandItemDefinition {
 
         String name = RegexUtil.PERIOD_PATTERN.split(path)[1];
         ItemStack stack = ItemSyntax.getItem(config.getString(path + ".item"));
-        List<String> commands = config.getStringList(path + ".commands", new ArrayList<String>());
+        List<String> commands = config.getStringList(path + ".commands", new ArrayList<>());
         String permNode = config.getString(path + ".permission-node", "");
         CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase(Locale.ENGLISH));
         ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase(Locale.ENGLISH));
         int delay = config.getInt(path + ".delay", 0);
-        List<String> delayedCommands = new ArrayList<String>();
+        List<String> delayedCommands = new ArrayList<>();
         if(delay > 0)
-            delayedCommands = config.getStringList(path + ".delayed-commands", new ArrayList<String>());
+            delayedCommands = config.getStringList(path + ".delayed-commands", new ArrayList<>());
         int cooldown = config.getInt(path + ".cooldown", 0);
         boolean cancelAction = config.getBoolean(path + ".cancel-action", true);
 
-        List<ItemStack> consumables = new ArrayList<ItemStack>();
+        List<ItemStack> consumables = new ArrayList<>();
 
         try {
-            for(String s : config.getStringList(path + ".consumed-items", new ArrayList<String>()))
+            for(String s : config.getStringList(path + ".consumed-items", new ArrayList<>()))
                 consumables.add(ItemUtil.makeItemValid(ItemSyntax.getItem(s)));
         } catch(Exception ignored){}
 
@@ -98,7 +98,7 @@ public class CommandItemDefinition {
 
         boolean keepOnDeath = config.getBoolean(path + ".keep-on-death", false);
 
-        List<CommandItemAction> actionList = new ArrayList<CommandItemAction>();
+        List<CommandItemAction> actionList = new ArrayList<>();
 
         if(config.getKeys(path + ".actions") != null)
             for(String ac : config.getKeys(path + ".actions")) {
@@ -129,7 +129,7 @@ public class CommandItemDefinition {
         config.setProperty(path + ".cooldown", cooldown);
         config.setProperty(path + ".cancel-action", cancelAction);
 
-        List<String> consumables = new ArrayList<String>();
+        List<String> consumables = new ArrayList<>();
         for(ItemStack s : this.consumables)
             consumables.add(ItemSyntax.getStringFromItem(s));
         config.setProperty(path + ".consumed-items", consumables);

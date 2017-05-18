@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,7 +99,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         else
             b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
 
-        PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<ItemStack>(Collections.singletonList(item)), getBackBlock());
+        PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
         for(ItemStack it : event.getItems())
@@ -165,7 +164,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
     @Override
     public void onPipeTransfer(PipePutEvent event) {
 
-        List<ItemStack> leftovers = new ArrayList<ItemStack>();
+        List<ItemStack> leftovers = new ArrayList<>();
 
         for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))

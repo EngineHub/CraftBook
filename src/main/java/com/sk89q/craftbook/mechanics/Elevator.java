@@ -62,7 +62,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
         if(elevatorSlowMove)
-            flyingPlayers = new HashSet<UUID>();
+            flyingPlayers = new HashSet<>();
         return true;
     }
 

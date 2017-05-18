@@ -112,7 +112,7 @@ public class CommandItemCommands {
             throw new CommandException("Invalid Item for CommandItems!");
         Conversation convo = conversationFactory.buildConversation((Conversable) sender);
         convo.getContext().setSessionData("item", ((HumanEntity) sender).getInventory().getItemInHand());
-        List<ItemStack> consumables = new ArrayList<ItemStack>();
+        List<ItemStack> consumables = new ArrayList<>();
         for(int i = 0; i <= 8; i++) {
             if(i == ((HumanEntity) sender).getInventory().getHeldItemSlot())
                 continue;
@@ -369,7 +369,7 @@ public class CommandItemCommands {
                 CommandType type = (CommandType) context.getSessionData("run-as");
                 ClickType clickType = (ClickType) context.getSessionData("click-type");
                 int delay = (Integer) context.getSessionData("delay");
-                List<String> delayedCommands = new ArrayList<String>();
+                List<String> delayedCommands = new ArrayList<>();
                 if(delay > 0)
                     delayedCommands = (List<String>) context.getSessionData("delayed-commands");
                 int cooldown = (Integer) context.getSessionData("cooldown");
@@ -377,7 +377,7 @@ public class CommandItemCommands {
                 boolean consumeSelf = (Boolean) context.getSessionData("consume-self");
                 TernaryState requireSneaking = (TernaryState) context.getSessionData("require-sneaking");
                 boolean keepOnDeath = (Boolean) context.getSessionData("keep-on-death");
-                List<CommandItemAction> actions = new ArrayList<CommandItemAction>();
+                List<CommandItemAction> actions = new ArrayList<>();
                 String missingConsumableMessage = "mech.command-items.need";
                 String cooldownMessage = "mech.command-items.wait";
                 CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actions.toArray(new CommandItemAction[actions.size()]), missingConsumableMessage, cooldownMessage);

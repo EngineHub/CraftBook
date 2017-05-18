@@ -21,7 +21,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
     private List<Note> song;
 
-    private Set<JingleNotePlayer> players = new HashSet<JingleNotePlayer>();
+    private Set<JingleNotePlayer> players = new HashSet<>();
 
     public StringJingleSequencer(String tune, int delay) {
         this.delay = delay;
@@ -38,21 +38,16 @@ public class StringJingleSequencer implements JingleSequencer {
         isPlaying = true;
         playedBefore = true;
 
-        taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new Runnable() {
+        taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), () -> {
 
-            @Override
-            public void run() {
-
-                if (position >= song.size() || !isPlaying || players.isEmpty()) {
-                    Bukkit.getScheduler().cancelTask(taskID);
-                    isPlaying = false;
-                    return;
-                }
-                for(JingleNotePlayer player : players)
-                    player.play(song.get(position));
-                position++;
+            if (position >= song.size() || !isPlaying || players.isEmpty()) {
+                Bukkit.getScheduler().cancelTask(taskID);
+                isPlaying = false;
+                return;
             }
-
+            for(JingleNotePlayer player : players)
+                player.play(song.get(position));
+            position++;
         }, delay, delay);
     }
 
@@ -60,7 +55,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
         if (tune == null) return null;
 
-        ArrayList<Note> musicKeys = new ArrayList<Note>();
+        ArrayList<Note> musicKeys = new ArrayList<>();
 
         byte instrument = -1;
         for (int i = 0; i < tune.length(); i++) {

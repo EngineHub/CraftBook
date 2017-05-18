@@ -17,7 +17,7 @@ public class ArrayUtilTest {
     @Test
     public void testGetArrayPage() {
 
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
         strings.add("Line1");
         strings.add("Line2");
         strings.add("Line3");

@@ -27,7 +27,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Directional;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,13 +83,10 @@ public class Chair extends AbstractCraftBookMechanic {
         // Attach the player to said arrow.
         final Entity far = ar;
         if(ar.isEmpty() && isNew) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    if (chairLoc != null)
-                        player.teleport(chairLoc);
-                    far.setPassenger(player);
-                }
+            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+                if (chairLoc != null)
+                    player.teleport(chairLoc);
+                far.setPassenger(player);
             });
         } else if (ar.isEmpty()) {
             removeChair(player);
@@ -115,12 +111,9 @@ public class Chair extends AbstractCraftBookMechanic {
         if(ent != null) {
             player.eject();
             ent.remove();
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    player.teleport(chairData.playerExitPoint);
-                    player.setSneaking(false);
-                }
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                player.teleport(chairData.playerExitPoint);
+                player.setSneaking(false);
             }, 5L);
         }
         chairs.remove(player.getName());
@@ -192,7 +185,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         // Now everything looks good, continue;
         if (chairAllowHeldBlock || !lplayer.isHoldingBlock() && lplayer.getHeldItemInfo().getType() != Material.SIGN || lplayer.getHeldItemInfo().getType() == Material.AIR) {
-            if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<Location>(), event.getClickedBlock()))
+            if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -304,7 +297,7 @@ public class Chair extends AbstractCraftBookMechanic {
     @Override
     public boolean enable () {
 
-        chairs = new ConcurrentHashMap<String, ChairData>();
+        chairs = new ConcurrentHashMap<>();
 
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 

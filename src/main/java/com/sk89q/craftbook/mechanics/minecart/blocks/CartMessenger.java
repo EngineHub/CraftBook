@@ -33,7 +33,7 @@ public class CartMessenger extends CartBlockMechanism {
             ChangedSign s = event.getBlocks().getSign();
             if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
 
-            ArrayList<String> messages = new ArrayList<String>();
+            ArrayList<String> messages = new ArrayList<>();
 
             boolean stack = false;
 

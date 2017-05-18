@@ -33,7 +33,7 @@ public class ImprovedCauldronCookbook {
 
     public void load() {
 
-        recipes = new ArrayList<Recipe>();
+        recipes = new ArrayList<>();
 
         if (config == null) return; // If the config is null, it can't continue.
 
@@ -75,8 +75,8 @@ public class ImprovedCauldronCookbook {
 
             this.id = id;
             this.config = config;
-            ingredients = new ArrayList<CauldronItemStack>();
-            results = new ArrayList<CauldronItemStack>();
+            ingredients = new ArrayList<>();
+            results = new ArrayList<>();
             chance = 60;
             load();
         }
@@ -92,7 +92,7 @@ public class ImprovedCauldronCookbook {
 
         private Collection<CauldronItemStack> getItems(String path) {
 
-            Collection<CauldronItemStack> items = new ArrayList<CauldronItemStack>();
+            Collection<CauldronItemStack> items = new ArrayList<>();
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String okey = String.valueOf(oitem);

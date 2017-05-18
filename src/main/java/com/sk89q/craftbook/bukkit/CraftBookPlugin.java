@@ -132,7 +132,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public boolean useLegacyCartSystem = false;
 
     static {
-        availableMechanics = new TreeMap<String, Class<? extends CraftBookMechanic>>();
+        availableMechanics = new TreeMap<>();
 
         availableMechanics.put("Variables", VariableManager.class);
         availableMechanics.put("CommandItems", CommandItems.class);
@@ -390,12 +390,8 @@ public class CraftBookPlugin extends JavaPlugin {
             }
 
         if(!foundAMech) {
-            Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-                @Override
-                public void run () {
-                    getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
-                }
-            }, 20L, 20*60*5);
+            Bukkit.getScheduler().runTaskTimer(this,
+                    () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
         }
     }
 
@@ -419,15 +415,9 @@ public class CraftBookPlugin extends JavaPlugin {
         languageManager = new LanguageManager();
         languageManager.init();
 
-        getServer().getScheduler().runTask(this, new Runnable() {
+        getServer().getScheduler().runTask(this, CompatabilityUtil::init);
 
-            @Override
-            public void run () {
-                CompatabilityUtil.init();
-            }
-        });
-
-        mechanics = new ArrayList<CraftBookMechanic>();
+        mechanics = new ArrayList<>();
 
         logDebugMessage("Initializing Mechanisms!", "startup");
 

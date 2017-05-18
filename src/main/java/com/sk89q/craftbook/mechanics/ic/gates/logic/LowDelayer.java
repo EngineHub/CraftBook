@@ -46,14 +46,10 @@ public class LowDelayer extends AbstractIC {
                 taskId.cancel();
             chip.setOutput(0, true);
         } else {
-            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-                @Override
-                public void run() {
-
-                    if (!chip.getInput(0)) {
-                        chip.setOutput(0, false);
-                    }
+                if (!chip.getInput(0)) {
+                    chip.setOutput(0, false);
                 }
             }, delay * 20);
         }

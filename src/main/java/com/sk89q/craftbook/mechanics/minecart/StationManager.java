@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class StationManager {
 
-    private static Map<String, String> stationSelection = new HashMap<String, String>();
+    private static Map<String, String> stationSelection = new HashMap<>();
 
     public static String getStation(String playerName) {
 

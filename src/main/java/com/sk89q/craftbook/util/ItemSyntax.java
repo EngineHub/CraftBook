@@ -77,7 +77,7 @@ public final class ItemSyntax {
             if (meta.isUnbreakable()) {
                 builder.append("/unbreakable:true");
             }
-            List<String> flags = new ArrayList<String>();
+            List<String> flags = new ArrayList<>();
             for (ItemFlag flag : ItemFlag.values()) {
                 if (meta.hasItemFlag(flag)) {
                     flags.add(flag.name());
@@ -170,7 +170,7 @@ public final class ItemSyntax {
                 meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
                 if(nameLoreSplit.length > 2) {
 
-                    List<String> lore = new ArrayList<String>();
+                    List<String> lore = new ArrayList<>();
                     for(int i = 2; i < nameLoreSplit.length; i++)
                         lore.add(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[i]));
 
@@ -190,9 +190,7 @@ public final class ItemSyntax {
                             ench = Enchantment.getById(Integer.parseInt(sp[0]));
                         rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
                     }
-                    catch(NumberFormatException ignored){}
-                    catch(ArrayIndexOutOfBoundsException ignored){}
-                    catch(NullPointerException ignored){}
+                    catch(NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ignored){}
                 }
             }
             if(advMetadataSplit.length > 1) {
@@ -263,19 +261,7 @@ public final class ItemSyntax {
         if(plugin != null) {
             try {
                 line = (String) plugin.getClass().getMethod("parseItemSyntax", String.class).invoke(plugin, line);
-            } catch (NoSuchMethodException e) {
-                plugin = null;
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                plugin = null;
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                plugin = null;
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                plugin = null;
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
                 plugin = null;
                 e.printStackTrace();
             }

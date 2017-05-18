@@ -42,14 +42,12 @@ public class CopyManager {
     /**
      * Cache.
      */
-    private final HashMap<String, HistoryHashMap<String, CuboidCopy>> cache = new HashMap<String,
-            HistoryHashMap<String, CuboidCopy>>();
+    private final HashMap<String, HistoryHashMap<String, CuboidCopy>> cache = new HashMap<>();
 
     /**
      * Remembers missing copies so as to not look for them on disk.
      */
-    private final HashMap<String, HistoryHashMap<String, Long>> missing = new HashMap<String, HistoryHashMap<String,
-            Long>>();
+    private final HashMap<String, HistoryHashMap<String, Long>> missing = new HashMap<>();
 
     /**
      * Gets the copy manager instance
@@ -222,7 +220,7 @@ public class CopyManager {
         if (worldCache != null) {
             return worldCache;
         } else {
-            worldCache = new HistoryHashMap<String, CuboidCopy>(10);
+            worldCache = new HistoryHashMap<>(10);
             cache.put(world, worldCache);
             return worldCache;
         }
@@ -234,7 +232,7 @@ public class CopyManager {
         if (worldCache != null) {
             return worldCache;
         } else {
-            worldCache = new HistoryHashMap<String, Long>(10);
+            worldCache = new HistoryHashMap<>(10);
             missing.put(world, worldCache);
             return worldCache;
         }

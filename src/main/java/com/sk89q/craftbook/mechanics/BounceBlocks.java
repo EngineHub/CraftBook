@@ -29,7 +29,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
     List<ItemInfo> blocks;
     private double sensitivity;
-    private Map<ItemInfo, Vector> autoBouncers = new HashMap<ItemInfo, Vector>();
+    private Map<ItemInfo, Vector> autoBouncers = new HashMap<>();
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

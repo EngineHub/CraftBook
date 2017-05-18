@@ -32,25 +32,21 @@ public class ExitRemover extends AbstractCraftBookMechanic {
                 return;
         }
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-            @Override
-            public void run () {
+            if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
 
-                if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
+            if(giveItem) {
 
-                if(giveItem) {
+                ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
 
-                    ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
-
-                    if(event.getExited() instanceof Player) {
-                        if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty() && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)
-                            event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
-                    } else if(event.getExited() != null)
+                if(event.getExited() instanceof Player) {
+                    if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty() && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)
                         event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
-                }
-                EntityUtil.killEntity(event.getVehicle());
+                } else if(event.getExited() != null)
+                    event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
             }
+            EntityUtil.killEntity(event.getVehicle());
         }, 2L);
     }
 

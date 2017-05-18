@@ -55,7 +55,7 @@ public final class ParsingUtil {
     public static List<String> getPossibleVariables(String line) {
 
         if(!line.contains("%"))
-            return new ArrayList<String>();
+            return new ArrayList<>();
 
         return variableFinderCache.getUnchecked(line);
     }
@@ -64,7 +64,7 @@ public final class ParsingUtil {
         @Override
         public List<String> load (String line) throws Exception {
 
-            List<String> variables = new ArrayList<String>();
+            List<String> variables = new ArrayList<>();
 
             for(String bit : RegexUtil.PERCENT_PATTERN.split(line)) {
                 if(line.indexOf(bit) > 0 && line.charAt(line.indexOf(bit)-1) == '\\') continue;

@@ -176,16 +176,9 @@ public class AreaCommands {
         if (folder != null && !folder.exists())
             throw new CommandException("The namespace '" + namespace + "' does not exist.");
 
-        List<String> areaList = new ArrayList<String>();
+        List<String> areaList = new ArrayList<>();
 
-        FilenameFilter fnf = new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-
-                return Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
-            }
-        };
+        FilenameFilter fnf = (dir, name) -> Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
 
         if (folder != null && folder.exists()) {
             for (File area : folder.listFiles(fnf)) {
@@ -326,14 +319,7 @@ public class AreaCommands {
     // If a deletion fails, the method stops attempting to delete and returns false.
     private boolean deleteDir(File dir) {
 
-        FilenameFilter fnf = new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-
-                return Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
-            }
-        };
+        FilenameFilter fnf = (dir1, name) -> Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
 
         if (dir.isDirectory()) {
             for (File aChild : dir.listFiles(fnf)) { if (!aChild.delete()) return false; }

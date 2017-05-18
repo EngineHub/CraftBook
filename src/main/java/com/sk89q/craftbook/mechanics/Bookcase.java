@@ -68,16 +68,12 @@ public class Bookcase extends AbstractCraftBookMechanic {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
-            Set<String> list = new LinkedHashSet<String>();
-            String l = "";
+            Set<String> list = new LinkedHashSet<>();
+            String l;
             while((l = reader.readLine()) != null)
                 list.add(l);
 
             lines = list.toArray(new String[list.size()]);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

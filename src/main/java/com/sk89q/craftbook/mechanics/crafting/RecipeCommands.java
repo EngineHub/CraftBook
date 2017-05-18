@@ -60,7 +60,7 @@ public class RecipeCommands {
 
         String name = context.getString(0);
         RecipeType type = RecipeType.getTypeFromName(context.getString(1));
-        HashMap<String, Object> advancedData = new HashMap<String, Object>();
+        HashMap<String, Object> advancedData = new HashMap<>();
 
         if (context.hasFlag('p')) {
             advancedData.put("permission-node", context.getFlag('p'));
@@ -73,7 +73,7 @@ public class RecipeCommands {
 
         if(type == RecipeType.SHAPED) {
 
-            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<CraftingItemStack, Character>();
+            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<>();
 
             int furtherestX = -1;
             int furtherestY = -1;
@@ -163,7 +163,7 @@ public class RecipeCommands {
 
         } else if (type == RecipeType.SHAPELESS || type == RecipeType.FURNACE) {
 
-            ArrayList<CraftingItemStack> ingredients = new ArrayList<CraftingItemStack>();
+            ArrayList<CraftingItemStack> ingredients = new ArrayList<>();
 
             for(ItemStack slot : slots) {
 
@@ -208,7 +208,7 @@ public class RecipeCommands {
 
     public List<CraftingItemStack> getResults(Inventory inv) {
 
-        List<CraftingItemStack> results = new ArrayList<CraftingItemStack>();
+        List<CraftingItemStack> results = new ArrayList<>();
 
         for(int i = 21; i < 27; i++) {
 

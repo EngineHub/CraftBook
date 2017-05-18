@@ -96,9 +96,7 @@ public class SetBridge extends AbstractIC {
                 offsetX = Integer.parseInt(offsetSplit[0]);
                 offsetY = Integer.parseInt(offsetSplit[1]);
                 offsetZ = Integer.parseInt(offsetSplit[2]);
-            } catch (NumberFormatException e) {
-                // ignore and use defaults
-            } catch (IndexOutOfBoundsException e) {
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 // ignore and use defaults
             }
             try {

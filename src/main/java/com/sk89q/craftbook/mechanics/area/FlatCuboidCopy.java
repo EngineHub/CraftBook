@@ -160,8 +160,8 @@ public class FlatCuboidCopy extends CuboidCopy {
     @Override
     public void paste() {
 
-        ArrayList<Tuple2<Vector, byte[]>> queueAfter = new ArrayList<Tuple2<Vector, byte[]>>();
-        ArrayList<Tuple2<Vector, byte[]>> queueLast = new ArrayList<Tuple2<Vector, byte[]>>();
+        ArrayList<Tuple2<Vector, byte[]>> queueAfter = new ArrayList<>();
+        ArrayList<Tuple2<Vector, byte[]>> queueLast = new ArrayList<>();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -174,9 +174,9 @@ public class FlatCuboidCopy extends CuboidCopy {
                     }
 
                     if (BlockType.shouldPlaceLast(blocks[index])) {
-                        queueLast.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
+                        queueLast.add(new Tuple2<>(pt, new byte[]{blocks[index], data[index]}));
                     } else {
-                        queueAfter.add(new Tuple2<Vector, byte[]>(pt, new byte[] {blocks[index], data[index]}));
+                        queueAfter.add(new Tuple2<>(pt, new byte[]{blocks[index], data[index]}));
                     }
                 }
             }

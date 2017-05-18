@@ -79,16 +79,10 @@ public final class BukkitUtil {
         }
     }
 
-    private static final Map<String, LocalWorld> wlw = new HashMap<String, LocalWorld>();
+    private static final Map<String, LocalWorld> wlw = new HashMap<>();
 
     public static LocalWorld getLocalWorld(World w) {
-
-        LocalWorld lw = wlw.get(w.getName());
-        if (lw == null) {
-            lw = new BukkitWorld(w);
-            wlw.put(w.getName(), lw);
-        }
-        return lw;
+        return wlw.computeIfAbsent(w.getName(), k -> new BukkitWorld(w));
     }
 
     public static Vector toVector(Block block) {

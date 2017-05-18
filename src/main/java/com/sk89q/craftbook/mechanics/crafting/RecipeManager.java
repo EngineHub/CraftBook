@@ -25,7 +25,7 @@ public class RecipeManager {
     }
 
     public void load() {
-        recipes = new LinkedHashSet<Recipe>();
+        recipes = new LinkedHashSet<>();
         if (config == null) {
             CraftBookPlugin.logger().severe("Failure loading recipes! Config is null!");
             return; // If the config is null, it can't continue.
@@ -124,7 +124,7 @@ public class RecipeManager {
                 if(ingredients != null) {
                     if(ingredients.size() != ((Recipe)o).ingredients.size())
                         return false;
-                    List<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>(ingredients);
+                    List<CraftingItemStack> stacks = new ArrayList<>(ingredients);
                     for(CraftingItemStack st : ((Recipe)o).ingredients) {
                         if(stacks.size() <= 0)
                             return false;
@@ -145,7 +145,7 @@ public class RecipeManager {
                     if(items.size() != ((Recipe)o).items.size())
                         return false;
 
-                    List<CraftingItemStack> stacks = new ArrayList<CraftingItemStack>(items.keySet());
+                    List<CraftingItemStack> stacks = new ArrayList<>(items.keySet());
                     for(CraftingItemStack st : ((Recipe)o).items.keySet()) {
                         if(stacks.size() <= 0)
                             return false;
@@ -202,8 +202,8 @@ public class RecipeManager {
 
         private Recipe(String id, YAMLProcessor config) throws InvalidCraftingException {
             this.id = id;
-            ingredients = new ArrayList<CraftingItemStack>();
-            items = new LinkedHashMap<CraftingItemStack, Character>();
+            ingredients = new ArrayList<>();
+            items = new LinkedHashMap<>();
             load();
         }
 
@@ -239,7 +239,7 @@ public class RecipeManager {
                 throw new InvalidCraftingException("Result is invalid in recipe: "+ id);
 
             if(iterator.hasNext()) {
-                ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>();
+                ArrayList<CraftingItemStack> extraResults = new ArrayList<>();
                 while(iterator.hasNext())
                     extraResults.add(iterator.next());
                 addAdvancedData("extra-results", extraResults);
@@ -259,9 +259,9 @@ public class RecipeManager {
 
                 for(String s : actions) {
                     if(s.equalsIgnoreCase("commands-console"))
-                        addAdvancedData("commands-console", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
+                        addAdvancedData("commands-console", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<>()));
                     else if(s.equalsIgnoreCase("commands-player"))
-                        addAdvancedData("commands-player", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<String>()));
+                        addAdvancedData("commands-player", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<>()));
                 }
             }
         }
@@ -271,24 +271,25 @@ public class RecipeManager {
             config.addNode("crafting-recipes." + id);
             config.setProperty("crafting-recipes." + id + ".type", type.name);
             if(type != RecipeType.SHAPED) {
-                LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
+                LinkedHashMap<String, Integer> resz = new LinkedHashMap<>();
                 for(CraftingItemStack stack : ingredients) {
                     resz.put(stack.toString() + ' ', stack.getItemStack().getAmount());
                 }
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
             } else {
-                LinkedHashMap<String, Character> resz = new LinkedHashMap<String, Character>();
+                LinkedHashMap<String, Character> resz = new LinkedHashMap<>();
                 for(Map.Entry<CraftingItemStack, Character> craftingItemStackCharacterEntry : items.entrySet())
                     resz.put(craftingItemStackCharacterEntry.getKey().toString() + ' ', craftingItemStackCharacterEntry.getValue());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
             }
 
-            LinkedHashMap<String, Integer> resz = new LinkedHashMap<String, Integer>();
+            LinkedHashMap<String, Integer> resz = new LinkedHashMap<>();
             resz.put(result.toString() + ' ', result.getItemStack().getAmount());
             if(hasAdvancedData("extra-results")) {
 
-                ArrayList<CraftingItemStack> extraResults = new ArrayList<CraftingItemStack>((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
+                ArrayList<CraftingItemStack> extraResults =
+                        new ArrayList<>((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
                 for(CraftingItemStack s : extraResults)
                     resz.put(s.toString() + ' ', s.getItemStack().getAmount());
             }
@@ -307,7 +308,7 @@ public class RecipeManager {
         }
 
         private LinkedHashMap<CraftingItemStack, Character> getShapeIngredients(String path) {
-            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<CraftingItemStack, Character>();
+            LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<>();
             try {
                 for (String item : config.getKeys(path)) {
                     ItemStack stack = ItemUtil.makeItemValid(ItemSyntax.getItem(RegexUtil.PERCENT_PATTERN.split(item.trim())[0]));
@@ -328,7 +329,7 @@ public class RecipeManager {
         }
 
         private List<CraftingItemStack> getItems(String path) {
-            List<CraftingItemStack> items = new ArrayList<CraftingItemStack>();
+            List<CraftingItemStack> items = new ArrayList<>();
             try {
                 for (Object oitem : config.getKeys(path)) {
                     String okey = String.valueOf(oitem);
@@ -376,7 +377,7 @@ public class RecipeManager {
         }
 
         //Advanced data
-        private HashMap<String, Object> advancedData = new HashMap<String, Object>();
+        private HashMap<String, Object> advancedData = new HashMap<>();
 
         public boolean hasAdvancedData(String key) {
             return advancedData.containsKey(key);

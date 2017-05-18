@@ -86,7 +86,7 @@ public final class EntityUtil {
 
     public static org.bukkit.entity.EntityType[] parseEntityList(List<String> list) {
 
-        List<org.bukkit.entity.EntityType> ents = new ArrayList<org.bukkit.entity.EntityType>();
+        List<org.bukkit.entity.EntityType> ents = new ArrayList<>();
         for(String s : list)
             ents.add(org.bukkit.entity.EntityType.fromName(s));
 

@@ -128,7 +128,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
         ItemInfo blockItem = cauldronBlock;
 
         // Used to store cauldron blocks -- walls are counted
-        Map<Location, ItemInfo> visited = new HashMap<Location, ItemInfo>();
+        Map<Location, ItemInfo> visited = new HashMap<>();
 
         // The following attempts to recursively find adjacent blocks so
         // that it can find all the blocks used within the cauldron
@@ -143,7 +143,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
         }
 
         // Key is the block ID and the value is the amount
-        Map<ItemInfo, Integer> contents = new HashMap<ItemInfo, Integer>();
+        Map<ItemInfo, Integer> contents = new HashMap<>();
 
         // Now we have to ignore cauldron blocks so that we get the real
         // contents of the cauldron
@@ -184,7 +184,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
 
             player.print(player.translate("mech.cauldron.legacy-create") + " " + recipe.getName() + ".");
 
-            List<ItemInfo> ingredients = new ArrayList<ItemInfo>(recipe.getIngredients());
+            List<ItemInfo> ingredients = new ArrayList<>(recipe.getIngredients());
 
             //List<BlockWorldVector> removeQueue = new ArrayList<BlockWorldVector>();
 

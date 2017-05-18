@@ -44,7 +44,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event))
             return;
 
-        Set<Location> visitedLocations = new HashSet<Location>();
+        Set<Location> visitedLocations = new HashSet<>();
         visitedLocations.add(event.getBlock().getLocation());
         int broken = 1;
 

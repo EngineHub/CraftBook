@@ -19,7 +19,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
     public static Collection<CauldronItemStack> convert(Collection<Item> stacks) {
 
-        Set<ItemStack> items = new HashSet<ItemStack>();
+        Set<ItemStack> items = new HashSet<>();
         for (Item item : stacks) {
             ItemStack stack = item.getItemStack();
 
@@ -38,7 +38,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
             if(!has)
                 items.add(stack);
         }
-        Set<CauldronItemStack> stackSet = new LinkedHashSet<CauldronItemStack>();
+        Set<CauldronItemStack> stackSet = new LinkedHashSet<>();
         // merge the amounts and stacks
         for (ItemStack stack : items)
             stackSet.add(new CauldronItemStack(stack));

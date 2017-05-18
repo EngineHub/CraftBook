@@ -26,7 +26,7 @@ public class VerifyUtilTest {
     @Test
     public void testWithoutNulls() {
 
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         list.add(null);
         list.add(mock(Object.class));
         list.add(mock(Object.class));

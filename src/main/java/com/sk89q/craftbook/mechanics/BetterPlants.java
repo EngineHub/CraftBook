@@ -28,8 +28,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
         if(fernFarming) {
-            for(World world : Bukkit.getWorlds())
-                tickedWorlds.add(world);
+            tickedWorlds.addAll(Bukkit.getWorlds());
 
             growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
         }
@@ -51,12 +50,9 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event)) return;
 
         if(fernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x3) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-                @Override
-                public void run () {
-                    event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), new ItemStack(Material.LONG_GRASS, 1, (short) 2));
-                    event.getBlock().getRelative(0, -1, 0).setTypeIdAndData(Material.LONG_GRASS.getId(), (byte) 2, true);
-                }
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), new ItemStack(Material.LONG_GRASS, 1, (short) 2));
+                event.getBlock().getRelative(0, -1, 0).setTypeIdAndData(Material.LONG_GRASS.getId(), (byte) 2, true);
             }, 2L);
         }
     }
@@ -92,7 +88,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
     }
 
-    private Set<World> tickedWorlds = new HashSet<World>();
+    private Set<World> tickedWorlds = new HashSet<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onWorldLoad(WorldLoadEvent event) {

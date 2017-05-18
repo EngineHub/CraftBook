@@ -28,7 +28,7 @@ public class SelfTriggeringManager implements Listener {
     /**
      * List of mechanics that think on a routine basis.
      */
-    private final Collection<Location> thinkingMechanics = new HashSet<Location>();
+    private final Collection<Location> thinkingMechanics = new HashSet<>();
 
     public void registerSelfTrigger(Chunk chunk) {
         if (!chunk.getWorld().isChunkLoaded(chunk))
@@ -84,7 +84,7 @@ public class SelfTriggeringManager implements Listener {
 
     public Collection<Location> getSelfTriggeringMechanics() {
 
-        return new ArrayList<Location>(thinkingMechanics);
+        return new ArrayList<>(thinkingMechanics);
     }
 
     private Location[] registeredLocations;
@@ -126,12 +126,7 @@ public class SelfTriggeringManager implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-            @Override
-            public void run() {
-                registerSelfTrigger(event.getChunk());
-            }
-        }, 2);
+        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> registerSelfTrigger(event.getChunk()), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

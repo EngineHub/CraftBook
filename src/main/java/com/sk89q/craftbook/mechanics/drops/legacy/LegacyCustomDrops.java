@@ -80,17 +80,12 @@ public class LegacyCustomDrops extends AbstractCraftBookMechanic {
 
         if(!blockDefinitions.exists() && !mobDefinitions.exists()) return true;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-            @Override
-            public void run () {
-                customDrops = new LegacyCustomDropManager(CraftBookPlugin.inst().getDataFolder());
-                if(blockDefinitions.exists())
-                    blockDefinitions.delete();
-                if(mobDefinitions.exists())
-                    mobDefinitions.delete();
-            }
-
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+            customDrops = new LegacyCustomDropManager(CraftBookPlugin.inst().getDataFolder());
+            if(blockDefinitions.exists())
+                blockDefinitions.delete();
+            if(mobDefinitions.exists())
+                mobDefinitions.delete();
         }, 10L);
         return true;
     }

@@ -202,7 +202,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
     }
 
-    public boolean isSameSapling(Block sapling, Block other) {
+    public static boolean isSameSapling(Block sapling, Block other) {
 
         return sapling.getType() == other.getType() && (other.getData() & 3) == (sapling.getData() & 3);
     }

@@ -17,7 +17,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
     String band;
 
-    public static final Map<String, Playlist> stations = new HashMap<String, Playlist>();
+    public static final Map<String, Playlist> stations = new HashMap<>();
 
     public RadioStation (Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);

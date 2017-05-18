@@ -69,7 +69,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0)) {
 
-            maxAmount = min + (int) (CraftBookPlugin.inst().getRandom().nextDouble() * (max - min + 1));
+            maxAmount = min + CraftBookPlugin.inst().getRandom().nextInt(max - min + 1);
             amountDone = 0;
             ticks = 0;
 

@@ -244,11 +244,7 @@ public class Area extends AbstractCraftBookMechanic {
                 setToggledState(sign, true);
             }
             return true;
-        } catch (CuboidCopyException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
-        } catch (DataException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
-        } catch (IOException e) {
+        } catch (CuboidCopyException | IOException | DataException e) {
             CraftBookPlugin.logger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
         }
         return false;
@@ -300,11 +296,7 @@ public class Area extends AbstractCraftBookMechanic {
                 setToggledState(sign, true);
             }
             return true;
-        } catch (CuboidCopyException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to cold toggle Area: " + e.getMessage());
-        } catch (DataException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to cold toggle Area: " + e.getMessage());
-        } catch (IOException e) {
+        } catch (CuboidCopyException | IOException | DataException e) {
             CraftBookPlugin.logger().log(Level.SEVERE, "Failed to cold toggle Area: " + e.getMessage());
         }
         return false;
@@ -315,10 +307,7 @@ public class Area extends AbstractCraftBookMechanic {
         String namespace = sign.getLine(0);
         String id = sign.getLine(2).toLowerCase(Locale.ENGLISH);
 
-        if (id.isEmpty() || id.length() < 1) return false;
-        if (namespace == null || namespace.isEmpty() || namespace.length() < 1) return false;
-
-        return true;
+        return !id.isEmpty() && namespace != null && !namespace.isEmpty();
     }
 
     // pattern to check where the markers for on and off state are

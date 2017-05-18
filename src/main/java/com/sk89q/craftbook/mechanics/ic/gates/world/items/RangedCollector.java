@@ -69,7 +69,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
     Block chest;
 
-    List<ItemStack> filters = new ArrayList<ItemStack>();
+    List<ItemStack> filters = new ArrayList<>();
 
     @Override
     public void load() {
@@ -135,7 +135,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
                     Block pipe = getBackBlock().getRelative(back);
 
-                    PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<ItemStack>(Collections.singletonList(stack)), getBackBlock());
+                    PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
                     Bukkit.getPluginManager().callEvent(event);
 
                     if (event.isCancelled()) {

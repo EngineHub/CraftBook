@@ -126,18 +126,18 @@ public class ICManager {
      *
      * @see RegisteredICFactory
      */
-    public final Map<String, RegisteredICFactory> registered = new LinkedHashMap<String, RegisteredICFactory>();
+    public final Map<String, RegisteredICFactory> registered = new LinkedHashMap<>();
 
     /**
      * Holds a map of long IDs to short IDs
      *
      * @see RegisteredICFactory
      */
-    public final Map<String, String> longRegistered = new HashMap<String, String>();
+    public final Map<String, String> longRegistered = new HashMap<>();
 
-    private static final Map<Location, IC> cachedICs = new HashMap<Location, IC>();
+    private static final Map<Location, IC> cachedICs = new HashMap<>();
 
-    private static final Set<String> customPrefix = new HashSet<String>();
+    private static final Set<String> customPrefix = new HashSet<>();
 
     /**
      * Register an ic if possible
@@ -315,7 +315,7 @@ public class ICManager {
 
     public List<RegisteredICFactory> getICList() {
 
-        return new LinkedList<RegisteredICFactory>(registered.values());
+        return new LinkedList<>(registered.values());
     }
 
     public void registerICs(Server server) {
@@ -474,7 +474,7 @@ public class ICManager {
 
     public String getSearchID(Player p, String search) {
 
-        ArrayList<String> icNameList = new ArrayList<String>(registered.keySet());
+        ArrayList<String> icNameList = new ArrayList<>(registered.keySet());
 
         Collections.sort(icNameList);
 
@@ -502,11 +502,11 @@ public class ICManager {
      */
     public String[] generateICText(Player p, String search, char[] parameters) {
 
-        ArrayList<String> icNameList = new ArrayList<String>(registered.keySet());
+        ArrayList<String> icNameList = new ArrayList<>(registered.keySet());
 
         Collections.sort(icNameList);
 
-        ArrayList<String> strings = new ArrayList<String>();
+        ArrayList<String> strings = new ArrayList<>();
         boolean col = true;
         for (String ic : icNameList) {
             try {

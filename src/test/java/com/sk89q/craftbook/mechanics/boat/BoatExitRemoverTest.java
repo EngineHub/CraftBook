@@ -93,10 +93,10 @@ public class BoatExitRemoverTest {
 
         rem.new BoatRemover(player, boat).run();
 
-        when(inv.addItem(Mockito.<ItemStack[]>any())).thenReturn(new HashMap<Integer, ItemStack>());
+        when(inv.addItem(Mockito.<ItemStack[]>any())).thenReturn(new HashMap<>());
         rem.new BoatRemover(player, boat).run();
 
         verify(boat, Mockito.times(4)).remove();
-        verify(world, Mockito.times(3)).dropItemNaturally(Mockito.eq(location), Mockito.<ItemStack>any());
+        verify(world, Mockito.times(3)).dropItemNaturally(Mockito.eq(location), Mockito.any());
     }
 }

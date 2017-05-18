@@ -121,11 +121,7 @@ public class Melody extends AbstractSelfTriggeredIC {
             try {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
                 hasRun = false;
-            } catch (MidiUnavailableException e) {
-                e.printStackTrace();
-            } catch (InvalidMidiDataException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
                 e.printStackTrace();
             }
         }
@@ -167,8 +163,8 @@ public class Melody extends AbstractSelfTriggeredIC {
         public MelodyPlayer(MidiJingleSequencer sequencer) {
             this.sequencer = sequencer;
             jNote = new JingleNoteManager();
-            toStop = new HashSet<String>();
-            toPlay = new HashSet<String>();
+            toStop = new HashSet<>();
+            toPlay = new HashSet<>();
             isPlaying = false;
             CraftBookPlugin.logDebugMessage("Constructing new player instance.", "ic-mc1270");
         }
@@ -235,9 +231,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         public boolean isValid() {
-            if(sequencer == null) return false;
-            if(!sequencer.isPlaying() && sequencer.hasPlayedBefore()) return false;
-            return true;
+            return sequencer != null && (sequencer.isPlaying() || !sequencer.hasPlayedBefore());
         }
     }
 

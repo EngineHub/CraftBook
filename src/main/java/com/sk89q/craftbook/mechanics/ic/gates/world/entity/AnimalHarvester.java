@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;

@@ -68,7 +68,7 @@ import java.util.Set;
  */
 final class MechanicListenerAdapter implements Listener {
 
-    private Set<String> signClickTimer = new HashSet<String>();
+    private Set<String> signClickTimer = new HashSet<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
@@ -99,12 +99,7 @@ final class MechanicListenerAdapter implements Listener {
                     return;
                 } else {
                     signClickTimer.add(event.getPlayer().getName());
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-                        @Override
-                        public void run () {
-                            signClickTimer.remove(event.getPlayer().getName());
-                        }
-                    }, CraftBookPlugin.inst().getConfiguration().signClickTimeout);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> signClickTimer.remove(event.getPlayer().getName()), CraftBookPlugin.inst().getConfiguration().signClickTimeout);
                 }
             }
             SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
@@ -344,16 +339,12 @@ final class MechanicListenerAdapter implements Listener {
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
 
         if(CraftBookPlugin.inst().useLegacyCartSystem) {
-            CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                        CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));
-                        CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-                    } catch (InvalidMechanismException ignored) {
-                    }
+            CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+                try {
+                    CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
+                    CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));
+                    CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                } catch (InvalidMechanismException ignored) {
                 }
             });
         }

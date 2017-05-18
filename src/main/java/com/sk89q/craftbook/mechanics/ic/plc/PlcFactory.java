@@ -45,14 +45,14 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public IC create(ChangedSign sign) {
 
-        PlcIC<StateT, CodeT, Lang> i = new PlcIC<StateT, CodeT, Lang>(s, sign, lang);
+        PlcIC<StateT, CodeT, Lang> i = new PlcIC<>(s, sign, lang);
         return selfTriggered ? i.selfTriggered() : i;
     }
 
     @Override
     public void verify(ChangedSign sign) throws ICVerificationException {
 
-        new PlcIC<StateT, CodeT, Lang>(sign, lang); // Huge ugly hack!!
+        new PlcIC<>(sign, lang); // Huge ugly hack!!
         sign.setLine(2, "id:" + CraftBookPlugin.inst().getRandom().nextInt());
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
@@ -69,7 +69,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
 
     public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered, String id) {
 
-        return new PlcFactory<StateT, CodeT, Lang>(s, lang, selfTriggered, id);
+        return new PlcFactory<>(s, lang, selfTriggered, id);
     }
 
     @Override

@@ -112,7 +112,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {
 
-        List<ItemInfo> blacklist = new ArrayList<ItemInfo>();
+        List<ItemInfo> blacklist = new ArrayList<>();
 
         public Factory(Server server) {
 

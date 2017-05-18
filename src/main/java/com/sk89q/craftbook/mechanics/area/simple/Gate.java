@@ -77,7 +77,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         boolean foundGate = false;
 
-        Set<GateColumn> visitedColumns = new HashSet<GateColumn>();
+        Set<GateColumn> visitedColumns = new HashSet<>();
 
         if (smallSearchSize) {
             // Toggle nearby gates
@@ -320,14 +320,8 @@ public class Gate extends AbstractCraftBookMechanic {
         final ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-
-            @Override
-            public void run() {
-
-                toggleGates(null, event.getBlock(), sign.getLine(1).equals("[DGate]"), event.getNewCurrent() > 0);
-            }
-        }, 2);
+        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                () -> toggleGates(null, event.getBlock(), sign.getLine(1).equals("[DGate]"), event.getNewCurrent() > 0), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -131,7 +131,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         int position;
 
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
 
         BukkitTask task;
 
@@ -197,7 +197,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         private class FyrestoneInterpreter implements ShowInterpreter {
 
-            Map<String, List<FireworkEffect>> effects = new HashMap<String, List<FireworkEffect>>();
+            Map<String, List<FireworkEffect>> effects = new HashMap<>();
             String currentBuilding = null;
             Location location = BukkitUtil.toSign(getSign()).getLocation();
             float duration = 0.5f;
@@ -325,7 +325,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             effectList.add(builder.build());
                             effects.put(currentBuilding, effectList);
                         } else {
-                            List<FireworkEffect> effectList = new ArrayList<FireworkEffect>();
+                            List<FireworkEffect> effectList = new ArrayList<>();
                             effectList.add(builder.build());
                             effects.put(currentBuilding, effectList);
                         }
@@ -343,12 +343,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                             if(preciseDuration)
-                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new Runnable() {
-                                    @Override
-                                    public void run () {
-                                        firework.detonate();
-                                    }
-                                }, (long) (duration*10));
+                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), firework::detonate, (long) (duration*10));
                         }
                     }
                 }
@@ -487,8 +482,8 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
     public interface ShowInterpreter extends Runnable {
 
-        public void setRunning(boolean isRunning);
+        void setRunning(boolean isRunning);
 
-        public boolean isRunning();
+        boolean isRunning();
     }
 }

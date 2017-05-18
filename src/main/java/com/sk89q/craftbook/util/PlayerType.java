@@ -11,7 +11,7 @@ public enum PlayerType {
 
     NAME('p'), UUID('u'), CBID('i'), GROUP('g'), PERMISSION_NODE('n'), TEAM('t'), ALL('a');
 
-    private PlayerType(char prefix) {
+    PlayerType(char prefix) {
 
         this.prefix = prefix;
     }

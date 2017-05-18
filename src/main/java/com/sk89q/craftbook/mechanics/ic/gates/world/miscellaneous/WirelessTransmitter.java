@@ -51,7 +51,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessTransmitter extends AbstractIC {
 
-    protected static final Set<String> memory = new LinkedHashSet<String>();
+    protected static final Set<String> memory = new LinkedHashSet<>();
 
     protected String band;
 
