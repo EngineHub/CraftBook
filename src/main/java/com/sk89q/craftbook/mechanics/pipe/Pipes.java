@@ -119,10 +119,6 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items, int depth) {
-        if (depth > 1200) {
-            CraftBookPlugin.logger().info("Pipe of excessive length found at " + block.getLocation().toString());
-            return;
-        }
         LinkedList<Block> searchQueue = new LinkedList<>();
 
         //Enumerate the search queue.
@@ -199,8 +195,10 @@ public class Pipes extends AbstractCraftBookMechanic {
                 try {
                     searchNearbyPipes(bl, visitedPipes, items, depth + 1);
                 } catch (StackOverflowError e) {
-                    CraftBookPlugin.logger().warning("Pipes encountered a StackOverflowError at position: " + bl.getLocation().toString() + ". "
-                            + "This occured at a depth of: " + depth);
+                    if (warnWhenMassive) {
+                        CraftBookPlugin.logger().warning("Pipes encountered a StackOverflowError at position: " + bl.getLocation().toString() + ". "
+                                + "This occured at a depth of: " + depth);
+                    }
                 }
             } else if (bl.getType() == Material.PISTON_BASE) {
 
@@ -261,7 +259,15 @@ public class Pipes extends AbstractCraftBookMechanic {
                     items.addAll(newItems);
                 }
 
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, depth + 1);
+                try {
+                    searchNearbyPipes(block, visitedPipes, items, depth + 1);
+                } catch (StackOverflowError e) {
+                    if (warnWhenMassive) {
+                        CraftBookPlugin.logger().warning("Pipes encountered a StackOverflowError at position: " + block.getLocation().toString() +
+                                ". "
+                                + "This occured at a depth of: " + depth);
+                    }
+                }
             } else if (bl.getType() == Material.DROPPER) {
 
                 ChangedSign sign = getSignOnPiston(bl);
@@ -298,7 +304,16 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.removeAll(filteredItems);
                 items.addAll(newItems);
 
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, depth + 1);
+                if (!items.isEmpty()) {
+                    try {
+                        searchNearbyPipes(block, visitedPipes, items, depth + 1);
+                    } catch (StackOverflowError e) {
+                        if (warnWhenMassive) {
+                            CraftBookPlugin.logger().warning("Pipes encountered a StackOverflowError at position: " + block.getLocation().toString()
+                                    + ". This occured at a depth of: " + depth);
+                        }
+                    }
+                }
             }
         }
     }
@@ -479,6 +494,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private ItemInfo pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
+    private boolean warnWhenMassive;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -494,5 +510,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "warn-when-too-large", "Prints a warning in the console when a pipe that's too large is found.");
+        warnWhenMassive = config.getBoolean(path + "warn-when-too-large", false);
     }
 }
