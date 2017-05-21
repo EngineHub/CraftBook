@@ -118,8 +118,11 @@ public class Pipes extends AbstractCraftBookMechanic {
         return null;
     }
 
-    private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions,
-            int depth) {
+    private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items, int depth) {
+        if (depth > 1200) {
+            CraftBookPlugin.logger().info("Pipe of excessive length found at " + block.getLocation().toString());
+            return;
+        }
         LinkedList<Block> searchQueue = new LinkedList<>();
 
         //Enumerate the search queue.
@@ -194,7 +197,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         for(Block bl : searchQueue) {
             if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS) {
                 try {
-                    searchNearbyPipes(bl, visitedPipes, items, filters, exceptions, depth + 1);
+                    searchNearbyPipes(bl, visitedPipes, items, depth + 1);
                 } catch (StackOverflowError e) {
                     CraftBookPlugin.logger().warning("Pipes encountered a StackOverflowError at position: " + bl.getLocation().toString() + ". "
                             + "This occured at a depth of: " + depth);
@@ -258,7 +261,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     items.addAll(newItems);
                 }
 
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions, depth + 1);
+                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, depth + 1);
             } else if (bl.getType() == Material.DROPPER) {
 
                 ChangedSign sign = getSignOnPiston(bl);
@@ -295,7 +298,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.removeAll(filteredItems);
                 items.addAll(newItems);
 
-                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, filters, exceptions, depth + 1);
+                if (!items.isEmpty()) searchNearbyPipes(block, visitedPipes, items, depth + 1);
             }
         }
     }
@@ -354,7 +357,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions, 0);
+                    searchNearbyPipes(block, visitedPipes, items, 0);
                 }
 
                 if (!items.isEmpty()) {
@@ -377,7 +380,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions, 0);
+                    searchNearbyPipes(block, visitedPipes, items, 0);
                 }
 
                 if (!items.isEmpty()) {
@@ -403,7 +406,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     if (!event.isCancelled()) {
                         visitedPipes.add(fac.getLocation().toVector());
-                        searchNearbyPipes(block, visitedPipes, items, filters, exceptions, 0);
+                        searchNearbyPipes(block, visitedPipes, items, 0);
                     }
 
                     if (!items.isEmpty()) {
@@ -420,7 +423,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items, filters, exceptions, 0);
+                    searchNearbyPipes(block, visitedPipes, items, 0);
                 }
                 leftovers.addAll(items);
             }
