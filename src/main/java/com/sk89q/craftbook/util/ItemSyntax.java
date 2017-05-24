@@ -192,6 +192,7 @@ public final class ItemSyntax {
                     }
                     catch(NumberFormatException ignored){}
                     catch(ArrayIndexOutOfBoundsException ignored){}
+                    catch(NullPointerException ignored){}
                 }
             }
             if(advMetadataSplit.length > 1) {
