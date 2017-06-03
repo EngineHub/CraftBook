@@ -24,6 +24,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.SignUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -65,6 +66,24 @@ public class BlockReplacer extends IC {
     public void create(Player player, List<Text> lines) throws InvalidICException {
         super.create(player, lines);
 
+        delay = 20;
+        mode = 0;
+        physics = true;
+
+        try {
+            String[] data = RegexUtil.COLON_PATTERN.split(SignUtil.getTextRaw(lines.get(3)));
+            delay = Math.max(0, Integer.parseInt(data[0]));
+            if (data.length > 1)
+                mode = Integer.parseInt(data[1]);
+            else
+                mode = 0;
+            physics = data.length <= 2 || data[2].equalsIgnoreCase("1") || data[2].equalsIgnoreCase("true");
+        } catch (Exception e) {
+            throw new InvalidICException("Last line must be of delay:mode:physics format");
+        }
+
+        lines.set(3, Text.of(delay, ":", mode, ":", physics));
+
         blockTypeData = new BlockReplacer.Factory.BlockTypeData();
 
         Inventory offBlockInventory = Inventory.builder()
@@ -99,13 +118,19 @@ public class BlockReplacer extends IC {
     public void load() {
         super.load();
 
-        String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
-        delay = Integer.parseInt(data[0]);
-        if(data.length > 1)
-            mode = Integer.parseInt(data[1]);
-        else
+        if (getLine(3).isEmpty()) {
+            String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
+            delay = Integer.parseInt(data[0]);
+            if (data.length > 1)
+                mode = Integer.parseInt(data[1]);
+            else
+                mode = 0;
+            physics = data.length <= 2 || data[2].equalsIgnoreCase("1") || data[2].equalsIgnoreCase("true");
+        } else {
+            delay = 20;
             mode = 0;
-        physics = data.length <= 2 || data[2].equalsIgnoreCase("1") || data[2].equalsIgnoreCase("true");
+            physics = true;
+        }
     }
 
     @Override
