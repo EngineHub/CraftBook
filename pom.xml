@@ -85,8 +85,8 @@
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.3.0-SNAPSHOT</version>
+            <artifactId>ProtocolLib-API</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
