@@ -176,7 +176,7 @@ subprojects {
     }
 
     shadowJar {
-        classifier ''
+        classifier 'dist'
         exclude 'docs'
         exclude 'GradleStart**'
         exclude '.cache'
