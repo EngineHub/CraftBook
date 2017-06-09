@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: "com.mendhak.gradlecrowdin"
@@ -11,6 +13,12 @@ sourceSets {
             srcDir 'src/main/resources'
         }
     }
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "build.hash": project.hasProperty("gitCommitHash") ? project.property("gitCommitHash") : "UNKNOWN"
+    ]
 }
 
 build.dependsOn(shadowJar)

@@ -126,12 +126,6 @@ subprojects {
         testCompile 'junit:junit:5.+'
     }
 
-    processResources {
-        filter ReplaceTokens, tokens: [
-                "build.hash": project.hasProperty("gitCommitHash") ? project.property("gitCommitHash") : "UNKNOWN"
-        ]
-    }
-
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
