@@ -71,7 +71,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(visitedLocations.contains(block.getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block))
                 if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, planted)) {
-                    ItemUtil.damageHeldItem(event.getPlayer());
+                    if (!singleDamageAxe) {
+                        ItemUtil.damageHeldItem(event.getPlayer());
+                    }
                 }
         }
     }
@@ -131,7 +133,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             if(visitedLocations.contains(block.getRelative(face).getLocation())) continue;
             if(canBreakBlock(event.getPlayer(), originalBlock, block.getRelative(face)))
                 if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, planted)) {
-                    ItemUtil.damageHeldItem(event.getPlayer());
+                    if (!singleDamageAxe) {
+                        ItemUtil.damageHeldItem(event.getPlayer());
+                    }
                 }
         }
 
@@ -145,6 +149,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean enforceDataValues;
     private boolean placeSaplings;
     private boolean breakLeaves;
+    private boolean singleDamageAxe;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -169,6 +174,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         config.setComment(path + "break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
         breakLeaves = config.getBoolean(path + "break-leaves", false);
+
+        config.setComment(path + "single-damage-axe", "Only remove one damage from the axe, regardless of the amount of logs removed.");
+        singleDamageAxe = config.getBoolean(path + "single-damage-axe", false);
     }
 
     private static class SaplingPlanter implements Runnable {
