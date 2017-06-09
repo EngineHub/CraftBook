@@ -18,7 +18,6 @@ package com.sk89q.craftbook.core.util;
 
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.core.CraftBookAPI;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -147,7 +146,7 @@ public class ConfigValue<T> {
             else
                 node.setValue(defaultValue);
         } catch (ObjectMappingException e) {
-            CraftBookPlugin.spongeInst().getLogger().error("Failed to map value!", e);
+            CraftBookAPI.inst().getLogger().error("Failed to map value!", e);
         }
     }
 }
