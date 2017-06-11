@@ -21,7 +21,7 @@ buildscript {
 
     configurations.all {
         resolutionStrategy {
-            force 'com.google.guava:guava:17.0'
+            force 'com.google.guava:guava:21.0'
         }
     }
 
@@ -109,7 +109,7 @@ subprojects {
     }
 
     dependencies {
-        compile 'com.google.guava:guava:17.0'
+        compile 'com.google.guava:guava:21.0'
         compile 'com.google.code.gson:gson:2.2.4'
         compile 'org.apache.commons:commons-lang3:3.3.2'
 

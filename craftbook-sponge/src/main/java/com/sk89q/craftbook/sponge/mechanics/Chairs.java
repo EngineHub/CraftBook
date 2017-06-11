@@ -119,8 +119,6 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 if (player.get(Keys.EXHAUSTION).orElse(-20d) > -20d) {
                     player.offer(Keys.EXHAUSTION, player.get(Keys.EXHAUSTION).orElse(-20d) - 0.1d);
                 }
-
-                chair.getValue().chairEntity.setRotation(new Vector3d(0, player.getRotation().getY(), 0));
             }
         }).submit(CraftBookPlugin.inst());
     }
@@ -168,7 +166,6 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
-        entity.setRotation(new Vector3d(0, player.getRotation().getY(), 0));
 
         location.getExtent().spawnEntity(entity, Cause.of(NamedCause.of("root", SpawnCause.builder().type(SpawnTypes.CUSTOM).build()), NamedCause.source(player)));
 

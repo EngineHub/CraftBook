@@ -43,18 +43,24 @@ public class SpongeJingleNotePlayer extends JingleNotePlayer {
         switch(instrument) {
             case PIANO:
                 return SoundTypes.BLOCK_NOTE_HARP;
-            case GUITAR:
-                return SoundTypes.BLOCK_NOTE_PLING;
             case BASS:
                 return SoundTypes.BLOCK_NOTE_BASS;
-            case BASS_GUITAR:
-                return SoundTypes.BLOCK_NOTE_BASS;
+            case SNARE_DRUM:
+                return SoundTypes.BLOCK_NOTE_SNARE;
             case STICKS:
                 return SoundTypes.BLOCK_NOTE_HAT;
             case BASS_DRUM:
                 return SoundTypes.BLOCK_NOTE_BASEDRUM;
-            case SNARE_DRUM:
-                return SoundTypes.BLOCK_NOTE_SNARE;
+            case BELL:
+                return SoundTypes.BLOCK_NOTE_BELL;
+            case CHIME:
+                return SoundTypes.BLOCK_NOTE_CHIME;
+            case FLUTE:
+                return SoundTypes.BLOCK_NOTE_FLUTE;
+            case XYLOPHONE:
+                return SoundTypes.BLOCK_NOTE_XYLOPHONE;
+            case PLING:
+                return SoundTypes.BLOCK_NOTE_PLING;
             default:
                 return SoundTypes.BLOCK_NOTE_HARP;
         }
