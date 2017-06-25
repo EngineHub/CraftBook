@@ -16,15 +16,22 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.core.util.RegexUtil;
+import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.worldedit.Vector;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 public class LocationUtil {
@@ -46,6 +53,60 @@ public class LocationUtil {
         }
 
         return Optional.ofNullable(inventory);
+    }
+
+    public static double getDistanceSquared(Location<World> location1, Location<World> location2) {
+        if(!location1.getExtent().equals(location2.getExtent())) {
+            return Integer.MAX_VALUE;
+        } else {
+            return location1.getPosition().distanceSquared(location2.getPosition());
+        }
+    }
+
+    public static boolean isWithinSphericalRadius(Location<World> location1, Location<World> location2, double radius) {
+        return location1.getExtent().equals(location2.getExtent())
+                && Math.floor(getDistanceSquared(location1, location2)) <= radius * radius; // Floor for more accurate readings
+    }
+
+    public static boolean isWithinRadiusPolygon(Location<World> location1, Location<World> location2, Vector3d radius) {
+        if(!location1.getExtent().equals(location2.getExtent())) return false;
+        if(location2.getX() < location1.getX() + radius.getX() && location2.getX() > location1.getX() - radius.getX())
+            if(location2.getY() < location1.getY() + radius.getY() && location2.getY() > location1.getY() - radius.getY())
+                if(location2.getZ() < location1.getZ() + radius.getZ() && location2.getZ() > location1.getZ() - radius.getX())
+                    return true;
+        return false;
+    }
+
+    public static boolean isWithinRadius(Location<World> location1, Location<World> location2, Vector3d radius) {
+        return radius.getX() == radius.getZ() && radius.getX() == radius.getY()
+                && isWithinSphericalRadius(location1, location2, radius.getFloorX())
+                || (radius.getX() != radius.getY()
+                || radius.getY() != radius.getZ()
+                || radius.getX() != radius.getZ())
+                && isWithinRadiusPolygon(location1, location2, radius);
+    }
+
+    public static Collection<Entity> getNearbyEntities(Location<World> location, Vector3d radius) {
+        int chunkRadiusX = radius.getFloorX() < 16 ? 1 : radius.getFloorX() / 16;
+        int chunkRadiusZ = radius.getFloorZ() < 16 ? 1 : radius.getFloorZ() / 16;
+        HashSet<Entity> radiusEntities = new HashSet<>();
+        for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
+            for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
+                int offChunkX = location.getChunkPosition().getX() + chX;
+                int offChunkZ = location.getChunkPosition().getZ() + chZ;
+                location.getExtent().getChunk(offChunkX, 0, offChunkZ).ifPresent(chunk -> {
+                    for (Entity e : chunk.getEntities()) {
+                        if (e == null || e.isRemoved()) {
+                            continue;
+                        }
+                        if (isWithinRadius(location, e.getLocation(), radius)) {
+                            radiusEntities.add(e);
+                        }
+                    }
+                });
+            }
+        }
+        return radiusEntities;
     }
 
     public static boolean isLocationWithinWorld(Location location) {
