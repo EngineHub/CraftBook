@@ -116,7 +116,6 @@ public class RecipeManager {
 
         @Override
         public boolean equals(Object o) {
-
             if(o instanceof Recipe) {
                 if(shape != null)
                     if(shape.size() != ((Recipe)o).shape.size())
@@ -173,7 +172,6 @@ public class RecipeManager {
 
         @Override
         public int hashCode() {
-
             int ret = id.hashCode();
             if(ingredients != null)
                 ret += ingredients.hashCode();
@@ -388,11 +386,12 @@ public class RecipeManager {
         }
 
         public void addAdvancedData(String key, Object data) {
-            CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack!", "advanced-data.init");
+            CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack! {" + String.valueOf(data) + '}',
+                    "advanced-data.init");
             advancedData.put(key, data);
         }
 
-        public HashMap<String,Object> getAdvancedDataMap () {
+        public HashMap<String,Object> getAdvancedDataMap() {
             return advancedData;
         }
     }
