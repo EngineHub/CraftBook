@@ -33,10 +33,12 @@ import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.property.item.FoodRestorationProperty;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -48,15 +50,16 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.recipe.smelting.SmeltingResult;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.Tuple;
 import org.spongepowered.api.world.LocatableBlock;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -75,8 +78,6 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
     private ConfigValue<Boolean> superFast = new ConfigValue<>("super-fast", "Removes the cap for 5 fuel to be used per tick, making the cooking pot faster.", false);
     private ConfigValue<Boolean> cookFoodOnly = new ConfigValue<>("food-only", "Caused the cooking pot to only cook food. Food is defined as anything that gives hunger points.", true);
 
-    //private List<FurnaceRecipe> recipesCache = new ArrayList<>();
-
     @Override
     public void onInitialize() throws CraftBookException {
         createPermissions.register();
@@ -87,16 +88,12 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         superFast.load(config);
         cookFoodOnly.load(config);
 
-        // TODO Fill recipesCache - FoodRestorationProperty for determining if food.
-
         super.onInitialize();
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-
-        // TODO Clear recipesCache
     }
 
     @Override
@@ -202,11 +199,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                 Chest chest = chestBlock.getTileEntity().map(tile -> (Chest) tile).get();
                 Inventory inventory = chest.getInventory();
 
-                // TODO When recipe API is done - scan furnace recipes from recipesCache.
-                // Tuple<Inventory Stack, Recipe Result>
-                List<Tuple<ItemStack, ItemStack>> items = new ArrayList<>();
-
-                if (items.size() > 0) {
+                if (inventory.totalItems() > 0) {
                     if (lastTick < 500) {
                         int multiplier = getMultiplier(sign);
                         if (superFast.getValue()) {
@@ -219,10 +212,21 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                         }
                     }
                     if (lastTick >= 50) {
-                        for (Tuple<ItemStack, ItemStack> item : items) {
-                            if (inventory.offer(item.getSecond()).getRejectedItems().isEmpty()) {
-                                inventory.query(item.getFirst()).poll(1);
-                                lastTick -= 50;
+                        for (Slot slot : inventory.<Slot>slots()) {
+                            ItemStack item = slot.peek().orElse(null);
+                            if (item != null) {
+                                Optional<SmeltingResult> resultOptional = Sponge.getRegistry().getSmeltingRecipeRegistry().getResult(item.createSnapshot());
+                                if (resultOptional.isPresent()) {
+                                    SmeltingResult result = resultOptional.get();
+                                    if (cookFoodOnly.getValue() && !result.getResult().getProperty(FoodRestorationProperty.class).isPresent()) {
+                                        continue;
+                                    }
+                                    if (inventory.offer(result.getResult().createStack()).getRejectedItems().isEmpty()) {
+                                        inventory.queryAny(item).poll(1);
+                                        lastTick -= 50;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -237,7 +241,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         }
     }
 
-    public void setMultiplier(Sign sign, int amount) {
+    private void setMultiplier(Sign sign, int amount) {
         if(!requireFuel.getValue())
             amount = Math.max(amount, 1);
         List<Text> lines = sign.lines().get();
@@ -245,11 +249,11 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         sign.offer(Keys.SIGN_LINES, lines);
     }
 
-    public void increaseMultiplier(Sign sign, int amount) {
+    private void increaseMultiplier(Sign sign, int amount) {
         setMultiplier(sign, getMultiplier(sign) + amount);
     }
 
-    public int getMultiplier(Sign sign) {
+    private int getMultiplier(Sign sign) {
         int multiplier;
         try {
             multiplier = Integer.parseInt(SignUtil.getTextRaw(sign, 3));
