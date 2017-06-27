@@ -84,6 +84,8 @@ public class DocumentationGenerator {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            CraftBookAPI.inst().getLogger().debug("Note: Tried to load non-existant file " + inputFile.getName());
         }
 
         return output.toString();
