@@ -255,7 +255,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.BounceBlocks");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Chairs");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.ChunkAnchor");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.CookingPot");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.CookingPot", GameState.PRE_INITIALIZATION);
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.CommandSigns");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Elevator");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Snow");
@@ -274,7 +274,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.pipe.Pipes");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightSwitch");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.signcopier.SignCopier");
-        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.XPStorer");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.XPStorer", GameState.PRE_INITIALIZATION);
 
         //Circuit Mechanics
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Ammeter");
