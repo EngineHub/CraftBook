@@ -21,6 +21,10 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.CombinationLock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Dispatcher;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.EdgeTriggerDFlipFlop;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullAdder;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullSubtractor;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.HalfAdder;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.HalfSubtractor;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.LevelTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemoryAccess;
@@ -98,6 +102,11 @@ class ICManager {
         registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
 
         //3I3O
+        registerICType(new ICType<>("MC4000", "FULL ADDER", "Full Adder", "A compact full-adder", new FullAdder.Factory(), "3I3O"));
+        registerICType(new ICType<>("MC4010", "HALF ADDER", "Half Adder", "A compact half-adder", new HalfAdder.Factory(), "3I3O"));
+
+        registerICType(new ICType<>("MC4100", "FULL SUBTR", "Full Subtractor", "A compact full-subtractor", new FullSubtractor.Factory(), "3I3O"));
+        registerICType(new ICType<>("MC4110", "HALF SUBTR", "Half Subtractor", "A compact half-subtractor", new HalfSubtractor.Factory(), "3I3O"));
         registerICType(new ICType<>("MC4200", "DISPATCH", "Dispatcher", "Outputs the centre input on the appropriate outputs when input is high.", new Dispatcher.Factory(), "3I3O"));
     }
 
