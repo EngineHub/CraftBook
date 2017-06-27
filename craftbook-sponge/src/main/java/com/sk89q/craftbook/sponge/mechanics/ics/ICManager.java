@@ -18,10 +18,16 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.CombinationLock;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Dispatcher;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.EdgeTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.LevelTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemoryAccess;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemorySetter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.NandGate;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.RSNandLatch;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.RSNorLatch;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.RandomBit;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Repeater;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.ToggleFlipFlop;
@@ -81,7 +87,18 @@ class ICManager {
         registerICType(new ICType<>("MC3020", "XOR", "Xor Gate", "Outputs high if the inputs are different", new XorGate.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3021", "XNOR", "Xnor Gate", "Outputs high if the inputs are the same", new XnorGate.Factory(), "3ISO"));
 
+        registerICType(new ICType<>("MC3030", "RS-NOR", "RS-Nor Latch", "A compact RS-Nor Latch", new RSNorLatch.Factory(), "3ISO"));
+
+        registerICType(new ICType<>("MC3033", "RS-NAND", "RS-Nand Latch", "A compact RS-Nand Latch", new RSNandLatch.Factory(), "3ISO"));
+        registerICType(new ICType<>("MC3034", "EDGE-D", "Edge-Trigger D Flip Flop", "A compact Edge-D Flip Flop", new EdgeTriggerDFlipFlop.Factory(), "3ISO"));
+        registerICType(new ICType<>("MC3036", "LEVEL-D", "Level-Trigger D Flip Flop", "A compact Level-D Flip Flop", new LevelTriggerDFlipFlop.Factory(), "3ISO"));
+
+        registerICType(new ICType<>("MC3050", "COMBO", "Combination Lock", "Outputs high if the correct combination is inputed", new CombinationLock.Factory(), "3ISO"));
+
         registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
+
+        //3I3O
+        registerICType(new ICType<>("MC4200", "DISPATCH", "Dispatcher", "Outputs the centre input on the appropriate outputs when input is high.", new Dispatcher.Factory(), "3I3O"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {

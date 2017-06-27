@@ -69,6 +69,10 @@ public abstract class PinSet {
         return type == BlockTypes.REDSTONE_WIRE || type == BlockTypes.LEVER;
     }
 
+    public boolean isTriggered(int id, IC ic) {
+        return id == ic.getTriggeredPin();
+    }
+
     public abstract String getName();
 
     public abstract Location<World> getPinLocation(int id, IC ic);

@@ -34,6 +34,7 @@ public abstract class IC {
     public Location<World> block;
     private Sign sign;
     private PinSet pinSet;
+    private int triggeredPin;
 
     public IC() {
     }
@@ -48,6 +49,14 @@ public abstract class IC {
             pinSet = ICSocket.PINSETS.get(ICManager.getICType(icFactory).getDefaultPinSet());
         }
         return pinSet;
+    }
+
+    public int getTriggeredPin() {
+        return this.triggeredPin;
+    }
+
+    public void setTriggeredPin(int triggeredPin) {
+        this.triggeredPin = triggeredPin;
     }
 
     /**

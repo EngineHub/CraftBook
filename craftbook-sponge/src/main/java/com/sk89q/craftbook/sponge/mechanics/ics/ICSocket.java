@@ -32,6 +32,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.command.SetDataCommand;
 import com.sk89q.craftbook.sponge.mechanics.ics.command.ShowDataCommand;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinSet;
+import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3I3O;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.Pins3ISO;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSI3O;
 import com.sk89q.craftbook.sponge.mechanics.ics.pinsets.PinsSISO;
@@ -81,6 +82,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         PINSETS.put("SISO", new PinsSISO());
         PINSETS.put("SI3O", new PinsSI3O());
         PINSETS.put("3ISO", new Pins3ISO());
+        PINSETS.put("3I3O", new Pins3I3O());
     }
 
     @Inject
@@ -238,6 +240,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
                     if (pin >= 0) {
                         if (powered != ic.getPinSet().getInput(pin, ic)) {
+                            ic.setTriggeredPin(pin);
                             Sponge.getScheduler().createTaskBuilder().execute(ic::trigger).submit(CraftBookPlugin.spongeInst().container);
                         }
                     }

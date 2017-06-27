@@ -92,7 +92,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
         StringBuilder icPins = new StringBuilder();
         icPins.append("IC Pins\n").append("=======\n\n");
-        icPins.append("\nInputs\n").append("~~~~~~\n\n");
+        icPins.append("\nInputs\n").append("------\n\n");
         for (int i = 0; i < icFactory.getPinHelp()[0].length; i++) {
             String line = icFactory.getPinHelp()[0][i];
             if (line.isEmpty()) {
@@ -100,7 +100,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
             }
             icPins.append("- ").append(line).append('\n');
         }
-        icPins.append("\nOutputs\n").append("~~~~~~~\n\n");
+        icPins.append("\nOutputs\n").append("-------\n\n");
         for (int i = 0; i < icFactory.getPinHelp()[1].length; i++) {
             String line = icFactory.getPinHelp()[1][i];
             if (line.isEmpty()) {
