@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.AndGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.CombinationLock;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Counter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Dispatcher;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.EdgeTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullAdder;
@@ -98,6 +99,8 @@ class ICManager {
         registerICType(new ICType<>("MC3036", "LEVEL-D", "Level-Trigger D Flip Flop", "A compact Level-D Flip Flop", new LevelTriggerDFlipFlop.Factory(), "3ISO"));
 
         registerICType(new ICType<>("MC3050", "COMBO", "Combination Lock", "Outputs high if the correct combination is inputed", new CombinationLock.Factory(), "3ISO"));
+
+        registerICType(new ICType<>("MC3102", "COUNTER", "Counter", "Increments on redstone signal, outputs high when reset.", new Counter.Factory(), "3ISO"));
 
         registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
 
