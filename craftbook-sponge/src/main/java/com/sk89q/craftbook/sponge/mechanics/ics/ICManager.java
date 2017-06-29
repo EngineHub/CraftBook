@@ -27,7 +27,9 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullAdder;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullSubtractor;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.HalfAdder;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.HalfSubtractor;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.InvertedRSNandLatch;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Inverter;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.JKFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.LevelTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemoryAccess;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.MemorySetter;
@@ -97,7 +99,8 @@ class ICManager {
         registerICType(new ICType<>("MC3021", "XNOR", "Xnor Gate", "Outputs high if the inputs are the same", new XnorGate.Factory(), "3ISO"));
 
         registerICType(new ICType<>("MC3030", "RS-NOR", "RS-Nor Latch", "A compact RS-Nor Latch", new RSNorLatch.Factory(), "3ISO"));
-
+        registerICType(new ICType<>("MC3031", "INV RS-NAND", "Inverse RS-Nand Latch", "A compact Inverse RS-Nand Latch", new InvertedRSNandLatch.Factory(), "3ISO"));
+        registerICType(new ICType<>("MC3032", "JK FLIP", "JK Flip Flip", "A compact JK Flip Flop", new JKFlipFlop.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3033", "RS-NAND", "RS-Nand Latch", "A compact RS-Nand Latch", new RSNandLatch.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3034", "EDGE-D", "Edge-Trigger D Flip Flop", "A compact Edge-D Flip Flop", new EdgeTriggerDFlipFlop.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3036", "LEVEL-D", "Level-Trigger D Flip Flop", "A compact Level-D Flip Flop", new LevelTriggerDFlipFlop.Factory(), "3ISO"));
