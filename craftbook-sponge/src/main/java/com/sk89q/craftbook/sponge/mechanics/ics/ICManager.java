@@ -46,6 +46,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.Wirele
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ZeusBolt;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.sensor.DaySensor;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.weather.TimeControlAdvanced;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import org.spongepowered.api.Sponge;
@@ -105,6 +106,8 @@ class ICManager {
 
         registerICType(new ICType<>("MC3101", "DOWN COUNTER", "Down Counter", "Decrements on redstone signal, outputs high when reset.", new DownCounter.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3102", "COUNTER", "Counter", "Increments on redstone signal, outputs high when reset.", new Counter.Factory(), "3ISO"));
+
+        registerICType(new ICType<>("MC3231", "T CONTROL ADV", "Time Control Advanced", "Changes the time of day when the clock input goes from low to high.", new TimeControlAdvanced.Factory(), "3ISO"));
 
         registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
 
