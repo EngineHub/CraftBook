@@ -21,6 +21,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Clock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.CombinationLock;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Counter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.Dispatcher;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.DownCounter;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.EdgeTriggerDFlipFlop;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullAdder;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.FullSubtractor;
@@ -100,6 +101,7 @@ class ICManager {
 
         registerICType(new ICType<>("MC3050", "COMBO", "Combination Lock", "Outputs high if the correct combination is inputed", new CombinationLock.Factory(), "3ISO"));
 
+        registerICType(new ICType<>("MC3101", "DOWN COUNTER", "Down Counter", "Decrements on redstone signal, outputs high when reset.", new DownCounter.Factory(), "3ISO"));
         registerICType(new ICType<>("MC3102", "COUNTER", "Counter", "Increments on redstone signal, outputs high when reset.", new Counter.Factory(), "3ISO"));
 
         registerICType(new ICType<>("MC3300", "ROM SET", "ROM Set", "Sets the memory state for a file for usage in the MemorySetter/Access IC group.", new MemorySetter.Factory(), "3ISO"));
