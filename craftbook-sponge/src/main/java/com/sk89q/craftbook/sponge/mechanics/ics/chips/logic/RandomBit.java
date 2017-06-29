@@ -106,6 +106,7 @@ public class RandomBit extends IC {
 
         @Override
         public String[][] getPinHelp() {
+
             return new String[][] {
                     new String[] {
                         "High to output random state"

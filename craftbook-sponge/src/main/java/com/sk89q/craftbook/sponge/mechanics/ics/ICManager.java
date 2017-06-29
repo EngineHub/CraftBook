@@ -85,6 +85,8 @@ class ICManager {
         registerICType(new ICType<>("MC1421", "CLOCK", "Clock", "Outputs high every X ticks when input is high.", new Clock.Factory()));
 
         //SI3O
+        registerICType(new ICType<>("MC2020", "RANDOM 3", "Random 3-Bit", "Randomly sets the outputs on high.", new RandomBit.Factory(), "SI3O"));
+
         registerICType(new ICType<>("MC2300", "ROM GET", "ROM Get", "Gets the memory state from a file for usage in the MemorySetter/Access IC group.", new MemoryAccess.Factory(), "SI3O"));
 
         //3ISO
@@ -113,6 +115,8 @@ class ICManager {
         registerICType(new ICType<>("MC4100", "FULL SUBTR", "Full Subtractor", "A compact full-subtractor", new FullSubtractor.Factory(), "3I3O"));
         registerICType(new ICType<>("MC4110", "HALF SUBTR", "Half Subtractor", "A compact half-subtractor", new HalfSubtractor.Factory(), "3I3O"));
         registerICType(new ICType<>("MC4200", "DISPATCH", "Dispatcher", "Outputs the centre input on the appropriate outputs when input is high.", new Dispatcher.Factory(), "3I3O"));
+
+        registerICType(new ICType<>("MC6020", "RANDOM 5", "Random 5-Bit", "Randomly sets the outputs on high.", new RandomBit.Factory(), "SI5O"));
     }
 
     public static void registerICType(ICType<? extends IC> ic) {
