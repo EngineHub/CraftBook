@@ -18,7 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.pinsets;
 
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
-import org.spongepowered.api.block.BlockType;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.event.cause.Cause;
@@ -64,9 +64,8 @@ public abstract class PinSet {
     }
 
     public boolean isValid(int id, IC ic) {
-        BlockType type = getPinLocation(id, ic).getBlockType();
-
-        return type == BlockTypes.REDSTONE_WIRE || type == BlockTypes.LEVER;
+        // TODO Check directions here to make sure it's actually powering the face
+        return BlockUtil.isPowerSource(getPinLocation(id, ic));
     }
 
     public boolean isTriggered(int id, IC ic) {

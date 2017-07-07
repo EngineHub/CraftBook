@@ -44,7 +44,14 @@ public abstract class SpongeCartBlockMechanic extends SpongeSignMechanic {
     public TernaryState isActive(Location<World> block) {
         boolean isConnected = false;
         for (Direction direction : BlockUtil.getDirectHorizontalFaces()) {
-            // TODO
+            switch (BlockUtil.isPowered(block, direction)) {
+                case TRUE:
+                    return TernaryState.TRUE;
+                case NONE:
+                    break;
+                case FALSE:
+                    isConnected = true;
+            }
         }
 
         return isConnected ? TernaryState.FALSE : TernaryState.NONE;

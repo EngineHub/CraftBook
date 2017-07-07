@@ -83,8 +83,7 @@ public class CartMechanismBlocks {
      */
     public boolean matches(String text) {
         return hasSign() && SignUtil.getTextRaw(sign.getTileEntity()
-                .map(sign -> (Sign) sign).get(), 1).equals(text);
-
+                .map(sign -> (Sign) sign).get(), 1).equals('[' + text + ']');
     }
 
     /**

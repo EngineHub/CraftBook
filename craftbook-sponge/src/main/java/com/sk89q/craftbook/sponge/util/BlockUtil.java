@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.util;
 
 import com.google.common.collect.Sets;
 import com.sk89q.craftbook.core.util.RegexUtil;
+import com.sk89q.craftbook.core.util.TernaryState;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
@@ -111,6 +112,40 @@ public final class BlockUtil {
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Checks whether this block is capable of providing power to nearby blocks.
+     *
+     * @param block The block to check
+     * @return If it's a power source.
+     */
+    public static boolean isPowerSource(Location<World> block) {
+        // TODO Make this more mod friendly.
+        return block.getBlockType() == BlockTypes.REDSTONE_WIRE
+                || block.getBlockType() == BlockTypes.POWERED_REPEATER
+                || block.getBlockType() == BlockTypes.UNPOWERED_REPEATER
+                || block.getBlockType() == BlockTypes.UNLIT_REDSTONE_TORCH
+                || block.getBlockType() == BlockTypes.REDSTONE_TORCH
+                || block.getBlockType() == BlockTypes.WOODEN_PRESSURE_PLATE
+                || block.getBlockType() == BlockTypes.STONE_PRESSURE_PLATE
+                || block.getBlockType() == BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE
+                || block.getBlockType() == BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE
+                || block.getBlockType() == BlockTypes.POWERED_COMPARATOR
+                || block.getBlockType() == BlockTypes.UNPOWERED_COMPARATOR
+                || block.getBlockType() == BlockTypes.REDSTONE_BLOCK
+                || block.getBlockType() == BlockTypes.LEVER;
+    }
+
+    public static TernaryState isPowered(Location<World> block, Direction face) {
+        Location<World> pow = block.getRelative(face);
+
+        if (isPowerSource(block)) {
+            if (getBlockPowerLevel(pow).orElse(0) > 0
+                    || getBlockIndirectPowerLevel(pow).orElse(0) > 0) return TernaryState.TRUE;
+            return TernaryState.FALSE;
+        }
+        return TernaryState.NONE;
     }
 
     /**
