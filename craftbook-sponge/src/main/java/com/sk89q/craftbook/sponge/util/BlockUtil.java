@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.google.common.collect.Sets;
 import com.sk89q.craftbook.core.util.RegexUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -37,9 +38,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public final class BlockUtil {
+
+    private static final Set<BlockType> trackBlocks = Sets.newHashSet(
+            BlockTypes.RAIL, BlockTypes.GOLDEN_RAIL, BlockTypes.DETECTOR_RAIL,
+            BlockTypes.ACTIVATOR_RAIL
+    );
 
     /**
      * Gets the relative direction of 'other' from 'base'.
@@ -48,7 +55,7 @@ public final class BlockUtil {
      * @param other The location of other.
      * @return The relative direction
      */
-    public static Direction getFacing(Location base, Location other) {
+    public static Direction getFacing(Location<World> base, Location<World> other) {
         for (Direction dir : Direction.values()) {
             if (base.getRelative(dir).getPosition().equals(other.getPosition()))
                 return dir;
@@ -172,6 +179,14 @@ public final class BlockUtil {
         return directFaces;
     }
 
+    private static Direction[] directHorizontalFaces = null;
+
+    public static Direction[] getDirectHorizontalFaces() {
+        if (directHorizontalFaces == null)
+            directHorizontalFaces = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+        return directHorizontalFaces;
+    }
+
     public static List<Location<World>> getAdjacentExcept(Location<World> location, Direction ... directions) {
         List<Location<World>> locations = new ArrayList<>();
 
@@ -215,7 +230,7 @@ public final class BlockUtil {
      * @param maximum The maximum length
      * @return The found length
      */
-    public static int getLength(Location startBlock, BlockState testState, Direction direction, int maximum) {
+    public static int getLength(Location<World> startBlock, BlockState testState, Direction direction, int maximum) {
         int length = 0;
 
         while(length < maximum) {
@@ -230,7 +245,7 @@ public final class BlockUtil {
         return length;
     }
 
-    public static int getMinimumLength(Location firstBlock, Location secondBlock, BlockState testState, Direction direction, int maximum) {
+    public static int getMinimumLength(Location<World> firstBlock, Location<World> secondBlock, BlockState testState, Direction direction, int maximum) {
         return Math.min(getLength(firstBlock, testState, direction, maximum), getLength(secondBlock, testState, direction, maximum));
     }
 
@@ -246,5 +261,15 @@ public final class BlockUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if a {@link BlockType} is a Minecart track.
+     *
+     * @param blockType The blocktype to check.
+     * @return If it's a Minecart track
+     */
+    public static boolean isTrack(BlockType blockType) {
+        return trackBlocks.contains(blockType);
     }
 }
