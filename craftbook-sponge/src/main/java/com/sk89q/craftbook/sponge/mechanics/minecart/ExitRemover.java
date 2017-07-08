@@ -30,6 +30,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.RideEntityEvent;
@@ -93,7 +94,7 @@ public class ExitRemover extends SpongeMechanic implements DocumentationProvider
         public void run () {
             if(minecart.isRemoved()) return;
 
-            if(giveItem.getValue()) {
+            if(giveItem.getValue() && player.gameMode().get() != GameModes.CREATIVE) {
                 ItemStack stack = ItemStack.of(ItemTypes.MINECART, 1);
 
                 if(!((Player) player).getInventory().offer(stack).getRejectedItems().isEmpty()) {

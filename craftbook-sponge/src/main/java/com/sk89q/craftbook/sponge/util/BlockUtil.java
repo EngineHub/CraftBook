@@ -140,7 +140,7 @@ public final class BlockUtil {
     public static TernaryState isPowered(Location<World> block, Direction face) {
         Location<World> pow = block.getRelative(face);
 
-        if (isPowerSource(block)) {
+        if (isPowerSource(pow)) {
             if (getBlockPowerLevel(pow).orElse(0) > 0
                     || getBlockIndirectPowerLevel(pow).orElse(0) > 0) return TernaryState.TRUE;
             return TernaryState.FALSE;
@@ -242,6 +242,18 @@ public final class BlockUtil {
     }
 
     /**
+     * Gets whether or not the specified {@link BlockState} passes the {@link BlockFilter}.
+     *
+     * @param filter The filter
+     * @param state The state to test
+     * @return If it passes
+     */
+    public static boolean doesStatePassFilter(BlockFilter filter, BlockState state) {
+        return filter.getApplicableBlockStates().stream()
+                .anyMatch(blockState -> blockState.equals(state));
+    }
+
+    /**
      * Gets whether or not the specified {@link BlockState} passes the {@link BlockFilter}s.
      *
      * @param filters The filters
@@ -250,9 +262,8 @@ public final class BlockUtil {
      */
     public static boolean doesStatePassFilters(Collection<BlockFilter> filters, BlockState state) {
         for(BlockFilter filter : filters)
-            for(BlockState blockState : filter.getApplicableBlockStates())
-                if(blockState.equals(state))
-                    return true;
+            if(doesStatePassFilter(filter, state))
+                return true;
         return false;
     }
 
