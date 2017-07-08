@@ -489,6 +489,41 @@ public final class ItemUtil {
                 if (item.getData().getData() == 0)
                     return null;
                 else return new ItemStack(Material.SPONGE);
+            case STAINED_CLAY:
+                switch(item.getData().getData()) {
+                    case 0:
+                        return new ItemStack(Material.WHITE_GLAZED_TERRACOTTA);
+                    case 1:
+                        return new ItemStack(Material.ORANGE_GLAZED_TERRACOTTA);
+                    case 2:
+                        return new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
+                    case 3:
+                        return new ItemStack(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
+                    case 4:
+                        return new ItemStack(Material.YELLOW_GLAZED_TERRACOTTA);
+                    case 5:
+                        return new ItemStack(Material.LIME_GLAZED_TERRACOTTA);
+                    case 6:
+                        return new ItemStack(Material.PINK_GLAZED_TERRACOTTA);
+                    case 7:
+                        return new ItemStack(Material.GRAY_GLAZED_TERRACOTTA);
+                    case 8:
+                        return new ItemStack(Material.SILVER_GLAZED_TERRACOTTA);
+                    case 9:
+                        return new ItemStack(Material.CYAN_GLAZED_TERRACOTTA);
+                    case 10:
+                        return new ItemStack(Material.PURPLE_GLAZED_TERRACOTTA);
+                    case 11:
+                        return new ItemStack(Material.BLUE_GLAZED_TERRACOTTA);
+                    case 12:
+                        return new ItemStack(Material.BROWN_GLAZED_TERRACOTTA);
+                    case 13:
+                        return new ItemStack(Material.GREEN_GLAZED_TERRACOTTA);
+                    case 14:
+                        return new ItemStack(Material.RED_GLAZED_TERRACOTTA);
+                    case 15:
+                        return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
+                }
             default:
                 return null;
         }
