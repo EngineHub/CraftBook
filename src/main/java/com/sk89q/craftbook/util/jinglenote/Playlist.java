@@ -191,6 +191,7 @@ public class Playlist {
 
                 while(players.isEmpty()) {
                     if(!isPlaying()) return;
+                    CraftBookPlugin.logDebugMessage("Playlist has no players", "playlist");
                     try {
                         Thread.sleep(100L);
                     } catch (InterruptedException e) {
@@ -289,6 +290,7 @@ public class Playlist {
                 } else if (line.startsWith("goto ")) {
 
                     position = Integer.parseInt(StringUtils.replace(line, "goto ", ""));
+                    CraftBookPlugin.logDebugMessage("Setting line to: " + position, "playlist");
                 }
             }
         }

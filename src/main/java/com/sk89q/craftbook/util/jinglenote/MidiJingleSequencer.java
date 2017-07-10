@@ -130,6 +130,13 @@ public final class MidiJingleSequencer implements JingleSequencer {
                 }
             });
 
+            sequencer.addMetaEventListener(meta -> {
+                // END_OF_TRACK_MESSAGE
+                if (meta.getType() == 47) {
+                    running = false;
+                }
+            });
+
             try {
                 if (sequencer.isOpen()) {
                     sequencer.start();
