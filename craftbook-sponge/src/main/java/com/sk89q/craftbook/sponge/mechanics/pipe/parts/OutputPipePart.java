@@ -35,7 +35,7 @@ public class OutputPipePart implements PipePart {
     }
 
     @Override
-    public List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide) {
+    public List<Location<World>> findPotentialOutputs(Location<World> location, ItemStack itemStack, Direction inputSide) {
 
         List<Location<World>> locations = new ArrayList<>();
 

@@ -38,5 +38,21 @@ public interface PipePart {
      * @param inputSide The side that the input has come from.
      * @return A list of possible output locations.
      */
-    List<Location<World>> findValidOutputs(Location<World> location, ItemStack itemStack, Direction inputSide);
+    List<Location<World>> findPotentialOutputs(Location<World> location, ItemStack itemStack, Direction inputSide);
+
+    /**
+     * Determines if an output is valid.
+     *
+     * <p>
+     *     This only needs to check for special behaviour.
+     * </p>
+     *
+     * @param location The location of this part.
+     * @param output The location of the output.
+     * @param itemStack The itemstack passed through.
+     * @return If the output is valid.
+     */
+    default boolean validateOutput(Location<World> location, Location<World> output, ItemStack itemStack) {
+        return true;
+    }
 }

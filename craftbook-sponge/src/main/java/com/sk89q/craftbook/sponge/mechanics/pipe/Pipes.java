@@ -17,7 +17,11 @@
 package com.sk89q.craftbook.sponge.mechanics.pipe;
 
 import com.me4502.modularframework.module.Module;
+import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.ColorConditionalPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.InputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.OutputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PassthroughPipePart;
@@ -51,7 +55,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Module(id = "pipes", name = "Pipes", onEnable="onInitialize", onDisable="onDisable")
-public class Pipes extends SpongeBlockMechanic {
+public class Pipes extends SpongeBlockMechanic implements DocumentationProvider {
 
     private PipePart[] pipeParts;
 
@@ -59,6 +63,7 @@ public class Pipes extends SpongeBlockMechanic {
     public void onInitialize() {
         List<PipePart> pipePartList = new ArrayList<>();
         pipePartList.add(new PassthroughPipePart());
+        pipePartList.add(new ColorConditionalPipePart());
         pipePartList.add(new InputPipePart());
         pipePartList.add(new OutputPipePart());
 
@@ -117,22 +122,24 @@ public class Pipes extends SpongeBlockMechanic {
         if(pipePart == null)
             return itemStack;
 
-        for(Location<World> location1 : pipePart.findValidOutputs(location, itemStack, fromDirection)) {
-            if(pipePart instanceof OutputPipePart) {
-                Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(location1);
+        for (Location<World> location1 : pipePart.findPotentialOutputs(location, itemStack, fromDirection)) {
+            if (pipePart.validateOutput(location, location1, itemStack)) {
+                if (pipePart instanceof OutputPipePart) {
+                    Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(location1);
 
-                if(inventory.isPresent()) {
-                    InventoryTransactionResult result = inventory.get().offer(itemStack);
-                    if(!result.getRejectedItems().isEmpty()) {
-                        for (ItemStackSnapshot snapshot : result.getRejectedItems()) {
-                            itemStack = snapshot.createStack();
+                    if (inventory.isPresent()) {
+                        InventoryTransactionResult result = inventory.get().offer(itemStack);
+                        if (!result.getRejectedItems().isEmpty()) {
+                            for (ItemStackSnapshot snapshot : result.getRejectedItems()) {
+                                itemStack = snapshot.createStack();
+                            }
+                        } else {
+                            itemStack.setQuantity(0);
                         }
-                    } else {
-                        itemStack.setQuantity(0);
                     }
-                }
-            } else
-                itemStack = doPipeIteration(location1, itemStack, BlockUtil.getFacing(location, location1), traversed);
+                } else
+                    itemStack = doPipeIteration(location1, itemStack, BlockUtil.getFacing(location1, location), traversed);
+            }
         }
 
         return itemStack;
@@ -148,5 +155,24 @@ public class Pipes extends SpongeBlockMechanic {
     @Override
     public boolean isValid(Location<World> location) {
         return location.getBlockType() == BlockTypes.STICKY_PISTON;
+    }
+
+    @Override
+    public String getPath() {
+        return "mechanics/pipes";
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue<?>[] {
+
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+
+        };
     }
 }

@@ -16,25 +16,26 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.pipe.parts;
 
-import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.List;
-
-public class PassthroughPipePart implements PipePart {
+public class ColorConditionalPipePart extends PassthroughPipePart {
 
     @Override
     public boolean isValid(BlockState blockState) {
-        return blockState.getType() == BlockTypes.GLASS;
+        return blockState.getType() == BlockTypes.STAINED_GLASS;
     }
 
     @Override
-    public List<Location<World>> findPotentialOutputs(Location<World> location, ItemStack itemStack, Direction inputSide) {
-        return BlockUtil.getAdjacentExcept(location, inputSide);
+    public boolean validateOutput(Location<World> location, Location<World> output, ItemStack itemStack) {
+        if (isValid(output.getBlock())) {
+            return location.get(Keys.DYE_COLOR).orElse(DyeColors.WHITE).equals(output.get(Keys.DYE_COLOR).orElse(DyeColors.WHITE));
+        }
+        return super.validateOutput(location, output, itemStack);
     }
 }
