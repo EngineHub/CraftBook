@@ -17,6 +17,7 @@ public abstract class CustomDropDefinition {
     private DropItemStack[] drops;
     private DropReward[] extraRewards;
     private String name;
+    private String permissionNode;
 
     private boolean append;
     private TernaryState silkTouch;
@@ -34,6 +35,14 @@ public abstract class CustomDropDefinition {
             this.extraRewards = extraRewards.toArray(new DropReward[extraRewards.size()]);
         this.name = name;
         this.silkTouch = silkTouch;
+    }
+
+    public void setPermissionNode(String permissionNode) {
+        this.permissionNode = permissionNode;
+    }
+
+    public String getPermissionNode() {
+        return permissionNode;
     }
 
     public void setAppend(boolean append) {

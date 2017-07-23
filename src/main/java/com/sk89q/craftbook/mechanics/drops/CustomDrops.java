@@ -126,6 +126,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 if (regions != null) {
                     def.setRegions(regions);
                 }
+                def.setPermissionNode(config.getString("custom-drops." + key + ".permission-node", null));
                 if (requiredItems != null) {
                     List<ItemStack> items = new ArrayList<>();
                     for (String requiredItem : requiredItems) {
@@ -158,6 +159,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
             config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
+            if (def.getPermissionNode() != null)
+                config.setProperty("custom-drops." + def.getName() + ".permission-node", def.getPermissionNode());
             if (def.getRegions() != null)
                 config.setProperty("custom-drops." + def.getName() + ".regions", def.getRegions());
             if (def.getItems() != null) {
@@ -228,6 +231,10 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if(!(def instanceof BlockCustomDropDefinition)) continue; //Nope, we only want block drop definitions.
 
             if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
+
+            if (def.getPermissionNode() != null && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission(def.getPermissionNode())) {
+                return;
+            }
 
             if (def.getRegions() != null) {
                 boolean found = false;
@@ -305,6 +312,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if(!(def instanceof EntityCustomDropDefinition)) continue; //Nope, we only want entity drop definitions.
 
             if(!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType())) continue;
+
+            if (def.getPermissionNode() != null) {
+                if (event.getEntity().getKiller() == null
+                        || !CraftBookPlugin.inst().wrapPlayer(event.getEntity().getKiller()).hasPermission(def.getPermissionNode()))
+                    return;
+            }
 
             if (def.getRegions() != null) {
                 boolean found = false;
