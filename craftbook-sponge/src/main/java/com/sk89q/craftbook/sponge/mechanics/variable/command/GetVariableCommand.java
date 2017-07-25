@@ -31,18 +31,22 @@ import org.spongepowered.api.util.annotation.NonnullByDefault;
 public class GetVariableCommand implements CommandExecutor {
 
     private Variables variables;
-    private boolean global;
 
-    public GetVariableCommand(Variables variables, boolean global) {
+    public GetVariableCommand(Variables variables) {
         this.variables = variables;
-        this.global = global;
     }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String key = args.<String>getOne("key").get();
+        boolean global = args.hasAny("g");
+        String namespace = global ? Variables.GLOBAL_NAMESPACE : args.<String>getOne("namespace").orElse(((Player) src).getUniqueId().toString());
+        if (namespace.equals(Variables.GLOBAL_NAMESPACE) && !global) {
+            src.sendMessage(Text.of(TextColors.RED, "Invalid namespace!"));
+            return CommandResult.empty();
+        }
 
-        src.sendMessage(Text.of(TextColors.YELLOW, "Variable " + key +  " is set to " + variables.getVariable(global ? "global" : ((Player) src).getUniqueId().toString(), key)));
+        src.sendMessage(Text.of(TextColors.YELLOW, "Variable " + key +  " is set to " + variables.getVariable(namespace, key)));
 
         return CommandResult.success();
     }

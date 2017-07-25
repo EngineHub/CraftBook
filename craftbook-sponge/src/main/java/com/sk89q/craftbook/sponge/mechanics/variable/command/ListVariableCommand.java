@@ -23,22 +23,26 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @NonnullByDefault
-public class RemoveVariableCommand implements CommandExecutor {
+public class ListVariableCommand implements CommandExecutor {
 
     private Variables variables;
 
-    public RemoveVariableCommand(Variables variables) {
+    public ListVariableCommand(Variables variables) {
         this.variables = variables;
     }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        String key = args.<String>getOne("key").get();
         boolean global = args.hasAny("g");
         String namespace = global ? Variables.GLOBAL_NAMESPACE : args.<String>getOne("namespace").orElse(((Player) src).getUniqueId().toString());
         if (namespace.equals(Variables.GLOBAL_NAMESPACE) && !global) {
@@ -46,8 +50,17 @@ public class RemoveVariableCommand implements CommandExecutor {
             return CommandResult.empty();
         }
 
-        variables.removeVariable(namespace, key);
-        src.sendMessage(Text.of(TextColors.YELLOW, "Removed variable " + key));
+        List<Text> variableList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : variables.getVariables(namespace).entrySet()) {
+            variableList.add(Text.of(TextColors.YELLOW, entry.getKey(), TextColors.GRAY, ": ", TextColors.GREEN, entry.getValue()));
+        }
+
+        PaginationList.builder()
+                .title(Text.of(TextColors.YELLOW, "Variable List"))
+                .header(Text.of(TextColors.GREEN, namespace))
+                .contents(variableList)
+                .build().sendTo(src);
 
         return CommandResult.success();
     }

@@ -23,12 +23,15 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.GetVariableCommand;
+import com.sk89q.craftbook.sponge.mechanics.variable.command.ListVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.RemoveVariableCommand;
 import com.sk89q.craftbook.sponge.mechanics.variable.command.SetVariableCommand;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.TextUtil;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -43,9 +46,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,7 +63,9 @@ import javax.annotation.Nullable;
 @Module(id = "variables", name = "Variables", onEnable="onInitialize", onDisable="onDisable")
 public class Variables extends SpongeMechanic implements DocumentationProvider {
 
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9]+)\\|)*([a-zA-Z0-9]+)%");
+    public static final String GLOBAL_NAMESPACE = "global";
+
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9_]+)\\|)*([a-zA-Z0-9]+)%");
 
     public static Variables instance;
 
@@ -67,6 +74,18 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
     @Inject
     @ModuleConfiguration
     public ConfigurationNode config;
+
+    private SpongePermissionNode setPermission = new SpongePermissionNode("craftbook.variables.set", "Allows setting variables.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode setGlobalPermission = new SpongePermissionNode("craftbook.variables.set.global", "Allows setting global variables.", PermissionDescription.ROLE_STAFF);
+
+    private SpongePermissionNode getPermission = new SpongePermissionNode("craftbook.variables.get", "Allows getting variables.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode getGlobalPermission = new SpongePermissionNode("craftbook.variables.get.global", "Allows getting global variables.", PermissionDescription.ROLE_STAFF);
+
+    private SpongePermissionNode delPermission = new SpongePermissionNode("craftbook.variables.remove", "Allows removing variables.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode delGlobalPermission = new SpongePermissionNode("craftbook.variables.remove.global", "Allows removing global variables.", PermissionDescription.ROLE_STAFF);
+
+    private SpongePermissionNode listPermission = new SpongePermissionNode("craftbook.variables.list", "Allows listing variables.", PermissionDescription.ROLE_USER);
+    private SpongePermissionNode listGlobalPermission = new SpongePermissionNode("craftbook.variables.list.global", "Allows listing global variables.", PermissionDescription.ROLE_STAFF);
 
     private ConfigValue<Boolean> defaultToGlobal = new ConfigValue<>("default-to-global", "If no namespace is provided, default to global. "
             + "Otherwise personal namespace", true);
@@ -86,52 +105,74 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
             variableStore = new HashMap<>();
         }
 
+        setPermission.register();
+        setGlobalPermission.register();
+
+        getPermission.register();
+        getGlobalPermission.register();
+
+        delPermission.register();
+        delGlobalPermission.register();
+
+        listPermission.register();
+        listGlobalPermission.register();
+
         defaultToGlobal.load(config);
 
         CommandSpec setVariable = CommandSpec.builder()
                 .description(Text.of("Set the value of a variable"))
-                .arguments(GenericArguments.string(Text.of("key")), GenericArguments.string(Text.of("value")))
-                .executor(new SetVariableCommand(this, false))
-                .build();
-
-        CommandSpec setGlobalVariable = CommandSpec.builder()
-                .description(Text.of("Set the value of a global variable"))
-                .arguments(GenericArguments.string(Text.of("key")), GenericArguments.string(Text.of("value")))
-                .executor(new SetVariableCommand(this, true))
+                .permission(setPermission.getNode())
+                .arguments(
+                        GenericArguments.string(Text.of("key")),
+                        GenericArguments.string(Text.of("value")),
+                        GenericArguments.flags()
+                                .permissionFlag(setGlobalPermission.getNode(), "g", "-global")
+                                .valueFlag(GenericArguments.string(Text.of("namespace")), "n", "-namespace")
+                                .buildWith(GenericArguments.none()))
+                .executor(new SetVariableCommand(this))
                 .build();
 
         CommandSpec getVariable = CommandSpec.builder()
                 .description(Text.of("Get the value of a variable"))
-                .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new GetVariableCommand(this, false))
-                .build();
-
-        CommandSpec getGlobalVariable = CommandSpec.builder()
-                .description(Text.of("Get the value of a global variable"))
-                .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new GetVariableCommand(this, true))
+                .permission(getPermission.getNode())
+                .arguments(
+                        GenericArguments.string(Text.of("key")),
+                        GenericArguments.flags()
+                                .permissionFlag(getGlobalPermission.getNode(), "g", "-global")
+                                .valueFlag(GenericArguments.string(Text.of("namespace")), "n", "-namespace")
+                                .buildWith(GenericArguments.none()))
+                .executor(new GetVariableCommand(this))
                 .build();
 
         CommandSpec removeVariable = CommandSpec.builder()
                 .description(Text.of("Removes a variable"))
-                .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new RemoveVariableCommand(this, false))
+                .permission(delPermission.getNode())
+                .arguments(
+                        GenericArguments.string(Text.of("key")),
+                        GenericArguments.flags()
+                                .permissionFlag(delGlobalPermission.getNode(), "g", "-global")
+                                .valueFlag(GenericArguments.string(Text.of("namespace")), "n", "-namespace")
+                                .buildWith(GenericArguments.none()))
+                .executor(new RemoveVariableCommand(this))
                 .build();
 
-        CommandSpec removeGlobalVariable = CommandSpec.builder()
-                .description(Text.of("Removes a global variable"))
-                .arguments(GenericArguments.string(Text.of("key")))
-                .executor(new RemoveVariableCommand(this, true))
+        CommandSpec listVariable = CommandSpec.builder()
+                .description(Text.of("List variables"))
+                .permission(listPermission.getNode())
+                .arguments(
+                        GenericArguments.flags()
+                                .permissionFlag(listPermission.getNode(), "g", "-global")
+                                .valueFlag(GenericArguments.string(Text.of("namespace")), "n", "-namespace")
+                                .buildWith(GenericArguments.none()))
+                .executor(new ListVariableCommand(this))
                 .build();
 
         CommandSpec variableCommand = CommandSpec.builder()
                 .description(Text.of("Base Variable command"))
                 .child(setVariable, "set", "def", "define")
-                .child(setGlobalVariable, "setglobal", "defglobal", "defineglobal")
                 .child(getVariable, "get")
-                .child(getGlobalVariable, "getglobal")
                 .child(removeVariable, "rm", "del", "remove")
-                .child(removeGlobalVariable, "rmglobal", "delglobal", "removeglobal")
+                .child(listVariable, "list", "ls")
                 .build();
 
         variableCommandMapping = Sponge.getGame().getCommandManager().register(CraftBookPlugin.spongeInst(), variableCommand, "var", "variable", "variables").orElse(null);
@@ -172,6 +213,10 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
             variableStore.remove(namespace);
     }
 
+    public Map<String, String> getVariables(String namespace) {
+        return variableStore.getOrDefault(namespace, Collections.emptyMap());
+    }
+
     public String parseVariables(String line, @Nullable Player player) {
         for(Pair<String, String> possibleVariable : getPossibleVariables(line)) {
             String namespace = possibleVariable.getLeft();
@@ -180,7 +225,7 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
             boolean explicit = true;
             if (namespace == null) {
                 if (defaultToGlobal.getValue()) {
-                    namespace = "global";
+                    namespace = GLOBAL_NAMESPACE;
                     if(player != null && getVariable(player.getUniqueId().toString(), name) != null) {
                         namespace = player.getUniqueId().toString();
                     }
@@ -257,6 +302,20 @@ public class Variables extends SpongeMechanic implements DocumentationProvider {
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue[] {
                 defaultToGlobal
+        };
+    }
+
+    @Override
+    public PermissionNode[] getPermissionNodes() {
+        return new PermissionNode[] {
+                setPermission,
+                setGlobalPermission,
+                getPermission,
+                getGlobalPermission,
+                delPermission,
+                delGlobalPermission,
+                listPermission,
+                listGlobalPermission
         };
     }
 }

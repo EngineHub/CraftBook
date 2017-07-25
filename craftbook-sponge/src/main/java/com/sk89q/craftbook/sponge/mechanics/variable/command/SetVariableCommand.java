@@ -31,16 +31,20 @@ import org.spongepowered.api.util.annotation.NonnullByDefault;
 public class SetVariableCommand implements CommandExecutor {
 
     private Variables variables;
-    private boolean global;
 
-    public SetVariableCommand(Variables variables, boolean global) {
+    public SetVariableCommand(Variables variables) {
         this.variables = variables;
-        this.global = global;
     }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String key = args.<String>getOne("key").get();
+        boolean global = args.hasAny("g");
+        String namespace = global ? Variables.GLOBAL_NAMESPACE : args.<String>getOne("namespace").orElse(((Player) src).getUniqueId().toString());
+        if (namespace.equals(Variables.GLOBAL_NAMESPACE) && !global) {
+            src.sendMessage(Text.of(TextColors.RED, "Invalid namespace!"));
+            return CommandResult.empty();
+        }
 
         if(!Variables.isValidVariableKey(key)) {
             src.sendMessage(Text.of(TextColors.RED, "Key contains invalid characters!"));
@@ -49,8 +53,8 @@ public class SetVariableCommand implements CommandExecutor {
 
         String value = args.<String>getOne("value").get();
 
-        variables.addVariable(global ? "global" : ((Player) src).getUniqueId().toString(), key, value);
-        src.sendMessage(Text.of(TextColors.YELLOW, "Set variable " + key + " to value " + variables.getVariable(global ? "global" : ((Player) src).getUniqueId().toString(), key)));
+        variables.addVariable(namespace, key, value);
+        src.sendMessage(Text.of(TextColors.YELLOW, "Set variable " + key + " to value " + variables.getVariable(namespace, key)));
 
         return CommandResult.success();
     }
