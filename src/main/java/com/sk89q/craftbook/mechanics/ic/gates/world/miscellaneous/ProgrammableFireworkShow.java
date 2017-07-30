@@ -228,6 +228,11 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                     if (line.trim().startsWith("#") || line.trim().isEmpty())
                         continue;
 
+                    int commentIndex = line.indexOf('#');
+                    if (commentIndex >= 0) {
+                        line = line.substring(0, commentIndex).trim();
+                    }
+
                     if (line.startsWith("set.")) {
 
                         if (currentBuilding == null)
