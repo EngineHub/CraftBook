@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.items;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -32,7 +33,9 @@ public class CommandItemAction {
 
         SETVAR,
         MATHVAR,
-        ISVAR
+        ISVAR,
+        GREATERVAR,
+        LESSVAR
     }
 
     /**
@@ -86,11 +89,40 @@ public class CommandItemAction {
 
                 VariableManager.instance.setVariable(mvar, mnamespace, val);
                 return true;
-            case ISVAR:
-                String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
+            case ISVAR: {
+                String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 String isnamespace = VariableManager.getNamespace(isparts[0]);
                 String isvar = VariableManager.getVariableName(isparts[0]);
                 return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
+            }
+            case GREATERVAR: {
+                String[] isparts = RegexUtil.GREATER_THAN_PATTERN.split(newVal, 2);
+                String isnamespace = VariableManager.getNamespace(isparts[0]);
+                String isvar = VariableManager.getVariableName(isparts[0]);
+                double variable = 0;
+                double test = 0;
+                try {
+                    variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
+                    test = Double.parseDouble(isparts[1]);
+                } catch(NumberFormatException e) {
+                    CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
+                }
+                return variable > test;
+            }
+            case LESSVAR: {
+                String[] isparts = RegexUtil.LESS_THAN_PATTERN.split(newVal, 2);
+                String isnamespace = VariableManager.getNamespace(isparts[0]);
+                String isvar = VariableManager.getVariableName(isparts[0]);
+                double variable = 0;
+                double test = 0;
+                try {
+                    variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
+                    test = Double.parseDouble(isparts[1]);
+                } catch(NumberFormatException e) {
+                    CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
+                }
+                return variable < test;
+            }
             default:
                 return true;
         }

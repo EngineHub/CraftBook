@@ -13,6 +13,8 @@ public class RegexUtil {
     public static final Pattern COMMA_PATTERN = Pattern.compile(",", Pattern.LITERAL);
     public static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]", Pattern.LITERAL);
     public static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("[", Pattern.LITERAL);
+    public static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">", Pattern.LITERAL);
+    public static final Pattern LESS_THAN_PATTERN = Pattern.compile("<", Pattern.LITERAL);
     public static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     public static final Pattern PLUS_PATTERN = Pattern.compile("+", Pattern.LITERAL);
     public static final Pattern COMMENT_PATTERN = Pattern.compile("#", Pattern.LITERAL);
