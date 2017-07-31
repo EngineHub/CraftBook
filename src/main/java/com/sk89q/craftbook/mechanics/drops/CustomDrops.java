@@ -300,6 +300,11 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 reward.giveReward(event.getPlayer());
             }
         }
+
+        if (removeVanillaDrops) {
+            event.setCancelled(true);
+            event.getBlock().setType(Material.AIR);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -388,14 +393,22 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 reward.giveReward(killer);
             }
         }
+
+        if (removeVanillaDrops) {
+            event.getDrops().clear();
+        }
     }
 
     private boolean customDropPermissions;
+    private boolean removeVanillaDrops;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "require-permissions", "Require a permission node to get custom drops.");
         customDropPermissions = config.getBoolean(path + "require-permissions", false);
+
+        config.setComment(path + "remove-vanilla-drops", "Remove all vanilla drops.");
+        removeVanillaDrops = config.getBoolean(path + "remove-vanilla-drops", false);
     }
 }
