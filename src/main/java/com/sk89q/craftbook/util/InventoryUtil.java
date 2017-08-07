@@ -211,6 +211,7 @@ public class InventoryUtil {
             case DROPPER:
             case DISPENSER:
             case FURNACE:
+            case BURNING_FURNACE:
             case BREWING_STAND:
                 return true;
             default:
