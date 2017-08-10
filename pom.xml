@@ -29,6 +29,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>Apache</id>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
@@ -104,8 +108,8 @@
         </dependency>
         <dependency>
             <groupId>fr.neatmonster</groupId>
-            <artifactId>ncpcore</artifactId>
-            <version>static</version>
+            <artifactId>nocheatplus</artifactId>
+            <version>3.15.1-RC</version>
         </dependency>
     </dependencies>
     <distributionManagement>
@@ -240,17 +244,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>assembly:assembly</preparationGoals>
-                    <goals>assembly:assembly</goals>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                </configuration>
             </plugin>
 
             <plugin>

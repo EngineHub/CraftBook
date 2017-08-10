@@ -62,14 +62,14 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
             chip.setOutput(0, collect());
     }
 
-    Vector radius;
-    Location centre;
+    private Vector radius;
+    private Location centre;
 
-    boolean include = false;
+    private boolean include = false;
 
-    Block chest;
+    private Block chest;
 
-    List<ItemStack> filters = new ArrayList<>();
+    private List<ItemStack> filters = new ArrayList<>();
 
     @Override
     public void load() {
@@ -106,62 +106,60 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         for (Entity entity : LocationUtil.getNearbyEntities(centre, radius)) {
             if (entity.isValid() && entity instanceof Item) {
-                if (LocationUtil.isWithinRadius(centre, entity.getLocation(), radius)) {
+                ItemStack stack = ((Item) entity).getItemStack();
 
-                    ItemStack stack = ((Item) entity).getItemStack();
+                if(!ItemUtil.isStackValid(stack))
+                    return false;
 
-                    if(!ItemUtil.isStackValid(stack))
-                        return false;
+                boolean passed = filters.isEmpty() || !include;
 
-                    boolean passed = filters.isEmpty() || !include;
-
-                    for(ItemStack filter : filters) {
-                        if(!ItemUtil.isStackValid(filter))
-                            continue;
-
-                        if(include && ItemUtil.areItemsIdentical(filter, stack)) {
-                            passed = true;
-                            break;
-                        } else if(!include && ItemUtil.areItemsIdentical(filter, stack)) {
-                            passed = false;
-                            break;
-                        }
-                    }
-
-                    if (!passed) {
+                for(ItemStack filter : filters) {
+                    if(!ItemUtil.isStackValid(filter))
                         continue;
-                    }
 
-                    BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
-                    Block pipe = getBackBlock().getRelative(back);
-
-                    PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
-                    Bukkit.getPluginManager().callEvent(event);
-
-                    if (event.isCancelled()) {
-                        continue;
-                    }
-
-                    if(event.getItems().isEmpty()) {
-                        entity.remove();
-                        return true;
-                    }
-
-                    if(!InventoryUtil.doesBlockHaveInventory(chest))
-                        return false;
-
-                    // Add the items to a container, and destroy them.
-                    List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
-                    if(leftovers.isEmpty()) {
-                        entity.remove();
-                        return true;
-                    } else {
-                        if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
-                            ((Item) entity).setItemStack(leftovers.get(0));
-                            return true;
-                        }
+                    if(include && ItemUtil.areItemsIdentical(filter, stack)) {
+                        passed = true;
+                        break;
+                    } else if(!include && ItemUtil.areItemsIdentical(filter, stack)) {
+                        passed = false;
+                        break;
                     }
                 }
+
+                if (!passed) {
+                    continue;
+                }
+
+                BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+                Block pipe = getBackBlock().getRelative(back);
+
+                PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
+                Bukkit.getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) {
+                    continue;
+                }
+
+                if(event.getItems().isEmpty()) {
+                    entity.remove();
+                    return true;
+                }
+
+                if(!InventoryUtil.doesBlockHaveInventory(chest))
+                    return false;
+
+                // Add the items to a container, and destroy them.
+                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
+                if(leftovers.isEmpty()) {
+                    entity.remove();
+                    return true;
+                } else {
+                    if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
+                        ((Item) entity).setItemStack(leftovers.get(0));
+                        return true;
+                    }
+                }
+                collected = true;
             }
         }
 
