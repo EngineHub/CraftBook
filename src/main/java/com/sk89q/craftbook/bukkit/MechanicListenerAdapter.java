@@ -300,6 +300,9 @@ final class MechanicListenerAdapter implements Listener {
                     if(face != null)
                         handleDirectWireInput(new WorldVector(w, x + face.getModX()*2, y, z + face.getModZ()*2), block, oldLevel, newLevel);
                 }
+                break;
+            case BlockID.POWERED_RAIL:
+                return;
         }
 
         // For redstone wires and repeaters, the code already exited this method
