@@ -35,8 +35,12 @@ mechanics:
         - OBSIDIAN
         - BEDROCK
         max-distance: 12
+        bounce-max-velocity: 5.0
     BetterPlants:
         fern-farming: true
+        fast-random-ticks: true
+    BoatDecay:
+        time-in-ticks: 20
     BoatExitRemover:
         give-item: false
     BoatRemoveEntities:
@@ -48,6 +52,11 @@ mechanics:
     Bookcase:
         read-when-sneaking: 'no'
         read-when-holding-block: false
+    BounceBlocks:
+        blocks:
+        - DIAMOND_BLOCK
+        sensitivity: 0.1
+        auto-blocks: {}
     Bridge:
         allow-redstone: true
         max-length: 30
@@ -79,6 +88,9 @@ mechanics:
         - JUNGLE_WOOD_STAIRS
         - QUARTZ_STAIRS
         - ACACIA_STAIRS
+        - DARK_OAK_STAIRS
+        - PURPUR_STAIRS
+        - RED_SANDSTONE_STAIRS
         face-correct-direction: true
         require-sign: false
         max-distance: 3
@@ -95,8 +107,11 @@ mechanics:
         sign-click-open: true
         take-buckets: false
         super-fast-cooking: false
+        heating: false
+        chunk-limit: false
     CustomDrops:
         require-permissions: false
+        remove-vanilla-drops: false
     DispenserRecipes:
         cannon-enable: true
         fan-enable: true
@@ -152,6 +167,8 @@ mechanics:
         show-name-right-click: true
         drop-rates: {}
         custom-mob-skins: {}
+        ignored-names:
+        - cscorelib
     HiddenSwitch:
         any-side: true
     ICs:
@@ -215,7 +232,7 @@ mechanics:
     MinecartSorter:
         block: NETHERRACK:0
     MinecartSpeedModifiers:
-        max-speed: 0.4
+        max-speed: 1.0
         off-rail-speed: 0.0
     MinecartStation:
         block: OBSIDIAN:0
@@ -228,6 +245,7 @@ mechanics:
         insulator-block: WOOL
         stack-per-move: true
         require-sign: false
+        warn-when-too-large: false
     SignCopier:
         item: INK_SACK:0
     Snow:
@@ -280,13 +298,17 @@ mechanics:
         enforce-data: false
         place-saplings: false
         break-leaves: false
+        single-damage-axe: false
     Variables:
         default-to-global: false
         enable-in-console: false
         enable-in-player-commands: false
         enable-in-player-chat: false
+        override-all-text: false
     XPStorer:
         require-bottle: false
         xp-per-bottle: 16
         block: MOB_SPAWNER
         require-sneaking-state: 'no'
+        radius-mode: false
+        radius: 5

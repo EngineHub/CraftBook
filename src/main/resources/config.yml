@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.9 Beta 1
+# CraftBook Configuration for Bukkit. Generated for version: 3.9u17
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -13,90 +13,89 @@ enabled-mechanics:
 
 # A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.
 disabled-mechanics:
-- MinecartVisionSteering
-- MinecartEmptySlowdown
-- SignCopier
-- BoatRemoveEntities
-- Snow
-- MinecartMaxSpeed
-- MinecartReverser
-- Pay
-- Netherrack
-- MinecartRemoveEntities
-- MinecartDeposit
-- BoatDrops
-- MinecartExitRemover
-- JackOLantern
-- MinecartMobBlocker
-- MinecartFallModifier
-- ICs
-- Ammeter
-- BoatSpeedModifiers
-- BoatExitRemover
 - AI
-- CustomDrops
-- MapChanger
-- LegacyCustomDrops
-- HeadDrops
-- MinecartEjector
-- TreeLopper
-- Glowstone
-- LightStone
-- LegacyCauldron
-- MinecartCollisionEntry
-- Footprints
-- Bridge
-- PaintingSwitcher
-- BetterPhysics
-- Marquee
-- MinecartDispenser
-- BetterPlants
-- HiddenSwitch
-- Gate
-- MinecartBooster
+- Ammeter
 - BetterLeads
-- MinecartDecay
-- CustomCrafting
-- Chairs
-- Elevator
-- BoatWaterPlaceOnly
-- CookingPot
-- MinecartSpeedModifiers
-- MinecartTemporaryCart
-- XPStorer
-- MinecartSorter
-- MinecartPlaceAnywhere
-- ToggleArea
-- MinecartTeleporter
-- CommandSigns
+- BetterPhysics
 - BetterPistons
-- DispenserRecipes
-- MinecartItemPickup
-- Jukebox
-- LandBoats
-- Bookcase
-- MinecartStation
-- Teleporter
-- MinecartMessenger
-- MinecartElevator
-- Door
-- MinecartMoreRails
-- MinecartConstantSpeed
-- LightSwitch
-- MinecartNoCollide
-- Cauldron
+- BetterPlants
+- BoatDecay
+- BoatDrops
+- BoatExitRemover
+- BoatRemoveEntities
+- BoatSpeedModifiers
 - BoatUncrashable
-- MinecartRailPlacer
+- BoatWaterPlaceOnly
+- Bookcase
+- BounceBlocks
+- Bridge
+- Cauldron
+- Chairs
 - ChunkAnchor
 - CommandItems
-- Sponge
+- CommandSigns
+- CookingPot
+- CustomCrafting
+- CustomDrops
+- DispenserRecipes
+- Door
+- Elevator
+- Footprints
+- Gate
+- Glowstone
+- HeadDrops
+- HiddenSwitch
+- ICs
+- JackOLantern
+- Jukebox
+- LandBoats
+- LegacyCauldron
+- LegacyCustomDrops
+- LightStone
+- LightSwitch
+- MapChanger
+- Marquee
+- MinecartBooster
+- MinecartCollisionEntry
+- MinecartConstantSpeed
+- MinecartDecay
+- MinecartDeposit
+- MinecartDispenser
+- MinecartEjector
+- MinecartElevator
+- MinecartEmptySlowdown
+- MinecartExitRemover
+- MinecartFallModifier
+- MinecartItemPickup
+- MinecartMaxSpeed
+- MinecartMessenger
+- MinecartMobBlocker
+- MinecartMoreRails
+- MinecartNoCollide
+- MinecartPlaceAnywhere
+- MinecartRailPlacer
+- MinecartRemoveEntities
+- MinecartReverser
+- MinecartSorter
+- MinecartSpeedModifiers
+- MinecartStation
+- MinecartTeleporter
+- MinecartTemporaryCart
+- MinecartVisionSteering
+- Netherrack
+- PaintingSwitcher
+- Pay
 - Pipes
+- SignCopier
+- Snow
+- Sponge
+- Teleporter
+- ToggleArea
+- TreeLopper
+- XPStorer
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2
-
-# Enables the update notifier. This checks for updates on start, and notifies anyone with the permission when they join. They can then use /cb update to download the update.
-notify-updates: true
 
 # Causes many mechanics to require sufficient blocks to function, for example gates, bridges and doors.
 safe-destruction: true
@@ -134,6 +133,9 @@ scan-text-for-localization: false
 
 # Enable a mode that will print extra debug information to the console.
 debug-mode: false
+
+# Causes all debug mode output to be logged into a file. This file is reset every startup (And every /cb reload).
+debug-mode-file-logging: false
 
 # Enable certain debug types when debug mode is enabled.
 debug-flags: []
