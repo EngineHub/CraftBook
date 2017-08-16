@@ -45,7 +45,7 @@ public final class SpongePermissionNode extends PermissionNode {
             return;
         }
 
-        PermissionDescription.Builder permissionBuilder = provider.getProvider().newDescriptionBuilder(CraftBookPlugin.inst()).get();
+        PermissionDescription.Builder permissionBuilder = provider.getProvider().newDescriptionBuilder(CraftBookPlugin.inst());
         permissionDescription = permissionBuilder.id(getNode()).description(Text.of(getDescription())).assign(getDefaultRole(), true).register();
     }
 
