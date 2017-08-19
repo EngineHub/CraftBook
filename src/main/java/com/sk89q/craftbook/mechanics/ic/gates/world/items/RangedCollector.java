@@ -173,9 +173,9 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                 collected = true;
             }
 
-            if (collected) {
-                chestState.update();
-            }
+            //if (collected) {
+            //    chestState.update();
+            //}
         }
 
         return collected;
