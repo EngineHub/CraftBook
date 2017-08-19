@@ -30,6 +30,17 @@ public class InventoryUtil {
      * @return The stacks that could not be added.
      */
     public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
+        return addItemsToInventory(container, true, stacks);
+    }
+
+    /**
+     * Adds items to an inventory, returning the leftovers.
+     *
+     * @param container The InventoryHolder to add the items to.
+     * @param stacks The stacks to add to the inventory.
+     * @return The stacks that could not be added.
+     */
+    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack ... stacks) {
 
         if(container instanceof Furnace) {
             return addItemsToFurnace((Furnace) container, stacks);
@@ -37,7 +48,7 @@ public class InventoryUtil {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
             ArrayList<ItemStack> leftovers = new ArrayList<>(container.getInventory().addItem(stacks).values());
-            if(container instanceof BlockState)
+            if(container instanceof BlockState && update)
                 ((BlockState) container).update();
             return leftovers;
         }

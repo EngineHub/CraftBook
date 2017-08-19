@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
@@ -21,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
@@ -104,6 +106,8 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         boolean collected = false;
 
+        List<Item> itemsForChest = Lists.newArrayList();
+
         for (Entity entity : LocationUtil.getNearbyEntities(centre, radius)) {
             if (entity.isValid() && entity instanceof Item) {
                 ItemStack stack = ((Item) entity).getItemStack();
@@ -145,21 +149,32 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     return true;
                 }
 
-                if(!InventoryUtil.doesBlockHaveInventory(chest))
-                    return false;
+                itemsForChest.add((Item) entity);
+            }
+        }
 
-                // Add the items to a container, and destroy them.
-                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
-                if(leftovers.isEmpty()) {
+        if (!itemsForChest.isEmpty()) {
+            if(!InventoryUtil.doesBlockHaveInventory(chest))
+                return false;
+
+            Chest chestState = (Chest) chest.getState();
+
+            // Add the items to a container, and destroy them.
+            for (Item entity : itemsForChest) {
+                ItemStack stack = entity.getItemStack();
+                List<ItemStack> leftovers = InventoryUtil.addItemsToInventory(chestState, false, stack);
+                if (leftovers.isEmpty()) {
                     entity.remove();
-                    return true;
                 } else {
-                    if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
-                        ((Item) entity).setItemStack(leftovers.get(0));
-                        return true;
+                    if (ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
+                        entity.setItemStack(leftovers.get(0));
                     }
                 }
                 collected = true;
+            }
+
+            if (collected) {
+                chestState.update();
             }
         }
 
