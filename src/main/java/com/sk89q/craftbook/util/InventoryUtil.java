@@ -48,8 +48,8 @@ public class InventoryUtil {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
             ArrayList<ItemStack> leftovers = new ArrayList<>(container.getInventory().addItem(stacks).values());
-            if(container instanceof BlockState && update)
-                ((BlockState) container).update();
+            //if(container instanceof BlockState && update)
+            //    ((BlockState) container).update();
             return leftovers;
         }
     }
@@ -86,7 +86,7 @@ public class InventoryUtil {
         }
         leftovers.removeAll(Collections.singleton(null));
 
-        furnace.update();
+        //furnace.update();
 
         return leftovers;
     }
@@ -120,7 +120,7 @@ public class InventoryUtil {
             }
         }
 
-        brewingStand.update();
+        //brewingStand.update();
 
         return leftovers;
     }
@@ -190,8 +190,8 @@ public class InventoryUtil {
             inv.getInventory().addItem(itemsToAdd.toArray(new ItemStack[itemsToAdd.size()]));
         }
 
-        if(inv instanceof BlockState)
-            ((BlockState) inv).update();
+        //if(inv instanceof BlockState)
+        //    ((BlockState) inv).update();
 
         return leftovers.isEmpty();
     }
