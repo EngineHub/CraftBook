@@ -16,8 +16,11 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.pipe;
 
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
+import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
@@ -29,6 +32,7 @@ import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PipePart;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.block.PoweredProperty;
@@ -57,10 +61,20 @@ import java.util.Set;
 @Module(id = "pipes", name = "Pipes", onEnable="onInitialize", onDisable="onDisable")
 public class Pipes extends SpongeBlockMechanic implements DocumentationProvider {
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
+    private ConfigValue<Boolean> stackPerPull = new ConfigValue<>("stack-per-pull", "Only pull a single stack from the source per usage.",true);
+
     private PipePart[] pipeParts;
 
     @Override
-    public void onInitialize() {
+    public void onInitialize() throws CraftBookException {
+        super.onInitialize();
+
+        stackPerPull.load(config);
+
         List<PipePart> pipePartList = new ArrayList<>();
         pipePartList.add(new PassthroughPipePart());
         pipePartList.add(new ColorConditionalPipePart());
@@ -87,29 +101,35 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
         Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(inventorySource);
 
         if(inventory.isPresent()) {
-            Optional<ItemStack> itemStackOptional = inventory.get().poll(1);
-            if(itemStackOptional.isPresent()) {
-                ItemStack itemStack = itemStackOptional.get();
-                Set<Location> traversed = new HashSet<>();
+            while (inventory.get().peek(1).isPresent()) {
+                Optional<ItemStack> itemStackOptional = inventory.get().poll(1);
+                if (itemStackOptional.isPresent()) {
+                    ItemStack itemStack = itemStackOptional.get();
+                    Set<Location<World>> traversed = new HashSet<>();
 
-                try {
-                    itemStack = doPipeIteration(location, itemStack, direction, traversed);
-                } catch(StackOverflowError e) {
-                    CraftBookPlugin.spongeInst().getLogger().error("Pipe overflow. Please report this issue to the developers with images of setup.", e);
-                }
-
-                if(itemStack.getQuantity() > 0) {
-                    for(ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
-                        Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
-                        item.offer(Keys.REPRESENTED_ITEM, snapshot);
-                        location.getExtent().spawnEntity(item, Cause.of(NamedCause.source(location)));
+                    try {
+                        itemStack = doPipeIteration(location, itemStack, direction, traversed);
+                    } catch (StackOverflowError e) {
+                        CraftBookPlugin.spongeInst().getLogger()
+                                .error("Pipe overflow. Please report this issue to the developers with images of setup.", e);
                     }
+
+                    if (itemStack.getQuantity() > 0) {
+                        for (ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
+                            Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
+                            item.offer(Keys.REPRESENTED_ITEM, snapshot);
+                            location.getExtent().spawnEntity(item, Cause.of(NamedCause.source(location)));
+                        }
+                    }
+                }
+                if (stackPerPull.getValue()) {
+                    break;
                 }
             }
         }
     }
 
-    private ItemStack doPipeIteration(Location<World> location, ItemStack itemStack, Direction fromDirection, Set<Location> traversed) {
+    private ItemStack doPipeIteration(Location<World> location, ItemStack itemStack, Direction fromDirection, Set<Location<World>> traversed) {
         if(traversed.contains(location))
             return itemStack;
 
@@ -145,7 +165,7 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
         return itemStack;
     }
 
-    private PipePart getPipePart(Location location) {
+    private PipePart getPipePart(Location<World> location) {
         for(PipePart pipePart : pipeParts)
             if(pipePart.isValid(location.getBlock()))
                 return pipePart;
@@ -165,7 +185,7 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
     @Override
     public ConfigValue<?>[] getConfigurationNodes() {
         return new ConfigValue<?>[] {
-
+            stackPerPull
         };
     }
 
