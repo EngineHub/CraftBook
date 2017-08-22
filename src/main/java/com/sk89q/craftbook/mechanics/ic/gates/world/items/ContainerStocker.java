@@ -1,17 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
@@ -25,6 +13,16 @@ import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ContainerStocker extends AbstractSelfTriggeredIC {
 
@@ -86,8 +84,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
             InventoryHolder c = (InventoryHolder) offset.getBlock().getState();
             for(ItemStack stack : event.getItems())
                 if (c.getInventory().addItem(stack).isEmpty()) {
-                    if(c instanceof BlockState)
-                        ((BlockState) c).update();
+                    //((BlockState) c).update();
                     return true;
                 }
         }

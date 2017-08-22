@@ -1,17 +1,5 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.bukkit.block.Chest;
-import org.bukkit.entity.minecart.StorageMinecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -21,6 +9,17 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class CartDeposit extends CartBlockMechanism {
 
@@ -129,7 +128,7 @@ public class CartDeposit extends CartBlockMechanism {
                 transferItems.addAll(leftovers);
                 leftovers.clear();
 
-                container.update();
+                //container.update();
             }
 
             CraftBookPlugin.logDebugMessage("collected items. " + transferItems.size() + " stacks left over.", "cart-deposit.collect");
@@ -178,7 +177,7 @@ public class CartDeposit extends CartBlockMechanism {
                     transferitems.addAll(Arrays.asList(containerinventory.getContents()));
                     containerinventory.clear();
                 }
-                container.update();
+                // container.update();
             }
 
             transferitems.removeAll(Collections.singleton(null));

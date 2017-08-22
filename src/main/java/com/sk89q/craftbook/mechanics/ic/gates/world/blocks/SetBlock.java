@@ -1,7 +1,10 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.Locale;
-
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.util.ItemInfo;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -9,11 +12,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.util.ItemInfo;
+import java.util.Locale;
 
 public abstract class SetBlock extends AbstractSelfTriggeredIC {
 
@@ -82,7 +81,7 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
                     stack.setAmount(stack.getAmount() - 1);
                 }
                 c.getInventory().setContents(is);
-                c.update();
+                //c.update();
                 return true;
             }
         }

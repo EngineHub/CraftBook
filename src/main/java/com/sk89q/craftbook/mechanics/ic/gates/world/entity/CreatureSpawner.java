@@ -16,18 +16,6 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.Locale;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
@@ -39,6 +27,17 @@ import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Locale;
 
 public class CreatureSpawner extends AbstractIC {
 
@@ -96,7 +95,7 @@ public class CreatureSpawner extends AbstractIC {
 
             org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
                     0).getState();
-            sp.setCreatureTypeByName(type.getName());
+            sp.setSpawnedType(type);
             sp.update();
         } else {
             Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));

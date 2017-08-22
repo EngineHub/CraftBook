@@ -320,7 +320,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         if (fromState instanceof InventoryHolder) {
             oldInventory = ((InventoryHolder) fromState).getInventory().getContents().clone();
             ((InventoryHolder) fromState).getInventory().clear();
-            fromState.update();
+            //fromState.update();
             from.setTypeId(0);
         }
         to.setTypeIdAndData(type, data, true);
@@ -337,7 +337,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             toState.update();
         } else if (toState instanceof InventoryHolder) {
             ((InventoryHolder) toState).getInventory().setContents(oldInventory);
-            toState.update(true);
+            //toState.update(true);
         }
 
         return true;
