@@ -96,11 +96,18 @@ public final class BlockUtil {
                 if(tool.getType() == Material.WOOD_SPADE || tool.getType() == Material.STONE_SPADE || tool.getType() == Material.IRON_SPADE || tool.getType() == Material.GOLD_SPADE || tool.getType() == Material.DIAMOND_SPADE)
                     drops.add(new ItemStack(Material.SNOW_BALL, block.getData() + 1));
                 break;
-            case CROPS:
+            case CROPS: {
                 drops.add(new ItemStack(Material.WHEAT, 1));
                 int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
-                if(amount > 0)
+                if (amount > 0)
                     drops.add(new ItemStack(Material.SEEDS, amount));
+                break;
+            }
+            case BEETROOT_BLOCK:
+                drops.add(new ItemStack(Material.BEETROOT, 1));
+                int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
+                if(amount > 0)
+                    drops.add(new ItemStack(Material.BEETROOT_SEEDS, amount));
                 break;
             case CARROT:
                 drops.add(new ItemStack(Material.CARROT_ITEM, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
