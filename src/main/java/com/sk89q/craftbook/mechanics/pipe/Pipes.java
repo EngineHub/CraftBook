@@ -246,6 +246,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                                 ItemStack st = iter.next();
                                 if (!st.getType().isRecord()) continue;
                                 juke.setPlaying(st.getType());
+                                juke.update();
                                 iter.remove();
                                 break;
                             }
@@ -429,7 +430,10 @@ public class Pipes extends AbstractCraftBookMechanic {
                             if (!ItemUtil.isStackValid(item)) continue;
                             block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
                         }
-                    } else juke.setPlaying(Material.AIR);
+                    } else {
+                        juke.setPlaying(Material.AIR);
+                        juke.update();
+                    }
                 }
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
