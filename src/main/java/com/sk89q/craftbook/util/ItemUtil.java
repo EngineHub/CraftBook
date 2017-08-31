@@ -568,7 +568,41 @@ public final class ItemUtil {
             case BLAZE_ROD:
             case LAVA_BUCKET:
             case BOOKSHELF:
-            case WOOL:
+            case WOOL:                
+            case SPRUCE_WOOD_STAIRS:
+            case JUNGLE_WOOD_STAIRS:
+            case BIRCH_WOOD_STAIRS:
+            case ACACIA_STAIRS:
+            case DARK_OAK_STAIRS:
+            case SPRUCE_FENCE:
+            case JUNGLE_FENCE:
+            case BIRCH_FENCE:
+            case ACACIA_FENCE:
+            case DARK_OAK_FENCE:
+            case SPRUCE_FENCE_GATE:
+            case JUNGLE_FENCE_GATE:
+            case BIRCH_FENCE_GATE:
+            case ACACIA_FENCE_GATE:
+            case DARK_OAK_FENCE_GATE:
+            case WOOD_DOOR:
+            case SPRUCE_DOOR_ITEM:
+            case JUNGLE_DOOR_ITEM:
+            case BIRCH_DOOR_ITEM:
+            case ACACIA_DOOR_ITEM:
+            case DARK_OAK_DOOR_ITEM:
+            case CARPET:
+            case SIGN:
+            case WOOD_BUTTON:
+            case FISHING_ROD:
+            case BOW:
+            case LADDER:
+            case BANNER:
+            case BOAT:
+            case BOAT_ACACIA:
+            case BOAT_BIRCH:
+            case BOAT_DARK_OAK:
+            case BOAT_JUNGLE:
+            case BOAT_SPRUCE:              
                 return true;
             default:
                 return false;
