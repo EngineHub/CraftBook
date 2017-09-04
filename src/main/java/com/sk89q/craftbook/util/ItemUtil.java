@@ -485,6 +485,8 @@ public final class ItemUtil {
                 return new ItemStack(Material.HARD_CLAY);
             case QUARTZ_ORE:
                 return new ItemStack(Material.QUARTZ);
+            case SMOOTH_BRICK:
+                return new ItemStack(Material.SMOOTH_BRICK, 1, (short) 2);
             case SPONGE:
                 if (item.getData().getData() == 0)
                     return null;
@@ -524,6 +526,32 @@ public final class ItemUtil {
                     case 15:
                         return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
                 }
+            case IRON_SWORD:
+            case IRON_PICKAXE:
+            case IRON_AXE:
+            case IRON_SPADE:
+            case IRON_HOE:
+            case CHAINMAIL_HELMET:
+            case CHAINMAIL_CHESTPLATE:
+            case CHAINMAIL_LEGGINGS:
+            case CHAINMAIL_BOOTS:
+            case IRON_HELMET:
+            case IRON_CHESTPLATE:
+            case IRON_LEGGINGS:
+            case IRON_BOOTS:
+            case IRON_BARDING:
+                return new ItemStack(Material.IRON_NUGGET);
+            case GOLD_SWORD:
+            case GOLD_PICKAXE:
+            case GOLD_AXE:
+            case GOLD_SPADE:
+            case GOLD_HOE:
+            case GOLD_HELMET:
+            case GOLD_CHESTPLATE:
+            case GOLD_LEGGINGS:
+            case GOLD_BOOTS:
+            case GOLD_BARDING:
+                return new ItemStack(Material.GOLD_NUGGET);
             default:
                 return null;
         }
