@@ -240,7 +240,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
                         List<ItemStack> its = new ArrayList<>(event.getItems());
-                        if (!juke.isPlaying()) {
+                        if (juke.getPlaying() != Material.AIR) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
                                 ItemStack st = iter.next();
