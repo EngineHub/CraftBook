@@ -16,10 +16,10 @@ def spongeFullVersion = spongeVersion + ".0-SNAPSHOT"
 
 dependencies {
     compile project(':craftbook-core')
-    compile "org.spongepowered:spongeapi:${spongeFullVersion}"
+    compileOnly "org.spongepowered:spongeapi:${spongeFullVersion}"
     compile 'com.me4502:ModularFramework:1.8.4'
     compile 'com.sk89q.worldedit:worldedit-sponge:6.1.7-SNAPSHOT'
-    testCompile group: 'org.mockito', name: 'mockito-core', version:'1.9.0-rc1'
+    testCompile "org.mockito:mockito-core:2.+"
 }
 
 project.archivesBaseName = "${project.archivesBaseName}-S${spongeVersion}"

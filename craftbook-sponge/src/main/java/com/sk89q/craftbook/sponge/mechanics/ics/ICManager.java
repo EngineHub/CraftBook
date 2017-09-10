@@ -51,6 +51,8 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.sensor.DaySensor;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.weather.TimeControlAdvanced;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.plc.PlcFactory;
+import com.sk89q.craftbook.sponge.mechanics.ics.plc.lang.Perlstone;
 import org.spongepowered.api.Sponge;
 
 import java.util.Comparator;
@@ -121,6 +123,9 @@ class ICManager {
         registerICType(new ICType<>("MC4100", "FULL SUBTR", "Full Subtractor", "A compact full-subtractor", new FullSubtractor.Factory(), "3I3O"));
         registerICType(new ICType<>("MC4110", "HALF SUBTR", "Half Subtractor", "A compact half-subtractor", new HalfSubtractor.Factory(), "3I3O"));
         registerICType(new ICType<>("MC4200", "DISPATCH", "Dispatcher", "Outputs the centre input on the appropriate outputs when input is high.", new Dispatcher.Factory(), "3I3O"));
+
+        //PLC
+        registerICType(new ICType<>("MC5000", "PERLSTONE", "Perlstone 3ISO Programmable Logic Chip", "3ISO PLC programmable with Perlstone.", new PlcFactory<>(new Perlstone()), "3ISO"));
 
         registerICType(new ICType<>("MC6020", "RANDOM 5", "Random 5-Bit", "Randomly sets the outputs on high.", new RandomBit.Factory(), "SI5O"));
     }

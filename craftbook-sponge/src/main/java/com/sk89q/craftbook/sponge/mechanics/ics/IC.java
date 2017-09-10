@@ -80,7 +80,7 @@ public abstract class IC {
 
     public Sign getSign() {
         if (sign == null) {
-            sign = (Sign) block.getTileEntity().orElseThrow(() -> new IllegalStateException("IC given block that is not a sign! (" + block.getBlockPosition().toString() + ") in world " + block.getExtent().getName()));
+            sign = (Sign) block.getTileEntity().orElseThrow(() -> new IllegalStateException("IC given block that is not a sign! (" + block.getBlockPosition() + ") in world " + block.getExtent().getName()));
         }
 
         return sign;
