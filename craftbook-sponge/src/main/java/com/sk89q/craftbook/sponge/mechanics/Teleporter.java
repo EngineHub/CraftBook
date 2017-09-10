@@ -35,8 +35,7 @@ import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -103,7 +102,7 @@ public class Teleporter extends SpongeSignMechanic implements DocumentationProvi
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             Location<World> signLocation = location;
 

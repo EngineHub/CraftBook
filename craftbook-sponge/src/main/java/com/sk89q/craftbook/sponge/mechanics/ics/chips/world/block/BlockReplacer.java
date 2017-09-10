@@ -93,7 +93,7 @@ public class BlockReplacer extends IC {
                 .listener(InteractInventoryEvent.Close.class, close -> {
                     Inventory inventory = close.getTargetInventory();
                     inventory.peek().ifPresent(itemStack ->
-                            blockTypeData.offBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getItem().getBlock().orElse(BlockTypes.AIR).getDefaultState()));
+                            blockTypeData.offBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getType().getBlock().orElse(BlockTypes.AIR).getDefaultState()));
                 })
                 .build(CraftBookPlugin.spongeInst().container);
 
@@ -104,14 +104,14 @@ public class BlockReplacer extends IC {
                 .listener(InteractInventoryEvent.Close.class, close -> {
                     Inventory inventory = close.getTargetInventory();
                     inventory.peek().ifPresent(itemStack -> {
-                        blockTypeData.onBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getItem().getBlock().orElse(BlockTypes.AIR).getDefaultState());
+                        blockTypeData.onBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getType().getBlock().orElse(BlockTypes.AIR).getDefaultState());
 
-                        player.openInventory(offBlockInventory, CraftBookPlugin.spongeInst().getCause().build());
+                        player.openInventory(offBlockInventory);
                     });
                 })
                 .build(CraftBookPlugin.spongeInst().container);
 
-        player.openInventory(onBlockInventory, CraftBookPlugin.spongeInst().getCause().build());
+        player.openInventory(onBlockInventory);
     }
 
     @Override
@@ -139,11 +139,11 @@ public class BlockReplacer extends IC {
             Location<World> block = getBackBlock();
             if(block.getBlock().equals(blockTypeData.onBlock)) {
                 if(!getPinSet().getInput(0, this)) {
-                    block.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE, CraftBookPlugin.spongeInst().getCause().build());
+                    block.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
                 }
             } else if (block.getBlock().equals(blockTypeData.offBlock)) {
                 if (getPinSet().getInput(0, this)) {
-                    block.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE, CraftBookPlugin.spongeInst().getCause().build());
+                    block.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
                 }
             }
             Set<Location> traversedBlocks = new HashSet<>();
@@ -168,12 +168,12 @@ public class BlockReplacer extends IC {
 
                 if (b.getBlock().equals(blockTypeData.onBlock)) {
                     if (!on) {
-                        b.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE, CraftBookPlugin.spongeInst().getCause().build());
+                        b.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
                     }
                     Sponge.getScheduler().createTaskBuilder().delayTicks(delay).execute(() -> replaceBlocks(on, b, traversedBlocks)).submit(CraftBookPlugin.spongeInst().container);
                 } else if (b.getBlock().equals(blockTypeData.offBlock)) {
                     if (on) {
-                        b.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE, CraftBookPlugin.spongeInst().getCause().build());
+                        b.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
                     }
                     Sponge.getScheduler().createTaskBuilder().delayTicks(delay).execute(() -> replaceBlocks(on, b, traversedBlocks)).submit(CraftBookPlugin.spongeInst().container);
                 }

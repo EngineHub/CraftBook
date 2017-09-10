@@ -38,9 +38,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
@@ -90,7 +89,7 @@ public class Elevator extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             Location<World> signLocation = location;
 

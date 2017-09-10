@@ -26,14 +26,14 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
-import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
-import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
@@ -45,9 +45,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
@@ -88,7 +86,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Humanoid human) {
         event.getTargetBlock().getLocation().ifPresent(location -> {
             if (isValid(location)) {
                 location.getTileEntity().ifPresent((sign -> {
@@ -114,7 +112,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {
-            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            Player player = event.getCause().first(Player.class).orElse(null);
             if(player != null) {
                 if(!usePermissions.hasPermission(player)) {
                     player.sendMessage(USE_PERMISSIONS);

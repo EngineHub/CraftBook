@@ -35,8 +35,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -67,13 +66,14 @@ public class Ammeter extends SpongeBlockMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             int powerLevel = BlockUtil.getDirectBlockPowerLevel(location).orElse(-1);
 
             HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
 
-            if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent() && player.getItemInHand(hand).get().getItem() == ammeterItem.getValue().getItem()) {
+            if (powerLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent()
+                    && player.getItemInHand(hand).get().getType() == ammeterItem.getValue().getType()) {
                 player.sendMessage(getCurrentLine(powerLevel));
                 event.setCancelled(true);
             }

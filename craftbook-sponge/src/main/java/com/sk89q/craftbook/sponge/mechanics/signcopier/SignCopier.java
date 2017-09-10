@@ -46,6 +46,8 @@ import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -119,7 +121,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                 : (event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND);
 
         player.getItemInHand(hand).ifPresent(itemStack -> {
-            if (itemStack.getItem() == signCopierItem.getValue().getItem()) {
+            if (itemStack.getType() == signCopierItem.getValue().getType()) {
                 event.getTargetBlock().getLocation().ifPresent(location -> {
                     if (SignUtil.isSign(location)) {
                         if (usePermissions.hasPermission(player)) {
@@ -131,7 +133,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                                     signData = signData.set(Keys.SIGN_LINES, lines);
 
                                     ChangeSignEvent changeSignEvent = SpongeEventFactory.createChangeSignEvent(
-                                            Cause.source(CraftBookPlugin.spongeInst().getContainer()).notifier(player).build(),
+                                            Cause.builder().build(EventContext.builder().add(EventContextKeys.PLAYER, player).build()),
                                             sign.getSignData().asImmutable(),
                                             signData,
                                             sign

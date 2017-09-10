@@ -23,20 +23,18 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -124,12 +122,14 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
             Location<World> checkBlock = sign.getLocation().getRelative(direction);
 
             if (checkBlock.getBlock().getType() == BlockTypes.LEVER) {
-                checkBlock.offer(Keys.POWERED, !checkBlock.get(Keys.POWERED).orElse(false),
-                        Cause.source(CraftBookPlugin.spongeInst().getContainer()).named(NamedCause.notifier(player)).build());
+                Sponge.getCauseStackManager().pushCause(player);
+                checkBlock.offer(Keys.POWERED, !checkBlock.get(Keys.POWERED).orElse(false));
+                Sponge.getCauseStackManager().popCause();
                 found = true;
             } else if (checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON || checkBlock.getBlock().getType() == BlockTypes.WOODEN_BUTTON) {
-                checkBlock.offer(Keys.POWERED, true,
-                        Cause.source(CraftBookPlugin.spongeInst().getContainer()).named(NamedCause.notifier(player)).build());
+                Sponge.getCauseStackManager().pushCause(player);
+                checkBlock.offer(Keys.POWERED, true);
+                Sponge.getCauseStackManager().popCause();
                 checkBlock.addScheduledUpdate(1, checkBlock.getBlock().getType() == BlockTypes.STONE_BUTTON ? 20 : 30);
                 found = true;
             }

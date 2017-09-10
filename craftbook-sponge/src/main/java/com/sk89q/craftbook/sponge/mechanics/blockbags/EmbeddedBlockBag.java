@@ -48,7 +48,7 @@ public class EmbeddedBlockBag implements DataSerializable, BlockBag {
         while (testIterator.hasNext()) {
             ItemStack testStack = testIterator.next();
             for (ItemStack itemStack : this.itemStacks) {
-                if (itemStack.getItem() == testStack.getItem()) {
+                if (itemStack.getType() == testStack.getType()) {
                     int newQuantity = testStack.getQuantity();
                     newQuantity -= itemStack.getQuantity();
                     if (newQuantity > 0) {
@@ -68,7 +68,7 @@ public class EmbeddedBlockBag implements DataSerializable, BlockBag {
             itemAdd:
             {
                 for (ItemStack existingStack : this.itemStacks) {
-                    if (itemStack.getItem() == existingStack.getItem()) {
+                    if (itemStack.getType() == existingStack.getType()) {
                         existingStack.setQuantity(existingStack.getQuantity() + itemStack.getQuantity());
                         break itemAdd;
                     }
@@ -91,7 +91,7 @@ public class EmbeddedBlockBag implements DataSerializable, BlockBag {
             Iterator<ItemStack> existingIterator = this.itemStacks.iterator();
             while (existingIterator.hasNext()) {
                 ItemStack existingStack = existingIterator.next();
-                if (itemStack.getItem() == existingStack.getItem()) {
+                if (itemStack.getType() == existingStack.getType()) {
                     int numToRemove = Math.min(existingStack.getQuantity(), newQuantity);
                     newQuantity -=  numToRemove;
                     if (existingStack.getQuantity() - numToRemove <= 0) {

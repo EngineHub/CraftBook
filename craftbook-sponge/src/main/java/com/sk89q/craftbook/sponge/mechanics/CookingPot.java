@@ -43,9 +43,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -107,21 +105,21 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent(location -> {
             if (isValid(location)) {
                 location.getTileEntity().map(sign -> (Sign) sign).ifPresent(sign -> {
-                    ItemStack itemStack = player.getItemInHand(event.getHandType()).filter(stack -> FuelSource.canCookWith(stack.getItem())).orElse(null);
+                    ItemStack itemStack = player.getItemInHand(event.getHandType()).filter(stack -> FuelSource.canCookWith(stack.getType())).orElse(null);
                     if (itemStack != null) {
                         if (refuelPermissions.hasPermission(player)) {
-                            int value = FuelSource.getFuelValue(itemStack.getItem());
+                            int value = FuelSource.getFuelValue(itemStack.getType());
                             increaseMultiplier(sign, value);
 
                             if (itemStack.getQuantity() > 1) {
                                 itemStack.setQuantity(itemStack.getQuantity() - 1);
                                 player.setItemInHand(event.getHandType(), itemStack);
                             } else {
-                                if (itemStack.getItem() == ItemTypes.LAVA_BUCKET) {
+                                if (itemStack.getType() == ItemTypes.LAVA_BUCKET) {
                                     player.setItemInHand(event.getHandType(), ItemStack.of(ItemTypes.BUCKET, 1));
                                 } else {
                                     player.setItemInHand(event.getHandType(), null);
@@ -133,7 +131,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                     } else {
                         Location<?> chestBlock = SignUtil.getBackBlock(location).add(0, 2, 0);
                         chestBlock.getTileEntity().filter(tileEntity -> tileEntity instanceof Chest).map(tileEntity -> (Chest) tileEntity).ifPresent(chest ->
-                                player.openInventory(chest.getInventory(), CraftBookPlugin.spongeInst().getCause().build()));
+                                player.openInventory(chest.getInventory()));
                     }
                 });
             }
@@ -150,7 +148,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {
-            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            Player player = event.getCause().first(Player.class).orElse(null);
             if(player != null) {
                 if(!refuelPermissions.hasPermission(player)) {
                     player.sendMessage(Text.of("You don't have permission to refuel this mechanic!"));

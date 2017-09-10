@@ -23,8 +23,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -37,7 +36,7 @@ import javax.annotation.Nullable;
 public abstract class SpongeSignMechanic extends SpongeBlockMechanic {
 
     @Listener
-    public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
+    public void onSignChange(ChangeSignEvent event, @First Player player) {
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
                 if(!getCreatePermission().hasPermission(player)) {

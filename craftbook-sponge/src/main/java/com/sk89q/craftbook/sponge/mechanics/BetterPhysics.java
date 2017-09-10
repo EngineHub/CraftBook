@@ -35,7 +35,6 @@ import org.spongepowered.api.entity.FallingBlock;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.LocatableBlock;
@@ -131,7 +130,7 @@ public class BetterPhysics extends SpongeBlockMechanic implements DocumentationP
             FallingBlock fallingBlock = (FallingBlock) ladder.getExtent().createEntity(EntityTypes.FALLING_BLOCK, ladder.getPosition().add(0.5, 0, 0.5));
             fallingBlock.offer(Keys.FALLING_BLOCK_STATE, ladder.getBlock());
             fallingBlock.offer(Keys.CAN_PLACE_AS_BLOCK, true);
-            ladder.getExtent().spawnEntity(fallingBlock, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
+            ladder.getExtent().spawnEntity(fallingBlock);
 
             physics.checkForPhysics(ladder.getRelative(Direction.UP));
         }

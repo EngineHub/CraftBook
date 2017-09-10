@@ -16,8 +16,8 @@
  */
 package com.sk89q.craftbook.sponge.util.data.mutable;
 
-import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.util.AbstractLongData;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;

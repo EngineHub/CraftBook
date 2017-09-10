@@ -33,8 +33,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -65,13 +64,13 @@ public class LightStone extends SpongeBlockMechanic implements DocumentationProv
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
             int lightLevel = BlockUtil.getLightLevel(location.getRelative(event.getTargetSide()));
 
             HandType hand = event instanceof InteractBlockEvent.Secondary.MainHand ? HandTypes.MAIN_HAND : HandTypes.OFF_HAND;
 
-            if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent() && player.getItemInHand(hand).get().getItem() == lightstoneItem.getValue().getItem()) {
+            if (lightLevel >= 0 && permissionNode.hasPermission(player) && player.getItemInHand(hand).isPresent() && player.getItemInHand(hand).get().getType() == lightstoneItem.getValue().getType()) {
                 player.sendMessage(getCurrentLine(lightLevel));
                 event.setCancelled(true);
             }

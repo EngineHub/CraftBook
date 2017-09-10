@@ -24,14 +24,13 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
-import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -42,8 +41,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
@@ -144,14 +141,14 @@ public class Door extends SimpleArea implements DocumentationProvider {
                         for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                             Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                             item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
-                            block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                            block.getExtent().spawnEntity(item);
                         }
                     } else if (type.getType() != BlockTypes.AIR && !baseBlock.getBlock().equals(otherBase.getBlock())) {
                         if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                             continue;
                         }
                     }
-                    baseBlock.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                    baseBlock.setBlock(type);
 
                     left = baseBlock.getRelative(SignUtil.getLeft(block));
 
@@ -160,14 +157,14 @@ public class Door extends SimpleArea implements DocumentationProvider {
                             for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                                 Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                                 item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
-                                block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                                block.getExtent().spawnEntity(item);
                             }
                         } else if (type.getType() != BlockTypes.AIR && !left.getBlock().equals(otherBase.getBlock())) {
                             if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                                 continue;
                             }
                         }
-                        left.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        left.setBlock(type);
                         left = left.getRelative(SignUtil.getLeft(block));
                     }
 
@@ -178,14 +175,14 @@ public class Door extends SimpleArea implements DocumentationProvider {
                             for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                                 Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                                 item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
-                                block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                                block.getExtent().spawnEntity(item);
                             }
                         } else if (type.getType() != BlockTypes.AIR && !right.getBlock().equals(otherBase.getBlock())) {
                             if (!blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
                                 continue;
                             }
                         }
-                        right.setBlock(type, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        right.setBlock(type);
                         right = right.getRelative(SignUtil.getRight(block));
                     }
 

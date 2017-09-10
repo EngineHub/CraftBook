@@ -17,7 +17,6 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.ParsingUtil;
@@ -79,7 +78,7 @@ public class ZeusBolt extends IC {
 
                         if(b.getBlockType() != BlockTypes.AIR && ThreadLocalRandom.current().nextInt(100) <= chance) {
                             Lightning lightning = (Lightning) b.getExtent().createEntity(EntityTypes.LIGHTNING, b.getPosition());
-                            b.getExtent().spawnEntity(lightning, CraftBookPlugin.spongeInst().getCause().build());
+                            b.getExtent().spawnEntity(lightning);
                         }
                     }
                 }

@@ -25,14 +25,13 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
-import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
@@ -45,9 +44,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Humanoid;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
@@ -83,7 +80,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Humanoid human) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Humanoid human) {
         super.onPlayerInteract(event, human);
 
         if (indirectAccess.getValue()) {
@@ -192,7 +189,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
             while (block.getBlockType() == BlockTypes.AIR) {
                 if (blockBag.has(Lists.newArrayList(blockBagItem.copy()))) {
                     if (blockBag.remove(Lists.newArrayList(blockBagItem.copy())).isEmpty()) {
-                        block.setBlock(gateType, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                        block.setBlock(gateType);
                         block = block.getRelative(dir);
                     }
                 } else {
@@ -207,9 +204,9 @@ public class Gate extends SimpleArea implements DocumentationProvider {
                 for (ItemStack leftover : blockBag.add(Lists.newArrayList(blockBagItem.copy()))) {
                     Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, sign.getLocation().getPosition());
                     item.offer(Keys.REPRESENTED_ITEM, leftover.createSnapshot());
-                    block.getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                    block.getExtent().spawnEntity(item);
                 }
-                block.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                block.setBlockType(BlockTypes.AIR);
                 block = block.getRelative(dir);
             }
         }

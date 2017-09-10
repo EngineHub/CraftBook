@@ -275,7 +275,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
                             ((SerializedICFactory) ic.getFactory()).setData(ic, data);
                         } else {
                             CraftBookPlugin.inst().getLogger().warn("Broken IC at " + location.toString());
-                            location.removeBlock(CraftBookPlugin.spongeInst().getCause().build());
+                            location.removeBlock();
                             return Optional.empty();
                         }
                     }

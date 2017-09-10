@@ -43,8 +43,7 @@ import org.spongepowered.api.data.type.TreeType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -111,7 +110,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
     }
 
     @Listener
-    public void onBlockBreak(ChangeBlockEvent.Break event, @Named(NamedCause.SOURCE) Player player) {
+    public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
         if(ItemUtil.doesStackPassFilters(allowedItems.getValue(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(null)) && !disabledPlayers.getValue().contains(player.getUniqueId())) {
             event.getTransactions().stream().filter((t) -> BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), t.getOriginal().getState())).forEach(transaction -> {
                 Optional<TreeType> treeType = transaction.getOriginal().get(Keys.TREE_TYPE);
@@ -135,7 +134,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
         if(data.isPresent() && data.get().equals(type)) { //Same tree type.
             // TODO Switch to FakePlayer when implemented.
             //block.getExtent().digBlockWith(block.getBlockPosition(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(null), Cause.of(NamedCause.simulated(player)));
-            block.removeBlock(CraftBookPlugin.spongeInst().getCause().build());
+            block.removeBlock();
             for(Direction dir : BlockUtil.getDirectFaces()) {
                 checkBlocks(block.getRelative(dir), player, type, traversed);
             }

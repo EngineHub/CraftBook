@@ -34,8 +34,6 @@ import org.spongepowered.api.data.property.block.TemperatureProperty;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.TickBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -107,7 +105,7 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
 
             if(newHeight > heightValue.getMaxValue()) {
                 if(highPiling.getValue())
-                    location.setBlockType(BlockTypes.SNOW, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                    location.setBlockType(BlockTypes.SNOW);
             } else {
                 location.offer(Keys.LAYER, newHeight);
                 if(disperse)
@@ -118,10 +116,10 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
                 Location down = location.getRelative(Direction.DOWN);
 
                 if (down.getBlockType() == BlockTypes.WATER || down.getBlockType() == BlockTypes.FLOWING_WATER)
-                    down.setBlockType(BlockTypes.ICE, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                    down.setBlockType(BlockTypes.ICE);
             }
         } else {
-            location.setBlockType(BlockTypes.SNOW_LAYER, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+            location.setBlockType(BlockTypes.SNOW_LAYER);
         }
     }
 
@@ -132,11 +130,11 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
             int newHeight = heightValue.get() - 1;
 
             if(newHeight < heightValue.getMinValue())
-                location.setBlockType(BlockTypes.AIR, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+                location.setBlockType(BlockTypes.AIR);
             else
                 location.offer(Keys.LAYER, newHeight);
         } else if (location.getBlockType() == BlockTypes.SNOW) {
-            location.setBlockType(BlockTypes.SNOW_LAYER, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+            location.setBlockType(BlockTypes.SNOW_LAYER);
             LayeredData data = location.getOrCreate(LayeredData.class).get();
             data.set(Keys.LAYER, data.getValue(Keys.LAYER).get().getMaxValue());
             location.offer(data);

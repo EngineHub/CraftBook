@@ -47,7 +47,6 @@ import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -148,7 +147,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     }
 
     @Listener
-    public void onInitialization(GameStartedServerEvent event) throws IllegalAccessException {
+    public void onInitialization(GameStartedServerEvent event) {
         if(config.dataOnlyMode.getValue()) {
             logger.info("Halting CraftBook Initialization - Data Only Mode! Note: Nothing will work.");
             return;
@@ -352,10 +351,6 @@ public class CraftBookPlugin extends CraftBookAPI {
         getSelfTriggerManager().ifPresent(SelfTriggerManager::unload);
         this.selfTriggerManager = null;
         moduleController.disableModules();
-    }
-
-    public Cause.Builder getCause() {
-        return Cause.source(this.container);
     }
 
     @Override

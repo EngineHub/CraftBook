@@ -25,7 +25,6 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.world.LoadWorldEvent;

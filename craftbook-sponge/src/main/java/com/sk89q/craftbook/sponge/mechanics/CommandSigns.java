@@ -38,7 +38,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.util.Direction;
@@ -83,7 +82,7 @@ public class CommandSigns extends SpongeSignMechanic implements DocumentationPro
         Location<World> block = source.getLocation();
 
         if (isValid(block)) {
-            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            Player player = event.getCause().first(Player.class).orElse(null);
 
             boolean isPowered = BlockUtil.getBlockPowerLevel(block).orElse(0) > 0;
             boolean wasPowered = block.get(CraftBookKeys.LAST_POWER).orElse(0) > 0;

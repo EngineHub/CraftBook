@@ -49,11 +49,7 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -145,7 +141,7 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         event.getTargetBlock().getLocation().filter(this::isValid).ifPresent(location -> {
             if (!sneakState.getValue().doesPass(player.get(Keys.IS_SNEAKING).orElse(false))
                     || player.get(Keys.EXPERIENCE_LEVEL).orElse(0) < 1
@@ -158,7 +154,7 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
             if(requireBottle.getValue()) {
                 bottleCount.set(0);
                 for (HandType handType : Sponge.getRegistry().getAllOf(HandType.class)) {
-                    player.getItemInHand(handType).filter(itemStack -> itemStack.getItem() == ItemTypes.GLASS_BOTTLE)
+                    player.getItemInHand(handType).filter(itemStack -> itemStack.getType() == ItemTypes.GLASS_BOTTLE)
                             .ifPresent((itemStack -> bottleCount.addAndGet(itemStack.getQuantity())));
                 }
 
@@ -263,9 +259,7 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
                 Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
                 item.offer(Keys.REPRESENTED_ITEM, bottles.createSnapshot());
 
-                SpawnCause cause = Sponge.getRegistry().createBuilder(SpawnCause.Builder.class).type(SpawnTypes.DROPPED_ITEM).build();
-
-                location.getExtent().spawnEntity(item, Cause.source(cause).build());
+                location.getExtent().spawnEntity(item);
             }
 
             tempBottles -= 64;

@@ -21,13 +21,10 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -52,7 +49,7 @@ public class JackOLantern extends SimplePowerable implements DocumentationProvid
         Direction direction = location.get(Keys.DIRECTION).orElse(Direction.NORTH);
         BlockState state = BlockState.builder().blockType(powered ? BlockTypes.LIT_PUMPKIN : BlockTypes.PUMPKIN).build();
         state = state.with(Keys.DIRECTION, direction).orElse(state);
-        location.setBlock(state, Cause.of(NamedCause.source(CraftBookPlugin.spongeInst().getContainer())));
+        location.setBlock(state);
     }
 
     @Override

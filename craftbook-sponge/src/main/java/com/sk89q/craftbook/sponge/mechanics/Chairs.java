@@ -18,7 +18,6 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
@@ -47,10 +46,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.entity.RideEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -167,7 +162,9 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
 
-        location.getExtent().spawnEntity(entity, Cause.of(NamedCause.of("root", SpawnCause.builder().type(SpawnTypes.CUSTOM).build()), NamedCause.source(player)));
+        Sponge.getCauseStackManager().pushCause(player);
+        location.getExtent().spawnEntity(entity);
+        Sponge.getCauseStackManager().popCause();
 
         Chair<?> chair = new Chair<>((ArmorStand) entity, location, player.getLocation());
 

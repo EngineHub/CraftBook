@@ -36,8 +36,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -97,14 +96,14 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         event.getTargetBlock().getLocation().filter((this::isValid)).ifPresent(location -> {
             if (!sneakState.getValue().doesPass(player.get(Keys.IS_SNEAKING).orElse(false) || !usePermissions.hasPermission(player))) {
                 return; //Don't alert the player with this mechanic.
             }
 
             if (!readWhenHoldingBlock.getValue()) {
-                ItemStack stack = player.getItemInHand(HandTypes.MAIN_HAND).filter((itemStack -> itemStack.getItem().getBlock().isPresent())).orElse(null);
+                ItemStack stack = player.getItemInHand(HandTypes.MAIN_HAND).filter((itemStack -> itemStack.getType().getBlock().isPresent())).orElse(null);
                 if (stack != null)
                     return;
             }

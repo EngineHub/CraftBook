@@ -52,13 +52,9 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
-import org.spongepowered.api.event.cause.entity.spawn.EntitySpawnCause;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnCause;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.Enchantments;
 import org.spongepowered.api.item.ItemTypes;
@@ -205,7 +201,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
     }
 
     @Listener
-    public void onItemDrops(DropItemEvent.Destruct event, @First EntitySpawnCause spawnCause) {
+    public void onItemDrops(DropItemEvent.Destruct event, @First Entity spawnCause) {
         EntityDamageSource damageSource = event.getCause().first(EntityDamageSource.class).orElse(null);
         Entity killer = null;
 
@@ -235,20 +231,20 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         }
 
         GameProfile profile = null;
-        if (spawnCause.getEntity() instanceof Player) {
-            profile = ((Player) spawnCause.getEntity()).getProfile();
+        if (spawnCause instanceof Player) {
+            profile = ((Player) spawnCause).getProfile();
         }
 
-        getStackForEntity(spawnCause.getEntity().getType(), profile).ifPresent(itemStack -> {
-            Vector3d location = spawnCause.getEntity().getLocation().getPosition();
-            Item item = (Item) spawnCause.getEntity().getWorld().createEntity(EntityTypes.ITEM, location);
+        getStackForEntity(spawnCause.getType(), profile).ifPresent(itemStack -> {
+            Vector3d location = spawnCause.getLocation().getPosition();
+            Item item = (Item) spawnCause.getWorld().createEntity(EntityTypes.ITEM, location);
             item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            spawnCause.getEntity().getWorld().spawnEntity(item, Cause.of(NamedCause.of("root", spawnCause)));
+            spawnCause.getWorld().spawnEntity(item);
         });
     }
 
     @Listener
-    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player player) {
+    public void onPlayerInteract(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         if (!showNameClick.getValue()) {
             return;
         }
@@ -292,12 +288,11 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
                                 getStackForEntity(entityType, profile).ifPresent(itemStack -> {
                                     Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition().add(0.5, 0.5, 0.5));
                                     item.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-                                    location.getExtent().spawnEntity(item, Cause.of(NamedCause.of("root",
-                                            SpawnCause.builder().type(SpawnTypes.DROPPED_ITEM).build())));
+                                    location.getExtent().spawnEntity(item);
 
                                     event.setCancelled(true);
                                     Sponge.getScheduler().createTaskBuilder().execute(() ->
-                                            location.setBlockType(BlockTypes.AIR, CraftBookPlugin.spongeInst().getCause().build())).submit(CraftBookPlugin.spongeInst().container);
+                                            location.setBlockType(BlockTypes.AIR)).submit(CraftBookPlugin.spongeInst().container);
                                 });
                             }
                         }

@@ -30,7 +30,6 @@ import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Firework;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.FireworkEffect;
 import org.spongepowered.api.item.FireworkShape;
 import org.spongepowered.api.item.FireworkShapes;
@@ -291,7 +290,7 @@ public class ProgrammableFireworksDisplay extends IC {
                             } else {
                                 firework.offer(Keys.FIREWORK_FLIGHT_MODIFIER, (int) duration * 2);
                             }
-                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
+                            location.getExtent().spawnEntity(firework);
                         }
                     }
                 }
@@ -385,7 +384,7 @@ public class ProgrammableFireworksDisplay extends IC {
                             firework.offer(Keys.FIREWORK_EFFECTS, fireworkEffects);
 
                             firework.offer(Keys.FIREWORK_FLIGHT_MODIFIER, (int) duration * 2);
-                            location.getExtent().spawnEntity(firework, Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
+                            location.getExtent().spawnEntity(firework);
                         } catch (Exception e) {
                             CraftBookPlugin.inst().getLogger().warn("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + showName + '!');
                             e.printStackTrace();

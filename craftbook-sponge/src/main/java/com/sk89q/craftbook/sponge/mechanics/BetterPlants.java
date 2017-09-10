@@ -40,7 +40,6 @@ import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.TickBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -74,8 +73,8 @@ public class BetterPlants extends SpongeBlockMechanic implements DocumentationPr
     public void onTick(TickBlockEvent.Random event) {
         event.getTargetBlock().getLocation().ifPresent(worldLocation -> {
             if (isValidFernFarming(worldLocation) && ThreadLocalRandom.current().nextInt(10) == 0) {
-                worldLocation.setBlock(BlockState.builder().blockType(BlockTypes.DOUBLE_PLANT).add(Keys.DOUBLE_PLANT_TYPE, DoublePlantTypes.FERN).add(Keys.PORTION_TYPE, PortionTypes.BOTTOM).build(), Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
-                worldLocation.getRelative(Direction.UP).setBlock(BlockState.builder().blockType(BlockTypes.DOUBLE_PLANT).add(Keys.DOUBLE_PLANT_TYPE, DoublePlantTypes.FERN).add(Keys.PORTION_TYPE, PortionTypes.TOP).build(), Cause.source(CraftBookPlugin.spongeInst().getContainer()).build());
+                worldLocation.setBlock(BlockState.builder().blockType(BlockTypes.DOUBLE_PLANT).add(Keys.DOUBLE_PLANT_TYPE, DoublePlantTypes.FERN).add(Keys.PORTION_TYPE, PortionTypes.BOTTOM).build());
+                worldLocation.getRelative(Direction.UP).setBlock(BlockState.builder().blockType(BlockTypes.DOUBLE_PLANT).add(Keys.DOUBLE_PLANT_TYPE, DoublePlantTypes.FERN).add(Keys.PORTION_TYPE, PortionTypes.TOP).build());
             }
         });
     }
@@ -89,12 +88,11 @@ public class BetterPlants extends SpongeBlockMechanic implements DocumentationPr
                 .filter(snapshot -> snapshot.getState().get(Keys.PORTION_TYPE).orElse(PortionTypes.BOTTOM).equals(PortionTypes.TOP))
                 .forEach(snapshot -> Sponge.getScheduler().createTaskBuilder().execute(task -> {
                     snapshot.getLocation().get().getRelative(Direction.DOWN)
-                            .setBlock(BlockState.builder().blockType(BlockTypes.TALLGRASS).add(Keys.SHRUB_TYPE, ShrubTypes.FERN).build(),
-                                    CraftBookPlugin.spongeInst().getCause().build());
+                            .setBlock(BlockState.builder().blockType(BlockTypes.TALLGRASS).add(Keys.SHRUB_TYPE, ShrubTypes.FERN).build());
                     if (player.get(Keys.GAME_MODE).orElse(GameModes.SURVIVAL) != GameModes.CREATIVE) {
                         Item item = (Item) snapshot.getLocation().get().getExtent().createEntity(EntityTypes.ITEM, snapshot.getPosition());
                         item.offer(Keys.REPRESENTED_ITEM, ItemStack.builder().itemType(ItemTypes.TALLGRASS).add(Keys.SHRUB_TYPE, ShrubTypes.FERN).build().createSnapshot());
-                        snapshot.getLocation().get().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                        snapshot.getLocation().get().spawnEntity(item);
                     }
                 }).submit(CraftBookPlugin.spongeInst().getContainer()));
     }

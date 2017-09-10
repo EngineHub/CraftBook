@@ -100,7 +100,7 @@ public class ExitRemover extends SpongeMechanic implements DocumentationProvider
                 if(!((Player) player).getInventory().offer(stack).getRejectedItems().isEmpty()) {
                     Item item = (Item) player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition().add(0, 1, 0));
                     item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
-                    player.getLocation().getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                    player.getLocation().getExtent().spawnEntity(item);
                 }
             }
 

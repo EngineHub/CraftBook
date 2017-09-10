@@ -18,8 +18,6 @@ package com.sk89q.craftbook.sponge.util;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.core.util.RegexUtil;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
-import com.sk89q.worldedit.Vector;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.entity.Entity;
@@ -31,7 +29,6 @@ import org.spongepowered.api.world.World;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 public class LocationUtil {

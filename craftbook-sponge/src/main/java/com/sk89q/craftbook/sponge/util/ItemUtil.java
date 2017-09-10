@@ -32,7 +32,7 @@ public class ItemUtil {
      */
     public static boolean doesStackPassFilters(Collection<ItemStack> filters, ItemStack stack) {
         for(ItemStack filter : filters)
-            if(stack == null && filter.getItem().getType() == ItemTypes.NONE || stack != null && filter.getItem().matches(stack))
+            if(stack == null && filter.getType().getType() == ItemTypes.NONE || stack != null && filter.getType().matches(stack))
                 return true;
         return false;
     }

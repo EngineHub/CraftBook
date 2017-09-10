@@ -23,15 +23,14 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.vehicle.minecart.RideableMinecart;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.RideEntityEvent;
-import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.filter.cause.First;
 
 @Module(id = "minecartmobblocker", name = "MinecartMobBlocker", onEnable="onInitialize", onDisable="onDisable")
 public class MobBlocker extends SpongeMechanic implements DocumentationProvider {
 
     @Listener
-    public void onVehicleEnter(RideEntityEvent.Mount event, @Named(NamedCause.SOURCE) Entity entity) {
+    public void onVehicleEnter(RideEntityEvent.Mount event, @First Entity entity) {
         if (event.getTargetEntity() instanceof RideableMinecart) {
             if (!(entity instanceof Player)) {
                 event.setCancelled(true);

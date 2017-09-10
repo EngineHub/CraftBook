@@ -49,9 +49,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.NotifyNeighborBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Named;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -140,7 +138,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     }
 
     @Listener
-    public void onSignChange(ChangeSignEvent event, @Named(NamedCause.SOURCE) Player player) {
+    public void onSignChange(ChangeSignEvent event, @First Player player) {
         for(String line : getValidSigns()) {
             if(SignUtil.getTextRaw(event.getText(), 1).equalsIgnoreCase(line)) {
                 if(!createPermissions.hasPermission(player) && !("[SaveArea]".equals(line) && createSavePermissions.hasPermission(player))) {
@@ -195,7 +193,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
         Sign sign = (Sign) block.getTileEntity().get();
 
         if (isMechanicSign(sign)) {
-            Player player = event.getCause().get(NamedCause.SOURCE, Player.class).orElse(null);
+            Player player = event.getCause().first(Player.class).orElse(null);
             if(player != null) {
                 if(!usePermissions.hasPermission(player)) {
                     player.sendMessage(USE_PERMISSIONS);
@@ -214,7 +212,7 @@ public class ComplexArea extends SpongeSignMechanic implements DocumentationProv
     }
 
     @Listener
-    public void onRightClick(InteractBlockEvent.Secondary.MainHand event, @Named(NamedCause.SOURCE) Player human) {
+    public void onRightClick(InteractBlockEvent.Secondary.MainHand event, @First Player human) {
         event.getTargetBlock().getLocation().ifPresent(location -> {
             if (isValid(location)) {
                 location.getTileEntity().ifPresent((sign -> {

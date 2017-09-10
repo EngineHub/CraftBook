@@ -25,18 +25,17 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -127,11 +126,11 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
 
                         Optional<Direction> connectedDirection = offset.get(Keys.DIRECTION);
 
-                        Cause.Builder causeBuilder = Cause.source(CraftBookPlugin.spongeInst().getContainer());
                         if (player != null)
-                            causeBuilder.notifier(player);
-
-                        offset.setBlock((state ? BlockTypes.TORCH : BlockTypes.REDSTONE_TORCH).getDefaultState(), causeBuilder.build());
+                            Sponge.getCauseStackManager().pushCause(player);
+                        offset.setBlock((state ? BlockTypes.TORCH : BlockTypes.REDSTONE_TORCH).getDefaultState());
+                        if (player != null)
+                            Sponge.getCauseStackManager().popCause();
 
                         connectedDirection.ifPresent((direction) -> offset.offer(Keys.DIRECTION, direction));
 
