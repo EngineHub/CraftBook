@@ -22,7 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
@@ -157,7 +156,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
             if(!InventoryUtil.doesBlockHaveInventory(chest))
                 return false;
 
-            Chest chestState = (Chest) chest.getState();
+            InventoryHolder chestState = (InventoryHolder) chest.getState();
 
             // Add the items to a container, and destroy them.
             for (Item entity : itemsForChest) {
