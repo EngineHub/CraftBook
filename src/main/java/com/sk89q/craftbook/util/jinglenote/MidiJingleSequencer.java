@@ -55,13 +55,13 @@ public final class MidiJingleSequencer implements JingleSequencer {
         10, 10,                 //82 - Open Triangle
     };
 
-    private Sequencer sequencer = null;
+    private Sequencer sequencer;
     private boolean running = false;
     private boolean playedBefore = false;
 
     private static final Object PLAYER_LOCK = new Object();
 
-    private Set<JingleNotePlayer> players = new HashSet<>();
+    private volatile Set<JingleNotePlayer> players = new HashSet<>();
 
     public MidiJingleSequencer(File midiFile, boolean loop) throws MidiUnavailableException, InvalidMidiDataException, IOException {
         try {
@@ -93,10 +93,11 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
-
-                    if(players.isEmpty()) {
-                        running = false;
-                        return;
+                    synchronized(PLAYER_LOCK) {
+                        if (players.isEmpty()) {
+                            running = false;
+                            return;
+                        }
                     }
 
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
@@ -160,7 +161,9 @@ public final class MidiJingleSequencer implements JingleSequencer {
     public void stop() {
 
         if(!running) return;
-        players.clear();
+        synchronized(PLAYER_LOCK) {
+            players.clear();
+        }
         CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer. (Stop called)", "midi");
         if (sequencer != null) {
             try {
@@ -209,7 +212,6 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
     @Override
     public boolean isPlaying () {
-
         return running && sequencer != null;
     }
 
@@ -220,15 +222,19 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
     @Override
     public void stop (JingleNotePlayer player) {
-        players.remove(player);
-        if(players.isEmpty()) {
-            stop();
+        synchronized(PLAYER_LOCK) {
+            players.remove(player);
+            if (players.isEmpty()) {
+                stop();
+            }
         }
     }
 
     @Override
     public void play (JingleNotePlayer player) {
-        players.add(player);
+        synchronized(PLAYER_LOCK) {
+            players.add(player);
+        }
         if(!playedBefore) {
             run();
         }
@@ -236,6 +242,10 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
     @Override
     public Set<JingleNotePlayer> getPlayers () {
-        return players;
+        Set<JingleNotePlayer> copy;
+        synchronized(PLAYER_LOCK) {
+            copy = new HashSet<>(players);
+        }
+        return copy;
     }
 }
