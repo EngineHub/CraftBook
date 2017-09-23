@@ -156,7 +156,7 @@ public class CartDeposit extends CartBlockMechanism {
                                 if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
                                     if(inf.b < 0) {
                                         transferitems.add(item.clone());
-                                        cartinventory.remove(item);
+                                        containerinventory.remove(item);
                                     } else {
                                         ItemStack stack = item.clone();
                                         if(item.getAmount() > inf.b) {
@@ -168,7 +168,7 @@ public class CartDeposit extends CartBlockMechanism {
                                             items.add(new Tuple2<>(inf.a, inf.b - stack.getAmount()));
                                         }
                                         transferitems.add(stack.clone());
-                                        cartinventory.removeItem(stack);
+                                        containerinventory.removeItem(stack);
                                     }
                                 }
                         }
