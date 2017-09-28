@@ -8,7 +8,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -127,7 +127,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 ItemMeta metaD = toDrop.getItemMeta();
                 if(metaD instanceof SkullMeta) {
                     SkullMeta itemMeta = (SkullMeta) metaD;
-                    itemMeta.setDisplayName(ChatColor.RESET + typeName + " Head");
+                    itemMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(typeName.replace("_", " ")) + " Head");
                     itemMeta.setOwner(mobName);
                     toDrop.setItemMeta(itemMeta);
                 } else
@@ -200,7 +200,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             }
 
             if(type != null)
-                meta.setDisplayName(ChatColor.RESET + StringUtils.replace(type.getName(), "_", " ") + " Head");
+                meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getName().replace("_", " ")) + " Head");
             else
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
 
@@ -251,7 +251,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         SNOWMAN("Koebasti", "scraftbrothers2"),
         HORSE("gavertoso"),
         WITCH("scrafbrothers4"),
-        POLAR_BEAR("_DmacK_");
+        POLAR_BEAR("ice_bear", "_DmacK_");
 
         MobSkullType(String playerName, String ... oldNames) {
 
