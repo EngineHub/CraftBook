@@ -4,12 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
-import org.bukkit.entity.Horse.Variant;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
@@ -134,8 +133,8 @@ public final class EntityUtil {
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("health")) {
             try {
                 double health = Double.parseDouble(data[1]);
-                if(((LivingEntity) ent).getMaxHealth() < health)
-                    ((LivingEntity) ent).setMaxHealth(health);
+                if(((LivingEntity) ent).getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < health)
+                    ((LivingEntity) ent).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
                 ((LivingEntity) ent).setHealth(health);
             } catch (Exception ignored) {
             }
@@ -191,11 +190,6 @@ public final class EntityUtil {
                     ((Wolf) ent).setAngry(true);
                 } else if (data[0].equalsIgnoreCase("collar")) {
                     ((Wolf) ent).setCollarColor(DyeColor.valueOf(data[1]));
-                }
-                break;
-            case SKELETON:
-                if (data[0].equalsIgnoreCase("wither")) {
-                    ((Skeleton) ent).setSkeletonType(SkeletonType.WITHER);
                 }
                 break;
             case ENDERMAN:
@@ -307,18 +301,8 @@ public final class EntityUtil {
                 }
                 break;
             case HORSE:
-                if(data[0].equalsIgnoreCase("horse"))
-                    ((Horse)ent).setVariant(Variant.HORSE);
-                else if (data[0].equalsIgnoreCase("donkey"))
-                    ((Horse)ent).setVariant(Variant.DONKEY);
-                else if (data[0].equalsIgnoreCase("mule"))
-                    ((Horse)ent).setVariant(Variant.MULE);
-                else if (data[0].equalsIgnoreCase("skeleton"))
-                    ((Horse)ent).setVariant(Variant.SKELETON_HORSE);
-                else if (data[0].equalsIgnoreCase("zombie"))
-                    ((Horse)ent).setVariant(Variant.UNDEAD_HORSE);
-                else if (data[0].equalsIgnoreCase("chest"))
-                    ((Horse)ent).setCarryingChest(true);
+                if (ent instanceof ChestedHorse && data[0].equalsIgnoreCase("chest"))
+                    ((ChestedHorse)ent).setCarryingChest(true);
                 else if (data[0].equalsIgnoreCase("domestic"))
                     try {
                         ((Horse)ent).setDomestication(Integer.parseInt(data[1]));
