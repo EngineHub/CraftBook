@@ -16,22 +16,6 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -50,6 +34,20 @@ import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReas
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
 
 /**
  * Mechanic wrapper for ICs. The mechanic manager dispatches events to this mechanic,
@@ -436,7 +434,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
 
-                ChangedSign sign = new ChangedSign((Sign) event.getBlock().getState(), event.getLines());
+                ChangedSign sign = new ChangedSign(event.getBlock(), event.getLines());
 
                 //WorldEdit offset/radius tools.
                 ICUtil.parseSignFlags(player, sign);

@@ -11,6 +11,7 @@ import com.sk89q.worldedit.LocalWorld;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import java.util.Arrays;
@@ -18,12 +19,13 @@ import java.util.Locale;
 
 public class ChangedSign {
 
+    private Block block;
     private Sign sign;
     private String[] lines;
 
-    public ChangedSign(Sign sign, String[] lines, LocalPlayer player) {
+    public ChangedSign(Block block, String[] lines, LocalPlayer player) {
 
-        this(sign, lines);
+        this(block, lines);
 
         if(lines != null && VariableManager.instance != null) {
             for(int i = 0; i < 4; i++) {
@@ -46,17 +48,22 @@ public class ChangedSign {
         }
     }
 
-    public ChangedSign(Sign sign, String[] lines) {
+    public ChangedSign(Block block, String[] lines) {
 
         Validate.notNull(sign);
 
-        this.sign = sign;
+        this.block = block;
         this.lines = lines;
+        this.sign = (Sign) block.getState();
     }
 
     public BlockWorldVector getBlockVector() {
 
         return BukkitUtil.toWorldVector(sign.getBlock());
+    }
+
+    public Block getBlock() {
+        return block;
     }
 
     public Sign getSign() {
