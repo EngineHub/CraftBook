@@ -40,33 +40,24 @@ import java.util.Map;
 public final class BukkitUtil {
 
     public static void printStacktrace(Throwable e) {
-
         CraftBookPlugin.inst().getLogger().severe(CraftBookPlugin.getStackTrace(e));
     }
 
-    public static ChangedSign toChangedSign(Sign sign) {
-
-        return toChangedSign(sign, sign.getLines());
-    }
-
     public static ChangedSign toChangedSign(Block sign) {
-
-        if (!SignUtil.isSign(sign)) return null;
-        return toChangedSign((Sign) sign.getState(), ((Sign) sign.getState()).getLines());
+        return toChangedSign(sign, ((Sign) sign.getState()).getLines());
     }
 
-    public static ChangedSign toChangedSign(Sign sign, String[] lines) {
-
-        return new ChangedSign(sign, lines);
+    public static ChangedSign toChangedSign(Block block, String[] lines) {
+        return toChangedSign(block, lines, null);
     }
 
-    public static ChangedSign toChangedSign(Sign sign, String[] lines, LocalPlayer player) {
-
-        return new ChangedSign(sign, lines, player);
+    public static ChangedSign toChangedSign(Block block, String[] lines, LocalPlayer player) {
+        if (!SignUtil.isSign(block)) return null;
+        return new ChangedSign(block, lines, player);
     }
 
     public static Block toBlock(ChangedSign sign) {
-        return sign.getSign().getBlock();
+        return sign.getBlock();
     }
 
     public static Sign toSign(ChangedSign sign) {

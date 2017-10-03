@@ -13,7 +13,6 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
@@ -158,7 +157,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 }
             }
             if (!found) return;
-            if (!verify(BukkitUtil.toChangedSign((Sign) event.getBlock().getState(), lines, player), player)) {
+            if (!verify(BukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
                 block.breakNaturally();
                 event.setCancelled(true);
                 return;
