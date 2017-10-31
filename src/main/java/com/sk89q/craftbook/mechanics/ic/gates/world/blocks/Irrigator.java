@@ -2,10 +2,12 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
 import java.util.HashMap;
 
+import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
@@ -25,7 +27,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         super(server, sign, factory);
     }
 
-    SearchArea area;
+    private SearchArea area;
 
     @Override
     public void load() {
@@ -68,7 +70,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
 
         if (b.getType() == Material.SOIL && b.getData() < 0x1) {
             if (consumeWater()) {
-                b.setData((byte) 0x8, false);
+                b.setData((byte) 0x7);
                 return true;
             }
         }
@@ -76,15 +78,10 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     }
 
     public boolean consumeWater() {
-
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        if (chest.getType() == Material.CHEST) {
-            Chest c = (Chest) chest.getState();
-            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(Material.WATER, 1));
-            if (over.isEmpty()) return true;
-            over = c.getInventory().removeItem(new ItemStack(Material.STATIONARY_WATER, 1));
-            if (over.isEmpty()) return true;
-            over = c.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET, 1));
+        if (InventoryUtil.doesBlockHaveInventory(chest)) {
+            InventoryHolder c = (InventoryHolder) chest.getState();
+            HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET, 1));
             if (over.isEmpty()) {
                 c.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                 return true;
