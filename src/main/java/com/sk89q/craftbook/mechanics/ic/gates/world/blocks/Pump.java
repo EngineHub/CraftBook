@@ -1,19 +1,18 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author Me4502
@@ -59,8 +58,8 @@ public class Pump extends AbstractSelfTriggeredIC {
     public boolean scan() {
 
         Block pump = getBackBlock();
-        if (!(pump.getRelative(0, 1, 0).getType() == Material.CHEST)) return false;
-        Chest c = (Chest) pump.getRelative(0, 1, 0).getState();
+        if (!InventoryUtil.doesBlockHaveInventory(pump.getRelative(0, 1, 0))) return false;
+        InventoryHolder c = (InventoryHolder) pump.getRelative(0, 1, 0).getState();
         for (int y = -1; y > -11; y--) {
             Block liquid = pump.getRelative(0, y, 0);
             if (check(c, liquid, 0)) return true;
@@ -68,12 +67,12 @@ public class Pump extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    public boolean searchNear(Chest c, Block block, int depth) {
+    public boolean searchNear(InventoryHolder c, Block block, int depth) {
 
         return depth <= 5 && (check(c, block.getRelative(0, 0, 1), depth) || check(c, block.getRelative(0, 0, -1), depth) || check(c, block.getRelative(1, 0, 0), depth) || check(c, block.getRelative(-1, 0, 0), depth));
     }
 
-    public boolean check(Chest c, Block liquid, int depth) {
+    public boolean check(InventoryHolder c, Block liquid, int depth) {
 
         if (!liquid.isLiquid()) return false;
         if (liquid.getData() == 0x0) {
@@ -85,34 +84,25 @@ public class Pump extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    public boolean addToChest(Chest c, Block liquid) {
-
-        if (((Factory) getFactory()).buckets) {
-            if (c.getInventory().contains(Material.BUCKET)) {
-                c.getInventory().removeItem(new ItemStack(Material.BUCKET));
-                if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()) == Material.LAVA ? Material.LAVA_BUCKET : Material.WATER_BUCKET, 1)).isEmpty()) {
-                    return true;
-                } else {
-                    c.getInventory().addItem(new ItemStack(Material.BUCKET));
-                    return false;
-                }
-            } else return false;
-        } else
-            if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()))).isEmpty()) return true;
-
-        return false;
+    public boolean addToChest(InventoryHolder c, Block liquid) {
+        if (c.getInventory().contains(Material.BUCKET)) {
+            c.getInventory().removeItem(new ItemStack(Material.BUCKET));
+            if (c.getInventory().addItem(new ItemStack(parse(liquid.getType()), 1)).isEmpty()) {
+                return true;
+            } else {
+                c.getInventory().addItem(new ItemStack(Material.BUCKET));
+                return false;
+            }
+        } else return false;
     }
 
-    public Material parse(Material mat) {
-
-        if (mat == Material.STATIONARY_WATER || mat == Material.WATER) return Material.WATER;
-        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA) return Material.LAVA;
+    public static Material parse(Material mat) {
+        if (mat == Material.STATIONARY_WATER || mat == Material.WATER) return Material.WATER_BUCKET;
+        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA) return Material.LAVA_BUCKET;
         return Material.AIR;
     }
 
-    public static class Factory extends AbstractICFactory implements ConfigurableIC {
-
-        public boolean buckets;
+    public static class Factory extends AbstractICFactory {
 
         public Factory(Server server) {
 
@@ -135,12 +125,6 @@ public class Pump extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {null, null}; //TODO allow offsets.
-        }
-
-        @Override
-        public void addConfiguration(YAMLProcessor config, String path) {
-
-            buckets = config.getBoolean(path + "requires-buckets", false);
         }
     }
 }

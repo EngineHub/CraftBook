@@ -3,32 +3,29 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 
 public class Spigot extends AbstractIC {
 
-    Vector radius;
-    Location offset;
+    private Vector radius;
+    private Location offset;
 
     public Spigot(Server server, ChangedSign block, ICFactory factory) {
 
@@ -37,7 +34,6 @@ public class Spigot extends AbstractIC {
 
     @Override
     public void load() {
-
         radius = ICUtil.parseRadius(getSign());
         offset = ICUtil.parseBlockLocation(getSign()).getLocation();
     }
@@ -63,112 +59,87 @@ public class Spigot extends AbstractIC {
     }
 
     public boolean search() {
+        Block chest = getBackBlock().getRelative(0, -1, 0);
 
-        Block off = offset.getBlock();
-        ArrayList<Location> searched = new ArrayList<>();
-        return searchAt(searched, off);
+        if (InventoryUtil.doesBlockHaveInventory(chest)) {
+            InventoryHolder c = (InventoryHolder) chest.getState();
+            Block off = offset.getBlock();
+            ArrayList<Location> searched = new ArrayList<>();
+            return searchAt(c, searched, off);
+        } else {
+            return false;
+        }
     }
 
-    public boolean searchAt(ArrayList<Location> searched, Block off) {
+    public boolean searchAt(InventoryHolder chest, ArrayList<Location> searched, Block off) {
 
         if (searched.contains(off.getLocation())) return false;
         searched.add(off.getLocation());
-        if (LocationUtil.isWithinRadius(off.getLocation(), offset, radius)) return false;
+        if (!LocationUtil.isWithinRadius(off.getLocation(), offset, radius)) return false;
         if (off.getType() == Material.AIR) {
-
-            int m = getFromChest();
-            if (m == BlockID.AIR) return false;
-            off.setTypeId(parse(m));
+            Material m = getFromChest(chest);
+            if (m == Material.AIR) return false;
+            off.setType(unparse(m));
             return true;
         } else if (off.isLiquid()) {
             if (off.getData() != 0x0) { // Moving
-
-                int m = getFromChest(off.getTypeId());
-                if (m == BlockID.AIR) return false;
-                off.setTypeId(m);
+                Material m = getFromChest(chest, off.getType());
+                if (m == Material.AIR) return false;
+                off.setType(unparse(m));
                 return true;
             } else { // Still
-
-                if (searchAt(searched, off.getRelative(1, 0, 0))) return true;
-                if (searchAt(searched, off.getRelative(-1, 0, 0))) return true;
-                if (searchAt(searched, off.getRelative(0, 0, 1))) return true;
-                if (searchAt(searched, off.getRelative(0, 0, -1))) return true;
-                if (searchAt(searched, off.getRelative(0, 1, 0))) return true;
+                return searchAt(chest, searched, off.getRelative(1, 0, 0))
+                        || searchAt(chest, searched, off.getRelative(-1, 0, 0))
+                        || searchAt(chest, searched, off.getRelative(0, 0, 1))
+                        || searchAt(chest, searched, off.getRelative(0, 0, -1))
+                        || searchAt(chest, searched, off.getRelative(0, 1, 0))
+                        || searchAt(chest, searched, off.getRelative(0, -1, 0));
             }
         }
 
         return false;
     }
 
-    public int getFromChest() {
-
-        Block chest = getBackBlock().getRelative(0, -1, 0);
-
-        if (chest.getTypeId() == BlockID.CHEST) {
-            Chest c = (Chest) chest.getState();
-            if (((Factory) getFactory()).buckets) {
-                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(ItemID.WATER_BUCKET, 1));
-                if (over.isEmpty()) return BlockID.WATER;
-                over = c.getInventory().removeItem(new ItemStack(ItemID.LAVA_BUCKET, 1));
-                if (over.isEmpty()) return BlockID.LAVA;
-            } else {
-                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(BlockID.WATER, 1));
-                if (over.isEmpty()) return BlockID.WATER;
-                over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_WATER, 1));
-                if (over.isEmpty()) return BlockID.WATER;
-                over = c.getInventory().removeItem(new ItemStack(BlockID.LAVA, 1));
-                if (over.isEmpty()) return BlockID.LAVA;
-                over = c.getInventory().removeItem(new ItemStack(BlockID.STATIONARY_LAVA, 1));
-                if (over.isEmpty()) return BlockID.LAVA;
-            }
+    public Material getFromChest(InventoryHolder holder) {
+        HashMap<Integer, ItemStack> over = holder.getInventory().removeItem(new ItemStack(Material.WATER_BUCKET, 1));
+        if (over.isEmpty()) {
+            holder.getInventory().addItem(new ItemStack(Material.BUCKET));
+            return Material.WATER;
+        }
+        over = holder.getInventory().removeItem(new ItemStack(Material.LAVA_BUCKET, 1));
+        if (over.isEmpty()) {
+            holder.getInventory().addItem(new ItemStack(Material.BUCKET));
+            return Material.LAVA;
         }
 
-        return BlockID.AIR;
+        return Material.AIR;
     }
 
-    public int getFromChest(int m) {
-
+    public Material getFromChest(InventoryHolder holder, Material m) {
         m = parse(m);
-        Block chest = getBackBlock().getRelative(0, -1, 0);
 
-        if (chest.getTypeId() == BlockID.CHEST) {
-            Chest c = (Chest) chest.getState();
-
-            if (((Factory) getFactory()).buckets) {
-
-                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(
-                        new ItemStack(m == BlockID.LAVA ? ItemID.LAVA_BUCKET : ItemID.WATER_BUCKET, 1));
-                if (over.isEmpty()) return m;
-            } else {
-
-                HashMap<Integer, ItemStack> over = c.getInventory().removeItem(new ItemStack(m, 1));
-                if (over.isEmpty()) return m;
-
-                over = c.getInventory().removeItem(new ItemStack(unparse(m), 1));
-                if (over.isEmpty()) return m;
-            }
+        HashMap<Integer, ItemStack> over = holder.getInventory().removeItem(new ItemStack(m, 1));
+        if (over.isEmpty()) {
+            holder.getInventory().addItem(new ItemStack(Material.BUCKET));
+            return unparse(m);
         }
 
-        return BlockID.AIR;
+        return Material.AIR;
     }
 
-    public int parse(int mat) {
-
-        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER) return BlockID.WATER;
-        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA) return BlockID.LAVA;
-        return BlockID.AIR;
+    public static Material parse(Material mat) {
+        if (mat == Material.STATIONARY_WATER || mat == Material.WATER || mat == Material.WATER_BUCKET) return Material.WATER_BUCKET;
+        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA || mat == Material.LAVA_BUCKET) return Material.LAVA_BUCKET;
+        return Material.AIR;
     }
 
-    public int unparse(int mat) {
-
-        if (mat == BlockID.STATIONARY_WATER || mat == BlockID.WATER) return BlockID.STATIONARY_WATER;
-        if (mat == BlockID.STATIONARY_LAVA || mat == BlockID.LAVA) return BlockID.STATIONARY_LAVA;
-        return BlockID.AIR;
+    public static Material unparse(Material mat) {
+        if (mat == Material.WATER_BUCKET || mat == Material.WATER || mat == Material.STATIONARY_WATER) return Material.WATER;
+        if (mat == Material.LAVA_BUCKET || mat == Material.LAVA || mat == Material.STATIONARY_LAVA) return Material.LAVA;
+        return Material.AIR;
     }
 
-    public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
-
-        public boolean buckets;
+    public static class Factory extends AbstractICFactory implements RestrictedIC {
 
         public Factory(Server server) {
 
@@ -191,12 +162,6 @@ public class Spigot extends AbstractIC {
         public String[] getLineHelp() {
 
             return new String[] {"+oradius=x:y:z offset", null};
-        }
-
-        @Override
-        public void addConfiguration(YAMLProcessor config, String path) {
-
-            buckets = config.getBoolean(path + "requires-buckets", false);
         }
     }
 }
