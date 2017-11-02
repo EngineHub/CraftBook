@@ -291,7 +291,6 @@ public class CraftBookPlugin extends JavaPlugin {
         availableMechanics.put("MinecartRailPlacer", RailPlacer.class);
         availableMechanics.put("MinecartSpeedModifiers", com.sk89q.craftbook.mechanics.minecart.SpeedModifiers.class);
         availableMechanics.put("MinecartEmptySlowdown", EmptySlowdown.class);
-        availableMechanics.put("MinecartRailPlacer", RailPlacer.class);
         availableMechanics.put("MinecartNoCollide", NoCollide.class);
         availableMechanics.put("MinecartPlaceAnywhere", PlaceAnywhere.class);
         availableMechanics.put("MinecartTemporaryCart", TemporaryCart.class);
