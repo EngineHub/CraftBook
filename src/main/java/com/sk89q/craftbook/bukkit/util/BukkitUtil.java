@@ -52,8 +52,7 @@ public final class BukkitUtil {
     }
 
     public static ChangedSign toChangedSign(Block block, String[] lines, LocalPlayer player) {
-        if (!SignUtil.isSign(block)) return null;
-        return new ChangedSign(block, lines, player);
+        return CraftBookPlugin.inst().getNmsAdapter().getChangedSign(block, lines, player);
     }
 
     public static Block toBlock(ChangedSign sign) {

@@ -370,6 +370,15 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
+     * Sets the NMS Adapter.
+     *
+     * @param nmsAdapter The NMS Adapter
+     */
+    public void setNmsAdapter(NMSAdapter nmsAdapter) {
+        this.nmsAdapter = nmsAdapter;
+    }
+
+    /**
      * Called on plugin enable.
      */
     @Override
