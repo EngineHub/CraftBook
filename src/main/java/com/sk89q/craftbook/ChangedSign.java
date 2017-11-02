@@ -50,11 +50,15 @@ public class ChangedSign {
 
     public ChangedSign(Block block, String[] lines) {
 
-        Validate.notNull(sign);
+        Validate.notNull(block);
 
         this.block = block;
         this.lines = lines;
         this.sign = (Sign) block.getState();
+
+        if (lines == null) {
+            this.lines = this.sign.getLines();
+        }
     }
 
     public BlockWorldVector getBlockVector() {
