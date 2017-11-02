@@ -386,6 +386,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         ItemSyntax.plugin = this;
 
+        nmsAdapter = new NMSAdapter();
+
         plugins = new CompanionPlugins();
         plugins.initiate(this);
 
@@ -413,8 +415,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         uuidMappings = new UUIDMappings();
         uuidMappings.enable();
-
-        nmsAdapter = new NMSAdapter();
 
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();

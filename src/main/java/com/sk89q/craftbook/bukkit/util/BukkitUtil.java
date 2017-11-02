@@ -44,7 +44,7 @@ public final class BukkitUtil {
     }
 
     public static ChangedSign toChangedSign(Block sign) {
-        return toChangedSign(sign, ((Sign) sign.getState()).getLines());
+        return toChangedSign(sign, null);
     }
 
     public static ChangedSign toChangedSign(Block block, String[] lines) {
