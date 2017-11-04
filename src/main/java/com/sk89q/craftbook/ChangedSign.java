@@ -22,15 +22,16 @@ public class ChangedSign {
     private Block block;
     private Sign sign;
     private String[] lines;
+    private String[] oldLines;
 
     public ChangedSign(Block block, String[] lines, LocalPlayer player) {
 
         this(block, lines);
 
-        if(lines != null && VariableManager.instance != null) {
+        if(this.lines != null && VariableManager.instance != null) {
             for(int i = 0; i < 4; i++) {
 
-                String line = lines[i];
+                String line = this.lines[i];
                 for(String var : ParsingUtil.getPossibleVariables(line)) {
 
                     String key;
@@ -53,12 +54,16 @@ public class ChangedSign {
         Validate.notNull(block);
 
         this.block = block;
-        this.lines = lines;
         this.sign = (Sign) block.getState();
 
         if (lines == null) {
             this.lines = this.sign.getLines();
+        } else {
+            this.lines = lines;
         }
+
+        this.oldLines = new String[this.lines.length];
+        System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
     }
 
     public BlockWorldVector getBlockVector() {
@@ -134,8 +139,11 @@ public class ChangedSign {
 
         if(!hasChanged() && !force)
             return false;
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 4; i++) {
             sign.setLine(i, lines[i]);
+        }
+        System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
+
         return sign.update(force);
     }
 
@@ -159,7 +167,7 @@ public class ChangedSign {
         boolean ret = false;
         try {
             for(int i = 0; i < 4; i++)
-                if(!sign.getLine(i).equals(lines[i])) {
+                if(!oldLines[i].equals(lines[i])) {
                     ret = true;
                     break;
                 }
@@ -170,7 +178,9 @@ public class ChangedSign {
 
     public void flushLines () {
 
-        lines = sign.getLines();
+        this.sign = (Sign) this.block.getState();
+        this.lines = this.sign.getLines();
+        System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
     }
 
     public boolean updateSign(ChangedSign sign) {
