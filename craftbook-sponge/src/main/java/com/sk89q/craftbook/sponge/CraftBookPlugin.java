@@ -272,6 +272,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.PaintingSwitcher");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.pipe.Pipes");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightSwitch");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Marquee");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.signcopier.SignCopier");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.XPStorer", GameState.PRE_INITIALIZATION);
 
