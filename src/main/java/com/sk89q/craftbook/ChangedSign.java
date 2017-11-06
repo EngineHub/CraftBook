@@ -83,7 +83,7 @@ public class ChangedSign {
 
     public Material getType() {
 
-        return sign.getType();
+        return block.getType();
     }
 
     public byte getLightLevel() {
@@ -141,11 +141,11 @@ public class ChangedSign {
         if(!hasChanged() && !force)
             return false;
         for(int i = 0; i < 4; i++) {
-            sign.setLine(i, lines[i]);
+            getSign().setLine(i, lines[i]);
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
 
-        return sign.update(force);
+        return getSign().update(force);
     }
 
     public byte getRawData() {
@@ -189,7 +189,6 @@ public class ChangedSign {
     public boolean updateSign(ChangedSign sign) {
 
         if(!equals(sign)) {
-            this.sign = sign.getSign();
             flushLines();
             return true;
         }
