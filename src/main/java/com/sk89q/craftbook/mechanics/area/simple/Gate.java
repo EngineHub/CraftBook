@@ -16,21 +16,6 @@
 
 package com.sk89q.craftbook.mechanics.area.simple;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
@@ -47,6 +32,20 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or open, a nearby fence will be found,
@@ -79,12 +78,14 @@ public class Gate extends AbstractCraftBookMechanic {
 
         Set<GateColumn> visitedColumns = new HashSet<>();
 
+        ChangedSign sign = BukkitUtil.toChangedSign(block);
+
         if (smallSearchSize) {
             // Toggle nearby gates
             for (int x1 = x - 1; x1 <= x + 1; x1++) {
                 for (int y1 = y - 2; y1 <= y + 1; y1++) {
                     for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                        if (recurseColumn(player, BukkitUtil.toChangedSign(block), block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, true)) {
+                        if (recurseColumn(player, sign, block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, true)) {
                             foundGate = true;
                         }
                     }
@@ -95,7 +96,7 @@ public class Gate extends AbstractCraftBookMechanic {
             for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
                 for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
-                        if (recurseColumn(player, BukkitUtil.toChangedSign(block), block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, false)) {
+                        if (recurseColumn(player, sign, block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, false)) {
                             foundGate = true;
                         }
                     }
@@ -482,8 +483,8 @@ public class Gate extends AbstractCraftBookMechanic {
                 for (int x1 = x - 1; x1 <= x + 1; x1++) {
                     for (int y1 = y - 2; y1 <= y + 1; y1++) {
                         for (int z1 = z - 1; z1 <= z + 1; z1++) {
-                            if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), true) != null) {
-                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), true));
+                            if (getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), true) != null) {
+                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), true));
                             }
                         }
                     }
@@ -492,8 +493,8 @@ public class Gate extends AbstractCraftBookMechanic {
                 for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
                     for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
                         for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
-                            if (getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), false) != null) {
-                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getSign().getBlock().getWorld().getBlockAt(x1, y1, z1), false));
+                            if (getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), false) != null) {
+                                gateBlock = new ItemInfo(getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), false));
                             }
                         }
                     }

@@ -16,20 +16,6 @@ package com.sk89q.craftbook.mechanics.area.simple;
  * see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -45,6 +31,19 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Door.
@@ -197,7 +196,7 @@ public class Door extends CuboidToggleMechanic {
         // efficiency choice :/
         Block hinge;
 
-        if (BukkitUtil.toChangedSign(trigger).getLine(1).equals("[Door Up]")) {
+        if (sign.getLine(1).equals("[Door Up]")) {
             hinge = proximalBaseCenter.getRelative(BlockFace.UP);
         } else {
             hinge = proximalBaseCenter.getRelative(BlockFace.DOWN);

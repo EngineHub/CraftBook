@@ -3,8 +3,11 @@ package com.sk89q.craftbook.bukkit.util;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.entity.BukkitEntity;
 import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
@@ -15,7 +18,11 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +67,6 @@ public final class BukkitUtil {
     }
 
     public static Sign toSign(ChangedSign sign) {
-
         try {
             if (sign.hasChanged()) sign.update(false);
             return sign.getSign();

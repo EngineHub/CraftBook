@@ -25,9 +25,26 @@ public class ChangedSign {
     private String[] oldLines;
 
     public ChangedSign(Block block, String[] lines, LocalPlayer player) {
-
         this(block, lines);
 
+        checkPlayerVariablePermissions(player);
+    }
+
+    public ChangedSign(Block block, String[] lines) {
+        Validate.notNull(block);
+
+        this.block = block;
+
+        if (lines == null) {
+            this.flushLines();
+        } else {
+            this.lines = lines;
+            this.oldLines = new String[this.lines.length];
+            System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
+        }
+    }
+
+    public void checkPlayerVariablePermissions(LocalPlayer player) {
         if(this.lines != null && VariableManager.instance != null) {
             for(int i = 0; i < 4; i++) {
 
@@ -49,26 +66,8 @@ public class ChangedSign {
         }
     }
 
-    public ChangedSign(Block block, String[] lines) {
-
-        Validate.notNull(block);
-
-        this.block = block;
-        this.sign = (Sign) block.getState();
-
-        if (lines == null) {
-            this.lines = this.sign.getLines();
-        } else {
-            this.lines = lines;
-        }
-
-        this.oldLines = new String[this.lines.length];
-        System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
-    }
-
     public BlockWorldVector getBlockVector() {
-
-        return BukkitUtil.toWorldVector(sign.getBlock());
+        return BukkitUtil.toWorldVector(block);
     }
 
     public Block getBlock() {
@@ -76,7 +75,9 @@ public class ChangedSign {
     }
 
     public Sign getSign() {
-
+        if (this.sign == null) {
+            this.sign = (Sign) this.block.getState();
+        }
         return sign;
     }
 
@@ -87,27 +88,27 @@ public class ChangedSign {
 
     public byte getLightLevel() {
 
-        return sign.getLightLevel();
+        return block.getLightLevel();
     }
 
     public LocalWorld getLocalWorld() {
 
-        return BukkitUtil.getLocalWorld(sign.getWorld());
+        return BukkitUtil.getLocalWorld(block.getWorld());
     }
 
     public int getX() {
 
-        return sign.getX();
+        return block.getX();
     }
 
     public int getY() {
 
-        return sign.getY();
+        return block.getY();
     }
 
     public int getZ() {
 
-        return sign.getZ();
+        return block.getZ();
     }
 
     public String[] getLines() {
@@ -132,7 +133,7 @@ public class ChangedSign {
 
     public void setType(Material type) {
 
-        sign.setType(type);
+        block.setType(type);
     }
 
     public boolean update(boolean force) {
@@ -148,18 +149,19 @@ public class ChangedSign {
     }
 
     public byte getRawData() {
-
-        return sign.getRawData();
+        return block.getData();
     }
 
     public void setRawData(byte b) {
-
-        sign.setRawData(b);
+        block.setData(b);
     }
 
     public void setLines(String[] lines) {
-
         this.lines = lines;
+    }
+
+    public void setOldLines(String[] oldLines) {
+        this.oldLines = oldLines;
     }
 
     public boolean hasChanged () {
@@ -177,7 +179,6 @@ public class ChangedSign {
     }
 
     public void flushLines () {
-
         this.sign = (Sign) this.block.getState();
         this.lines = this.sign.getLines();
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
@@ -186,7 +187,7 @@ public class ChangedSign {
     public boolean updateSign(ChangedSign sign) {
 
         if(!equals(sign)) {
-            this.sign = sign.sign;
+            this.sign = sign.getSign();
             flushLines();
             return true;
         }
