@@ -165,7 +165,6 @@ public class ChangedSign {
     }
 
     public boolean hasChanged () {
-
         boolean ret = false;
         try {
             for(int i = 0; i < 4; i++)
@@ -181,6 +180,9 @@ public class ChangedSign {
     public void flushLines () {
         this.sign = (Sign) this.block.getState();
         this.lines = this.sign.getLines();
+        if (this.oldLines == null) {
+            this.oldLines = new String[lines.length];
+        }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
     }
 
