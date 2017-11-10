@@ -41,7 +41,8 @@ public class TranslationsManager {
     private static LoadingCache<Locale, ResourceBundle> resourceBundleCache = CacheBuilder.newBuilder().build(new ResourceBundleLoader());
 
     public static void initialize() {
-        resourceBundleFunction = locale -> Optional.of(resourceBundleCache.getUnchecked(locale)).orElse(resourceBundleCache.getUnchecked(Locales.EN_US));
+        resourceBundleFunction = locale -> Optional.ofNullable(resourceBundleCache.getUnchecked(locale))
+                .orElse(resourceBundleCache.getUnchecked(Locales.EN_US));
 
         USE_PERMISSIONS = TranslatableText.builder(new ResourceBundleTranslation("mechanic.use-permissions", resourceBundleFunction)).color(TextColors.RED).build();
     }
