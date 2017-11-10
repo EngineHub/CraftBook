@@ -298,7 +298,7 @@ final class MechanicListenerAdapter implements Listener {
                 if(button != null) {
                     BlockFace face = button.getAttachedFace();
                     if(face != null)
-                        handleDirectWireInput(new WorldVector(w, x + face.getModX()*2, y, z + face.getModZ()*2), block, oldLevel, newLevel);
+                        handleDirectWireInput(new WorldVector(w, x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2), block, oldLevel, newLevel);
                 }
                 break;
             case BlockID.POWERED_RAIL:
