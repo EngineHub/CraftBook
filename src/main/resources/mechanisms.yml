@@ -181,6 +181,7 @@ mechanics:
         save-persistent-data: true
         midi-use-percussion: false
         break-on-error: false
+        disable-self-triggered: false
     LegacyCauldron:
         block: STONE
     LightStone:

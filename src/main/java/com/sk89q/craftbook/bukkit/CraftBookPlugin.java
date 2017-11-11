@@ -582,7 +582,7 @@ public class CraftBookPlugin extends JavaPlugin {
                     continue;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
-                if(mech instanceof CookingPot || mech instanceof ICMechanic) //TODO make this a better check.
+                if(mech instanceof CookingPot || (mech instanceof ICMechanic && !((ICMechanic) mech).disableSelfTriggered)) //TODO make this a better check.
                     hasSTMechanic = true;
                 if(mech instanceof CartBlockMechanism)
                     useLegacyCartSystem = true;
