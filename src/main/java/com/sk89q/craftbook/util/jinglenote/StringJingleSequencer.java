@@ -210,6 +210,11 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
+    public int getPlayerCount() {
+        return players.size();
+    }
+
+    @Override
     public Set<JingleNotePlayer> getPlayers () {
         return players;
     }

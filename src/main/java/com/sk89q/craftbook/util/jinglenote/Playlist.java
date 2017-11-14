@@ -9,11 +9,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class Playlist {
 
@@ -138,7 +146,7 @@ public class Playlist {
 
             while (position < lines.size() && isPlaying()) {
                 if(sequencer != null) {
-                    while(sequencer != null && sequencer.isPlaying() && !sequencer.getPlayers().isEmpty()) {
+                    while(sequencer != null && sequencer.isPlaying() && sequencer.getPlayerCount() > 0) {
                         for(Entry<String, SearchArea> p : lastPlayers.entrySet()) {
 
                             if(players.containsKey(p.getKey()) && jNote.isPlaying(p.getKey()))

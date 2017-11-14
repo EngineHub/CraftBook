@@ -27,6 +27,8 @@ public interface JingleSequencer {
 
     void play(JingleNotePlayer player);
 
+    int getPlayerCount();
+
     Set<JingleNotePlayer> getPlayers();
 
     class Note {

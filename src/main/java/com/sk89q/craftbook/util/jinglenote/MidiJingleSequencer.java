@@ -9,13 +9,21 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 
-import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
 
 /**
  * A sequencer that reads MIDI files.
@@ -93,11 +101,9 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
                 @Override
                 public void send(MidiMessage message, long timeStamp) {
-                    synchronized(PLAYER_LOCK) {
-                        if (players.isEmpty()) {
-                            running = false;
-                            return;
-                        }
+                    if (getPlayerCount() == 0) {
+                        running = false;
+                        return;
                     }
 
                     if ((message.getStatus() & 0xF0) == ShortMessage.PROGRAM_CHANGE) {
@@ -143,9 +149,11 @@ public final class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                     running = true;
                     playedBefore = true;
-                    synchronized(PLAYER_LOCK) {
-                        for(JingleNotePlayer player : players)
-                            CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
+                    if (CraftBookPlugin.inst().getConfiguration().debugMode) {
+                        synchronized (PLAYER_LOCK) {
+                            for (JingleNotePlayer player : players)
+                                CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");
+                        }
                     }
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
@@ -224,9 +232,10 @@ public final class MidiJingleSequencer implements JingleSequencer {
     public void stop (JingleNotePlayer player) {
         synchronized(PLAYER_LOCK) {
             players.remove(player);
-            if (players.isEmpty()) {
-                stop();
-            }
+        }
+
+        if (this.getPlayerCount() == 0) {
+            stop();
         }
     }
 
@@ -238,6 +247,11 @@ public final class MidiJingleSequencer implements JingleSequencer {
         if(!playedBefore) {
             run();
         }
+    }
+
+    @Override
+    public int getPlayerCount() {
+        return this.players.size();
     }
 
     @Override
