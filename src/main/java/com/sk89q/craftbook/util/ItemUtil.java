@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.material.MaterialData;
@@ -330,6 +331,34 @@ public final class ItemUtil {
             CraftBookPlugin.logDebugMessage("Stored enchants are the same", "item-checks.meta.enchants");
         } else if (meta2 instanceof EnchantmentStorageMeta)
             return false; // meta type mismatch
+
+        if (meta instanceof BookMeta) {
+            if (!(meta2 instanceof BookMeta))
+                return false;
+
+            BookMeta bookMeta = (BookMeta) meta;
+            BookMeta bookMeta2 = (BookMeta) meta2;
+
+            if (bookMeta.hasAuthor() != bookMeta2.hasAuthor())
+                return false;
+            if (bookMeta.hasAuthor() && !bookMeta.getAuthor().equals(bookMeta2.getAuthor()))
+                return false;
+            if (bookMeta.hasTitle() != bookMeta2.hasTitle())
+                return false;
+            if (bookMeta.hasTitle() && !bookMeta.getTitle().equals(bookMeta2.getTitle()))
+                return false;
+            if (bookMeta.hasPages() != bookMeta2.hasPages())
+                return false;
+            if (bookMeta.hasPages()) {
+                if (bookMeta.getPageCount() != bookMeta2.getPageCount())
+                    return false;
+                for (int i = 0; i < bookMeta.getPageCount(); i++) {
+                    if (!bookMeta.getPage(i).equals(bookMeta2.getPage(i)))
+                        return false;
+                }
+            }
+        } else if (meta2 instanceof BookMeta)
+            return false;
 
         return true;
     }
