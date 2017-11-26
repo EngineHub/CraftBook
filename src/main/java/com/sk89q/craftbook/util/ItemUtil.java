@@ -352,7 +352,7 @@ public final class ItemUtil {
             if (bookMeta.hasPages()) {
                 if (bookMeta.getPageCount() != bookMeta2.getPageCount())
                     return false;
-                for (int i = 0; i < bookMeta.getPageCount(); i++) {
+                for (int i = 1; i <= bookMeta.getPageCount(); i++) {
                     if (!bookMeta.getPage(i).equals(bookMeta2.getPage(i)))
                         return false;
                 }
