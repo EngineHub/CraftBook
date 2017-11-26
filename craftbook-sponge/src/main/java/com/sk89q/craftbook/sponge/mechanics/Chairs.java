@@ -128,7 +128,8 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     @Override
     public boolean isValid(Location<World> location) {
         return BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), location.getBlock()) &&
-                (location.getBlockY() == 0 || !location.getRelative(Direction.DOWN).getBlockType().equals(BlockTypes.AIR));
+                (location.getBlockY() == 0 || !location.getRelative(Direction.DOWN).getBlockType().equals(BlockTypes.AIR)) &&
+                location.getRelative(Direction.UP).getBlockType().equals(BlockTypes.AIR);
     }
 
     private boolean hasSign(Location<World> location, List<Location<World>> searched, Location<World> original) {
