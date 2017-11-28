@@ -63,7 +63,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!(event.getBlock().getState() instanceof Dispenser)) return; // Heh? Isn't this just for dispensers?
+        if (event.getBlock().getType() != Material.DISPENSER) return;
         Dispenser dis = (Dispenser) event.getBlock().getState();
         if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
             event.setCancelled(true);
