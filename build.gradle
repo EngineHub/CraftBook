@@ -98,7 +98,6 @@ subprojects {
     targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
-        mavenLocal()
         mavenCentral()
         maven { url "http://repo.spongepowered.org/maven/" }
         maven { url "http://maven.sk89q.com/repo/" }
@@ -122,6 +121,7 @@ subprojects {
         // Logging
         compile 'org.slf4j:slf4j-api:1.7.22'
 
+        compile 'com.me4502:modularframework-core:1.9.1'
         compile 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
         testCompile 'org.mockito:mockito-core:2.+'
         testCompile 'junit:junit:5.+'

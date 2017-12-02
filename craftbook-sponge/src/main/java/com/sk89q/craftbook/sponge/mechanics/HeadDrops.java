@@ -51,13 +51,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
-import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
-import org.spongepowered.api.item.Enchantments;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.enchantment.EnchantmentTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -221,7 +219,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         if (killer != null && killer instanceof Player) {
             int level = ((Player) killer).getItemInHand(HandTypes.MAIN_HAND).filter(item -> item.get(Keys.ITEM_ENCHANTMENTS).isPresent())
                     .map(item -> item.get(Keys.ITEM_ENCHANTMENTS).get().stream()
-                            .filter(enchant -> enchant.getEnchantment().equals(Enchantments.LOOTING)).findFirst())
+                            .filter(enchant -> enchant.getType().equals(EnchantmentTypes.LOOTING)).findFirst())
                     .filter(Optional::isPresent).map(enchant -> enchant.get().getLevel()).orElse(0);
             chance = Math.min(1, chance + (lootingRateModifier.getValue() * level));
         }

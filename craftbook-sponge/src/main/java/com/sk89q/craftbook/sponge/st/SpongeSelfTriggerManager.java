@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.st;
 import com.google.common.collect.ImmutableMap;
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
+import com.me4502.modularframework.module.SpongeModuleWrapper;
 import com.sk89q.craftbook.core.st.SelfTriggerClock;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
@@ -83,7 +84,7 @@ public class SpongeSelfTriggerManager implements SelfTriggerManager {
             for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
-                    SpongeMechanic mechanic = (SpongeMechanic) module.getModuleUnchecked();
+                    SpongeMechanic mechanic = (SpongeMechanic) ((SpongeModuleWrapper) module).getModuleUnchecked();
                     if (mechanic instanceof SpongeBlockMechanic && mechanic instanceof SelfTriggeringMechanic) {
                         if (((SpongeBlockMechanic) mechanic).isValid(tileEntity.getLocation())) {
                             register((SelfTriggeringMechanic) mechanic, tileEntity.getLocation());

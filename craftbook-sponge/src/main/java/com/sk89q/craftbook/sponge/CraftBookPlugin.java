@@ -17,10 +17,11 @@
 package com.sk89q.craftbook.sponge;
 
 import com.google.inject.Inject;
-import com.me4502.modularframework.ModuleController;
 import com.me4502.modularframework.ShadedModularFramework;
+import com.me4502.modularframework.SpongeModuleController;
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
+import com.me4502.modularframework.module.SpongeModuleWrapper;
 import com.sk89q.craftbook.core.CraftBookAPI;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.st.SelfTriggerManager;
@@ -79,7 +80,7 @@ public class CraftBookPlugin extends CraftBookAPI {
     @Inject
     public PluginContainer container;
 
-    public ModuleController<CraftBookPlugin> moduleController;
+    public SpongeModuleController<CraftBookPlugin> moduleController;
 
     private SelfTriggerManager selfTriggerManager;
 
@@ -274,6 +275,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.LightSwitch");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.Marquee");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.signcopier.SignCopier");
+        moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.dispenser.DispenserRecipes");
         moduleController.registerModule("com.sk89q.craftbook.sponge.mechanics.XPStorer", GameState.PRE_INITIALIZATION);
 
         //Circuit Mechanics
@@ -309,7 +311,7 @@ public class CraftBookPlugin extends CraftBookAPI {
 
     private void loadMechanics(GameState loadState) {
         moduleController.enableModules(input -> {
-            if (loadState == input.getLoadState() && (config.enabledMechanics.getValue().contains(input.getName())
+            if (loadState == ((SpongeModuleWrapper) input).getLoadState() && (config.enabledMechanics.getValue().contains(input.getName())
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.enable-all"))
                     || "true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs")))) {
                 logger.debug("Enabled: " + input.getName());
@@ -322,7 +324,7 @@ public class CraftBookPlugin extends CraftBookAPI {
         for (ModuleWrapper module : moduleController.getModules()) {
             if (!module.isEnabled()) continue;
             try {
-                if (module.getModuleUnchecked() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
+                if (((SpongeModuleWrapper) module).getModuleUnchecked() instanceof SelfTriggeringMechanic && !getSelfTriggerManager().isPresent()) {
                     this.selfTriggerManager = new SpongeSelfTriggerManager();
                     getSelfTriggerManager().ifPresent(SelfTriggerManager::initialize);
                     break;
@@ -336,7 +338,7 @@ public class CraftBookPlugin extends CraftBookAPI {
             for (ModuleWrapper module : moduleController.getModules()) {
                 if(!module.isEnabled()) continue;
                 try {
-                    Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
+                    Mechanic mechanic = (Mechanic) ((SpongeModuleWrapper) module).getModuleUnchecked();
                     if(mechanic instanceof DocumentationProvider)
                         DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
                 } catch (ModuleNotInstantiatedException e) {

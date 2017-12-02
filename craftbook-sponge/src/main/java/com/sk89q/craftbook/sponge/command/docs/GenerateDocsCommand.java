@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.command.docs;
 
 import com.me4502.modularframework.exception.ModuleNotInstantiatedException;
 import com.me4502.modularframework.module.ModuleWrapper;
+import com.me4502.modularframework.module.SpongeModuleWrapper;
 import com.sk89q.craftbook.core.Mechanic;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
@@ -35,7 +36,7 @@ public class GenerateDocsCommand implements CommandExecutor {
         for (ModuleWrapper module : CraftBookPlugin.spongeInst().moduleController.getModules()) {
             if(!module.isEnabled()) continue;
             try {
-                Mechanic mechanic = (Mechanic) module.getModuleUnchecked();
+                Mechanic mechanic = (Mechanic) ((SpongeModuleWrapper) module).getModuleUnchecked();
                 if(mechanic instanceof DocumentationProvider)
                     DocumentationGenerator.generateDocumentation((DocumentationProvider) mechanic);
             } catch (ModuleNotInstantiatedException e) {
