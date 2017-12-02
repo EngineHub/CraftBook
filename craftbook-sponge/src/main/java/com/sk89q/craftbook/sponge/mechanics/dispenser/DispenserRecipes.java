@@ -24,7 +24,12 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.ConstructEntityEvent;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.EventContextKeys;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnType;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
+import org.spongepowered.api.event.entity.SpawnEntityEvent;
+import org.spongepowered.api.event.filter.cause.ContextValue;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -36,8 +41,9 @@ import org.spongepowered.api.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import javax.annotation.Nullable;
 
 @Module(id = "dispenserrecipes", name = "DispenserRecipes", onEnable = "onInitialize", onDisable = "onDisable")
 public class DispenserRecipes extends SpongeBlockMechanic implements DocumentationProvider {
@@ -50,6 +56,7 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
 
         recipes.add(new Cannon());
         recipes.add(new Fan());
+        recipes.add(new Vacuum());
     }
 
     @Override
@@ -75,20 +82,39 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
     }
 
     @Listener
-    public void onCreateEntity(ConstructEntityEvent event, @First LocatableBlock dispenser) {
-        // TODO
+    public void onCreateEntity(SpawnEntityEvent event, @First LocatableBlock dispenser) {
+        event.getContext().get(EventContextKeys.SPAWN_TYPE).ifPresent(spawnType -> {
+            if (spawnType != SpawnTypes.DISPENSE || dispenser.getBlockState().getType() != BlockTypes.DISPENSER) {
+                return;
+            }
+
+            Dispenser dispenserTile = (Dispenser) dispenser.getLocation().getTileEntity().get();
+            if (handleDispenserAction(dispenserTile, event.getEntities().get(0).getVelocity())) {
+                event.setCancelled(true);
+            }
+        });
     }
 
-    // TODO Water/Lava form
+    @Listener
+    public void onChangeBlock(ChangeBlockEvent event, @First LocatableBlock dispenser) {
+        if (dispenser.getBlockState().getType() != BlockTypes.DISPENSER) {
+            return;
+        }
 
-    public boolean handleDispenserAction(Dispenser dispenser, Vector3d velocity) {
+        Dispenser dispenserTile = (Dispenser) dispenser.getLocation().getTileEntity().get();
+        if (handleDispenserAction(dispenserTile, null)) {
+            event.setCancelled(true);
+        }
+    }
+
+    public boolean handleDispenserAction(Dispenser dispenser, @Nullable Vector3d velocity) {
         for (DispenserRecipe recipe : recipes) {
             ItemStack[] items = StreamSupport.stream(dispenser.getInventory().slots().spliterator(), false)
                     .map(Inventory::peek).filter(Optional::isPresent)
                     .map(Optional::get).toArray(ItemStack[]::new);
             if (recipe.doesPass(items)) {
                 if (recipe.doAction(dispenser, items, velocity)) {
-                    dispenser.getInventory().slots().forEach(Inventory::poll); // Take one of every stack.
+                    dispenser.getInventory().slots().forEach(inv -> inv.poll(1)); // Take one of every stack.
                     return true;
                 }
 

@@ -17,10 +17,14 @@
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
 import com.flowpowered.math.vector.Vector3d;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.explosive.PrimedTNT;
+import org.spongepowered.api.event.CauseStackManager;
+import org.spongepowered.api.event.cause.EventContextKeys;
+import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.util.Direction;
@@ -43,8 +47,12 @@ public class Cannon extends SimpleDispenserRecipe {
         if (face != Direction.NONE) {
             Location<World> location = dispenser.getLocation().getRelative(face).add(0.5, 0.5, 0.5);
             PrimedTNT tnt = (PrimedTNT) dispenser.getWorld().createEntity(EntityTypes.PRIMED_TNT, location.getPosition());
-            tnt.setVelocity(velocity.normalize().mul(2f));
-            dispenser.getWorld().spawnEntity(tnt);
+            Vector3d tntVelocity = face.asOffset().add(0, 0.1f, 0).normalize().mul(2f);
+            tnt.setVelocity(tntVelocity);
+            try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
+                Sponge.getCauseStackManager().addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.CUSTOM);
+                dispenser.getWorld().spawnEntity(tnt);
+            }
             return true;
         }
 

@@ -23,11 +23,14 @@ import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -106,7 +109,20 @@ public class LocationUtil {
         return radiusEntities;
     }
 
-    public static boolean isLocationWithinWorld(Location location) {
+    public static boolean isEntityInLocation(Location<World> location, Entity entity) {
+        AABB boundingBox = entity.getBoundingBox().orElse(null);
+        return boundingBox != null && boundingBox.intersects(new AABB(location.getBlockPosition(), location.getBlockPosition().add(1, 1, 1)));
+    }
+
+    public static Collection<Entity> getEntitiesAtLocation(Location<World> location) {
+        Chunk chunk = location.getExtent().getChunk(location.getChunkPosition()).orElse(null);
+        if (chunk == null) {
+            return Collections.emptyList();
+        }
+        return chunk.getEntities(entity -> isEntityInLocation(location, entity));
+    }
+
+    public static boolean isLocationWithinWorld(Location<World> location) {
         return location.getBlockY() < location.getExtent().getBlockMax().getY() && location.getBlockY() >= location.getExtent().getBlockMin().getY();
     }
 

@@ -1,19 +1,3 @@
-/*
- * CraftBook Copyright (C) 2010-2017 sk89q <http://www.sk89q.com>
- * CraftBook Copyright (C) 2011-2017 me4502 <http://www.me4502.com>
- * CraftBook Copyright (C) Contributors
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
 import com.flowpowered.math.vector.Vector3d;
@@ -28,12 +12,12 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public class Fan extends SimpleDispenserRecipe {
+public class Vacuum extends SimpleDispenserRecipe {
 
-    public Fan() {
+    public Vacuum() {
         super(new ItemStack[]{
                 ItemStack.of(ItemTypes.WEB, 1), ItemStack.of(ItemTypes.LEAVES, 1), ItemStack.of(ItemTypes.WEB, 1),
-                ItemStack.of(ItemTypes.LEAVES, 1), ItemStack.of(ItemTypes.PISTON, 1), ItemStack.of(ItemTypes.LEAVES, 1),
+                ItemStack.of(ItemTypes.LEAVES, 1), ItemStack.of(ItemTypes.STICKY_PISTON, 1), ItemStack.of(ItemTypes.LEAVES, 1),
                 ItemStack.of(ItemTypes.WEB, 1), ItemStack.of(ItemTypes.LEAVES, 1), ItemStack.of(ItemTypes.WEB, 1),
         });
     }
@@ -46,7 +30,7 @@ public class Fan extends SimpleDispenserRecipe {
             int distance = 0;
             while (offset.getBlockType() == BlockTypes.AIR && distance < 5) {
                 for (Entity e : LocationUtil.getEntitiesAtLocation(offset)) {
-                    e.setVelocity(face.asOffset().mul(5 - distance));
+                    e.setVelocity(face.asOffset().mul(5 - distance).mul(-1.0));
                 }
                 distance ++;
                 offset = offset.getRelative(face);
