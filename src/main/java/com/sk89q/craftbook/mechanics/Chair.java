@@ -15,6 +15,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
@@ -86,7 +87,7 @@ public class Chair extends AbstractCraftBookMechanic {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 if (chairLoc != null)
                     player.teleport(chairLoc);
-                far.setPassenger(player);
+                far.addPassenger(player);
             });
         } else if (ar.isEmpty()) {
             removeChair(player);
@@ -270,8 +271,8 @@ public class Chair extends AbstractCraftBookMechanic {
                 else {
                     addChair(p, pl.getValue().location, null); // For any new players.
 
-                    if (chairHealth && p.getHealth() < p.getMaxHealth())
-                        p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getMaxHealth()));
+                    if (chairHealth && p.getHealth() < p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+                        p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
                     if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }
