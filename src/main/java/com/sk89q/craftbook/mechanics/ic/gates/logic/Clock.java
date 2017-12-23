@@ -122,10 +122,10 @@ public class Clock extends AbstractSelfTriggeredIC {
             try {
                 interval = Integer.parseInt(sign.getLine(2));
             } catch (NumberFormatException e) {
-                throw new ICVerificationException("The third line must be a number between 5 and 500.");
+                throw new ICVerificationException("The third line must be a number between 5 and 100000.");
             }
 
-            interval = Math.max(Math.min(interval, 500), 5);
+            interval = Math.max(Math.min(interval, 100000), 5);
 
             sign.setLine(2, Integer.toString(interval));
 
