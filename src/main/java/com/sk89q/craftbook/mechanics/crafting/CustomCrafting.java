@@ -33,6 +33,9 @@ import java.util.Map.Entry;
 public class CustomCrafting extends AbstractCraftBookMechanic {
 
     public static CustomCrafting INSTANCE;
+    private RecipeManager manager;
+
+    public static final Set<String> registeredNames = new HashSet<>();
 
     private static final Map<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<>();
 
@@ -40,12 +43,14 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     public boolean enable() {
         INSTANCE = this;
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml");
-        new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
-        Collection<RecipeManager.Recipe> recipeCollection = RecipeManager.INSTANCE.getRecipes();
+        manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
+        Collection<RecipeManager.Recipe> recipeCollection = manager.getRecipes();
         int recipes = 0;
-        for (RecipeManager.Recipe r : recipeCollection)
-            if(addRecipe(r))
+        for (RecipeManager.Recipe r : recipeCollection) {
+            if (addRecipe(r)) {
                 recipes++;
+            }
+        }
         CraftBookPlugin.inst().getLogger().info("Registered " + recipes + " custom recipes!");
 
         return true;
@@ -54,7 +59,8 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     @Override
     public void disable () {
         advancedRecipes.clear();
-        RecipeManager.INSTANCE = null;
+        manager.disable();
+        manager = null;
         INSTANCE = null;
     }
 
@@ -62,6 +68,12 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
      * Adds a recipe to the manager.
      */
     public boolean addRecipe(RecipeManager.Recipe r) {
+        if (registeredNames.contains(r.getId())) {
+            CraftBookPlugin.inst().getLogger().warning("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
+                    + "limitation in Bukkit-derivitive servers, this can't be registered again without a restart.");
+            return false;
+        }
+
         try {
             Recipe sh;
 
@@ -82,6 +94,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                 return false;
 
             CraftBookPlugin.inst().getServer().addRecipe(sh);
+            registeredNames.add(r.getId());
             if(r.hasAdvancedData()) {
                 advancedRecipes.put(sh, r);
                 CraftBookPlugin.logDebugMessage("Adding a new recipe with advanced data!", "advanced-data.init");

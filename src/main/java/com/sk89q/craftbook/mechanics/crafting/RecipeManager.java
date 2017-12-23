@@ -57,6 +57,10 @@ public class RecipeManager {
         }
     }
 
+    public void disable() {
+        INSTANCE = null;
+    }
+
     public void save() {
         if (config == null) {
             CraftBookPlugin.logger().severe("Failure saving recipes! Config is null!");

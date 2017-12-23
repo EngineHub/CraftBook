@@ -88,6 +88,9 @@ public final class ProtectionUtil {
             EventUtil.ignoreEvent(event);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
             CompatabilityUtil.enableInterferences(player);
+            if (!event.isCancelled() && CraftBookPlugin.inst().getConfiguration().obeyWorldguard && CraftBookPlugin.plugins.getWorldGuard() != null) {
+                return CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
+            }
             return !event.isCancelled();
         }
         return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
