@@ -42,6 +42,7 @@ import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -139,11 +140,11 @@ public class BlockReplacer extends IC {
             Location<World> block = getBackBlock();
             if(block.getBlock().equals(blockTypeData.onBlock)) {
                 if(!getPinSet().getInput(0, this)) {
-                    block.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+                    block.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
                 }
             } else if (block.getBlock().equals(blockTypeData.offBlock)) {
                 if (getPinSet().getInput(0, this)) {
-                    block.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+                    block.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
                 }
             }
             Set<Location> traversedBlocks = new HashSet<>();
@@ -168,12 +169,12 @@ public class BlockReplacer extends IC {
 
                 if (b.getBlock().equals(blockTypeData.onBlock)) {
                     if (!on) {
-                        b.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+                        b.setBlock(blockTypeData.offBlock, physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
                     }
                     Sponge.getScheduler().createTaskBuilder().delayTicks(delay).execute(() -> replaceBlocks(on, b, traversedBlocks)).submit(CraftBookPlugin.spongeInst().container);
                 } else if (b.getBlock().equals(blockTypeData.offBlock)) {
                     if (on) {
-                        b.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlag.ALL : BlockChangeFlag.NONE);
+                        b.setBlock(blockTypeData.onBlock, physics ? BlockChangeFlags.ALL : BlockChangeFlags.NONE);
                     }
                     Sponge.getScheduler().createTaskBuilder().delayTicks(delay).execute(() -> replaceBlocks(on, b, traversedBlocks)).submit(CraftBookPlugin.spongeInst().container);
                 }

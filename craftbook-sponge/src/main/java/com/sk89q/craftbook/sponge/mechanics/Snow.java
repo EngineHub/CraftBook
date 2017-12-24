@@ -32,8 +32,11 @@ import org.spongepowered.api.data.manipulator.mutable.block.LayeredData;
 import org.spongepowered.api.data.property.block.ReplaceableProperty;
 import org.spongepowered.api.data.property.block.TemperatureProperty;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
+import org.spongepowered.api.entity.projectile.Snowball;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.block.TickBlockEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -58,6 +61,7 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
     private ConfigValue<Boolean> waterFreezing = new ConfigValue<>("water-freezing", "Allows snow to freeze water beneath it.", false);
     private ConfigValue<Boolean> meltInSunlight = new ConfigValue<>("melt-in-sunlight", "Allows snow to melt when in sunlight.", false);
     private ConfigValue<Boolean> partialMeltOnly = new ConfigValue<>("partial-melt-only", "When `melt-in-sunlight` is enabled, only melt to vanilla height.", false);
+    private ConfigValue<Boolean> placement = new ConfigValue<>("snowballs-place-snow", "Allow thrown snowballs to create snow.", false);
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -72,6 +76,21 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
         waterFreezing.load(config);
         meltInSunlight.load(config);
         partialMeltOnly.load(config);
+        placement.load(config);
+    }
+
+    @Listener
+    public void onSnowballHit(CollideBlockEvent.Impact event, @First Snowball snowball) {
+        if (!placement.getValue()) {
+            return;
+        }
+        Location<World> block = event.getTargetLocation();
+        if (!isSnowBlock(block)) {
+            block = block.getBlockRelative(Direction.UP);
+        }
+        if (isSnowBlock(block) || canPlaceSnowAt(block)) {
+            increaseSnow(block, true);
+        }
     }
 
     @Listener
@@ -98,28 +117,40 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
     }
 
     private void increaseSnow(Location<?> location, boolean disperse) {
+        if (canPlaceSnowAt(location.getRelative(Direction.DOWN)) && location.getBlockType() == BlockTypes.AIR) {
+            // Place it as low as possible.
+            while (canPlaceSnowAt(location.getRelative(Direction.DOWN)) && location.getBlockY() > 1) {
+                location = location.getRelative(Direction.DOWN);
+            }
+            increaseSnow(location, disperse);
+            return;
+        }
         Optional<MutableBoundedValue<Integer>> optionalHeightValue = location.getValue(Keys.LAYER);
         if(location.getBlockType() == BlockTypes.SNOW_LAYER && optionalHeightValue.isPresent()) {
             MutableBoundedValue<Integer> heightValue = optionalHeightValue.get();
             int newHeight = heightValue.get() + 1;
 
-            if(newHeight > heightValue.getMaxValue()) {
-                if(highPiling.getValue())
+            if (newHeight >= heightValue.getMaxValue()) {
+                if (highPiling.getValue())
                     location.setBlockType(BlockTypes.SNOW);
             } else {
                 location.offer(Keys.LAYER, newHeight);
-                if(disperse)
+                if (disperse)
                     disperseSnow(location, null);
             }
 
-            if(waterFreezing.getValue()) {
+            if (waterFreezing.getValue()) {
                 Location down = location.getRelative(Direction.DOWN);
 
                 if (down.getBlockType() == BlockTypes.WATER || down.getBlockType() == BlockTypes.FLOWING_WATER)
                     down.setBlockType(BlockTypes.ICE);
             }
-        } else {
+        } else if (canPlaceSnowAt(location)) {
             location.setBlockType(BlockTypes.SNOW_LAYER);
+        } else {
+            if (location.getBlockY() < 255) {
+                increaseSnow(location.getRelative(Direction.UP), disperse);
+            }
         }
     }
 
@@ -145,34 +176,23 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
         if(!dispersionMode.getValue())
             return;
 
-        int currentHeight = location.get(Keys.LAYER).orElse(0);
+        int currentHeight = location.get(Keys.LAYER).orElse(location.getBlockType() == BlockTypes.SNOW ? 8 : 0);
         if(currentHeight == 0)
             return;
 
         Direction currentSmallest = null;
         int currentSmallestInt = Integer.MAX_VALUE;
 
-        for(final Direction dir : VALID_SNOW_DIRECTIONS) {
+        for (final Direction dir : VALID_SNOW_DIRECTIONS) {
             if(dir == ignoredFace || (currentHeight == 1 && dir != Direction.DOWN)) continue;
 
             final Location<?> relative = location.getRelative(dir);
             if(canPlaceSnowAt(relative)) {
-                int otherHeight = relative.get(Keys.LAYER).orElse(0);
-                if(otherHeight >= 1) {
-                    if(dir != Direction.DOWN && currentHeight < otherHeight+2) {
-                        continue;
-                    }
+                int otherHeight = dir == Direction.DOWN ? -1 : relative.get(Keys.LAYER).orElse(0);
+                if(otherHeight >= 1 && currentHeight < otherHeight + 2) {
+                    continue;
                 }
-                if(dir == Direction.DOWN) {
-                    increaseSnow(relative, false);
-                    decreaseSnow(location);
-                    Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(20L).execute(() -> {
-                        disperseSnow(relative, dir.getOpposite());
-                        if (isBlockBuried(location))
-                            disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
-                    }).submit(CraftBookPlugin.inst());
-                    break;
-                } else if(currentSmallest == null || currentSmallestInt > otherHeight) {
+                if(currentSmallest == null || currentSmallestInt > otherHeight) {
                     currentSmallest = dir;
                     currentSmallestInt = otherHeight;
                     if(currentSmallestInt == 0)
@@ -186,7 +206,7 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
             increaseSnow(relative, false);
             decreaseSnow(location);
             Direction finalCurrentSmallest = currentSmallest;
-            Sponge.getGame().getScheduler().createTaskBuilder().delayTicks(20L).execute(() -> {
+            Sponge.getGame().getScheduler().createTaskBuilder().execute(() -> {
                 disperseSnow(relative, finalCurrentSmallest.getOpposite());
                 if (isBlockBuried(location))
                     disperseSnow(location.getRelative(Direction.UP), Direction.NONE);
@@ -297,7 +317,8 @@ public class Snow extends SpongeMechanic implements DocumentationProvider {
                 highPiling,
                 waterFreezing,
                 meltInSunlight,
-                partialMeltOnly
+                partialMeltOnly,
+                placement
         };
     }
 }
