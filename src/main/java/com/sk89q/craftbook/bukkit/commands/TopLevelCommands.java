@@ -45,7 +45,7 @@ public class TopLevelCommands {
     public void area(CommandContext context, CommandSender sender) {
     }
 
-    @Command(aliases = {"headdrops", "hd"}, desc = "Commands to manage Craftbook Head Drops")
+    @Command(aliases = {"headdrops"}, desc = "Commands to manage Craftbook Head Drops")
     @NestedCommand(HeadDropsCommands.class)
     public void headdrops(CommandContext context, CommandSender sender) {
     }
@@ -67,12 +67,12 @@ public class TopLevelCommands {
 
     }
 
-    @Command(aliases = {"sign", "signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
+    @Command(aliases = {"signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
     @NestedCommand(SignEditCommands.class)
     public void signedit(CommandContext context, CommandSender sender) {
     }
 
-    @Command(aliases = {"ic","circuit"}, desc = "Commands to manage Craftbook IC's")
+    @Command(aliases = {"ic", "circuit"}, desc = "Commands to manage Craftbook IC's")
     @NestedCommand(ICCommands.class)
     public void icCmd(CommandContext context, CommandSender sender) {
     }
