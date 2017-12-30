@@ -44,14 +44,16 @@ public final class ItemInfo {
 
     @Deprecated
     public int getId() {
-
         return data.getItemTypeId();
     }
 
     public Material getType() {
-
         if(data.getItemTypeId() < 0) return null;
         return data.getItemType();
+    }
+
+    public boolean isTypeValid() {
+        return data.getItemType() != null;
     }
 
     public void setId(int id) {

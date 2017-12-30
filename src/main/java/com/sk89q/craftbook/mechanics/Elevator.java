@@ -314,7 +314,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     private void makeItSo(LocalPlayer player, Block destination, BlockFace shift) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getPosition().getZ()));
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getZ()));
         // well, unless that's already a ceiling.
         if (!BlockType.canPassThrough(floor.getTypeId())) {
             floor = floor.getRelative(BlockFace.DOWN);
@@ -432,7 +432,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 newLocation.setPitch(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
                 ((BukkitPlayer)player).getPlayer().getVehicle().teleport(newLocation);
             }
-            player.setPosition(BukkitUtil.toLocation(newLocation).getPosition(), newLocation.getPitch(), newLocation.getYaw());
+            player.setPosition(BukkitUtil.toLocation(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
             teleportFinish(player, destination, shift);
         }

@@ -20,7 +20,7 @@ public class CollisionEntry extends AbstractCraftBookMechanic {
         if (event.getVehicle() instanceof RideableMinecart) {
             if (!event.getVehicle().isEmpty()) return;
             if (!(event.getEntity() instanceof HumanEntity)) return;
-            event.getVehicle().setPassenger(event.getEntity());
+            event.getVehicle().addPassenger(event.getEntity());
 
             event.setCollisionCancelled(true);
         }

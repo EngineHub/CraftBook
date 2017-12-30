@@ -80,7 +80,7 @@ public class CartDeposit extends CartBlockMechanism {
                     Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
                     while(iter.hasNext()) {
                         Tuple2<ItemInfo, Integer> inf = iter.next();
-                        if (inf.a.getId() < 0 || inf.a.getType() == item.getType()) {
+                        if (!inf.a.isTypeValid() || inf.a.getType() == item.getType()) {
                             if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
                                 if(inf.b < 0) {
                                     transferItems.add(item.clone());
@@ -152,7 +152,7 @@ public class CartDeposit extends CartBlockMechanism {
                         Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
                         while(iter.hasNext()) {
                             Tuple2<ItemInfo, Integer> inf = iter.next();
-                            if (inf.a.getId() < 0 || inf.a.getType() == item.getType())
+                            if (!inf.a.isTypeValid() || inf.a.getType() == item.getType())
                                 if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
                                     if(inf.b < 0) {
                                         transferitems.add(item.clone());

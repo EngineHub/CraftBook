@@ -5,23 +5,15 @@ import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.Location;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.entity.BukkitEntity;
-import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
-import com.sk89q.worldedit.bukkit.entity.BukkitItem;
-import com.sk89q.worldedit.bukkit.entity.BukkitPainting;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -96,11 +88,6 @@ public final class BukkitUtil {
         return new BlockWorldVector(getLocalWorld(block.getWorld()), block.getX(), block.getY(), block.getZ());
     }
 
-    public static BlockWorldVector toWorldVector(org.bukkit.Location location) {
-
-        return new BlockWorldVector(getLocalWorld(location.getWorld()), location.getX(), location.getY(), location.getZ());
-    }
-
     public static Vector toVector(org.bukkit.Location loc) {
 
         return new Vector(loc.getX(), loc.getY(), loc.getZ());
@@ -134,13 +121,6 @@ public final class BukkitUtil {
                 loc.getYaw());
     }
 
-    public static Player matchSinglePlayer(Server server, String name) {
-
-        List<Player> players = server.matchPlayer(name);
-        if (players.isEmpty()) return null;
-        return players.get(0);
-    }
-
     public static Block toBlock(BlockWorldVector pt) {
 
         return toWorld(pt).getBlockAt(toLocation(pt));
@@ -163,32 +143,17 @@ public final class BukkitUtil {
     public static final double EQUALS_PRECISION = 0.0001;
 
     public static org.bukkit.Location toLocation(Location teleportLocation) {
-
-        Vector pt = teleportLocation.getPosition();
-        return new org.bukkit.Location(toWorld(teleportLocation.getWorld()), pt.getX(), pt.getY(), pt.getZ(),
+        return new org.bukkit.Location(
+                toWorld((com.sk89q.worldedit.world.World) teleportLocation.getExtent()),
+                teleportLocation.getX(),
+                teleportLocation.getY(),
+                teleportLocation.getZ(),
                 teleportLocation.getYaw(),
-                teleportLocation.getPitch());
+                teleportLocation.getPitch()
+        );
     }
 
-    public static World toWorld(final LocalWorld world) {
-
+    public static World toWorld(final com.sk89q.worldedit.world.World world) {
         return ((BukkitWorld) world).getWorld();
-    }
-
-    public static BukkitEntity toLocalEntity(Entity e) {
-
-        switch (e.getType()) {
-            case EXPERIENCE_ORB:
-                return new BukkitExpOrb(toLocation(e.getLocation()), e.getUniqueId(),
-                        ((ExperienceOrb) e).getExperience());
-            case PAINTING:
-                Painting paint = (Painting) e;
-                return new BukkitPainting(toLocation(e.getLocation()), paint.getArt(), paint.getFacing(),
-                        e.getUniqueId());
-            case DROPPED_ITEM:
-                return new BukkitItem(toLocation(e.getLocation()), ((Item) e).getItemStack(), e.getUniqueId());
-            default:
-                return new BukkitEntity(toLocation(e.getLocation()), e.getType(), e.getUniqueId());
-        }
     }
 }

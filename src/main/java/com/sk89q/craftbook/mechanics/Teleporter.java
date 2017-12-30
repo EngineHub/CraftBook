@@ -24,8 +24,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Location;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.blocks.BlockType;
 
 /**
@@ -203,14 +202,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         // Teleport!
         Location subspaceRift = player.getPosition();
-        subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 1, floor.getZ() + 0.5));
+        subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
+        subspaceRift = subspaceRift.setY(floor.getY() + 1.0);
+        subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
         if (player.isInsideVehicle()) {
             subspaceRift = BukkitUtil.toLocation(((BukkitPlayer)player).getPlayer().getVehicle().getLocation());
-            subspaceRift = subspaceRift.setPosition(new Vector(floor.getX() + 0.5, floor.getY() + 2, floor.getZ() + 0.5));
+            subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
+            subspaceRift = subspaceRift.setY(floor.getY() + 2.0);
+            subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
             ((BukkitPlayer)player).getPlayer().getVehicle().teleport(BukkitUtil.toLocation(subspaceRift));
         }
         if (maxRange > 0)
-            if (subspaceRift.getPosition().distanceSq(player.getPosition().getPosition()) > maxRange * maxRange) {
+            if (subspaceRift.toVector().distanceSq(player.getPosition().toVector()) > maxRange * maxRange) {
                 player.print("mech.teleport.range");
                 return;
             }
@@ -221,7 +224,6 @@ public class Teleporter extends AbstractCraftBookMechanic {
     }
 
     private static boolean checkTeleportSign(LocalPlayer player, Block sign) {
-
         if (!SignUtil.isSign(sign)) {
             player.printError("mech.teleport.sign");
             return false;

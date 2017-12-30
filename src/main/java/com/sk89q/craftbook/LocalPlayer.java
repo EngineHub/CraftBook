@@ -18,8 +18,8 @@ package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
-import com.sk89q.worldedit.Location;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.util.Location;
 
 import java.util.UUID;
 

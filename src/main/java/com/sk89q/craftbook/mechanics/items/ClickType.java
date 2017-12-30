@@ -7,6 +7,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -87,7 +88,7 @@ public enum ClickType {
             case ITEM_DROP:
                 return event instanceof PlayerDropItemEvent;
             case ITEM_PICKUP:
-                return event instanceof PlayerPickupItemEvent;
+                return event instanceof EntityPickupItemEvent;
             case PLAYER_CHAT:
                 return event instanceof AsyncPlayerChatEvent;
             case PLAYER_DEATH:

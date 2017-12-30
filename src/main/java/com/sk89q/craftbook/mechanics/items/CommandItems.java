@@ -294,12 +294,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
     }
 
     @EventHandler(priority=EventPriority.HIGH)
-    public void onItemPickup(final PlayerPickupItemEvent event) {
+    public void onItemPickup(final EntityPickupItemEvent event) {
 
-        if(event.getItem() == null)
+        if (event.getItem() == null)
             return;
 
-        performCommandItems(event.getItem().getItemStack(), event.getPlayer(), event);
+        if (event.getEntity() instanceof Player) {
+            performCommandItems(event.getItem().getItemStack(), (Player) event.getEntity(), event);
+        }
     }
 
     @SuppressWarnings("unchecked")

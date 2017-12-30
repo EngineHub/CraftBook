@@ -60,7 +60,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
 
         RideableMinecart cart = event.getClickedBlock().getWorld().spawn(BlockUtil.getBlockCentre(event.getClickedBlock()), RideableMinecart.class);
         minecarts.add(cart);
-        cart.setPassenger(event.getPlayer());
+        cart.addPassenger(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
