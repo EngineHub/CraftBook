@@ -34,6 +34,15 @@ public final class BlockFilter {
 
     private List<BlockState> cache;
 
+    /**
+     * Create a generic filter for this BlockType.
+     *
+     * @param blockType The {@link BlockType}
+     */
+    public BlockFilter(BlockType blockType) {
+        this.rule = blockType.getName();
+    }
+
     public BlockFilter(String rule) {
         this.rule = rule;
     }

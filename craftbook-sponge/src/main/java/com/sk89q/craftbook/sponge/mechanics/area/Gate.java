@@ -34,7 +34,9 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.locale.TranslationsManager;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
@@ -56,6 +58,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -322,11 +325,13 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     @Override
     public List<BlockFilter> getDefaultBlocks() {
         List<BlockFilter> states = Lists.newArrayList();
-        states.add(new BlockFilter("FENCE"));
-        states.add(new BlockFilter("NETHER_BRICK_FENCE"));
-        states.add(new BlockFilter("GLASS_PANE"));
-        states.add(new BlockFilter("STAINED_GLASS_PANE"));
-        states.add(new BlockFilter("IRON_BARS"));
+        states.addAll(Sponge.getRegistry().getAllOf(BlockType.class).stream()
+                .filter(blockType -> blockType.getName().toLowerCase().contains("fence"))
+                .map(BlockFilter::new)
+                .collect(Collectors.toList()));
+        states.add(new BlockFilter(BlockTypes.GLASS_PANE));
+        states.add(new BlockFilter(BlockTypes.STAINED_GLASS_PANE));
+        states.add(new BlockFilter(BlockTypes.IRON_BARS));
         return states;
     }
 }
