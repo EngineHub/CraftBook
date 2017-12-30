@@ -67,7 +67,7 @@ public class TopLevelCommands {
 
     }
 
-    @Command(aliases = {"signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
+    @Command(aliases = {"sign", "signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
     @NestedCommand(SignEditCommands.class)
     public void signedit(CommandContext context, CommandSender sender) {
     }
