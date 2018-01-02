@@ -29,7 +29,7 @@ buildscript {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.3.0'
         classpath 'org.ajoberstar:gradle-git:1.5.1'
-        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0"
+        classpath "gradle.plugin.net.minecrell:licenser:0.3"
         classpath "gradle.plugin.com.mendhak.gradlecrowdin:plugin:0.0.9"
     }
 }
@@ -90,7 +90,7 @@ subprojects {
     apply plugin: "signing"
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'com.jfrog.artifactory'
-    apply plugin: "com.github.hierynomus.license"
+    apply plugin: "net.minecrell.licenser"
 
     ext.internalVersion = version + ";" + gitCommitHash
 
@@ -147,12 +147,8 @@ subprojects {
         include '**/*.java'
         exclude '**/Metrics.java'
 
-        ignoreFailures = false
-        strictCheck = true
-
-        mapping {
-            java = 'SLASHSTAR_STYLE'
-        }
+        ignoreFailures = true
+        newLine = false
     }
 
     // The outputs
