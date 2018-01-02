@@ -1,6 +1,6 @@
 /*
- * CraftBook Copyright (C) 2010-2017 sk89q <http://www.sk89q.com>
- * CraftBook Copyright (C) 2011-2017 me4502 <http://www.me4502.com>
+ * CraftBook Copyright (C) 2010-2018 sk89q <http://www.sk89q.com>
+ * CraftBook Copyright (C) 2011-2018 me4502 <http://www.me4502.com>
  * CraftBook Copyright (C) Contributors
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
