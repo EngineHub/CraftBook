@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics;
 
 import static com.sk89q.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
@@ -31,6 +32,7 @@ import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.util.BlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
@@ -75,6 +77,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     private ConfigValue<Boolean> exitAtEntry = new ConfigValue<>("exit-at-last-position", "Moves player's to their entry position when they exit the chair.", false);
     private ConfigValue<Boolean> requireSigns = new ConfigValue<>("require-sign", "Require signs on the chairs.", false);
     private ConfigValue<Integer> maxSignDistance = new ConfigValue<>("max-sign-distance", "The distance the sign can be from the clicked chair.", 3);
+    private ConfigValue<Boolean> faceCorrectDirection = new ConfigValue<>("face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)", true);
     private ConfigValue<Boolean> healPassenger = new ConfigValue<>("heal-passenger", "Heal the player when they're sitting in the chair.", false);
     private ConfigValue<Double> healAmount = new ConfigValue<>("heal-amount", "Amount to heal the player by.", 1.0d, TypeToken.of(Double.class));
 
@@ -92,6 +95,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         exitAtEntry.load(config);
         requireSigns.load(config);
         maxSignDistance.load(config);
+        faceCorrectDirection.load(config);
         healPassenger.load(config);
         healAmount.load(config);
 
@@ -162,6 +166,13 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
+
+        if (faceCorrectDirection.getValue() && location.supports(Keys.DIRECTION)) {
+            System.out.println(location.get(Keys.DIRECTION).orElse(Direction.NONE).getOpposite().asOffset());
+            Vector3d euler = LocationUtil.cartesianToEuler(location.get(Keys.DIRECTION).orElse(Direction.NONE).getOpposite().asOffset());
+            entity.setRotation(euler);
+            player.setRotation(euler);
+        }
 
         Sponge.getCauseStackManager().pushCause(player);
         location.getExtent().spawnEntity(entity);
@@ -285,6 +296,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
                 exitAtEntry,
                 requireSigns,
                 maxSignDistance,
+                faceCorrectDirection,
                 healPassenger,
                 healAmount
         };

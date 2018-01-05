@@ -252,4 +252,26 @@ public class LocationUtil {
     public static String stringFromLocation(Location<World> location) {
         return location.getExtent().getName() + ',' + location.getPosition().getX() + ',' + location.getPosition().getY() + ',' + location.getPosition().getZ();
     }
+
+    /**
+     * Takes a cartesian {@link Vector3d} and returns a euler {@link Vector3d}
+     *
+     * @return A euler vector3d
+     */
+    public static Vector3d cartesianToEuler(Vector3d cartesian) {
+        double x = cartesian.getX();
+        double y = cartesian.getY();
+        double z = cartesian.getZ();
+
+        if (x == 0 && z == 0) {
+            return Vector3d.ZERO;
+        }
+
+        double theta = Math.atan2(-x, z);
+        float yaw = (float) Math.toDegrees((theta + (2 * Math.PI)) % (2 * Math.PI));
+        double xz = Math.sqrt(x*x + z*z);
+        float pitch = (float) Math.toDegrees(Math.atan(-y / xz));
+
+        return new Vector3d(pitch, yaw, 0);
+    }
 }
