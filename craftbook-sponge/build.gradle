@@ -11,7 +11,7 @@ plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
 }
 
-def spongeVersion = "8.0"
+def spongeVersion = "7.1"
 def spongeFullVersion = spongeVersion + ".0-SNAPSHOT"
 
 dependencies {
