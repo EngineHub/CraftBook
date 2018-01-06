@@ -22,6 +22,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
+import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.prompt.EntityArchetypeDataPrompt;
 import org.spongepowered.api.Sponge;
@@ -29,6 +30,7 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.EntityArchetype;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.player.Player;
@@ -43,7 +45,7 @@ import java.util.Optional;
 public class EntitySpawner extends IC {
 
     private static EntityArchetypeDataPrompt ENTITY_TYPE_PROMPT = new EntityArchetypeDataPrompt(
-            1, 1, "Enter Entity Type"
+            1, 9, "Enter Entity Type"
     );
 
     private Factory.EntityTypeData entityTypeData;
@@ -99,7 +101,13 @@ public class EntitySpawner extends IC {
     public void trigger() {
         if (getPinSet().getInput(0, this)) {
             if (!entityTypeData.entityTypes.isEmpty()) {
-                Location<World> block = getBackBlock().getRelative(Direction.UP);
+                Location<World> block = getBackBlock();
+                while (block.getBlockType().getProperty(MatterProperty.class).map(MatterProperty::getValue).orElse(MatterProperty.Matter.GAS) == MatterProperty.Matter.SOLID) {
+                    if (block.getY() >= 255) {
+                        break;
+                    }
+                    block = block.getRelative(Direction.UP);
+                }
                 for (EntityArchetype type : entityTypeData.entityTypes) {
                     for (int i = 0; i < amount; i++) {
                         type.apply(block);
