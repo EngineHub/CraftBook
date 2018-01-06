@@ -17,7 +17,6 @@
 package com.sk89q.craftbook.sponge.util.data;
 
 import static org.spongepowered.api.data.DataQuery.of;
-import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
 
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
@@ -29,19 +28,41 @@ import org.spongepowered.api.data.value.mutable.Value;
 
 public class CraftBookKeys {
 
-    public static Key<MutableBoundedValue<Integer>> LAST_POWER = makeSingleKey(new TypeTokens.IntegerTypeToken(),
-            new TypeTokens.MutableBoundedValueIntegerTypeToken(), of("LastPower"), "craftbook:lastpower", "LastPower");
+    public CraftBookKeys() {
+    }
 
-    public static Key<Value<SerializedICData>> IC_DATA = makeSingleKey(new TypeTokens.ICTypeToken(),
-            new TypeTokens.ICValueTypeToken(), of("IC"), "craftbook:ic", "IC");
+    public static Key<MutableBoundedValue<Integer>> LAST_POWER = Key.builder()
+            .type(new TypeTokens.MutableBoundedValueIntegerTypeToken())
+            .id("craftbook:lastpower")
+            .name("LastPower")
+            .query(of("LastPower"))
+            .build();
 
-    public static Key<Value<String>> NAMESPACE = makeSingleKey(TypeToken.of(String.class),
-            new TypeToken<Value<String>>(){}, of("Namespace"), "craftbook:namespace", "Namespace");
+    public static Key<Value<SerializedICData>> IC_DATA = Key.builder()
+            .type(new TypeTokens.ICValueTypeToken())
+            .id("craftbook:ic")
+            .name("IC")
+            .query(of("IC"))
+            .build();
 
-    public static Key<Value<Long>> BLOCK_BAG = makeSingleKey(new TypeTokens.LongTypeToken(),
-            new TypeTokens.LongValueTypeToken(), of("BlockBag"), "craftbook:blockbag", "BlockBag");
+    public static Key<Value<String>> NAMESPACE = Key.builder()
+            .type(new TypeToken<Value<String>>(){})
+            .id("craftbook:namespace")
+            .name("Namespace")
+            .query(of("Namespace"))
+            .build();
 
-    public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = makeSingleKey(new TypeToken<EmbeddedBlockBag>() {},
-            new TypeToken<Value<EmbeddedBlockBag>>() {}, of("EmbeddedBlockBag"), "craftbook:embeddedblockbag",
-            "EmbeddedBlockBag");
+    public static Key<Value<Long>> BLOCK_BAG = Key.builder()
+            .type(new TypeTokens.LongValueTypeToken())
+            .id("craftbook:blockbag")
+            .name("BlockBag")
+            .query(of("BlockBag"))
+            .build();
+
+    public static Key<Value<EmbeddedBlockBag>> EMBEDDED_BLOCK_BAG = Key.builder()
+            .type(new TypeToken<Value<EmbeddedBlockBag>>() {})
+            .id("craftbook:embeddedblockbag")
+            .name("EmbeddedBlockBag")
+            .query(of("EmbeddedBlockBag"))
+            .build();
 }

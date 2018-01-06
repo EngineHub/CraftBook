@@ -25,6 +25,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.prompt.BlockStateDataPrompt;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
@@ -50,8 +51,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class BlockReplacer extends IC {
+
+    private static BlockStateDataPrompt OFF_BLOCK_PROMPT = new BlockStateDataPrompt(
+            1, 1, "Enter Off State"
+    );
+
+    private static BlockStateDataPrompt ON_BLOCK_PROMPT = new BlockStateDataPrompt(
+            1, 1, "Enter On State"
+    );
 
     private Factory.BlockTypeData blockTypeData;
 
@@ -87,32 +98,10 @@ public class BlockReplacer extends IC {
 
         blockTypeData = new BlockReplacer.Factory.BlockTypeData();
 
-        Inventory offBlockInventory = Inventory.builder()
-                .of(InventoryArchetypes.CHEST)
-                .property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of("Enter Off Block")))
-                .property(InventoryDimension.PROPERTY_NAME, InventoryDimension.of(9, 1))
-                .listener(InteractInventoryEvent.Close.class, close -> {
-                    Inventory inventory = close.getTargetInventory();
-                    inventory.peek().ifPresent(itemStack ->
-                            blockTypeData.offBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getType().getBlock().orElse(BlockTypes.AIR).getDefaultState()));
-                })
-                .build(CraftBookPlugin.spongeInst().container);
-
-        Inventory onBlockInventory = Inventory.builder()
-                .of(InventoryArchetypes.CHEST)
-                .property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of("Enter On Block")))
-                .property(InventoryDimension.PROPERTY_NAME, InventoryDimension.of(9, 1))
-                .listener(InteractInventoryEvent.Close.class, close -> {
-                    Inventory inventory = close.getTargetInventory();
-                    inventory.peek().ifPresent(itemStack -> {
-                        blockTypeData.onBlock = itemStack.get(Keys.ITEM_BLOCKSTATE).orElse(itemStack.getType().getBlock().orElse(BlockTypes.AIR).getDefaultState());
-
-                        player.openInventory(offBlockInventory);
-                    });
-                })
-                .build(CraftBookPlugin.spongeInst().container);
-
-        player.openInventory(onBlockInventory);
+        ON_BLOCK_PROMPT.getData(player, blockStates -> {
+            blockTypeData.onBlock = blockStates.get(0);
+            OFF_BLOCK_PROMPT.getData(player, blockStates1 -> blockTypeData.offBlock = blockStates1.get(0));
+        });
     }
 
     @Override
@@ -150,7 +139,6 @@ public class BlockReplacer extends IC {
             Set<Location> traversedBlocks = new HashSet<>();
             traversedBlocks.add(block);
             getPinSet().setOutput(0, replaceBlocks(getPinSet().getInput(0, this), block, traversedBlocks), this);
-
         }
     }
 

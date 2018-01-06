@@ -39,6 +39,9 @@ import org.spongepowered.api.data.DataRegistration;
 public class CraftBookData {
 
     public static void registerData() {
+        // This registers the keys.
+        new CraftBookKeys();
+
         // Generic Data
         DataRegistration<LastPowerData, ImmutableLastPowerData> lastPowerData =
                 DataRegistration.<LastPowerData, ImmutableLastPowerData>builder()

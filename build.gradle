@@ -147,7 +147,7 @@ subprojects {
         include '**/*.java'
         exclude '**/Metrics.java'
 
-        ignoreFailures = true
+        ignoreFailures = false
         newLine = false
     }
 
