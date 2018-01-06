@@ -43,6 +43,7 @@ import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.WorldTimeModulus;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XnorGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.logic.XorGate;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.block.BlockReplacer;
+import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.entity.EntitySpawner;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.ProgrammableFireworksDisplay;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessReceiver;
 import com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous.WirelessTransmitter;
@@ -78,6 +79,8 @@ class ICManager {
 
         registerICType(new ICType<>("MC1110", "TRANSMITTER", "Wireless Transmitter", "Transmits a wireless redstone signal.", new WirelessTransmitter.Factory()));
         registerICType(new ICType<>("MC1111", "RECEIVER", "Wireless Receiver", "Receives a wireless redstone signal.", new WirelessReceiver.Factory()));
+
+        registerICType(new ICType<>("MC1200", "SPAWNER", "Entity Spawner", "Spawns an entity with specified data.", new EntitySpawner.Factory()));
 
         registerICType(new ICType<>("MC1203", "ZEUS BOLT", "Zeus Bolt", "Strikes a location with lightning.", new ZeusBolt.Factory()));
 

@@ -108,7 +108,7 @@ public class BlockReplacer extends IC {
     public void load() {
         super.load();
 
-        if (getLine(3).isEmpty()) {
+        if (!getLine(3).isEmpty()) {
             String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
             delay = Integer.parseInt(data[0]);
             if (data.length > 1)
