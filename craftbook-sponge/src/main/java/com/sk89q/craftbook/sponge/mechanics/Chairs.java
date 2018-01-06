@@ -168,7 +168,6 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         entity.offer(Keys.HAS_GRAVITY, false);
 
         if (faceCorrectDirection.getValue() && location.supports(Keys.DIRECTION)) {
-            System.out.println(location.get(Keys.DIRECTION).orElse(Direction.NONE).getOpposite().asOffset());
             Vector3d euler = LocationUtil.cartesianToEuler(location.get(Keys.DIRECTION).orElse(Direction.NONE).getOpposite().asOffset());
             entity.setRotation(euler);
             player.setRotation(euler);
