@@ -23,16 +23,19 @@ import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
 import com.sk89q.craftbook.sponge.util.SignUtil;
-import com.sk89q.craftbook.sponge.util.prompt.EntityArchetypeDataPrompt;
+import com.sk89q.craftbook.sponge.util.prompt.ItemStackSnapshotDataPrompt;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.property.block.MatterProperty;
-import org.spongepowered.api.entity.EntityArchetype;
-import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
@@ -41,17 +44,15 @@ import org.spongepowered.api.world.World;
 import java.util.List;
 import java.util.Optional;
 
-public class EntitySpawner extends IC {
+public class ItemDispenser extends IC {
 
-    private static EntityArchetypeDataPrompt ENTITY_TYPE_PROMPT = new EntityArchetypeDataPrompt(
-            1, 9, "Enter Entity Type"
+    private static ItemStackSnapshotDataPrompt ITEMS_PROMPT = new ItemStackSnapshotDataPrompt(
+            1, 9, "Enter Items to Dispense"
     );
 
-    private Factory.EntityTypeData entityTypeData;
+    private ItemDispenser.Factory.ItemStackData itemStackData;
 
-    private int amount;
-
-    public EntitySpawner(ICFactory<EntitySpawner> icFactory, Location<World> block) {
+    public ItemDispenser(ICFactory<ItemDispenser> icFactory, Location<World> block) {
         super(icFactory, block);
     }
 
@@ -59,53 +60,27 @@ public class EntitySpawner extends IC {
     public void create(Player player, List<Text> lines) throws InvalidICException {
         super.create(player, lines);
 
-        amount = 1;
-
-        try {
-            amount = Integer.parseInt(SignUtil.getTextRaw(lines.get(3)));
-            if (amount < 1) {
-                throw new InvalidICException("You can't spawn less than 1 entity!");
-            } else if (amount > 100) {
-                throw new InvalidICException("You can't spawn more than 100 entities at a time!");
-            }
-        } catch (Exception e) {
-            throw new InvalidICException("Invalid amount on 4th line!");
-        }
-
-        lines.set(3, Text.of(amount));
-
-        entityTypeData = new Factory.EntityTypeData();
+        itemStackData = new ItemDispenser.Factory.ItemStackData();
 
         String line2 = SignUtil.getTextRaw(lines.get(2));
         if (!line2.isEmpty()) {
-            Sponge.getRegistry().getType(EntityType.class, line2).ifPresent(entityType ->
-                    entityTypeData.entityTypes = Lists.newArrayList(EntityArchetype.of(entityType))
+            Sponge.getRegistry().getType(ItemType.class, line2).ifPresent(itemType ->
+                    itemStackData.itemStacks = Lists.newArrayList(itemType.getTemplate())
             );
         }
 
-        if (entityTypeData.entityTypes.isEmpty()) {
-            ENTITY_TYPE_PROMPT.getData(player, entityArchetypes -> {
-                entityTypeData.entityTypes = entityArchetypes;
-                setLine(2, Text.of(entityTypeData.entityTypes.get(0).getType().getName()));
+        if (itemStackData.itemStacks.isEmpty()) {
+            ITEMS_PROMPT.getData(player, entityArchetypes -> {
+                itemStackData.itemStacks = entityArchetypes;
+                setLine(2, Text.of(itemStackData.itemStacks.get(0).getType().getName()));
             });
-        }
-    }
-
-    @Override
-    public void load() {
-        super.load();
-
-        if (!getLine(3).isEmpty()) {
-            amount = Integer.parseInt(getLine(3));
-        } else {
-            amount = 1;
         }
     }
 
     @Override
     public void trigger() {
         if (getPinSet().getInput(0, this)) {
-            if (!entityTypeData.entityTypes.isEmpty()) {
+            if (!itemStackData.itemStacks.isEmpty()) {
                 Location<World> block = getBackBlock();
                 while (block.getBlockType().getProperty(MatterProperty.class).map(MatterProperty::getValue).orElse(MatterProperty.Matter.GAS) == MatterProperty.Matter.SOLID) {
                     if (block.getY() >= 255) {
@@ -113,31 +88,31 @@ public class EntitySpawner extends IC {
                     }
                     block = block.getRelative(Direction.UP);
                 }
-                for (EntityArchetype type : entityTypeData.entityTypes) {
-                    for (int i = 0; i < amount; i++) {
-                        type.apply(block);
-                    }
+                for (ItemStackSnapshot stack : itemStackData.itemStacks) {
+                    Item item = (Item) block.getExtent().createEntity(EntityTypes.ITEM, block.getPosition());
+                    item.offer(Keys.REPRESENTED_ITEM, stack);
+                    block.getExtent().spawnEntity(item);
                 }
             }
         }
     }
 
-    public static class Factory extends SerializedICFactory<EntitySpawner, Factory.EntityTypeData> {
+    public static class Factory extends SerializedICFactory<ItemDispenser, ItemDispenser.Factory.ItemStackData> {
 
         public Factory() {
-            super(EntityTypeData.class, 1);
+            super(ItemDispenser.Factory.ItemStackData.class, 1);
         }
 
         @Override
-        public EntitySpawner createInstance(Location<World> location) {
-            return new EntitySpawner(this, location);
+        public ItemDispenser createInstance(Location<World> location) {
+            return new ItemDispenser(this, location);
         }
 
         @Override
         public String[] getLineHelp() {
             return new String[] {
-                    "entity type, or blank to set later",
-                    "amount"
+                    "item type, or blank to set later",
+                    ""
             };
         }
 
@@ -154,27 +129,27 @@ public class EntitySpawner extends IC {
         }
 
         @Override
-        public void setData(EntitySpawner ic, EntityTypeData data) {
-            ic.entityTypeData = data;
+        public void setData(ItemDispenser ic, ItemDispenser.Factory.ItemStackData data) {
+            ic.itemStackData = data;
         }
 
         @Override
-        public EntityTypeData getData(EntitySpawner ic) {
-            return ic.entityTypeData;
+        public ItemDispenser.Factory.ItemStackData getData(ItemDispenser ic) {
+            return ic.itemStackData;
         }
 
         @Override
-        protected Optional<EntityTypeData> buildContent(DataView container) throws InvalidDataException {
-            EntityTypeData entityTypeData = new EntityTypeData();
+        protected Optional<ItemDispenser.Factory.ItemStackData> buildContent(DataView container) throws InvalidDataException {
+            ItemDispenser.Factory.ItemStackData itemStackData = new ItemDispenser.Factory.ItemStackData();
 
-            entityTypeData.entityTypes = container.getSerializableList(DataQuery.of("EntityTypes"), EntityArchetype.class).orElse(Lists.newArrayList());
+            itemStackData.itemStacks = container.getSerializableList(DataQuery.of("ItemStacks"), ItemStackSnapshot.class).orElse(Lists.newArrayList());
 
-            return Optional.of(entityTypeData);
+            return Optional.of(itemStackData);
         }
 
-        public static class EntityTypeData extends SerializedICData {
+        public static class ItemStackData extends SerializedICData {
 
-            public List<EntityArchetype> entityTypes = Lists.newArrayList();
+            public List<ItemStackSnapshot> itemStacks = Lists.newArrayList();
 
             @Override
             public int getContentVersion() {
@@ -184,7 +159,7 @@ public class EntitySpawner extends IC {
             @Override
             public DataContainer toContainer() {
                 return super.toContainer()
-                        .set(DataQuery.of("EntityTypes"), this.entityTypes);
+                        .set(DataQuery.of("ItemStacks"), this.itemStacks);
             }
         }
     }
