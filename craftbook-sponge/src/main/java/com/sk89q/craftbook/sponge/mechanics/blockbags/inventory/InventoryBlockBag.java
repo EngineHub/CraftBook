@@ -20,6 +20,7 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.InventoryTransactionResult;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public abstract class InventoryBlockBag implements BlockBag {
     public List<ItemStack> remove(List<ItemStack> itemStacks) {
         List<ItemStack> output = new ArrayList<>();
         for(ItemStack stack : itemStacks) {
-            Inventory view = inventory.query(stack);
+            Inventory view = inventory.query(QueryOperationTypes.ITEM_STACK_EXACT.of(stack));
             //view.poll(stack.getQuantity());
             //InventoryTransactionResult result = ;
             //if(result.getRejectedItems().size() > 0) {

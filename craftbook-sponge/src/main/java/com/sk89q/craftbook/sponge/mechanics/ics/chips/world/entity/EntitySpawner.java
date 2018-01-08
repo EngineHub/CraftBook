@@ -22,7 +22,6 @@ import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
 import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
-import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.prompt.EntityArchetypeDataPrompt;
 import org.spongepowered.api.Sponge;

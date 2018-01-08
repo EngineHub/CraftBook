@@ -30,6 +30,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -80,7 +81,9 @@ public class PlcIC<Lang extends PlcLanguage> extends IC {
         Chest c = chestBlock.getTileEntity().map(te -> (Chest) te).get();
         Inventory i = c.getDoubleChestInventory().orElse(c.getInventory());
         ItemStack book = null;
-        for (Slot slot : i.query(ItemTypes.WRITABLE_BOOK, ItemTypes.WRITTEN_BOOK).<Slot>slots()) {
+        for (Slot slot : i.query(
+                QueryOperationTypes.ITEM_TYPE.of(ItemTypes.WRITABLE_BOOK),
+                QueryOperationTypes.ITEM_TYPE.of(ItemTypes.WRITTEN_BOOK)).<Slot>slots()) {
             ItemStack item = slot.peek().orElse(null);
             if (item != null && item.getQuantity() > 0 ) {
                 if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");

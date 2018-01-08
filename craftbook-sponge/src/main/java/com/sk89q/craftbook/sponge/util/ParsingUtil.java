@@ -65,12 +65,17 @@ public class ParsingUtil {
         if(offsets.getFloorX() == 0 && offsets.getFloorY() == 0 && offsets.getFloorZ() == 0)
             return target;
 
-        if (relative == LocationCheckType.RELATIVE)
-            target = LocationUtil.getRelativeOffset(sign.getLocation(), offsets.getFloorX(), offsets.getFloorY(), offsets.getFloorZ());
-        else if (relative == LocationCheckType.OFFSET)
-            target = LocationUtil.getOffset(target, offsets.getFloorX(), offsets.getFloorY(), offsets.getFloorZ());
-        else if (relative == LocationCheckType.ABSOLUTE)
-            target = target.getExtent().getLocation(offsets.getX(), offsets.getY(), offsets.getZ());
+        switch (relative) {
+            case RELATIVE:
+                target = LocationUtil.getRelativeOffset(sign.getLocation(), offsets.getFloorX(), offsets.getFloorY(), offsets.getFloorZ());
+                break;
+            case OFFSET:
+                target = LocationUtil.getOffset(target, offsets.getFloorX(), offsets.getFloorY(), offsets.getFloorZ());
+                break;
+            case ABSOLUTE:
+                target = target.getExtent().getLocation(offsets.getX(), offsets.getY(), offsets.getZ());
+                break;
+        }
         return target;
     }
 

@@ -96,13 +96,10 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
         Location<World> inventorySource = location.getRelative(direction);
 
         //Let's try and find a source of items!
-        Optional<Inventory> inventory = LocationUtil.getInventoryForLocation(inventorySource);
-
-        if(inventory.isPresent()) {
-            while (inventory.get().peek(1).isPresent()) {
-                Optional<ItemStack> itemStackOptional = inventory.get().poll(1);
-                if (itemStackOptional.isPresent()) {
-                    ItemStack itemStack = itemStackOptional.get();
+        LocationUtil.getInventoryForLocation(inventorySource).ifPresent(inv -> {
+            while (inv.peek(1).isPresent()) {
+                Optional<ItemStack> itemStackOptional = inv.poll(1);
+                itemStackOptional.ifPresent(itemStack -> {
                     Set<Location<World>> traversed = new HashSet<>();
 
                     try {
@@ -113,18 +110,18 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
                     }
 
                     if (itemStack.getQuantity() > 0) {
-                        for (ItemStackSnapshot snapshot : inventory.get().offer(itemStack).getRejectedItems()) {
+                        for (ItemStackSnapshot snapshot : inv.offer(itemStack).getRejectedItems()) {
                             Item item = (Item) location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
                             item.offer(Keys.REPRESENTED_ITEM, snapshot);
                             location.getExtent().spawnEntity(item);
                         }
                     }
-                }
+                });
                 if (stackPerPull.getValue()) {
                     break;
                 }
             }
-        }
+        });
     }
 
     private ItemStack doPipeIteration(Location<World> location, ItemStack itemStack, Direction fromDirection, Set<Location<World>> traversed) {

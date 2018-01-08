@@ -49,6 +49,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.recipe.smelting.SmeltingResult;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
@@ -87,11 +88,6 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
         cookFoodOnly.load(config);
 
         super.onInitialize();
-    }
-
-    @Override
-    public void onDisable() {
-        super.onDisable();
     }
 
     @Override
@@ -220,7 +216,7 @@ public class CookingPot extends SpongeSignMechanic implements SelfTriggeringMech
                                         continue;
                                     }
                                     if (inventory.offer(result.getResult().createStack()).getRejectedItems().isEmpty()) {
-                                        inventory.queryAny(item).poll(1);
+                                        inventory.query(QueryOperationTypes.ITEM_STACK_IGNORE_QUANTITY.of(item)).poll(1);
                                         lastTick -= 50;
                                         break;
                                     }

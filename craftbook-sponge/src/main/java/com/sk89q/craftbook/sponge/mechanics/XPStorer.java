@@ -53,6 +53,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -173,7 +174,8 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
             int outputBottles = (int) Math.min(bottleCount.get(), Math.floor(((float) xp) / xpPerBottle.getValue()));
 
             if(requireBottle.getValue()) {
-                outputBottles = player.getInventory().query(ItemTypes.GLASS_BOTTLE).poll(outputBottles).orElse(ItemStack.of(ItemTypes.GLASS_BOTTLE, 0)).getQuantity();
+                outputBottles = player.getInventory().query(QueryOperationTypes.ITEM_TYPE.of(ItemTypes.GLASS_BOTTLE))
+                        .poll(outputBottles).orElse(ItemStack.of(ItemTypes.GLASS_BOTTLE, 0)).getQuantity();
             }
 
             // Reset their xp
@@ -204,7 +206,7 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
                         int bottleCount = Integer.MAX_VALUE;
 
                         if (requireBottle.getValue()) {
-                            bottleCount = inventory.query(ItemTypes.GLASS_BOTTLE).totalItems();
+                            bottleCount = inventory.query(QueryOperationTypes.ITEM_TYPE.of(ItemTypes.GLASS_BOTTLE)).totalItems();
                             if (bottleCount == 0) {
                                 continue;
                             }
@@ -223,7 +225,8 @@ public class XPStorer extends SpongeSignMechanic implements DocumentationProvide
                         bottleCount = (int) Math.min(bottleCount, Math.floor(((float) xp) / xpPerBottle.getValue()));
 
                         if(requireBottle.getValue()) {
-                            bottleCount = inventory.query(ItemTypes.GLASS_BOTTLE).poll(bottleCount).orElse(ItemStack.of(ItemTypes.GLASS_BOTTLE, 0)).getQuantity();
+                            bottleCount = inventory.query(QueryOperationTypes.ITEM_TYPE.of(ItemTypes.GLASS_BOTTLE))
+                                    .poll(bottleCount).orElse(ItemStack.of(ItemTypes.GLASS_BOTTLE, 0)).getQuantity();
                         }
 
                         int remainingXp = convertXp(location, xp, bottleCount);
