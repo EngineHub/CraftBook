@@ -38,7 +38,6 @@ import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -55,6 +54,9 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
         recipes.add(new Cannon());
         recipes.add(new Fan());
         recipes.add(new Vacuum());
+        recipes.add(new FireArrows());
+        recipes.add(new SnowShooter());
+        recipes.add(new XPShooter());
     }
 
     @Override
@@ -108,8 +110,9 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
     public boolean handleDispenserAction(Dispenser dispenser, @Nullable Vector3d velocity) {
         for (DispenserRecipe recipe : recipes) {
             ItemStack[] items = StreamSupport.stream(dispenser.getInventory().slots().spliterator(), false)
-                    .map(Inventory::peek).filter(Optional::isPresent)
-                    .map(Optional::get).toArray(ItemStack[]::new);
+                    .map(Inventory::peek)
+                    .map(opt -> opt.orElse(ItemStack.empty()))
+                    .toArray(ItemStack[]::new);
             if (recipe.doesPass(items)) {
                 if (recipe.doAction(dispenser, items, velocity)) {
                     dispenser.getInventory().slots().forEach(inv -> inv.poll(1)); // Take one of every stack.

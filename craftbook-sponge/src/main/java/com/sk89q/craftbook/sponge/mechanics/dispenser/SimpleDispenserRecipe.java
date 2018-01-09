@@ -16,8 +16,11 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackComparators;
+
+import java.util.Arrays;
 
 public abstract class SimpleDispenserRecipe implements DispenserRecipe {
 
@@ -30,7 +33,8 @@ public abstract class SimpleDispenserRecipe implements DispenserRecipe {
     @Override
     public boolean doesPass(ItemStack[] checkRecipe) {
         for (int i = 0; i < checkRecipe.length; i++) {
-            if (ItemStackComparators.TYPE.compare(recipe[i], checkRecipe[i]) != 0) {
+            if (ItemStackComparators.TYPE.compare(recipe[i], checkRecipe[i]) != 0
+                    && !(checkRecipe[i].isEmpty() && recipe[i].getType() == ItemTypes.AIR)) {
                 return false;
             }
         }
