@@ -17,10 +17,14 @@
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
+import com.me4502.modularframework.module.guice.ModuleConfiguration;
+import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
+import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
 import org.spongepowered.api.event.Listener;
@@ -45,18 +49,48 @@ import javax.annotation.Nullable;
 @Module(id = "dispenserrecipes", name = "DispenserRecipes", onEnable = "onInitialize", onDisable = "onDisable")
 public class DispenserRecipes extends SpongeBlockMechanic implements DocumentationProvider {
 
+    @Inject
+    @ModuleConfiguration
+    public ConfigurationNode config;
+
     private List<DispenserRecipe> recipes = new ArrayList<>();
+
+    private ConfigValue<Boolean> cannon = new ConfigValue<>("cannon", "Enables the 'Cannon' dispenser recipe.", true);
+    private ConfigValue<Boolean> fan = new ConfigValue<>("fan", "Enables the 'Fan' dispenser recipe.", true);
+    private ConfigValue<Boolean> vacuum = new ConfigValue<>("vacuum", "Enables the 'Vacuum' dispenser recipe.", true);
+    private ConfigValue<Boolean> fireArrows = new ConfigValue<>("fire-arrows", "Enables the 'Fire Arrows' dispenser recipe.", true);
+    private ConfigValue<Boolean> snowShooter = new ConfigValue<>("snow-shooter", "Enables the 'Snow Shooter' dispenser recipe.", true);
+    private ConfigValue<Boolean> xpShooter = new ConfigValue<>("xp-shooter", "Enables the 'XP Shooter' dispenser recipe.", true);
 
     @Override
     public void onInitialize() throws CraftBookException {
         super.onInitialize();
 
-        recipes.add(new Cannon());
-        recipes.add(new Fan());
-        recipes.add(new Vacuum());
-        recipes.add(new FireArrows());
-        recipes.add(new SnowShooter());
-        recipes.add(new XPShooter());
+        cannon.load(config);
+        fan.load(config);
+        vacuum.load(config);
+        fireArrows.load(config);
+        snowShooter.load(config);
+        xpShooter.load(config);
+
+        if (cannon.getValue()) {
+            recipes.add(new Cannon());
+        }
+        if (fan.getValue()) {
+            recipes.add(new Fan());
+        }
+        if (vacuum.getValue()) {
+            recipes.add(new Vacuum());
+        }
+        if (fireArrows.getValue()) {
+            recipes.add(new FireArrows());
+        }
+        if (snowShooter.getValue()) {
+            recipes.add(new SnowShooter());
+        }
+        if (xpShooter.getValue()) {
+            recipes.add(new XPShooter());
+        }
     }
 
     @Override
@@ -124,5 +158,17 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
         }
 
         return false;
+    }
+
+    @Override
+    public ConfigValue<?>[] getConfigurationNodes() {
+        return new ConfigValue[] {
+                cannon,
+                fan,
+                vacuum,
+                fireArrows,
+                snowShooter,
+                xpShooter
+        };
     }
 }
