@@ -224,6 +224,7 @@ public class InventoryUtil {
             case FURNACE:
             case BURNING_FURNACE:
             case BREWING_STAND:
+            case HOPPER:
             case WHITE_SHULKER_BOX:
             case ORANGE_SHULKER_BOX:
             case MAGENTA_SHULKER_BOX:
