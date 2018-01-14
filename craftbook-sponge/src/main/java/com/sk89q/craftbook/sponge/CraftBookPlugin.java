@@ -60,7 +60,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-@Plugin(id = "craftbook", name = "CraftBook", version = "4.0",
+@Plugin(id = "craftbook", name = "CraftBook", version = "4.0-SNAPSHOT",
         description = "CraftBook adds a number of new mechanics to Minecraft with no client mods required.")
 public class CraftBookPlugin extends CraftBookAPI {
 
