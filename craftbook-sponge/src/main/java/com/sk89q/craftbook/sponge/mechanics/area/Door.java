@@ -27,7 +27,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
@@ -229,10 +229,11 @@ public class Door extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public List<BlockFilter> getDefaultBlocks() {
-        List<BlockFilter> states = Lists.newArrayList();
-        states.add(new BlockFilter("PLANKS"));
-        states.add(new BlockFilter("COBBLESTONE"));
+    public List<SpongeBlockFilter> getDefaultBlocks() {
+        List<SpongeBlockFilter> states = Lists.newArrayList();
+        states.add(new SpongeBlockFilter(BlockTypes.PLANKS));
+        states.add(new SpongeBlockFilter(BlockTypes.STONEBRICK));
+        states.add(new SpongeBlockFilter(BlockTypes.COBBLESTONE));
         return states;
     }
 

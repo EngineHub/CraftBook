@@ -28,11 +28,12 @@ import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.event.Listener;
@@ -52,7 +53,7 @@ public class Footprints extends SpongeMechanic implements DocumentationProvider 
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
+    private ConfigValue<List<SpongeBlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can have footprints on.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
 
     private ParticleEffect footprintParticle;
 
@@ -85,12 +86,15 @@ public class Footprints extends SpongeMechanic implements DocumentationProvider 
         }
     }
 
-    private static List<BlockFilter> getDefaultBlocks() {
-        List<BlockFilter> states = Lists.newArrayList();
-        states.add(new BlockFilter("SAND"));
-        states.add(new BlockFilter("DIRT"));
-        states.add(new BlockFilter("GRAVEL"));
-        states.add(new BlockFilter("SNOW"));
+    private static List<SpongeBlockFilter> getDefaultBlocks() {
+        List<SpongeBlockFilter> states = Lists.newArrayList();
+        states.add(new SpongeBlockFilter(BlockTypes.SAND));
+        states.add(new SpongeBlockFilter(BlockTypes.DIRT));
+        states.add(new SpongeBlockFilter(BlockTypes.GRAVEL));
+        states.add(new SpongeBlockFilter(BlockTypes.SNOW));
+        states.add(new SpongeBlockFilter(BlockTypes.SNOW_LAYER));
+        states.add(new SpongeBlockFilter(BlockTypes.GRASS));
+        states.add(new SpongeBlockFilter(BlockTypes.GRASS_PATH));
         return states;
     }
 

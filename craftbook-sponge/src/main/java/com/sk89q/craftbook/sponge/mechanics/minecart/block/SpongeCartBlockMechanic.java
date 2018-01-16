@@ -19,7 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.minecart.block;
 import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.core.util.TernaryState;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.event.Listener;
@@ -84,7 +84,7 @@ public abstract class SpongeCartBlockMechanic extends SpongeSignMechanic {
 
     // TODO if needed. public void enter(Minecart minecart, Player player, CartMechanismBlocks blocks) {}
 
-    public abstract BlockFilter getBlockFilter();
+    public abstract SpongeBlockFilter getBlockFilter();
 
     public boolean requiresSign() {
         return false;

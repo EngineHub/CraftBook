@@ -27,13 +27,14 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.treelopper.command.ToggleCommand;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.ItemUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -64,7 +65,7 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that are logs.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
+    private ConfigValue<List<SpongeBlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that are logs.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     private ConfigValue<List<ItemStack>> allowedItems = new ConfigValue<>("allowed-items", "The list of items that can be used with this mechanic.", getDefaultItems(), new TypeTokens.ItemStackListTypeToken());
     public ConfigValue<List<UUID>> disabledPlayers = new ConfigValue<>("disabled-users", "A list of users that have disabled the mechanic.", new ArrayList<>(), new TypeTokens.UUIDListTypeToken());
 
@@ -141,10 +142,10 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
         }
     }
 
-    private static List<BlockFilter> getDefaultBlocks() {
-        List<BlockFilter> states = Lists.newArrayList();
-        states.add(new BlockFilter("LOG"));
-        states.add(new BlockFilter("LOG2"));
+    private static List<SpongeBlockFilter> getDefaultBlocks() {
+        List<SpongeBlockFilter> states = Lists.newArrayList();
+        states.add(new SpongeBlockFilter(BlockTypes.LOG));
+        states.add(new SpongeBlockFilter(BlockTypes.LOG2));
         return states;
     }
 

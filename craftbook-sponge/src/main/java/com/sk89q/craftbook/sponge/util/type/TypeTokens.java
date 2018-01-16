@@ -18,7 +18,7 @@ package com.sk89q.craftbook.sponge.util.type;
 
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -40,7 +40,7 @@ public class TypeTokens {
 
     public static class LongValueTypeToken extends TypeToken<Value<Long>> {}
 
-    public static class BlockFilterListTypeToken extends TypeToken<List<BlockFilter>> {}
+    public static class BlockFilterListTypeToken extends TypeToken<List<SpongeBlockFilter>> {}
 
     public static class ItemStackListTypeToken extends TypeToken<List<ItemStack>> {}
 

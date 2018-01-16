@@ -28,7 +28,7 @@ import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.MultiBlockBag;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
@@ -291,7 +291,7 @@ public class Gate extends SimpleArea implements DocumentationProvider {
 
         Location<World> topBlock;
 
-        GateColumn(Location<World> topBlock, ConfigValue<List<BlockFilter>> allowedBlocks) {
+        GateColumn(Location<World> topBlock, ConfigValue<List<SpongeBlockFilter>> allowedBlocks) {
             while (BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), topBlock.getBlock())) {
                 topBlock = topBlock.getRelative(Direction.UP);
             }
@@ -323,15 +323,15 @@ public class Gate extends SimpleArea implements DocumentationProvider {
     }
 
     @Override
-    public List<BlockFilter> getDefaultBlocks() {
-        List<BlockFilter> states = Lists.newArrayList();
+    public List<SpongeBlockFilter> getDefaultBlocks() {
+        List<SpongeBlockFilter> states = Lists.newArrayList();
         states.addAll(Sponge.getRegistry().getAllOf(BlockType.class).stream()
                 .filter(blockType -> blockType.getName().toLowerCase().contains("fence"))
-                .map(BlockFilter::new)
+                .map(SpongeBlockFilter::new)
                 .collect(Collectors.toList()));
-        states.add(new BlockFilter(BlockTypes.GLASS_PANE));
-        states.add(new BlockFilter(BlockTypes.STAINED_GLASS_PANE));
-        states.add(new BlockFilter(BlockTypes.IRON_BARS));
+        states.add(new SpongeBlockFilter(BlockTypes.GLASS_PANE));
+        states.add(new SpongeBlockFilter(BlockTypes.STAINED_GLASS_PANE));
+        states.add(new SpongeBlockFilter(BlockTypes.IRON_BARS));
         return states;
     }
 }

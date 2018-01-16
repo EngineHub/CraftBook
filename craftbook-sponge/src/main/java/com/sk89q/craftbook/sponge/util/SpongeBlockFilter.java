@@ -16,6 +16,7 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.sk89q.craftbook.core.util.BlockFilter;
 import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.Sponge;
@@ -28,9 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class BlockFilter {
-
-    private String rule;
+public final class SpongeBlockFilter extends BlockFilter<BlockState> {
 
     private List<BlockState> cache;
 
@@ -39,15 +38,19 @@ public final class BlockFilter {
      *
      * @param blockType The {@link BlockType}
      */
-    public BlockFilter(BlockType blockType) {
-        this.rule = blockType.getName();
+    public SpongeBlockFilter(BlockType blockType) {
+        super(blockType.getName());
     }
 
-    public BlockFilter(String rule) {
-        this.rule = rule;
+    public SpongeBlockFilter(BlockState blockState) {
+        super(blockState.toString());
     }
 
-    public List<BlockState> getApplicableBlockStates() {
+    public SpongeBlockFilter(String rule) {
+        super(rule);
+    }
+
+    public List<BlockState> getApplicableBlocks() {
         if(cache == null) {
             //Enumerate the cache.
             cache = new ArrayList<>();
@@ -56,22 +59,22 @@ public final class BlockFilter {
 
             Map<String, String> traitSpecifics = new HashMap<>();
 
-            if(rule.contains("[") && rule.endsWith("]")) {
-                String subRule = rule.substring(rule.indexOf('['), rule.length()-2);
+            if(getRule().contains("[") && getRule().endsWith("]")) {
+                String subRule = getRule().substring(getRule().indexOf('['), getRule().length()-2);
                 String[] parts = RegexUtil.COMMA_PATTERN.split(subRule);
 
-                blockType = Sponge.getGame().getRegistry().getType(BlockType.class, rule.substring(0, rule.indexOf('['))).orElse(null);
+                blockType = Sponge.getGame().getRegistry().getType(BlockType.class, getRule().substring(0, getRule().indexOf('['))).orElse(null);
 
                 for(String part : parts) {
                     String[] keyValue = RegexUtil.EQUALS_PATTERN.split(part);
                     traitSpecifics.put(keyValue[0].toLowerCase(), keyValue[1]);
                 }
             } else {
-                blockType = Sponge.getGame().getRegistry().getType(BlockType.class, rule).orElse(null);
+                blockType = Sponge.getGame().getRegistry().getType(BlockType.class, getRule()).orElse(null);
             }
 
             if(blockType == null) {
-                CraftBookPlugin.spongeInst().getLogger().warn("Missing type for filter rule: " + rule);
+                CraftBookPlugin.spongeInst().getLogger().warn("Missing type for filter rule: " + getRule());
                 return cache;
             }
 
@@ -100,7 +103,7 @@ public final class BlockFilter {
                     if(state != null) {
                         cache.add(state);
                     } else {
-                        CraftBookPlugin.spongeInst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + rule + "' is correct?");
+                        CraftBookPlugin.spongeInst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + getRule() + "' is correct?");
                     }
 
                     counter[0] += 1;
@@ -111,14 +114,5 @@ public final class BlockFilter {
         }
 
         return cache;
-    }
-
-    public String getRule() {
-        return this.rule;
-    }
-
-    @Override
-    public String toString() {
-        return this.rule;
     }
 }

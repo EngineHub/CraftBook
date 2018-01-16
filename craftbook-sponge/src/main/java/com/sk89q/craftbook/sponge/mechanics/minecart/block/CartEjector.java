@@ -25,10 +25,11 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.TernaryState;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.service.permission.PermissionDescription;
@@ -46,7 +47,8 @@ public class CartEjector extends SpongeCartBlockMechanic implements Documentatio
 
     private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.cartejector", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    private ConfigValue<BlockFilter> allowedBlocks = new ConfigValue<>("material", "The block that this mechanic requires.", new BlockFilter("IRON_BLOCK"), TypeToken.of(BlockFilter.class));
+    private ConfigValue<SpongeBlockFilter> allowedBlocks = new ConfigValue<>("material", "The block that this mechanic requires.",
+            new SpongeBlockFilter(BlockTypes.IRON_BLOCK), TypeToken.of(SpongeBlockFilter.class));
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -92,7 +94,7 @@ public class CartEjector extends SpongeCartBlockMechanic implements Documentatio
     }
 
     @Override
-    public BlockFilter getBlockFilter() {
+    public SpongeBlockFilter getBlockFilter() {
         return allowedBlocks.getValue();
     }
 

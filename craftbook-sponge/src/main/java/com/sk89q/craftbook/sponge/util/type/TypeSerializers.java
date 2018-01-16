@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import com.sk89q.craftbook.core.util.TernaryState;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -39,7 +39,7 @@ public class TypeSerializers {
     }
 
     public static void register(TypeSerializerCollection serializers) {
-        serializers.registerType(TypeToken.of(BlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
+        serializers.registerType(TypeToken.of(SpongeBlockFilter.class), new TypeSerializers.BlockFilterTypeSerializer());
         //options.getSerializers().registerType(TypeToken.of(BlockState.class), new BlockStateTypeSerializer());
         serializers.registerType(new TypeToken<Set<?>>(){}, new SetTypeSerializer());
         //options.getSerializers().registerType(TypeToken.of(ItemStack.class), new ItemStackTypeSerializer());
@@ -70,14 +70,14 @@ public class TypeSerializers {
         }
     }
 
-    private static class BlockFilterTypeSerializer implements TypeSerializer<BlockFilter> {
+    private static class BlockFilterTypeSerializer implements TypeSerializer<SpongeBlockFilter> {
         @Override
-        public BlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) {
-            return new BlockFilter(value.getString());
+        public SpongeBlockFilter deserialize(TypeToken<?> type, ConfigurationNode value) {
+            return new SpongeBlockFilter(value.getString());
         }
 
         @Override
-        public void serialize(TypeToken<?> type, BlockFilter obj, ConfigurationNode value) {
+        public void serialize(TypeToken<?> type, SpongeBlockFilter obj, ConfigurationNode value) {
             value.setValue(obj.getRule());
         }
     }

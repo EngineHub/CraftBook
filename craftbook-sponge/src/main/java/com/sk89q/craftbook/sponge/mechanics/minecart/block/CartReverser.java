@@ -26,10 +26,11 @@ import com.sk89q.craftbook.core.util.CraftBookException;
 import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.TernaryState;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.util.Direction;
@@ -43,7 +44,8 @@ public class CartReverser extends SpongeCartBlockMechanic implements Documentati
 
     private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.cartreverser", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    private ConfigValue<BlockFilter> allowedBlocks = new ConfigValue<>("material", "The block that this mechanic requires.", new BlockFilter("WOOL"), TypeToken.of(BlockFilter.class));
+    private ConfigValue<SpongeBlockFilter> allowedBlocks = new ConfigValue<>("material", "The block that this mechanic requires.",
+            new SpongeBlockFilter(BlockTypes.WOOL), TypeToken.of(SpongeBlockFilter.class));
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -109,7 +111,7 @@ public class CartReverser extends SpongeCartBlockMechanic implements Documentati
     }
 
     @Override
-    public BlockFilter getBlockFilter() {
+    public SpongeBlockFilter getBlockFilter() {
         return allowedBlocks.getValue();
     }
 

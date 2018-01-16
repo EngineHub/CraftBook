@@ -27,7 +27,7 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
@@ -65,7 +65,7 @@ public abstract class SimpleArea extends SpongeSignMechanic {
     SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase(), "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook." + getName().toLowerCase() + ".use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
+    ConfigValue<List<SpongeBlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     ConfigValue<Boolean> allowRedstone = new ConfigValue<>("allow-redstone", "Whether to allow redstone to be used to trigger this mechanic or not", true);
 
     TranslatableText missingOtherEnd = TranslatableText.of(new ResourceBundleTranslation("area.missing-other-end", TranslationsManager.getResourceBundleFunction()));
@@ -185,5 +185,5 @@ public abstract class SimpleArea extends SpongeSignMechanic {
      */
     public abstract boolean triggerMechanic(Location<World> block, Sign sign, @Nullable Humanoid human, @Nullable Boolean forceState);
 
-    public abstract List<BlockFilter> getDefaultBlocks();
+    public abstract List<SpongeBlockFilter> getDefaultBlocks();
 }

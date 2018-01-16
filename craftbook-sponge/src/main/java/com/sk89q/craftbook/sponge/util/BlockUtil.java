@@ -242,26 +242,26 @@ public final class BlockUtil {
     }
 
     /**
-     * Gets whether or not the specified {@link BlockState} passes the {@link BlockFilter}.
+     * Gets whether or not the specified {@link BlockState} passes the {@link SpongeBlockFilter}.
      *
      * @param filter The filter
      * @param state The state to test
      * @return If it passes
      */
-    public static boolean doesStatePassFilter(BlockFilter filter, BlockState state) {
-        return filter.getApplicableBlockStates().stream()
+    public static boolean doesStatePassFilter(SpongeBlockFilter filter, BlockState state) {
+        return filter.getApplicableBlocks().stream()
                 .anyMatch(blockState -> blockState.equals(state));
     }
 
     /**
-     * Gets whether or not the specified {@link BlockState} passes the {@link BlockFilter}s.
+     * Gets whether or not the specified {@link BlockState} passes the {@link SpongeBlockFilter}s.
      *
      * @param filters The filters
      * @param state The state to test
      * @return If it passes
      */
-    public static boolean doesStatePassFilters(Collection<BlockFilter> filters, BlockState state) {
-        for(BlockFilter filter : filters)
+    public static boolean doesStatePassFilters(Collection<SpongeBlockFilter> filters, BlockState state) {
+        for(SpongeBlockFilter filter : filters)
             if(doesStatePassFilter(filter, state))
                 return true;
         return false;

@@ -30,7 +30,7 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
@@ -73,7 +73,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     @ModuleConfiguration
     public ConfigurationNode config;
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
+    private ConfigValue<List<SpongeBlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "A list of blocks that can be used.", getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     private ConfigValue<Boolean> exitAtEntry = new ConfigValue<>("exit-at-last-position", "Moves player's to their entry position when they exit the chair.", false);
     private ConfigValue<Boolean> requireSigns = new ConfigValue<>("require-sign", "Require signs on the chairs.", false);
     private ConfigValue<Integer> maxSignDistance = new ConfigValue<>("max-sign-distance", "The distance the sign can be from the clicked chair.", 3);
@@ -275,11 +275,11 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
         }
     }
 
-    private static List<BlockFilter> getDefaultBlocks() {
-        List<BlockFilter> states = Lists.newArrayList();
+    private static List<SpongeBlockFilter> getDefaultBlocks() {
+        List<SpongeBlockFilter> states = Lists.newArrayList();
         states.addAll(Sponge.getRegistry().getAllOf(BlockType.class).stream()
                 .filter(blockType -> blockType.getName().toLowerCase().contains("stairs"))
-                .map(blockType -> new BlockFilter(blockType.getName())).collect(Collectors.toList()));
+                .map(blockType -> new SpongeBlockFilter(blockType.getName())).collect(Collectors.toList()));
         return states;
     }
 

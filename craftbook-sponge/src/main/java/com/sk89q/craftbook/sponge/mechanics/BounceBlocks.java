@@ -30,15 +30,17 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import com.sk89q.craftbook.sponge.util.BlockFilter;
+import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.StringUtils;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -62,11 +64,13 @@ public class BounceBlocks extends SpongeSignMechanic implements DocumentationPro
     private SpongePermissionNode createPermissions = new SpongePermissionNode("craftbook.bounceblocks", "Allows the user to create the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
     private SpongePermissionNode usePermissions = new SpongePermissionNode("craftbook.bounceblocks.use", "Allows the user to use the " + getName() + " mechanic.", PermissionDescription.ROLE_USER);
 
-    private ConfigValue<List<BlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "The list of blocks that can be normal bounce blocks.",
+    private ConfigValue<List<SpongeBlockFilter>> allowedBlocks = new ConfigValue<>("allowed-blocks", "The list of blocks that can be normal bounce blocks.",
             getDefaultBlocks(), new TypeTokens.BlockFilterListTypeToken());
     private ConfigValue<Double> sensitivity = new ConfigValue<>("sensitivity", "Sensitivity of jump detection.", 0.1d, TypeToken.of(Double.class));
-    private ConfigValue<Map<BlockFilter, String>> autoBlocks = new ConfigValue<>("auto-blocks", "Bounce blocks that are predefined.",
-            Maps.newHashMap(ImmutableMap.of(new BlockFilter("hardened_clay"), "2,1,2")), new TypeToken<Map<BlockFilter, String>>() {});
+    private ConfigValue<Map<SpongeBlockFilter, String>> autoBlocks = new ConfigValue<>("auto-blocks", "Bounce blocks that are predefined.",
+            Maps.newHashMap(ImmutableMap.of(
+                    new SpongeBlockFilter(BlockTypes.STAINED_HARDENED_CLAY.getDefaultState().with(Keys.DYE_COLOR, DyeColors.ORANGE).get()), "2,1,2")
+            ), new TypeToken<Map<SpongeBlockFilter, String>>() {});
 
     @Override
     public void onInitialize() throws CraftBookException {
@@ -97,8 +101,8 @@ public class BounceBlocks extends SpongeSignMechanic implements DocumentationPro
                     }
                 }
             } else {
-                for (Map.Entry<BlockFilter, String> blockFilterStringEntry : autoBlocks.getValue().entrySet()) {
-                    if (blockFilterStringEntry.getKey().getApplicableBlockStates().contains(block.getBlock())) {
+                for (Map.Entry<SpongeBlockFilter, String> blockFilterStringEntry : autoBlocks.getValue().entrySet()) {
+                    if (blockFilterStringEntry.getKey().getApplicableBlocks().contains(block.getBlock())) {
                         doAction(event.getTargetEntity(), blockFilterStringEntry.getValue(), event.getToTransform().getRotation());
                     }
                 }
@@ -163,9 +167,9 @@ public class BounceBlocks extends SpongeSignMechanic implements DocumentationPro
         return false;
     }
 
-    private static List<BlockFilter> getDefaultBlocks() {
+    private static List<SpongeBlockFilter> getDefaultBlocks() {
         return Lists.newArrayList(
-                new BlockFilter("DIAMOND_BLOCK")
+                new SpongeBlockFilter(BlockTypes.DIAMOND_BLOCK)
         );
     }
 
