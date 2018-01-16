@@ -16,12 +16,18 @@
  */
 package com.sk89q.craftbook.sponge.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackComparators;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 public class ItemUtil {
+
+    public static final Comparator<ItemStack> ALL_ANY_SIZE = Ordering.compound(ImmutableList.of(ItemStackComparators.TYPE, ItemStackComparators.PROPERTIES, ItemStackComparators.ITEM_DATA));
 
     /**
      * Gets whether or not the specified {@link ItemStack} passes the {@link ItemStack}s.

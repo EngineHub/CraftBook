@@ -22,6 +22,7 @@ import com.sk89q.craftbook.sponge.util.SpongeBlockFilter;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class TypeTokens {
     public static class LongValueTypeToken extends TypeToken<Value<Long>> {}
 
     public static class BlockFilterListTypeToken extends TypeToken<List<SpongeBlockFilter>> {}
+
+    public static class ItemStackSnapshotValueTypeToken extends TypeToken<Value<ItemStackSnapshot>> {}
 
     public static class ItemStackListTypeToken extends TypeToken<List<ItemStack>> {}
 

@@ -25,17 +25,24 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import com.sk89q.craftbook.sponge.util.BlockUtil;
+import com.sk89q.craftbook.sponge.util.ItemUtil;
 import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
+import com.sk89q.craftbook.sponge.util.data.mutable.KeyLockData;
+import com.sk89q.craftbook.sponge.util.prompt.ItemStackSnapshotDataPrompt;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -45,9 +52,16 @@ import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 @Module(id = "hiddenswitch", name = "HiddenSwitch", onEnable="onInitialize", onDisable="onDisable")
 public class HiddenSwitch extends SpongeSignMechanic implements DocumentationProvider {
+
+    private static ItemStackSnapshotDataPrompt ITEMS_PROMPT = new ItemStackSnapshotDataPrompt(
+            1, 1, "Enter Key"
+    );
 
     @Inject
     @ModuleConfiguration
@@ -68,6 +82,18 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
         usePermission.register();
     }
 
+    @Override
+    public boolean verifyLines(Location<World> location, List<Text> lines, @Nullable Player player) {
+        if (SignUtil.getTextRaw(lines.get(2)).equalsIgnoreCase("locked")) {
+            ITEMS_PROMPT.getData(player, itemStacks -> {
+                KeyLockData keyLockData = new KeyLockData(itemStacks.get(0));
+                location.offer(keyLockData);
+            });
+        }
+
+        return super.verifyLines(location, lines, player);
+    }
+
     @Listener
     public void onClick(InteractBlockEvent.Secondary.MainHand event, @First Player player) {
         event.getTargetBlock().getLocation().ifPresent((location) -> {
@@ -85,6 +111,14 @@ public class HiddenSwitch extends SpongeSignMechanic implements DocumentationPro
                     if (isMechanicSign(sign)) {
                         if (!usePermission.hasPermission(player)) {
                             return;
+                        }
+                        Optional<ItemStackSnapshot> key = sign.get(CraftBookKeys.KEY_LOCK);
+                        if (key.isPresent()) {
+                            if (ItemUtil.ALL_ANY_SIZE.compare(key.get().createStack(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(ItemStack.empty())) != 0
+                                    && ItemUtil.ALL_ANY_SIZE.compare(key.get().createStack(), player.getItemInHand(HandTypes.OFF_HAND).orElse(ItemStack.empty())) != 0) {
+                                player.sendMessage(Text.of(TextColors.RED, "The key doesn't fit."));
+                                return;
+                            }
                         }
                         if (toggleSwitches(sign, player)) {
                             player.sendMessage(Text.of(TextColors.YELLOW, "You hear the muffled click of a switch."));

@@ -21,16 +21,19 @@ import com.sk89q.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import com.sk89q.craftbook.sponge.util.data.builder.BlockBagDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.EmbeddedBlockBagDataBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.ICDataManipulatorBuilder;
+import com.sk89q.craftbook.sponge.util.data.builder.KeyLockDataBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.LastPowerDataManipulatorBuilder;
 import com.sk89q.craftbook.sponge.util.data.builder.NamespaceDataBuilder;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableEmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableICData;
+import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableKeyLockData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableLastPowerData;
 import com.sk89q.craftbook.sponge.util.data.immutable.ImmutableNamespaceData;
 import com.sk89q.craftbook.sponge.util.data.mutable.BlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.EmbeddedBlockBagData;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
+import com.sk89q.craftbook.sponge.util.data.mutable.KeyLockData;
 import com.sk89q.craftbook.sponge.util.data.mutable.LastPowerData;
 import com.sk89q.craftbook.sponge.util.data.mutable.NamespaceData;
 import org.spongepowered.api.Sponge;
@@ -102,5 +105,14 @@ public class CraftBookData {
                         .buildAndRegister(CraftBookPlugin.spongeInst().container);
 
         Sponge.getDataManager().registerLegacyManipulatorIds("com.sk89q.craftbook.sponge.mechanics.blockbags.data.BlockBagData", blockBagData);
+
+        // Hidden Switch Data
+        DataRegistration.<BlockBagData, ImmutableBlockBagData>builder()
+                .dataClass(KeyLockData.class)
+                .immutableClass(ImmutableKeyLockData.class)
+                .builder(new KeyLockDataBuilder())
+                .manipulatorId("key_lock")
+                .dataName("KeyLock")
+                .buildAndRegister(CraftBookPlugin.spongeInst().container);
     }
 }

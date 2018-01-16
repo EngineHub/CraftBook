@@ -25,6 +25,7 @@ import com.sk89q.craftbook.sponge.util.type.TypeTokens;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 
 public class CraftBookKeys {
 
@@ -43,6 +44,13 @@ public class CraftBookKeys {
             .id("craftbook:ic")
             .name("IC")
             .query(of("IC"))
+            .build();
+
+    public static Key<Value<ItemStackSnapshot>> KEY_LOCK = Key.builder()
+            .type(new TypeTokens.ItemStackSnapshotValueTypeToken())
+            .id("craftbook:key_lock")
+            .name("KeyLock")
+            .query(of("KeyLock"))
             .build();
 
     public static Key<Value<String>> NAMESPACE = Key.builder()
