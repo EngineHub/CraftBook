@@ -173,6 +173,11 @@ public class Door extends CuboidToggleMechanic {
         // first assuming that the bridge is above
         Block proximalBaseCenter = getBlockBase(trigger);
 
+        ItemInfo doorType = getBlockType(trigger);
+        if (proximalBaseCenter.getType() != doorType.getType() || (proximalBaseCenter.getData() != doorType.getData() && doorType.getData() != -1)) {
+            throw new InvalidMechanismException("mech.bridge.material");
+        }
+
         // Find the other side
         Block farSide = getFarSign(trigger);
 
@@ -208,9 +213,9 @@ public class Door extends CuboidToggleMechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (BlockUtil.isBlockReplacable(hinge.getType()) && proximalBaseCenter.getType() != hinge.getType())
-            return close(trigger, farSide, proximalBaseCenter, toggle, player);
+            return close(trigger, farSide, doorType, toggle, player);
         else
-            return open(trigger, farSide, proximalBaseCenter, toggle);
+            return open(trigger, farSide, doorType, toggle);
 
     }
 
@@ -321,6 +326,7 @@ public class Door extends CuboidToggleMechanic {
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
+        super.loadConfiguration(config, path);
 
         config.setComment(path + "allow-redstone", "Allow doors to be toggled via redstone.");
         allowRedstone = config.getBoolean(path + "allow-redstone", true);

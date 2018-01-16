@@ -108,11 +108,13 @@ public class Bridge extends CuboidToggleMechanic {
             ChangedSign sign = event.getSign();
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
-                if (event.getPlayer().getItemInHand() != null)
-                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType() && getBlockBase(event.getClickedBlock()).getData() == event.getPlayer().getItemInHand().getData().getData()) {
+                if (event.getPlayer().getItemInHand() != null) {
+                    ItemInfo bridgeType = getBlockType(event.getClickedBlock());
+                    if (bridgeType.getType() == event.getPlayer().getItemInHand().getType()
+                            && bridgeType.getData() == event.getPlayer().getItemInHand().getData().getData()) {
 
                         if (!player.hasPermission("craftbook.mech.bridge.restock")) {
-                            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                                 player.printError("mech.restock-permission");
                             return;
                         }
@@ -133,6 +135,7 @@ public class Bridge extends CuboidToggleMechanic {
                         event.setCancelled(true);
                         return;
                     }
+                }
 
             event.setCancelled(true);
 
@@ -253,6 +256,11 @@ public class Bridge extends CuboidToggleMechanic {
         // first assuming that the bridge is above
         Block proximalBaseCenter = getBlockBase(trigger);
 
+        ItemInfo bridgeType = getBlockType(trigger);
+        if (proximalBaseCenter.getType() != bridgeType.getType() || (proximalBaseCenter.getData() != bridgeType.getData() && bridgeType.getData() != -1)) {
+            throw new InvalidMechanismException("mech.bridge.material");
+        }
+
         // Find the other side
         Block farSide = getFarSign(trigger);
 
@@ -279,9 +287,9 @@ public class Bridge extends CuboidToggleMechanic {
         // obsidian in the middle of a wooden bridge, just weird
         // results.
         if (BlockUtil.isBlockReplacable(hinge.getType()) && proximalBaseCenter.getType() != hinge.getType())
-            return close(trigger, farSide, proximalBaseCenter, toggle, player);
+            return close(trigger, farSide, bridgeType, toggle, player);
         else
-            return open(trigger, farSide, proximalBaseCenter, toggle);
+            return open(trigger, farSide, bridgeType, toggle);
     }
 
     @Override
@@ -296,6 +304,7 @@ public class Bridge extends CuboidToggleMechanic {
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
+        super.loadConfiguration(config, path);
 
         config.setComment(path + "allow-redstone", "Enable bridges via redstone.");
         allowRedstone = config.getBoolean(path + "allow-redstone", true);

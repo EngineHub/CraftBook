@@ -242,7 +242,6 @@ public class Gate extends AbstractCraftBookMechanic {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
-
         if (!EventUtil.passesFilter(event))
             return;
 

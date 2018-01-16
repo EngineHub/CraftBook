@@ -10,8 +10,11 @@ import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipeSuckEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Material;
@@ -37,14 +40,14 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public abstract boolean isApplicableSign(String line);
 
-    public static boolean open(Block sign, Block farSide, Block base, CuboidRegion toggle) {
+    public static boolean open(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle) {
 
         ChangedSign s = BukkitUtil.toChangedSign(sign);
         ChangedSign other = BukkitUtil.toChangedSign(farSide);
         for (Vector bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if (BlockUtil.areBlocksIdentical(b, base) || BlockUtil.isBlockReplacable(b.getType())) {
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction && BlockUtil.areBlocksIdentical(b, base))
+            if ((b.getType() == type.getType() && (b.getData() == type.getData() || type.getData() == -1)) || BlockUtil.isBlockReplacable(b.getType())) {
+                if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getType() && (b.getData() == type.getData() || type.getData() == -1)))
                     addBlocks(s, other, 1);
                 b.setType(Material.AIR);
             }
@@ -53,7 +56,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public static boolean close(Block sign, Block farSide, Block base, CuboidRegion toggle, LocalPlayer player) {
+    public static boolean close(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle, LocalPlayer player) {
 
         ChangedSign s = BukkitUtil.toChangedSign(sign);
         ChangedSign other = BukkitUtil.toChangedSign(farSide);
@@ -62,8 +65,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                     if (hasEnoughBlocks(s, other)) {
-                        b.setType(base.getType());
-                        b.setData(base.getData());
+                        b.setType(type.getType());
+                        b.setData((byte) type.getData());
                         removeBlocks(s, other, 1);
                     } else {
                         if (player != null) {
@@ -72,8 +75,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
                         return false;
                     }
                 } else {
-                    b.setType(base.getType());
-                    b.setData(base.getData());
+                    b.setType(type.getType());
+                    b.setData((byte) type.getData());
                 }
             }
         }
@@ -177,13 +180,14 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         other = BukkitUtil.toChangedSign(getFarSign(event.getBlock()));
 
-        if (hasEnoughBlocks(sign, other)) {
-            Block base;
+        int amount = getBlocks(sign, other);
+
+        if (amount > 0) {
+            ItemInfo base;
             try {
-                base = getBlockBase(event.getBlock());
-                int amount = getBlocks(sign, other);
+                base = getBlockType(event.getBlock());
                 while(amount > 0) {
-                    ItemStack toDrop = new ItemStack(base.getType(), Math.min(amount, 64), base.getData());
+                    ItemStack toDrop = new ItemStack(base.getType(), Math.min(amount, 64), (short) base.getData());
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
                     amount -= 64;
                 }
@@ -198,7 +202,11 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s, other) - amount;
-        s.setLine(0, String.valueOf(curBlocks));
+        if (s.getLine(0).contains(",")) {
+            s.setLine(0, String.valueOf(curBlocks) + ',' + s.getLine(0).split(",")[1]);
+        } else {
+            s.setLine(0, String.valueOf(curBlocks));
+        }
         s.update(false);
         return curBlocks >= 0;
     }
@@ -207,28 +215,36 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
         int curBlocks = getBlocks(s, other) + amount;
-        s.setLine(0, String.valueOf(curBlocks));
+        if (s.getLine(0).contains(",")) {
+            s.setLine(0, String.valueOf(curBlocks) + ',' + s.getLine(0).split(",")[1]);
+        } else {
+            s.setLine(0, String.valueOf(curBlocks));
+        }
         s.update(false);
         return curBlocks >= 0;
     }
 
     public static void setBlocks(ChangedSign s, int amount) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return;
-        s.setLine(0, String.valueOf(amount));
+        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite")) return;
+        if (s.getLine(0).contains(",")) {
+            s.setLine(0, String.valueOf(amount) + ',' + s.getLine(0).split(",")[1]);
+        } else {
+            s.setLine(0, String.valueOf(amount));
+        }
         s.update(false);
     }
 
     public static int getBlocks(ChangedSign s, ChangedSign other) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite") || other != null && other.getLine(0).equalsIgnoreCase("infinite"))
+        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite") || other != null && other.getLine(0).split(",")[0].equalsIgnoreCase("infinite"))
             return 0;
         int curBlocks = 0;
         try {
-            curBlocks = Integer.parseInt(s.getLine(0));
+            curBlocks = Integer.parseInt(s.getLine(0).split(",")[0]);
             if(other != null) {
                 try {
-                    curBlocks += Integer.parseInt(other.getLine(0));
+                    curBlocks += Integer.parseInt(other.getLine(0).split(",")[0]);
                     setBlocks(s, curBlocks);
                     setBlocks(other, 0);
                 } catch (Exception ignored) {
@@ -242,6 +258,65 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
-        return s.getLine(0).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
+        return s.getLine(0).split(",")[0].equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
+    }
+
+    public ItemInfo getStoredType(Block block) {
+        Block farBlock = getFarSign(block);
+        if (farBlock == null) {
+            return null;
+        }
+
+        ChangedSign closeSign = BukkitUtil.toChangedSign(block);
+        ChangedSign farSign = BukkitUtil.toChangedSign(farBlock);
+
+        ItemInfo type = null;
+
+        if (closeSign.getLine(0).contains(",")) {
+            type = new ItemInfo(closeSign.getLine(0).split(",")[1]);
+        }
+        if (farSign.getLine(0).contains(",")) {
+            if (type != null) {
+                return null;
+            } else {
+                closeSign.setLine(0, closeSign.getLine(0) + ',' + farSign.getLine(0).split(",")[1]);
+                type = new ItemInfo(farSign.getLine(0).split(",")[1]);
+                closeSign.update(false);
+            }
+        }
+
+        return type;
+    }
+
+    /**
+     * Gets the block type of this mechanic. Usually passes through, but can be used by enforce type.
+     *
+     * @param block The block location
+     * @return The type
+     */
+    public ItemInfo getBlockType(Block block) throws InvalidMechanismException {
+        if (enforceType) {
+            ChangedSign sign = BukkitUtil.toChangedSign(block);
+            ItemInfo type = null;
+            if (sign.getLine(0).contains(",")) {
+                type = new ItemInfo(sign.getLine(0).split(",")[1]);
+            }
+            if (type == null) {
+                type = new ItemInfo(this.getBlockBase(block));
+                sign.setLine(0, sign.getLine(0) + ',' + type.toString());
+                sign.update(false);
+            }
+            return type;
+        }
+
+        return new ItemInfo(this.getBlockBase(block));
+    }
+
+    protected boolean enforceType;
+
+    @Override
+    public void loadConfiguration(YAMLProcessor config, String path) {
+        config.setComment(path + "enforce-type", "Allow doors to be toggled via redstone.");
+        enforceType = config.getBoolean(path + "enforce-type", true);
     }
 }
