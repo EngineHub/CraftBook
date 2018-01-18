@@ -56,7 +56,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
         this.icFactory = icFactory;
 
         this.permissionNode = new SpongePermissionNode(
-                "craftbook.ic." + (this.icFactory instanceof RestrictedIC ? "restricted" : "safe") + '.' + this.modelId,
+                "craftbook.ic." + (this.icFactory instanceof RestrictedIC ? "restricted" : "safe") + '.' + this.modelId.toLowerCase(),
                 "Allows creation of the " + this.name + " (" + this.modelId + ") IC.",
                 this.icFactory instanceof RestrictedIC ? PermissionDescription.ROLE_STAFF : PermissionDescription.ROLE_USER
         );
