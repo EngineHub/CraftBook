@@ -18,8 +18,13 @@ package com.sk89q.craftbook.sponge.mechanics.ics;
 
 import static com.sk89q.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
 
+import com.google.common.collect.Lists;
+import com.sk89q.craftbook.core.util.PermissionNode;
+import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
+import org.spongepowered.api.service.permission.PermissionDescription;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +35,8 @@ public class ICType<T extends IC> implements DocumentationProvider {
     private static final Pattern IC_PINS_PATTERN = Pattern.compile("%IC_PINS%", Pattern.LITERAL);
     private static final Pattern IC_LINES_PATTERN = Pattern.compile("%IC_LINES%", Pattern.LITERAL);
     private static final Pattern IC_ID_PATTERN = Pattern.compile("%IC_ID%", Pattern.LITERAL);
+    private static final Pattern IC_PERMISSIONS_PATTERN = Pattern.compile("%PERMISSIONS%", Pattern.LITERAL);
+    private static final Pattern IC_CONFIGURATION_PATTERN = Pattern.compile("%CONFIGURATION%", Pattern.LITERAL);
 
     private String name;
     private String description;
@@ -39,12 +46,20 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
     private ICFactory<T> icFactory;
 
+    private SpongePermissionNode permissionNode;
+
     public ICType(String modelId, String shorthandId, String name, String description, ICFactory<T> icFactory) {
         this.modelId = modelId;
         this.shorthandId = shorthandId;
         this.name = name;
         this.description = description;
         this.icFactory = icFactory;
+
+        this.permissionNode = new SpongePermissionNode(
+                "craftbook.ic." + (this.icFactory instanceof RestrictedIC ? "restricted" : "safe") + '.' + this.modelId,
+                "Allows creation of the " + this.name + " (" + this.modelId + ") IC.",
+                this.icFactory instanceof RestrictedIC ? PermissionDescription.ROLE_STAFF : PermissionDescription.ROLE_USER
+        );
     }
 
     public ICType(String modelId, String shorthandId, String name, String description, ICFactory<T> icFactory, String defaultPinset) {
@@ -74,6 +89,10 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
     public ICFactory<T> getFactory() {
         return this.icFactory;
+    }
+
+    public SpongePermissionNode getPermissionNode() {
+        return this.permissionNode;
     }
 
     @Override
@@ -123,7 +142,16 @@ public class ICType<T extends IC> implements DocumentationProvider {
         }
         input = IC_LINES_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icLines.toString()));
 
+        input = IC_PERMISSIONS_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(DocumentationGenerator.generatePermissionsSection(Lists.newArrayList(permissionNode))));
+        input = IC_CONFIGURATION_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(""));
+
         String icHeader = createStringOfLength(modelId.length(), '=') + '\n' + modelId + '\n' + createStringOfLength(modelId.length(), '=');
+
+        if (this.icFactory instanceof RestrictedIC) {
+            icHeader += "\n\n";
+            icHeader += ".. NOTE:\n   This IC is marked as `Restricted`. This means it's not necessarily suitable for normal players.\n";
+        }
+
         return IC_HEADER_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icHeader));
     }
 

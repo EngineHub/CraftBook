@@ -20,6 +20,7 @@ import com.sk89q.craftbook.core.util.RegexUtil;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import com.sk89q.craftbook.sponge.mechanics.ics.RestrictedIC;
 import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
@@ -163,7 +164,7 @@ public class BlockReplacer extends IC {
         return traversedBlocks.size() > 0;
     }
 
-    public static class Factory extends SerializedICFactory<BlockReplacer, Factory.BlockTypeData> {
+    public static class Factory extends SerializedICFactory<BlockReplacer, Factory.BlockTypeData> implements RestrictedIC {
 
         public Factory() {
             super(BlockTypeData.class, 1);

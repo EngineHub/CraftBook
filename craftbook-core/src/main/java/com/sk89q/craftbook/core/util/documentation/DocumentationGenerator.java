@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,6 +93,38 @@ public class DocumentationGenerator {
         return output.toString();
     }
 
+    public static String generatePermissionsSection(List<PermissionNode> nodes) {
+        StringBuilder permissionsSection = new StringBuilder();
+
+        if(nodes.size() > 0) {
+            permissionsSection.append("Permissions\n");
+            permissionsSection.append("===========\n\n");
+
+            int nodeLength = "Node".length(), descriptionLength = "Description".length(), defaultRoleLength = "Default Role".length();
+
+            for(PermissionNode permissionNode : nodes) {
+                if(permissionNode.getNode().length() > nodeLength)
+                    nodeLength = permissionNode.getNode().length();
+                if(permissionNode.getDescription().length() > descriptionLength)
+                    descriptionLength = permissionNode.getDescription().length();
+                if(permissionNode.getDefaultRole().length() > defaultRoleLength)
+                    defaultRoleLength = permissionNode.getDefaultRole().length();
+            }
+
+            String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(descriptionLength, '=') + ' ' + createStringOfLength(defaultRoleLength, '=');
+
+            permissionsSection.append(border).append('\n');
+            permissionsSection.append(padToLength("Node", nodeLength + 1)).append(padToLength("Description", descriptionLength + 1)).append(padToLength("Default Role", defaultRoleLength + 1)).append('\n');
+            permissionsSection.append(border).append('\n');
+            for(PermissionNode permissionNode : nodes) {
+                permissionsSection.append(padToLength(permissionNode.getNode(), nodeLength + 1)).append(padToLength(permissionNode.getDescription(), descriptionLength + 1)).append(padToLength(permissionNode.getDefaultRole(), defaultRoleLength + 1)).append('\n');
+            }
+            permissionsSection.append(border).append('\n');
+        }
+
+        return permissionsSection.toString();
+    }
+
     public static String makeReplacements(String input, DocumentationProvider provider) {
         StringBuilder configSection = new StringBuilder();
 
@@ -132,36 +166,7 @@ public class DocumentationGenerator {
 
         input = CONFIG_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(configSection.toString()));
 
-        StringBuilder permissionsSection = new StringBuilder();
-
-        if(provider.getPermissionNodes().length > 0) {
-
-            permissionsSection.append("Permissions\n");
-            permissionsSection.append("===========\n\n");
-
-            int nodeLength = "Node".length(), descriptionLength = "Description".length(), defaultRoleLength = "Default Role".length();
-
-            for(PermissionNode permissionNode : provider.getPermissionNodes()) {
-                if(permissionNode.getNode().length() > nodeLength)
-                    nodeLength = permissionNode.getNode().length();
-                if(permissionNode.getDescription().length() > descriptionLength)
-                    descriptionLength = permissionNode.getDescription().length();
-                if(permissionNode.getDefaultRole().length() > defaultRoleLength)
-                    defaultRoleLength = permissionNode.getDefaultRole().length();
-            }
-
-            String border = createStringOfLength(nodeLength, '=') + ' ' + createStringOfLength(descriptionLength, '=') + ' ' + createStringOfLength(defaultRoleLength, '=');
-
-            permissionsSection.append(border).append('\n');
-            permissionsSection.append(padToLength("Node", nodeLength + 1)).append(padToLength("Description", descriptionLength + 1)).append(padToLength("Default Role", defaultRoleLength + 1)).append('\n');
-            permissionsSection.append(border).append('\n');
-            for(PermissionNode permissionNode : provider.getPermissionNodes()) {
-                permissionsSection.append(padToLength(permissionNode.getNode(), nodeLength + 1)).append(padToLength(permissionNode.getDescription(), descriptionLength + 1)).append(padToLength(permissionNode.getDefaultRole(), defaultRoleLength + 1)).append('\n');
-            }
-            permissionsSection.append(border).append('\n');
-        }
-
-        input = PERMS_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(permissionsSection.toString()));
+        input = PERMS_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(generatePermissionsSection(Arrays.asList(provider.getPermissionNodes()))));
 
         input = provider.performCustomConversions(input);
 

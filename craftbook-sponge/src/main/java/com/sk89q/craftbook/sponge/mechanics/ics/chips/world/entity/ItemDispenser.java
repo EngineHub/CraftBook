@@ -19,6 +19,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.entity;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
 import com.sk89q.craftbook.sponge.mechanics.ics.InvalidICException;
+import com.sk89q.craftbook.sponge.mechanics.ics.RestrictedIC;
 import com.sk89q.craftbook.sponge.mechanics.ics.SerializedICData;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.SerializedICFactory;
@@ -97,7 +98,7 @@ public class ItemDispenser extends IC {
         }
     }
 
-    public static class Factory extends SerializedICFactory<ItemDispenser, ItemDispenser.Factory.ItemStackData> {
+    public static class Factory extends SerializedICFactory<ItemDispenser, ItemDispenser.Factory.ItemStackData> implements RestrictedIC {
 
         public Factory() {
             super(ItemDispenser.Factory.ItemStackData.class, 1);

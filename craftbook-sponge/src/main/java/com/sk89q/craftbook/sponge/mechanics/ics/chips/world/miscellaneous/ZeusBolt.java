@@ -18,6 +18,7 @@ package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.miscellaneous;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.RestrictedIC;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import com.sk89q.craftbook.sponge.util.ParsingUtil;
 import org.spongepowered.api.block.BlockTypes;
@@ -86,7 +87,7 @@ public class ZeusBolt extends IC {
         }
     }
 
-    public static class Factory implements ICFactory<ZeusBolt> {
+    public static class Factory implements ICFactory<ZeusBolt>, RestrictedIC {
 
         @Override
         public ZeusBolt createInstance(Location<World> location) {

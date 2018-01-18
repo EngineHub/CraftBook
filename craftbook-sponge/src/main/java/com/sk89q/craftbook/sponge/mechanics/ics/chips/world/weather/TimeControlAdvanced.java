@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.sponge.mechanics.ics.chips.world.weather;
 
 import com.sk89q.craftbook.sponge.mechanics.ics.IC;
+import com.sk89q.craftbook.sponge.mechanics.ics.RestrictedIC;
 import com.sk89q.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -45,7 +46,7 @@ public class TimeControlAdvanced  extends IC {
         }
     }
 
-    public static class Factory implements ICFactory<TimeControlAdvanced> {
+    public static class Factory implements ICFactory<TimeControlAdvanced>, RestrictedIC {
 
         @Override
         public TimeControlAdvanced createInstance(Location<World> location) {

@@ -25,6 +25,7 @@ import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
 import com.sk89q.craftbook.core.util.ConfigValue;
 import com.sk89q.craftbook.core.util.CraftBookException;
+import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationGenerator;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
@@ -40,6 +41,7 @@ import com.sk89q.craftbook.sponge.mechanics.types.SpongeBlockMechanic;
 import com.sk89q.craftbook.sponge.st.SelfTriggeringMechanic;
 import com.sk89q.craftbook.sponge.st.SpongeSelfTriggerManager;
 import com.sk89q.craftbook.sponge.util.SignUtil;
+import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import com.sk89q.craftbook.sponge.util.data.CraftBookKeys;
 import com.sk89q.craftbook.sponge.util.data.mutable.ICData;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -101,6 +103,8 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
         maxRadius.load(config);
 
+        ICManager.getICTypes().stream().map(ICType::getPermissionNode).forEach(SpongePermissionNode::register);
+
         if ("true".equalsIgnoreCase(System.getProperty("craftbook.generate-docs"))) {
             ICManager.getICTypes().forEach(DocumentationGenerator::generateDocumentation);
         }
@@ -159,18 +163,22 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
         ICType<? extends IC> icType = ICManager.getICType((event.getText().lines().get(1)).toPlain());
         if (icType == null) return;
 
-        List<Text> lines = event.getText().lines().get();
-        lines.set(0, Text.of(icType.getShorthand().toUpperCase()));
-        lines.set(1, Text.of(SignUtil.getTextRaw(lines.get(1)).toUpperCase()));
+        if (!icType.getPermissionNode().hasPermission(player)) {
+            player.sendMessage(Text.of(TextColors.RED, "You don't have permission to create this IC!"));
+        } else {
+            List<Text> lines = event.getText().lines().get();
+            lines.set(0, Text.of(icType.getShorthand().toUpperCase()));
+            lines.set(1, Text.of(SignUtil.getTextRaw(lines.get(1)).toUpperCase()));
 
-        try {
-            createICData(event.getTargetTile().getLocation(), lines, player);
-            player.sendMessage(Text.of(TextColors.YELLOW, "Created " + icType.getName()));
+            try {
+                createICData(event.getTargetTile().getLocation(), lines, player);
+                player.sendMessage(Text.of(TextColors.YELLOW, "Created " + icType.getName()));
 
-            event.getText().set(Keys.SIGN_LINES, lines);
-        } catch (InvalidICException e) {
-            event.setCancelled(true);
-            player.sendMessage(Text.of("Failed to create IC. " + e.getMessage()));
+                event.getText().set(Keys.SIGN_LINES, lines);
+            } catch (InvalidICException e) {
+                event.setCancelled(true);
+                player.sendMessage(Text.of("Failed to create IC. " + e.getMessage()));
+            }
         }
     }
 
