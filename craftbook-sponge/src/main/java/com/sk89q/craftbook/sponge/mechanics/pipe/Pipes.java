@@ -25,7 +25,9 @@ import com.sk89q.craftbook.core.util.PermissionNode;
 import com.sk89q.craftbook.core.util.documentation.DocumentationProvider;
 import com.sk89q.craftbook.sponge.CraftBookPlugin;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.ColorConditionalPipePart;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.ColourConditionalIntersectionPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.InputPipePart;
+import com.sk89q.craftbook.sponge.mechanics.pipe.parts.IntersectionPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.OutputPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PassthroughPipePart;
 import com.sk89q.craftbook.sponge.mechanics.pipe.parts.PipePart;
@@ -78,6 +80,8 @@ public class Pipes extends SpongeBlockMechanic implements DocumentationProvider 
         pipePartList.add(new ColorConditionalPipePart());
         pipePartList.add(new InputPipePart());
         pipePartList.add(new OutputPipePart());
+        pipePartList.add(new IntersectionPipePart());
+        pipePartList.add(new ColourConditionalIntersectionPipePart());
 
         pipeParts = pipePartList.toArray(new PipePart[pipePartList.size()]);
     }

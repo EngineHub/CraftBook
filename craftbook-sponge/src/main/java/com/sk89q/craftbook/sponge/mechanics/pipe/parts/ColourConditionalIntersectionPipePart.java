@@ -24,11 +24,11 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-public class ColorConditionalPipePart extends PassthroughPipePart {
+public class ColourConditionalIntersectionPipePart extends IntersectionPipePart {
 
     @Override
     public boolean isValid(BlockState blockState) {
-        return blockState.getType() == BlockTypes.STAINED_GLASS;
+        return blockState.getType() == BlockTypes.STAINED_GLASS_PANE;
     }
 
     @Override
