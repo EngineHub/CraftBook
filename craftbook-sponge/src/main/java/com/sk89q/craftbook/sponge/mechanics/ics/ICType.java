@@ -149,7 +149,7 @@ public class ICType<T extends IC> implements DocumentationProvider {
 
         if (this.icFactory instanceof RestrictedIC) {
             icHeader += "\n\n";
-            icHeader += ".. NOTE:\n   This IC is marked as `Restricted`. This means it's not necessarily suitable for normal players.\n";
+            icHeader += ".. note::\n\n   This IC is marked as `Restricted`. This means it's not necessarily suitable for normal players.\n";
         }
 
         return IC_HEADER_PATTERN.matcher(input).replaceAll(Matcher.quoteReplacement(icHeader));
