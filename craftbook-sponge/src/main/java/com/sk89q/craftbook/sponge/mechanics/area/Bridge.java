@@ -38,7 +38,6 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.type.TreeTypes;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Humanoid;
@@ -87,7 +86,7 @@ public class Bridge extends SimpleArea implements DocumentationProvider {
             }
 
             if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
-                if (block.getBlock() != BlockTypes.WALL_SIGN) {
+                if (block.getBlockType() != BlockTypes.WALL_SIGN) {
                     bridgeDirection = Direction.UP;
                     baseBlock = block.getRelative(bridgeDirection);
                     if(!BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), baseBlock.getBlock())) {
