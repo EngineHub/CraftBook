@@ -134,6 +134,21 @@ public class InventoryUtil {
      * @return whether the inventory contains all the items. If there are no items to check, it returns true.
      */
     public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
+        return doesInventoryContain(inv, !exact, false, false, false, stacks);
+    }
+
+    /**
+     * Checks whether the inventory contains all the given itemstacks.
+     *
+     * @param inv The inventory to check.
+     * @param ignoreStackSize Whether to ignore stack size count.
+     * @param ignoreDurability Whether to ignore durability if damageable.
+     * @param ignoreMeta Whether to ignore meta/nbt data.
+     * @param ignoreEnchants Whether to ignore enchantment data.
+     * @param stacks The stacks to check.
+     * @return whether the inventory contains all the items. If there are no items to check, it returns true.
+     */
+    public static boolean doesInventoryContain(Inventory inv, boolean ignoreStackSize, boolean ignoreDurability, boolean ignoreMeta, boolean ignoreEnchants, ItemStack ... stacks) {
 
         ArrayList<ItemStack> itemsToFind = new ArrayList<>(Arrays.asList(stacks));
 
@@ -146,7 +161,7 @@ public class InventoryUtil {
             items.add(((PlayerInventory) inv).getItemInOffHand());
         }
 
-        for (ItemStack item : inv.getContents()) {
+        for (ItemStack item : items) {
             if(!ItemUtil.isStackValid(item))
                 continue;
 
@@ -159,9 +174,26 @@ public class InventoryUtil {
                     continue;
                 }
 
-                if(ItemUtil.areItemsIdentical(base, item)) {
-                    if(exact && base.getAmount() != item.getAmount())
+                if(ItemUtil.areItemsSimilar(base, item)) {
+                    if(!ignoreStackSize && base.getAmount() != item.getAmount())
                         continue;
+
+                    if(!ignoreDurability && (base.getType().getMaxDurability() > 0 || item.getType().getMaxDurability() > 0) && base.getDurability() != item.getDurability())
+                        continue;
+
+                    if(!ignoreMeta) {
+                        if(base.hasItemMeta() != item.hasItemMeta()) {
+                            if(!ignoreEnchants)
+                                continue;
+                            if(base.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(base))
+                                continue;
+                            else if(item.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(item))
+                                continue;
+                        } else if(base.hasItemMeta()) {
+                            if(base.hasItemMeta() && !ItemUtil.areItemMetaIdentical(base.getItemMeta(), item.getItemMeta(), !ignoreEnchants))
+                                continue;
+                        }
+                    }
 
                     itemsToFind.remove(base);
                     break;

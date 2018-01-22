@@ -24,6 +24,7 @@ import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
 public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
@@ -35,12 +36,24 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
     Block chestBlock;
     boolean inverted;
+    boolean ignoreDurability;
+    boolean ignoreEnchants;
+    boolean ignoreMeta;
 
     @Override
     public void load() {
 
         chestBlock = getBackBlock().getRelative(0, 1, 0);
         inverted = getSign().getLine(2).equalsIgnoreCase("invert");
+
+        for (String line4 : RegexUtil.PIPE_PATTERN.split(getSign().getLine(3))) {
+            if (line4.equalsIgnoreCase("!D"))
+                ignoreDurability = true;
+            if (line4.equalsIgnoreCase("!E"))
+                ignoreEnchants = true;
+            if (line4.equalsIgnoreCase("!M"))
+                ignoreMeta = true;
+        }
     }
 
     @Override
@@ -102,7 +115,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     public boolean isInAboveContainer(ItemStack item) {
         ItemStack itemClone = item.clone();
         itemClone.setAmount(1);
-        return InventoryUtil.doesBlockHaveInventory(chestBlock) && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), false, itemClone);
+        return InventoryUtil.doesBlockHaveInventory(chestBlock) && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), true, ignoreDurability, ignoreMeta, ignoreEnchants, itemClone);
     }
 
     public static class Factory extends AbstractICFactory {
