@@ -237,7 +237,10 @@ public final class ItemUtil {
     }
 
     public static boolean areItemMetaIdentical(ItemMeta meta, ItemMeta meta2) {
+        return areItemMetaIdentical(meta, meta2, true);
+    }
 
+    public static boolean areItemMetaIdentical(ItemMeta meta, ItemMeta meta2, boolean checkEnchants) {
         //Display Names
         String displayName1;
         if(meta.hasDisplayName())
@@ -280,57 +283,59 @@ public final class ItemUtil {
 
         CraftBookPlugin.logDebugMessage("Lore is the same", "item-checks.meta.lores");
 
-        //Enchants
-        List<Enchantment> ench1 = new ArrayList<>();
-        if(meta.hasEnchants())
-            ench1.addAll(meta.getEnchants().keySet());
+        if(checkEnchants) {
+            //Enchants
+            List<Enchantment> ench1 = new ArrayList<>();
+            if(meta.hasEnchants())
+                ench1.addAll(meta.getEnchants().keySet());
 
-        List<Enchantment> ench2 = new ArrayList<>();
-        if(meta2.hasEnchants())
-            ench2.addAll(meta2.getEnchants().keySet());
+            List<Enchantment> ench2 = new ArrayList<>();
+            if(meta2.hasEnchants())
+                ench2.addAll(meta2.getEnchants().keySet());
 
-        if(ench1.size() != ench2.size())
-            return false;
-        CraftBookPlugin.logDebugMessage("Has same enchantment lengths", "item-checks.meta.enchants");
-
-        for(Enchantment ench : ench1) {
-            if(!ench2.contains(ench))
+            if(ench1.size() != ench2.size())
                 return false;
-            if(meta.getEnchantLevel(ench) != meta2.getEnchantLevel(ench))
-                return false;
-        }
+            CraftBookPlugin.logDebugMessage("Has same enchantment lengths", "item-checks.meta.enchants");
 
-        CraftBookPlugin.logDebugMessage("Enchants are the same", "item-checks.meta.enchants");
-
-        //StoredEnchants
-        if (meta instanceof EnchantmentStorageMeta) {
-            if (!(meta2 instanceof EnchantmentStorageMeta))
-                return false; // meta type mismatch
-
-            EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) meta;
-            List<Enchantment> storedEnchantments = new ArrayList<>();
-            if (storageMeta.hasStoredEnchants())
-                storedEnchantments.addAll(storageMeta.getStoredEnchants().keySet());
-
-            EnchantmentStorageMeta storageMeta2 = (EnchantmentStorageMeta) meta2;
-            List<Enchantment> storedEnchantments2 = new ArrayList<>();
-            if (storageMeta2.hasStoredEnchants())
-                storedEnchantments2.addAll(storageMeta2.getStoredEnchants().keySet());
-
-            if (storedEnchantments.size() != storedEnchantments2.size())
-                return false; // mismatch enchantment counts
-            CraftBookPlugin.logDebugMessage("Has same stored enchantment lengths", "item-checks.meta.enchants");
-
-            for (Enchantment ench : storedEnchantments) {
-                if (!storedEnchantments2.contains(ench))
-                    return false; // mismatch stored enchantments
-                if (storageMeta.getStoredEnchantLevel(ench) != storageMeta2.getStoredEnchantLevel(ench))
-                    return false; // mismatch stored enchantment levels
+            for(Enchantment ench : ench1) {
+                if(!ench2.contains(ench))
+                    return false;
+                if(meta.getEnchantLevel(ench) != meta2.getEnchantLevel(ench))
+                    return false;
             }
 
-            CraftBookPlugin.logDebugMessage("Stored enchants are the same", "item-checks.meta.enchants");
-        } else if (meta2 instanceof EnchantmentStorageMeta)
-            return false; // meta type mismatch
+            CraftBookPlugin.logDebugMessage("Enchants are the same", "item-checks.meta.enchants");
+
+            //StoredEnchants
+            if (meta instanceof EnchantmentStorageMeta) {
+                if (!(meta2 instanceof EnchantmentStorageMeta))
+                    return false; // meta type mismatch
+
+                EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) meta;
+                List<Enchantment> storedEnchantments = new ArrayList<>();
+                if (storageMeta.hasStoredEnchants())
+                    storedEnchantments.addAll(storageMeta.getStoredEnchants().keySet());
+
+                EnchantmentStorageMeta storageMeta2 = (EnchantmentStorageMeta) meta2;
+                List<Enchantment> storedEnchantments2 = new ArrayList<>();
+                if (storageMeta2.hasStoredEnchants())
+                    storedEnchantments2.addAll(storageMeta2.getStoredEnchants().keySet());
+
+                if (storedEnchantments.size() != storedEnchantments2.size())
+                    return false; // mismatch enchantment counts
+                CraftBookPlugin.logDebugMessage("Has same stored enchantment lengths", "item-checks.meta.enchants");
+
+                for (Enchantment ench : storedEnchantments) {
+                    if (!storedEnchantments2.contains(ench))
+                        return false; // mismatch stored enchantments
+                    if (storageMeta.getStoredEnchantLevel(ench) != storageMeta2.getStoredEnchantLevel(ench))
+                        return false; // mismatch stored enchantment levels
+                }
+
+                CraftBookPlugin.logDebugMessage("Stored enchants are the same", "item-checks.meta.enchants");
+            } else if (meta2 instanceof EnchantmentStorageMeta)
+                return false; // meta type mismatch
+        }
 
         if (meta instanceof BookMeta) {
             if (!(meta2 instanceof BookMeta))
@@ -414,6 +419,14 @@ public final class ItemUtil {
             return false;
         }
         return true;
+    }
+
+    public static boolean hasDisplayNameOrLore(ItemStack item) {
+        if(item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            return meta.hasDisplayName() || meta.hasLore();
+        }
+        return false;
     }
 
     /**
