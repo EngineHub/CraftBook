@@ -41,6 +41,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 @Module(id = "bookshelf", name = "Bookshelf", onEnable="onInitialize", onDisable="onDisable")
 public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvider {
@@ -110,7 +112,9 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
             String line = bookLines[ThreadLocalRandom.current().nextInt(bookLines.length)];
 
             player.sendMessage(Text.of(TextColors.YELLOW, "You pick up a book..."));
-            player.sendMessage(Text.of(line));
+            for (String lineSegment : line.split(Pattern.quote("\n"))) {
+                player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(lineSegment));
+            }
         });
     }
 
