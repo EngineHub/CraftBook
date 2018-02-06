@@ -112,7 +112,7 @@ public class Bookshelf extends SpongeBlockMechanic implements DocumentationProvi
             String line = bookLines[ThreadLocalRandom.current().nextInt(bookLines.length)];
 
             player.sendMessage(Text.of(TextColors.YELLOW, "You pick up a book..."));
-            for (String lineSegment : line.split("\n")) {
+            for (String lineSegment : line.split("\\\\n")) {
                 player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(lineSegment));
             }
         });
