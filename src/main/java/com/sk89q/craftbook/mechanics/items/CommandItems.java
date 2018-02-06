@@ -505,15 +505,19 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
         if(comdef.type == CommandType.CONSOLE)
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        else if (comdef.type == CommandType.PLAYER)
-            Bukkit.dispatchCommand(player, command);
-        else  if (comdef.type == CommandType.SUPERUSER) {
+        else if (comdef.type == CommandType.PLAYER) {
+            if (ProtectionUtil.canSendCommand(player, command)) {
+                Bukkit.dispatchCommand(player, command);
+            }
+        } else if (comdef.type == CommandType.SUPERUSER) {
             PermissionAttachment att = player.addAttachment(CraftBookPlugin.inst());
             att.setPermission("*", true);
             boolean wasOp = player.isOp();
             if(!wasOp)
                 player.setOp(true);
-            Bukkit.dispatchCommand(player, command);
+            if (ProtectionUtil.canSendCommand(player, command)) {
+                Bukkit.dispatchCommand(player, command);
+            }
             att.remove();
             if(!wasOp)
                 player.setOp(wasOp);
