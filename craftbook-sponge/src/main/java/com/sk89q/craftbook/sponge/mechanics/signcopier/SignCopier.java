@@ -133,7 +133,7 @@ public class SignCopier extends SpongeMechanic implements DocumentationProvider 
                                     signData = signData.set(Keys.SIGN_LINES, lines);
 
                                     ChangeSignEvent changeSignEvent = SpongeEventFactory.createChangeSignEvent(
-                                            Cause.builder().build(EventContext.builder().add(EventContextKeys.PLAYER, player).build()),
+                                            Cause.builder().append(player).build(EventContext.builder().add(EventContextKeys.PLAYER, player).build()),
                                             sign.getSignData().asImmutable(),
                                             signData,
                                             sign
