@@ -30,6 +30,7 @@ import com.sk89q.craftbook.sponge.util.SignUtil;
 import com.sk89q.craftbook.sponge.util.SpongePermissionNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.data.key.Keys;
@@ -128,11 +129,13 @@ public class LightSwitch extends SpongeSignMechanic implements DocumentationProv
 
                         if (player != null)
                             Sponge.getCauseStackManager().pushCause(player);
-                        offset.setBlock((state ? BlockTypes.TORCH : BlockTypes.REDSTONE_TORCH).getDefaultState());
+                        BlockState newState = (state ? BlockTypes.TORCH : BlockTypes.REDSTONE_TORCH).getDefaultState();
+                        if (connectedDirection.isPresent()) {
+                            newState = newState.with(Keys.DIRECTION, connectedDirection.get()).get();
+                        }
+                        offset.setBlock(newState);
                         if (player != null)
                             Sponge.getCauseStackManager().popCause();
-
-                        connectedDirection.ifPresent((direction) -> offset.offer(Keys.DIRECTION, direction));
 
                         if (toggledLights > maxLights)
                             return;
