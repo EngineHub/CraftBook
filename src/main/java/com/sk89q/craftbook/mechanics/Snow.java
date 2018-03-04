@@ -30,6 +30,7 @@ import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockVector;
 
 import java.util.*;
@@ -67,19 +68,18 @@ public class Snow extends AbstractCraftBookMechanic {
         return true;
     }
 
-    private boolean canLandOn(Block id) {
-        switch(id.getType()) {
-
+    private boolean canLandOn(Block block) {
+        switch(block.getType()) {
             case WOOD_STAIRS:
             case BRICK_STAIRS:
             case SMOOTH_STAIRS:
             case SANDSTONE_STAIRS:
             case QUARTZ_STAIRS:
             case COBBLESTONE_STAIRS:
-                return new Stairs(id.getType(), id.getData()).isInverted();
+                return new Stairs(block.getType(), block.getData()).isInverted();
             case STEP:
             case WOOD_STEP:
-                return new Step(id.getType(), id.getData()).isInverted();
+                return new Step(block.getType(), block.getData()).isInverted();
             case ACTIVATOR_RAIL:
             case CAKE_BLOCK:
             case DAYLIGHT_DETECTOR:
@@ -96,7 +96,7 @@ public class Snow extends AbstractCraftBookMechanic {
             case AIR:
                 return false;
             default:
-                return !(!freezeWater && (id.getType() == Material.WATER || id.getType() == Material.STATIONARY_WATER)) && !isReplacable(id);
+                return !(!freezeWater && (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER)) && !isReplacable(block);
         }
     }
 
@@ -226,10 +226,10 @@ public class Snow extends AbstractCraftBookMechanic {
 
         if(!isChunkUseful) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowChunkHandler(event.getChunk()), getRandomDelay() * (event.getWorld().hasStorm() ? 20L : 10L));
+        new SnowChunkHandler(event.getChunk()).runTaskLater(CraftBookPlugin.inst(), getRandomDelay() * (event.getWorld().hasStorm() ? 20L : 10L));
     }
 
-    private class SnowChunkHandler implements Runnable {
+    private class SnowChunkHandler extends BukkitRunnable {
 
         public Chunk chunk;
 
@@ -239,15 +239,16 @@ public class Snow extends AbstractCraftBookMechanic {
 
         @Override
         public void run () {
-
-            if(!chunk.isLoaded()) return; //Abandon ship.
+            if(!chunk.isLoaded()) {
+                return; //Abandon ship.
+            }
 
             boolean meltMode = !chunk.getWorld().hasStorm() && meltSunlight;
 
-            Block highest = chunk.getWorld().getHighestBlockAt(chunk.getBlock(0, 0, 0).getX() + CraftBookPlugin.inst().getRandom().nextInt(16), chunk.getBlock(0, 0, 0).getZ() + CraftBookPlugin.inst().getRandom().nextInt(16));
+            Block chunkBase = chunk.getBlock(0, 0, 0);
+            Block highest = chunk.getWorld().getHighestBlockAt(chunkBase.getX() + CraftBookPlugin.inst().getRandom().nextInt(16), chunkBase.getZ() + CraftBookPlugin.inst().getRandom().nextInt(16));
 
             if(highest.getType() == Material.SNOW || highest.getType() == Material.SNOW_BLOCK || highest.getType() == Material.ICE || isReplacable(highest)) {
-
                 if(highest.getWorld().hasStorm() && highest.getType() != Material.ICE) {
                     if(highest.getTemperature() < 0.15) {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), animationTicks);
@@ -260,7 +261,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 }
             }
 
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), this, getRandomDelay() * (meltMode ? 5L : 20L));
+            runTaskLater(CraftBookPlugin.inst(), getRandomDelay() * (meltMode ? 5L : 20L));
         }
     }
 
