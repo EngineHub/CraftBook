@@ -411,8 +411,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             }
                         }
 
-                        if (!found && !def.missingConsumableMessage.isEmpty()) {
-                            lplayer.printError(lplayer.translate(def.missingConsumableMessage).replace("%item%", stack.getAmount() + " " + stack.getType().name()));
+                        if (!found) {
+                            if (!def.missingConsumableMessage.isEmpty()) {
+                                lplayer.printError(lplayer.translate(def.missingConsumableMessage).replace("%item%", stack.getAmount() + " " + stack.getType().name()));
+                            }
                             break current;
                         }
                     }
@@ -506,7 +508,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(comdef.type == CommandType.CONSOLE)
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         else if (comdef.type == CommandType.PLAYER) {
-            if (ProtectionUtil.canSendCommand(player, command)) {
+            if (comdef.fakeCommand) {
+                ProtectionUtil.canSendCommand(player, command);
+            } else {
                 Bukkit.dispatchCommand(player, command);
             }
         } else if (comdef.type == CommandType.SUPERUSER) {
@@ -515,7 +519,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
             boolean wasOp = player.isOp();
             if(!wasOp)
                 player.setOp(true);
-            if (ProtectionUtil.canSendCommand(player, command)) {
+            if (comdef.fakeCommand) {
+                ProtectionUtil.canSendCommand(player, command);
+            } else {
                 Bukkit.dispatchCommand(player, command);
             }
             att.remove();

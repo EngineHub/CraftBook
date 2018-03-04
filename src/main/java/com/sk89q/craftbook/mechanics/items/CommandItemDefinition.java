@@ -20,6 +20,7 @@ public class CommandItemDefinition {
     protected String permNode;
     protected CommandType type;
     protected ClickType clickType;
+    protected boolean fakeCommand;
 
     protected String[] commands;
 
@@ -50,7 +51,9 @@ public class CommandItemDefinition {
         return name;
     }
 
-    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath, CommandItemAction[] actions, String missingConsumableMessage, String cooldownMessage) {
+    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int
+            delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState
+            requireSneaking, boolean keepOnDeath, CommandItemAction[] actions, String missingConsumableMessage, String cooldownMessage, boolean fakeCommand) {
 
         this.name = name;
         this.stack = stack;
@@ -69,6 +72,7 @@ public class CommandItemDefinition {
         this.actions = actions;
         this.missingConsumableMessage = missingConsumableMessage;
         this.cooldownMessage = cooldownMessage;
+        this.fakeCommand = fakeCommand;
     }
 
     public static CommandItemDefinition load(YAMLProcessor config, String path) {
@@ -97,6 +101,7 @@ public class CommandItemDefinition {
         TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
 
         boolean keepOnDeath = config.getBoolean(path + ".keep-on-death", false);
+        boolean fakeCommand = config.getBoolean(path + ".fake-command-compatibility", false);
 
         List<CommandItemAction> actionList = new ArrayList<>();
 
@@ -113,7 +118,9 @@ public class CommandItemDefinition {
         String missingConsumableMessage = config.getString(path + ".consumable-message", "mech.command-items.need");
         String cooldownMessage = config.getString(path + ".cooldown-message", "mech.command-items.wait");
 
-        return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]), missingConsumableMessage, cooldownMessage);
+        return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay,
+                delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables
+                .size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]), missingConsumableMessage, cooldownMessage, fakeCommand);
     }
 
     public void save(YAMLProcessor config, String path) {
@@ -136,6 +143,7 @@ public class CommandItemDefinition {
         config.setProperty(path + ".consume-self", consumeSelf);
         config.setProperty(path + ".require-sneaking-state", requireSneaking.name());
         config.setProperty(path + ".keep-on-death", keepOnDeath);
+        config.setProperty(path + ".fake-command-compatibility", fakeCommand);
 
         config.addNode(path + ".actions");
         for(CommandItemAction ac : actions) {

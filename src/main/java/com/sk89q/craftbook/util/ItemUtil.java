@@ -371,7 +371,7 @@ public final class ItemUtil {
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
         if(!isStackValid(item) || !isStackValid(item2)) {
-            CraftBookPlugin.logDebugMessage("An invalid item was compared. Was first? " + isStackValid(item), "item-checks");
+            CraftBookPlugin.logDebugMessage("An invalid item was compared. Was first? " + !isStackValid(item), "item-checks");
             return !isStackValid(item) && !isStackValid(item2);
         }
         else {

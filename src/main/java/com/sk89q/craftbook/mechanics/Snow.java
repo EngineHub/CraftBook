@@ -226,10 +226,10 @@ public class Snow extends AbstractCraftBookMechanic {
 
         if(!isChunkUseful) return;
 
-        new SnowChunkHandler(event.getChunk()).runTaskLater(CraftBookPlugin.inst(), getRandomDelay() * (event.getWorld().hasStorm() ? 20L : 10L));
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowChunkHandler(event.getChunk()), getRandomDelay() * (event.getWorld().hasStorm() ? 20L : 10L));
     }
 
-    private class SnowChunkHandler extends BukkitRunnable {
+    private class SnowChunkHandler implements Runnable {
 
         public Chunk chunk;
 
@@ -261,7 +261,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 }
             }
 
-            runTaskLater(CraftBookPlugin.inst(), getRandomDelay() * (meltMode ? 5L : 20L));
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), this, getRandomDelay() * (meltMode ? 5L : 20L));
         }
     }
 
