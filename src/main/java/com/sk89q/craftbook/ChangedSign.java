@@ -145,7 +145,7 @@ public class ChangedSign {
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
 
-        return getSign().update(force);
+        return getSign().update(force, false);
     }
 
     public byte getRawData() {
