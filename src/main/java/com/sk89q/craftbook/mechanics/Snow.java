@@ -44,7 +44,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-        if(meltSunlight || piling || realistic) {
+        if(meltSunlight || piling) {
             for(World world : Bukkit.getWorlds()) {
                 for(Chunk chunk : world.getLoadedChunks()) {
                     boolean isChunkUseful = false;
@@ -242,9 +242,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if(!chunk.isLoaded()) return; //Abandon ship.
 
-            boolean meltMode = false;
-            if(!chunk.getWorld().hasStorm() && meltSunlight)
-                meltMode = true;
+            boolean meltMode = !chunk.getWorld().hasStorm() && meltSunlight;
 
             Block highest = chunk.getWorld().getHighestBlockAt(chunk.getBlock(0, 0, 0).getX() + CraftBookPlugin.inst().getRandom().nextInt(16), chunk.getBlock(0, 0, 0).getZ() + CraftBookPlugin.inst().getRandom().nextInt(16));
 
@@ -305,7 +303,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(realistic)
                     if(!disperse(block) && !canLandOn(block.getRelative(0, -1, 0)))
                         decreaseSnow(block, false);
-            } else if (amount < 0) { // Odd edge case.
+            } else if (amount < 0) {
                 if(decreaseSnow(block, true))
                     amount++;
                 if(amount < 0)
@@ -383,24 +381,38 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         boolean increaseSnow(Block snow, boolean disperse) {
-
-            if(snow.getRelative(0, -1, 0).getType() != Material.AIR && isReplacable(snow.getRelative(0, -1, 0))) {
-                if(snow.getRelative(0, -1, 0).getType() != Material.SNOW || snow.getRelative(0,-1,0).getData() < 0x7)
-                    return increaseSnow(snow.getRelative(0,-1,0), disperse);
+            Block below = snow.getRelative(0, -1, 0);
+            if(below.getType() != Material.AIR && isReplacable(below)) {
+                if(below.getType() != Material.SNOW || below.getData() < 0x7)
+                    return increaseSnow(below, disperse);
             }
 
-            if (freezeWater && (snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER)) {
-                if(snow.getRelative(0, -1, 0).getData() == 0) {
-                    BlockState state = snow.getRelative(0, -1, 0).getState();
+            if (freezeWater && (below.getType() == Material.WATER || below.getType() == Material.STATIONARY_WATER)) {
+                if(below.getData() == 0) {
+                    BlockState state = below.getState();
                     state.setType(Material.ICE);
                     if(ProtectionUtil.canBlockForm(state.getBlock(), state))
-                        snow.getRelative(0, -1, 0).setType(Material.ICE);
-                } else snow.getRelative(0, -1, 0).setType(Material.AIR);
-            } else if(snow.getRelative(0, -1, 0).getType() == Material.WATER || snow.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER) {
+                        below.setType(Material.ICE);
+                } else below.setType(Material.AIR);
+            } else if(below.getType() == Material.WATER || below.getType() == Material.STATIONARY_WATER) {
                 return true; //Still return true, pretend it's actually succeeded.
             }
 
             if(snow.getType() != Material.SNOW && snow.getType() != Material.SNOW_BLOCK) {
+                if (below.getType() == Material.SNOW_BLOCK) {
+                    boolean allowed = false;
+                    if (pileHigh) {
+                        for (int i = 0; i < maxPileHeight + 1; i++) {
+                            if (below.getRelative(0, -i, 0).getType() != Material.SNOW_BLOCK) {
+                                allowed = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!allowed) {
+                        return false;
+                    }
+                }
                 if(isReplacable(snow)) {
                     snow.setTypeIdAndData(Material.SNOW.getId(), (byte) 0, false);
                     if(disperse)
@@ -414,7 +426,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 if(pileHigh) {
                     boolean allowed = false;
                     for(int i = 0; i < maxPileHeight+1; i++) {
-                        if(snow.getRelative(0,-i,0).getType() != Material.SNOW_BLOCK) {
+                        if(below.getRelative(0,-i,0).getType() != Material.SNOW_BLOCK) {
                             allowed = true;
                             break;
                         }
