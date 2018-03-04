@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
@@ -43,8 +42,6 @@ import org.spongepowered.api.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
-
-import javax.annotation.Nullable;
 
 @Module(id = "dispenserrecipes", name = "DispenserRecipes", onEnable = "onInitialize", onDisable = "onDisable")
 public class DispenserRecipes extends SpongeBlockMechanic implements DocumentationProvider {
@@ -110,7 +107,7 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
         }
 
         Dispenser dispenserTile = (Dispenser) dispenser.getLocation().getTileEntity().get();
-        if (handleDispenserAction(dispenserTile, event.getEntities().get(0).getVelocity())) {
+        if (handleDispenserAction(dispenserTile)) {
             event.setCancelled(true);
         }
     }
@@ -123,7 +120,7 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
             }
 
             Dispenser dispenserTile = (Dispenser) dispenser.getLocation().getTileEntity().get();
-            if (handleDispenserAction(dispenserTile, event.getEntities().get(0).getVelocity())) {
+            if (handleDispenserAction(dispenserTile)) {
                 event.setCancelled(true);
             }
         });
@@ -136,19 +133,19 @@ public class DispenserRecipes extends SpongeBlockMechanic implements Documentati
         }
 
         Dispenser dispenserTile = (Dispenser) dispenser.getLocation().getTileEntity().get();
-        if (handleDispenserAction(dispenserTile, null)) {
+        if (handleDispenserAction(dispenserTile)) {
             event.setCancelled(true);
         }
     }
 
-    public boolean handleDispenserAction(Dispenser dispenser, @Nullable Vector3d velocity) {
+    public boolean handleDispenserAction(Dispenser dispenser) {
         for (DispenserRecipe recipe : recipes) {
             ItemStack[] items = StreamSupport.stream(dispenser.getInventory().slots().spliterator(), false)
                     .map(Inventory::peek)
                     .map(opt -> opt.orElse(ItemStack.empty()))
                     .toArray(ItemStack[]::new);
             if (recipe.doesPass(items)) {
-                if (recipe.doAction(dispenser, items, velocity)) {
+                if (recipe.doAction(dispenser, items)) {
                     dispenser.getInventory().slots().forEach(inv -> inv.poll(1)); // Take one of every stack.
                     return true;
                 }

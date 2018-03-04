@@ -42,12 +42,13 @@ public class XPShooter extends SimpleDispenserRecipe {
     }
 
     @Override
-    public boolean doAction(Dispenser dispenser, ItemStack[] recipe, Vector3d velocity) {
+    public boolean doAction(Dispenser dispenser, ItemStack[] recipe) {
         Direction face = dispenser.getLocation().get(Keys.DIRECTION).orElse(Direction.NONE);
         if (face != Direction.NONE) {
             Location<World> location = dispenser.getLocation().getRelative(face).add(0.5, 0.5, 0.5);
             ThrownExpBottle bottle = (ThrownExpBottle) dispenser.getWorld().createEntity(EntityTypes.THROWN_EXP_BOTTLE, location.getPosition());
-            bottle.setVelocity(velocity);
+            Vector3d bottleVelocity = face.asOffset().add(0, 0.1f, 0).normalize().mul(1.5f);
+            bottle.setVelocity(bottleVelocity);
             try (CauseStackManager.StackFrame frame = Sponge.getCauseStackManager().pushCauseFrame()) {
                 Sponge.getCauseStackManager().addContext(EventContextKeys.SPAWN_TYPE, SpawnTypes.CUSTOM);
                 dispenser.getWorld().spawnEntity(bottle);

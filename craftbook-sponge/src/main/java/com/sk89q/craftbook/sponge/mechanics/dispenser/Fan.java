@@ -16,7 +16,6 @@
  */
 package com.sk89q.craftbook.sponge.mechanics.dispenser;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.sk89q.craftbook.sponge.util.LocationUtil;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.carrier.Dispenser;
@@ -39,7 +38,7 @@ public class Fan extends SimpleDispenserRecipe {
     }
 
     @Override
-    public boolean doAction(Dispenser dispenser, ItemStack[] recipe, Vector3d velocity) {
+    public boolean doAction(Dispenser dispenser, ItemStack[] recipe) {
         Direction face = dispenser.getLocation().get(Keys.DIRECTION).orElse(Direction.NONE);
         if (face != Direction.NONE) {
             Location<World> offset = dispenser.getLocation().getRelative(face);
