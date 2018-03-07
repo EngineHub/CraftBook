@@ -380,7 +380,11 @@ public class CommandItemCommands {
                 List<CommandItemAction> actions = new ArrayList<>();
                 String missingConsumableMessage = "mech.command-items.need";
                 String cooldownMessage = "mech.command-items.wait";
-                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking, keepOnDeath, actions.toArray(new CommandItemAction[actions.size()]), missingConsumableMessage, cooldownMessage);
+                CommandItemDefinition def = new CommandItemDefinition(name, stack, type, clickType, permNode,
+                        commands.toArray(new String[commands.size()]), delay, delayedCommands.toArray(new String[delayedCommands.size()]),
+                        cooldown, cancelAction, consumables.toArray(new ItemStack[consumables.size()]), consumeSelf, requireSneaking,
+                        keepOnDeath, actions.toArray(new CommandItemAction[actions.size()]), missingConsumableMessage, cooldownMessage,
+                        false);
                 CommandItems.INSTANCE.addDefinition(def);
                 CommandItems.INSTANCE.save();
                 return ChatColor.YELLOW + "Successfully added CommandItem: " + name;
