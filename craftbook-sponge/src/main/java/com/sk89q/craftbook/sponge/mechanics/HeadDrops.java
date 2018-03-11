@@ -121,6 +121,8 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.CAVE_SPIDER, GameProfile.of(UUID.fromString("cab28771-f0cd-4fe7-b129-02c69eba79a5"), "MHF_CaveSpider"));
         mobSkullMap.put(EntityTypes.CHICKEN, GameProfile.of(UUID.fromString("92deafa9-4307-42d9-b003-88601598d6c0"), "MHF_Chicken"));
         mobSkullMap.put(EntityTypes.COW, GameProfile.of(UUID.fromString("f159b274-c22e-4340-b7c1-52abde147713"), "MHF_Cow"));
+        mobSkullMap.put(EntityTypes.DONKEY, GameProfile.of(UUID.fromString("5464dd67-5a46-4239-862f-b27b4944442c"), "Donkey"));
+        mobSkullMap.put(EntityTypes.ELDER_GUARDIAN, GameProfile.of(UUID.fromString("57ef77e6-d9ea-493e-a0c7-564a36d9d12a"), "ElderGuardian"));
         mobSkullMap.put(EntityTypes.ENDERMAN, GameProfile.of(UUID.fromString("40ffb372-12f6-4678-b3f2-2176bf56dd4b"), "MHF_Enderman"));
         mobSkullMap.put(EntityTypes.ENDERMITE, GameProfile.of(UUID.fromString("3df6a050-b93e-4d8b-8fa4-b5228a797b84"), "MHF_Endermite"));
         mobSkullMap.put(EntityTypes.ENDER_DRAGON, GameProfile.of(UUID.fromString("bd3802bb-be48-438c-bafb-cb9510e2aa2d"), "MHF_EnderDragon"));
@@ -131,8 +133,10 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.MAGMA_CUBE, GameProfile.of(UUID.fromString("0972bdd1-4b86-49fb-9ecc-a353f8491a51"), "MHF_LavaSlime"));
         mobSkullMap.put(EntityTypes.MUSHROOM_COW, GameProfile.of(UUID.fromString("a46817d6-73c5-4f3f-b712-af6b3ff47b96"), "MHF_MushroomCow"));
         mobSkullMap.put(EntityTypes.OCELOT, GameProfile.of(UUID.fromString("1bee9df5-4f71-42a2-bf52-d97970d3fea3"), "MHF_Ocelot"));
+        mobSkullMap.put(EntityTypes.PARROT, GameProfile.of(UUID.fromString("3d88c411-c7e1-40f9-b1f7-fbe4b7aef4a2"), "MHF_Parrot"));
         mobSkullMap.put(EntityTypes.PIG, GameProfile.of(UUID.fromString("8b57078b-f1bd-45df-83c4-d88d16768fbe"), "MHF_Pig"));
         mobSkullMap.put(EntityTypes.PIG_ZOMBIE, GameProfile.of(UUID.fromString("18a2bb50-334a-4084-9184-2c380251a24b"), "MHF_PigZombie"));
+        mobSkullMap.put(EntityTypes.POLAR_BEAR, GameProfile.of(UUID.fromString("38029209-38b0-4311-97a9-60663fbf74b5"), "Polar_Bear"));
         mobSkullMap.put(EntityTypes.RABBIT, GameProfile.of(UUID.fromString("fbec11d4-80a7-4c1c-9de3-4136a16f1de0"), "MHF_Rabbit"));
         mobSkullMap.put(EntityTypes.SHEEP, GameProfile.of(UUID.fromString("dfaad551-4e7e-45a1-a6f7-c6fc5ec823ac"), "MHF_Sheep"));
         mobSkullMap.put(EntityTypes.SHULKER, GameProfile.of(UUID.fromString("160f7d8a-c6b0-4fc8-8925-9e9d6c9c57d5"), "MHF_Shulker"));
@@ -147,6 +151,7 @@ public class HeadDrops extends SpongeMechanic implements DocumentationProvider {
         mobSkullMap.put(EntityTypes.WOLF, GameProfile.of(UUID.fromString("8d2d1d6d-8034-4c89-bd86-809a31fd5193"), "MHF_Wolf"));
         mobSkullMap.put(EntityTypes.VEX, GameProfile.of(UUID.fromString("f5f20997-217f-4426-8ab9-c6db6cce023f"), "MHF_Vex"));
         mobSkullMap.put(EntityTypes.VILLAGER, GameProfile.of(UUID.fromString("bd482739-767c-45dc-a1f8-c33c40530952"), "MHF_Villager"));
+        mobSkullMap.put(EntityTypes.VINDICATION_ILLAGER, GameProfile.of(UUID.fromString("1f32ef1f-9bf1-436e-98e3-cb48758fd268"), "Vindicator"));
     }
 
     private Optional<ItemStack> getStackForEntity(EntityType type, @Nullable GameProfile profile) {
