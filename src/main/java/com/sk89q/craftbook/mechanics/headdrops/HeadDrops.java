@@ -218,40 +218,44 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     protected enum MobSkullType {
 
         //Official
+        BAT("bozzobrain", "coolwhip101"),
         BLAZE("MHF_Blaze", "Blaze_Head"),
         CAVE_SPIDER("MHF_CaveSpider"),
         CHICKEN("MHF_Chicken", "scraftbrothers1"),
         COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
+        DONKEY("Donkey"),
+        ELDER_GUARDIAN("ElderGuardian"),
         ENDERMAN("MHF_Enderman", "Violit"),
         ENDERMITE("MHF_Endermite"),
         ENDER_DRAGON("MHF_EnderDragon"),
         EVOKER("MFH_Evoker"),
         GHAST("MHF_Ghast", "_QuBra_"),
+        GUARDIAN("MHF_Guardian", "Guardian"),
+        HORSE("gavertoso"),
+        IRON_GOLEM("MHF_Golem", "zippie007"),
         MAGMA_CUBE("MHF_LavaSlime"),
         MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
+        OCELOT("MHF_Ocelot", "scraftbrothers3"),
+        PARROT("MHF_Parrot"),
         PIG("MHF_Pig", "XlexerX"),
         PIG_ZOMBIE("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
+        POLAR_BEAR("Polar_Bear", "ice_bear", "_DmacK_"),
+        RABBIT("MHF_Rabbit", "rabbit2077"),
         SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
+        SHULKER("MHF_Shulker"),
+        //SILVERFISH("Xzomag", "AlexVMiner"),
         SLIME("MHF_Slime", "HappyHappyMan"),
+        SNOWMAN("MHF_SnowGolem", "Koebasti", "scraftbrothers2"),
         SPIDER("MHF_Spider", "Kelevra_V"),
-        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9"),
-        IRON_GOLEM("MHF_Golem", "zippie007"),
         STRAY("MHF_Stray"),
         SQUID("MHF_Squid", "squidette8"),
-        OCELOT("MHF_Ocelot", "scraftbrothers3"),
+        WITCH("MHF_Witch", "scrafbrothers4"),
+        WITHER("MHF_Wither"),
         WOLF("MHF_Wolf", "Budwolf"),
-        RABBIT("MHF_Rabbit", "rabbit2077"),
-        GUARDIAN("MHF_Guardian", "Guardian"),
-        SHULKER("MHF_Shulker"),
         VEX("MHF_Vex"),
+        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9");
 
         //Unofficial/Community
-        BAT("bozzobrain", "coolwhip101"),
-        //SILVERFISH("Xzomag", "AlexVMiner"),
-        SNOWMAN("Koebasti", "scraftbrothers2"),
-        HORSE("gavertoso"),
-        WITCH("scrafbrothers4"),
-        POLAR_BEAR("ice_bear", "_DmacK_");
 
         MobSkullType(String playerName, String ... oldNames) {
 
