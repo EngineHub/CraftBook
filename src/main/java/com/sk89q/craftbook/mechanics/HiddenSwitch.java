@@ -98,7 +98,8 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 toggleSwitches(testBlock, eventFace.getOppositeFace());
                 success = true;
             } else {
-                if (ItemUtil.areItemsIdentical(player.getItemInHand(), itemID)) {
+                if (ItemUtil.areItemsIdentical(player.getInventory().getItemInMainHand(), itemID)
+                        || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
                     toggleSwitches(testBlock, eventFace.getOppositeFace());
                     success = true;
                 } else
