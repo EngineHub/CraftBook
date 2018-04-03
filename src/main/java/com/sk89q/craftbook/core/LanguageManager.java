@@ -56,16 +56,16 @@ public class LanguageManager {
 
             lang.save();
 
-            languageMap.put(language, lang);
+            languageMap.put(language.toLowerCase(), lang);
         }
     }
 
     public String getString(String message, String language) {
 
         //message = ChatColor.stripColor(message);
-        if(language == null || !languageMap.containsKey(language))
+        if(language == null || !languageMap.containsKey(language.toLowerCase()))
             language = CraftBookPlugin.inst().getConfiguration().language;
-        YAMLProcessor languageData = languageMap.get(language);
+        YAMLProcessor languageData = languageMap.get(language.toLowerCase());
         String def = defaultMessages.get(message);
         if(languageData == null) {
             if(!CraftBookPlugin.inst().getConfiguration().languageScanText || def != null) {
@@ -103,14 +103,7 @@ public class LanguageManager {
     }
 
     public static String getPlayersLanguage(Player p) {
-
-        //try {
-        //Field d = EntityPlayer.class.getDeclaredField("locale");
-        //d.setAccessible(true);
-        //return (String) d.get(((CraftPlayer) p).getHandle());
-        //} catch (Throwable e) {
-        return CraftBookPlugin.inst().getConfiguration().language;
-        //}
+        return p.getLocale();
     }
 
     public Set<String> getLanguages() {
