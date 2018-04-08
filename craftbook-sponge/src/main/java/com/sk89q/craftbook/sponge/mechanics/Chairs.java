@@ -163,7 +163,7 @@ public class Chairs extends SpongeBlockMechanic implements DocumentationProvider
     }
 
     private void addChair(Player player, Location<World> location) {
-        Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1, -0.5));
+        Entity entity = location.getExtent().createEntity(EntityTypes.ARMOR_STAND, location.getBlockPosition().toDouble().sub(-0.5, 1.2, -0.5));
         entity.offer(Keys.INVISIBLE, true);
         entity.offer(Keys.HAS_GRAVITY, false);
 
