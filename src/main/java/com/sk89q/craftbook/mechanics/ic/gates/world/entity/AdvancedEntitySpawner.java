@@ -36,9 +36,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
         super(server, sign, factory);
     }
 
-    Location location;
-    EntityType type;
-    int amount;
+    private Location location;
+    private EntityType type;
+    private int amount;
 
     @Override
     public String getTitle() {
@@ -56,11 +56,14 @@ public class AdvancedEntitySpawner extends AbstractIC {
     public void load() {
 
         String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(getSign().getLine(3).trim());
-        type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
-        if (type == null) {
-            type = EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
-            if(type == null)
+        try {
+            type = EntityType.valueOf(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
+        } catch (IllegalArgumentException e) {
+            try {
+                type = EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
+            } catch (IllegalArgumentException ee) {
                 type = EntityType.PIG;
+            }
         }
 
         try {
@@ -206,9 +209,11 @@ public class AdvancedEntitySpawner extends AbstractIC {
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
             EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
             if(type == null)
-                type = EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
-            if (type == null)
-                throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
+                try {
+                    EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
+                } catch (IllegalArgumentException e) {
+                    throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
+                }
             else if (!type.isSpawnable())
                 throw new ICVerificationException("Entity is not spawnable!");
         }
