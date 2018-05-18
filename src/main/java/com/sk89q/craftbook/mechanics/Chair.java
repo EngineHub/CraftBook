@@ -26,6 +26,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Directional;
 
@@ -110,6 +112,7 @@ public class Chair extends AbstractCraftBookMechanic {
         final ChairData chairData = chairs.get(player.getName());
         final Entity ent = chairData.chairEntity;
         if(ent != null) {
+            ent.eject();
             player.eject();
             ent.remove();
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
@@ -168,6 +171,20 @@ public class Chair extends AbstractCraftBookMechanic {
         if (hasChair(event.getBlock())) {
             event.setCancelled(true);
             CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).printError("mech.chairs.in-use");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onDisconnect(PlayerQuitEvent event) {
+        if (hasChair(event.getPlayer())) {
+            removeChair(event.getPlayer());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onKick(PlayerKickEvent event) {
+        if (hasChair(event.getPlayer())) {
+            removeChair(event.getPlayer());
         }
     }
 
@@ -259,10 +276,14 @@ public class Chair extends AbstractCraftBookMechanic {
         public void run() {
             for (Map.Entry<String, ChairData> pl : chairs.entrySet()) {
                 Player p = Bukkit.getPlayerExact(pl.getKey());
-                if (p == null  || p.isDead()) {
+                if (p == null  || p.isDead() || !p.isValid()) {
                     ChairData data = chairs.remove(pl.getKey());
-                    if (data != null && data.chairEntity != null)
-                        data.chairEntity.remove();
+                    if (data != null && data.chairEntity != null) {
+                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                            data.chairEntity.eject();
+                            data.chairEntity.remove();
+                        }, 5);
+                    }
                     continue;
                 }
 
