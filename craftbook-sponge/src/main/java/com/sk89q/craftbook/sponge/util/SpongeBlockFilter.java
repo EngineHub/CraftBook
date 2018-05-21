@@ -24,11 +24,10 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.trait.BlockTrait;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class SpongeBlockFilter extends BlockFilter<BlockState> {
 
@@ -53,13 +52,15 @@ public final class SpongeBlockFilter extends BlockFilter<BlockState> {
 
     public List<BlockState> getApplicableBlocks() {
         if(cache == null) {
+            //Enumerate the cache.
+            cache = new ArrayList<>();
 
             BlockType blockType;
 
             Map<String, String> traitSpecifics = new HashMap<>();
 
             if(getRule().contains("[") && getRule().endsWith("]")) {
-                String subRule = getRule().substring(getRule().indexOf('[') + 1, getRule().length() - 1);
+                String subRule = getRule().substring(getRule().indexOf('['), getRule().length()-2);
                 String[] parts = RegexUtil.COMMA_PATTERN.split(subRule);
 
                 blockType = Sponge.getGame().getRegistry().getType(BlockType.class, getRule().substring(0, getRule().indexOf('['))).orElse(null);
@@ -74,20 +75,42 @@ public final class SpongeBlockFilter extends BlockFilter<BlockState> {
 
             if(blockType == null) {
                 CraftBookPlugin.spongeInst().getLogger().warn("Missing type for filter rule: " + getRule());
-                return Collections.emptyList();
+                return cache;
             }
 
-            BlockState.MatcherBuilder matcherBuilder = BlockState.matcher(blockType);
+            int[] counter = new int[blockType.getTraits().size()];
 
-            traitSpecifics.forEach((k, v) ->
-                    blockType.getTrait(k).ifPresent(t ->
-                            t.parseValue(v).ifPresent(tv ->
-                                    matcherBuilder.trait((BlockTrait) t, (Comparable) tv)
-                            )
-                    )
-            );
+            if(counter.length != 0) {
+                while (true) {
+                    BlockState state = blockType.getDefaultState();
+                    List<BlockTrait<?>> blockTraits = new ArrayList<>(state.getTraits());
+                    for (int i = 0; i < counter.length; i++) {
+                        BlockTrait<?> trait = blockTraits.get(i);
+                        if(traitSpecifics.containsKey(trait.getName().toLowerCase()))
+                            state = state.withTrait(trait, traitSpecifics.get(trait.getName().toLowerCase())).orElse(null);
+                        else {
+                            ArrayList<?> possibleValues = new ArrayList<>(trait.getPossibleValues());
+                            if (counter[i] >= possibleValues.size()) {
+                                counter[i] = 0;
+                                if (i + 1 >= counter.length)
+                                    return cache;
+                                counter[i + 1]++;
+                            }
+                            state = state.withTrait(trait, possibleValues.get(counter[i])).get();
+                        }
+                    }
 
-            cache = matcherBuilder.build().getCompatibleStates();
+                    if(state != null) {
+                        cache.add(state);
+                    } else {
+                        CraftBookPlugin.spongeInst().getLogger().warn("A state was null when it shouldn't have been. Are you sure '" + getRule() + "' is correct?");
+                    }
+
+                    counter[0] += 1;
+                }
+            } else {
+                cache.add(blockType.getDefaultState());
+            }
         }
 
         return cache;
