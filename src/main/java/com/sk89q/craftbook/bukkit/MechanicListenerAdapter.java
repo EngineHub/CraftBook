@@ -408,7 +408,7 @@ final class MechanicListenerAdapter implements Listener {
     public void onSignChange(SignChangeEvent event) {
         for (int i = 0; i < 4; i++) {
             String line = event.getLine(i);
-            if (line.startsWith("&0")) {
+            if (line.startsWith("&0") || line.startsWith("\u00A70")) {
                 line = line.substring(2);
                 event.setLine(i, line);
             }
