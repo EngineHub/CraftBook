@@ -48,7 +48,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        state.setOutput(0, isDetected());
+        state.setOutput(0, invertOutput != isDetected());
     }
 
     SearchArea area;
