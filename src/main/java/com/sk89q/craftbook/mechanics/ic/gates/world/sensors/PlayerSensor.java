@@ -16,6 +16,9 @@ import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.PlayerType;
 import com.sk89q.craftbook.util.SearchArea;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Me4502
  */
@@ -51,43 +54,49 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         state.setOutput(0, invertOutput != isDetected());
     }
 
-    SearchArea area;
+    private static final Pattern NAME_STRIPPER = Pattern.compile("[gpnta!^]:");
 
-    PlayerType type;
-    String nameLine;
-    boolean invertOutput = false;
+    private SearchArea area;
+
+    private PlayerType type;
+    private String nameLine;
+    private boolean invertOutput = false;
+    private boolean invertDetection = false;
 
     @Override
     public void load() {
-
-        if (getLine(3).contains(":"))
-            type = PlayerType.getFromChar(getLine(3).replace("!", "").trim().toCharArray()[0]);
-        else
+        if (getLine(3).contains(":")) {
+            type = PlayerType.getFromChar(getLine(3).replace("!", "").replace("^", "").trim().toCharArray()[0]);
+        } else {
             type = PlayerType.NAME;
+        }
 
         invertOutput = getLine(3).contains("!");
+        invertDetection = getLine(3).contains("^");
 
-        nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").replace("!", "").trim();
+        nameLine = NAME_STRIPPER.matcher(getLine(3)).replaceAll(Matcher.quoteReplacement("")).trim();
 
         area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
     }
 
-    protected boolean isDetected() {
-
+    private boolean isDetected() {
         if (!nameLine.isEmpty() && type == PlayerType.NAME) {
             Player p = Bukkit.getPlayerExact(nameLine);
-            if (p != null && area.isWithinArea(p.getLocation())) return true;
+            if (p != null && (invertDetection != area.isWithinArea(p.getLocation()))) {
+                return true;
+            }
         }
 
         for (Player p : area.getPlayersInArea()) {
-
-            if (p == null || !p.isValid())
+            if (p == null || !p.isValid()) {
                 continue;
+            }
 
-            if (nameLine.isEmpty())
+            if (nameLine.isEmpty()) {
                 return true;
-            else if (type.doesPlayerPass(p, nameLine))
+            } else if (invertDetection != type.doesPlayerPass(p, nameLine)) {
                 return true;
+            }
         }
 
         return false;
