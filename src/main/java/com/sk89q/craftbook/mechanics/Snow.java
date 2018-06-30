@@ -145,7 +145,7 @@ public class Snow extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if (!trample) return;
+        if (!trample && !slowdown) return;
 
         if(!EventUtil.passesFilter(event))
             return;
@@ -161,15 +161,21 @@ public class Snow extends AbstractCraftBookMechanic {
                     event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1), true);
             }
 
-            if (!player.hasPermission("craftbook.mech.snow.trample")) return;
+            if (trample) {
+                if (!player.hasPermission("craftbook.mech.snow.trample"))
+                    return;
 
-            if (jumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
-                return;
+                if (jumpTrample && !(event.getFrom().getY() - event.getTo().getY() >= 0.1D))
+                    return;
 
-            if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
-                if(event.getTo().getBlock().getData() == 0x0 && partialTrample) return;
-                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) return;
-                Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1));
+                if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
+                    if (event.getTo().getBlock().getData() == 0x0 && partialTrample)
+                        return;
+                    if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil
+                            .canBuild(event.getPlayer(), event.getPlayer().getLocation(), false))
+                        return;
+                    Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(event.getTo().getBlock(), -1));
+                }
             }
         }
     }
