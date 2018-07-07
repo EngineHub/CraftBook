@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -46,6 +47,7 @@ public class ReportWriter {
         appendCraftBookInformation(plugin);
         appendCustomCraftingInformation(plugin);
         appendGlobalConfiguration(plugin.getConfiguration());
+        appendMechanicConfiguration(plugin.getMechanics());
         appendln("-------------");
         appendln("END OF REPORT");
         appendln();
@@ -110,6 +112,7 @@ public class ReportWriter {
         for (Field field : cls.getFields()) {
             try {
                 if (field.getName().equalsIgnoreCase("config")) continue;
+                if (field.getName().equalsIgnoreCase("plugin")) continue;
                 Object val = field.get(config);
                 configLog.put(field.getName(), val);
             } catch (IllegalArgumentException e) {
@@ -117,16 +120,29 @@ public class ReportWriter {
             } catch (IllegalAccessException ignore) {
             }
         }
-        Class<? extends BukkitConfiguration> cls2 = config.getClass();
-        for (Field field : cls2.getFields()) {
-            try {
-                if (field.getName().equalsIgnoreCase("config")) continue;
-                if (field.getName().equalsIgnoreCase("plugin")) continue;
-                Object val = field.get(config);
-                configLog.put(field.getName(), val);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException ignore) {
+        append(log);
+        appendln();
+    }
+
+    private void appendMechanicConfiguration(List<CraftBookMechanic> mechanics) {
+        appendHeader("Mechanic Configurations");
+
+        LogListBlock log = new LogListBlock();
+        for (CraftBookMechanic mechanic : mechanics) {
+            LogListBlock configLog = log.putChild(mechanic.getClass().getSimpleName());
+
+            Class<? extends CraftBookMechanic> cls = mechanic.getClass();
+            for (Field field : cls.getDeclaredFields()) {
+                try {
+                    if (field.getName().equalsIgnoreCase("instance") || field.getName().equalsIgnoreCase("queue"))
+                        continue;
+                    field.setAccessible(true); // Some of these will be private
+                    Object val = field.get(mechanic);
+                    configLog.put(field.getName(), val);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException ignore) {
+                }
             }
         }
         append(log);
