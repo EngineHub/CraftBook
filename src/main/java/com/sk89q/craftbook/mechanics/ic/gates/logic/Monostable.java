@@ -138,7 +138,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             }
 
             ticks = Math.max(ticks, 2);
-            ticks = Math.min(ticks, 150);
+            ticks = Math.min(ticks, 6000);
 
             sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
             sign.setLine(3, "0");
