@@ -118,7 +118,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         @Override
         public String getShortDescription() {
 
-            return "Pumps liquids into above chest.";
+            return "Pumps liquids into buckets in the above chest.";
         }
 
         @Override
