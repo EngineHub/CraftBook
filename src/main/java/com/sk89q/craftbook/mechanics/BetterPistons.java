@@ -286,22 +286,19 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             break;
                         }
                         for (Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
-
                             if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i))) {
                                 ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                             }
                         }
                         copyData(trigger.getRelative(piston.getFacing(), i + 1), trigger.getRelative(piston.getFacing(), i));
                     }
-                }, 2L * (p + 1));
+                }, 3L * (p + 1));
             }
         }
     }
 
     public void superPush(final Block trigger, final PistonBaseMaterial piston, ChangedSign signState) {
-
-        if (trigger.getRelative(piston.getFacing()).getType() != Material.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getType() !=Material.PISTON_MOVING_PIECE) {
-
+        if (trigger.getRelative(piston.getFacing()).getType() != Material.PISTON_EXTENSION && trigger.getRelative(piston.getFacing()).getType() != Material.PISTON_MOVING_PIECE) {
             int block = 10;
             int amount = 1;
             try {
@@ -319,20 +316,21 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             for (int p = 0; p < amount; p++) {
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
                     for (int x = fblock + 2; x >= 1; x--) {
-                        if (trigger.equals(trigger.getRelative(piston.getFacing(), x)) || trigger.getRelative(piston.getFacing(), x).getType() == Material.PISTON_MOVING_PIECE || trigger.getRelative(piston.getFacing(), x).getType() == Material.PISTON_EXTENSION || !canPistonPushBlock(trigger.getRelative(piston.getFacing(), x)))
+                        Block offset = trigger.getRelative(piston.getFacing(), x);
+                        Block next = trigger.getRelative(piston.getFacing(), x + 1);
+                        if (trigger.equals(offset) || offset.getType() == Material.PISTON_MOVING_PIECE || offset.getType() == Material.PISTON_EXTENSION || !canPistonPushBlock(offset))
                             continue;
-                        if (trigger.getRelative(piston.getFacing(), x + 1).getType() == Material.AIR) {
-                            for (Entity ent : trigger.getRelative(piston.getFacing(), x + 1).getChunk().getEntities()) {
-
-                                if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), x + 1))) {
+                        if (next.getType() == Material.AIR) {
+                            for (Entity ent : next.getChunk().getEntities()) {
+                                if (EntityUtil.isEntityInBlock(ent, offset)) {
                                     ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                                 }
                             }
-                            if(copyData(trigger.getRelative(piston.getFacing(), x), trigger.getRelative(piston.getFacing(), x + 1)))
-                                trigger.getRelative(piston.getFacing(), x).setType(Material.AIR);
+                            if(copyData(offset, next))
+                                offset.setType(Material.AIR);
                         }
                     }
-                }, 2L * (p + 1));
+                }, 3L * (p + 1));
             }
         }
     }
@@ -348,7 +346,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         BlockState toState = to.getState();
         BlockState fromState = from.getState();
 
-        if (fromState instanceof DoubleChest || toState instanceof DoubleChest) return false;
+        if (fromState instanceof DoubleChest || toState instanceof DoubleChest) {
+            return false;
+        }
 
         int type = from.getTypeId();
         byte data = from.getData();
@@ -358,7 +358,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             oldInventory = ((InventoryHolder) fromState).getInventory().getContents().clone();
             ((InventoryHolder) fromState).getInventory().clear();
             //fromState.update();
-            from.setTypeId(0);
+            from.setType(Material.AIR);
         }
         to.setTypeIdAndData(type, data, true);
         if (to.getType() == Material.STONE_BUTTON || to.getType() == Material.WOOD_BUTTON) {
