@@ -54,7 +54,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         state.setOutput(0, invertOutput != isDetected());
     }
 
-    private static final Pattern NAME_STRIPPER = Pattern.compile("[gpnta!^]:");
+    private static final Pattern NAME_STRIPPER = Pattern.compile("[gpnta!^]*:");
 
     private SearchArea area;
 
@@ -80,11 +80,9 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
     }
 
     private boolean isDetected() {
-        if (!nameLine.isEmpty() && type == PlayerType.NAME) {
+        if (!nameLine.isEmpty() && type == PlayerType.NAME && !invertDetection) {
             Player p = Bukkit.getPlayerExact(nameLine);
-            if (p != null && (invertDetection != area.isWithinArea(p.getLocation()))) {
-                return true;
-            }
+            return p != null && area.isWithinArea(p.getLocation());
         }
 
         for (Player p : area.getPlayersInArea()) {
