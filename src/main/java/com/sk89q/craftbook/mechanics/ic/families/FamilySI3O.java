@@ -16,16 +16,15 @@
 
 package com.sk89q.craftbook.mechanics.ic.families;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractChipState;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFamily;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.util.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * Handles detection for the single input single output family.
@@ -35,25 +34,25 @@ import com.sk89q.worldedit.BlockWorldVector;
 public class FamilySI3O extends AbstractICFamily {
 
     @Override
-    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detect(Location source, ChangedSign sign) {
 
         return new ChipStateSI3O(source, sign);
     }
 
     @Override
-    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detectSelfTriggered(Location source, ChangedSign sign) {
 
         return new ChipStateSI3O(source, sign, true);
     }
 
     public static class ChipStateSI3O extends AbstractChipState {
 
-        public ChipStateSI3O(BlockWorldVector source, ChangedSign sign) {
+        public ChipStateSI3O(Location source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-        public ChipStateSI3O(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
+        public ChipStateSI3O(Location source, ChangedSign sign, boolean selfTriggered) {
 
             super(source, sign, selfTriggered);
         }
@@ -61,7 +60,7 @@ public class FamilySI3O extends AbstractICFamily {
         @Override
         protected Block getBlock(int pin) {
 
-            Block bsign = BukkitUtil.toSign(sign).getBlock();
+            Block bsign = CraftBookBukkitUtil.toSign(sign).getBlock();
             BlockFace fback = SignUtil.getBack(bsign);
 
             switch (pin) {

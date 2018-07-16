@@ -28,9 +28,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -188,7 +185,6 @@ final class MechanicListenerAdapter implements Listener {
     private static void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
 
         World world = block.getWorld();
-        BlockWorldVector v = BukkitUtil.toWorldVector(block);
 
         // Give the method a BlockWorldVector instead of a Block
         boolean wasOn = oldLevel >= 1;
@@ -199,10 +195,9 @@ final class MechanicListenerAdapter implements Listener {
         // off and on state, and ignore simple current changes (i.e. 15->13)
         if (!wasChange) return;
 
-        LocalWorld w = BukkitUtil.getLocalWorld(world);
-        int x = v.getBlockX();
-        int y = v.getBlockY();
-        int z = v.getBlockZ();
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
 
         // When this hook has been called, the level in the world has not
         // yet been updated, so we're going to do this very ugly thing of
@@ -214,17 +209,17 @@ final class MechanicListenerAdapter implements Listener {
 
                     // power all blocks around the redstone wire on the same y level
                     // north/south
-                    handleDirectWireInput(new WorldVector(w, x - 1, y, z), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + 1, y, z), block, oldLevel, newLevel);
+                    handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
+                    handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
                     // east/west
-                    handleDirectWireInput(new WorldVector(w, x, y, z - 1), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x, y, z + 1), block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
 
                     // Can be triggered from below
-                    handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
 
                     // Can be triggered from above (Eg, glass->glowstone like redstone lamps)
-                    handleDirectWireInput(new WorldVector(w, x, y - 1, z), block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 } else {
 
                     int above = world.getBlockTypeIdAt(x, y + 1, z);
@@ -250,10 +245,10 @@ final class MechanicListenerAdapter implements Listener {
                             && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
                             && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
                         // Possible blocks north / south
-                        handleDirectWireInput(new WorldVector(w, x - 1, y, z), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x + 1, y, z), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), block, oldLevel, newLevel);
+                        handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
+                        handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
+                        handleDirectWireInput(x - 1, y - 1, z, block, oldLevel, newLevel);
+                        handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
                     }
 
                     if (!BlockType.isRedstoneBlock(northSide) && !BlockType.isRedstoneBlock(southSide)
@@ -262,17 +257,17 @@ final class MechanicListenerAdapter implements Listener {
                             && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
                             && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
                         // Possible blocks west / east
-                        handleDirectWireInput(new WorldVector(w, x, y, z - 1), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x, y, z + 1), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), block, oldLevel, newLevel);
-                        handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), block, oldLevel, newLevel);
+                        handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
+                        handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
+                        handleDirectWireInput(x, y - 1, z - 1, block, oldLevel, newLevel);
+                        handleDirectWireInput(x, y - 1, z + 1, block, oldLevel, newLevel);
                     }
 
                     // Can be triggered from below
-                    handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
 
                     // Can be triggered from above
-                    handleDirectWireInput(new WorldVector(w, x, y - 1, z), block, oldLevel, newLevel);
+                    handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 }
                 return;
             case BlockID.REDSTONE_REPEATER_OFF:
@@ -281,14 +276,14 @@ final class MechanicListenerAdapter implements Listener {
             case BlockID.COMPARATOR_ON:
                 Directional diode = (Directional) block.getState().getData();
                 BlockFace f = diode.getFacing();
-                handleDirectWireInput(new WorldVector(w, x + f.getModX(), y, z + f.getModZ()), block, oldLevel, newLevel);
+                handleDirectWireInput(x + f.getModX(), y, z + f.getModZ(), block, oldLevel, newLevel);
                 if(block.getRelative(f).getTypeId() != 0) {
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX(), y - 1, z + f.getModZ()), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX(), y + 1, z + f.getModZ()), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX() + 1, y - 1, z + f.getModZ()), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX() - 1, y - 1, z + f.getModZ()), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX() + 1, y - 1, z + f.getModZ() + 1), block, oldLevel, newLevel);
-                    handleDirectWireInput(new WorldVector(w, x + f.getModX() - 1, y - 1, z + f.getModZ() - 1), block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX(), y - 1, z + f.getModZ(), block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX(), y + 1, z + f.getModZ(), block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ() + 1, block, oldLevel, newLevel);
+                    handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ() - 1, block, oldLevel, newLevel);
                 }
                 return;
             case BlockID.STONE_BUTTON:
@@ -298,7 +293,7 @@ final class MechanicListenerAdapter implements Listener {
                 if(button != null) {
                     BlockFace face = button.getAttachedFace();
                     if(face != null)
-                        handleDirectWireInput(new WorldVector(w, x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2), block, oldLevel, newLevel);
+                        handleDirectWireInput(x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2, block, oldLevel, newLevel);
                 }
                 break;
             case BlockID.POWERED_RAIL:
@@ -308,33 +303,35 @@ final class MechanicListenerAdapter implements Listener {
         // For redstone wires and repeaters, the code already exited this method
         // Non-wire blocks proceed
 
-        handleDirectWireInput(new WorldVector(w, x - 1, y, z), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x + 1, y, z), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x - 1, y - 1, z), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x + 1, y - 1, z), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x, y, z - 1), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x, y, z + 1), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x, y - 1, z - 1), block, oldLevel, newLevel);
-        handleDirectWireInput(new WorldVector(w, x, y - 1, z + 1), block, oldLevel, newLevel);
+        handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
+        handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
+        handleDirectWireInput(x - 1, y - 1, z, block, oldLevel, newLevel);
+        handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
+        handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
+        handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
+        handleDirectWireInput(x, y - 1, z - 1, block, oldLevel, newLevel);
+        handleDirectWireInput(x, y - 1, z + 1, block, oldLevel, newLevel);
 
         // Can be triggered from below
-        handleDirectWireInput(new WorldVector(w, x, y + 1, z), block, oldLevel, newLevel);
+        handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
 
         // Can be triggered from above
-        handleDirectWireInput(new WorldVector(w, x, y - 1, z), block, oldLevel, newLevel);
+        handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
     }
 
     /**
      * Handle the direct wire input.
      *
-     * @param pt
+     * @param x
+     * @param y
+     * @param z
      * @param sourceBlock
      * @param oldLevel
      * @param newLevel
      */
-    private static void handleDirectWireInput(WorldVector pt, Block sourceBlock, int oldLevel, int newLevel) {
+    private static void handleDirectWireInput(int x, int y, int z, Block sourceBlock, int oldLevel, int newLevel) {
 
-        Block block = sourceBlock.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
+        Block block = sourceBlock.getWorld().getBlockAt(x, y, z);
         if(BukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
             return;
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);

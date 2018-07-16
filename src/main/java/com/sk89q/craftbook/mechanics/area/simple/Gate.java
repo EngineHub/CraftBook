@@ -18,9 +18,9 @@ package com.sk89q.craftbook.mechanics.area.simple;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -68,7 +68,7 @@ public class Gate extends AbstractCraftBookMechanic {
      *
      * @return true if a gate was found and blocks were changed; false otherwise.
      */
-    public boolean toggleGates(LocalPlayer player, Block block, boolean smallSearchSize, Boolean close) {
+    public boolean toggleGates(CraftBookPlayer player, Block block, boolean smallSearchSize, Boolean close) {
 
         int x = block.getX();
         int y = block.getY();
@@ -78,7 +78,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         Set<GateColumn> visitedColumns = new HashSet<>();
 
-        ChangedSign sign = BukkitUtil.toChangedSign(block);
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
         if (smallSearchSize) {
             // Toggle nearby gates
@@ -120,7 +120,7 @@ public class Gate extends AbstractCraftBookMechanic {
      *
      * @return true if a gate column was found and blocks were changed; false otherwise.
      */
-    private boolean recurseColumn(LocalPlayer player, ChangedSign sign, Block block, Set<GateColumn> visitedColumns, Boolean close, boolean smallSearchSize) {
+    private boolean recurseColumn(CraftBookPlayer player, ChangedSign sign, Block block, Set<GateColumn> visitedColumns, Boolean close, boolean smallSearchSize) {
 
         if (limitColumns && visitedColumns.size() > columnLimit)
             return false;
@@ -161,7 +161,7 @@ public class Gate extends AbstractCraftBookMechanic {
      * @param close To open or close.
      * @param visitedColumns Previously searched columns.
      */
-    private boolean toggleColumn(LocalPlayer player, ChangedSign sign, Block block, GateColumn column, boolean close, Set<GateColumn> visitedColumns, boolean smallSearchSize) {
+    private boolean toggleColumn(CraftBookPlayer player, ChangedSign sign, Block block, GateColumn column, boolean close, Set<GateColumn> visitedColumns, boolean smallSearchSize) {
 
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
@@ -176,9 +176,9 @@ public class Gate extends AbstractCraftBookMechanic {
 
         for (Vector bl : column.getRegion()) {
 
-            Block blo = BukkitUtil.toBlock(new BlockWorldVector(BukkitUtil.toWorldVector(block).getWorld(), bl));
+            Block blo = CraftBookBukkitUtil.toBlock(new BlockWorldVector(CraftBookBukkitUtil.toWorldVector(block).getWorld(), bl));
 
-            //sign = BukkitUtil.toChangedSign(sign.getSign().getBlock());
+            //sign = CraftBookBukkitUtil.toChangedSign(sign.getSign().getBlock());
 
             if(sign == null) {
                 CraftBookPlugin.logDebugMessage("Invalid Sign!", "gates.search");
@@ -187,9 +187,9 @@ public class Gate extends AbstractCraftBookMechanic {
 
             ChangedSign otherSign = null;
 
-            Block ot = SignUtil.getNextSign(BukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
+            Block ot = SignUtil.getNextSign(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
             if(ot != null)
-                otherSign = BukkitUtil.toChangedSign(ot);
+                otherSign = CraftBookBukkitUtil.toChangedSign(ot);
 
             if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
@@ -247,7 +247,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         ChangedSign sign = event.getSign();
 
@@ -317,7 +317,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if (!SignUtil.isSign(event.getBlock())) return;
 
-        final ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        final ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
 
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
@@ -331,7 +331,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if(!event.getLine(1).equalsIgnoreCase("[Gate]") && !event.getLine(1).equalsIgnoreCase("[DGate]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (event.getLine(1).equalsIgnoreCase("[Gate]")) {
             if(!player.hasPermission("craftbook.mech.gate")) {
@@ -423,10 +423,10 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if (!SignUtil.isSign(event.getBlock())) return;
 
-        final ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        final ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -652,7 +652,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public CuboidRegion getRegion() {
 
-            return new CuboidRegion(BukkitUtil.toWorldVector(getStartingPoint().getRelative(0, -1, 0)), BukkitUtil.toWorldVector(getEndingPoint()));
+            return new CuboidRegion(CraftBookBukkitUtil.toWorldVector(getStartingPoint().getRelative(0, -1, 0)), CraftBookBukkitUtil.toWorldVector(getEndingPoint()));
         }
 
         @Override

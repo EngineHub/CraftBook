@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.ChatColor;
 
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.plc.PlcException;
@@ -229,7 +229,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     " at column " + li[i].col);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    BukkitUtil.printStacktrace(e);
+                    CraftBookBukkitUtil.printStacktrace(e);
                     i = li.length - 1;
                     throw new ICVerificationException("Unexpected function end " + "around line " + li[i].line);
                 }

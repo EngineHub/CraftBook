@@ -16,10 +16,10 @@
 
 package com.sk89q.craftbook.mechanics.ic.plc;
 
+import com.sk89q.craftbook.CraftBookPlayer;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.IC;
@@ -63,7 +63,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+    public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
         // Do nothing
     }
 

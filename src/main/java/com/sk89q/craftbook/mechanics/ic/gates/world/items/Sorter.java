@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -84,7 +84,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
         boolean returnValue = false;
 
-        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
+        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
             if(sortItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
@@ -95,13 +95,13 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
     public boolean sortItemStack(final ItemStack item) {
 
-        BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+        BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         Block b;
 
         if (isInAboveContainer(item) ^ inverted)
-            b = SignUtil.getRightBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+            b = SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
         else
-            b = SignUtil.getLeftBlock(BukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+            b = SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
 
         PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);

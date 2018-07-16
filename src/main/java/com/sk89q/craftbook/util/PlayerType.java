@@ -40,7 +40,7 @@ public enum PlayerType {
                 return player.hasPermission(line);
             case TEAM:
                 try {
-                    return Bukkit.getScoreboardManager().getMainScoreboard().getTeam(line).hasPlayer(player);
+                    return Bukkit.getScoreboardManager().getMainScoreboard().getTeam(line).hasEntry(player.getName());
                 } catch(Exception e) {}
                 break;
             case ALL:

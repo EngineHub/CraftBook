@@ -2,11 +2,11 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.Metrics.Graph;
 import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.st.MechanicClock;
 import com.sk89q.craftbook.core.st.SelfTriggeringManager;
@@ -751,7 +751,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 });
             }
         } catch (Throwable e1) {
-            BukkitUtil.printStacktrace(e1);
+            CraftBookBukkitUtil.printStacktrace(e1);
         }
     }
 
@@ -1068,15 +1068,15 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Wrap a player as a LocalPlayer.
+     * Wrap a player as a CraftBookPlayer.
      *
      * @param player The player to wrap
      *
      * @return The wrapped player
      */
-    public LocalPlayer wrapPlayer(Player player) {
+    public CraftBookPlayer wrapPlayer(Player player) {
 
-        return new BukkitPlayer(this, player);
+        return new BukkitCraftBookPlayer(this, player);
     }
 
     /**

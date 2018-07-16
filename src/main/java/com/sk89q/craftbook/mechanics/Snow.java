@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
@@ -30,7 +30,6 @@ import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockVector;
 
 import java.util.*;
@@ -123,7 +122,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
+                CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
                 if (!player.hasPermission("craftbook.mech.snow.place")) return;
             }
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new SnowHandler(block, 1));
@@ -150,7 +149,7 @@ public class Snow extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event))
             return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (event.getTo().getBlock().getType() == Material.SNOW) {
 

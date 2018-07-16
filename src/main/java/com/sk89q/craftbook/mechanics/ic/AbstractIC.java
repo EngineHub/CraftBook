@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -24,7 +25,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
@@ -59,12 +59,12 @@ public abstract class AbstractIC implements IC {
 
     public Location getLocation() {
 
-        return BukkitUtil.toSign(getSign()).getLocation();
+        return CraftBookBukkitUtil.toSign(getSign()).getLocation();
     }
 
     public Block getBackBlock() {
 
-        return SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
+        return SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
     }
 
     public String getLine(int line) {

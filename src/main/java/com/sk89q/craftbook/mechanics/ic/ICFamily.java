@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics.ic;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.util.Location;
 
 /**
  * IC families handle the logic required in figuring out where pins are located and reading them. One ICFamily
@@ -36,7 +36,7 @@ public interface ICFamily {
      *
      * @return
      */
-    ChipState detect(BlockWorldVector source, ChangedSign sign);
+    ChipState detect(Location source, ChangedSign sign);
 
     /**
      * Return a {@link ChipState} that provides an interface to access the I/O pins.
@@ -46,7 +46,7 @@ public interface ICFamily {
      *
      * @return
      */
-    ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign);
+    ChipState detectSelfTriggered(Location source, ChangedSign sign);
 
     /**
      * Gets the sign modifier of the family. In case of the base ic thats MC.

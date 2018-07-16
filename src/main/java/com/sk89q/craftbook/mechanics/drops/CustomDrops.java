@@ -2,7 +2,7 @@ package com.sk89q.craftbook.mechanics.drops;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
 import com.sk89q.craftbook.util.*;
@@ -53,7 +53,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             return false;
         }
 

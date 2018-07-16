@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -9,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -85,10 +85,11 @@ public class BlockLauncher extends AbstractIC {
         }
         double y = above.getY() - 0.99D;
 
-        if(!new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
+        if(!new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
             return;
 
-        FallingBlock block = BukkitUtil.toSign(getSign()).getWorld().spawnFallingBlock(new Location(BukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getType(), this.block.getData().getData());
+        FallingBlock block = CraftBookBukkitUtil
+                .toSign(getSign()).getWorld().spawnFallingBlock(new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getType(), this.block.getData().getData());
         block.setVelocity(velocity);
     }
 

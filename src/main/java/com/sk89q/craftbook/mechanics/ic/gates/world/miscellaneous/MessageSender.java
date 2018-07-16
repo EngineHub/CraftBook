@@ -22,7 +22,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -139,7 +139,7 @@ public class MessageSender extends AbstractIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (!sign.getLine(2).equalsIgnoreCase(player.getName()))
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1510"))

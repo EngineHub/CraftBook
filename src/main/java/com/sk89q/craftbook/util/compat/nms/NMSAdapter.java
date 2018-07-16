@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.util.compat.nms;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.util.SignUtil;
 import org.bukkit.block.Block;
 
@@ -24,7 +24,7 @@ public class NMSAdapter {
      * @param player The player (Optional)
      * @return The ChangedSign
      */
-    public ChangedSign getChangedSign(Block block, String[] lines, LocalPlayer player) {
+    public ChangedSign getChangedSign(Block block, String[] lines, CraftBookPlayer player) {
         if (!SignUtil.isSign(block)) return null;
         return new ChangedSign(block, lines, player);
     }

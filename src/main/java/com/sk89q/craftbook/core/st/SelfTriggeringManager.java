@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.core.st;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
@@ -43,7 +43,7 @@ public class SelfTriggeringManager implements Listener {
         } catch (Throwable e) {
             Bukkit.getLogger().warning("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName() + " x: " + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.");
             if(CraftBookPlugin.inst().getConfiguration().debugMode)
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
         }
     }
 
@@ -114,7 +114,7 @@ public class SelfTriggeringManager implements Listener {
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
                 CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
-                BukkitUtil.printStacktrace(t);
+                CraftBookBukkitUtil.printStacktrace(t);
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
         }

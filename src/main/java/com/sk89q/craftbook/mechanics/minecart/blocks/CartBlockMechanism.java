@@ -2,9 +2,9 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -136,7 +136,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
         Block block = event.getBlock();
         String[] lines = event.getLines();
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         try {
             if (getApplicableSigns() == null || getApplicableSigns().length == 0) return;
@@ -157,7 +157,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 }
             }
             if (!found) return;
-            if (!verify(BukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
+            if (!verify(CraftBookBukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
                 block.breakNaturally();
                 event.setCancelled(true);
                 return;
@@ -176,7 +176,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
     public abstract String[] getApplicableSigns();
 
-    public boolean verify(ChangedSign sign, LocalPlayer player) {
+    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
 
         return true;
     }

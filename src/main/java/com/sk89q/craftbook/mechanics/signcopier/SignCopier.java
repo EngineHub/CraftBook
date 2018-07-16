@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics.signcopier;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.CompatabilityUtil;
 import com.sk89q.craftbook.util.EventUtil;
@@ -41,7 +41,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        LocalPlayer player = event.getWrappedPlayer();
+        CraftBookPlayer player = event.getWrappedPlayer();
 
         if (!player.getHeldItemInfo().equals(item)) return;
 

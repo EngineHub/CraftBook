@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
@@ -56,7 +56,7 @@ public class BukkitConfiguration {
             config.load();
         } catch (IOException e) {
             logger.severe("Error loading CraftBook configuration: " + e);
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         }
 
         if(config.getNode("mechanics") != null) {

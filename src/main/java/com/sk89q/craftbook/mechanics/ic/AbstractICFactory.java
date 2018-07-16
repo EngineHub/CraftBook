@@ -21,12 +21,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
  * Abstract IC factory.
@@ -55,7 +55,7 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+    public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         // TODO Use this to make some restricted IC's allowed to normal users, but limited.
@@ -92,10 +92,10 @@ public abstract class AbstractICFactory implements ICFactory {
                 if(((PersistentDataIC) this).getStorageFile().exists())
                     ((PersistentDataIC) this).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) this).getStorageFile())));
             } catch (FileNotFoundException e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             } catch (IOException e) {
                 CraftBookPlugin.logger().severe("An invalid ic save file was found!");
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
         }
     }

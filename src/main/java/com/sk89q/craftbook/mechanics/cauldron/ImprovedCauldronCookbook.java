@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -109,7 +109,7 @@ public class ImprovedCauldronCookbook {
                 }
             } catch (Exception e) {
                 CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for cauldron recipe: " + id);
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
             return items;
         }

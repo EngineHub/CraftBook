@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -51,7 +51,7 @@ public class MemorySetter extends AbstractIC {
             try {
                 f.createNewFile();
             } catch (IOException e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
         }
     }
@@ -65,7 +65,7 @@ public class MemorySetter extends AbstractIC {
             pw.close();
             return true;
         } catch (Exception e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         }
         return false;
     }

@@ -15,7 +15,7 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.SearchArea;
@@ -35,7 +35,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         // if the line contains a = the offset is given
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(2));
 
         chest = getBackBlock().getRelative(BlockFace.UP);
     }

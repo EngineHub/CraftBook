@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -46,7 +46,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
      *
      * @param player
      */
-    public static void read(LocalPlayer player) {
+    public static void read(CraftBookPlayer player) {
 
         try {
             String text = getBookLine();
@@ -116,7 +116,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!player.hasPermission("craftbook.mech.bookshelf.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");

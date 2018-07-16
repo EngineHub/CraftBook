@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.util.jinglenote;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.SearchArea;
 import org.apache.commons.lang.StringUtils;
@@ -41,7 +41,7 @@ public class Playlist {
         try {
             readPlaylist();
         } catch (IOException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         }
     }
 
@@ -172,7 +172,7 @@ public class Playlist {
                         try {
                             Thread.sleep(10L);
                         } catch (InterruptedException e) {
-                            BukkitUtil.printStacktrace(e);
+                            CraftBookBukkitUtil.printStacktrace(e);
                         }
 
                         if(!isPlaying()) {
@@ -203,7 +203,7 @@ public class Playlist {
                     try {
                         Thread.sleep(100L);
                     } catch (InterruptedException e) {
-                        BukkitUtil.printStacktrace(e);
+                        CraftBookBukkitUtil.printStacktrace(e);
                     }
                 }
 
@@ -263,10 +263,10 @@ public class Playlist {
                         try {
                             Thread.sleep(1000L);
                         } catch (InterruptedException e) {
-                            BukkitUtil.printStacktrace(e);
+                            CraftBookBukkitUtil.printStacktrace(e);
                         }
                     } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
-                        BukkitUtil.printStacktrace(e);
+                        CraftBookBukkitUtil.printStacktrace(e);
                     }
                 } else if (line.startsWith("tune ")) {
 
@@ -284,7 +284,7 @@ public class Playlist {
                     try {
                         Thread.sleep(1000L);
                     } catch (InterruptedException e) {
-                        BukkitUtil.printStacktrace(e);
+                        CraftBookBukkitUtil.printStacktrace(e);
                     }
                 } else if (line.startsWith("send ")) {
 

@@ -16,13 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -31,7 +25,10 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemDispenser extends AbstractIC {
 
@@ -40,8 +37,8 @@ public class ItemDispenser extends AbstractIC {
         super(server, sign, factory);
     }
 
-    ItemStack item;
-    int times = 1;
+    private ItemStack item;
+    private int times = 1;
 
     @Override
     public void load() {
@@ -82,17 +79,15 @@ public class ItemDispenser extends AbstractIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if (item.getType() != Material.PISTON_MOVING_PIECE) {
-                Location loc = getBackBlock().getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
-                int maxY = 10;
+            Location loc = getBackBlock().getRelative(0, 1, 0).getLocation().add(0.5, 0.5, 0.5);
+            int maxY = 10;
 
-                for (int y = 0; y <= maxY; y++) {
-                    if (BlockType.canPassThrough(loc.getBlock().getRelative(0, y, 0).getTypeId())) {
-
-                        for(int i = 0; i < times; i++)
-                            BukkitUtil.toSign(getSign()).getWorld().dropItem(loc.getBlock().getRelative(0, y, 0).getLocation(), item.clone());
-                        return;
+            for (int y = 0; y <= maxY; y++) {
+                if (!loc.getBlock().getRelative(0, y, 0).getType().isSolid()) {
+                    for(int i = 0; i < times; i++) {
+                        getBackBlock().getWorld().dropItem(loc.getBlock().getRelative(0, y, 0).getLocation(), item.clone());
                     }
+                    return;
                 }
             }
         }

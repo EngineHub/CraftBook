@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -10,9 +11,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -26,7 +26,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.chunk")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
@@ -59,7 +59,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         if(!allowRedstone) return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
-            ChangedSign sign = BukkitUtil.toChangedSign(block);
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
             if(!sign.getLine(1).equals("[Chunk]")) return;
 
@@ -96,7 +96,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         } catch(Throwable t) {
             CraftBookPlugin.logger().warning("A chunk failed to be kept in memory. Is the chunk corrupt? (X:" + event.getChunk().getX() + ", Z:" + event.getChunk().getZ() + ")");
             if(CraftBookPlugin.inst().getConfiguration().debugMode)
-                BukkitUtil.printStacktrace(t);
+                CraftBookBukkitUtil.printStacktrace(t);
         }
     }
 

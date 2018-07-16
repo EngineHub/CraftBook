@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.worldedit.world.DataException;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.data.DataException;
 
 /**
  * Represents a cuboid copy that can be saved to disk and loaded from disk. Supports multiple formats, like MCEDIT,
@@ -69,7 +69,7 @@ public abstract class CuboidCopy {
         try {
             copy.loadFromFile(file);
         } catch (IOException | DataException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             throw new CuboidCopyException(e.getMessage());
         }
         // make sure that null is never returned but an exception is thrown instead
@@ -91,8 +91,8 @@ public abstract class CuboidCopy {
                     if (pt == null) {
                         continue;
                     }
-                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
-                        Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
+                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(CraftBookBukkitUtil.toLocation(world, pt)))) {
+                        Block block = world.getBlockAt(CraftBookBukkitUtil.toLocation(world, pt));
                         if (block instanceof InventoryHolder) {
                             InventoryHolder holder = (InventoryHolder) block;
                             holder.getInventory().clear();
@@ -107,7 +107,7 @@ public abstract class CuboidCopy {
         }
 
         for (Vector pt : queued) {
-            Block block = world.getBlockAt(BukkitUtil.toLocation(world, pt));
+            Block block = world.getBlockAt(CraftBookBukkitUtil.toLocation(world, pt));
             if (block instanceof InventoryHolder) {
 
                 InventoryHolder holder = (InventoryHolder) block;

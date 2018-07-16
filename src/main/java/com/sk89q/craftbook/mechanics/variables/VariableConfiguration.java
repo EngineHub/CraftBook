@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics.variables;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.squirrelid.Profile;
@@ -32,7 +32,7 @@ public class VariableConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             return;
         }
 

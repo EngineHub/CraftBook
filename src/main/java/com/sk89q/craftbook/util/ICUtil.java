@@ -17,20 +17,21 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
-import com.sk89q.worldedit.regions.SphereRegionSelector;
+import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.selector.SphereRegionSelector;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -106,7 +107,7 @@ public final class ICUtil {
         return false;
     }
 
-    public static void parseSignFlags(LocalPlayer player, ChangedSign sign) {
+    public static void parseSignFlags(CraftBookPlayer player, ChangedSign sign) {
 
         for(int i = 2; i < 4; i++) {
 
@@ -116,9 +117,9 @@ public final class ICUtil {
                     sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
-                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    if(WorldEdit.getSelection(((BukkitCraftBookPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector() != null) {
 
-                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector();
 
                         try {
                             if(selector instanceof CuboidRegionSelector) {
@@ -186,9 +187,9 @@ public final class ICUtil {
                     player.printError("worldedit.ic.notfound");
                 } else {
 
-                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector() != null) {
 
-                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitPlayer) player).getPlayer()).getRegionSelector();
+                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector();
 
                         try {
                             if(selector instanceof CuboidRegionSelector) {
@@ -257,7 +258,7 @@ public final class ICUtil {
 
     public static Block parseBlockLocation(ChangedSign sign, String line, LocationCheckType relative) {
 
-        Block target = SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock());
+        Block target = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
 
         if (line.contains("!"))
             relative = LocationCheckType.getTypeFromChar('!');
@@ -370,7 +371,7 @@ public final class ICUtil {
     }
 
     public static void collectItem(AbstractIC ic, Vector offset, ItemStack... items) {
-        Sign sign = BukkitUtil.toSign(ic.getSign());
+        Sign sign = CraftBookBukkitUtil.toSign(ic.getSign());
         Block backB = ic.getBackBlock();
         BlockFace back = SignUtil.getBack(sign.getBlock());
 

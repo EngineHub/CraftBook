@@ -1,11 +1,11 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -46,7 +46,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
             getSign().update(false);
         }
 
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
 
         try {
             damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);

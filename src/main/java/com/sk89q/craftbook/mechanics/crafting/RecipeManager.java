@@ -3,10 +3,10 @@ package com.sk89q.craftbook.mechanics.crafting;
 import java.io.IOException;
 import java.util.*;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -51,7 +51,7 @@ public class RecipeManager {
                 try {
                     recipes.add(new Recipe(key, config));
                 } catch (InvalidCraftingException e) {
-                    BukkitUtil.printStacktrace(e);
+                    CraftBookBukkitUtil.printStacktrace(e);
                 }
             }
         }
@@ -325,7 +325,7 @@ public class RecipeManager {
                 }
             } catch (Exception e) {
                 CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
             return items;
         }
@@ -349,7 +349,7 @@ public class RecipeManager {
                 }
             } catch (Exception e) {
                 CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
             return items;
         }

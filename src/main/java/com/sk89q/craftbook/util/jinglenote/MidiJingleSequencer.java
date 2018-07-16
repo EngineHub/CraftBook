@@ -6,7 +6,7 @@
 package com.sk89q.craftbook.util.jinglenote;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 
 import java.io.File;
@@ -158,10 +158,10 @@ public final class MidiJingleSequencer implements JingleSequencer {
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
             } catch(Exception e){
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
         } catch (MidiUnavailableException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         }
     }
 

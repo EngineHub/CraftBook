@@ -8,7 +8,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -65,7 +65,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(2));
 
         try {
             damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[2]);

@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -23,7 +24,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -100,14 +100,14 @@ public class ArrowShooter extends AbstractIC {
 
     public void shootArrows(int n) {
 
-        Block signBlock = BukkitUtil.toSign(getSign()).getBlock();
+        Block signBlock = CraftBookBukkitUtil.toSign(getSign()).getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
         double x = targetDir.getX() - signBlock.getX();
         double z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
-        Location shootLoc = new Location(BukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
+        Location shootLoc = new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
                 targetDir.getY() + 0.5,
                 targetDir.getZ() + 0.5);
 
@@ -115,7 +115,7 @@ public class ArrowShooter extends AbstractIC {
             return;
 
         for (short i = 0; i < n; i++)
-            BukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float)speed, (float)spread);
+            CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float)speed, (float)spread);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

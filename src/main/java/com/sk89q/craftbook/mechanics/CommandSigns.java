@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -9,10 +11,8 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
@@ -30,7 +30,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[command]")) return;
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.command")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
@@ -53,7 +53,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
         if(s.getLine(0).equals("EXPANSION")) return;
 
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -80,7 +80,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        ChangedSign s = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign s = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if(!s.getLine(1).equals("[Command]")) return;
 
@@ -89,13 +89,13 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         runCommandSign(s, null);
     }
 
-    public static void runCommandSign(ChangedSign sign, LocalPlayer player) {
+    public static void runCommandSign(ChangedSign sign, CraftBookPlayer player) {
 
         String command = StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3);
 
-        while(BlockUtil.areBlocksIdentical(BukkitUtil.toBlock(sign), BukkitUtil.toBlock(sign).getRelative(0, -1, 0))) {
+        while(BlockUtil.areBlocksIdentical(CraftBookBukkitUtil.toBlock(sign), CraftBookBukkitUtil.toBlock(sign).getRelative(0, -1, 0))) {
 
-            sign = BukkitUtil.toChangedSign(BukkitUtil.toBlock(sign).getRelative(0, -1, 0));
+            sign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toBlock(sign).getRelative(0, -1, 0));
             if(!sign.getLine(1).equals("[Command]")) break;
             if(!sign.getLine(0).equals("EXPANSION")) break;
 
@@ -105,7 +105,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if (player == null)
             if (command.contains("@p")) return; // We don't work with player commands.
 
-        command = ParsingUtil.parseLine(command, player == null ? null : ((BukkitPlayer) player).getPlayer());
+        command = ParsingUtil.parseLine(command, player == null ? null : ((BukkitCraftBookPlayer) player).getPlayer());
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }

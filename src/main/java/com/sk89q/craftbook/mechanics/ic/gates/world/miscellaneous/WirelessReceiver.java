@@ -18,12 +18,12 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import java.util.UUID;
 
+import com.sk89q.craftbook.CraftBookPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -159,7 +159,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111"))) sign.setLine(3, player.getCraftBookId());
             else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")) sign.setLine(3, player.getCraftBookId());

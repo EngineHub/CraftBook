@@ -2,9 +2,9 @@ package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
@@ -52,7 +52,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if(!event.getLine(1).equalsIgnoreCase("[pipe]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.circuits.pipes")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -110,7 +110,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 continue;
             if(block.getRelative(face).getType() != Material.SIGN_POST && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
-            ChangedSign sign = BukkitUtil.toChangedSign(block.getRelative(face));
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block.getRelative(face));
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
                 return sign;
         }

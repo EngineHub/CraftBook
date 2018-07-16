@@ -2,10 +2,10 @@ package com.sk89q.craftbook.mechanics.cauldron;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
@@ -69,7 +69,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
         if (!event.getLine(1).equalsIgnoreCase("[Cauldron]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cauldron")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -91,7 +91,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 for(BlockFace face : faces) {
                     Block sign = block.getRelative(face);
                     if(sign.getType() == Material.WALL_SIGN) {
-                        ChangedSign s = BukkitUtil.toChangedSign(sign);
+                        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
                         if(s.getLine(1).equals("[Cauldron]")) {
                             found = true;
                             break;
@@ -114,7 +114,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!isCauldron(event.getClickedBlock())) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(performCauldron(event.getClickedBlock(), player))
             event.setCancelled(true);
@@ -163,7 +163,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if (trackCauldronItem(item) || BukkitUtil.equals(lastLocation, item.getLocation()))
+            if (trackCauldronItem(item) || CraftBookBukkitUtil.equals(lastLocation, item.getLocation()))
                 cancel();
         }
     }
@@ -212,7 +212,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         }
     }
 
-    public boolean performCauldron(Block block, LocalPlayer player) {
+    public boolean performCauldron(Block block, CraftBookPlayer player) {
 
         if (player != null && !player.hasPermission("craftbook.mech.cauldron.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -237,9 +237,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return true;
             } else if(player != null) { // Spoons
                 if (isItemSpoon(player.getHeldItemInfo().getType())) {
-                    double chance = getSpoonChance(((BukkitPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
+                    double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
                     double ran = CraftBookPlugin.inst().getRandom().nextDouble();
-                    ((BukkitPlayer) player).getPlayer().getItemInHand().setDurability((short) (((BukkitPlayer) player).getPlayer().getItemInHand().getDurability() - (short) 1));
+                    ((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().setDurability((short) (((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().getDurability() - (short) 1));
                     if (chance <= ran) {
                         cook(block, recipe, items);
                         player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());

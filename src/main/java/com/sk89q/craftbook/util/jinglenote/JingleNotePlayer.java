@@ -6,7 +6,7 @@
 package com.sk89q.craftbook.util.jinglenote;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.craftbook.util.jinglenote.JingleSequencer.Note;
 
@@ -39,14 +39,14 @@ public abstract class JingleNotePlayer implements Runnable {
             try {
                 sequencer.play(this);
             } catch (Throwable t) {
-                BukkitUtil.printStacktrace(t);
+                CraftBookBukkitUtil.printStacktrace(t);
             }
 
             while(isPlaying()){
                 Thread.sleep(10L);
             }
         } catch (InterruptedException e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         } finally {
             CraftBookPlugin.logDebugMessage("Finished playing for: " + player, "midi.stop");
             stop();

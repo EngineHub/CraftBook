@@ -7,7 +7,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -197,7 +197,7 @@ public class Chair extends AbstractCraftBookMechanic {
         if (event.getClickedBlock() == null || !chairBlocks.contains(new ItemInfo(event.getClickedBlock())))
             return;
 
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (lplayer.isSneaking()) return;
         Player player = event.getPlayer();
 

@@ -97,8 +97,8 @@ public class Pump extends AbstractSelfTriggeredIC {
     }
 
     public static Material parse(Material mat) {
-        if (mat == Material.STATIONARY_WATER || mat == Material.WATER) return Material.WATER_BUCKET;
-        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA) return Material.LAVA_BUCKET;
+        if (mat == Material.WATER) return Material.WATER_BUCKET;
+        if (mat == Material.LAVA) return Material.LAVA_BUCKET;
         return Material.AIR;
     }
 

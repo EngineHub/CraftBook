@@ -18,7 +18,7 @@ package com.sk89q.craftbook.mechanics.area;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.world.DataException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
 

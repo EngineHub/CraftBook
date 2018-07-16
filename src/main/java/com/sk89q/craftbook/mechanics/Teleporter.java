@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,10 +15,8 @@ import org.bukkit.material.Button;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -43,7 +43,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
 
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!localPlayer.hasPermission("craftbook.mech.teleporter")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -84,12 +84,12 @@ public class Teleporter extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
             return;
 
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         Block trigger = null;
 
         if (SignUtil.isSign(event.getClickedBlock())) {
-            ChangedSign s = BukkitUtil.toChangedSign(event.getClickedBlock());
+            ChangedSign s = CraftBookBukkitUtil.toChangedSign(event.getClickedBlock());
             if (!s.getLine(1).equals("[Teleporter]")) return;
             String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
             if (pos.length <= 2) {
@@ -102,7 +102,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
             if(b == null || b.getAttachedFace() == null) return;
             Block sign = event.getClickedBlock().getRelative(b.getAttachedFace(), 2);
             if (SignUtil.isSign(sign)) {
-                ChangedSign s = BukkitUtil.toChangedSign(sign);
+                ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
                 if (!s.getLine(1).equals("[Teleporter]")) return;
                 String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                 if (pos.length <= 2) {
@@ -133,7 +133,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         event.setCancelled(true);
     }
 
-    private void makeItSo(LocalPlayer player, Block trigger) {
+    private void makeItSo(CraftBookPlayer player, Block trigger) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         // check if this looks at all like something we're interested in first
@@ -143,7 +143,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         double toZ = 0;
 
         if (SignUtil.isSign(trigger)) {
-            ChangedSign s = BukkitUtil.toChangedSign(trigger);
+            ChangedSign s = CraftBookBukkitUtil.toChangedSign(trigger);
             String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
             if (pos.length > 2) {
                 try {
@@ -206,11 +206,11 @@ public class Teleporter extends AbstractCraftBookMechanic {
         subspaceRift = subspaceRift.setY(floor.getY() + 1.0);
         subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
         if (player.isInsideVehicle()) {
-            subspaceRift = BukkitUtil.toLocation(((BukkitPlayer)player).getPlayer().getVehicle().getLocation());
+            subspaceRift = CraftBookBukkitUtil.toLocation(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation());
             subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
             subspaceRift = subspaceRift.setY(floor.getY() + 2.0);
             subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
-            ((BukkitPlayer)player).getPlayer().getVehicle().teleport(BukkitUtil.toLocation(subspaceRift));
+            ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(CraftBookBukkitUtil.toLocation(subspaceRift));
         }
         if (maxRange > 0)
             if (subspaceRift.toVector().distanceSq(player.getPosition().toVector()) > maxRange * maxRange) {
@@ -223,13 +223,13 @@ public class Teleporter extends AbstractCraftBookMechanic {
         player.print("mech.teleport.alert");
     }
 
-    private static boolean checkTeleportSign(LocalPlayer player, Block sign) {
+    private static boolean checkTeleportSign(CraftBookPlayer player, Block sign) {
         if (!SignUtil.isSign(sign)) {
             player.printError("mech.teleport.sign");
             return false;
         }
 
-        ChangedSign s = BukkitUtil.toChangedSign(sign);
+        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         if (!s.getLine(1).equals("[Teleporter]")) {
             player.printError("mech.teleport.sign");
             return false;

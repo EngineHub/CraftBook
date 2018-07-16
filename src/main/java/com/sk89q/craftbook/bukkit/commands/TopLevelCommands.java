@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.ReportWriter;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.area.AreaCommands;
 import com.sk89q.craftbook.mechanics.cauldron.CauldronCommands;
 import com.sk89q.craftbook.mechanics.crafting.RecipeCommands;
@@ -96,7 +96,7 @@ public class TopLevelCommands {
             try {
                 CraftBookPlugin.inst().reloadConfiguration();
             } catch (Throwable e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
                 sender.sendMessage("An error occured while reloading the CraftBook config.");
                 return;
             }
