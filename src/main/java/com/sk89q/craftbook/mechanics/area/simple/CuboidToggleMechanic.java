@@ -2,16 +2,15 @@ package com.sk89q.craftbook.mechanics.area.simple;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.pipe.PipeFinishEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipeSuckEvent;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -42,8 +41,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static boolean open(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle) {
 
-        ChangedSign s = BukkitUtil.toChangedSign(sign);
-        ChangedSign other = BukkitUtil.toChangedSign(farSide);
+        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
+        ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
         for (Vector bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if ((b.getType() == type.getType() && (b.getData() == type.getData() || type.getData() == -1)) || BlockUtil.isBlockReplacable(b.getType())) {
@@ -56,10 +55,10 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public static boolean close(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle, LocalPlayer player) {
+    public static boolean close(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle, CraftBookPlayer player) {
 
-        ChangedSign s = BukkitUtil.toChangedSign(sign);
-        ChangedSign other = BukkitUtil.toChangedSign(farSide);
+        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
+        ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
         for (Vector bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getType())) {
@@ -90,7 +89,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getOrigin())) return;
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getOrigin());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getOrigin());
 
         if(!isApplicableSign(sign.getLine(1))) return;
 
@@ -117,7 +116,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getPuttingBlock())) return;
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getPuttingBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getPuttingBlock());
 
         if(!isApplicableSign(sign.getLine(1))) return;
 
@@ -144,7 +143,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!SignUtil.isSign(event.getSuckedBlock())) return;
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getSuckedBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getSuckedBlock());
 
         if(!isApplicableSign(sign.getLine(1))) return;
 
@@ -167,18 +166,18 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(BukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         ChangedSign sign = null, other;
 
         if (SignUtil.isSign(event.getBlock()))
-            sign = BukkitUtil.toChangedSign(event.getBlock());
+            sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if (sign == null) return;
 
-        other = BukkitUtil.toChangedSign(getFarSign(event.getBlock()));
+        other = CraftBookBukkitUtil.toChangedSign(getFarSign(event.getBlock()));
 
         int amount = getBlocks(sign, other);
 
@@ -267,8 +266,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             return null;
         }
 
-        ChangedSign closeSign = BukkitUtil.toChangedSign(block);
-        ChangedSign farSign = BukkitUtil.toChangedSign(farBlock);
+        ChangedSign closeSign = CraftBookBukkitUtil.toChangedSign(block);
+        ChangedSign farSign = CraftBookBukkitUtil.toChangedSign(farBlock);
 
         ItemInfo type = null;
 
@@ -296,7 +295,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
      */
     public ItemInfo getBlockType(Block block) throws InvalidMechanismException {
         if (enforceType) {
-            ChangedSign sign = BukkitUtil.toChangedSign(block);
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
             ItemInfo type = null;
             if (sign.getLine(0).contains(",")) {
                 type = new ItemInfo(sign.getLine(0).split(",")[1]);

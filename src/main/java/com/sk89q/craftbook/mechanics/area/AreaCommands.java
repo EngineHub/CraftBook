@@ -1,22 +1,8 @@
 package com.sk89q.craftbook.mechanics.area;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.minecraft.util.commands.Command;
@@ -24,17 +10,31 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
-import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.world.DataException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Silthus
  */
 public class AreaCommands {
-
-    private final CopyManager copyManager = new CopyManager();
 
     public AreaCommands(CraftBookPlugin plugin) {
 
@@ -46,7 +46,7 @@ public class AreaCommands {
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
 
         if (!(sender instanceof Player)) return;
-        LocalPlayer player = plugin.wrapPlayer((Player) sender);
+        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
 
         String id;
         String namespace = player.getCraftBookId();
@@ -79,13 +79,13 @@ public class AreaCommands {
             WorldEditPlugin worldEdit = CraftBookPlugin.plugins.getWorldEdit();
 
             World world = ((Player) sender).getWorld();
-            Selection sel = worldEdit.getSelection((Player) sender);
+            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(BukkitUtil.getWorld(world));
             if(sel == null) {
                 sender.sendMessage(ChatColor.RED + "You have not made a selection!");
                 return;
             }
-            Vector min = BukkitUtil.toVector(sel.getMinimumPoint());
-            Vector max = BukkitUtil.toVector(sel.getMaximumPoint());
+            Vector min = sel.getMinimumPoint();
+            Vector max = sel.getMaximumPoint();
             Vector size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
@@ -131,6 +131,8 @@ public class AreaCommands {
             }
         } catch (NoClassDefFoundError e) {
             throw new CommandException("WorldEdit.jar does not exist in plugins/, or is outdated. (Or you are using an outdated version of CraftBook)");
+        } catch (IncompleteRegionException e) {
+            throw new CommandException("Invalid selection");
         }
     }
 
@@ -140,7 +142,7 @@ public class AreaCommands {
     public void list(CommandContext context, CommandSender sender) throws CommandException {
 
         if (!(sender instanceof Player)) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) sender);
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) sender);
 
         String namespace = "~" + player.getCraftBookId();
 
@@ -254,7 +256,7 @@ public class AreaCommands {
         Block block = world.getBlockAt(xyz[0], xyz[1], xyz[2]);
         if (!SignUtil.isSign(block)) throw new CommandException("No sign found at the specified location.");
 
-        if (!Area.toggleCold(BukkitUtil.toChangedSign(block))) {
+        if (!Area.toggleCold(CraftBookBukkitUtil.toChangedSign(block))) {
             throw new CommandException("Failed to toggle an area at the specified location.");
         }
         // TODO Make a sender wrap for this
@@ -267,7 +269,7 @@ public class AreaCommands {
     public void delete(CommandContext context, CommandSender sender) throws CommandException {
 
         if (!(sender instanceof Player)) return;
-        LocalPlayer player = plugin.wrapPlayer((Player) sender);
+        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
 
         String namespace = "~" + player.getCraftBookId();
         String areaId = null;

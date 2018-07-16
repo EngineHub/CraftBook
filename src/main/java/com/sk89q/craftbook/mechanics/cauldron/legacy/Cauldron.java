@@ -17,8 +17,8 @@ package com.sk89q.craftbook.mechanics.cauldron.legacy;
  */
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -91,7 +91,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         if(!isACauldron(event.getClickedBlock())) return;
 
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.cauldron")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -118,12 +118,12 @@ public class Cauldron extends AbstractCraftBookMechanic {
      * @param world
      * @param block
      */
-    private void performCauldron(LocalPlayer player, World world, Block block) {
+    private void performCauldron(CraftBookPlayer player, World world, Block block) {
 
         // Gotta start at a root Y then find our orientation
         int rootY = block.getY();
 
-        Player p = ((BukkitPlayer)player).getPlayer();
+        Player p = ((BukkitCraftBookPlayer)player).getPlayer();
 
         ItemInfo blockItem = cauldronBlock;
 
@@ -240,7 +240,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
      * @param maxY
      * @param visited
      */
-    public void findCauldronContents(LocalPlayer player, World world, Block block, int minY, int maxY, Map<Location, ItemInfo> visited) {
+    public void findCauldronContents(CraftBookPlayer player, World world, Block block, int minY, int maxY, Map<Location, ItemInfo> visited) {
 
         ItemInfo blockID = cauldronBlock;
 

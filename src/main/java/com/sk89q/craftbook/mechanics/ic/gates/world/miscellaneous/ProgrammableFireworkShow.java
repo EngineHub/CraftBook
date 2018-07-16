@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -23,7 +24,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -143,7 +143,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
             try {
                 readShow();
             } catch (IOException e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
         }
 
@@ -199,7 +199,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
             Map<String, List<FireworkEffect>> effects = new HashMap<>();
             String currentBuilding = null;
-            Location location = BukkitUtil.toSign(getSign()).getLocation();
+            Location location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
             float duration = 0.5f;
             boolean preciseDuration = false;
             FireworkEffect.Builder builder = FireworkEffect.builder();
@@ -282,7 +282,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         y = Double.parseDouble(args[1]);
                         z = Double.parseDouble(args[2]);
 
-                        location = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                        location = CraftBookBukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
                     } else if (line.startsWith("duration ")) {
 
                         String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("duration ", ""));
@@ -308,7 +308,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             y = Double.parseDouble(args[1]);
                             z = Double.parseDouble(args[2]);
 
-                            sloc = BukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                            sloc = CraftBookBukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
                             if(bits.length > 2) {
                                 volume = Float.parseFloat(bits[2]);
                                 if(bits.length > 3)
@@ -400,7 +400,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             //Offset data (0)
                             errorLocation = "Offset";
                             String[] offset = RegexUtil.COMMA_PATTERN.split(data[0]);
-                            Location location = BukkitUtil.toSign(getSign()).getLocation();
+                            Location location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
                             location.add(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]),
                                     Double.parseDouble(offset[2]));
 
@@ -463,7 +463,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
                             CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + showName + "!");
-                            BukkitUtil.printStacktrace(e);
+                            CraftBookBukkitUtil.printStacktrace(e);
                         }
                     }
                 }

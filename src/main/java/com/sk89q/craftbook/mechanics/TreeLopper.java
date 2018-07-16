@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -31,7 +31,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!enabledBlocks.contains(new ItemInfo(event.getBlock()))) return;
         if(!enabledItems.contains(player.getHeldItemInfo())) return;
@@ -105,7 +105,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         return true;
     }
 
-    private boolean searchBlock(BlockBreakEvent event, Block block, LocalPlayer player, ItemInfo originalBlock, Set<Location> visitedLocations, int broken, int planted) {
+    private boolean searchBlock(BlockBreakEvent event, Block block, CraftBookPlayer player, ItemInfo originalBlock, Set<Location> visitedLocations, int broken, int planted) {
 
         if(visitedLocations.contains(block.getLocation()))
             return false;

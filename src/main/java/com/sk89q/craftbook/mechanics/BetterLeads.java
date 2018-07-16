@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
@@ -29,7 +29,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     public void onPlayerClick(final PlayerInteractEntityEvent event) {
         if(!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()))) return;
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEASH) return;
 
         if (!EventUtil.passesFilter(event)) return;
@@ -93,7 +93,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
         if(leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
             if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {

@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -75,7 +75,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
     protected boolean scanForItems() {
 
         boolean collected = false;
-        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock()))
+        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()))
             if(item.isValid() && !item.isDead())
                 if(collectItem(item))
                     collected = true;
@@ -97,7 +97,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack))
             return false;
 
-        BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+        BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         Block pipe = getBackBlock().getRelative(back);
 
         PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());

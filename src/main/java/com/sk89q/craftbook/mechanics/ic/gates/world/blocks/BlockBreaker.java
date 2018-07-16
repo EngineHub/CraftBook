@@ -3,13 +3,13 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
@@ -88,7 +88,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     public void dropItem(ItemStack item) {
 
-        BukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(BukkitUtil.toSign(getSign()).getBlock()), item);
+        CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(CraftBookBukkitUtil.toSign(getSign()).getBlock()), item);
     }
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {

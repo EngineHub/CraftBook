@@ -101,7 +101,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         brokenType = blockToBreak.getType();
         blockToBreak.setType(Material.AIR);
 
-        return !(brokenType == Material.LAVA || brokenType == Material.WATER || brokenType == Material.STATIONARY_LAVA || brokenType == Material.STATIONARY_WATER);
+        return !(brokenType == Material.LAVA || brokenType == Material.WATER);
 
     }
 

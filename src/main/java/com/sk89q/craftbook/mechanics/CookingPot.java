@@ -2,9 +2,9 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -36,7 +36,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if (!event.getLine(1).equalsIgnoreCase("[Cook]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cook")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -62,7 +62,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!SignUtil.isSign(event.getBlock())) return;
 
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
@@ -90,7 +90,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!SignUtil.isSign(event.getBlock())) return;
 
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
@@ -186,7 +186,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getClickedBlock().getLocation());
 
-        LocalPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block b = SignUtil.getBackBlock(event.getClickedBlock());
@@ -226,7 +226,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 sign.update(false);
         } else {
             event.getPlayer().setFireTicks(getMultiplier(sign)+40);
-            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             player.printError("mech.cook.ouch");
         }
     }
@@ -238,7 +238,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!SignUtil.isSign(event.getBlock())) return;
 
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 
@@ -254,7 +254,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if(!sign.getLine(1).equals("[Cook]")) return;
 

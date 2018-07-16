@@ -31,9 +31,9 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -60,7 +60,7 @@ public class Bridge extends CuboidToggleMechanic {
 
         if(!event.getLine(1).equalsIgnoreCase("[bridge]") && !event.getLine(1).equalsIgnoreCase("[bridge end]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.bridge")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -89,9 +89,9 @@ public class Bridge extends CuboidToggleMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isApplicableSign(BukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.bridge.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -123,7 +123,7 @@ public class Bridge extends CuboidToggleMechanic {
                         if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
                             amount = 5;
                         }
-                        addBlocks(sign, BukkitUtil.toChangedSign(getFarSign(event.getClickedBlock())), amount);
+                        addBlocks(sign, CraftBookBukkitUtil.toChangedSign(getFarSign(event.getClickedBlock())), amount);
 
                         if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
                             if (event.getPlayer().getItemInHand().getAmount() <= amount)
@@ -156,7 +156,7 @@ public class Bridge extends CuboidToggleMechanic {
         if (event.isMinor()) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(BukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
             try {
@@ -196,7 +196,7 @@ public class Bridge extends CuboidToggleMechanic {
             // allowed to find the distal signpost
 
             if (farSide.getType() == trigger.getType()) {
-                String otherSignText = BukkitUtil.toChangedSign(farSide).getLine(1);
+                String otherSignText = CraftBookBukkitUtil.toChangedSign(farSide).getLine(1);
                 if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
                     break;
                 }
@@ -214,8 +214,8 @@ public class Bridge extends CuboidToggleMechanic {
         if (distance <= 2*2) {
             throw new InvalidMechanismException("Bridge too short!");
         }
-        CuboidRegion toggle = new CuboidRegion(BukkitUtil.toVector(proximalBaseCenter), BukkitUtil.toVector(distalBaseCenter));
-        ChangedSign sign = BukkitUtil.toChangedSign(trigger);
+        CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter), CraftBookBukkitUtil.toVector(distalBaseCenter));
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
             left = Math.max(0, Math.min(maxWidth, Integer.parseInt(sign.getLine(2))));
@@ -232,23 +232,23 @@ public class Bridge extends CuboidToggleMechanic {
         for (int i = 0; i < left; i++) {
             if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i), proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i)))
                 throw new InvalidMechanismException("mech.bridge.material");
-            toggle.expand(BukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
+            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
             if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i), proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i)))
                 throw new InvalidMechanismException("mech.bridge.material");
-            toggle.expand(BukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
+            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
 
         // Don't toggle the end points
-        toggle.contract(BukkitUtil.toVector(SignUtil.getBack(trigger)), BukkitUtil.toVector(SignUtil.getFront(trigger)));
+        toggle.contract(CraftBookBukkitUtil.toVector(SignUtil.getBack(trigger)), CraftBookBukkitUtil.toVector(SignUtil.getFront(trigger)));
 
         return toggle;
     }
 
-    public boolean flipState(Block trigger, LocalPlayer player) throws InvalidMechanismException {
+    public boolean flipState(Block trigger, CraftBookPlayer player) throws InvalidMechanismException {
 
         if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException();
 

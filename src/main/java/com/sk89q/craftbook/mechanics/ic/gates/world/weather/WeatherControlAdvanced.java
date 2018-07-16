@@ -1,10 +1,10 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.weather;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -57,7 +57,7 @@ public class WeatherControlAdvanced extends AbstractIC {
 
         if (chip.isTriggered(0) && chip.getInput(0)) {
 
-            World world = BukkitUtil.toSign(getSign()).getWorld();
+            World world = CraftBookBukkitUtil.toSign(getSign()).getWorld();
             world.setStorm(chip.getInput(1));
             if (chip.getInput(1)) {
                 world.setWeatherDuration(duration);

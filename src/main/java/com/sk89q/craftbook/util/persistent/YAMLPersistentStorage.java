@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -37,7 +37,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
         try {
             processor.load();
         } catch (Throwable e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
         }
 
@@ -48,7 +48,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
             try {
                 processor.load();
             } catch (Exception e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
                 CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
             }
         }

@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -23,7 +24,6 @@ import org.bukkit.block.Block;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -92,7 +92,7 @@ public class LightningSummon extends AbstractIC {
                         int rx = center.getBlockX() - x;
                         int ry = center.getBlockY() - y;
                         int rz = center.getBlockZ() - z;
-                        Block b = BukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                        Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
                         if(b.getType() != Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(100) <= chance)
                             b.getWorld().strikeLightning(b.getLocation());

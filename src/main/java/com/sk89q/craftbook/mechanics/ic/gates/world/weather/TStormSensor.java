@@ -1,9 +1,9 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.weather;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -33,14 +33,14 @@ public class TStormSensor extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, BukkitUtil.toSign(getSign()).getWorld().isThundering());
+            chip.setOutput(0, CraftBookBukkitUtil.toSign(getSign()).getWorld().isThundering());
         }
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, BukkitUtil.toSign(getSign()).getWorld().isThundering());
+        chip.setOutput(0, CraftBookBukkitUtil.toSign(getSign()).getWorld().isThundering());
     }
 
     public static class Factory extends AbstractICFactory {

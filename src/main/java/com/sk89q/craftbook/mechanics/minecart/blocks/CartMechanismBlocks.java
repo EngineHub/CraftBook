@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -7,7 +8,6 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Vine;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RailUtil;
@@ -200,7 +200,7 @@ public class CartMechanismBlocks {
      */
     public ChangedSign getSign() {
 
-        return !hasSign() ? null : BukkitUtil.toChangedSign(sign);
+        return !hasSign() ? null : CraftBookBukkitUtil.toChangedSign(sign);
     }
 
     boolean hasSign() {

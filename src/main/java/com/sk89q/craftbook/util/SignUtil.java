@@ -16,12 +16,11 @@
 
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.block.SignChangeEvent;
-
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 /**
  * <p>
@@ -198,7 +197,7 @@ public final class SignUtil {
         for (int i = 0; i < searchRadius; i++) {
             if (isSign(otherBlock.getRelative(way))) {
                 otherBlock = otherBlock.getRelative(way);
-                if (BukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
+                if (CraftBookBukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
                     found = true;
                     break;
                 }
@@ -418,6 +417,6 @@ public final class SignUtil {
      * @return
      */
     public static boolean doesSignHaveText(Block sign, String text, int line) {
-        return isSign(sign) && BukkitUtil.toChangedSign(sign).getLine(line).equals(text);
+        return isSign(sign) && CraftBookBukkitUtil.toChangedSign(sign).getLine(line).equals(text);
     }
 }

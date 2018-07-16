@@ -1,12 +1,12 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -57,7 +57,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        location = BukkitUtil.toSign(getSign()).getLocation();
+        location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
 
         if (!getSign().getLine(3).isEmpty())
             type = EntityType.fromString(getSign().getLine(3));
@@ -87,7 +87,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
 
         boolean resultBoolean = false;
 
-        for (Entity e : LocationUtil.getNearbyEntities(location, BukkitUtil.toVector(new Vector(3,3,3)))) {
+        for (Entity e : LocationUtil.getNearbyEntities(location, CraftBookBukkitUtil.toVector(new Vector(3,3,3)))) {
 
             if (e.isDead() || !e.isValid())
                 continue;

@@ -4,7 +4,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
@@ -31,7 +31,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
     }
 
     @Override
-    public boolean verify(ChangedSign sign, LocalPlayer player) {
+    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
 
         try {
             if(!sign.getLine(2).isEmpty())

@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
@@ -17,7 +18,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SearchArea;
@@ -251,7 +251,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (sign.getLine(3).trim().isEmpty())
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1270"))

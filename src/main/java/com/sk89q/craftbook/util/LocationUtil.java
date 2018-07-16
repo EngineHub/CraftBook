@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util;
 
 import java.util.HashSet;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.worldedit.Vector;
 
 /**
@@ -128,8 +128,8 @@ public final class LocationUtil {
 
     public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
 
-        return getRelativeOffset(SignUtil.getBackBlock(BukkitUtil.toSign(sign).getBlock()),
-                SignUtil.getFacing(BukkitUtil.toSign(sign).getBlock()),
+        return getRelativeOffset(SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock()),
+                SignUtil.getFacing(CraftBookBukkitUtil.toSign(sign).getBlock()),
                 offsetX, offsetY, offsetZ);
     }
 

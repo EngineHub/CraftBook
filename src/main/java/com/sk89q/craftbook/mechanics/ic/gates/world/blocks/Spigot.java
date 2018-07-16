@@ -128,14 +128,14 @@ public class Spigot extends AbstractIC {
     }
 
     public static Material parse(Material mat) {
-        if (mat == Material.STATIONARY_WATER || mat == Material.WATER || mat == Material.WATER_BUCKET) return Material.WATER_BUCKET;
-        if (mat == Material.STATIONARY_LAVA || mat == Material.LAVA || mat == Material.LAVA_BUCKET) return Material.LAVA_BUCKET;
+        if (mat == Material.WATER || mat == Material.WATER_BUCKET) return Material.WATER_BUCKET;
+        if (mat == Material.LAVA || mat == Material.LAVA_BUCKET) return Material.LAVA_BUCKET;
         return Material.AIR;
     }
 
     public static Material unparse(Material mat) {
-        if (mat == Material.WATER_BUCKET || mat == Material.WATER || mat == Material.STATIONARY_WATER) return Material.WATER;
-        if (mat == Material.LAVA_BUCKET || mat == Material.LAVA || mat == Material.STATIONARY_LAVA) return Material.LAVA;
+        if (mat == Material.WATER_BUCKET || mat == Material.WATER) return Material.WATER;
+        if (mat == Material.LAVA_BUCKET || mat == Material.LAVA) return Material.LAVA;
         return Material.AIR;
     }
 

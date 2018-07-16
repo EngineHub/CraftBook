@@ -31,7 +31,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
@@ -166,7 +166,7 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))) sign.setLine(3, player.getCraftBookId());
             else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")) sign.setLine(3, player.getCraftBookId());

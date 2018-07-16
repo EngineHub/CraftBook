@@ -20,7 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -68,7 +68,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
         if(!getLine(3).isEmpty())
             centre = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         else
-            centre = SignUtil.getBackBlock(BukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0, 1, 0);
+            centre = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0, 1, 0);
 
         try {
             min = Byte.parseByte(getSign().getLine(2));

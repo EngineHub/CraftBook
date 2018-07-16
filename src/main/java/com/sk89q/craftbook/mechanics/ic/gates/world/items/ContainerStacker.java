@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -62,7 +62,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        Block bl = BukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+        Block bl = CraftBookBukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         if (InventoryUtil.doesBlockHaveInventory(bl)) {
             InventoryHolder c = (InventoryHolder) bl.getState();
             for (int i = 0; i < c.getInventory().getSize(); i++) {

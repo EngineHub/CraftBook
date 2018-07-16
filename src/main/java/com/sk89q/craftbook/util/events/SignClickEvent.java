@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util.events;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -9,9 +10,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 
 public class SignClickEvent extends PlayerInteractEvent {
 
@@ -22,7 +22,7 @@ public class SignClickEvent extends PlayerInteractEvent {
     public SignClickEvent (Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
         super(who, action, item, clickedBlock, clickedFace);
 
-        sign = BukkitUtil.toChangedSign(getClickedBlock());
+        sign = CraftBookBukkitUtil.toChangedSign(getClickedBlock());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SignClickEvent extends PlayerInteractEvent {
         return sign;
     }
 
-    public LocalPlayer getWrappedPlayer() {
+    public CraftBookPlayer getWrappedPlayer() {
         return CraftBookPlugin.inst().wrapPlayer(getPlayer());
     }
 }

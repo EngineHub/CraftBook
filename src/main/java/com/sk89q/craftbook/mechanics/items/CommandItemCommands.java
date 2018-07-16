@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics.items;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -389,7 +389,7 @@ public class CommandItemCommands {
                 CommandItems.INSTANCE.save();
                 return ChatColor.YELLOW + "Successfully added CommandItem: " + name;
             } catch(Exception e) {
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
                 return ChatColor.RED + "Failed to add CommandItem! See Console for more details!";
             }
         }

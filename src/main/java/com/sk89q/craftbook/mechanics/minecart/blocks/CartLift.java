@@ -7,7 +7,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.CartUtil;
 import com.sk89q.craftbook.util.ItemInfo;
@@ -46,7 +46,7 @@ public class CartLift extends CartBlockMechanism {
 
             if (SignUtil.isSign(destination) && event.getBlocks().base.getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
 
-                ChangedSign state = BukkitUtil.toChangedSign(destination);
+                ChangedSign state = CraftBookBukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);
 
                 if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {

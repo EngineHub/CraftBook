@@ -2,7 +2,7 @@ package com.sk89q.craftbook.mechanics.headdrops;
 
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -153,7 +153,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(skull == null || !skull.hasOwner())
                 return;
 
-            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
                 player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
@@ -181,7 +181,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if (ignoredNames.contains(playerName)) {
                 return;
             }
-            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
             EntityType type = MobSkullType.getEntityType(playerName);
 

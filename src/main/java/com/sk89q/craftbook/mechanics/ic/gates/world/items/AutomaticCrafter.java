@@ -2,7 +2,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
@@ -74,7 +74,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 }
             }
         } catch (Exception e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             disp.getInventory().setContents(disp.getInventory().getContents());
         }
     }
@@ -160,7 +160,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
         }
 
-        for (Item item : ItemUtil.getItemsAtBlock(BukkitUtil.toSign(getSign()).getBlock())) {
+        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
             boolean delete = true;
 
             ItemStack stack = item.getItemStack();
@@ -246,7 +246,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                             require = ingredientMap.get(item);
                     }
                     catch(Exception e){
-                        BukkitUtil.printStacktrace(e);
+                        CraftBookBukkitUtil.printStacktrace(e);
                     }
                     if (require != null && require.getType() != Material.AIR) {
                         validRecipeItems ++;
@@ -254,7 +254,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                     if (!ItemUtil.areItemsIdentical(require, stack))
                         return false;
                 } catch (Exception e) {
-                    BukkitUtil.printStacktrace(e);
+                    CraftBookBukkitUtil.printStacktrace(e);
                     return false;
                 }
             }

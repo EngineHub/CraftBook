@@ -16,16 +16,15 @@
 
 package com.sk89q.craftbook.mechanics.ic.families;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractChipState;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFamily;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
+import com.sk89q.worldedit.util.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * Handles detection for the single input single output family.
@@ -35,13 +34,13 @@ import com.sk89q.worldedit.BlockWorldVector;
 public class FamilyAISO extends AbstractICFamily {
 
     @Override
-    public ChipState detect(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detect(Location source, ChangedSign sign) {
 
         return new ChipStateAISO(source, sign);
     }
 
     @Override
-    public ChipState detectSelfTriggered(BlockWorldVector source, ChangedSign sign) {
+    public ChipState detectSelfTriggered(Location source, ChangedSign sign) {
 
         return new ChipStateAISO(source, sign, true);
     }
@@ -54,12 +53,12 @@ public class FamilyAISO extends AbstractICFamily {
 
     public static class ChipStateAISO extends AbstractChipState {
 
-        public ChipStateAISO(BlockWorldVector source, ChangedSign sign) {
+        public ChipStateAISO(Location source, ChangedSign sign) {
 
             super(source, sign, false);
         }
 
-        public ChipStateAISO(BlockWorldVector source, ChangedSign sign, boolean selfTriggered) {
+        public ChipStateAISO(Location source, ChangedSign sign, boolean selfTriggered) {
 
             super(source, sign, selfTriggered);
         }
@@ -69,14 +68,14 @@ public class FamilyAISO extends AbstractICFamily {
 
             switch (pin) {
                 case 0:
-                    return SignUtil.getFrontBlock(BukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
                 case 1:
-                    return SignUtil.getLeftBlock(BukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
                 case 2:
-                    return SignUtil.getRightBlock(BukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
                 case 3:
-                    BlockFace face = SignUtil.getBack(BukkitUtil.toSign(sign).getBlock());
-                    return BukkitUtil.toSign(sign).getBlock().getRelative(face).getRelative(face);
+                    BlockFace face = SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return CraftBookBukkitUtil.toSign(sign).getBlock().getRelative(face).getRelative(face);
                 default:
                     return null;
             }

@@ -3,9 +3,10 @@ package com.sk89q.craftbook.mechanics.area;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import com.sk89q.worldedit.world.DataException;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.World;
 
 import java.io.File;
@@ -34,7 +35,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
     }
 
     @Override
-    protected void loadFromFile(File file) throws IOException, CuboidCopyException, DataException {
+    protected void loadFromFile(File file) throws IOException, DataException {
 
         clipboard = SchematicFormat.MCEDIT.load(file);
         origin = clipboard.getOrigin();
@@ -65,7 +66,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
                     size.getZ() - 1));
             EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
-            editSession.setBlocks(region, new BaseBlock(0));
+            editSession.setBlocks(region, new BaseBlock(BlockTypes.AIR));
             editSession.flushQueue();
         } catch (MaxChangedBlocksException e) {
             // is never thrown

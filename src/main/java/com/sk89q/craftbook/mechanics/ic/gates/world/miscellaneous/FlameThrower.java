@@ -7,7 +7,7 @@ import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -21,8 +21,8 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class FlameThrower extends AbstractIC {
 
-    int distance;
-    int delay;
+    private int distance;
+    private int delay;
 
     public FlameThrower(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -65,7 +65,7 @@ public class FlameThrower extends AbstractIC {
 
     public void sendFlames(final boolean make) {
 
-        final Block block = BukkitUtil.toSign(getSign()).getBlock();
+        final Block block = CraftBookBukkitUtil.toSign(getSign()).getBlock();
         final BlockFace direction = SignUtil.getBack(block);
 
         if(delay <= 0) {
@@ -73,7 +73,7 @@ public class FlameThrower extends AbstractIC {
             Block fire = block.getRelative(direction, 2);
             for (int i = 0; i < distance; i++) {
                 if (make) {
-                    if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
+                    if (fire.getType() == Material.AIR || fire.getType() == Material.GRASS) {
                         fire.setType(Material.FIRE);
                     }
                 } else if (fire.getType() == Material.FIRE) {
@@ -90,7 +90,7 @@ public class FlameThrower extends AbstractIC {
 
                     Block fire = block.getRelative(direction, 2+fi);
                     if (make) {
-                        if (fire.getType() == Material.AIR || fire.getType() == Material.LONG_GRASS) {
+                        if (fire.getType() == Material.AIR || fire.getType() == Material.GRASS) {
                             fire.setType(Material.FIRE);
                         }
                     } else if (fire.getType() == Material.FIRE) {

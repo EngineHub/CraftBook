@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -47,7 +47,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting) {
-            LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             Painting paint = (Painting) event.getRightClicked();
 
             if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
@@ -84,7 +84,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (players.get(player.getUniqueId()) == null)
             return;
@@ -113,7 +113,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
 
             return;
         }
-        int newID = paint.getArt().getId() + (isForwards ? 1 : -1);
+        int newID = paint.getArt().ordinal() + (isForwards ? 1 : -1);
         if (newID < 0) {
             newID = art.length - 1;
         } else if (newID > art.length - 1) {
@@ -144,7 +144,6 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
 
         if(event.getEntity() instanceof Painting) {
-
             UUID uuid = paintings.remove(event.getEntity());
 
             if(uuid != null) {

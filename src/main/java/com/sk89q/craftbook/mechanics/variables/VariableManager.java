@@ -3,7 +3,7 @@ package com.sk89q.craftbook.mechanics.variables;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.squirrelid.Profile;
@@ -48,7 +48,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
             variableConfiguration.load();
         } catch(Exception ignored){
-            BukkitUtil.printStacktrace(ignored);
+            CraftBookBukkitUtil.printStacktrace(ignored);
             return false;
         }
 
@@ -155,7 +155,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
         if(!CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) return;
         if(SignUtil.isSign(event.getBlock())) {
 
-            ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
             int i = 0;
 

@@ -3,9 +3,9 @@ package com.sk89q.craftbook.mechanics.items;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.*;
@@ -90,7 +90,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             config.load();
         } catch (IOException e) {
             CraftBookPlugin.logger().severe("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
             return false;
         }
 
@@ -365,7 +365,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if (event == null || !EventUtil.passesFilter(event))
             return;
 
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
 
         for(CommandItemDefinition def : definitions) {
             current: {

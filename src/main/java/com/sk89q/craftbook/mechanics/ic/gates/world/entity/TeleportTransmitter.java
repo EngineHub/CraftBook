@@ -2,7 +2,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.util.*;
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             type = PlayerType.getFromChar(RegexUtil.PIPE_PATTERN.split(getLine(2))[1].charAt(0));
             typeData = RegexUtil.COLON_PATTERN.split(RegexUtil.PIPE_PATTERN.split(getLine(2))[1])[1];
         }
-        area = SearchArea.createArea(BukkitUtil.toSign(getSign()).getBlock(), getLine(3));
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(3));
     }
 
     @Override
@@ -160,7 +160,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.isValidArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
 

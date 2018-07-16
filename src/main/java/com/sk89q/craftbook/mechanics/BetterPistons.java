@@ -3,9 +3,9 @@ package com.sk89q.craftbook.mechanics;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -44,7 +44,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         Types type = null;
 
         if (SignUtil.isSign(sign)) {
-            ChangedSign s = BukkitUtil.toChangedSign(sign);
+            ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
             switch (s.getLine(1)) {
                 case "[Crush]":
                     type = Types.CRUSH;
@@ -70,7 +70,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         Block block = SignUtil.getBackBlock(event.getBlock());
         Types type = null;
         // check if this looks at all like something we're interested in first
@@ -177,7 +177,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
 
         for(Tuple2<Types, Block> tups : types) {
-            ChangedSign signState = BukkitUtil.toChangedSign(tups.b);
+            ChangedSign signState = CraftBookBukkitUtil.toChangedSign(tups.b);
 
             switch (tups.a) {
                 case CRUSH:

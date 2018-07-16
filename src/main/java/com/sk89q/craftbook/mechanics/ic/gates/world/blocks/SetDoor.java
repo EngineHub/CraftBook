@@ -6,7 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -47,7 +47,7 @@ public class SetDoor extends AbstractIC {
     @Override
     public void load() {
 
-        faceing = SignUtil.getFacing(BukkitUtil.toSign(getSign()).getBlock());
+        faceing = SignUtil.getFacing(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
             try {

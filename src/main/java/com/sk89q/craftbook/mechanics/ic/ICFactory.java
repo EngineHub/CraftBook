@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics.ic;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 
 /**
  * Factories are used to generate instances of ICs.
@@ -61,7 +61,7 @@ public interface ICFactory {
      * @throws ICVerificationException if the area of the world defined by the sign does not represent a valid setup
      *                                 for this type of IC.
      */
-    void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException;
+    void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException;
 
     /**
      * Get a short description of the IC

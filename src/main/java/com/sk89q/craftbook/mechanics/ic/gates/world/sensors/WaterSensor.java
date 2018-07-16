@@ -28,10 +28,11 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ICUtil;
+import org.bukkit.block.data.Waterlogged;
 
 public class WaterSensor extends AbstractSelfTriggeredIC {
 
-    Block center;
+    private Block center;
 
     public WaterSensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -76,10 +77,7 @@ public class WaterSensor extends AbstractSelfTriggeredIC {
      * @return
      */
     protected boolean hasWater() {
-
-        Material blockID = center.getType();
-
-        return blockID == Material.WATER || blockID == Material.STATIONARY_WATER;
+        return center.getType() == Material.WATER || (center.getBlockData() instanceof Waterlogged && ((Waterlogged) center.getBlockData()).isWaterlogged());
     }
 
     public static class Factory extends AbstractICFactory {

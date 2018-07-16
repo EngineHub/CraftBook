@@ -3,8 +3,8 @@ package com.sk89q.craftbook.mechanics.ic.gates.variables;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -111,14 +111,14 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, LocalPlayer player) throws ICVerificationException {
+        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
             if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), "global", parts[0], "use"))
+                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global", parts[0], "use"))
                     throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
             } else
-                if(!VariableCommands.hasVariablePermission(((BukkitPlayer) player).getPlayer(), parts[0], parts[1], "use"))
+                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0], parts[1], "use"))
                     throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 

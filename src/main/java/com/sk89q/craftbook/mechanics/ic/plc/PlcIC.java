@@ -18,13 +18,12 @@ package com.sk89q.craftbook.mechanics.ic.plc;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.SelfTriggeredIC;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.BlockWorldVector;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -39,7 +38,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -107,14 +112,13 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String getFileName() {
 
         if (!isShared()) {
-            BlockWorldVector l = sign.getBlockVector();
-            return lang.getName() + "$$" + l.getBlockX() + "_" + l.getBlockY() + "_" + l.getBlockZ();
+            return lang.getName() + "$$" + sign.getX() + "_" + sign.getY() + "_" + sign.getZ();
         } else return lang.getName() + "$" + sign.getLine(3);
     }
 
     private File getStorageLocation() {
 
-        World w = BukkitUtil.toWorld(sign.getLocalWorld());
+        World w = sign.getBlock().getWorld();
         File worldDir = w.getWorldFolder();
         File targetDir = new File(new File(worldDir, "craftbook"), "plcs");
         if(new File(worldDir, "craftbook-plcs").exists()) {
@@ -219,7 +223,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
         for (ItemStack s : i.getContents()) {
-            if (s != null && s.getAmount() > 0 && (s.getType() == Material.BOOK_AND_QUILL || s.getType() == Material.WRITTEN_BOOK)) {
+            if (s != null && s.getAmount() > 0 && (s.getType() == Material.WRITABLE_BOOK || s.getType() == Material.WRITTEN_BOOK)) {
                 if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
@@ -228,7 +232,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         StringBuilder code = new StringBuilder();
         for (String s : ((BookMeta) book.getItemMeta()).getPages()) {
-            code.append(s).append("\n");
+            code.append(s).append('\n');
         }
         CraftBookPlugin.logDebugMessage(code.toString(), "plc");
         return code.toString();
@@ -236,7 +240,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private String getCode() throws CodeNotFoundException {
 
-        Sign sign = BukkitUtil.toSign(this.sign);
+        Sign sign = CraftBookBukkitUtil.toSign(this.sign);
 
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
         if (above.getType() == Material.CHEST) return getBookCode(above);
@@ -251,15 +255,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         for (int y = 0; y < w.getMaxHeight(); y++) {
             if (y != l.getBlockY()) if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
-                ChangedSign s = BukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
+                ChangedSign s = CraftBookBukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
                 if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
                     y--;
                     Block b = w.getBlockAt(x, y, z);
                     StringBuilder code = new StringBuilder();
                     while (SignUtil.isSign(b)) {
-                        s = BukkitUtil.toChangedSign(b);
+                        s = CraftBookBukkitUtil.toChangedSign(b);
                         for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
-                            code.append(s.getLine(li)).append("\n");
+                            code.append(s.getLine(li)).append('\n');
                         }
                         b = w.getBlockAt(x, --y, z);
                     }
@@ -316,67 +320,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     public IC selfTriggered() {
 
         final IC self = this;
-        return new SelfTriggeredIC() {
-
-            @Override
-            public String getTitle() {
-
-                return self.getTitle();
-            }
-
-            @Override
-            public String getSignTitle() {
-
-                return self.getSignTitle();
-            }
-
-            @Override
-            public void trigger(ChipState chip) {
-
-            }
-
-            @Override
-            public void think(ChipState chip) {
-
-                self.trigger(chip);
-            }
-
-            @Override
-            public boolean isActive() {
-
-                return true;
-            }
-
-            @Override
-            public void onRightClick(Player p) {
-
-                self.onRightClick(p);
-            }
-
-            @Override
-            public void unload() {
-
-            }
-
-            @Override
-            public void load() {
-
-            }
-
-            @Override
-            public boolean isAlwaysST () {
-                return false;
-            }
-
-            @Override
-            public ChangedSign getSign () {
-                return self.getSign();
-            }
-
-            @Override
-            public void onICBreak (BlockBreakEvent event) {
-            }
-        };
+        return new SelfTriggeredPlcIC(self);
     }
 
     @Override
@@ -384,10 +328,9 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         if (CraftBookPlugin.inst().hasPermission(p, "craftbook.plc.debug")) {
             p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
-            BlockWorldVector l = sign.getBlockVector();
             p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
-            p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET + " (" + l.getBlockX() + ", " +
-                    "" + l.getBlockY() + ", " + l.getBlockZ() + ")");
+            p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET + " (" + sign.getX() + ", " +
+                    "" + sign.getY() + ", " + sign.getZ() + ")");
             p.sendMessage(ChatColor.RED + "Language:" + ChatColor.RESET + " " + lang.getName());
             p.sendMessage(ChatColor.RED + "Full Storage Name:" + ChatColor.RESET + " " + getFileName());
             if (error) {
@@ -418,5 +361,67 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     @Override
     public void onICBreak (BlockBreakEvent event) {
+    }
+
+    private static class SelfTriggeredPlcIC implements SelfTriggeredIC {
+        private final IC self;
+
+        public SelfTriggeredPlcIC(IC self) {
+            this.self = self;
+        }
+
+        @Override
+        public String getTitle() {
+            return self.getTitle();
+        }
+
+        @Override
+        public String getSignTitle() {
+            return self.getSignTitle();
+        }
+
+        @Override
+        public void trigger(ChipState chip) {
+
+        }
+
+        @Override
+        public void think(ChipState chip) {
+            self.trigger(chip);
+        }
+
+        @Override
+        public boolean isActive() {
+            return true;
+        }
+
+        @Override
+        public void onRightClick(Player p) {
+            self.onRightClick(p);
+        }
+
+        @Override
+        public void unload() {
+
+        }
+
+        @Override
+        public void load() {
+
+        }
+
+        @Override
+        public boolean isAlwaysST () {
+            return false;
+        }
+
+        @Override
+        public ChangedSign getSign () {
+            return self.getSign();
+        }
+
+        @Override
+        public void onICBreak (BlockBreakEvent event) {
+        }
     }
 }

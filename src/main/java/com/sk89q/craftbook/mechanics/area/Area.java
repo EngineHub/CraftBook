@@ -2,9 +2,9 @@ package com.sk89q.craftbook.mechanics.area;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -15,7 +15,7 @@ import com.sk89q.squirrelid.Profile;
 import com.sk89q.squirrelid.resolver.HttpRepositoryService;
 import com.sk89q.squirrelid.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.data.DataException;
+import com.sk89q.worldedit.world.DataException;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -54,7 +54,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         if (!event.getLine(1).equalsIgnoreCase("[Area]") && !event.getLine(1).equalsIgnoreCase("[SaveArea]")) return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         String cbid = player.getCraftBookId();
 
@@ -98,7 +98,7 @@ public class Area extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         boolean save = false;
 
         ChangedSign sign = event.getSign();
@@ -169,7 +169,7 @@ public class Area extends AbstractCraftBookMechanic {
     public void onSelfTriggerPing(SelfTriggerPingEvent event) {
 
         if(SignUtil.isSign(event.getBlock())) {
-            ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
             if(sign.getLine(1).equals("[Area]")) {
                 isValidArea(sign); //Perform a conversion,
                 sign.update(false);
@@ -187,7 +187,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         boolean save = false;
 
-        ChangedSign sign = BukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
         if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
 
@@ -205,7 +205,7 @@ public class Area extends AbstractCraftBookMechanic {
         if (!checkSign(sign)) return false;
 
         try {
-            World world = BukkitUtil.toSign(sign).getWorld();
+            World world = CraftBookBukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
             String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
             String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);
@@ -258,7 +258,7 @@ public class Area extends AbstractCraftBookMechanic {
         boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
 
         try {
-            World world = BukkitUtil.toSign(sign).getWorld();
+            World world = CraftBookBukkitUtil.toSign(sign).getWorld();
             String namespace = sign.getLine(0);
             String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
             String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);

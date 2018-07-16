@@ -7,15 +7,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.LocalPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.minecraft.util.commands.Command;
@@ -56,7 +56,7 @@ public class RecipeCommands {
         }
 
         if (!(sender instanceof Player)) return;
-        LocalPlayer player = plugin.wrapPlayer((Player) sender);
+        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
 
         String name = context.getString(0);
         RecipeType type = RecipeType.getTypeFromName(context.getString(1));
@@ -158,7 +158,7 @@ public class RecipeCommands {
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
 
         } else if (type == RecipeType.SHAPELESS || type == RecipeType.FURNACE) {
@@ -201,7 +201,7 @@ public class RecipeCommands {
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
-                BukkitUtil.printStacktrace(e);
+                CraftBookBukkitUtil.printStacktrace(e);
             }
         }
     }

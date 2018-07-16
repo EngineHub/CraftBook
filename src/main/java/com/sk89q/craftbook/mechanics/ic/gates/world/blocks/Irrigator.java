@@ -6,12 +6,12 @@ import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
+import org.bukkit.block.data.type.Farmland;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -68,9 +68,10 @@ public class Irrigator extends AbstractSelfTriggeredIC {
 
         if(b == null) return false;
 
-        if (b.getType() == Material.SOIL && b.getData() < 0x1) {
-            if (consumeWater()) {
-                b.setData((byte) 0x7);
+        if (b.getType() == Material.FARMLAND) {
+            Farmland farmland = (Farmland) b.getBlockData();
+            if (farmland.getMoisture() < 1 && consumeWater()) {
+                farmland.setMoisture(farmland.getMaximumMoisture());
                 return true;
             }
         }
@@ -86,7 +87,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
                 c.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                 return true;
             }
-        } else if (chest.getType() == Material.WATER || chest.getType() == Material.STATIONARY_WATER) {
+        } else if (chest.getType() == Material.WATER) {
             chest.setType(Material.AIR);
             return true;
         }
@@ -130,7 +131,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(BukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

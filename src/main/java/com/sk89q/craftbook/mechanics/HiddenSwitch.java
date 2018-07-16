@@ -1,9 +1,13 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Powerable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,9 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -32,7 +34,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
 
         // Must be Wall Sign
         if (b == null || b.getType() != Material.WALL_SIGN) return false;
-        ChangedSign s = BukkitUtil.toChangedSign(b);
+        ChangedSign s = CraftBookBukkitUtil.toChangedSign(b);
 
         return s.getLine(1).equalsIgnoreCase("[X]");
     }
@@ -43,7 +45,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if(!event.getLine(1).equalsIgnoreCase("[x]")) return;
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
@@ -56,7 +58,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
 
     public boolean testBlock(Block switchBlock, BlockFace eventFace, Player player) {
 
-        LocalPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
+        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
         ChangedSign s = null;
         Block testBlock = null;
         if(anyside) {
@@ -64,7 +66,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
                 if(testBlock.getType() == Material.WALL_SIGN) {
-                    s = BukkitUtil.toChangedSign(testBlock);
+                    s = CraftBookBukkitUtil.toChangedSign(testBlock);
                     break;
                 }
             }
@@ -72,7 +74,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
             if(testBlock.getType() == Material.WALL_SIGN)
-                s = BukkitUtil.toChangedSign(testBlock);
+                s = CraftBookBukkitUtil.toChangedSign(testBlock);
         }
 
         if(s == null)
@@ -109,7 +111,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             if(success)
                 lplayer.print("mech.hiddenswitch.toggle");
 
-            if (!lplayer.isSneaking()) return true;
+            return !lplayer.isSneaking();
         }
 
         return false;
@@ -128,7 +130,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
             return;
 
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
             return;
@@ -165,12 +167,13 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             final Block checkBlock = sign.getRelative(blockFace);
 
             if (checkBlock.getType() == Material.LEVER) {
-                checkBlock.setData((byte) (checkBlock.getData() ^ 0x8));
-            } else if (checkBlock.getType() == Material.STONE_BUTTON || checkBlock.getType() == Material.WOOD_BUTTON) {
-                checkBlock.setData((byte) (checkBlock.getData() | 0x8));
-
-                Runnable turnOff = () -> checkBlock.setData((byte) (checkBlock.getData() & ~0x8));
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, checkBlock.getType() == Material.STONE_BUTTON ? 20L : 30L);
+                Powerable powerable = (Powerable) checkBlock.getBlockData();
+                powerable.setPowered(!powerable.isPowered());
+            } else if (Tag.BUTTONS.getValues().contains(checkBlock.getType())) {
+                Powerable powerable = (Powerable) checkBlock.getBlockData();
+                powerable.setPowered(true);
+                Runnable turnOff = () -> powerable.setPowered(false);
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
             }
         }
     }

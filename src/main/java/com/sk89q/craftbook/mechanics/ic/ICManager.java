@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics.ic;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.families.*;
 import com.sk89q.craftbook.mechanics.ic.gates.logic.*;
 import com.sk89q.craftbook.mechanics.ic.gates.variables.IsAtLeast;
@@ -92,7 +92,7 @@ public class ICManager {
         try {
             icConfiguration.load();
         } catch (Throwable e) {
-            BukkitUtil.printStacktrace(e);
+            CraftBookBukkitUtil.printStacktrace(e);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -72,7 +72,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
 
         if (InventoryUtil.doesBlockHaveInventory(offset.getBlock())) {
 
-            BlockFace back = SignUtil.getBack(BukkitUtil.toSign(getSign()).getBlock());
+            BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
             PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());

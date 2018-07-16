@@ -18,10 +18,10 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.LocalPlayer;
-import com.sk89q.craftbook.bukkit.BukkitPlayer;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.BukkitUtil;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -125,7 +125,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         if(event.getLine(1).equalsIgnoreCase("[lift]")) dir = Direction.RECV;
 
         if(dir == Direction.NONE) return;
-        LocalPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.elevator")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -183,7 +183,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
 
-            LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
+            CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
             if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
                 localPlayer.printError("mech.lift.busy");
                 continue;
@@ -221,7 +221,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
             return;
 
-        LocalPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         // check if this looks at all like something we're interested in first
         Direction dir = isLift(event.getClickedBlock());
@@ -280,7 +280,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         while (true) {
             destination = destination.getRelative(shift);
             Direction derp = isLift(destination);
-            if (derp != Direction.NONE && isValidLift(BukkitUtil.toChangedSign(clickedBlock), BukkitUtil.toChangedSign(destination)))
+            if (derp != Direction.NONE && isValidLift(CraftBookBukkitUtil.toChangedSign(clickedBlock), CraftBookBukkitUtil.toChangedSign(destination)))
                 break; // found it!
 
             if (destination.getY() == clickedBlock.getY()) {
@@ -311,7 +311,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         return destination;
     }
 
-    private void makeItSo(LocalPlayer player, Block destination, BlockFace shift) {
+    private void makeItSo(CraftBookPlayer player, Block destination, BlockFace shift) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getZ()));
@@ -348,19 +348,19 @@ public class Elevator extends AbstractCraftBookMechanic {
         teleportPlayer(player, floor, destination, shift);
     }
 
-    public void teleportPlayer(final LocalPlayer player, final Block floor, final Block destination, final BlockFace shift) {
+    public void teleportPlayer(final CraftBookPlayer player, final Block floor, final Block destination, final BlockFace shift) {
 
-        final Location newLocation = BukkitUtil.toLocation(player.getPosition());
+        final Location newLocation = CraftBookBukkitUtil.toLocation(player.getPosition());
         newLocation.setY(floor.getY() + 1);
 
         if(elevatorSlowMove) {
 
-            final Location lastLocation = BukkitUtil.toLocation(player.getPosition());
+            final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getPosition());
 
             new BukkitRunnable(){
                 @Override
                 public void run () {
-                    OfflinePlayer op = ((BukkitPlayer)player).getPlayer();
+                    OfflinePlayer op = ((BukkitCraftBookPlayer)player).getPlayer();
                     if(!op.isOnline()) {
                         cancel();
                         return;
@@ -425,20 +425,20 @@ public class Elevator extends AbstractCraftBookMechanic {
             // Teleport!
             if (player.isInsideVehicle()) {
 
-                newLocation.setX(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getX());
+                newLocation.setX(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getX());
                 newLocation.setY(floor.getY() + 2);
-                newLocation.setZ(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getZ());
-                newLocation.setYaw(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getYaw());
-                newLocation.setPitch(((BukkitPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
-                ((BukkitPlayer)player).getPlayer().getVehicle().teleport(newLocation);
+                newLocation.setZ(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getZ());
+                newLocation.setYaw(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getYaw());
+                newLocation.setPitch(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
+                ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(newLocation);
             }
-            player.setPosition(BukkitUtil.toLocation(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+            player.setPosition(CraftBookBukkitUtil.toLocation(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
             teleportFinish(player, destination, shift);
         }
     }
 
-    public static void teleportFinish(LocalPlayer player, Block destination, BlockFace shift) {
+    public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
         // Now, we want to read the sign so we can tell the player
         // his or her floor, but as that may not be avilable, we can
         // just print a generic message
@@ -448,12 +448,12 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                 Button button = (Button) destination.getState().getData();
                 if (SignUtil.isSign(destination.getRelative(button.getAttachedFace(), 2)))
-                    info = BukkitUtil.toChangedSign(destination.getRelative(button.getAttachedFace(), 2));
+                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(button.getAttachedFace(), 2));
             }
             if (info == null)
                 return;
         } else
-            info = BukkitUtil.toChangedSign(destination);
+            info = CraftBookBukkitUtil.toChangedSign(destination);
         String title = info.getLines()[0];
         if (!title.isEmpty()) {
             player.print(player.translate("mech.lift.floor") + ": " + title);
@@ -484,12 +484,12 @@ public class Elevator extends AbstractCraftBookMechanic {
                     return Direction.NONE;
                 Block sign = block.getRelative(b.getAttachedFace(), 2);
                 if (SignUtil.isSign(sign))
-                    return isLift(BukkitUtil.toChangedSign(sign));
+                    return isLift(CraftBookBukkitUtil.toChangedSign(sign));
             }
             return Direction.NONE;
         }
 
-        return isLift(BukkitUtil.toChangedSign(block));
+        return isLift(CraftBookBukkitUtil.toChangedSign(block));
     }
 
     private static Elevator.Direction isLift(ChangedSign sign) {
