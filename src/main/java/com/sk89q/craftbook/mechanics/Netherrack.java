@@ -75,7 +75,7 @@ public class Netherrack extends AbstractCraftBookMechanic {
 
         switch (t) {
             case SNOW:
-            case LONG_GRASS:
+            case GRASS:
             case VINE:
             case DEAD_BUSH:
             case AIR:

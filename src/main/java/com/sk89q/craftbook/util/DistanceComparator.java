@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
@@ -59,8 +59,8 @@ public class DistanceComparator<T extends BlockState> implements Comparator<T> {
         Block b1 = o1.getBlock();
         Block b2 = o2.getBlock();
 
-        double dist1 = LocationUtil.getDistanceSquared(b1.getLocation(), BukkitUtil.toLocation(b1.getWorld(), origin));
-        double dist2 = LocationUtil.getDistanceSquared(b2.getLocation(), BukkitUtil.toLocation(b2.getWorld(), origin));
+        double dist1 = LocationUtil.getDistanceSquared(b1.getLocation(), BukkitAdapter.adapt(b1.getWorld(), origin));
+        double dist2 = LocationUtil.getDistanceSquared(b2.getLocation(), BukkitAdapter.adapt(b2.getWorld(), origin));
 
         if (dist1 < dist2) return -1;
         else if (dist1 > dist2) return 1;

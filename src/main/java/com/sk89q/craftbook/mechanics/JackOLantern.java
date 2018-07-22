@@ -18,6 +18,8 @@ package com.sk89q.craftbook.mechanics;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -42,20 +44,19 @@ public class JackOLantern extends AbstractCraftBookMechanic {
         if(event.isMinor())
             return;
 
-        if (event.getBlock().getType() != Material.PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
+        if (event.getBlock().getType() != Material.CARVED_PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
 
         if(event.isOn() == (event.getBlock().getType() == Material.JACK_O_LANTERN))
             return;
 
         setPowered(event.getBlock(), event.isOn());
-
-        event.getBlock().setData(event.getBlock().getData(), false);
     }
 
     private static void setPowered(Block block, boolean on) {
-        byte data = block.getData();
-        block.setType(on ? Material.JACK_O_LANTERN : Material.PUMPKIN);
-        block.setData(data);
+
+        BlockFace data = ((Directional) block.getBlockData()).getFacing();
+        block.setType(on ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN);
+        ((Directional) block.getBlockData()).setFacing(data);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -63,7 +64,7 @@ public class JackOLantern extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if (event.getBlock().getType() != Material.PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
+        if (event.getBlock().getType() != Material.CARVED_PUMPKIN && event.getBlock().getType() != Material.JACK_O_LANTERN) return;
 
         if (event.getBlock().getType() == Material.JACK_O_LANTERN && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);

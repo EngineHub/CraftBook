@@ -22,12 +22,21 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.*;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -40,6 +49,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.material.Attachable;
 import org.bukkit.material.Button;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -314,7 +324,8 @@ public class Elevator extends AbstractCraftBookMechanic {
     private void makeItSo(CraftBookPlayer player, Block destination, BlockFace shift) {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getPosition().getX()), destination.getY() + 1, (int) Math.floor(player.getPosition().getZ()));
+        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getX()), destination.getY() + 1,
+                (int) Math.floor(player.getLocation().getZ()));
         // well, unless that's already a ceiling.
         if (!BlockType.canPassThrough(floor.getTypeId())) {
             floor = floor.getRelative(BlockFace.DOWN);
@@ -350,12 +361,12 @@ public class Elevator extends AbstractCraftBookMechanic {
 
     public void teleportPlayer(final CraftBookPlayer player, final Block floor, final Block destination, final BlockFace shift) {
 
-        final Location newLocation = CraftBookBukkitUtil.toLocation(player.getPosition());
+        final Location newLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
         newLocation.setY(floor.getY() + 1);
 
         if(elevatorSlowMove) {
 
-            final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getPosition());
+            final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
 
             new BukkitRunnable(){
                 @Override
@@ -432,7 +443,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 newLocation.setPitch(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
                 ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(newLocation);
             }
-            player.setPosition(CraftBookBukkitUtil.toLocation(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+            player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
             teleportFinish(player, destination, shift);
         }
@@ -444,11 +455,10 @@ public class Elevator extends AbstractCraftBookMechanic {
         // just print a generic message
         ChangedSign info = null;
         if (!SignUtil.isSign(destination)) {
-            if (destination.getType() == Material.STONE_BUTTON || destination.getType() == Material.WOOD_BUTTON) {
-
-                Button button = (Button) destination.getState().getData();
-                if (SignUtil.isSign(destination.getRelative(button.getAttachedFace(), 2)))
-                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(button.getAttachedFace(), 2));
+            if (Tag.BUTTONS.isTagged(destination.getType())) {
+                Attachable attachable = (Attachable) destination.getBlockData();
+                if (SignUtil.isSign(destination.getRelative(attachable.getAttachedFace(), 2)))
+                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getAttachedFace(), 2));
             }
             if (info == null)
                 return;
@@ -478,7 +488,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     private Elevator.Direction isLift(Block block) {
 
         if (!SignUtil.isSign(block)) {
-            if (elevatorButtonEnabled && (block.getType() == Material.STONE_BUTTON || block.getType() == Material.WOOD_BUTTON)) {
+            if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
                 Button b = (Button) block.getState().getData();
                 if(b == null || b.getAttachedFace() == null)
                     return Direction.NONE;

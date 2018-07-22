@@ -64,10 +64,6 @@ public class Cauldron extends AbstractCraftBookMechanic {
         ItemInfo blockItem = cauldronBlock;
 
         // stop strange lava ids
-        if (below == Material.STATIONARY_LAVA)
-            below = Material.LAVA;
-        if (below2 == Material.STATIONARY_LAVA)
-            below2 = Material.LAVA;
         // Preliminary check so we don't waste CPU cycles
         return (below == Material.LAVA || below2 == Material.LAVA) && (blockItem.isSame(s1) || blockItem.isSame(s2) || blockItem.isSame(s3) || blockItem.isSame(s4));
 
@@ -201,7 +197,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
                     // removeQueue.add(entry.getKey());
                     // } else {
                     world.getBlockAt(entry.getKey().getBlockX(), entry.getKey().getBlockY(),
-                            entry.getKey().getBlockZ()).setTypeId(BlockID.AIR);
+                            entry.getKey().getBlockZ()).setType(Material.AIR);
                     // }
                     ingredients.remove(entry.getValue());
                 }
@@ -259,14 +255,6 @@ public class Cauldron extends AbstractCraftBookMechanic {
 
         Material type = block.getType();
 
-        // Make water work reliably
-        if (type == Material.STATIONARY_WATER)
-            type = Material.WATER;
-
-        // Make lava work reliably
-        if (type == Material.STATIONARY_LAVA)
-            type = Material.LAVA;
-
         visited.put(block.getLocation(), new ItemInfo(type, block.getData()));
 
         // It's a wall -- we only needed to remember that we visited it but
@@ -275,7 +263,7 @@ public class Cauldron extends AbstractCraftBookMechanic {
 
         // Must have a lava floor
         Block lavaPos = recurse(0, block.getY() - minY + 1, 0, block);
-        if (world.getBlockTypeIdAt(lavaPos.getX(), lavaPos.getY(), lavaPos.getZ()) == BlockID.LAVA) {
+        if (world.getBlockAt(lavaPos.getX(), lavaPos.getY(), lavaPos.getZ()).getType() == Material.LAVA) {
             player.printError("mech.cauldron.no-lava");
             return;
         }

@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.util.jinglenote;
 
-import org.bukkit.Sound;
-
 public enum Instrument {
 
     /*

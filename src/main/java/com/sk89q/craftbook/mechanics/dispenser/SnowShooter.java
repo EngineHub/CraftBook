@@ -9,12 +9,12 @@ public class SnowShooter extends ItemShooter {
 
     public SnowShooter(Material[] recipe) {
 
-        super(Material.SNOW_BALL, recipe);
+        super(Material.SNOWBALL, recipe);
     }
 
     public SnowShooter() {
 
-        super(Material.SNOW_BALL, new Material[] {
+        super(Material.SNOWBALL, new Material[] {
                 Material.AIR,            Material.SNOW_BLOCK,     Material.AIR,
                 Material.SNOW_BLOCK,     Material.POTION,          Material.SNOW_BLOCK,
                 Material.AIR,            Material.SNOW_BLOCK,     Material.AIR

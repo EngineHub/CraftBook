@@ -188,7 +188,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 return;
 
             event.setCancelled(true);
-            event.getBlock().setTypeId(Material.AIR.getId(), false);
+            event.getBlock().setType(Material.AIR, false);
             for(ItemStack stack : BlockUtil.getBlockDrops(event.getBlock(), event.getPlayer().getItemInHand()))
                 event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), stack);
 
@@ -399,14 +399,14 @@ public class Snow extends AbstractCraftBookMechanic {
                     return increaseSnow(below, disperse);
             }
 
-            if (freezeWater && (below.getType() == Material.WATER || below.getType() == Material.STATIONARY_WATER)) {
+            if (freezeWater && (below.getType() == Material.WATER)) {
                 if(below.getData() == 0) {
                     BlockState state = below.getState();
                     state.setType(Material.ICE);
                     if(ProtectionUtil.canBlockForm(state.getBlock(), state))
                         below.setType(Material.ICE);
                 } else below.setType(Material.AIR);
-            } else if(below.getType() == Material.WATER || below.getType() == Material.STATIONARY_WATER) {
+            } else if(below.getType() == Material.WATER) {
                 return true; //Still return true, pretend it's actually succeeded.
             }
 
@@ -426,7 +426,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     }
                 }
                 if(isReplacable(snow)) {
-                    snow.setTypeIdAndData(Material.SNOW.getId(), (byte) 0, false);
+                    snow.setType(Material.SNOW, false);
                     if(disperse)
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), animationTicks);
                     return true;
@@ -477,7 +477,7 @@ public class Snow extends AbstractCraftBookMechanic {
 
             byte data = (byte) (snow.getData()-1);
             if(snow.getType() == Material.SNOW && snow.getData() == 0x0)
-                snow.setTypeId(Material.AIR.getId(), false);
+                snow.setType(Material.AIR, false);
             else if(snow.getType() == Material.SNOW_BLOCK)
                 snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, false);
             else

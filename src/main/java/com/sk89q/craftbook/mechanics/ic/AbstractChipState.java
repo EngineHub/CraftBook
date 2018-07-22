@@ -4,7 +4,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -55,7 +55,7 @@ public abstract class AbstractChipState implements ChipState {
     @Override
     public boolean isTriggered(int pin) {
         Block block = getBlock(pin);
-        return block != null && BukkitUtil.toLocation(block.getLocation()).equals(source);
+        return block != null && BukkitAdapter.adapt(block.getLocation()).equals(source);
     }
 
     @Override

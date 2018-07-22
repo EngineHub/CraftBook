@@ -132,10 +132,10 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         int wz = block.getZ();
         Material aboveID = block.getRelative(0, 1, 0).getType();
 
-        if (aboveID == Material.TORCH || aboveID == Material.REDSTONE_TORCH_OFF || aboveID == Material.REDSTONE_TORCH_ON) {
+        if (aboveID == Material.WALL_TORCH || aboveID == Material.REDSTONE_WALL_TORCH) {
             // Check if block above is a redstone torch.
             // Used to get what to change torches to.
-            boolean on = aboveID != Material.TORCH;
+            boolean on = aboveID != Material.WALL_TORCH;
             // Prevent spam
             Long lastUse = recentLightToggles.remove(block.getLocation());
             long currTime = System.currentTimeMillis();

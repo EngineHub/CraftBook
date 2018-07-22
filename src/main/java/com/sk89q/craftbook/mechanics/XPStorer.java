@@ -93,7 +93,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
             return;
         }
 
-        int bottleCount = (int) Math.min(max, Math.floor(xp / xpPerBottle));
+        int bottleCount = (int) Math.min(max, Math.floor(xp / (double) xpPerBottle));
 
         CraftBookPlugin.logDebugMessage("Bottles: " + bottleCount, "xpstorer");
 
@@ -104,7 +104,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int tempBottles = bottleCount;
 
         while(tempBottles > 0) {
-            ItemStack bottles = new ItemStack(Material.EXP_BOTTLE, Math.min(tempBottles, 64));
+            ItemStack bottles = new ItemStack(Material.EXPERIENCE_BOTTLE, Math.min(tempBottles, 64));
             if (event.getClickedBlock() == null)
                 for (ItemStack leftOver : event.getPlayer().getInventory().addItem(bottles).values())
                     event.getPlayer().getWorld().dropItemNaturally(event.getPlayer().getLocation(), leftOver);
@@ -236,12 +236,12 @@ public class XPStorer extends AbstractCraftBookMechanic {
             return;
         }
 
-        int bottleCount = (int) Math.min(max, Math.floor(xp / xpPerBottle));
+        int bottleCount = (int) Math.min(max, Math.floor(xp / (double) xpPerBottle));
 
         int tempBottles = bottleCount;
 
         while(tempBottles > 0) {
-            ItemStack bottles = new ItemStack(Material.EXP_BOTTLE, Math.min(tempBottles, 64));
+            ItemStack bottles = new ItemStack(Material.EXPERIENCE_BOTTLE, Math.min(tempBottles, 64));
             if (inventory != null) {
                 for (ItemStack leftover : inventory.addItem(bottles).values()) {
                     event.getBlock().getWorld().dropItemNaturally(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), leftover);

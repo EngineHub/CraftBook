@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -64,17 +65,16 @@ public final class RedstoneUtil {
      */
     public static boolean isPotentialPowerSource(Material typeId) {
 
-        return typeId == Material.REDSTONE_WIRE || typeId == Material.DIODE_BLOCK_ON
-                || typeId == Material.DIODE_BLOCK_OFF
+        return typeId == Material.REDSTONE_WIRE
+                || typeId == Material.REPEATER
                 || typeId == Material.LEVER
-                || typeId == Material.REDSTONE_TORCH_ON
-                || typeId == Material.REDSTONE_TORCH_OFF
-                || typeId == Material.WOOD_PLATE
-                || typeId == Material.STONE_PLATE
-                || typeId == Material.GOLD_PLATE
-                || typeId == Material.IRON_PLATE
-                || typeId == Material.REDSTONE_COMPARATOR_OFF
-                || typeId == Material.REDSTONE_COMPARATOR_ON
+                || typeId == Material.REDSTONE_TORCH
+                || typeId == Material.REDSTONE_WALL_TORCH
+                || Tag.WOODEN_PRESSURE_PLATES.isTagged(typeId)
+                || typeId == Material.STONE_PRESSURE_PLATE
+                || typeId == Material.HEAVY_WEIGHTED_PRESSURE_PLATE
+                || typeId == Material.LIGHT_WEIGHTED_PRESSURE_PLATE
+                || typeId == Material.COMPARATOR
                 || typeId == Material.REDSTONE_BLOCK;
     }
 

@@ -84,7 +84,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
     private boolean isCauldron(Block block) {
 
-        if (block.getType() == Material.CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA || block.getRelative(BlockFace.DOWN).getType() == Material.STATIONARY_LAVA)) {
+        if (block.getType() == Material.CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
             if(requireSign) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
                 boolean found = false;
@@ -259,7 +259,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
     public static boolean isItemSpoon(Material id) {
 
-        return id == Material.WOOD_SPADE || id == Material.STONE_SPADE || id == Material.IRON_SPADE || id == Material.DIAMOND_SPADE || id == Material.GOLD_SPADE;
+        return id == Material.WOODEN_SHOVEL || id == Material.STONE_SHOVEL || id == Material.IRON_SHOVEL || id == Material.DIAMOND_SHOVEL || id == Material.GOLDEN_SHOVEL;
     }
 
     public static double getSpoonChance(ItemStack item, double chance) {
@@ -271,19 +271,19 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         double tenth = toGo / 10;
         int multiplier = 0;
         switch(id) {
-            case WOOD_SPADE:
+            case WOODEN_SHOVEL:
                 multiplier = 1;
                 break;
-            case STONE_SPADE:
+            case STONE_SHOVEL:
                 multiplier = 2;
                 break;
-            case IRON_SPADE:
+            case IRON_SHOVEL:
                 multiplier = 3;
                 break;
-            case DIAMOND_SPADE:
+            case DIAMOND_SHOVEL:
                 multiplier = 4;
                 break;
-            case GOLD_SPADE:
+            case GOLDEN_SHOVEL:
                 multiplier = 5;
                 break;
             default:

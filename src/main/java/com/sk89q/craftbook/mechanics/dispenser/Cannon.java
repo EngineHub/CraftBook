@@ -19,9 +19,9 @@ public class Cannon extends Recipe {
 
     public Cannon() {
         super(new Material[] {
-                Material.FIREBALL,     Material.SULPHUR, Material.FIREBALL,
-                Material.SULPHUR,         Material.TNT,    Material.SULPHUR,
-                Material.FIREBALL,     Material.SULPHUR, Material.FIREBALL
+                Material.FIRE_CHARGE,     Material.GUNPOWDER, Material.FIRE_CHARGE,
+                Material.GUNPOWDER,         Material.TNT,    Material.GUNPOWDER,
+                Material.FIRE_CHARGE,     Material.GUNPOWDER, Material.FIRE_CHARGE
         });
     }
 
