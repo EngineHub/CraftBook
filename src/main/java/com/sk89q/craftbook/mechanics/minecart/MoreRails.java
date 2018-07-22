@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
@@ -35,7 +36,10 @@ public class MoreRails extends AbstractCraftBookMechanic {
         if (!(event.getVehicle() instanceof Minecart)) return;
 
         if (pressurePlate)
-            if (event.getTo().getBlock().getType() == Material.STONE_PLATE || event.getTo().getBlock().getType() == Material.WOOD_PLATE || event.getTo().getBlock().getType() == Material.GOLD_PLATE || event.getTo().getBlock().getType() == Material.IRON_PLATE)
+            if (event.getTo().getBlock().getType() == Material.STONE_PRESSURE_PLATE
+                    || Tag.WOODEN_PRESSURE_PLATES.isTagged(event.getTo().getBlock().getType())
+                    || event.getTo().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE
+                    || event.getTo().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE)
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
 
         if (ladder)

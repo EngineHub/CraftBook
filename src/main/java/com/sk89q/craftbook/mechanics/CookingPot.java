@@ -295,7 +295,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
     }
 
     private enum Ingredients {
-        COAL(Material.COAL, 40), COALBLOCK(Material.COAL_BLOCK, 360), LAVA(Material.LAVA_BUCKET, 6000), BLAZE(Material.BLAZE_ROD, 500), BLAZEDUST(Material.BLAZE_POWDER, 250), SNOWBALL(Material.SNOW_BALL, -40), SNOW(Material.SNOW_BLOCK, -100), ICE(Material.ICE, -1000);
+        COAL(Material.COAL, 40), COALBLOCK(Material.COAL_BLOCK, 360), LAVA(Material.LAVA_BUCKET, 6000), BLAZE(Material.BLAZE_ROD, 500),
+        BLAZEDUST(Material.BLAZE_POWDER, 250), SNOWBALL(Material.SNOWBALL, -40), SNOW(Material.SNOW_BLOCK, -100), ICE(Material.ICE, -1000);
 
         private Material id;
         private int mult;

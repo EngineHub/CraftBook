@@ -91,7 +91,7 @@ public class CreatureSpawner extends AbstractIC {
         if(!center.getChunk().isLoaded())
             return;
 
-        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getType() == Material.MOB_SPAWNER) {
+        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getType() == Material.SPAWNER) {
 
             org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
                     0).getState();

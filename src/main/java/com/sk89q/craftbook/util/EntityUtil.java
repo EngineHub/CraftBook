@@ -281,7 +281,7 @@ public final class EntityUtil {
                 } else if (data[0].equalsIgnoreCase("cyan")) {
                     ((Sheep) ent).setColor(DyeColor.CYAN);
                 } else if (data[0].equalsIgnoreCase("silver")) {
-                    ((Sheep) ent).setColor(DyeColor.SILVER);
+                    ((Sheep) ent).setColor(DyeColor.LIGHT_GRAY);
                 } else if (data[0].equalsIgnoreCase("gray")) {
                     ((Sheep) ent).setColor(DyeColor.GRAY);
                 } else if (data[0].equalsIgnoreCase("pink")) {

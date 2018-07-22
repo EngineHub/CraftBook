@@ -30,7 +30,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         if(!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()))) return;
         if(!(event.getRightClicked() instanceof LivingEntity)) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEASH) return;
+        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEAD) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -161,7 +161,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
                     isOwner = true;
             if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || event.getRemover().hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
-                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEASH, 1));
+                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEAD, 1));
             } else {
                 amountConnected++;
             }

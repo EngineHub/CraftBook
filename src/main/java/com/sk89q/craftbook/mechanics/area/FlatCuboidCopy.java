@@ -24,12 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.sk89q.worldguard.bukkit.BukkitUtil;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 /**
  * Stores a copy of a cuboid.

@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
@@ -28,9 +29,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.BlockType;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -77,7 +75,7 @@ final class MechanicListenerAdapter implements Listener {
         Action action = null;
         if(event.getAction() == Action.RIGHT_CLICK_AIR) {
             try {
-                block = event.getPlayer().getTargetBlock((Set<Material>)null, 5);
+                block = event.getPlayer().getTargetBlock(null, 5);
                 if(block != null && block.getType() != Material.AIR)
                     action = Action.RIGHT_CLICK_BLOCK;
                 else
@@ -130,11 +128,11 @@ final class MechanicListenerAdapter implements Listener {
 
     private static void checkBlockChange(Player player, Block block, boolean build) {
         switch(block.getType()) {
-
-            case REDSTONE_TORCH_ON:
-            case DIODE_BLOCK_ON:
+            case REDSTONE_TORCH:
+            case REDSTONE_WALL_TORCH:
+            case REPEATER:
             case REDSTONE_BLOCK:
-            case REDSTONE_COMPARATOR_ON:
+            case COMPARATOR:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
@@ -151,17 +149,27 @@ final class MechanicListenerAdapter implements Listener {
                 if(((org.bukkit.material.Lever) block.getState().getData()).isPowered())
                     handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
                 break;
-            case WOOD_BUTTON:
+            case ACACIA_BUTTON:
+            case BIRCH_BUTTON:
+            case DARK_OAK_BUTTON:
+            case JUNGLE_BUTTON:
+            case OAK_BUTTON:
+            case SPRUCE_BUTTON:
             case STONE_BUTTON:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 if(((org.bukkit.material.Button) block.getState().getData()).isPowered())
                     handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
                 break;
-            case STONE_PLATE:
-            case WOOD_PLATE:
-            case GOLD_PLATE:
-            case IRON_PLATE:
+            case STONE_PRESSURE_PLATE:
+            case ACACIA_PRESSURE_PLATE:
+            case BIRCH_PRESSURE_PLATE:
+            case DARK_OAK_PRESSURE_PLATE:
+            case HEAVY_WEIGHTED_PRESSURE_PLATE:
+            case JUNGLE_PRESSURE_PLATE:
+            case LIGHT_WEIGHTED_PRESSURE_PLATE:
+            case OAK_PRESSURE_PLATE:
+            case SPRUCE_PRESSURE_PLATE:
             case DETECTOR_RAIL:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
@@ -203,8 +211,8 @@ final class MechanicListenerAdapter implements Listener {
         // yet been updated, so we're going to do this very ugly thing of
         // faking the value with the new one whenever the data value of this
         // block is requested -- it is quite ugly
-        switch(block.getTypeId()) {
-            case BlockID.REDSTONE_WIRE:
+        switch(block.getType()) {
+            case REDSTONE_WIRE:
                 if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) {
 
                     // power all blocks around the redstone wire on the same y level
@@ -222,28 +230,28 @@ final class MechanicListenerAdapter implements Listener {
                     handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 } else {
 
-                    int above = world.getBlockTypeIdAt(x, y + 1, z);
+                    Material above = world.getBlockAt(x, y + 1, z).getType();
 
-                    int westSide = world.getBlockTypeIdAt(x, y, z + 1);
-                    int westSideAbove = world.getBlockTypeIdAt(x, y + 1, z + 1);
-                    int westSideBelow = world.getBlockTypeIdAt(x, y - 1, z + 1);
-                    int eastSide = world.getBlockTypeIdAt(x, y, z - 1);
-                    int eastSideAbove = world.getBlockTypeIdAt(x, y + 1, z - 1);
-                    int eastSideBelow = world.getBlockTypeIdAt(x, y - 1, z - 1);
+                    Material westSide = world.getBlockAt(x, y, z + 1).getType();
+                    Material westSideAbove = world.getBlockAt(x, y + 1, z + 1).getType();
+                    Material westSideBelow = world.getBlockAt(x, y - 1, z + 1).getType();
+                    Material eastSide = world.getBlockAt(x, y, z - 1).getType();
+                    Material eastSideAbove = world.getBlockAt(x, y + 1, z - 1).getType();
+                    Material eastSideBelow = world.getBlockAt(x, y - 1, z - 1).getType();
 
-                    int northSide = world.getBlockTypeIdAt(x - 1, y, z);
-                    int northSideAbove = world.getBlockTypeIdAt(x - 1, y + 1, z);
-                    int northSideBelow = world.getBlockTypeIdAt(x - 1, y - 1, z);
-                    int southSide = world.getBlockTypeIdAt(x + 1, y, z);
-                    int southSideAbove = world.getBlockTypeIdAt(x + 1, y + 1, z);
-                    int southSideBelow = world.getBlockTypeIdAt(x + 1, y - 1, z);
+                    Material northSide = world.getBlockAt(x - 1, y, z).getType();
+                    Material northSideAbove = world.getBlockAt(x - 1, y + 1, z).getType();
+                    Material northSideBelow = world.getBlockAt(x - 1, y - 1, z).getType();
+                    Material southSide = world.getBlockAt(x + 1, y, z).getType();
+                    Material southSideAbove = world.getBlockAt(x + 1, y + 1, z).getType();
+                    Material southSideBelow = world.getBlockAt(x + 1, y - 1, z).getType();
 
                     // Make sure that the wire points to only this block
-                    if (!BlockType.isRedstoneBlock(westSide) && !BlockType.isRedstoneBlock(eastSide)
-                            && (!BlockType.isRedstoneBlock(westSideAbove) || westSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(eastSideAbove) || eastSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(westSideBelow) || westSide != 0)
-                            && (!BlockType.isRedstoneBlock(eastSideBelow) || eastSide != 0)) {
+                    if (!CraftBookBukkitUtil.isRedstoneBlock(westSide) && !CraftBookBukkitUtil.isRedstoneBlock(eastSide)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideBelow) || westSide != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideBelow) || eastSide != Material.AIR)) {
                         // Possible blocks north / south
                         handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
                         handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
@@ -251,11 +259,11 @@ final class MechanicListenerAdapter implements Listener {
                         handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
                     }
 
-                    if (!BlockType.isRedstoneBlock(northSide) && !BlockType.isRedstoneBlock(southSide)
-                            && (!BlockType.isRedstoneBlock(northSideAbove) || northSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(southSideAbove) || southSide == 0 || above != 0)
-                            && (!BlockType.isRedstoneBlock(northSideBelow) || northSide != 0)
-                            && (!BlockType.isRedstoneBlock(southSideBelow) || southSide != 0)) {
+                    if (!CraftBookBukkitUtil.isRedstoneBlock(northSide) && !CraftBookBukkitUtil.isRedstoneBlock(southSide)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideBelow) || northSide != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideBelow) || southSide != Material.AIR)) {
                         // Possible blocks west / east
                         handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
                         handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
@@ -270,14 +278,12 @@ final class MechanicListenerAdapter implements Listener {
                     handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 }
                 return;
-            case BlockID.REDSTONE_REPEATER_OFF:
-            case BlockID.REDSTONE_REPEATER_ON:
-            case BlockID.COMPARATOR_OFF:
-            case BlockID.COMPARATOR_ON:
+            case REPEATER:
+            case COMPARATOR:
                 Directional diode = (Directional) block.getState().getData();
                 BlockFace f = diode.getFacing();
                 handleDirectWireInput(x + f.getModX(), y, z + f.getModZ(), block, oldLevel, newLevel);
-                if(block.getRelative(f).getTypeId() != 0) {
+                if(block.getRelative(f).getType() != Material.AIR) {
                     handleDirectWireInput(x + f.getModX(), y - 1, z + f.getModZ(), block, oldLevel, newLevel);
                     handleDirectWireInput(x + f.getModX(), y + 1, z + f.getModZ(), block, oldLevel, newLevel);
                     handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
@@ -286,9 +292,14 @@ final class MechanicListenerAdapter implements Listener {
                     handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ() - 1, block, oldLevel, newLevel);
                 }
                 return;
-            case BlockID.STONE_BUTTON:
-            case BlockID.WOODEN_BUTTON:
-            case BlockID.LEVER:
+            case ACACIA_BUTTON:
+            case BIRCH_BUTTON:
+            case DARK_OAK_BUTTON:
+            case JUNGLE_BUTTON:
+            case OAK_BUTTON:
+            case SPRUCE_BUTTON:
+            case STONE_BUTTON:
+            case LEVER:
                 Attachable button = (Attachable) block.getState().getData();
                 if(button != null) {
                     BlockFace face = button.getAttachedFace();
@@ -296,7 +307,8 @@ final class MechanicListenerAdapter implements Listener {
                         handleDirectWireInput(x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2, block, oldLevel, newLevel);
                 }
                 break;
-            case BlockID.POWERED_RAIL:
+            case POWERED_RAIL:
+            case ACTIVATOR_RAIL:
                 return;
         }
 
@@ -332,7 +344,7 @@ final class MechanicListenerAdapter implements Listener {
     private static void handleDirectWireInput(int x, int y, int z, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = sourceBlock.getWorld().getBlockAt(x, y, z);
-        if(BukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
+        if(CraftBookBukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
             return;
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
 

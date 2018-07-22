@@ -13,7 +13,7 @@ import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.DataException;
@@ -79,7 +79,7 @@ public class AreaCommands {
             WorldEditPlugin worldEdit = CraftBookPlugin.plugins.getWorldEdit();
 
             World world = ((Player) sender).getWorld();
-            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(BukkitUtil.getWorld(world));
+            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(BukkitAdapter.adapt(world));
             if(sel == null) {
                 sender.sendMessage(ChatColor.RED + "You have not made a selection!");
                 return;

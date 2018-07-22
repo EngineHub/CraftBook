@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.Tag;
 import org.bukkit.TreeType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -25,7 +26,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 
 public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
-    SearchArea area;
+    private SearchArea area;
 
     public BonemealTerraformer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -103,7 +104,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.SAPLING) {
+        if (Tag.SAPLINGS.isTagged(b.getType())) {
             if (consumeBonemeal()) {
                 if (!growTree(b, CraftBookPlugin.inst().getRandom())) refundBonemeal();
                 else return;
@@ -127,7 +128,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                 }
             }
         }
-        if ((b.getType() == Material.SUGAR_CANE_BLOCK || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getType() == Material.AIR) {
+        if ((b.getType() == Material.SUGAR_CANE || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getType() == Material.AIR) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(b.getType());
             }
@@ -135,7 +136,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
         if (b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getType() == Material.AIR) {
             if (consumeBonemeal()) {
-                b.setType(b.getBiome() == Biome.MUSHROOM_ISLAND || b.getBiome() == Biome.MUSHROOM_ISLAND_SHORE ? Material.MYCEL : Material.GRASS);
+                b.setType(b.getBiome() == Biome.MUSHROOM_FIELDS || b.getBiome() == Biome.MUSHROOM_FIELD_SHORE ? Material.MYCELIUM : Material.GRASS);
             }
             return;
         }
@@ -143,22 +144,22 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             if (consumeBonemeal()) {
                 int t = CraftBookPlugin.inst().getRandom().nextInt(7);
                 if (t == 0) {
-                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
+                    b.getRelative(0, 1, 0).setType(Material.GRASS);
                 } else if (t == 1) {
-                    b.getRelative(0, 1, 0).setType(Material.YELLOW_FLOWER);
+                    b.getRelative(0, 1, 0).setType(Material.DANDELION);
                 } else if (t == 2) {
-                    b.getRelative(0, 1, 0).setType(Material.RED_ROSE);
+                    b.getRelative(0, 1, 0).setType(Material.POPPY);
                 } else if (t == 3) {
-                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 2, true);
+                    b.getRelative(0, 1, 0).setType(Material.FERN);
                 } else {
-                    b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 1, true);
+                    b.getRelative(0, 1, 0).setType(Material.GRASS);
                 }
             }
             return;
         }
-        if (b.getTypeId() == BlockID.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
-                b.getRelative(0, 1, 0).setTypeIdAndData(BlockID.LONG_GRASS, (byte) 0, true);
+                b.getRelative(0, 1, 0).setType(Material.DEAD_BUSH);
             }
             return;
         }
@@ -170,11 +171,11 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
         if (b.getType() == Material.STATIONARY_WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
             if (consumeBonemeal()) {
-                b.getRelative(0, 1, 0).setType(Material.WATER_LILY);
+                b.getRelative(0, 1, 0).setType(Material.LILY_PAD);
             }
             return;
         }
-        if (b.getType() == Material.MYCEL && b.getRelative(0, 1, 0).getType() == Material.AIR
+        if (b.getType() == Material.MYCELIUM && b.getRelative(0, 1, 0).getType() == Material.AIR
                 && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 int t = CraftBookPlugin.inst().getRandom().nextInt(2);
@@ -191,14 +192,15 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public boolean consumeBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(), new ItemStack(Material.INK_SACK, 1, (short) 15));
+        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(),
+                new ItemStack(Material.BONE_MEAL, 1));
 
     }
 
     public boolean refundBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.addItemsToInventory((InventoryHolder) chest.getState(), new ItemStack(Material.INK_SACK, 1, (short) 15)).isEmpty();
+        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.addItemsToInventory((InventoryHolder) chest.getState(), new ItemStack(Material.BONE_MEAL, 1)).isEmpty();
 
     }
 
@@ -251,12 +253,12 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
 
         if (flag) {
-            sapling.getRelative(i1, 0, j1).setTypeId(0);
-            sapling.getRelative(i1 + 1, 0, j1).setTypeId(0);
-            sapling.getRelative(i1, 0, j1 + 1).setTypeId(0);
-            sapling.getRelative(i1 + 1, 0, j1 + 1).setTypeId(0);
+            sapling.getRelative(i1, 0, j1).setType(Material.AIR);
+            sapling.getRelative(i1 + 1, 0, j1).setType(Material.AIR);
+            sapling.getRelative(i1, 0, j1 + 1).setType(Material.AIR);
+            sapling.getRelative(i1 + 1, 0, j1 + 1).setType(Material.AIR);
         } else {
-            sapling.setTypeId(0);
+            sapling.setType(Material.AIR);
         }
 
         boolean planted = sapling.getWorld().generateTree(sapling.getRelative(i1, 0, j1).getLocation(), treeType);

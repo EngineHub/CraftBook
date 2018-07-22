@@ -818,7 +818,7 @@ public final class ItemUtil {
 
         if(valid.getDurability() < 0)
             valid.setDurability((short) 0);
-        if(valid.getType() == null || valid.getType() == Material.PISTON_MOVING_PIECE)
+        if(valid.getType() == null || valid.getType() == Material.MOVING_PISTON)
             valid.setType(Material.STONE);
         if(valid.getData().getData() < 0)
             valid.setData(new MaterialData(valid.getType().getId(), (byte) 0));

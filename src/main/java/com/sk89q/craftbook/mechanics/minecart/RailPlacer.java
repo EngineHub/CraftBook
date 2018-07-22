@@ -23,8 +23,8 @@ public class RailPlacer extends AbstractCraftBookMechanic {
 
         if(event.getTo().getBlock().getType() == Material.AIR && !BlockType.canPassThrough(event.getTo().getBlock().getRelative(0, -1, 0).getTypeId()) && ((StorageMinecart)event.getVehicle()).getInventory().contains(Material.RAILS)) {
 
-            if(((StorageMinecart)event.getVehicle()).getInventory().removeItem(new ItemStack(Material.RAILS, 1)).isEmpty())
-                event.getTo().getBlock().setType(Material.RAILS);
+            if(((StorageMinecart)event.getVehicle()).getInventory().removeItem(new ItemStack(Material.RAIL, 1)).isEmpty())
+                event.getTo().getBlock().setType(Material.RAIL);
         }
     }
 

@@ -109,7 +109,7 @@ public class CartSorter extends CartBlockMechanism {
 
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
-        if (targetTrack.getType() == Material.RAILS) {
+        if (targetTrack.getType() == Material.RAIL) {
             targetTrack.setData(trackData);
         }
     }
