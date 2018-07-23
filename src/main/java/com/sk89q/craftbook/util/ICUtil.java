@@ -18,7 +18,6 @@ package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
@@ -106,64 +105,59 @@ public final class ICUtil {
                     sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
-                    if(WorldEdit.getSelection(((BukkitCraftBookPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
 
-                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector();
+                    try {
+                        if(selector instanceof CuboidRegionSelector) {
 
-                        try {
-                            if(selector instanceof CuboidRegionSelector) {
+                            Vector centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
 
-                                Vector centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
+                            centre = centre.divide(2);
 
-                                centre = centre.divide(2);
+                            Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
-                                Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
+                            String x,y,z;
 
-                                String x,y,z;
+                            x = Double.toString(offset.getX());
+                            if (x.endsWith(".0"))
+                                x = StringUtils.replace(x, ".0", "");
 
-                                x = Double.toString(offset.getX());
-                                if (x.endsWith(".0"))
-                                    x = StringUtils.replace(x, ".0", "");
+                            y = Double.toString(offset.getY());
+                            if (y.endsWith(".0"))
+                                y = StringUtils.replace(y, ".0", "");
 
-                                y = Double.toString(offset.getY());
-                                if (y.endsWith(".0"))
-                                    y = StringUtils.replace(y, ".0", "");
+                            z = Double.toString(offset.getZ());
+                            if (z.endsWith(".0"))
+                                z = StringUtils.replace(z, ".0", "");
 
-                                z = Double.toString(offset.getZ());
-                                if (z.endsWith(".0"))
-                                    z = StringUtils.replace(z, ".0", "");
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
+                        } else if (selector instanceof SphereRegionSelector) {
 
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
-                            } else if (selector instanceof SphereRegionSelector) {
+                            Vector centre = selector.getRegion().getCenter();
 
-                                Vector centre = selector.getRegion().getCenter();
+                            Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
-                                Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
+                            String x,y,z;
 
-                                String x,y,z;
+                            x = Double.toString(offset.getX());
+                            if (x.endsWith(".0"))
+                                x = StringUtils.replace(x, ".0", "");
 
-                                x = Double.toString(offset.getX());
-                                if (x.endsWith(".0"))
-                                    x = StringUtils.replace(x, ".0", "");
+                            y = Double.toString(offset.getY());
+                            if (y.endsWith(".0"))
+                                y = StringUtils.replace(y, ".0", "");
 
-                                y = Double.toString(offset.getY());
-                                if (y.endsWith(".0"))
-                                    y = StringUtils.replace(y, ".0", "");
+                            z = Double.toString(offset.getZ());
+                            if (z.endsWith(".0"))
+                                z = StringUtils.replace(z, ".0", "");
 
-                                z = Double.toString(offset.getZ());
-                                if (z.endsWith(".0"))
-                                    z = StringUtils.replace(z, ".0", "");
-
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
-                            } else { // Unsupported.
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
-                                player.printError("worldedit.ic.unsupported");
-                            }
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
+                        } else { // Unsupported.
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
+                            player.printError("worldedit.ic.unsupported");
                         }
-                        catch(IncompleteRegionException e) {
-                            player.printError("worldedit.ic.noselection");
-                        }
-                    } else {
+                    }
+                    catch(IncompleteRegionException e) {
                         player.printError("worldedit.ic.noselection");
                     }
                 }
@@ -175,49 +169,43 @@ public final class ICUtil {
                     sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
+                    RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
 
-                    if(CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()) != null && CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector() != null) {
+                    try {
+                        if(selector instanceof CuboidRegionSelector) {
 
-                        RegionSelector selector = CraftBookPlugin.plugins.getWorldEdit().getSelection(((BukkitCraftBookPlayer) player).getPlayer()).getRegionSelector();
+                            String x,y,z;
 
-                        try {
-                            if(selector instanceof CuboidRegionSelector) {
+                            x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX())/2);
+                            if (x.endsWith(".0"))
+                                x = StringUtils.replace(x, ".0", "");
 
-                                String x,y,z;
+                            y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY())/2);
+                            if (y.endsWith(".0"))
+                                y = StringUtils.replace(y, ".0", "");
 
-                                x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX())/2);
-                                if (x.endsWith(".0"))
-                                    x = StringUtils.replace(x, ".0", "");
+                            z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ())/2);
+                            if (z.endsWith(".0"))
+                                z = StringUtils.replace(z, ".0", "");
 
-                                y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY())/2);
-                                if (y.endsWith(".0"))
-                                    y = StringUtils.replace(y, ".0", "");
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x + "," + y + "," + z));
+                        } else if (selector instanceof SphereRegionSelector) {
 
-                                z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ())/2);
-                                if (z.endsWith(".0"))
-                                    z = StringUtils.replace(z, ".0", "");
+                            String x;
 
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x + "," + y + "," + z));
-                            } else if (selector instanceof SphereRegionSelector) {
+                            double amounts = ((EllipsoidRegion) selector.getRegion()).getRadius().getX();
 
-                                String x;
+                            x = Double.toString(amounts);
+                            if (x.endsWith(".0"))
+                                x = StringUtils.replace(x, ".0", "");
 
-                                double amounts = ((EllipsoidRegion) selector.getRegion()).getRadius().getX();
-
-                                x = Double.toString(amounts);
-                                if (x.endsWith(".0"))
-                                    x = StringUtils.replace(x, ".0", "");
-
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x));
-                            } else { // Unsupported.
-                                sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
-                                player.printError("worldedit.ic.unsupported");
-                            }
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", x));
+                        } else { // Unsupported.
+                            sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
+                            player.printError("worldedit.ic.unsupported");
                         }
-                        catch(IncompleteRegionException e) {
-                            player.printError("worldedit.ic.noselection");
-                        }
-                    } else {
+                    }
+                    catch(IncompleteRegionException e) {
                         player.printError("worldedit.ic.noselection");
                     }
                 }
