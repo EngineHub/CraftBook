@@ -5,10 +5,16 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -25,7 +31,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CustomDrops extends AbstractCraftBookMechanic {
 
@@ -239,8 +248,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if (def.getRegions() != null) {
                 boolean found = false;
                 for (String region : def.getRegions()) {
-                    ProtectedRegion r = WorldGuardPlugin.inst().getRegionManager(event.getBlock().getWorld())
-                            .getRegion(region);
+                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(event.getBlock().getWorld())).getRegion(region);
                     if (r != null && r.contains(event.getBlock().getX(), event.getBlock().getY(),
                             event.getBlock().getZ())) {
                         found = true;
@@ -327,8 +335,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             if (def.getRegions() != null) {
                 boolean found = false;
                 for (String region : def.getRegions()) {
-                    ProtectedRegion r = WorldGuardPlugin.inst().getRegionManager(event.getEntity().getWorld())
-                            .getRegion(region);
+                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(event.getEntity().getWorld())).getRegion(region);
                     if (r != null && r.contains(event.getEntity().getLocation().getBlockX(),
                             event.getEntity().getLocation().getBlockY(),
                             event.getEntity().getLocation().getBlockZ())) {

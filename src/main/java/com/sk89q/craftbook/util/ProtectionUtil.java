@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,9 +16,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldguard.protection.GlobalRegionManager;
-
 public final class ProtectionUtil {
 
     /**
@@ -29,8 +27,6 @@ public final class ProtectionUtil {
      * @param build True for build, false for break
      *
      * @return whether {@code player} can build at {@code loc}
-     *
-     * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
      */
     public static boolean canBuild(Player player, Location loc, boolean build) {
 
@@ -46,8 +42,6 @@ public final class ProtectionUtil {
      * @param build True for build, false for break
      *
      * @return whether {@code player} can build at {@code block}'s location
-     *
-     * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.block.Block)
      */
     public static boolean canBuild(Player player, Block block, boolean build) {
 
@@ -89,8 +83,6 @@ public final class ProtectionUtil {
      * @param loc    The location to check at.
      *
      * @return whether {@code player} can build at {@code loc}
-     *
-     * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
      */
     public static boolean canUse(Player player, Location loc, BlockFace face, Action action) {
 
@@ -117,8 +109,6 @@ public final class ProtectionUtil {
      * @param block    The location to check at.
      *
      * @return whether {@code player} can build at {@code loc}
-     *
-     * @see GlobalRegionManager#canBuild(org.bukkit.entity.Player, org.bukkit.Location)
      */
     public static boolean canAccessInventory(Player player, Block block) {
 

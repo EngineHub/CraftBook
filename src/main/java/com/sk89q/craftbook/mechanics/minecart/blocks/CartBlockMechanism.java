@@ -10,7 +10,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.craftbook.util.exceptions.InsufficientPermissionsException;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -165,7 +165,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
             player.checkPermission("craftbook.vehicles." + getName().toLowerCase(Locale.ENGLISH));
             event.setLine(lineNum, "[" + lineFound + "]");
             player.print(getName() + " Created!");
-        } catch (InsufficientPermissionsException e) {
+        } catch (AuthorizationException e) {
             player.printError("vehicles.create-permission");
             block.breakNaturally();
             event.setCancelled(true);

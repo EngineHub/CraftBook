@@ -5,8 +5,8 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,10 +37,10 @@ public class Footprints extends AbstractCraftBookMechanic {
         Block below = event.getPlayer().getLocation().subtract(0, 1, 0).getBlock(); //Gets the block they're standing on
         double yOffset = 0.07D;
 
-        if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW || event.getPlayer().getLocation().getBlock().getType() == Material.CARPET || event.getPlayer().getLocation().getBlock().getType() == Material.SOUL_SAND) {
+        if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW || Tag.CARPETS.isTagged(event.getPlayer().getLocation().getBlock().getType()) || event.getPlayer().getLocation().getBlock().getType() == Material.SOUL_SAND) {
             below = event.getPlayer().getLocation().getBlock();
             yOffset = 0.15D;
-            if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW && event.getPlayer().getLocation().getBlock().getData() == 0 || event.getPlayer().getLocation().getBlock().getType() == Material.CARPET) {
+            if(event.getPlayer().getLocation().getBlock().getType() == Material.SNOW && event.getPlayer().getLocation().getBlock().getData() == 0 || Tag.CARPETS.isTagged(event.getPlayer().getLocation().getBlock().getType())) {
                 yOffset = below.getY() - event.getPlayer().getLocation().getY();
                 yOffset += 0.15D;
             }
@@ -59,7 +59,8 @@ public class Footprints extends AbstractCraftBookMechanic {
                     if(!play.hasPermission("craftbook.mech.footprints.see"))
                         continue;
                     if (play.getWorld().equals(event.getPlayer().getPlayer().getWorld())) {
-                        play.getWorld().spigot().playEffect(event.getPlayer().getLocation().add(0, yOffset, 0), Effect.FOOTSTEP);
+                        // TODO :'(
+//                        play.getWorld().spigot().playEffect(event.getPlayer().getLocation().add(0, yOffset, 0), Effect.FOOTSTEP);
                     }
                 }
 

@@ -1,9 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -14,7 +10,9 @@ import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Server;
 
 /**
  * @author Me4502
@@ -98,7 +96,6 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
     public void doEffect() {
 
         if (effectID == 0) return;
-        if (effectID == 2001 && BlockType.fromID(effectData) == null) return;
 
         for (int i = 0; i < times; i++) {
             offset.getWorld().playEffect(offset, Effect.getById(effectID), effectData, 50);
@@ -150,7 +147,6 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
                 } catch (Exception e) {
                     effectData = 0;
                 }
-                if (effectID == 2001 && BlockType.fromID(effectData) == null) throw new ICVerificationException("Invalid block ID for effect!");
             }
             catch(Exception e) {
                 throw new ICVerificationException("Invalid effect!");

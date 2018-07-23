@@ -11,10 +11,14 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -26,8 +30,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Stairs;
-import org.bukkit.material.Step;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockVector;
@@ -69,38 +71,29 @@ public class Snow extends AbstractCraftBookMechanic {
 
     private boolean canLandOn(Block block) {
         switch(block.getType()) {
-            case WOOD_STAIRS:
-            case BRICK_STAIRS:
-            case SMOOTH_STAIRS:
-            case SANDSTONE_STAIRS:
-            case QUARTZ_STAIRS:
-            case COBBLESTONE_STAIRS:
-                return new Stairs(block.getType(), block.getData()).isInverted();
-            case STEP:
-            case WOOD_STEP:
-                return new Step(block.getType(), block.getData()).isInverted();
-            case ACTIVATOR_RAIL:
-            case CAKE_BLOCK:
+            case CAKE:
             case DAYLIGHT_DETECTOR:
-            case DIODE_BLOCK_OFF:
-            case DIODE_BLOCK_ON:
-            case REDSTONE_COMPARATOR_OFF:
-            case REDSTONE_COMPARATOR_ON:
-            case RAILS:
-            case CARPET:
-            case DETECTOR_RAIL:
-            case POWERED_RAIL:
-            case SAPLING:
+            case REPEATER:
+            case COMPARATOR:
             case TORCH:
             case AIR:
                 return false;
             default:
-                return !(!freezeWater && (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER)) && !isReplacable(block);
+                if (Tag.STAIRS.isTagged(block.getType())) {
+                    return ((Stairs) block.getBlockData()).getHalf() == Bisected.Half.TOP;
+                }
+                if (Tag.SLABS.isTagged(block.getType())) {
+                    return ((Slab) block.getBlockData()).getType() != Slab.Type.BOTTOM;
+                }
+                if (Tag.CARPETS.isTagged(block.getType()) || Tag.RAILS.isTagged(block.getType()) || Tag.SAPLINGS.isTagged(block.getType())) {
+                    return false;
+                }
+                return !(!freezeWater && (block.getType() == Material.WATER)) && !isReplacable(block);
         }
     }
 
     private boolean isReplacable(Block block) {
-        return !(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER)
+        return !(block.getType() == Material.WATER)
                 && (BlockUtil.isBlockReplacable(block.getType())
                 || realisticReplacables.contains(new ItemInfo(block)));
     }
@@ -433,8 +426,8 @@ public class Snow extends AbstractCraftBookMechanic {
                 } else
                     return false;
             }
-            byte data = (byte) (snow.getData()+1);
-            if(data > 0x6) {
+            org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
+            if(snowData.getLayers() + 1 > snowData.getMaximumLayers()) {
                 if(pileHigh) {
                     boolean allowed = false;
                     for(int i = 0; i < maxPileHeight+1; i++) {
@@ -453,7 +446,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 } else
                     return false;
             } else
-                snow.setData(data, false);
+                snowData.setLayers(snowData.getLayers() + 1);
 
             if(disperse)
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), animationTicks);
@@ -475,14 +468,18 @@ public class Snow extends AbstractCraftBookMechanic {
                 return decreaseSnow(snow.getRelative(0,1,0), disperse);
             }
 
-            byte data = (byte) (snow.getData()-1);
-            if(snow.getType() == Material.SNOW && snow.getData() == 0x0)
-                snow.setType(Material.AIR, false);
-            else if(snow.getType() == Material.SNOW_BLOCK)
-                snow.setTypeIdAndData(Material.SNOW.getId(), (byte)6, false);
-            else
-                snow.setData(data, false);
-
+            if (snow.getType() == Material.SNOW_BLOCK) {
+                org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) Material.SNOW.createBlockData();
+                snowData.setLayers(snowData.getMaximumLayers() - 1);
+                snow.setBlockData(snowData, false);
+            } else {
+                org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
+                if (snowData.getLayers() == 0) {
+                    snow.setType(Material.AIR, false);
+                } else {
+                    snowData.setLayers(snowData.getLayers() - 1);
+                }
+            }
             if(disperse && realistic) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
                 for(BlockFace dir : faces) Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow.getRelative(dir), 0, snow.getLocation().toVector().toBlockVector()),

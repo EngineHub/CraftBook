@@ -16,21 +16,26 @@
 
 package com.sk89q.craftbook.mechanics;
 
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.world.item.ItemTypes;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.AnaloguePowerable;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Lightable;
+import org.bukkit.block.data.Powerable;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 /**
@@ -42,12 +47,11 @@ public class Ammeter extends AbstractCraftBookMechanic {
     public void onRightClick(PlayerInteractEvent event) {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
-        if(!BlockType.canTransferRedstone(event.getClickedBlock().getTypeId()) && !BlockType.isRedstoneSource(event.getClickedBlock().getTypeId())) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!item.equals(player.getHeldItemInfo())) return;
+        if(player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
         if(!player.hasPermission("craftbook.mech.ammeter.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -62,43 +66,25 @@ public class Ammeter extends AbstractCraftBookMechanic {
 
         Block block = event.getClickedBlock();
         int data = getSpecialData(block);
-        String line = getCurrentLine(data);
-        player.print(player.translate("mech.ammeter.ammeter") + ": " + line + ChatColor.WHITE + " " + data + " A");
-        event.setCancelled(true);
+        if (data >= 0) {
+            String line = getCurrentLine(data);
+            player.print(player.translate("mech.ammeter.ammeter") + ": " + line + ChatColor.WHITE + ' ' + data + " A");
+            event.setCancelled(true);
+        }
     }
 
     private static int getSpecialData(Block block) {
 
-        byte data = block.getData();
-        int current = 0;
-        switch (block.getType()) {
-            case REDSTONE_WIRE:
-                current = data;
-                break;
-            case LEVER:
-            case STONE_BUTTON:
-            case WOOD_BUTTON:
-            case POWERED_RAIL:
-            case DETECTOR_RAIL:
-            case TRIPWIRE_HOOK:
-            case ACTIVATOR_RAIL:
-                if ((data & 0x8) == 0x8)
-                    current = 15;
-                break;
-            case STONE_PLATE:
-            case WOOD_PLATE:
-                if ((data & 0x1) == 0x1)
-                    current = 15;
-                break;
-            case REDSTONE_TORCH_ON:
-            case DIODE_BLOCK_ON:
-            case REDSTONE_COMPARATOR_ON:
-            case REDSTONE_BLOCK:
-                current = 15;
-                break;
-            default:
-                current = 0;
-                break;
+        BlockData blockData = block.getBlockData();
+        int current = -1;
+        if (blockData instanceof Powerable) {
+            current = ((Powerable) blockData).isPowered() ? 15 : 0;
+        } else if (blockData instanceof AnaloguePowerable) {
+            current = ((AnaloguePowerable) blockData).getPower();
+        } else if (blockData instanceof Lightable) {
+            current = ((Lightable) blockData).isLit() ? 15 : 0;
+        } else if (block.getType() == Material.REDSTONE_BLOCK) {
+            current = 15;
         }
 
         return current;
@@ -107,7 +93,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
     private static String getCurrentLine(int data) {
 
         StringBuilder line = new StringBuilder(25);
-        line.append(ChatColor.YELLOW).append("[");
+        line.append(ChatColor.YELLOW).append('[');
         if (data > 10)
             line.append(ChatColor.DARK_GREEN);
         else if (data > 5)
@@ -115,20 +101,20 @@ public class Ammeter extends AbstractCraftBookMechanic {
         else if (data > 0)
             line.append(ChatColor.DARK_RED);
         for (int i = 0; i < data; i++)
-            line.append("|");
+            line.append('|');
         line.append(ChatColor.BLACK);
         for (int i = data; i < 15; i++)
-            line.append("|");
-        line.append(ChatColor.YELLOW).append("]");
+            line.append('|');
+        line.append(ChatColor.YELLOW).append(']');
         return line.toString();
     }
 
-    private ItemInfo item;
+    private ItemType item;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "item", "Set the item that is the ammeter tool.");
-        item = new ItemInfo(config.getString(path + "item", "COAL"));
+        item = ItemTypes.get(config.getString(path + "item", ItemTypes.COAL.getId()));
     }
 }

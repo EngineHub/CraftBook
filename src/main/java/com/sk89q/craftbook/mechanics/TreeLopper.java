@@ -5,6 +5,9 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
@@ -34,7 +38,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!enabledBlocks.contains(new ItemInfo(event.getBlock()))) return;
-        if(!enabledItems.contains(player.getHeldItemInfo())) return;
+        if(!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType())) return;
         if(!player.hasPermission("craftbook.mech.treelopper.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -58,7 +62,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         TreeSpecies species = null;
         if(placeSaplings && usedBlock.getState().getData() instanceof Tree
-                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCEL))
+                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM))
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
         usedBlock.breakNaturally(event.getPlayer().getInventory().getItemInMainHand());
         if(species != null && planted < maxSaplings(species)) {
@@ -87,14 +91,13 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     private boolean canBreakBlock(Player player, ItemInfo originalBlock, Block toBreak) {
 
-        if((originalBlock.getType() == Material.LOG || originalBlock.getType() == Material.LOG_2) && (toBreak.getType() == Material.LEAVES || toBreak.getType() == Material.LEAVES_2) && breakLeaves) {
+        if(Tag.LOGS.isTagged(originalBlock.getType()) && Tag.LEAVES.isTagged(toBreak.getType()) && breakLeaves) {
             MaterialData nw = toBreak.getState().getData();
             Tree old = new Tree(originalBlock.getType(), (byte) originalBlock.getData());
             if(!(nw instanceof Leaves)) return false;
-            if(enforceDataValues && ((Leaves) nw).getSpecies() != old.getSpecies()) return false;
+            if(((Leaves) nw).getSpecies() != old.getSpecies()) return false;
         } else {
             if(toBreak.getType() != originalBlock.getType()) return false;
-            if(enforceDataValues && toBreak.getData() != originalBlock.getData()) return false;
         }
 
         if(!ProtectionUtil.canBuild(player, toBreak, false)) {
@@ -111,11 +114,11 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             return false;
         if(broken > maxSearchSize)
             return false;
-        if(!enabledItems.contains(player.getHeldItemInfo()))
+        if(!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType()))
             return false;
         TreeSpecies species = null;
         if(placeSaplings
-                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS || block.getRelative(0, -1, 0).getType() == Material.MYCEL)) {
+                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
             MaterialData data = block.getState().getData();
             if (data instanceof Leaves)
                 species = ((Leaves) data).getSpecies();
@@ -143,10 +146,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     }
 
     List<ItemInfo> enabledBlocks;
-    List<ItemInfo> enabledItems;
+    List<ItemType> enabledItems;
     private int maxSearchSize;
     private boolean allowDiagonals;
-    private boolean enforceDataValues;
     private boolean placeSaplings;
     private boolean breakLeaves;
     private boolean singleDamageAxe;
@@ -158,16 +160,14 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         enabledBlocks = ItemInfo.parseListFromString(config.getStringList(path + "block-list", Arrays.asList("LOG", "LOG_2")));
 
         config.setComment(path + "tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = ItemInfo.parseListFromString(config.getStringList(path + "tool-list", Arrays.asList("IRON_AXE", "WOOD_AXE", "STONE_AXE", "DIAMOND_AXE", "GOLD_AXE")));
+        enabledItems = config.getStringList(path + "tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
+                ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId())).stream().map(ItemTypes::get).collect(Collectors.toList());
 
         config.setComment(path + "max-size", "The maximum amount of blocks the TreeLopper can break.");
         maxSearchSize = config.getInt(path + "max-size", 30);
 
         config.setComment(path + "allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
         allowDiagonals = config.getBoolean(path + "allow-diagonals", false);
-
-        config.setComment(path + "enforce-data", "Make sure the blocks broken by TreeLopper all share the same data values.");
-        enforceDataValues = config.getBoolean(path + "enforce-data", false);
 
         config.setComment(path + "place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
         placeSaplings = config.getBoolean(path + "place-saplings", false);

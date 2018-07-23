@@ -51,7 +51,7 @@ public final class SignUtil {
 
     public static boolean isSign(Block block) {
 
-        return block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN;
+        return block.getType() == Material.SIGN || block.getType() == Material.WALL_SIGN;
     }
 
     /**
@@ -77,7 +77,7 @@ public final class SignUtil {
      */
     public static BlockFace getFront(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getType() == Material.SIGN) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.SOUTH;
@@ -139,7 +139,7 @@ public final class SignUtil {
      */
     public static BlockFace getBack(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getType() == Material.SIGN) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.NORTH;
@@ -219,7 +219,7 @@ public final class SignUtil {
      */
     public static BlockFace getRight(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getType() == Material.SIGN) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.EAST;
@@ -280,7 +280,7 @@ public final class SignUtil {
      */
     public static BlockFace getLeft(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getType() == Material.SIGN) {
             switch (sign.getData()) {
                 case 0x0:
                     return BlockFace.WEST;
@@ -341,7 +341,7 @@ public final class SignUtil {
      */
     public static boolean isCardinal(Block sign) {
 
-        if (sign.getType() == Material.SIGN_POST) {
+        if (sign.getType() == Material.SIGN) {
             switch (sign.getData()) {
                 case 0x0:
                 case 0x4:

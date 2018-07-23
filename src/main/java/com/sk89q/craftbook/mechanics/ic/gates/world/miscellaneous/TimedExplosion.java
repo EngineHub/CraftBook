@@ -79,7 +79,7 @@ public class TimedExplosion extends AbstractIC {
             if(!loc.getChunk().isLoaded())
                 return;
 
-            while(!BlockType.canPassThrough(loc.getBlock().getTypeId()))
+            while(loc.getBlock().getType().isSolid())
                 loc = loc.add(0, 1, 0);
             TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(BlockUtil.getBlockCentre(loc.getBlock()),
                     EntityType.PRIMED_TNT);

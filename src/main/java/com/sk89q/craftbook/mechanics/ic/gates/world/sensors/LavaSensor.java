@@ -79,7 +79,7 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
 
         Material blockID = center.getType();
 
-        return blockID == Material.LAVA || blockID == Material.STATIONARY_LAVA;
+        return blockID == Material.LAVA;
     }
 
     public static class Factory extends AbstractICFactory {

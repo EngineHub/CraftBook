@@ -1,20 +1,25 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 public class Driller extends AbstractSelfTriggeredIC {
 
@@ -92,8 +97,6 @@ public class Driller extends AbstractSelfTriggeredIC {
             depth += 1;
             brokenType = blockToBreak.getType();
             if (brokenType == Material.BEDROCK) return false;
-            if (!((Factory)getFactory()).breakNonNatural)
-                if (brokenType != Material.AIR && !BlockType.isNaturalTerrainBlock(brokenType.getId())) return false;
         }
 
         ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
@@ -113,7 +116,6 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
 
-        boolean breakNonNatural;
         int drillSize;
         int maxDrillDepth;
 
@@ -143,7 +145,6 @@ public class Driller extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            breakNonNatural = config.getBoolean(path + "break-unnatural-blocks", false);
             drillSize = config.getInt(path + "drill-size", 3);
             maxDrillDepth = config.getInt(path + "max-drill-depth", 256);
         }

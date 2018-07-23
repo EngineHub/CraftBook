@@ -16,20 +16,21 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.inventory.EquipmentSlot;
 
 /**
@@ -46,7 +47,7 @@ public class LightStone extends AbstractCraftBookMechanic {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!item.equals(player.getHeldItemInfo())) return;
+        if(player.getItemInHand(HandSide.MAIN_HAND).getType() == item) return;
         if(!player.hasPermission("craftbook.mech.lightstone.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
@@ -78,12 +79,12 @@ public class LightStone extends AbstractCraftBookMechanic {
         return line.toString();
     }
 
-    public ItemInfo item;
+    public ItemType item;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "item", "The item that the lightstone mechanic uses.");
-        item = new ItemInfo(config.getString(path + "item", "GLOWSTONE_DUST"));
+        item = ItemTypes.get(config.getString(path + "item", ItemTypes.GLOWSTONE_DUST.getId()));
     }
 }

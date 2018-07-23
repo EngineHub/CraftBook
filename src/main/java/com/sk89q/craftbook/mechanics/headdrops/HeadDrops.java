@@ -15,8 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -85,7 +83,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 if (ignoredNames.contains(playerName)) {
                     return;
                 }
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+                toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
                 SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
                 meta.setOwner(playerName);
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
@@ -94,24 +92,28 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             case ZOMBIE:
                 if(!enableMobs)
                     return;
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)2);
+                toDrop = new ItemStack(Material.ZOMBIE_HEAD, 1);
                 break;
             case CREEPER:
                 if(!enableMobs)
                     return;
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)4);
+                toDrop = new ItemStack(Material.CREEPER_HEAD, 1);
                 break;
             case SKELETON:
                 if(!enableMobs)
                     return;
-                if(((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER && !overrideNatural)
+                toDrop = new ItemStack(Material.SKELETON_SKULL, 1);
+                break;
+            case WITHER_SKELETON:
+                if (!enableMobs || !overrideNatural)
                     return;
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) (((Skeleton) event.getEntity()).getSkeletonType() == SkeletonType.WITHER ? 1 : 0));
+                toDrop = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
                 break;
             case ENDER_DRAGON:
                 if(!enableMobs)
                     return;
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short) 5);
+                toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
+                break;
             default:
                 if(!enableMobs)
                     return;
@@ -123,7 +125,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     mobName = customSkins.get(typeName);
                 if(mobName == null || mobName.isEmpty())
                     break;
-                toDrop = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+                toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
                 ItemMeta metaD = toDrop.getItemMeta();
                 if(metaD instanceof SkullMeta) {
                     SkullMeta itemMeta = (SkullMeta) metaD;
@@ -147,7 +149,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        if(event.getClickedBlock().getType() == Material.SKULL) {
+        if(event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
 
             Skull skull = (Skull)event.getClickedBlock().getState();
             if(skull == null || !skull.hasOwner())
@@ -172,7 +174,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
 
-        if(event.getBlock().getType() == Material.SKULL) {
+        if(event.getBlock().getType() == Material.PLAYER_HEAD || event.getBlock().getType() == Material.PLAYER_WALL_HEAD) {
 
             Skull skull = (Skull)event.getBlock().getState();
             if(!skull.hasOwner())
@@ -185,7 +187,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             EntityType type = MobSkullType.getEntityType(playerName);
 
-            ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+            ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setOwner(playerName);
 

@@ -1,14 +1,7 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -17,6 +10,15 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class Cultivator extends AbstractSelfTriggeredIC {
 
@@ -69,7 +71,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
 
             if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
-                b.setType(Material.SOIL);
+                b.setType(Material.FARMLAND);
                 return true;
             }
         }
@@ -77,22 +79,23 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         return false;
     }
 
+    private static final Set<Material> hoes = EnumSet.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
+            Material.DIAMOND_HOE);
+
     public boolean damageHoe() {
 
         if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST) {
             Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
-            for (int i = 290; i <= 294; i++) {
-                for (int slot = 0; slot < c.getInventory().getSize(); slot++) {
-                    if (c.getInventory().getItem(slot) == null || c.getInventory().getItem(slot).getTypeId() != i)
-                        continue;
-                    if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
-                        ItemStack item = c.getInventory().getItem(slot);
-                        item.setDurability((short) (item.getDurability() + 1));
-                        if(item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
-                            item = null;
-                        c.getInventory().setItem(slot, item);
-                        return true;
-                    }
+            for (int slot = 0; slot < c.getInventory().getSize(); slot++) {
+                if (c.getInventory().getItem(slot) == null || !hoes.contains(c.getInventory().getItem(slot).getType()))
+                    continue;
+                if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
+                    ItemStack item = c.getInventory().getItem(slot);
+                    item.setDurability((short) (item.getDurability() + 1));
+                    if(item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
+                        item = null;
+                    c.getInventory().setItem(slot, item);
+                    return true;
                 }
             }
         }
