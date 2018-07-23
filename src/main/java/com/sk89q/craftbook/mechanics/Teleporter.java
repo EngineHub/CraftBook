@@ -1,8 +1,21 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Material;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SignClickEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.Location;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -12,20 +25,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Button;
-
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SignClickEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldedit.blocks.BlockType;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -97,7 +96,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 return;
             }
             trigger = event.getClickedBlock();
-        } else if (event.getClickedBlock().getType() == Material.STONE_BUTTON || event.getClickedBlock().getType() == Material.WOOD_BUTTON) {
+        } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
             Button b = (Button) event.getClickedBlock().getState().getData();
             if(b == null || b.getAttachedFace() == null) return;
             Block sign = event.getClickedBlock().getRelative(b.getAttachedFace(), 2);
@@ -166,7 +165,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 if (!checkTeleportSign(player, location)) {
                     return;
                 }
-            } else if (location.getType() == Material.STONE_BUTTON || location.getType() == Material.WOOD_BUTTON) {
+            } else if (Tag.BUTTONS.isTagged(location.getType())) {
                 Button b = (Button) location.getState().getData();
                 Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
                 if (!checkTeleportSign(player, sign)) {
@@ -181,14 +180,14 @@ public class Teleporter extends AbstractCraftBookMechanic {
         Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
                 (int) Math.floor(toZ));
         // well, unless that's already a ceiling.
-        if (!BlockType.canPassThrough(floor.getTypeId()))
+        if (floor.getType().isSolid())
             floor = floor.getRelative(BlockFace.DOWN);
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         for (int i = 0; i < 5; i++) {
-            if (BlockType.canPassThrough(floor.getTypeId()))
+            if (!floor.getType().isSolid())
                 foundFree++;
             else
                 break;
@@ -201,19 +200,19 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         // Teleport!
-        Location subspaceRift = player.getPosition();
+        Location subspaceRift = player.getLocation();
         subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
         subspaceRift = subspaceRift.setY(floor.getY() + 1.0);
         subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
         if (player.isInsideVehicle()) {
-            subspaceRift = CraftBookBukkitUtil.toLocation(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation());
+            subspaceRift = BukkitAdapter.adapt(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation());
             subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
             subspaceRift = subspaceRift.setY(floor.getY() + 2.0);
             subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
             ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(CraftBookBukkitUtil.toLocation(subspaceRift));
         }
         if (maxRange > 0)
-            if (subspaceRift.toVector().distanceSq(player.getPosition().toVector()) > maxRange * maxRange) {
+            if (subspaceRift.toVector().distanceSq(player.getLocation().toVector()) > maxRange * maxRange) {
                 player.print("mech.teleport.range");
                 return;
             }

@@ -1,21 +1,26 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockBreaker extends AbstractSelfTriggeredIC {
 
@@ -73,7 +78,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             }
         }
 
-        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.PISTON_MOVING_PIECE || ((Factory)getFactory()).blockBlacklist.contains(new ItemInfo(broken)))
+        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.MOVING_PISTON || ((Factory)getFactory()).blockBlacklist.contains(new ItemInfo(broken)))
             return false;
 
         if (item.getType() != broken.getType()) return false;

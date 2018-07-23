@@ -34,6 +34,7 @@ import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReas
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -223,7 +224,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
                 if (block.getType() != Material.WALL_SIGN) return;
                 try {
-                    ChipState chipState = ((ICFamily) icData[1]).detect(CraftBookBukkitUtil.toWorldVector(source), CraftBookBukkitUtil.toChangedSign(block));
+                    ChipState chipState = ((ICFamily) icData[1]).detect(BukkitAdapter.adapt(source.getLocation()), CraftBookBukkitUtil.toChangedSign(block));
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
                         if (chipState.isTriggered(i)) {
@@ -303,7 +304,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(icData != null && icData[2] instanceof SelfTriggeredIC) {
             event.setHandled(true);
-            ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(CraftBookBukkitUtil.toWorldVector(event.getBlock()), ((IC) icData[2]).getSign());
+            ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitAdapter.adapt(event.getBlock().getLocation()), ((IC) icData[2]).getSign());
             ((SelfTriggeredIC) icData[2]).think(chipState);
         }
     }

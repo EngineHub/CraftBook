@@ -1,16 +1,22 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.worldedit.Vector;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.Tag;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -72,29 +78,25 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         Material above = block.getRelative(0, 1, 0).getType();
         Material below = block.getRelative(0, -1, 0).getType();
         switch (block.getType()) {
-            case CROPS:
-            case CARROT:
-            case POTATO:
-                return block.getData() >= 0x7;
-            case BEETROOT_BLOCK:
-                return block.getData() >= 0x3;
+            case WHEAT:
+            case CARROTS:
+            case POTATOES:
+            case BEETROOTS:
+            case NETHER_WART_BLOCK:
+            case COCOA:
+                Ageable ageable = (Ageable) block.getBlockData();
+                return ageable.getAge() == ageable.getMaximumAge();
             case CACTUS:
                 return below == Material.CACTUS && above != Material.CACTUS;
-            case SUGAR_CANE_BLOCK:
-                return below == Material.SUGAR_CANE_BLOCK && above != Material.SUGAR_CANE_BLOCK;
+            case SUGAR_CANE:
+                return below == Material.SUGAR_CANE && above != Material.SUGAR_CANE;
             case VINE:
                 return above == Material.VINE && below != Material.VINE;
-            case COCOA:
-                return (block.getData() & 0x8) == 0x8 || (block.getData() & 0xC) == 0xC;
-            case NETHER_WARTS:
-                return block.getData() >= 0x3;
-            case MELON_BLOCK:
+            case MELON:
             case PUMPKIN:
-            case LOG:
-            case LOG_2:
                 return true;
             default:
-                return false;
+                return Tag.LOGS.isTagged(block.getType());
         }
     }
 

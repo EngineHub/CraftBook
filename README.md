@@ -24,12 +24,7 @@ An extensive list of features is available on [the wiki!](http://wiki.sk89q.com/
 Compiling
 ---------
 
-The project is written for Java 6 and our build process makes use of [Maven](http://maven.apache.org). Once installed,
-simply run:
-
-    mvn clean package
-
-Dependencies are automatically handled by Maven.
+See [COMPILING.md](COMPILING.md) for a guide on compiling CraftBook.
 
 Contributing
 ------------

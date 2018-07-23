@@ -28,6 +28,7 @@ import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
@@ -74,26 +75,14 @@ public final class ICUtil {
             return false;
 
         // check if the lever was toggled on
-        boolean wasOn = (block.getData() & 0x8) > 0;
-
-        byte data = block.getData();
-        int newData;
-        // check if the state changed and set the data value
-        if (!state) {
-            newData = data & 0x7;
-        } else {
-            newData = data | 0x8;
-        }
+        boolean wasOn = lever.isPowered();
 
         // if the state changed lets apply physics to the source block and the lever itself
         if (wasOn != state) {
-
             // set the new data
-            block.setData((byte) newData, true);
+            lever.setPowered(state);
             // apply physics to the source block the lever is attached to
-            byte sData = source.getData();
-            source.setData((byte) (sData - 1), true);
-            source.setData(sData, true);
+            source.setBlockData(source.getBlockData(), true);
 
             // lets call blockredstone events on the source block and the lever
             // in order to correctly update all surrounding blocks
@@ -128,7 +117,7 @@ public final class ICUtil {
 
                                 centre = centre.divide(2);
 
-                                Vector offset = centre.subtract(sign.getBlockVector());
+                                Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
                                 String x,y,z;
 
@@ -149,7 +138,7 @@ public final class ICUtil {
 
                                 Vector centre = selector.getRegion().getCenter();
 
-                                Vector offset = centre.subtract(sign.getBlockVector());
+                                Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
                                 String x,y,z;
 

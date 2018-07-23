@@ -9,12 +9,17 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
+import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -33,7 +38,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.Directional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -204,7 +208,7 @@ public class Chair extends AbstractCraftBookMechanic {
         Player player = event.getPlayer();
 
         // Now everything looks good, continue;
-        if (chairAllowHeldBlock || !lplayer.isHoldingBlock() && lplayer.getHeldItemInfo().getType() != Material.SIGN || lplayer.getHeldItemInfo().getType() == Material.AIR) {
+        if (chairAllowHeldBlock || !lplayer.isHoldingBlock() && lplayer.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.SIGN || lplayer.getItemInHand(HandSide.MAIN_HAND).getType() == ItemTypes.AIR) {
             if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
@@ -230,10 +234,10 @@ public class Chair extends AbstractCraftBookMechanic {
                     lplayer.print("mech.chairs.in-use");
                     return;
                 }
-                if (BlockType.canPassThrough(event.getClickedBlock().getRelative(0, -1, 0).getTypeId())) {
+                if (!event.getClickedBlock().getRelative(0, -1, 0).getType().isSolid()) {
                     lplayer.printError("mech.chairs.floating");
                     return;
-                } else if(!BlockType.canPassThrough(event.getClickedBlock().getRelative(0, 1, 0).getTypeId())) {
+                } else if(event.getClickedBlock().getRelative(0, 1, 0).getType().isSolid()) {
                     lplayer.printError("mech.chairs.obstructed");
                     return;
                 }

@@ -16,25 +16,25 @@
 
 package com.sk89q.craftbook.mechanics;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Directional;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 
 /**
  * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
@@ -152,15 +152,16 @@ public class LightSwitch extends AbstractCraftBookMechanic {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         Block relBlock = block.getWorld().getBlockAt(x, y, z);
                         Material id = relBlock.getType();
-                        byte data = relBlock.getData();
-                        if (id == Material.TORCH || id == Material.REDSTONE_TORCH_OFF || id == Material.REDSTONE_TORCH_ON) {
+                        boolean wall = id == Material.WALL_TORCH || id == Material.REDSTONE_WALL_TORCH;
+                        if (id == Material.TORCH || id == Material.WALL_TORCH || id == Material.REDSTONE_TORCH || id == Material.REDSTONE_WALL_TORCH) {
                             // Limit the maximum number of changed lights
                             if (changed >= maximum) return true;
 
-                            if (on) {
-                                relBlock.setTypeIdAndData(Material.TORCH.getId(), data, false);
+                            if (wall) {
+                                Directional directional = (Directional) (on ? Material.WALL_TORCH : Material.REDSTONE_WALL_TORCH).createBlockData();
+                                relBlock.setBlockData(directional, false);
                             } else {
-                                relBlock.setTypeIdAndData(Material.REDSTONE_TORCH_ON.getId(), data, false);
+                                relBlock.setType(on ? Material.TORCH : Material.REDSTONE_TORCH, false);
                             }
                             changed++;
                         }

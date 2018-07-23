@@ -3,24 +3,25 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SearchArea;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.TreeSpecies;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.CocoaPlant;
-import org.bukkit.material.Dye;
-import org.bukkit.material.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,81 +144,77 @@ public class Planter extends AbstractSelfTriggeredIC {
     }
 
     protected boolean plantableItem(ItemStack item) {
-
         switch (item.getType()) {
-            case SAPLING:
-            case SEEDS:
-            case NETHER_STALK:
+            case WHEAT_SEEDS:
+            case NETHER_WART:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
             case CACTUS:
-            case POTATO_ITEM:
-            case CARROT_ITEM:
-            case RED_ROSE:
-            case YELLOW_FLOWER:
+            case POTATO:
+            case CARROT:
+            case POPPY:
+            case DANDELION:
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
-            case WATER_LILY:
+            case LILY_PAD:
             case BEETROOT_SEEDS:
+            case COCOA_BEANS:
                 return true;
-            case INK_SACK:
-                return ((Dye)item.getData()).getColor() == DyeColor.BROWN;
             default:
-                return false;
+                return Tag.SAPLINGS.isTagged(item.getType());
         }
     }
 
     protected boolean itemPlantableAtBlock(ItemStack item, Block block) {
 
         switch (item.getType()) {
-            case SAPLING:
-            case RED_ROSE:
-            case YELLOW_FLOWER:
-                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS;
-            case SEEDS:
+            case POPPY:
+            case DANDELION:
+                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK;
+            case WHEAT_SEEDS:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
-            case POTATO_ITEM:
-            case CARROT_ITEM:
+            case POTATO:
+            case CARROT:
             case BEETROOT_SEEDS:
-                return block.getRelative(0, -1, 0).getType() == Material.SOIL;
-            case NETHER_STALK:
+                return block.getRelative(0, -1, 0).getType() == Material.FARMLAND;
+            case NETHER_WART:
                 return block.getRelative(0, -1, 0).getType() == Material.SOUL_SAND;
             case CACTUS:
                 return block.getRelative(0, -1, 0).getType() == Material.SAND;
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
                 return block.getRelative(0, -1, 0).getType().isSolid();
-            case WATER_LILY:
-                return block.getRelative(0, -1, 0).getType() == Material.WATER || block.getRelative(0, -1, 0).getType() == Material.STATIONARY_WATER;
-            case INK_SACK:
-                if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
+            case LILY_PAD:
+                return block.getRelative(0, -1, 0).getType() == Material.WATER;
+            case COCOA_BEANS:
                 BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
                 for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE)
+                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG)
                         return true;
                 }
                 return false;
             default:
-                break;
+                if (Tag.SAPLINGS.isTagged(item.getType())) {
+                    return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK;
+                }
+                return false;
         }
-        return false;
     }
 
     protected boolean plantBlockAt(ItemStack item, Block block) {
 
         switch (item.getType()) {
-            case SAPLING:
-            case RED_ROSE:
-            case YELLOW_FLOWER:
+            case POPPY:
+            case DANDELION:
             case CACTUS:
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
-            case WATER_LILY:
-                block.setTypeIdAndData(item.getTypeId(), item.getData().getData(), true);
+            case LILY_PAD:
+                block.setType(item.getType());
                 return true;
-            case SEEDS:
-                block.setTypeIdAndData(Material.CROPS.getId(), (byte) 0, true);
+            case WHEAT_SEEDS:
+                block.setType(Material.WHEAT);
                 return true;
             case MELON_SEEDS:
                 block.setType(Material.MELON_STEM);
@@ -225,34 +222,35 @@ public class Planter extends AbstractSelfTriggeredIC {
             case PUMPKIN_SEEDS:
                 block.setType(Material.PUMPKIN_STEM);
                 return true;
-            case NETHER_STALK:
-                block.setTypeIdAndData(Material.NETHER_WARTS.getId(), (byte) 0, true);
+            case NETHER_WART_BLOCK:
+                block.setType(Material.NETHER_WART);
                 return true;
-            case POTATO_ITEM:
-                block.setTypeIdAndData(Material.POTATO.getId(), (byte) 0, true);
+            case POTATO:
+                block.setType(Material.POTATOES);
                 return true;
-            case CARROT_ITEM:
-                block.setTypeIdAndData(Material.CARROT.getId(), (byte) 0, true);
+            case CARROT:
+                block.setType(Material.CARROTS);
                 return true;
             case BEETROOT_SEEDS:
-                block.setTypeIdAndData(Material.BEETROOT_BLOCK.getId(), (byte) 0, true);
+                block.setType(Material.BEETROOTS);
                 return true;
-            case INK_SACK:
-                if(((Dye)item.getData()).getColor() != DyeColor.BROWN) return false;
+            case COCOA_BEANS:
                 List<BlockFace> faces =
                         new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
                 for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.LOG && ((Tree)block.getRelative(face).getState().getData()).getSpecies() == TreeSpecies.JUNGLE) {
-                        block.setTypeIdAndData(Material.COCOA.getId(), (byte) 0, true);
-                        BlockState state = block.getState();
-                        ((CocoaPlant)state.getData()).setFacingDirection(face);
-                        state.update();
+                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG) {
+                        block.setType(Material.COCOA);
+                        ((Cocoa) block.getBlockData()).setFacing(face);
                         return true;
                     }
                 }
                 return false;
             default:
+                if (Tag.SAPLINGS.isTagged(item.getType())) {
+                    block.setType(item.getType());
+                    return true;
+                }
                 return false;
         }
     }

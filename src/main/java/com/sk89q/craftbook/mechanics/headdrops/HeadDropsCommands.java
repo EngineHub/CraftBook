@@ -53,7 +53,7 @@ public class HeadDropsCommands {
 
         String mobName = skullType.getPlayerName();
 
-        ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+        ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
         ItemMeta metaD = stack.getItemMeta();
         if(metaD instanceof SkullMeta) {
             SkullMeta itemMeta = (SkullMeta) metaD;
