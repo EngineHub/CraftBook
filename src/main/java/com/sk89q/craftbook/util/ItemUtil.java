@@ -414,9 +414,6 @@ public final class ItemUtil {
         } else if (item.getAmount() <= 0) {
             CraftBookPlugin.logDebugMessage("item-checks", "Item has amount of " + item.getAmount());
             return false;
-        } else if (item.getTypeId() <= 0) {
-            CraftBookPlugin.logDebugMessage("item-checks", "Item has type ID of " + item.getTypeId());
-            return false;
         }
         return true;
     }
@@ -467,22 +464,24 @@ public final class ItemUtil {
     public static ItemStack getCookedResult(ItemStack item) {
 
         switch (item.getType()) {
-            case RAW_BEEF:
+            case BEEF:
                 return new ItemStack(Material.COOKED_BEEF);
-            case RAW_CHICKEN:
+            case CHICKEN:
                 return new ItemStack(Material.COOKED_CHICKEN);
-            case RAW_FISH:
-                return new ItemStack(Material.COOKED_FISH, 1, item.getDurability());
-            case PORK:
-                return new ItemStack(Material.GRILLED_PORK);
-            case POTATO_ITEM:
+            case COD:
+                return new ItemStack(Material.COOKED_COD);
+            case SALMON:
+                return new ItemStack(Material.COOKED_SALMON);
+            case PORKCHOP:
+                return new ItemStack(Material.COOKED_PORKCHOP);
+            case POTATO:
                 return new ItemStack(Material.BAKED_POTATO);
             case MUTTON:
                 return new ItemStack(Material.COOKED_MUTTON);
             case RABBIT:
                 return new ItemStack(Material.COOKED_RABBIT);
             case CHORUS_FRUIT:
-                return new ItemStack(Material.CHORUS_FRUIT_POPPED);
+                return new ItemStack(Material.POPPED_CHORUS_FRUIT);
             default:
                 return null;
         }
@@ -499,7 +498,7 @@ public final class ItemUtil {
             case COBBLESTONE:
                 return new ItemStack(Material.STONE);
             case CACTUS:
-                return new ItemStack(Material.INK_SACK, 1, (short) 2);
+                return new ItemStack(Material.CACTUS_GREEN);
             case LOG:
             case LOG_2:
                 return new ItemStack(Material.COAL, 1, (short) 1);
@@ -508,7 +507,7 @@ public final class ItemUtil {
             case COAL_ORE:
                 return new ItemStack(Material.COAL);
             case LAPIS_ORE:
-                return new ItemStack(Material.INK_SACK, 4, (short) 4);
+                return new ItemStack(Material.LAPIS_LAZULI);
             case REDSTONE_ORE:
                 return new ItemStack(Material.REDSTONE, 4);
             case EMERALD_ORE:
@@ -571,7 +570,7 @@ public final class ItemUtil {
             case IRON_SWORD:
             case IRON_PICKAXE:
             case IRON_AXE:
-            case IRON_SPADE:
+            case IRON_SHOVEL:
             case IRON_HOE:
             case CHAINMAIL_HELMET:
             case CHAINMAIL_CHESTPLATE:
@@ -581,18 +580,18 @@ public final class ItemUtil {
             case IRON_CHESTPLATE:
             case IRON_LEGGINGS:
             case IRON_BOOTS:
-            case IRON_BARDING:
+            case IRON_HORSE_ARMOR:
                 return new ItemStack(Material.IRON_NUGGET);
-            case GOLD_SWORD:
-            case GOLD_PICKAXE:
-            case GOLD_AXE:
-            case GOLD_SPADE:
-            case GOLD_HOE:
-            case GOLD_HELMET:
-            case GOLD_CHESTPLATE:
-            case GOLD_LEGGINGS:
-            case GOLD_BOOTS:
-            case GOLD_BARDING:
+            case GOLDEN_SWORD:
+            case GOLDEN_PICKAXE:
+            case GOLDEN_AXE:
+            case GOLDEN_SHOVEL:
+            case GOLDEN_HOE:
+            case GOLDEN_HELMET:
+            case GOLDEN_CHESTPLATE:
+            case GOLDEN_LEGGINGS:
+            case GOLDEN_BOOTS:
+            case GOLDEN_HORSE_ARMOR:
                 return new ItemStack(Material.GOLD_NUGGET);
             default:
                 return null;
@@ -775,7 +774,7 @@ public final class ItemUtil {
 
     public static ItemStack getUsedItem(ItemStack item) {
 
-        if (item.getType() == Material.MUSHROOM_SOUP) {
+        if (item.getType() == Material.MUSHROOM_STEW) {
             item.setType(Material.BOWL); // Get your bowl back
         } else if (item.getType() == Material.POTION) {
             item.setType(Material.GLASS_BOTTLE); // Get your bottle back

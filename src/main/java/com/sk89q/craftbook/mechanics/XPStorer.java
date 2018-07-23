@@ -7,6 +7,8 @@ import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -48,7 +50,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int max = Integer.MAX_VALUE;
 
         if(requireBottle) {
-            if(player.getHeldItemInfo().getType() != Material.GLASS_BOTTLE && block.getType() != Material.AIR) {
+            if(player.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.GLASS_BOTTLE && block.getType() != Material.AIR) {
                 player.printError("mech.xp-storer.bottle");
                 return;
             }

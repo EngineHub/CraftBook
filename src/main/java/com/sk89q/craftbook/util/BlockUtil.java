@@ -98,29 +98,29 @@ public final class BlockUtil {
                         || tool.getType() == Material.DIAMOND_SHOVEL)
                     drops.add(new ItemStack(Material.SNOWBALL, ((Snow) block.getBlockData()).getLayers() + 1));
                 break;
-            case CROPS: {
+            case WHEAT: {
                 drops.add(new ItemStack(Material.WHEAT, 1));
                 int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
                 if (amount > 0)
-                    drops.add(new ItemStack(Material.SEEDS, amount));
+                    drops.add(new ItemStack(Material.WHEAT_SEEDS, amount));
                 break;
             }
-            case BEETROOT_BLOCK:
+            case BEETROOTS:
                 drops.add(new ItemStack(Material.BEETROOT, 1));
                 int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
                 if(amount > 0)
                     drops.add(new ItemStack(Material.BEETROOT_SEEDS, amount));
                 break;
-            case CARROT:
-                drops.add(new ItemStack(Material.CARROT_ITEM, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+            case CARROTS:
+                drops.add(new ItemStack(Material.CARROT, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
                 break;
-            case POTATO:
-                drops.add(new ItemStack(Material.POTATO_ITEM, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+            case POTATOES:
+                drops.add(new ItemStack(Material.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
                 if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
                     drops.add(new ItemStack(Material.POISONOUS_POTATO, 1));
                 break;
-            case NETHER_WARTS:
-                drops.add(new ItemStack(Material.NETHER_STALK, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
+            case NETHER_WART_BLOCK:
+                drops.add(new ItemStack(Material.NETHER_WART, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
                 break;
             case SUGAR_CANE:
                 drops.add(new ItemStack(Material.SUGAR_CANE, 1));
