@@ -1,11 +1,16 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.ParserContext;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
@@ -195,10 +200,12 @@ public final class EntityUtil {
             case ENDERMAN:
                 if (data[0].equalsIgnoreCase("block")) {
                     try {
-                        int id = Integer.parseInt(data[1]);
-                        byte d = 0;
-                        if (data.length > 2) d = Byte.parseByte(data[2]);
-                        ((Enderman) ent).setCarriedMaterial(new MaterialData(id, d));
+                        StringBuilder bits = new StringBuilder(data[1]);
+                        for (int i = 2; i < data.length; i++) {
+                            bits.append(':').append(data[i]);
+                        }
+                        BlockStateHolder blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(bits.toString(), new ParserContext());
+                        ((Enderman) ent).setCarriedBlock(BukkitAdapter.adapt(blockState));
                     } catch (Exception ignored) {
                     }
                 }

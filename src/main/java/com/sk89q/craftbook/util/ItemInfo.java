@@ -56,24 +56,9 @@ public final class ItemInfo {
         return data.getItemType() != null;
     }
 
-    public void setId(int id) {
-
-        data = new MaterialData(id, data.getData());
-    }
-
     public int getData() {
 
         return data.getData();
-    }
-
-    public void setData(int data) {
-
-        this.data.setData((byte) data);
-    }
-
-    public MaterialData getMaterialData() {
-
-        return data;
     }
 
     public boolean isSame(Block block) {

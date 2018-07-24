@@ -24,12 +24,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
 import com.sk89q.worldguard.bukkit.BukkitUtil;
 import org.bukkit.World;
 
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BlockType;
+import org.bukkit.block.data.BlockData;
 
 /**
  * Stores a copy of a cuboid.
@@ -147,8 +151,20 @@ public class FlatCuboidCopy extends CuboidCopy {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     int index = y * width * length + z * width + x;
-                    blocks[index] = (byte) world.getBlockTypeIdAt(BukkitUtil.toLocation(world, origin.add(x, y, z)));
-                    data[index] = world.getBlockAt(BukkitUtil.toLocation(world, origin.add(x, y, z))).getData();
+                    int[] datas =
+                            LegacyMapper.getInstance().getLegacyFromBlock(BukkitAdapter.adapt(world.getBlockAt(BukkitAdapter.adapt(world, origin.add(x, y, z))).getBlockData()));
+                    if (datas != null) {
+                        if (datas[0] > Byte.MAX_VALUE) {
+                            // If the format doesn't support it, it's stone.
+                            datas[0] = 1;
+                            datas[1] = 0;
+                        }
+                        blocks[index] = (byte) datas[0];
+                        data[index] = (byte) datas[1];
+                    } else {
+                        blocks[index] = 0;
+                        data[index] = 0;
+                    }
                 }
             }
         }
@@ -184,17 +200,19 @@ public class FlatCuboidCopy extends CuboidCopy {
 
         for (Tuple2<Vector, byte[]> entry : queueAfter) {
             byte[] v = entry.b;
-            world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
-            if (BlockType.usesData(v[0])) {
-                world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
+            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0], v[1]);
+            if (state != null) {
+                BlockData blockData = BukkitAdapter.adapt(state);
+                world.getBlockAt(entry.a.getBlockX(), entry.a.getBlockY(), entry.a.getBlockZ()).setBlockData(blockData);
             }
         }
 
         for (Tuple2<Vector, byte[]> entry : queueLast) {
             byte[] v = entry.b;
-            world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setTypeId(v[0]);
-            if (BlockType.usesData(v[0])) {
-                world.getBlockAt(BukkitUtil.toLocation(world, entry.a)).setData(v[1]);
+            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0], v[1]);
+            if (state != null) {
+                BlockData blockData = BukkitAdapter.adapt(state);
+                world.getBlockAt(entry.a.getBlockX(), entry.a.getBlockY(), entry.a.getBlockZ()).setBlockData(blockData);
             }
         }
 

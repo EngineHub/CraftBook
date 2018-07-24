@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -499,9 +500,6 @@ public final class ItemUtil {
                 return new ItemStack(Material.STONE);
             case CACTUS:
                 return new ItemStack(Material.CACTUS_GREEN);
-            case LOG:
-            case LOG_2:
-                return new ItemStack(Material.COAL, 1, (short) 1);
             case IRON_ORE:
                 return new ItemStack(Material.IRON_INGOT);
             case COAL_ORE:
@@ -519,54 +517,51 @@ public final class ItemUtil {
             case SAND:
                 return new ItemStack(Material.GLASS);
             case CLAY_BALL:
-                return new ItemStack(Material.CLAY_BRICK);
+                return new ItemStack(Material.BRICK);
             case NETHERRACK:
-                return new ItemStack(Material.NETHER_BRICK_ITEM);
+                return new ItemStack(Material.NETHER_BRICK);
             case CLAY:
-                return new ItemStack(Material.HARD_CLAY);
-            case QUARTZ_ORE:
+                return new ItemStack(Material.TERRACOTTA);
+            case NETHER_QUARTZ_ORE:
                 return new ItemStack(Material.QUARTZ);
-            case SMOOTH_BRICK:
-                return new ItemStack(Material.SMOOTH_BRICK, 1, (short) 2);
+            case STONE_BRICKS:
+                return new ItemStack(Material.CRACKED_STONE_BRICKS);
             case SPONGE:
                 if (item.getData().getData() == 0)
                     return null;
                 else return new ItemStack(Material.SPONGE);
-            case STAINED_CLAY:
-                switch(item.getData().getData()) {
-                    case 0:
-                        return new ItemStack(Material.WHITE_GLAZED_TERRACOTTA);
-                    case 1:
-                        return new ItemStack(Material.ORANGE_GLAZED_TERRACOTTA);
-                    case 2:
-                        return new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
-                    case 3:
-                        return new ItemStack(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
-                    case 4:
-                        return new ItemStack(Material.YELLOW_GLAZED_TERRACOTTA);
-                    case 5:
-                        return new ItemStack(Material.LIME_GLAZED_TERRACOTTA);
-                    case 6:
-                        return new ItemStack(Material.PINK_GLAZED_TERRACOTTA);
-                    case 7:
-                        return new ItemStack(Material.GRAY_GLAZED_TERRACOTTA);
-                    case 8:
-                        return new ItemStack(Material.SILVER_GLAZED_TERRACOTTA);
-                    case 9:
-                        return new ItemStack(Material.CYAN_GLAZED_TERRACOTTA);
-                    case 10:
-                        return new ItemStack(Material.PURPLE_GLAZED_TERRACOTTA);
-                    case 11:
-                        return new ItemStack(Material.BLUE_GLAZED_TERRACOTTA);
-                    case 12:
-                        return new ItemStack(Material.BROWN_GLAZED_TERRACOTTA);
-                    case 13:
-                        return new ItemStack(Material.GREEN_GLAZED_TERRACOTTA);
-                    case 14:
-                        return new ItemStack(Material.RED_GLAZED_TERRACOTTA);
-                    case 15:
-                        return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
-                }
+            case WHITE_TERRACOTTA:
+                return new ItemStack(Material.WHITE_GLAZED_TERRACOTTA);
+            case ORANGE_TERRACOTTA:
+                return new ItemStack(Material.ORANGE_GLAZED_TERRACOTTA);
+            case MAGENTA_TERRACOTTA:
+                return new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
+            case LIGHT_BLUE_TERRACOTTA:
+                return new ItemStack(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
+            case YELLOW_TERRACOTTA:
+                return new ItemStack(Material.YELLOW_GLAZED_TERRACOTTA);
+            case LIME_TERRACOTTA:
+                return new ItemStack(Material.LIME_GLAZED_TERRACOTTA);
+            case PINK_TERRACOTTA:
+                return new ItemStack(Material.PINK_GLAZED_TERRACOTTA);
+            case GRAY_TERRACOTTA:
+                return new ItemStack(Material.GRAY_GLAZED_TERRACOTTA);
+            case LIGHT_GRAY_TERRACOTTA:
+                return new ItemStack(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
+            case CYAN_TERRACOTTA:
+                return new ItemStack(Material.CYAN_GLAZED_TERRACOTTA);
+            case PURPLE_TERRACOTTA:
+                return new ItemStack(Material.PURPLE_GLAZED_TERRACOTTA);
+            case BLUE_TERRACOTTA:
+                return new ItemStack(Material.BLUE_GLAZED_TERRACOTTA);
+            case BROWN_TERRACOTTA:
+                return new ItemStack(Material.BROWN_GLAZED_TERRACOTTA);
+            case GREEN_TERRACOTTA:
+                return new ItemStack(Material.GREEN_GLAZED_TERRACOTTA);
+            case RED_TERRACOTTA:
+                return new ItemStack(Material.RED_GLAZED_TERRACOTTA);
+            case BLACK_TERRACOTTA:
+                return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
             case IRON_SWORD:
             case IRON_PICKAXE:
             case IRON_AXE:
@@ -594,6 +589,9 @@ public final class ItemUtil {
             case GOLDEN_HORSE_ARMOR:
                 return new ItemStack(Material.GOLD_NUGGET);
             default:
+                if (Tag.LOGS.isTagged(item.getType())) {
+                    return new ItemStack(Material.CHARCOAL);
+                }
                 return null;
         }
     }
@@ -609,38 +607,30 @@ public final class ItemUtil {
         switch(item.getType()) {
             case COAL:
             case COAL_BLOCK:
-            case LOG:
-            case LOG_2:
-            case LEAVES:
-            case LEAVES_2:
-            case WOOD:
-            case WOOD_STEP:
-            case SAPLING:
-            case WOOD_AXE:
-            case WOOD_HOE:
-            case WOOD_PICKAXE:
-            case WOOD_SPADE:
-            case WOOD_SWORD:
-            case WOOD_PLATE:
+            case WOODEN_AXE:
+            case WOODEN_HOE:
+            case WOODEN_PICKAXE:
+            case WOODEN_SHOVEL:
+            case WOODEN_SWORD:
             case STICK:
-            case FENCE:
-            case FENCE_GATE:
-            case WOOD_STAIRS:
-            case TRAP_DOOR:
-            case WORKBENCH:
+            case OAK_FENCE:
+            case OAK_FENCE_GATE:
+            case OAK_TRAPDOOR:
+            case ACACIA_TRAPDOOR:
+            case BIRCH_TRAPDOOR:
+            case DARK_OAK_TRAPDOOR:
+            case JUNGLE_TRAPDOOR:
+            case SPRUCE_TRAPDOOR:
+            case CRAFTING_TABLE:
             case CHEST:
             case TRAPPED_CHEST:
             case JUKEBOX:
             case NOTE_BLOCK:
-            case HUGE_MUSHROOM_1:
-            case HUGE_MUSHROOM_2:
+            case BROWN_MUSHROOM_BLOCK:
+            case RED_MUSHROOM_BLOCK:
             case BLAZE_ROD:
             case LAVA_BUCKET:
             case BOOKSHELF:
-            case WOOL:                
-            case SPRUCE_WOOD_STAIRS:
-            case JUNGLE_WOOD_STAIRS:
-            case BIRCH_WOOD_STAIRS:
             case ACACIA_STAIRS:
             case DARK_OAK_STAIRS:
             case SPRUCE_FENCE:
@@ -653,28 +643,25 @@ public final class ItemUtil {
             case BIRCH_FENCE_GATE:
             case ACACIA_FENCE_GATE:
             case DARK_OAK_FENCE_GATE:
-            case WOOD_DOOR:
-            case SPRUCE_DOOR_ITEM:
-            case JUNGLE_DOOR_ITEM:
-            case BIRCH_DOOR_ITEM:
-            case ACACIA_DOOR_ITEM:
-            case DARK_OAK_DOOR_ITEM:
-            case CARPET:
             case SIGN:
-            case WOOD_BUTTON:
             case FISHING_ROD:
             case BOW:
             case LADDER:
-            case BANNER:
-            case BOAT:
-            case BOAT_ACACIA:
-            case BOAT_BIRCH:
-            case BOAT_DARK_OAK:
-            case BOAT_JUNGLE:
-            case BOAT_SPRUCE:              
                 return true;
             default:
-                return false;
+                return Tag.ITEMS_BOATS.isTagged(item.getType())
+                        || Tag.WOODEN_DOORS.isTagged(item.getType())
+                        || Tag.CARPETS.isTagged(item.getType())
+                        || Tag.WOODEN_BUTTONS.isTagged(item.getType())
+                        || Tag.ITEMS_BANNERS.isTagged(item.getType())
+                        || Tag.LOGS.isTagged(item.getType())
+                        || Tag.LEAVES.isTagged(item.getType())
+                        || Tag.PLANKS.isTagged(item.getType())
+                        || Tag.WOODEN_STAIRS.isTagged(item.getType())
+                        || Tag.WOODEN_SLABS.isTagged(item.getType())
+                        || Tag.SAPLINGS.isTagged(item.getType())
+                        || Tag.WOOL.isTagged(item.getType())
+                        || Tag.WOODEN_PRESSURE_PLATES.isTagged(item.getType());
         }
     }
 
@@ -687,17 +674,17 @@ public final class ItemUtil {
     public static boolean isAPotionIngredient(ItemStack item) {
 
         switch(item.getType()) {
-            case NETHER_STALK:
+            case NETHER_WART:
             case GLOWSTONE_DUST:
             case REDSTONE:
             case SPIDER_EYE:
             case MAGMA_CREAM:
             case SUGAR:
-            case SPECKLED_MELON:
+            case GLISTERING_MELON_SLICE:
             case GHAST_TEAR:
             case BLAZE_POWDER:
             case FERMENTED_SPIDER_EYE:
-            case SULPHUR:
+            case GUNPOWDER:
             case GOLDEN_CARROT:
             case RABBIT_FOOT:
                 return true;
@@ -819,8 +806,6 @@ public final class ItemUtil {
             valid.setDurability((short) 0);
         if(valid.getType() == null || valid.getType() == Material.MOVING_PISTON)
             valid.setType(Material.STONE);
-        if(valid.getData().getData() < 0)
-            valid.setData(new MaterialData(valid.getType().getId(), (byte) 0));
         if(valid.getAmount() < 1)
             valid.setAmount(1);
 
@@ -865,32 +850,32 @@ public final class ItemUtil {
             case DIAMOND_AXE:
             case DIAMOND_HOE:
             case DIAMOND_PICKAXE:
-            case DIAMOND_SPADE:
+            case DIAMOND_SHOVEL:
             case DIAMOND_SWORD:
                 return 1562;
             case IRON_AXE:
             case IRON_HOE:
             case IRON_PICKAXE:
-            case IRON_SPADE:
+            case IRON_SHOVEL:
             case IRON_SWORD:
                 return 251;
             case STONE_AXE:
             case STONE_HOE:
             case STONE_PICKAXE:
-            case STONE_SPADE:
+            case STONE_SHOVEL:
             case STONE_SWORD:
                 return 132;
-            case WOOD_AXE:
-            case WOOD_HOE:
-            case WOOD_PICKAXE:
-            case WOOD_SPADE:
-            case WOOD_SWORD:
+            case WOODEN_AXE:
+            case WOODEN_HOE:
+            case WOODEN_PICKAXE:
+            case WOODEN_SHOVEL:
+            case WOODEN_SWORD:
                 return 60;
-            case GOLD_AXE:
-            case GOLD_HOE:
-            case GOLD_PICKAXE:
-            case GOLD_SPADE:
-            case GOLD_SWORD:
+            case GOLDEN_AXE:
+            case GOLDEN_HOE:
+            case GOLDEN_PICKAXE:
+            case GOLDEN_SHOVEL:
+            case GOLDEN_SWORD:
                 return 33;
             case SHEARS:
                 return 238;

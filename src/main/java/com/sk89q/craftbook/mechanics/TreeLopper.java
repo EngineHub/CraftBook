@@ -3,22 +3,30 @@ package com.sk89q.craftbook.mechanics;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.BlockUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Tag;
+import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.material.Leaves;
 import org.bukkit.material.MaterialData;
-import org.bukkit.material.Sapling;
 import org.bukkit.material.Tree;
 
 import java.util.Arrays;
@@ -190,13 +198,31 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         @Override
         public void run () {
-            usedBlock.setType(Material.SAPLING);
-            BlockState state = usedBlock.getState();
-            Sapling sapling = (Sapling) state.getData();
-            System.out.println(fspecies.name());
-            sapling.setSpecies(fspecies);
-            state.setData(sapling);
-            state.update();
+            Material saplingMaterial;
+            switch (fspecies) {
+                case DARK_OAK:
+                    saplingMaterial = Material.DARK_OAK_SAPLING;
+                    break;
+                case GENERIC:
+                    saplingMaterial = Material.OAK_SAPLING;
+                    break;
+                case REDWOOD:
+                    saplingMaterial = Material.SPRUCE_SAPLING;
+                    break;
+                case BIRCH:
+                    saplingMaterial = Material.BIRCH_SAPLING;
+                    break;
+                case JUNGLE:
+                    saplingMaterial = Material.JUNGLE_SAPLING;
+                    break;
+                case ACACIA:
+                    saplingMaterial = Material.ACACIA_SAPLING;
+                    break;
+                default:
+                    saplingMaterial = Material.OAK_SAPLING;
+                    break;
+            }
+            usedBlock.setType(saplingMaterial);
         }
 
     }
