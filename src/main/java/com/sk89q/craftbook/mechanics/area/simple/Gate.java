@@ -30,9 +30,12 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.util.HandSide;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,6 +45,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -175,7 +179,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         for (Vector bl : column.getRegion()) {
 
-            Block blo = CraftBookBukkitUtil.toBlock(new BlockWorldVector(CraftBookBukkitUtil.toWorldVector(block).getWorld(), bl));
+            Block blo = CraftBookBukkitUtil.toLocation((World) BukkitAdapter.adapt(block.getLocation()).getExtent(), bl).getBlock();
 
             //sign = CraftBookBukkitUtil.toChangedSign(sign.getSign().getBlock());
 
@@ -256,7 +260,9 @@ public class Gate extends AbstractCraftBookMechanic {
 
         ItemInfo gateBlock = getGateBlock(sign, smallSearchSize);
 
-        if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (gateBlock == null || gateBlock.getType() == Material.AIR || gateBlock.getType() == player.getHeldItemInfo().getType()) && isValidGateBlock(sign, smallSearchSize, player.getHeldItemInfo(), false)) {
+        if (CraftBookPlugin.inst().getConfiguration().safeDestruction
+                && (gateBlock == null || gateBlock.getType() == Material.AIR || gateBlock.getType() == player.getHeldItemInfo().getType())
+                && isValidGateBlock(sign, smallSearchSize, player.getHeldItemInfo(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -270,7 +276,7 @@ public class Gate extends AbstractCraftBookMechanic {
             addBlocks(sign, amount);
 
             if (enforceType) {
-                sign.setLine(0, player.getHeldItemInfo().toString());
+                sign.setLine(0, player.getItemInHand(HandSide.MAIN_HAND).getType().getId());
                 sign.update(false);
             }
 
@@ -437,26 +443,20 @@ public class Gate extends AbstractCraftBookMechanic {
         if (amount > 0) {
             ItemInfo type = getGateBlock(sign, sign.getLine(1).equals("[DGate]"));
             if(type == null || type.getType() == Material.AIR)
-                type = new ItemInfo(Material.FENCE, 0);
+                type = new ItemInfo(Material.OAK_FENCE, 0);
             ItemStack toDrop = new ItemStack(type.getType(), amount, (short) type.getData());
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
     }
 
+    private Set<Material> passableBlocks = EnumSet.of(Material.WATER, Material.LAVA, Material.SNOW, Material.GRASS, Material.VINE,
+            Material.DEAD_BUSH, Material.GRASS, Material.FERN);
+
     private boolean canPassThrough(ChangedSign sign, boolean smallSearchSize, Block t) {
 
-        Material[] passableBlocks = new Material[9];
-        passableBlocks[0] = Material.WATER;
-        passableBlocks[1] = Material.STATIONARY_WATER;
-        passableBlocks[2] = Material.LAVA;
-        passableBlocks[3] = Material.STATIONARY_LAVA;
-        passableBlocks[4] = Material.SNOW;
-        passableBlocks[5] = Material.LONG_GRASS;
-        passableBlocks[6] = Material.VINE;
-        passableBlocks[7] = Material.DEAD_BUSH;
-        passableBlocks[8] = Material.AIR;
-
-        for (Material aPassableBlock : passableBlocks) { if (aPassableBlock == t.getType()) return true; }
+        if (passableBlocks.contains(t.getType())) {
+            return true;
+        }
 
         return isValidGateBlock(sign, smallSearchSize, new ItemInfo(t), true);
     }
@@ -650,8 +650,10 @@ public class Gate extends AbstractCraftBookMechanic {
         }
 
         public CuboidRegion getRegion() {
-
-            return new CuboidRegion(CraftBookBukkitUtil.toWorldVector(getStartingPoint().getRelative(0, -1, 0)), CraftBookBukkitUtil.toWorldVector(getEndingPoint()));
+            return new CuboidRegion(
+                    BukkitAdapter.adapt(getStartingPoint().getRelative(0, -1, 0).getLocation()).toVector(),
+                    BukkitAdapter.adapt(getEndingPoint().getLocation()).toVector()
+            );
         }
 
         @Override

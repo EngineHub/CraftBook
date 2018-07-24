@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Rail;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -23,7 +24,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
- * @contributor LordEnki
+ * @author LordEnki
  */
 
 public class CartSorter extends CartBlockMechanism {
@@ -51,55 +52,55 @@ public class CartSorter extends CartBlockMechanism {
         // pick the track block to modify and the curve to give it.
         // perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
         // this is required since there's not a north track and a south track; just a north-south track type.
-        byte trackData;
+        Rail trackData = (Rail) Material.RAIL.createBlockData();
         BlockFace next = SignUtil.getFacing(event.getBlocks().sign);
         switch (next) {
             case SOUTH:
                 switch (dir) {
                     case LEFT:
-                        trackData = 9;
+                        trackData.setShape(Rail.Shape.NORTH_EAST);
                         break;
                     case RIGHT:
-                        trackData = 8;
+                        trackData.setShape(Rail.Shape.NORTH_WEST);
                         break;
                     default:
-                        trackData = 0;
+                        trackData.setShape(Rail.Shape.NORTH_SOUTH);
                 }
                 break;
             case NORTH:
                 switch (dir) {
                     case LEFT:
-                        trackData = 7;
+                        trackData.setShape(Rail.Shape.SOUTH_WEST);
                         break;
                     case RIGHT:
-                        trackData = 6;
+                        trackData.setShape(Rail.Shape.SOUTH_EAST);
                         break;
                     default:
-                        trackData = 0;
+                        trackData.setShape(Rail.Shape.NORTH_SOUTH);
                 }
                 break;
             case WEST:
                 switch (dir) {
                     case LEFT:
-                        trackData = 6;
+                        trackData.setShape(Rail.Shape.SOUTH_EAST);
                         break;
                     case RIGHT:
-                        trackData = 9;
+                        trackData.setShape(Rail.Shape.NORTH_EAST);
                         break;
                     default:
-                        trackData = 1;
+                        trackData.setShape(Rail.Shape.EAST_WEST);
                 }
                 break;
             case EAST:
                 switch (dir) {
                     case LEFT:
-                        trackData = 8;
+                        trackData.setShape(Rail.Shape.NORTH_WEST);
                         break;
                     case RIGHT:
-                        trackData = 7;
+                        trackData.setShape(Rail.Shape.SOUTH_WEST);
                         break;
                     default:
-                        trackData = 1;
+                        trackData.setShape(Rail.Shape.EAST_WEST);
                 }
                 break;
             default:
@@ -110,7 +111,7 @@ public class CartSorter extends CartBlockMechanism {
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.
         if (targetTrack.getType() == Material.RAIL) {
-            targetTrack.setData(trackData);
+            targetTrack.setBlockData(trackData);
         }
     }
 
@@ -195,7 +196,7 @@ public class CartSorter extends CartBlockMechanism {
         if (line.startsWith("#")) {
             if (player != null) {
                 String selectedStation = StationManager.getStation(player.getName());
-                return line.equalsIgnoreCase("#" + selectedStation);
+                return line.equalsIgnoreCase('#' + selectedStation);
             }
         }
 

@@ -3,22 +3,31 @@ package com.sk89q.craftbook.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.blocks.BaseItem;
+import com.sk89q.worldedit.blocks.BaseItemStack;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.ParserContext;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.material.MaterialData;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -115,53 +124,36 @@ public final class ItemSyntax {
         return StringUtils.replace(builder.toString(), "\u00A7", "&");
     }
 
+    private static ParserContext ITEM_CONTEXT = new ParserContext();
+
+    static {
+        ITEM_CONTEXT.setPreferringWildcard(true);
+    }
+
     private static final LoadingCache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
 
         @Override
         public ItemStack load(String line) throws Exception {
-
-            Material material = Material.AIR;
-            int data = -1;
             int amount = 1;
 
             String[] advMetadataSplit = FSLASH_PATTERN.split(line);
             String[] nameLoreSplit = PIPE_PATTERN.split(advMetadataSplit[0].replace("\\/", "/"));
             String[] enchantSplit = SEMICOLON_PATTERN.split(nameLoreSplit[0].replace("\\;", ";"));
             String[] amountSplit = ASTERISK_PATTERN.split(enchantSplit[0].replace("\\*", "*"), 2);
-            String[] dataSplit = COLON_PATTERN.split(amountSplit[0].replace("\\:", ":"), 2);
 
-            try {
-                material = Material.getMaterial(Integer.parseInt(dataSplit[0]));
-            } catch (NumberFormatException e) {
-                try {
-                    material = Material.matchMaterial(dataSplit[0]);
-                } catch (Exception ee) {
-                    try {
-                        try {
-                            Object itemType = Class.forName("com.sk89q.worldedit.blocks.ItemType").getMethod("lookup", String.class).invoke(null, dataSplit[0]);
-                            material = Material.getMaterial((Integer) itemType.getClass().getMethod("getID").invoke(itemType));
-                        }
-                        catch(Exception eee){
-                            Object blockType = Class.forName("com.sk89q.worldedit.blocks.BlockType").getMethod("lookup", String.class).invoke(null, dataSplit[0]);
-                            material = Material.getMaterial((Integer) blockType.getClass().getMethod("getID").invoke(blockType));
-                        }
-                    } catch(Throwable ignored){}
-                }
-            }
-            try {
-                if (dataSplit.length > 1)
-                    data = Integer.parseInt(dataSplit[1]);
-            } catch(Exception ignored){}
+            BaseItem item = WorldEdit.getInstance().getItemFactory().parseFromInput(amountSplit[0], ITEM_CONTEXT);
             try {
                 if(amountSplit.length > 1)
                     amount = Integer.parseInt(amountSplit[1]);
             } catch(Exception ignored){}
 
-            if (material == null || material == Material.AIR) material = Material.STONE;
+            ItemStack rVal;
 
-            ItemStack rVal = new ItemStack(material, amount, (short) data);
-            if(data <= Byte.MAX_VALUE)
-                rVal.setData(new MaterialData(material, (byte)data));
+            if (item == null || item.getType() == null) {
+                rVal = new ItemStack(Material.STONE);
+            } else {
+                rVal = BukkitAdapter.adapt(new BaseItemStack(item.getType(), item.getNbtData(), amount));
+            }
 
             if(nameLoreSplit.length > 1) {
 
@@ -187,7 +179,7 @@ public final class ItemSyntax {
                         String[] sp = COLON_PATTERN.split(enchantSplit[i]);
                         Enchantment ench = Enchantment.getByName(sp[0]);
                         if(ench == null)
-                            ench = Enchantment.getById(Integer.parseInt(sp[0]));
+                            ench = Enchantment.getByKey(NamespacedKey.minecraft(sp[0]));
                         rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
                     }
                     catch(NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ignored){}
@@ -224,15 +216,16 @@ public final class ItemSyntax {
                         try {
                             String[] sp = SEMICOLON_PATTERN.split(bits[1]);
                             Enchantment ench = Enchantment.getByName(sp[0]);
-                            if(ench == null)
-                                ench = Enchantment.getById(Integer.parseInt(sp[0]));
+                            if(ench == null) {
+                                ench = Enchantment.getByKey(NamespacedKey.minecraft(sp[0]));
+                            }
                             ((EnchantmentStorageMeta) meta).addStoredEnchant(ench, Integer.parseInt(sp[1]), true);
                         } catch(Exception ignored){}
                     } else if (bits[0].equalsIgnoreCase("unbreakable")) {
                         boolean unbreakable = Boolean.parseBoolean(bits[1]);
                         meta.setUnbreakable(unbreakable);
                     } else if (bits[0].equalsIgnoreCase("flags")) {
-                        List<String> flags = Arrays.asList(COMMA_PATTERN.split(bits[1]));
+                        String[] flags = COMMA_PATTERN.split(bits[1]);
                         for (String flag : flags) {
                             meta.addItemFlags(ItemFlag.valueOf(flag));
                         }

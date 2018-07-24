@@ -10,6 +10,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -49,10 +50,13 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(fernFarming && event.getBlock().getType() == Material.DOUBLE_PLANT && event.getBlock().getData() >= 0x8 && event.getBlock().getRelative(0, -1, 0).getType() == Material.DOUBLE_PLANT && event.getBlock().getRelative(0, -1, 0).getData() == 0x3) {
+        if(fernFarming && event.getBlock().getType() == Material.LARGE_FERN
+                && ((Bisected) event.getBlock().getBlockData()).getHalf() == Bisected.Half.TOP
+                && event.getBlock().getRelative(0, -1, 0).getType() == Material.LARGE_FERN
+                && ((Bisected) event.getBlock().getRelative(0, -1, 0).getBlockData()).getHalf() == Bisected.Half.BOTTOM) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
-                event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), new ItemStack(Material.LONG_GRASS, 1, (short) 2));
-                event.getBlock().getRelative(0, -1, 0).setTypeIdAndData(Material.LONG_GRASS.getId(), (byte) 2, true);
+                event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), new ItemStack(Material.FERN));
+                event.getBlock().getRelative(0, -1, 0).setType(Material.FERN);
             }, 2L);
         }
     }
@@ -79,9 +83,11 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                     else
                         block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
 
-                    if(fernFarming && block.getType() == Material.LONG_GRASS && block.getData() == 0x2) {
-                        block.setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 3, false);
-                        block.getRelative(0, 1, 0).setTypeIdAndData(Material.DOUBLE_PLANT.getId(), (byte) 11, false);
+                    if(fernFarming && block.getType() == Material.FERN) {
+                        block.setType(Material.LARGE_FERN, false);
+                        Bisected topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
+                        topHalfData.setHalf(Bisected.Half.TOP);
+                        block.getRelative(0, 1, 0).setBlockData(topHalfData, false);
                     }
                 }
             }
