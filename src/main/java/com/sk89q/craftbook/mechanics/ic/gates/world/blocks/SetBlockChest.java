@@ -107,7 +107,7 @@ public class SetBlockChest extends SetBlock {
             config.setComment(path + "blacklist", "Stops the IC from placing the listed blocks.");
             blockBlacklist.addAll(config.getStringList(path + "blacklist",
                     blockBlacklist.stream().map(BlockType::getId).collect(Collectors.toList()))
-                    .stream().map(BlockTypes::get).collect(Collectors.toList()));
+                    .stream().map(BlockSyntax::getBlock).map(BlockStateHolder::getBlockType).collect(Collectors.toList()));
         }
     }
 }

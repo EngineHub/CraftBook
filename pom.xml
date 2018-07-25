@@ -155,7 +155,7 @@
             <resource>
                 <targetPath>defaults/</targetPath>
                 <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
+                <directory>${basedir}/src/main/resources/defaults/</directory>
                 <includes>
                     <include>config.yml</include>
                     <include>mechanisms.yml</include>
@@ -171,7 +171,7 @@
             <resource>
                 <targetPath>defaults/</targetPath>
                 <filtering>false</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
+                <directory>${basedir}/src/main/resources/defaults/</directory>
                 <includes>
                     <include>ic-config.yml</include>
                 </includes>

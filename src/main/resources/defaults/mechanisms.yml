@@ -8,7 +8,7 @@ mechanics:
         attack-passive-enable:
         - Zombie
     Ammeter:
-        item: COAL
+        item: minecraft:coal
     BetterLeads:
         stop-mob-target: false
         owner-unleash-only: false
@@ -25,15 +25,27 @@ mechanics:
         crusher-blacklist:
         - OBSIDIAN
         - BEDROCK
+        - PORTAL
+        - ENDER_PORTAL_FRAME
+        - ENDER_PORTAL
+        - END_GATEWAY
         super-sticky: true
         super-push: true
         movement-blacklist:
         - OBSIDIAN
         - BEDROCK
+        - PORTAL
+        - ENDER_PORTAL_FRAME
+        - ENDER_PORTAL
+        - END_GATEWAY
         bounce: true
         bounce-blacklist:
         - OBSIDIAN
         - BEDROCK
+        - PORTAL
+        - ENDER_PORTAL_FRAME
+        - ENDER_PORTAL
+        - END_GATEWAY
         max-distance: 12
         bounce-max-velocity: 5.0
     BetterPlants:
@@ -58,15 +70,38 @@ mechanics:
         sensitivity: 0.1
         auto-blocks: {}
     Bridge:
+        enforce-type: true
         allow-redstone: true
         max-length: 30
         max-width: 5
         blocks:
-        - COBBLESTONE
-        - WOOD
-        - GLASS
-        - DOUBLE_STEP
-        - WOOD_DOUBLE_STEP
+        - minecraft:cobblestone
+        - minecraft:glass
+        - minecraft:dark_oak_planks
+        - minecraft:birch_planks
+        - minecraft:spruce_planks
+        - minecraft:jungle_planks
+        - minecraft:acacia_planks
+        - minecraft:oak_planks
+        - minecraft:spruce_slab
+        - minecraft:jungle_slab
+        - minecraft:acacia_slab
+        - minecraft:birch_slab
+        - minecraft:brick_slab
+        - minecraft:oak_slab
+        - minecraft:prismarine_brick_slab
+        - minecraft:petrified_oak_slab
+        - minecraft:stone_slab
+        - minecraft:cobblestone_slab
+        - minecraft:quartz_slab
+        - minecraft:dark_prismarine_slab
+        - minecraft:purpur_slab
+        - minecraft:stone_brick_slab
+        - minecraft:prismarine_slab
+        - minecraft:nether_brick_slab
+        - minecraft:red_sandstone_slab
+        - minecraft:sandstone_slab
+        - minecraft:dark_oak_slab
     Cauldron:
         spoons: true
         enable-redstone: false
@@ -77,20 +112,23 @@ mechanics:
         regen-health: true
         regen-health-amount: 1.0
         blocks:
-        - WOOD_STAIRS
-        - COBBLESTONE_STAIRS
-        - BRICK_STAIRS
-        - SMOOTH_STAIRS
-        - NETHER_BRICK_STAIRS
-        - SANDSTONE_STAIRS
-        - SPRUCE_WOOD_STAIRS
-        - BIRCH_WOOD_STAIRS
-        - JUNGLE_WOOD_STAIRS
-        - QUARTZ_STAIRS
-        - ACACIA_STAIRS
-        - DARK_OAK_STAIRS
-        - PURPUR_STAIRS
-        - RED_SANDSTONE_STAIRS
+        - minecraft:birch_stairs
+        - minecraft:red_sandstone_stairs
+        - minecraft:brick_stairs
+        - minecraft:prismarine_stairs
+        - minecraft:dark_prismarine_stairs
+        - minecraft:purpur_stairs
+        - minecraft:spruce_stairs
+        - minecraft:nether_brick_stairs
+        - minecraft:dark_oak_stairs
+        - minecraft:prismarine_brick_stairs
+        - minecraft:quartz_stairs
+        - minecraft:sandstone_stairs
+        - minecraft:oak_stairs
+        - minecraft:jungle_stairs
+        - minecraft:cobblestone_stairs
+        - minecraft:acacia_stairs
+        - minecraft:stone_brick_stairs
         face-correct-direction: true
         require-sign: false
         max-distance: 3
@@ -119,15 +157,38 @@ mechanics:
         snow-shooter-enable: true
         xp-shooter-enable: true
     Door:
+        enforce-type: true
         allow-redstone: true
         max-length: 30
         max-width: 5
         blocks:
-        - COBBLESTONE
-        - WOOD
-        - GLASS
-        - DOUBLE_STEP
-        - WOOD_DOUBLE_STEP
+        - minecraft:cobblestone
+        - minecraft:glass
+        - minecraft:dark_oak_planks
+        - minecraft:birch_planks
+        - minecraft:spruce_planks
+        - minecraft:jungle_planks
+        - minecraft:acacia_planks
+        - minecraft:oak_planks
+        - minecraft:spruce_slab
+        - minecraft:jungle_slab
+        - minecraft:acacia_slab
+        - minecraft:birch_slab
+        - minecraft:brick_slab
+        - minecraft:oak_slab
+        - minecraft:prismarine_brick_slab
+        - minecraft:petrified_oak_slab
+        - minecraft:stone_slab
+        - minecraft:cobblestone_slab
+        - minecraft:quartz_slab
+        - minecraft:dark_prismarine_slab
+        - minecraft:purpur_slab
+        - minecraft:stone_brick_slab
+        - minecraft:prismarine_slab
+        - minecraft:nether_brick_slab
+        - minecraft:red_sandstone_slab
+        - minecraft:sandstone_slab
+        - minecraft:dark_oak_slab
     Elevator:
         allow-redstone: false
         redstone-player-search-radius: 3
@@ -147,15 +208,20 @@ mechanics:
         limit-columns: true
         max-columns: 14
         blocks:
-        - FENCE
-        - IRON_FENCE
-        - THIN_GLASS
-        - NETHER_FENCE
+        - minecraft:acacia_fence
+        - minecraft:birch_fence
+        - minecraft:jungle_fence
+        - minecraft:oak_fence
+        - minecraft:spruce_fence
+        - minecraft:dark_oak_fence
+        - minecraft:nether_brick_fence
+        - minecraft:iron_bars
+        - minecraft:glass_pane
         enforce-type: true
         max-column-height: 12
         gate-search-radius: 3
     Glowstone:
-        glowstone-off-block: GLASS
+        glowstone-off-block: minecraft:glass
     HeadDrops:
         drop-mob-heads: true
         drop-player-heads: true
@@ -183,9 +249,9 @@ mechanics:
         break-on-error: false
         disable-self-triggered: false
     LegacyCauldron:
-        block: STONE
+        block: minecraft:stone
     LightStone:
-        item: GLOWSTONE_DUST
+        item: minecraft:glowstone_dust
     LightSwitch:
         max-range: 10
         max-lights: 20
@@ -196,6 +262,7 @@ mechanics:
         20x-slow-block: GRAVEL:0
     MinecartConstantSpeed:
         speed: 0.5
+        ignore-powered-rail: false
     MinecartDecay:
         time-in-ticks: 20
     MinecartDeposit:
@@ -248,7 +315,7 @@ mechanics:
         require-sign: false
         warn-when-too-large: false
     SignCopier:
-        item: INK_SACK:0
+        item: minecraft:ink_sac
     Snow:
         piling: false
         trample: false
@@ -267,6 +334,7 @@ mechanics:
         - BROWN_MUSHROOM
         - RED_MUSHROOM
         - FIRE
+        animate-falling: false
         falldown-animation-speed: 5
         freeze-water: false
         melt-in-sunlight: false
@@ -289,14 +357,13 @@ mechanics:
         - LOG
         - LOG_2
         tool-list:
-        - IRON_AXE
-        - WOOD_AXE
-        - STONE_AXE
-        - DIAMOND_AXE
-        - GOLD_AXE
+        - minecraft:iron_axe
+        - minecraft:wooden_axe
+        - minecraft:stone_axe
+        - minecraft:diamond_axe
+        - minecraft:golden_axe
         max-size: 30
         allow-diagonals: false
-        enforce-data: false
         place-saplings: false
         break-leaves: false
         single-damage-axe: false
@@ -309,7 +376,7 @@ mechanics:
     XPStorer:
         require-bottle: false
         xp-per-bottle: 16
-        block: MOB_SPAWNER
+        block: minecraft:spawner
         require-sneaking-state: 'no'
         radius-mode: false
         radius: 5

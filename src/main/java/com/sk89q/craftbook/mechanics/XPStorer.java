@@ -7,7 +7,10 @@ import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -36,9 +39,9 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return;
 
-        if(block.getType() != Material.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
-        else if(block.getType() != Material.AIR)
-            if(!block.isSame(event.getClickedBlock())) return;
+        if(block.getBlockType() != BlockTypes.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
+        else if(block.getBlockType() != BlockTypes.AIR)
+            if(!block.equalsFuzzy(BukkitAdapter.adapt(event.getClickedBlock().getBlockData()))) return;
 
         if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
 
@@ -50,7 +53,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int max = Integer.MAX_VALUE;
 
         if(requireBottle) {
-            if(player.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.GLASS_BOTTLE && block.getType() != Material.AIR) {
+            if(player.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.GLASS_BOTTLE && block.getBlockType() != BlockTypes.AIR) {
                 player.printError("mech.xp-storer.bottle");
                 return;
             }
@@ -152,7 +155,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!autonomousMode) return;
         if(!EventUtil.passesFilter(event)) return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[XP]") || !block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
+        if (!event.getLine(1).equalsIgnoreCase("[XP]") || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData()))) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -182,7 +185,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!autonomousMode) return;
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock()) || !block.isSame(SignUtil.getBackBlock(event.getBlock()))) return;
+        if(!SignUtil.isSign(event.getBlock()) || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData()))) return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
@@ -272,7 +275,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
     private boolean requireBottle;
     private int xpPerBottle;
-    private ItemInfo block;
+    private BlockStateHolder block;
     private TernaryState sneakingState;
     private boolean autonomousMode;
     private int radius;
@@ -287,7 +290,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         xpPerBottle = config.getInt(path + "xp-per-bottle", 16);
 
         config.setComment(path + "block", "The block that is an XP Storer.");
-        block = new ItemInfo(config.getString(path + "block", "MOB_SPAWNER"));
+        block = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.SPAWNER.getId()), true);
 
         config.setComment(path + "require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
         sneakingState = TernaryState.getFromString(config.getString(path + "require-sneaking-state", "no"));

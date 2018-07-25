@@ -16,11 +16,14 @@
 
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
+import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
 public class BlockSyntax {
@@ -28,6 +31,7 @@ public class BlockSyntax {
 
     static {
         BLOCK_CONTEXT.setPreferringWildcard(true);
+        BLOCK_CONTEXT.setRestricted(false);
     }
 
     public static BlockStateHolder getBlock(String line) {
@@ -41,16 +45,30 @@ public class BlockSyntax {
 
         BLOCK_CONTEXT.setPreferringWildcard(wild);
 
+        BlockStateHolder blockState = null;
         try {
-            BlockStateHolder blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(line, BLOCK_CONTEXT);
-            if (blockState == null) {
-                return null;
-            }
-            return blockState.toImmutableState();
+            blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(line, BLOCK_CONTEXT);
         } catch (InputParseException e) {
-            e.printStackTrace();
-            return null;
         }
+
+        if (blockState == null) {
+            String[] dataSplit = RegexUtil.COLON_PATTERN.split(line.replace("\\:", ":"), 2);
+            Material material = Material.getMaterial(dataSplit[0], true);
+            if (material != null) {
+                int data = 0;
+                if (dataSplit.length > 1) {
+                    data = Integer.parseInt(dataSplit[1]);
+                    if (data < 0 || data > 15) {
+                        data = 0;
+                    }
+                }
+                blockState = LegacyMapper.getInstance().getBlockFromLegacy(material.getId(), data);
+            }
+            if (material == null) {
+                CraftBookPlugin.logger().warning("Invalid block format: " + line);
+            }
+        }
+        return blockState;
     }
 
     public static BlockData getBukkitBlock(String line) {
