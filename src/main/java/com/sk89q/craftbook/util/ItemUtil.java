@@ -2,17 +2,24 @@ package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
+import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
@@ -596,6 +603,64 @@ public final class ItemUtil {
         }
     }
 
+    public static Material getWoolFromColour(DyeColor color) {
+        switch (color) {
+            case WHITE:
+                return Material.WHITE_WOOL;
+            case ORANGE:
+                return Material.ORANGE_WOOL;
+            case MAGENTA:
+                return Material.MAGENTA_WOOL;
+            case LIGHT_BLUE:
+                return Material.LIGHT_BLUE_WOOL;
+            case YELLOW:
+                return Material.YELLOW_WOOL;
+            case LIME:
+                return Material.LIME_WOOL;
+            case PINK:
+                return Material.PINK_WOOL;
+            case GRAY:
+                return Material.GRAY_WOOL;
+            case LIGHT_GRAY:
+                return Material.LIGHT_GRAY_WOOL;
+            case CYAN:
+                return Material.CYAN_WOOL;
+            case PURPLE:
+                return Material.PURPLE_WOOL;
+            case BLUE:
+                return Material.BLUE_WOOL;
+            case BROWN:
+                return Material.BROWN_WOOL;
+            case GREEN:
+                return Material.GREEN_WOOL;
+            case RED:
+                return Material.RED_WOOL;
+            case BLACK:
+                return Material.BLACK_WOOL;
+            default:
+                return Material.WHITE_WOOL;
+        }
+    }
+
+    public static Material getBoatFromTree(TreeSpecies treeSpecies) {
+        switch (treeSpecies) {
+            case GENERIC:
+                return Material.OAK_BOAT;
+            case REDWOOD:
+                return Material.SPRUCE_BOAT;
+            case BIRCH:
+                return Material.BIRCH_BOAT;
+            case JUNGLE:
+                return Material.JUNGLE_BOAT;
+            case ACACIA:
+                return Material.ACACIA_BOAT;
+            case DARK_OAK:
+                return Material.DARK_OAK_BOAT;
+            default:
+                return Material.OAK_BOAT;
+        }
+    }
+
     /**
      * Checks whether the item is usable as a fuel in a furnace.
      * 
@@ -897,6 +962,109 @@ public final class ItemUtil {
                 player.setItemInHand(heldItem);
             else
                 player.setItemInHand(null);
+        }
+    }
+
+    public static boolean isStainedGlass(Material typeId) {
+        switch(typeId) {
+            case BLACK_STAINED_GLASS:
+            case BLUE_STAINED_GLASS:
+            case BROWN_STAINED_GLASS:
+            case CYAN_STAINED_GLASS:
+            case GRAY_STAINED_GLASS:
+            case GREEN_STAINED_GLASS:
+            case LIGHT_BLUE_STAINED_GLASS:
+            case LIGHT_GRAY_STAINED_GLASS:
+            case LIME_STAINED_GLASS:
+            case MAGENTA_STAINED_GLASS:
+            case ORANGE_STAINED_GLASS:
+            case PINK_STAINED_GLASS:
+            case PURPLE_STAINED_GLASS:
+            case RED_STAINED_GLASS:
+            case WHITE_STAINED_GLASS:
+            case YELLOW_STAINED_GLASS:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isStainedGlassPane(Material typeId) {
+        switch(typeId) {
+            case BLACK_STAINED_GLASS_PANE:
+            case BLUE_STAINED_GLASS_PANE:
+            case BROWN_STAINED_GLASS_PANE:
+            case CYAN_STAINED_GLASS_PANE:
+            case GRAY_STAINED_GLASS_PANE:
+            case GREEN_STAINED_GLASS_PANE:
+            case LIGHT_BLUE_STAINED_GLASS_PANE:
+            case LIGHT_GRAY_STAINED_GLASS_PANE:
+            case LIME_STAINED_GLASS_PANE:
+            case MAGENTA_STAINED_GLASS_PANE:
+            case ORANGE_STAINED_GLASS_PANE:
+            case PINK_STAINED_GLASS_PANE:
+            case PURPLE_STAINED_GLASS_PANE:
+            case RED_STAINED_GLASS_PANE:
+            case WHITE_STAINED_GLASS_PANE:
+            case YELLOW_STAINED_GLASS_PANE:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static DyeColor getStainedColor(Material material) {
+        switch (material) {
+            case BLACK_STAINED_GLASS:
+            case BLACK_STAINED_GLASS_PANE:
+                return DyeColor.BLACK;
+            case BLUE_STAINED_GLASS:
+            case BLUE_STAINED_GLASS_PANE:
+                return DyeColor.BLUE;
+            case BROWN_STAINED_GLASS:
+            case BROWN_STAINED_GLASS_PANE:
+                return DyeColor.BROWN;
+            case CYAN_STAINED_GLASS:
+            case CYAN_STAINED_GLASS_PANE:
+                return DyeColor.CYAN;
+            case GRAY_STAINED_GLASS:
+            case GRAY_STAINED_GLASS_PANE:
+                return DyeColor.GRAY;
+            case GREEN_STAINED_GLASS:
+            case GREEN_STAINED_GLASS_PANE:
+                return DyeColor.GREEN;
+            case LIGHT_BLUE_STAINED_GLASS:
+            case LIGHT_BLUE_STAINED_GLASS_PANE:
+                return DyeColor.LIGHT_BLUE;
+            case LIGHT_GRAY_STAINED_GLASS:
+            case LIGHT_GRAY_STAINED_GLASS_PANE:
+                return DyeColor.LIGHT_GRAY;
+            case LIME_STAINED_GLASS:
+            case LIME_STAINED_GLASS_PANE:
+                return DyeColor.LIME;
+            case MAGENTA_STAINED_GLASS:
+            case MAGENTA_STAINED_GLASS_PANE:
+                return DyeColor.MAGENTA;
+            case ORANGE_STAINED_GLASS:
+            case ORANGE_STAINED_GLASS_PANE:
+                return DyeColor.ORANGE;
+            case PINK_STAINED_GLASS:
+            case PINK_STAINED_GLASS_PANE:
+                return DyeColor.PINK;
+            case PURPLE_STAINED_GLASS:
+            case PURPLE_STAINED_GLASS_PANE:
+                return DyeColor.PURPLE;
+            case RED_STAINED_GLASS:
+            case RED_STAINED_GLASS_PANE:
+                return DyeColor.RED;
+            case WHITE_STAINED_GLASS:
+            case WHITE_STAINED_GLASS_PANE:
+                return DyeColor.WHITE;
+            case YELLOW_STAINED_GLASS:
+            case YELLOW_STAINED_GLASS_PANE:
+                return DyeColor.YELLOW;
+            default:
+                return DyeColor.WHITE;
         }
     }
 }

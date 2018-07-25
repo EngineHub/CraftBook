@@ -1,14 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
@@ -18,8 +9,20 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class BlockReplacer extends AbstractIC {
 
@@ -33,11 +36,8 @@ public class BlockReplacer extends AbstractIC {
         chip.setOutput(0, replaceBlocks(chip.getInput(0)));
     }
 
-    int onId;
-    byte onData;
-
-    int offId;
-    byte offData;
+    private BlockStateHolder onBlock;
+    private BlockStateHolder offBlock;
 
     int delay;
     int mode;
@@ -48,19 +48,8 @@ public class BlockReplacer extends AbstractIC {
 
         String[] ids = RegexUtil.MINUS_PATTERN.split(getLine(2));
 
-        String[] onIds = RegexUtil.COLON_PATTERN.split(ids[0]);
-        onId = Integer.parseInt(onIds[0]);
-        if(onIds.length > 1)
-            onData = Byte.parseByte(onIds[1]);
-        else
-            onData = -1;
-
-        String[] offIds = RegexUtil.COLON_PATTERN.split(ids[1]);
-        offId = Integer.parseInt(offIds[0]);
-        if(offIds.length > 1)
-            offData = Byte.parseByte(offIds[1]);
-        else
-            offData = -1;
+        onBlock = BlockSyntax.getBlock(ids[0], true);
+        offBlock = BlockSyntax.getBlock(ids[1], true);
 
         String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
         delay = Integer.parseInt(data[0]);
@@ -85,15 +74,17 @@ public class BlockReplacer extends AbstractIC {
                     continue;
                 traversedBlocks.add(b.getLocation());
 
-                if(b.getTypeId() == onId && (onData == -1 || onData == b.getData())) {
+                BlockState bState = BukkitAdapter.adapt(b.getBlockData());
 
-                    if(!on)
-                        b.setTypeIdAndData(offId, offData == -1 ? 0 : offData, physics);
+                if(onBlock.equalsFuzzy(bState)) {
+                    if(!on) {
+                        b.setBlockData(BukkitAdapter.adapt(offBlock), physics);
+                    }
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
-                } else if (b.getTypeId() == offId && (offData == -1 || offData == b.getData())) {
-
-                    if(on)
-                        b.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
+                } else if (offBlock.equalsFuzzy(bState)) {
+                    if(on) {
+                        b.setBlockData(BukkitAdapter.adapt(onBlock), physics);
+                    }
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
                 }
             }
@@ -103,15 +94,18 @@ public class BlockReplacer extends AbstractIC {
     }
 
     public boolean replaceBlocks(boolean on) {
-
         Block block = getBackBlock();
-        if(block.getTypeId() == onId && (onData == -1 || onData == block.getData())) {
-            if(!on)
-                block.setTypeIdAndData(offId, offData == -1 ? 0 : offData, physics);
+        BlockState blockState = BukkitAdapter.adapt(block.getBlockData());
+
+        if(onBlock.equalsFuzzy(blockState)) {
+            if(!on) {
+                block.setBlockData(BukkitAdapter.adapt(offBlock), physics);
+            }
         }
-        else if (block.getTypeId() == offId && (offData == -1 || offData == block.getData()))
-            if(on)
-                block.setTypeIdAndData(onId, onData == -1 ? 0 : onData, physics);
+        else if (offBlock.equalsFuzzy(blockState))
+            if(on) {
+                block.setBlockData(BukkitAdapter.adapt(onBlock), physics);
+            }
         Set<Location> traversedBlocks = new HashSet<>();
         traversedBlocks.add(block.getLocation());
         return replaceBlocks(on, block, traversedBlocks);
