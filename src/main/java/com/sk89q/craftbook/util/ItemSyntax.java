@@ -7,7 +7,9 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.BaseItemStack;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -128,6 +130,7 @@ public final class ItemSyntax {
 
     static {
         ITEM_CONTEXT.setPreferringWildcard(true);
+        ITEM_CONTEXT.setRestricted(false);
     }
 
     private static final LoadingCache<String, ItemStack> itemCache = CacheBuilder.newBuilder().maximumSize(1024).expireAfterAccess(10, TimeUnit.MINUTES).build(new CacheLoader<String, ItemStack>() {
@@ -141,7 +144,23 @@ public final class ItemSyntax {
             String[] enchantSplit = SEMICOLON_PATTERN.split(nameLoreSplit[0].replace("\\;", ";"));
             String[] amountSplit = ASTERISK_PATTERN.split(enchantSplit[0].replace("\\*", "*"), 2);
 
-            BaseItem item = WorldEdit.getInstance().getItemFactory().parseFromInput(amountSplit[0], ITEM_CONTEXT);
+            BaseItem item = null;
+            try {
+                item = WorldEdit.getInstance().getItemFactory().parseFromInput(amountSplit[0], ITEM_CONTEXT);
+            } catch (InputParseException e) {
+                String[] dataSplit = COLON_PATTERN.split(amountSplit[0].replace("\\:", ":"), 2);
+                Material material = Material.getMaterial(dataSplit[0], true);
+                if (material != null) {
+                    int data = 0;
+                    if (dataSplit.length > 1) {
+                        data = Integer.parseInt(dataSplit[1]);
+                        if (data < 0 || data > 15) {
+                            data = 0;
+                        }
+                    }
+                    item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(material.getId(), data));
+                }
+            }
             try {
                 if(amountSplit.length > 1)
                     amount = Integer.parseInt(amountSplit[1]);
