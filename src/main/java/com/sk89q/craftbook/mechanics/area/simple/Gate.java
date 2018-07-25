@@ -35,8 +35,10 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.HandSide;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -44,11 +46,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or open, a nearby fence will be found,
@@ -128,7 +131,7 @@ public class Gate extends AbstractCraftBookMechanic {
         if (limitColumns && visitedColumns.size() > columnLimit)
             return false;
 
-        if (!isValidGateBlock(sign, smallSearchSize, new ItemInfo(block), true)) return false;
+        if (!isValidGateBlock(sign, smallSearchSize, block.getBlockData(), true)) return false;
 
         CraftBookPlugin.logDebugMessage("Found a possible gate column at " + block.getX() + ':' + block.getY() + ':' + block.getZ(), "gates.search");
 
@@ -146,7 +149,7 @@ public class Gate extends AbstractCraftBookMechanic {
         visitedColumns.add(column);
 
         if (close == null)
-            close = !isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(x, column.getStartingY() - 1, z)), true);
+            close = !isValidGateBlock(sign, smallSearchSize, block.getWorld().getBlockAt(x, column.getStartingY() - 1, z).getBlockData(), true);
 
         CraftBookPlugin.logDebugMessage("Valid column at " + block.getX() + ':' + block.getY() + ':' + block.getZ() + " is being " + (close ? "closed" : "opened"), "gates.search");
         CraftBookPlugin.logDebugMessage("Column Top: " + column.getStartingY() + " End: " + column.getEndingY(), "gates.search");
@@ -169,11 +172,11 @@ public class Gate extends AbstractCraftBookMechanic {
         // If we want to close the gate then we replace air/water blocks
         // below with fence blocks; otherwise, we want to replace fence
         // blocks below with air
-        ItemInfo item;
+        BlockData item;
         if (close)
-            item = new ItemInfo(column.getStartingPoint());
+            item = column.getStartingPoint().getBlockData();
         else
-            item = new ItemInfo(Material.AIR, 0);
+            item = Material.AIR.createBlockData();
 
         CraftBookPlugin.logDebugMessage("Setting column at " + block.getX() + ':' + block.getY() + ':' + block.getZ() + " to " + item.toString(), "gates.search");
 
@@ -196,7 +199,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
             if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
-                if (blo.getType() != Material.AIR && !isValidGateBlock(sign, smallSearchSize, new ItemInfo(blo), true))
+                if (blo.getType() != Material.AIR && !isValidGateBlock(sign, smallSearchSize, blo.getBlockData(), true))
                     break;
             } else // Allowing water allows the use of gates as flood gates
                 if (!canPassThrough(sign, smallSearchSize, blo))
@@ -205,18 +208,18 @@ public class Gate extends AbstractCraftBookMechanic {
             // bag.setBlockID(w, x, y1, z, ID);
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                 if (!close || hasEnoughBlocks(sign, otherSign)) {
-                    if (!close && isValidGateBlock(sign, smallSearchSize, new ItemInfo(blo), true))
+                    if (!close && isValidGateBlock(sign, smallSearchSize, blo.getBlockData(), true))
                         addBlocks(sign, 1);
-                    else if (close && canPassThrough(sign, smallSearchSize, blo) && isValidGateBlock(sign, smallSearchSize, item, true) && !item.isSame(blo))
+                    else if (close && canPassThrough(sign, smallSearchSize, blo) && isValidGateBlock(sign, smallSearchSize, item, true) && item.getMaterial() != blo.getType())
                         removeBlocks(sign, 1);
-                    blo.setTypeIdAndData(item.getId(), (byte) item.getData(), true);
+                    blo.setBlockData(item, true);
                 } else if (!hasEnoughBlocks(sign, otherSign) && isValidGateBlock(sign, smallSearchSize, item, true))
                     if (player != null) {
                         player.printError("mech.not-enough-blocks");
                         return false;
                     }
             } else
-                blo.setTypeIdAndData(item.getId(), (byte) item.getData(), true);
+                blo.setBlockData(item, true);
 
             CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ':' + bl.getY() + ':' + bl.getZ() + " to " + item.toString(), "gates.search");
 
@@ -262,7 +265,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if (CraftBookPlugin.inst().getConfiguration().safeDestruction
                 && (gateBlock == null || gateBlock.getType() == Material.AIR || gateBlock.getType() == BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))
-                && isValidGateBlock(sign, smallSearchSize, player.getItemInHand(HandSide.MAIN_HAND), false)) {
+                && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()).createBlockData(), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -399,7 +402,7 @@ public class Gate extends AbstractCraftBookMechanic {
      * @param check Should search.
      * @return
      */
-    public boolean isValidGateBlock(ChangedSign sign, boolean smallSearchSize, ItemInfo block, boolean check) {
+    public boolean isValidGateBlock(ChangedSign sign, boolean smallSearchSize, BlockData block, boolean check) {
 
         ItemInfo type;
 
@@ -458,7 +461,7 @@ public class Gate extends AbstractCraftBookMechanic {
             return true;
         }
 
-        return isValidGateBlock(sign, smallSearchSize, new ItemInfo(t), true);
+        return isValidGateBlock(sign, smallSearchSize, t.getBlockData(), true);
     }
 
     public ItemInfo getGateBlock(ChangedSign sign, boolean smallSearchSize) {
@@ -510,7 +513,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public Block getFirstBlock(ChangedSign sign, Block block, boolean smallSearchSize) {
 
-        if (!isValidGateBlock(sign, smallSearchSize, new ItemInfo(block), false)) return null;
+        if (!isValidGateBlock(sign, smallSearchSize, block.getBlockData(), false)) return null;
 
         return block;
     }
@@ -608,7 +611,7 @@ public class Gate extends AbstractCraftBookMechanic {
                 int max = Math.min(block.getWorld().getMaxHeight()-1, block.getY() + remainingColumnHeight);
                 for (int y1 = block.getY() + 1; y1 <= max; y1++) {
                     if(remainingColumnHeight <= 0) break;
-                    if (isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y1, block.getZ())), true)) {
+                    if (isValidGateBlock(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y1, block.getZ()).getBlockData(), true)) {
                         maxY = y1;
                         remainingColumnHeight --;
                     } else
@@ -627,7 +630,8 @@ public class Gate extends AbstractCraftBookMechanic {
                 int min = Math.max(0, block.getY() - remainingColumnHeight);
                 for (int y = block.getY(); y >= min; y--) {
                     if(remainingColumnHeight <= 0) break;
-                    if (canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ())) || isValidGateBlock(sign, smallSearchSize, new ItemInfo(block.getWorld().getBlockAt(block.getX(), y, block.getZ())), true)) {
+                    if (canPassThrough(sign, smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ())) || isValidGateBlock(sign,
+                            smallSearchSize, block.getWorld().getBlockAt(block.getX(), y, block.getZ()).getBlockData(), true)) {
                         minY = y;
                         remainingColumnHeight --;
                     } else
@@ -672,10 +676,24 @@ public class Gate extends AbstractCraftBookMechanic {
     private boolean allowRedstone;
     private boolean limitColumns;
     private int columnLimit;
-    private List<ItemInfo> blocks;
+    private List<Material> blocks;
     private boolean enforceType;
     private int columnHeight;
     private int searchRadius;
+
+    public List<Material> getDefaultBlocks() {
+        List<Material> materials = new ArrayList<>();
+        materials.add(Material.ACACIA_FENCE);
+        materials.add(Material.BIRCH_FENCE);
+        materials.add(Material.JUNGLE_FENCE);
+        materials.add(Material.OAK_FENCE);
+        materials.add(Material.SPRUCE_FENCE);
+        materials.add(Material.DARK_OAK_FENCE);
+        materials.add(Material.NETHER_BRICK_FENCE);
+        materials.add(Material.IRON_BARS);
+        materials.add(Material.GLASS_PANE);
+        return materials;
+    }
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -690,7 +708,9 @@ public class Gate extends AbstractCraftBookMechanic {
         columnLimit = config.getInt(path + "max-columns", 14);
 
         config.setComment(path + "blocks", "The list of blocks that a gate can use.");
-        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("FENCE", "IRON_FENCE", "THIN_GLASS", "NETHER_FENCE")));
+        blocks = config.getStringList(path + "blocks",
+                getDefaultBlocks().stream().map(Material::getKey).map(NamespacedKey::toString).collect(Collectors.toList())
+        ).stream().map(Material::getMaterial).collect(Collectors.toList());
 
         config.setComment(path + "enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
         enforceType = config.getBoolean(path + "enforce-type", true);

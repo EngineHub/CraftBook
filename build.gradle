@@ -42,8 +42,6 @@ if (!project.hasProperty("gitCommitHash")) {
     }
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
@@ -84,8 +82,8 @@ allprojects {
         compile 'com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT'
         compile 'fr.neatmonster:nocheatplus:3.15.1-RC'
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.5.5'
-        testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.5.5'
+        testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.1'
+        testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.1'
     }
 
     if (JavaVersion.current().isJava8Compatible()) {
@@ -106,7 +104,7 @@ allprojects {
     }
 
     artifacts {
-        archives jar
+        archives shadowJar
         archives sourcesJar
         archives javadocJar
     }
@@ -114,12 +112,19 @@ allprojects {
     build.dependsOn(sourcesJar)
     build.dependsOn(javadocJar)
 
+    jar {
+        manifest {
+            attributes("Class-Path": "CraftBook/WorldEdit.jar lib/WorldEdit.jar ../lib/WorldEdit.jar ../WorldEdit.jar",
+                    "WorldEdit-Version": version)
+        }
+    }
+
     shadowJar {
         classifier 'dist'
         dependencies {
             include(dependency('com.sk89q:squirrelid'))
         }
-        relocate('com.sk89q:squirrelid', 'com.sk89q.craftbook.util.profile')
+        relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'
         exclude 'GradleStart**'
         exclude '.cache'
         exclude 'LICENSE*'
@@ -148,8 +153,13 @@ allprojects {
     }
 
     processResources {
-        from(sourceSets.main.resources.srcDirs) {
-            filter ReplaceTokens, tokens: [version: version]
+        from (sourceSets.main.resources.srcDirs) {
+            expand 'internalVersion': project.internalVersion
+            include 'plugin.yml'
+        }
+
+        from (sourceSets.main.resources.srcDirs) {
+            exclude 'plugin.yml'
         }
     }
 }

@@ -1,0 +1,21 @@
+ics:
+    MC1110:
+        per-player: false
+    MC1111:
+        per-player: false
+    MC1225:
+        requires-buckets: false
+    MC1226:
+        requires-buckets: false
+    MC1245:
+        blacklist: []
+    MC1248:
+        break-unnatural-blocks: false
+    MC1252:
+        max-fire-range: 20
+    MC1263:
+        invert-output: false
+    MC1278:
+        inverted: false
+    MC1421:
+        inverted: false

@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -60,25 +61,25 @@ public class BlockUtilTest {
     public void testIsBlockSimilarTo() {
 
         Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.WOOD);
+        when(mockBlock1.getType()).thenReturn(Material.OAK_WOOD);
 
         assertTrue(!BlockUtil.isBlockSimilarTo(mockBlock1, Material.COBBLESTONE));
 
-        assertTrue(BlockUtil.isBlockSimilarTo(mockBlock1, Material.WOOD));
+        assertTrue(BlockUtil.isBlockSimilarTo(mockBlock1, Material.OAK_WOOD));
     }
 
     @Test
     public void testIsBlockIdenticalTo() {
 
         Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.WOOD);
+        when(mockBlock1.getType()).thenReturn(Material.OAK_WOOD);
         when(mockBlock1.getData()).thenReturn((byte) 1);
 
         assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.SAND, (byte) 1));
 
-        assertTrue(BlockUtil.isBlockIdenticalTo(mockBlock1, Material.WOOD, (byte) 1));
+        assertTrue(BlockUtil.isBlockIdenticalTo(mockBlock1, Material.OAK_WOOD, (byte) 1));
 
-        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.WOOD, (byte) 4));
+        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.OAK_WOOD, (byte) 4));
     }
 
     @Test
@@ -121,6 +122,6 @@ public class BlockUtilTest {
 
         ItemStack[] drops = BlockUtil.getBlockDrops(mlock, null);
 
-        assertTrue(drops.length == 0);
+        assertEquals(0, drops.length);
     }
 }

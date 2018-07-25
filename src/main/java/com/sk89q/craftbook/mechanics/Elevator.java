@@ -30,7 +30,6 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -327,7 +326,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getX()), destination.getY() + 1,
                 (int) Math.floor(player.getLocation().getZ()));
         // well, unless that's already a ceiling.
-        if (!BlockType.canPassThrough(floor.getTypeId())) {
+        if (floor.getType().isSolid()) {
             floor = floor.getRelative(BlockFace.DOWN);
         }
 
@@ -336,7 +335,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (BlockType.canPassThrough(floor.getTypeId())) {
+            if (!floor.getType().isSolid()) {
                 foundFree++;
             } else {
                 foundGround = true;
@@ -412,11 +411,11 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                     if(newLocation.getY() > p.getLocation().getY()) {
                         p.setVelocity(new Vector(0, speed,0));
-                        if(!BlockType.canPassThrough(p.getLocation().add(0, 2, 0).getBlock().getTypeId()))
+                        if(p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
                             p.teleport(p.getLocation().add(0, speed, 0));
                     } else if (newLocation.getY() < p.getLocation().getY()) {
                         p.setVelocity(new Vector(0, -speed,0));
-                        if(!BlockType.canPassThrough(p.getLocation().add(0, -1, 0).getBlock().getTypeId()))
+                        if(p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
                             p.teleport(p.getLocation().add(0, -speed, 0));
                     } else {
                         teleportFinish(player, destination, shift);

@@ -1,19 +1,19 @@
 package com.sk89q.craftbook.mechanics.area;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.DataException;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockType;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a cuboid copy that can be saved to disk and loaded from disk. Supports multiple formats, like MCEDIT,
@@ -91,13 +91,13 @@ public abstract class CuboidCopy {
                     if (pt == null) {
                         continue;
                     }
-                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(CraftBookBukkitUtil.toLocation(world, pt)))) {
+                    if (Blocks.shouldPlaceLast(BukkitAdapter.asBlockType(world.getBlockAt(CraftBookBukkitUtil.toLocation(world, pt)).getType()))) {
                         Block block = world.getBlockAt(CraftBookBukkitUtil.toLocation(world, pt));
                         if (block instanceof InventoryHolder) {
                             InventoryHolder holder = (InventoryHolder) block;
                             holder.getInventory().clear();
                         }
-                        block.setType(Material.AIR);
+                        block.setType(Material.AIR, false);
                     } else {
                         // Can't destroy these blocks yet
                         queued.add(pt);

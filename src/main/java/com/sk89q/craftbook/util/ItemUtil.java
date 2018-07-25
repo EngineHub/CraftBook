@@ -9,7 +9,6 @@ import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -20,7 +19,6 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -119,22 +117,17 @@ public final class ItemUtil {
 
     public static boolean areItemsSimilar(ItemStack item, Material type) {
 
-        return areItemsSimilar(item, new MaterialData(type));
-    }
-
-    public static boolean areItemsSimilar(ItemStack item, MaterialData data) {
-
-        return areItemsSimilar(item.getData(), data);
+        return areItemsSimilar(item.getType(), type);
     }
 
     public static boolean areItemsSimilar(ItemStack item, ItemStack item2) {
 
-        return areItemsSimilar(item.getData(), item2.getData());
+        return areItemsSimilar(item.getType(), item2.getType());
     }
 
-    public static boolean areItemsSimilar(MaterialData data, MaterialData comparedData) {
+    public static boolean areItemsSimilar(Material data, Material comparedData) {
 
-        return data.getItemType() == comparedData.getItemType();
+        return data == comparedData;
     }
 
     private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + String.valueOf('\u00A7') + "[Rr]");

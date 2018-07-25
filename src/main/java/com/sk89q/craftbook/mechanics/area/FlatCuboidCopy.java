@@ -16,6 +16,16 @@ package com.sk89q.craftbook.mechanics.area;
  * see <http://www.gnu.org/licenses/>.
  */
 
+import com.sk89q.craftbook.util.Tuple2;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.data.BlockData;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -23,17 +33,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.registry.LegacyMapper;
-import com.sk89q.worldguard.bukkit.BukkitUtil;
-import org.bukkit.World;
-
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BlockType;
-import org.bukkit.block.data.BlockData;
 
 /**
  * Stores a copy of a cuboid.
@@ -185,11 +184,11 @@ public class FlatCuboidCopy extends CuboidCopy {
                     int index = y * width * length + z * width + x;
                     Vector pt = origin.add(x, y, z);
 
-                    if (BlockType.shouldPlaceLast(world.getBlockTypeIdAt(BukkitUtil.toLocation(world, pt)))) {
-                        world.getBlockAt(BukkitUtil.toLocation(world, pt)).setTypeId(0);
+                    if (Blocks.shouldPlaceLast(BukkitAdapter.asBlockType(world.getBlockAt(BukkitAdapter.adapt(world, pt)).getType()))) {
+                        world.getBlockAt(BukkitAdapter.adapt(world, pt)).setType(Material.AIR);
                     }
 
-                    if (BlockType.shouldPlaceLast(blocks[index])) {
+                    if (Blocks.shouldPlaceLast(LegacyMapper.getInstance().getBlockFromLegacy(blocks[index]).getBlockType())) {
                         queueLast.add(new Tuple2<>(pt, new byte[]{blocks[index], data[index]}));
                     } else {
                         queueAfter.add(new Tuple2<>(pt, new byte[]{blocks[index], data[index]}));

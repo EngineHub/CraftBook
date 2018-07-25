@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -28,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.sk89q.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Boat.class, VehicleExitEvent.class, ExitRemover.class})
 public class BoatExitRemoverTest {
