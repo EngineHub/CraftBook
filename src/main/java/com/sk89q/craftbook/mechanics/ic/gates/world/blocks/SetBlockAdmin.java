@@ -16,14 +16,6 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
@@ -33,6 +25,15 @@ import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SetBlockAdmin extends SetBlock {
 
@@ -54,7 +55,7 @@ public class SetBlockAdmin extends SetBlock {
     }
 
     @Override
-    protected void doSet(Block body, ItemInfo item, boolean force) {
+    protected void doSet(Block body, BlockStateHolder blockData, boolean force) {
 
         if(((Factory)getFactory()).blockBlacklist.contains(item))
             return;
@@ -62,10 +63,7 @@ public class SetBlockAdmin extends SetBlock {
         BlockFace toPlace = ((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
 
         if (force || body.getRelative(toPlace).getType() == Material.AIR) {
-            body.getRelative(toPlace).setType(item.getType());
-            if (item.getData() != -1) {
-                body.getRelative(toPlace).setData((byte) item.getData());
-            }
+            body.getRelative(toPlace).setBlockData(BukkitAdapter.adapt(blockData));
         }
     }
 

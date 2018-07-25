@@ -18,6 +18,8 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
 import java.util.Locale;
 
+import com.sk89q.craftbook.util.BlockSyntax;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -29,6 +31,7 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
+import org.bukkit.block.data.BlockData;
 
 public class MultipleSetBlock extends AbstractIC {
 
@@ -37,15 +40,12 @@ public class MultipleSetBlock extends AbstractIC {
         super(server, sign, factory);
     }
 
-    int x, y, z;
+    private int x, y, z;
 
-    int onblock;
-    byte ondata;
+    private BlockData onBlock;
+    private BlockData offblock;
 
-    int offblock;
-    byte offdata;
-
-    String[] dim;
+    private String[] dim;
 
     @Override
     public void load() {
@@ -66,40 +66,12 @@ public class MultipleSetBlock extends AbstractIC {
 
         String[] blocks = RegexUtil.MINUS_PATTERN.split(coords[3]);
 
-        String[] onBlocks = RegexUtil.COLON_PATTERN.split(blocks[0],2);
-        try {
-            onblock = Integer.parseInt(onBlocks[0]);
-        } catch (Exception e) {
-            return;
-        }
-
-        if (onBlocks.length == 2) {
-            try {
-                ondata = Byte.parseByte(onBlocks[1]);
-            } catch (Exception e) {
-                return;
-            }
-        }
+        onBlock = BlockSyntax.getBukkitBlock(blocks[0]);
 
         if(blocks.length > 1) {
-            String[] offBlocks = RegexUtil.COLON_PATTERN.split(blocks[1],2);
-
-            try {
-                offblock = Integer.parseInt(offBlocks[0]);
-            } catch (Exception e) {
-                offblock = 0;
-            }
-
-            if (offBlocks.length == 2) {
-                try {
-                    offdata = Byte.parseByte(offBlocks[1]);
-                } catch (Exception e) {
-                    offdata = 0;
-                }
-            }
+            onBlock = BlockSyntax.getBukkitBlock(blocks[1]);
         } else {
-            offblock = 0;
-            offdata = 0;
+            offblock = Material.AIR.createBlockData();
         }
 
         x += Integer.parseInt(coords[0]);
@@ -124,16 +96,14 @@ public class MultipleSetBlock extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        int setblock = onblock;
-        byte setdata = ondata;
+        BlockData setBlock = onBlock;
 
         chip.setOutput(0, chip.getInput(0));
 
         boolean inp = chip.getInput(0);
 
         if (!inp) {
-            setblock = offblock;
-            setdata = offdata;
+            setBlock = offblock;
         }
 
         Block body = getBackBlock();
@@ -145,12 +115,12 @@ public class MultipleSetBlock extends AbstractIC {
             for (int lx = 0; lx < dimX; lx++) {
                 for (int ly = 0; ly < dimY; ly++) {
                     for (int lz = 0; lz < dimZ; lz++) {
-                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setTypeIdAndData(setblock, setdata, true);
+                        body.getWorld().getBlockAt(x + lx, y + ly, z + lz).setBlockData(setBlock, true);
                     }
                 }
             }
         } else {
-            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(setblock, setdata, true);
+            body.getWorld().getBlockAt(x, y, z).setBlockData(setBlock, true);
         }
     }
 

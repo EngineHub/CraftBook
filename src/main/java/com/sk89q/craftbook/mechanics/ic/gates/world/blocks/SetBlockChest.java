@@ -3,6 +3,11 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sk89q.craftbook.util.BlockSyntax;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -40,20 +45,17 @@ public class SetBlockChest extends SetBlock {
     }
 
     @Override
-    protected void doSet(Block body, ItemInfo item, boolean force) {
+    protected void doSet(Block body, BlockStateHolder item, boolean force) {
 
-        if(((Factory)getFactory()).blockBlacklist.contains(item))
+        if(((Factory)getFactory()).blockBlacklist.contains(item.getBlockType()))
             return;
 
         BlockFace toPlace = ((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
         BlockFace chest = !((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
 
         if (force || body.getRelative(toPlace).getType() == Material.AIR) {
-            if (takeFromChest(body.getRelative(chest), item)) {
-                body.getRelative(toPlace).setType(item.getType());
-                if (item.getData() != -1) {
-                    body.getRelative(toPlace).setData((byte) item.getData());
-                }
+            if (takeFromChest(body.getRelative(chest), item.getBlockType().getItemType())) {
+                body.getRelative(toPlace).setBlockData(BukkitAdapter.adapt(item));
             }
         }
     }
@@ -63,8 +65,8 @@ public class SetBlockChest extends SetBlock {
         boolean above;
 
         @SuppressWarnings("serial")
-        public List<ItemInfo> blockBlacklist = new ArrayList<ItemInfo>(){{
-            add(new ItemInfo(Material.BEDROCK, -1));
+        public List<BlockType> blockBlacklist = new ArrayList<BlockType>(){{
+            add(BlockTypes.BEDROCK);
         }};
 
         public Factory(Server server, boolean above) {
@@ -84,10 +86,10 @@ public class SetBlockChest extends SetBlock {
 
             if(sign.getLine(2) == null || sign.getLine(2).isEmpty())
                 throw new ICVerificationException("A block must be provided on line 2!");
-            ItemInfo item = new ItemInfo(sign.getLine(2));
-            if(item.getType() == null)
+            BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2));
+            if(item == null || !item.getBlockType().hasItemType())
                 throw new ICVerificationException("An invalid block was provided on line 2!");
-            if(blockBlacklist.contains(item))
+            if(blockBlacklist.contains(item.getBlockType()))
                 throw new ICVerificationException("A blacklisted block was provided on line 2!");
         }
 

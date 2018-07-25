@@ -261,8 +261,8 @@ public class Gate extends AbstractCraftBookMechanic {
         ItemInfo gateBlock = getGateBlock(sign, smallSearchSize);
 
         if (CraftBookPlugin.inst().getConfiguration().safeDestruction
-                && (gateBlock == null || gateBlock.getType() == Material.AIR || gateBlock.getType() == player.getHeldItemInfo().getType())
-                && isValidGateBlock(sign, smallSearchSize, player.getHeldItemInfo(), false)) {
+                && (gateBlock == null || gateBlock.getType() == Material.AIR || gateBlock.getType() == BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))
+                && isValidGateBlock(sign, smallSearchSize, player.getItemInHand(HandSide.MAIN_HAND), false)) {
 
             if (!player.hasPermission("craftbook.mech.gate.restock")) {
                 if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)

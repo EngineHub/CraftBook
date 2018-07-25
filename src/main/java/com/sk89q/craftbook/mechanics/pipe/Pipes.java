@@ -167,19 +167,21 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     visitedPipes.add(off.getLocation().toVector());
 
-                    if(block.getType() == Material.STAINED_GLASS && off.getType() == Material.STAINED_GLASS && block.getData() != off.getData()) continue;
+                    if(ItemUtil.isStainedGlass(block.getType()) && ItemUtil.isStainedGlass(off.getType()) && block.getType() != off.getType()) continue;
 
-                    if(off.getType() == Material.GLASS || off.getType() == Material.STAINED_GLASS)
+                    if(off.getType() == Material.GLASS || ItemUtil.isStainedGlass(off.getType())) {
                         searchQueue.add(off);
-                    else if (off.getType() == Material.THIN_GLASS || off.getType() == Material.STAINED_GLASS_PANE) {
+                    } else if (off.getType() == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(off.getType())) {
                         Block offsetBlock = off.getRelative(x, y, z);
                         if (!isValidPipeBlock(offsetBlock.getType())) continue;
                         if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
-                        if(off.getType() == Material.STAINED_GLASS_PANE) {
-                            if((block.getType() == Material.STAINED_GLASS
-                                    || block.getType() == Material.STAINED_GLASS_PANE) && off.getData() != block.getData()
-                                    || (offsetBlock.getType() == Material.STAINED_GLASS
-                                    || offsetBlock.getType() == Material.STAINED_GLASS_PANE) && off.getData() != offsetBlock.getData()) continue;
+                        if(ItemUtil.isStainedGlassPane(off.getType())) {
+                            if((ItemUtil.isStainedGlass(block.getType())
+                                    || ItemUtil.isStainedGlassPane(block.getType())) && ItemUtil.getStainedColor(off.getType()) != ItemUtil
+                                    .getStainedColor(offsetBlock.getType())
+                                    || (ItemUtil.isStainedGlass(offsetBlock.getType())
+                                    || ItemUtil.isStainedGlassPane(offsetBlock.getType())) && ItemUtil.getStainedColor(off.getType()) != ItemUtil
+                                    .getStainedColor(offsetBlock.getType())) continue;
                         }
                         visitedPipes.add(offsetBlock.getLocation().toVector());
                         searchQueue.add(off.getRelative(x, y, z));
@@ -191,7 +193,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         //Use the queue to search blocks.
         for(Block bl : searchQueue) {
-            if (bl.getType() == Material.GLASS || bl.getType() == Material.STAINED_GLASS) {
+            if (bl.getType() == Material.GLASS || ItemUtil.isStainedGlass(bl.getType())) {
                 try {
                     searchNearbyPipes(bl, visitedPipes, items, depth + 1);
                 } catch (StackOverflowError e) {
@@ -321,13 +323,13 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     private static boolean isValidPipeBlock(Material typeId) {
         return typeId == Material.GLASS
-                || typeId == Material.STAINED_GLASS
+                || ItemUtil.isStainedGlass(typeId)
                 || typeId == Material.PISTON
                 || typeId == Material.STICKY_PISTON
                 || typeId == Material.WALL_SIGN
                 || typeId == Material.DROPPER
-                || typeId == Material.THIN_GLASS
-                || typeId == Material.STAINED_GLASS_PANE;
+                || typeId == Material.GLASS_PANE
+                || ItemUtil.isStainedGlassPane(typeId);
     }
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {

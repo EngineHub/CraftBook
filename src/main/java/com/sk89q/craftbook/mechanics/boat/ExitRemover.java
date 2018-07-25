@@ -1,7 +1,12 @@
 package com.sk89q.craftbook.mechanics.boat;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -9,12 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ExitRemover extends AbstractCraftBookMechanic {
 
@@ -44,7 +43,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
             if(!boat.isValid() || boat.isDead()) return;
 
             if(giveItem) {
-                ItemStack stack = new ItemStack(Material.BOAT, 1);
+                ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
 
                 if(player instanceof Player) {
                     if(!((Player) player).getInventory().addItem(stack).isEmpty())

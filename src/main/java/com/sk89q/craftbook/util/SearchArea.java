@@ -4,6 +4,8 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -69,7 +71,8 @@ public final class SearchArea {
             if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return new SearchArea();
 
-            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(StringUtils.replace(line, "r:", ""));
+            ProtectedRegion reg = WorldGuard.getInstance().getPlatform().getRegionContainer()
+                    .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
             if(reg == null)
                 return new SearchArea();
 
@@ -93,7 +96,8 @@ public final class SearchArea {
             if(CraftBookPlugin.plugins.getWorldGuard() == null)
                 return false;
 
-            ProtectedRegion reg = CraftBookPlugin.plugins.getWorldGuard().getRegionManager(block.getWorld()).getRegion(StringUtils.replace(line, "r:", ""));
+            ProtectedRegion reg = WorldGuard.getInstance().getPlatform().getRegionContainer()
+                    .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
             return reg != null;
 
         } else {

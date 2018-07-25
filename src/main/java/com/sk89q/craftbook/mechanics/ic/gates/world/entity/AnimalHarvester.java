@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 import java.util.Collections;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -125,7 +126,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
                 Sheep sh = (Sheep) entity;
                 if(sh.isSheared())
                     return false;
-                if (addToChest(new ItemStack(Material.WOOL, CraftBookPlugin.inst().getRandom().nextInt(2) + 1, sh.getColor().getWoolData()))) {
+                if (addToChest(new ItemStack(ItemUtil.getWoolFromColour(sh.getColor()), CraftBookPlugin.inst().getRandom().nextInt(2) + 1))) {
                     sh.setSheared(true);
                     return true;
                 }

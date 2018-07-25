@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.util;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +10,6 @@ import org.bukkit.material.MaterialData;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 public final class ItemInfo {
 
     public MaterialData data;
@@ -20,8 +21,8 @@ public final class ItemInfo {
 
     @Deprecated
     public ItemInfo(int id, int data) {
-
-        this.data = new MaterialData(id, (byte) data);
+        Material material = BukkitAdapter.adapt(LegacyMapper.getInstance().getBlockFromLegacy(id, data).getBlockType());
+        this.data = new MaterialData(material, (byte) data);
     }
 
     public ItemInfo(Block block) {
@@ -37,18 +38,17 @@ public final class ItemInfo {
     public ItemInfo(ItemStack item) {
 
         if(item == null)
-            data = new MaterialData(-1,(byte) -1);
+            data = Material.AIR.getNewData((byte) 0);
         else
             data = item.getData();
     }
 
     @Deprecated
     public int getId() {
-        return data.getItemTypeId();
+        return data.getItemType().getId();
     }
 
     public Material getType() {
-        if(data.getItemTypeId() < 0) return null;
         return data.getItemType();
     }
 

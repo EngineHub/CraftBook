@@ -16,8 +16,11 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Locale;
 
+import com.sk89q.craftbook.util.BlockSyntax;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -31,6 +34,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
+import org.bukkit.block.data.BlockData;
 
 public class FlexibleSetBlock extends AbstractIC {
 
@@ -39,11 +43,10 @@ public class FlexibleSetBlock extends AbstractIC {
         super(server, sign, factory);
     }
 
-    int x, y, z;
-    Block body;
-    boolean hold;
-    int block;
-    byte data;
+    private int x, y, z;
+    private Block body;
+    private boolean hold;
+    BlockData block;
 
     @Override
     public void load() {
@@ -57,7 +60,7 @@ public class FlexibleSetBlock extends AbstractIC {
 
         String line4 = getSign().getLine(3);
 
-        String[] params = RegexUtil.COLON_PATTERN.split(line3);
+        String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
         if (params.length < 2) return;
         if (params[0].length() < 2) return;
 
@@ -87,18 +90,10 @@ public class FlexibleSetBlock extends AbstractIC {
         }
 
         try {
-            block = Integer.parseInt(params[1]);
+            block = BlockSyntax.getBukkitBlock(params[1]);
         } catch (Exception e) {
             return;
         }
-
-        if (params.length > 2) {
-            try {
-                data = Byte.parseByte(params[2]);
-            } catch (Exception e) {
-                data = 0;
-            }
-        } else data = 0;
 
         hold = line4.toUpperCase(Locale.ENGLISH).contains("H");
 
@@ -143,7 +138,7 @@ public class FlexibleSetBlock extends AbstractIC {
         if (body == null) return;
 
         if (inp) {
-            body.getWorld().getBlockAt(x, y, z).setTypeIdAndData(block, data, true);
+            body.getWorld().getBlockAt(x, y, z).setBlockData(block, true);
         } else if (hold) {
             body.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
         }
@@ -167,7 +162,7 @@ public class FlexibleSetBlock extends AbstractIC {
 
             String line3 = sign.getLine(2).toUpperCase(Locale.ENGLISH);
 
-            String[] params = RegexUtil.COLON_PATTERN.split(line3);
+            String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
             if (params.length < 2) throw new ICVerificationException("Not enough parameters on second line!");
             if (params[0].length() < 2) throw new ICVerificationException("Invalid first parameter!");
 
@@ -193,17 +188,9 @@ public class FlexibleSetBlock extends AbstractIC {
             }
 
             try {
-                Integer.parseInt(params[1]);
+                checkNotNull(BlockSyntax.getBlock(params[1]));
             } catch (Exception e) {
-                throw new ICVerificationException("Invalid block ID!");
-            }
-
-            if (params.length > 2) {
-                try {
-                    Byte.parseByte(params[2]);
-                } catch (Exception e) {
-                    throw new ICVerificationException("Invalid block data!");
-                }
+                throw new ICVerificationException("Invalid block!");
             }
         }
 
