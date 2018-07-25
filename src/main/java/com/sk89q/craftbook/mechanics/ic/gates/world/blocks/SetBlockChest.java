@@ -1,9 +1,14 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockSyntax;
+import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -13,14 +18,8 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.util.yaml.YAMLProcessor;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Me4502
@@ -64,10 +63,7 @@ public class SetBlockChest extends SetBlock {
 
         boolean above;
 
-        @SuppressWarnings("serial")
-        public List<BlockType> blockBlacklist = new ArrayList<BlockType>(){{
-            add(BlockTypes.BEDROCK);
-        }};
+        public List<BlockType> blockBlacklist = Lists.newArrayList(BlockTypes.BEDROCK);
 
         public Factory(Server server, boolean above) {
 
@@ -109,7 +105,9 @@ public class SetBlockChest extends SetBlock {
         public void addConfiguration (YAMLProcessor config, String path) {
 
             config.setComment(path + "blacklist", "Stops the IC from placing the listed blocks.");
-            blockBlacklist.addAll(ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blockBlacklist))));
+            blockBlacklist.addAll(config.getStringList(path + "blacklist",
+                    blockBlacklist.stream().map(BlockType::getId).collect(Collectors.toList()))
+                    .stream().map(BlockTypes::get).collect(Collectors.toList()));
         }
     }
 }

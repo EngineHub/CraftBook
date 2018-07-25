@@ -34,16 +34,21 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Door.
@@ -173,8 +178,8 @@ public class Door extends CuboidToggleMechanic {
         // first assuming that the bridge is above
         Block proximalBaseCenter = getBlockBase(trigger);
 
-        ItemInfo doorType = getBlockType(trigger);
-        if (proximalBaseCenter.getType() != doorType.getType() || (proximalBaseCenter.getData() != doorType.getData() && doorType.getData() != -1)) {
+        BlockData doorType = getBlockType(trigger);
+        if (proximalBaseCenter.getType() != doorType.getMaterial()) {
             throw new InvalidMechanismException("mech.bridge.material");
         }
 
@@ -268,7 +273,7 @@ public class Door extends CuboidToggleMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
         } else throw new InvalidMechanismException("Sign is incorrectly made.");
 
-        if (blocks.contains(new ItemInfo(proximalBaseCenter)))
+        if (blocks.contains(proximalBaseCenter.getType()))
             return proximalBaseCenter;
         else throw new InvalidMechanismException("mech.door.unusable");
     }
@@ -296,14 +301,14 @@ public class Door extends CuboidToggleMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() && distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getData())
+            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() && distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getData())
+            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
         }
@@ -322,7 +327,16 @@ public class Door extends CuboidToggleMechanic {
     boolean allowRedstone;
     int maxLength;
     int maxWidth;
-    List<ItemInfo> blocks;
+    List<Material> blocks;
+
+    public List<Material> getDefaultBlocks() {
+        List<Material> materials = new ArrayList<>();
+        materials.add(Material.COBBLESTONE);
+        materials.add(Material.GLASS);
+        materials.addAll(Tag.PLANKS.getValues());
+        materials.addAll(Tag.SLABS.getValues());
+        return materials;
+    }
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -338,6 +352,8 @@ public class Door extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
-        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("COBBLESTONE", "WOOD", "GLASS", "DOUBLE_STEP", "WOOD_DOUBLE_STEP")));
+        blocks = config.getStringList(path + "blocks",
+                getDefaultBlocks().stream().map(Material::getKey).map(NamespacedKey::toString).collect(Collectors.toList())
+        ).stream().map(Material::getMaterial).collect(Collectors.toList());
     }
 }

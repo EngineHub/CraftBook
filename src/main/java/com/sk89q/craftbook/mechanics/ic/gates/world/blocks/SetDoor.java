@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.craftbook.util.BlockSyntax;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -17,17 +18,15 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Silthus
  */
 public class SetDoor extends AbstractIC {
 
-    private int onMaterial;
-    private int onData;
-
-    private int offMaterial;
-    private int offData;
+    private BlockData onBlock;
+    private BlockData offBlock;
 
     private int width;
     private int height;
@@ -50,36 +49,13 @@ public class SetDoor extends AbstractIC {
         faceing = SignUtil.getFacing(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         String line = getSign().getLine(2);
         if (!line.isEmpty()) {
-            try {
-                String[] split = RegexUtil.MINUS_PATTERN.split(line);
-                // parse the material data
-                if (split.length > 0) {
-                    try {
-                        // parse the data that gets set when the block is toggled off
-                        String[] strings = RegexUtil.COLON_PATTERN.split(split[1]);
-                        offMaterial = Integer.parseInt(strings[0]);
-                        if (strings.length > 0) {
-                            offData = Integer.parseInt(strings[1]);
-                        }
-                    } catch (NumberFormatException e) {
-                        offMaterial = 0;
-                        offData = 0;
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        offData = 0;
-                    }
-                }
-                // parse the material and data for toggle on
-                String[] strings = RegexUtil.COLON_PATTERN.split(split[0]);
-                onMaterial = Integer.parseInt(strings[0]);
-                if (strings.length > 0) {
-                    onData = Integer.parseInt(strings[1]);
-                }
-            } catch (NumberFormatException e) {
-                onMaterial = 1;
-                onData = 0;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                onData = 0;
+            String[] split = RegexUtil.MINUS_PATTERN.split(line);
+            // parse the material data
+            if (split.length > 0) {
+                offBlock = BlockSyntax.getBukkitBlock(split[1]);
             }
+            // parse the material and data for toggle on
+            onBlock = BlockSyntax.getBukkitBlock(split[0]);
         }
         // parse the coordinates
         line = getSign().getLine(3);
@@ -152,11 +128,11 @@ public class SetDoor extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && BlockUtil.isBlockReplacable(Material.getMaterial(onMaterial))) continue;
-                    block.setTypeIdAndData(onMaterial, (byte) onData, true);
+                    if (isSource && BlockUtil.isBlockReplacable(onBlock.getMaterial())) continue;
+                    block.setBlockData(onBlock);
                 } else {
-                    if (isSource && BlockUtil.isBlockReplacable(Material.getMaterial(offMaterial))) continue;
-                    block.setTypeIdAndData(offMaterial, (byte) offData, true);
+                    if (isSource && BlockUtil.isBlockReplacable(offBlock.getMaterial())) continue;
+                    block.setBlockData(offBlock);
                 }
             }
         }

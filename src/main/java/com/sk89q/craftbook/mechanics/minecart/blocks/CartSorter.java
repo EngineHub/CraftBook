@@ -1,5 +1,14 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.mechanics.minecart.StationManager;
+import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,14 +23,6 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.minecart.StationManager;
-import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
  * @author LordEnki
@@ -148,8 +149,8 @@ public class CartSorter extends CartBlockMechanism {
 
         if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
             try {
-                int item = Integer.parseInt(parts[1]);
-                if (player.getItemInHand().getTypeId() == item) return true;
+                ItemStack item = ItemSyntax.getItem(parts[1]);
+                if (ItemUtil.areItemsSimilar(player.getItemInHand(), item)) return true;
             } catch (NumberFormatException ignored) {
             }
         } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
@@ -163,19 +164,17 @@ public class CartSorter extends CartBlockMechanism {
 
             if (parts.length == 4) {
                 try {
-                    int item = Integer.parseInt(parts[1]);
-                    short durability = Short.parseShort(parts[2]);
+                    ItemStack item = ItemSyntax.getItem(parts[1] + ':' + parts[2]);
                     int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
                             storageInventory.getContents().length - 1);
                     ItemStack indexed = storageInventory.getContents()[index];
-                    if (indexed != null && indexed.equals(new ItemStack(item, 1, durability))) return true;
+                    if (indexed != null && indexed.equals(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
             } else if (parts.length == 3) {
                 try {
-                    int item = Integer.parseInt(parts[1]);
-                    short durability = Short.parseShort(parts[2]);
-                    if (storageInventory.contains(new ItemStack(item, 1, durability))) return true;
+                    ItemStack item = ItemSyntax.getItem(parts[1] + parts[2]);
+                    if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }
             } else if (parts[1].equalsIgnoreCase("!")) {
@@ -187,7 +186,7 @@ public class CartSorter extends CartBlockMechanism {
                 return true;
             } else {
                 try {
-                    int item = Integer.parseInt(parts[1]);
+                    ItemStack item = ItemSyntax.getItem(parts[1]);
                     if (storageInventory.contains(item)) return true;
                 } catch (NumberFormatException ignored) {
                 }

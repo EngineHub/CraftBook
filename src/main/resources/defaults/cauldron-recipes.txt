@@ -1,0 +1,25 @@
+#
+# This file is a list of cauldron recipes. Each line has 4 fields that
+# are separated by colons (:):
+#
+#     1. Recipe name
+#     2. Ingredients
+#     3. Resulting items
+#     4. Groups that can use this recipe (optional field)
+#
+# The name can be anything. The two lists are block/item IDs and you
+# can use block/item names as well (that are in your items.txt or
+# items table). If you need multiple copies of one item or block, use
+# * followed by the multiplier, so 1*4 means 4 of item 1 (stone).
+#
+# If one recipe's ingredients are a subset of another, it should go below
+# the other recipe.
+#
+# If you want a recipe to be usuable by everyone, don't put anything
+# for the last field. If you want to list multiple groups, separate them
+# by commas.
+#
+# Lines starting with a sharp symbol (#) are comments and are ignored. Blank
+# lines are OK.
+#
+grass:3*3,6*2:2*2

@@ -8,11 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Boat.class, VehicleDestroyEvent.class, Drops.class})
 public class BoatDropsTest {

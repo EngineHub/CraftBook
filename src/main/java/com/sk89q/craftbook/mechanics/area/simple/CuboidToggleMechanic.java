@@ -8,9 +8,9 @@ import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.pipe.PipeFinishEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipeSuckEvent;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -18,6 +18,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -39,14 +40,14 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public abstract boolean isApplicableSign(String line);
 
-    public static boolean open(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle) {
+    public static boolean open(Block sign, Block farSide, BlockData type, CuboidRegion toggle) {
 
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
         for (Vector bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-            if ((b.getType() == type.getType() && (b.getData() == type.getData() || type.getData() == -1)) || BlockUtil.isBlockReplacable(b.getType())) {
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getType() && (b.getData() == type.getData() || type.getData() == -1)))
+            if (b.getType() == type.getMaterial() || BlockUtil.isBlockReplacable(b.getType())) {
+                if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getMaterial()))
                     addBlocks(s, other, 1);
                 b.setType(Material.AIR);
             }
@@ -55,7 +56,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public static boolean close(Block sign, Block farSide, ItemInfo type, CuboidRegion toggle, CraftBookPlayer player) {
+    public static boolean close(Block sign, Block farSide, BlockData data, CuboidRegion toggle, CraftBookPlayer player) {
 
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
@@ -64,8 +65,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                     if (hasEnoughBlocks(s, other)) {
-                        b.setType(type.getType());
-                        b.setData((byte) type.getData());
+                        b.setBlockData(data);
                         removeBlocks(s, other, 1);
                     } else {
                         if (player != null) {
@@ -74,8 +74,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
                         return false;
                     }
                 } else {
-                    b.setType(type.getType());
-                    b.setData((byte) type.getData());
+                    b.setBlockData(data);
                 }
             }
         }
@@ -182,11 +181,11 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         int amount = getBlocks(sign, other);
 
         if (amount > 0) {
-            ItemInfo base;
+            BlockData base;
             try {
                 base = getBlockType(event.getBlock());
                 while(amount > 0) {
-                    ItemStack toDrop = new ItemStack(base.getType(), Math.min(amount, 64), (short) base.getData());
+                    ItemStack toDrop = new ItemStack(base.getMaterial(), Math.min(amount, 64));
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
                     amount -= 64;
                 }
@@ -260,7 +259,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return s.getLine(0).split(",")[0].equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
 
-    public ItemInfo getStoredType(Block block) {
+    public BlockData getStoredType(Block block) {
         Block farBlock = getFarSign(block);
         if (farBlock == null) {
             return null;
@@ -269,17 +268,17 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         ChangedSign closeSign = CraftBookBukkitUtil.toChangedSign(block);
         ChangedSign farSign = CraftBookBukkitUtil.toChangedSign(farBlock);
 
-        ItemInfo type = null;
+        BlockData type = null;
 
         if (closeSign.getLine(0).contains(",")) {
-            type = new ItemInfo(closeSign.getLine(0).split(",")[1]);
+            type = BlockSyntax.getBukkitBlock(closeSign.getLine(0).split(",")[1]);
         }
         if (farSign.getLine(0).contains(",")) {
             if (type != null) {
                 return null;
             } else {
                 closeSign.setLine(0, closeSign.getLine(0) + ',' + farSign.getLine(0).split(",")[1]);
-                type = new ItemInfo(farSign.getLine(0).split(",")[1]);
+                type = BlockSyntax.getBukkitBlock(farSign.getLine(0).split(",")[1]);
                 closeSign.update(false);
             }
         }
@@ -293,22 +292,22 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
      * @param block The block location
      * @return The type
      */
-    public ItemInfo getBlockType(Block block) throws InvalidMechanismException {
+    public BlockData getBlockType(Block block) throws InvalidMechanismException {
         if (enforceType) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
-            ItemInfo type = null;
+            BlockData type = null;
             if (sign.getLine(0).contains(",")) {
-                type = new ItemInfo(sign.getLine(0).split(",")[1]);
+                type = BlockSyntax.getBukkitBlock(sign.getLine(0).split(",")[1]);
             }
             if (type == null) {
-                type = new ItemInfo(this.getBlockBase(block));
-                sign.setLine(0, sign.getLine(0) + ',' + type.toString());
+                type = this.getBlockBase(block).getBlockData();
+                sign.setLine(0, sign.getLine(0) + ',' + type.getAsString());
                 sign.update(false);
             }
             return type;
         }
 
-        return new ItemInfo(this.getBlockBase(block));
+        return this.getBlockBase(block).getBlockData();
     }
 
     protected boolean enforceType;

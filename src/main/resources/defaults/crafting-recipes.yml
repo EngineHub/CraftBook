@@ -1,0 +1,36 @@
+# CraftBook Custom Recipes. CraftBook Version: Demo Copy
+# For more information on setting up custom recipes, see the wiki:
+# http://wiki.sk89q.com/wiki/CraftBook/Custom_crafting
+
+crafting-recipes:
+  shapelessexample:
+    type: shapeless
+    ingredients: #mc only supports amount of 1 currently as ingredients.
+      # light wooden plank
+      'wood:2': 3
+      # brown wool
+      'wool:12': 2
+    results:
+      #64 Endstone.
+      '121': 64
+  shapeexample:
+    type: shaped
+    ingredients: #mc only supports amount of 1 currently as ingredients.
+      # light wooden plank
+      'wood:2': 'a'
+      # brown wool
+      'wool:12': 'b'
+    shape: #two of a on top, 2 of b on bottom.
+      - 'aa'
+      - 'bb'
+    results:
+      #64 Endstone.
+      '121': 64
+  furnaceexample:
+    type: furnace
+    ingredients:
+      # light wooden plank
+      'wood:2': 1
+    results:
+      #1 Stone.
+      'stone': 1
