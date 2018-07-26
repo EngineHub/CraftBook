@@ -70,6 +70,18 @@ allprojects {
             name = 'md_5-rep'
             url = 'http://repo.md-5.net/content/repositories/releases/'
         }
+        maven {
+            name = 'Vault Repo'
+            url = 'http://nexus.hc.to/content/repositories/pub_releases/'
+        }
+		maven {
+            name = 'Gravity Repo'
+            url = 'http://repo.gravitydevelopment.net/'
+        }
+		maven {
+            name = 'Dmulloy2 Repo'
+            url = 'http://repo.dmulloy2.net/content/groups/public/'
+        }
     }
 
     dependencies {
