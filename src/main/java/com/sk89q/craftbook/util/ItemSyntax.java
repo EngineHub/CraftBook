@@ -158,7 +158,7 @@ public final class ItemSyntax {
                             data = 0;
                         }
                     }
-                    item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(material.getId(), data));
+                    item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(BukkitAdapter.asItemType(material).getLegacyId(), data));
                 }
             }
             try {
