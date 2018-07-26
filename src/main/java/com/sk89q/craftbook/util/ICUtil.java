@@ -39,10 +39,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Lever;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,9 +68,9 @@ public final class ICUtil {
         if (block.getType() != Material.LEVER) return false;
 
         // return if the lever is not attached to our IC block
-        Lever lever = (Lever) block.getState().getData();
+        Switch lever = (Switch) block.getBlockData();
 
-        if (!block.getRelative(lever.getAttachedFace()).equals(source))
+        if (!block.getRelative(lever.getFacing()).equals(source))
             return false;
 
         // check if the lever was toggled on
@@ -80,6 +80,7 @@ public final class ICUtil {
         if (wasOn != state) {
             // set the new data
             lever.setPowered(state);
+            block.setBlockData(lever);
             // apply physics to the source block the lever is attached to
             source.setBlockData(source.getBlockData(), true);
 

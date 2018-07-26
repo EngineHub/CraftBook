@@ -49,7 +49,7 @@ public class LightStone extends AbstractCraftBookMechanic {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(player.getItemInHand(HandSide.MAIN_HAND).getType() == item) return;
+        if(player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
         if(!player.hasPermission("craftbook.mech.lightstone.use")) {
             if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
