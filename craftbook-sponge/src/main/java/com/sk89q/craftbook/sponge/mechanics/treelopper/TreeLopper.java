@@ -47,6 +47,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.permission.PermissionDescription;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
@@ -112,6 +113,9 @@ public class TreeLopper extends SpongeMechanic implements DocumentationProvider 
 
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event, @First Player player) {
+        if (event.getCause().containsType(PluginContainer.class)) {
+            return; //Ignore plugin caused breaks.
+        }
         if(ItemUtil.doesStackPassFilters(allowedItems.getValue(), player.getItemInHand(HandTypes.MAIN_HAND).orElse(null)) && !disabledPlayers.getValue().contains(player.getUniqueId())) {
             event.getTransactions().stream().filter((t) -> BlockUtil.doesStatePassFilters(allowedBlocks.getValue(), t.getOriginal().getState())).forEach(transaction -> {
                 Optional<TreeType> treeType = transaction.getOriginal().get(Keys.TREE_TYPE);
