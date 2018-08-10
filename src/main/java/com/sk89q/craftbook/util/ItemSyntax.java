@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.BaseItemStack;
@@ -158,7 +159,13 @@ public final class ItemSyntax {
                             data = 0;
                         }
                     }
-                    item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(BukkitAdapter.asItemType(material).getLegacyId(), data));
+                    try {
+                        int type = LegacyMapper.getInstance().getLegacyFromItem(BukkitAdapter.asItemType(material))[0];
+                        item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(type, data));
+                    } catch (Exception ee) {
+                        CraftBookPlugin.logger().warning("Failed to convert legacy item: " + material.getId() + ':' + data);
+                        ee.printStackTrace();
+                    }
                 }
             }
             try {

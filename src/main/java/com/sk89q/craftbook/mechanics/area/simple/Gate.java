@@ -390,7 +390,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public boolean isValidGateBlock(ItemInfo block) {
 
-        return blocks.contains(block);
+        return blocks.contains(block.getType());
     }
 
     /**
@@ -409,19 +409,19 @@ public class Gate extends AbstractCraftBookMechanic {
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
                 ItemInfo def = new ItemInfo(sign.getLine(0));
-                return block.equals(def);
+                return block.getMaterial().equals(def.getType());
             } catch (Exception e) {
                 if (check) {
                     type = getGateBlock(sign, smallSearchSize);
                     if(type == null || type.getType() == Material.AIR)
-                        return block.equals(type);
+                        return block.getMaterial().equals(Material.AIR);
                 }
-                return blocks.contains(block);
+                return blocks.contains(block.getMaterial());
             }
         } else if(check && (type = getGateBlock(sign, smallSearchSize)) != null)
-            return block.equals(type);
+            return block.getMaterial().equals(type.getType());
         else
-            return blocks.contains(block);
+            return blocks.contains(block.getMaterial());
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -4,7 +4,6 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -68,7 +67,7 @@ public class MCEditCuboidCopy extends CuboidCopy {
                     size.getZ() - 1));
             EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1);
             editSession.enableQueue();
-            editSession.setBlocks(region, new BaseBlock(BlockTypes.AIR));
+            editSession.setBlocks(region, BlockTypes.AIR.getDefaultState());
             editSession.flushQueue();
         } catch (MaxChangedBlocksException e) {
             // is never thrown
