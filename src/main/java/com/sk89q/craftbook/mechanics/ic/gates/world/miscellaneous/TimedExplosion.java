@@ -16,7 +16,6 @@ import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.blocks.BlockType;
 
 public class TimedExplosion extends AbstractIC {
 
