@@ -153,7 +153,7 @@ public class FlatCuboidCopy extends CuboidCopy {
                     int[] datas =
                             LegacyMapper.getInstance().getLegacyFromBlock(BukkitAdapter.adapt(world.getBlockAt(BukkitAdapter.adapt(world, origin.add(x, y, z))).getBlockData()));
                     if (datas != null) {
-                        if (datas[0] > Byte.MAX_VALUE) {
+                        if (datas[0] > 255) {
                             // If the format doesn't support it, it's stone.
                             datas[0] = 1;
                             datas[1] = 0;
@@ -199,7 +199,7 @@ public class FlatCuboidCopy extends CuboidCopy {
 
         for (Tuple2<Vector, byte[]> entry : queueAfter) {
             byte[] v = entry.b;
-            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0], v[1]);
+            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0] & 0xFF, v[1]);
             if (state != null) {
                 BlockData blockData = BukkitAdapter.adapt(state);
                 world.getBlockAt(entry.a.getBlockX(), entry.a.getBlockY(), entry.a.getBlockZ()).setBlockData(blockData);
@@ -208,7 +208,7 @@ public class FlatCuboidCopy extends CuboidCopy {
 
         for (Tuple2<Vector, byte[]> entry : queueLast) {
             byte[] v = entry.b;
-            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0], v[1]);
+            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(v[0] & 0xFF, v[1]);
             if (state != null) {
                 BlockData blockData = BukkitAdapter.adapt(state);
                 world.getBlockAt(entry.a.getBlockX(), entry.a.getBlockY(), entry.a.getBlockZ()).setBlockData(blockData);
