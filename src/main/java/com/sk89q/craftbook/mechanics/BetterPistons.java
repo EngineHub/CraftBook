@@ -6,10 +6,10 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.RegexUtil;
@@ -17,6 +17,10 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -234,9 +238,10 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             }
         }
 
-        if (pistonsCrusherBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
+        if (Blocks.containsFuzzy(pistonsCrusherBlacklist, BukkitAdapter.adapt(trigger.getRelative(piston.getFacing()).getBlockData()))) {
             return;
         }
+
         trigger.getRelative(piston.getFacing()).breakNaturally();
         trigger.getRelative(piston.getFacing()).setType(Material.AIR, false);
     }
@@ -259,7 +264,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                 && InventoryUtil.doesBlockHaveInventory(trigger.getRelative(piston.getFacing()))
                 || trigger.getRelative(piston.getFacing()).getType() == Material.MOVING_PISTON
                 || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_HEAD
-                || pistonsBounceBlacklist.contains(new ItemInfo(trigger.getRelative(piston.getFacing())))) {
+                || Blocks.containsFuzzy(pistonsBounceBlacklist, BukkitAdapter.adapt(trigger.getRelative(piston.getFacing()).getBlockData()))) {
             for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
                 if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
                     ent.setVelocity(ent.getVelocity().add(vel));
@@ -405,8 +410,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private boolean canPistonPushBlock(Block block) {
         if (block.getState() instanceof DoubleChest) return false;
 
-        if(pistonsMovementBlacklist.contains(new ItemInfo(block)))
+        if (Blocks.containsFuzzy(pistonsMovementBlacklist, BukkitAdapter.adapt(block.getBlockData()))) {
             return false;
+        }
 
         switch (block.getType()) {
             case MOVING_PISTON:
@@ -439,22 +445,22 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private int pistonMaxDistance;
     private boolean pistonsCrusher;
     private boolean pistonsCrusherInstaKill;
-    private List<ItemInfo> pistonsCrusherBlacklist;
+    private List<BlockStateHolder> pistonsCrusherBlacklist;
     private boolean pistonsSuperPush;
     private boolean pistonsSuperSticky;
-    private List<ItemInfo> pistonsMovementBlacklist;
+    private List<BlockStateHolder> pistonsMovementBlacklist;
     private boolean pistonsBounce;
-    private List<ItemInfo> pistonsBounceBlacklist;
+    private List<BlockStateHolder> pistonsBounceBlacklist;
     private double pistonBounceMaxVelocity;
 
-    public List<String> getDefaultBlacklist() {
+    public static List<String> getDefaultBlacklist() {
         return Lists.newArrayList(
-                "OBSIDIAN",
-                "BEDROCK",
-                "PORTAL",
-                "ENDER_PORTAL_FRAME",
-                "ENDER_PORTAL",
-                "END_GATEWAY"
+                BlockTypes.OBSIDIAN.getId(),
+                BlockTypes.BEDROCK.getId(),
+                BlockTypes.NETHER_PORTAL.getId(),
+                BlockTypes.END_PORTAL.getId(),
+                BlockTypes.END_PORTAL_FRAME.getId(),
+                BlockTypes.END_GATEWAY.getId()
         );
     }
 
@@ -468,7 +474,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         pistonsCrusherInstaKill = config.getBoolean(path + "crushers-kill-mobs", false);
 
         config.setComment(path + "crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
-        pistonsCrusherBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "crusher-blacklist", getDefaultBlacklist()));
+        pistonsCrusherBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "crusher-blacklist", getDefaultBlacklist()), true);
 
         config.setComment(path + "super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
         pistonsSuperSticky = config.getBoolean(path + "super-sticky", true);
@@ -477,13 +483,13 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         pistonsSuperPush = config.getBoolean(path + "super-push", true);
 
         config.setComment(path + "movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
-        pistonsMovementBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "movement-blacklist", getDefaultBlacklist()));
+        pistonsMovementBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "movement-blacklist", getDefaultBlacklist()), true);
 
         config.setComment(path + "bounce", "Enables BetterPistons Bounce Mechanic.");
         pistonsBounce = config.getBoolean(path + "bounce", true);
 
         config.setComment(path + "bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
-        pistonsBounceBlacklist = ItemInfo.parseListFromString(config.getStringList(path + "bounce-blacklist", getDefaultBlacklist()));
+        pistonsBounceBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "bounce-blacklist", getDefaultBlacklist()), true);
 
         config.setComment(path + "max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt(path + "max-distance", 12);
