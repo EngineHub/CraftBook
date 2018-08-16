@@ -18,20 +18,34 @@ package com.sk89q.craftbook.mechanics.area;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.HistoryHashMap;
-import com.sk89q.worldedit.world.DataException;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.World;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
  * Used to load, save, and cache cuboid copies.
- *
- * @author sk89q, Silthus
  */
 public class CopyManager {
 
@@ -42,12 +56,12 @@ public class CopyManager {
     /**
      * Cache.
      */
-    private final HashMap<String, HistoryHashMap<String, CuboidCopy>> cache = new HashMap<>();
+    private final HistoryHashMap<String, BlockArrayClipboard> cache = new HistoryHashMap<>(10);
 
     /**
      * Remembers missing copies so as to not look for them on disk.
      */
-    private final HashMap<String, HistoryHashMap<String, Long>> missing = new HashMap<>();
+    private final HistoryHashMap<String, Long> missing = new HistoryHashMap<>(10);
 
     /**
      * Gets the copy manager instance
@@ -62,9 +76,9 @@ public class CopyManager {
     /**
      * Checks to see whether a name is a valid copy name.
      *
-     * @param name
+     * @param name Checks if it's a valid schematic name
      *
-     * @return
+     * @return If it's valid
      */
     public static boolean isValidName(String name) {
 
@@ -75,9 +89,9 @@ public class CopyManager {
     /**
      * Checks to see whether a name is a valid namespace.
      *
-     * @param name
+     * @param name Checks if it's a valid namespace
      *
-     * @return
+     * @return If it's valid
      */
     public static boolean isValidNamespace(String name) {
 
@@ -109,10 +123,13 @@ public class CopyManager {
      * @param area      to check
      */
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
-
-        area = StringUtils.replace(area, "-", "") + getFileSuffix();
+        area = StringUtils.replace(area, "-", "");
         File file = new File(dataFolder, "areas/" + namespace);
-        return new File(file, area).exists();
+        if (!new File(file, area + getFileSuffix()).exists()) {
+            return new File(file, area + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension()).exists();
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -121,38 +138,46 @@ public class CopyManager {
      * does not exist, an exception will be raised. An exception may be raised if the file exists but cannot be read
      * for whatever reason.
      *
-     * @param namespace
-     * @param id
+     * @param namespace The clipboard namespace
+     * @param id The clipboard ID
      *
-     * @return
+     * @return The loaded clipboard
      *
-     * @throws IOException
-     * @throws MissingCuboidCopyException
-     * @throws CuboidCopyException
+     * @throws IOException If it fails to load
      */
-    public CuboidCopy load(World world, String namespace, String id) throws IOException,
-    CuboidCopyException {
+    public BlockArrayClipboard load(String namespace, String id) throws IOException {
 
         id = id.toLowerCase(Locale.ENGLISH);
-        String cacheKey = namespace + "/" + id;
-
-        HistoryHashMap<String, Long> missing = getMissing(world.getUID().toString());
+        String cacheKey = namespace + '/' + id;
 
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
-            if (lastCheck > System.currentTimeMillis()) throw new MissingCuboidCopyException(id);
+            if (lastCheck > System.currentTimeMillis()) throw new FileNotFoundException(id);
         }
 
-        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
-
-        CuboidCopy copy = cache.get(cacheKey);
+        BlockArrayClipboard copy = cache.get(cacheKey);
 
         if (copy == null) {
-            File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
-            copy = CuboidCopy.load(new File(folder, id + getFileSuffix()), world);
-            missing.remove(cacheKey);
-            cache.put(cacheKey, copy);
-            return copy;
+            File file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + getFileSuffix());
+            if (!file.exists()) {
+                file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace),
+                        id + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension());
+            }
+            if (file.exists()) {
+                ClipboardFormat format = ClipboardFormats.findByFile(file);
+                if (format == null) {
+                    missing.put(cacheKey, System.currentTimeMillis());
+                    throw new IOException("Unknown clipboard format!");
+                }
+                ClipboardReader reader = format.getReader(new FileInputStream(file));
+                copy = (BlockArrayClipboard) reader.read();
+                missing.remove(cacheKey);
+                cache.put(cacheKey, copy);
+                return copy;
+            } else {
+                missing.put(cacheKey, System.currentTimeMillis());
+                throw new FileNotFoundException(id);
+            }
         }
 
         return copy;
@@ -161,14 +186,13 @@ public class CopyManager {
     /**
      * Save a copy to disk. The copy will be cached.
      *
-     * @param id
-     * @param copyFlat
+     * @param namespace The save namespace
+     * @param id The save id
+     * @param clipboard The clipboard containing the save
      *
-     * @throws IOException
+     * @throws IOException If the file failed to save
      */
-    public void save(World world, String namespace, String id, CuboidCopy copyFlat) throws IOException, DataException {
-
-        HistoryHashMap<String, CuboidCopy> cache = getCache(world.getUID().toString());
+    public void save(String namespace, String id, BlockArrayClipboard clipboard) throws IOException {
 
         File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
 
@@ -178,22 +202,79 @@ public class CopyManager {
 
         id = id.toLowerCase(Locale.ENGLISH);
 
-        String cacheKey = namespace + "/" + id;
+        String cacheKey = namespace + '/' + id;
 
-        copyFlat.save(new File(folder, id + getFileSuffix()));
+        File file = new File(folder, id + getFileSuffix());
+        ClipboardWriter writer = getDefaultClipboardFormat().getWriter(new FileOutputStream(file));
+        writer.write(clipboard);
         missing.remove(cacheKey);
-        cache.put(cacheKey, copyFlat);
+        cache.put(cacheKey, clipboard);
+    }
+
+    /**
+     * Copies a region into the BlockArrayClipboard.
+     *
+     * @param region The region
+     * @return The BlockArrayClipboard
+     * @throws WorldEditException If something went wrong.
+     */
+    public BlockArrayClipboard copy(Region region) throws WorldEditException {
+        BlockArrayClipboard copy = new BlockArrayClipboard(region);
+//        copy.setOrigin(origin);
+
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
+
+        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy, region.getMinimumPoint());
+        forwardExtentCopy.setCopyingEntities(true);
+        Operations.complete(forwardExtentCopy);
+
+        return copy;
+    }
+
+    /**
+     * Pastes the clipboard into the world.
+     *
+     * @param clipboard The clipboard
+     * @throws WorldEditException If it fails
+     */
+    public void paste(BlockArrayClipboard clipboard) throws WorldEditException {
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1);
+
+        Operation operation = new ClipboardHolder(clipboard)
+                .createPaste(editSession)
+                .to(clipboard.getOrigin())
+                .ignoreAirBlocks(false)
+                .build();
+
+        Operations.complete(operation);
+    }
+
+    /**
+     * Clears the area a clipboard can inhabit
+     *
+     * @param clipboard The clipboard
+     */
+    public void clear(BlockArrayClipboard clipboard) {
+        try {
+            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1);
+            editSession.enableQueue();
+            editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
+            editSession.flushQueue();
+        } catch (MaxChangedBlocksException e) {
+            // is never thrown
+        }
     }
 
     /**
      * Gets whether a copy can be made.
      *
-     * @param namespace
-     * @param ignore
+     * @param namespace The clipboard namespace
+     * @param ignore File name to ignore
+     * @param quota The limit of tiels
      *
      * @return -1 if the copy can be made, some other number for the count
      */
-    public static int meetsQuota(World world, String namespace, String ignore, int quota) {
+    public static int meetsQuota(String namespace, String ignore, int quota) {
 
         String ignoreFilename = ignore + getFileSuffix();
 
@@ -214,32 +295,11 @@ public class CopyManager {
         }
     }
 
-    private HistoryHashMap<String, CuboidCopy> getCache(String world) {
-
-        HistoryHashMap<String, CuboidCopy> worldCache = cache.get(world);
-        if (worldCache != null) {
-            return worldCache;
-        } else {
-            worldCache = new HistoryHashMap<>(10);
-            cache.put(world, worldCache);
-            return worldCache;
-        }
-    }
-
-    private HistoryHashMap<String, Long> getMissing(String world) {
-
-        HistoryHashMap<String, Long> worldCache = missing.get(world);
-        if (worldCache != null) {
-            return worldCache;
-        } else {
-            worldCache = new HistoryHashMap<>(10);
-            missing.put(world, worldCache);
-            return worldCache;
-        }
+    private static ClipboardFormat getDefaultClipboardFormat() {
+        return BuiltInClipboardFormat.SPONGE_SCHEMATIC;
     }
 
     private static String getFileSuffix() {
-
-        return Area.instance.useSchematics ? ".schematic" : ".cbcopy";
+        return '.' + getDefaultClipboardFormat().getPrimaryFileExtension();
     }
 }

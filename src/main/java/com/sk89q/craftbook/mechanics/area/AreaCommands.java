@@ -13,10 +13,10 @@ import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.DataException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -67,7 +67,7 @@ public class AreaCommands {
             throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
 
         if (personal) {
-            namespace = "~" + namespace;
+            namespace = '~' + namespace;
         }
 
         id = context.getString(0);
@@ -76,10 +76,8 @@ public class AreaCommands {
             throw new CommandException("Invalid area name. Needs to be between 1 and 13 letters long.");
 
         try {
-            WorldEditPlugin worldEdit = CraftBookPlugin.plugins.getWorldEdit();
-
-            World world = ((Player) sender).getWorld();
-            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(BukkitAdapter.adapt(world));
+            com.sk89q.worldedit.world.World world = BukkitAdapter.adapt(((Player) sender).getWorld());
+            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(world);
             if(sel == null) {
                 sender.sendMessage(ChatColor.RED + "You have not made a selection!");
                 return;
@@ -97,7 +95,7 @@ public class AreaCommands {
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
             if (Area.instance.maxAreasPerUser >= 0 && !namespace.equals("global") && !player.hasPermission("craftbook.mech.area.bypass-limit")) {
-                int count = CopyManager.meetsQuota(world, namespace, id,
+                int count = CopyManager.meetsQuota(namespace, id,
                         Area.instance.maxAreasPerUser);
 
                 if (count > -1) {
@@ -107,32 +105,24 @@ public class AreaCommands {
             }
 
             // Copy
-            CuboidCopy copy;
-
-            if (Area.instance.useSchematics) {
-                copy = new MCEditCuboidCopy(min, size, world);
-            } else {
-                copy = new FlatCuboidCopy(min, size, world);
-            }
-
-            copy.copy();
+            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel);
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '" + namespace +
                     "' and ID '" + id + "'.");
 
             // Save
             try {
-                CopyManager.getInstance().save(world, namespace, id.toLowerCase(Locale.ENGLISH), copy);
+                CopyManager.getInstance().save(namespace, id.toLowerCase(Locale.ENGLISH), copy);
                 player.print("Area saved as '" + id + "' under the '" + namespace + "' namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());
-            } catch (DataException e) {
-                player.print(e.getMessage());
             }
         } catch (NoClassDefFoundError e) {
             throw new CommandException("WorldEdit.jar does not exist in plugins/, or is outdated. (Or you are using an outdated version of CraftBook)");
         } catch (IncompleteRegionException e) {
             throw new CommandException("Invalid selection");
+        } catch (WorldEditException e) {
+            player.printError(e.getMessage());
         }
     }
 
