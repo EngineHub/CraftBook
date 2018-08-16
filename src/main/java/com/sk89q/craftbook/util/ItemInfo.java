@@ -10,6 +10,7 @@ import org.bukkit.material.MaterialData;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public final class ItemInfo {
 
     public MaterialData data;

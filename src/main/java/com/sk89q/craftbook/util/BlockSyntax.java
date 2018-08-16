@@ -26,6 +26,9 @@ import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class BlockSyntax {
     private static ParserContext BLOCK_CONTEXT = new ParserContext();
 
@@ -71,7 +74,23 @@ public class BlockSyntax {
         return blockState;
     }
 
+    public static List<BlockStateHolder> getBlocks(List<String> lines) {
+        return getBlocks(lines, false);
+    }
+
+    public static List<BlockStateHolder> getBlocks(List<String> lines, boolean wild) {
+        return lines.stream().map(line -> getBlock(line, wild)).collect(Collectors.toList());
+    }
+
     public static BlockData getBukkitBlock(String line) {
         return BukkitAdapter.adapt(getBlock(line));
+    }
+
+    public static String toMinifiedId(BlockStateHolder holder) {
+        String output = holder.getAsString();
+        if (output.startsWith("minecraft:")) {
+            output = output.substring(10);
+        }
+        return output;
     }
 }
