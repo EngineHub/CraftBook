@@ -7,10 +7,10 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RedstoneUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -31,10 +31,9 @@ import java.util.Locale;
  */
 public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
-    protected ItemInfo material;
+    protected BlockStateHolder material;
 
-    public ItemInfo getMaterial() {
-
+    public BlockStateHolder getMaterial() {
         return material;
     }
 
@@ -144,12 +143,12 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
             String lineFound = null;
             int lineNum = 1;
             for (String sign : getApplicableSigns()) {
-                if (lines[1].equalsIgnoreCase("[" + sign + "]")) {
+                if (lines[1].equalsIgnoreCase('[' + sign + ']')) {
                     found = true;
                     lineFound = sign;
                     lineNum = 1;
                     break;
-                } else if (this instanceof CartMessenger && lines[0].equalsIgnoreCase("[" + sign + "]")) {
+                } else if (this instanceof CartMessenger && lines[0].equalsIgnoreCase('[' + sign + ']')) {
                     found = true;
                     lineFound = sign;
                     lineNum = 0;
@@ -163,7 +162,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 return;
             }
             player.checkPermission("craftbook.vehicles." + getName().toLowerCase(Locale.ENGLISH));
-            event.setLine(lineNum, "[" + lineFound + "]");
+            event.setLine(lineNum, '[' + lineFound + ']');
             player.print(getName() + " Created!");
         } catch (AuthorizationException e) {
             player.printError("vehicles.create-permission");

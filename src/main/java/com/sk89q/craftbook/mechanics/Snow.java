@@ -1,13 +1,18 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -34,7 +39,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockVector;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Snow fall mechanism. Builds up/tramples snow
@@ -95,7 +105,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean isReplacable(Block block) {
         return !(block.getType() == Material.WATER)
                 && (BlockUtil.isBlockReplacable(block.getType())
-                || realisticReplacables.contains(new ItemInfo(block)));
+                || Blocks.containsFuzzy(realisticReplacables, BukkitAdapter.adapt(block.getBlockData())));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -528,12 +538,24 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean pileHigh;
     private int maxPileHeight;
     private boolean jumpTrample;
-    private List<ItemInfo> realisticReplacables;
+    private List<BlockStateHolder> realisticReplacables;
     private int animationTicks;
     private boolean freezeWater;
     private boolean meltSunlight;
     private boolean meltPartial;
     private boolean animateFalling;
+
+    private static List<String> getDefaultReplacables() {
+        return Lists.newArrayList(
+                BlockTypes.DEAD_BUSH.getId(),
+                BlockTypes.GRASS.getId(),
+                BlockTypes.DANDELION.getId(),
+                BlockTypes.POPPY.getId(),
+                BlockTypes.BROWN_MUSHROOM.getId(),
+                BlockTypes.RED_MUSHROOM.getId(),
+                BlockTypes.FIRE.getId(),
+                BlockTypes.FERN.getId());
+    }
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -566,7 +588,7 @@ public class Snow extends AbstractCraftBookMechanic {
         maxPileHeight = config.getInt(path + "max-pile-height", 3);
 
         config.setComment(path + "replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
-        realisticReplacables = ItemInfo.parseListFromString(config.getStringList(path + "replacable-blocks", Arrays.asList("DEAD_BUSH", "LONG_GRASS", "YELLOW_FLOWER", "RED_ROSE", "BROWN_MUSHROOM", "RED_MUSHROOM", "FIRE")));
+        realisticReplacables = BlockSyntax.getBlocks(config.getStringList(path + "replacable-blocks", getDefaultReplacables()), true);
 
         config.setComment(path + "animate-falling", "Cause the snow to fall slowly (May be intensive).");
         animateFalling = config.getBoolean(path + "animate-falling", false);

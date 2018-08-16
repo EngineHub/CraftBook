@@ -9,9 +9,9 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -19,7 +19,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Me4502
@@ -46,7 +45,7 @@ public class SetBlockChest extends SetBlock {
     @Override
     protected void doSet(Block body, BlockStateHolder item, boolean force) {
 
-        if(((Factory)getFactory()).blockBlacklist.contains(item.getBlockType()))
+        if(Blocks.containsFuzzy(((Factory)getFactory()).blockBlacklist, item))
             return;
 
         BlockFace toPlace = ((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
@@ -63,7 +62,7 @@ public class SetBlockChest extends SetBlock {
 
         boolean above;
 
-        public List<BlockType> blockBlacklist = Lists.newArrayList(BlockTypes.BEDROCK);
+        public List<BlockStateHolder> blockBlacklist;
 
         public Factory(Server server, boolean above) {
 
@@ -85,7 +84,7 @@ public class SetBlockChest extends SetBlock {
             BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2));
             if(item == null || !item.getBlockType().hasItemType())
                 throw new ICVerificationException("An invalid block was provided on line 2!");
-            if(blockBlacklist.contains(item.getBlockType()))
+            if(Blocks.containsFuzzy(blockBlacklist, item))
                 throw new ICVerificationException("A blacklisted block was provided on line 2!");
         }
 
@@ -105,9 +104,7 @@ public class SetBlockChest extends SetBlock {
         public void addConfiguration (YAMLProcessor config, String path) {
 
             config.setComment(path + "blacklist", "Stops the IC from placing the listed blocks.");
-            blockBlacklist.addAll(config.getStringList(path + "blacklist",
-                    blockBlacklist.stream().map(BlockType::getId).collect(Collectors.toList()))
-                    .stream().map(BlockSyntax::getBlock).map(BlockStateHolder::getBlockType).collect(Collectors.toList()));
+            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
         }
     }
 }

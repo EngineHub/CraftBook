@@ -23,29 +23,29 @@ mechanics:
         crushers: true
         crushers-kill-mobs: false
         crusher-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        - PORTAL
-        - ENDER_PORTAL_FRAME
-        - ENDER_PORTAL
-        - END_GATEWAY
+        - minecraft:obsidian
+        - minecraft:bedrock
+        - minecraft:nether_portal
+        - minecraft:end_portal
+        - minecraft:end_portal_frame
+        - minecraft:end_gateway
         super-sticky: true
         super-push: true
         movement-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        - PORTAL
-        - ENDER_PORTAL_FRAME
-        - ENDER_PORTAL
-        - END_GATEWAY
+        - minecraft:obsidian
+        - minecraft:bedrock
+        - minecraft:nether_portal
+        - minecraft:end_portal
+        - minecraft:end_portal_frame
+        - minecraft:end_gateway
         bounce: true
         bounce-blacklist:
-        - OBSIDIAN
-        - BEDROCK
-        - PORTAL
-        - ENDER_PORTAL_FRAME
-        - ENDER_PORTAL
-        - END_GATEWAY
+        - minecraft:obsidian
+        - minecraft:bedrock
+        - minecraft:nether_portal
+        - minecraft:end_portal
+        - minecraft:end_portal_frame
+        - minecraft:end_gateway
         max-distance: 12
         bounce-max-velocity: 5.0
     BetterPlants:
@@ -66,7 +66,7 @@ mechanics:
         read-when-holding-block: false
     BounceBlocks:
         blocks:
-        - DIAMOND_BLOCK
+        - minecraft:diamond_block
         sensitivity: 0.1
         auto-blocks: {}
     Bridge:
@@ -77,31 +77,31 @@ mechanics:
         blocks:
         - minecraft:cobblestone
         - minecraft:glass
-        - minecraft:dark_oak_planks
-        - minecraft:birch_planks
-        - minecraft:spruce_planks
-        - minecraft:jungle_planks
         - minecraft:acacia_planks
+        - minecraft:jungle_planks
+        - minecraft:spruce_planks
+        - minecraft:birch_planks
         - minecraft:oak_planks
+        - minecraft:dark_oak_planks
+        - minecraft:prismarine_brick_slab
+        - minecraft:nether_brick_slab
+        - minecraft:sandstone_slab
+        - minecraft:red_sandstone_slab
+        - minecraft:petrified_oak_slab
+        - minecraft:dark_oak_slab
+        - minecraft:birch_slab
+        - minecraft:stone_slab
+        - minecraft:prismarine_slab
+        - minecraft:purpur_slab
         - minecraft:spruce_slab
         - minecraft:jungle_slab
-        - minecraft:acacia_slab
-        - minecraft:birch_slab
-        - minecraft:brick_slab
         - minecraft:oak_slab
-        - minecraft:prismarine_brick_slab
-        - minecraft:petrified_oak_slab
-        - minecraft:stone_slab
-        - minecraft:cobblestone_slab
         - minecraft:quartz_slab
+        - minecraft:cobblestone_slab
+        - minecraft:brick_slab
         - minecraft:dark_prismarine_slab
-        - minecraft:purpur_slab
+        - minecraft:acacia_slab
         - minecraft:stone_brick_slab
-        - minecraft:prismarine_slab
-        - minecraft:nether_brick_slab
-        - minecraft:red_sandstone_slab
-        - minecraft:sandstone_slab
-        - minecraft:dark_oak_slab
     Cauldron:
         spoons: true
         enable-redstone: false
@@ -111,24 +111,7 @@ mechanics:
         allow-holding-blocks: false
         regen-health: true
         regen-health-amount: 1.0
-        blocks:
-        - minecraft:birch_stairs
-        - minecraft:red_sandstone_stairs
-        - minecraft:brick_stairs
-        - minecraft:prismarine_stairs
-        - minecraft:dark_prismarine_stairs
-        - minecraft:purpur_stairs
-        - minecraft:spruce_stairs
-        - minecraft:nether_brick_stairs
-        - minecraft:dark_oak_stairs
-        - minecraft:prismarine_brick_stairs
-        - minecraft:quartz_stairs
-        - minecraft:sandstone_stairs
-        - minecraft:oak_stairs
-        - minecraft:jungle_stairs
-        - minecraft:cobblestone_stairs
-        - minecraft:acacia_stairs
-        - minecraft:stone_brick_stairs
+        blocks: []
         face-correct-direction: true
         require-sign: false
         max-distance: 3
@@ -164,31 +147,31 @@ mechanics:
         blocks:
         - minecraft:cobblestone
         - minecraft:glass
-        - minecraft:dark_oak_planks
-        - minecraft:birch_planks
-        - minecraft:spruce_planks
-        - minecraft:jungle_planks
         - minecraft:acacia_planks
+        - minecraft:jungle_planks
+        - minecraft:spruce_planks
+        - minecraft:birch_planks
         - minecraft:oak_planks
+        - minecraft:dark_oak_planks
+        - minecraft:prismarine_brick_slab
+        - minecraft:nether_brick_slab
+        - minecraft:sandstone_slab
+        - minecraft:red_sandstone_slab
+        - minecraft:petrified_oak_slab
+        - minecraft:dark_oak_slab
+        - minecraft:birch_slab
+        - minecraft:stone_slab
+        - minecraft:prismarine_slab
+        - minecraft:purpur_slab
         - minecraft:spruce_slab
         - minecraft:jungle_slab
-        - minecraft:acacia_slab
-        - minecraft:birch_slab
-        - minecraft:brick_slab
         - minecraft:oak_slab
-        - minecraft:prismarine_brick_slab
-        - minecraft:petrified_oak_slab
-        - minecraft:stone_slab
-        - minecraft:cobblestone_slab
         - minecraft:quartz_slab
+        - minecraft:cobblestone_slab
+        - minecraft:brick_slab
         - minecraft:dark_prismarine_slab
-        - minecraft:purpur_slab
+        - minecraft:acacia_slab
         - minecraft:stone_brick_slab
-        - minecraft:prismarine_slab
-        - minecraft:nether_brick_slab
-        - minecraft:red_sandstone_slab
-        - minecraft:sandstone_slab
-        - minecraft:dark_oak_slab
     Elevator:
         allow-redstone: false
         redstone-player-search-radius: 3
@@ -198,11 +181,12 @@ mechanics:
         smooth-movement-speed: 0.5
     Footprints:
         blocks:
-        - DIRT
-        - SAND
-        - SNOW
-        - SNOW_BLOCK
-        - ICE
+        - minecraft:dirt
+        - minecraft:sand
+        - minecraft:snow
+        - minecraft:snow_block
+        - minecraft:ice
+        - minecraft:red_sand
     Gate:
         allow-redstone: true
         limit-columns: true
@@ -256,35 +240,35 @@ mechanics:
         max-range: 10
         max-lights: 20
     MinecartBooster:
-        max-boost-block: GOLD_BLOCK:0
-        25x-boost-block: GOLD_ORE:0
-        50x-slow-block: SOUL_SAND:0
-        20x-slow-block: GRAVEL:0
+        max-boost-block: minecraft:gold_block
+        25x-boost-block: minecraft:gold_ore
+        50x-slow-block: minecraft:soul_sand
+        20x-slow-block: minecraft:gravel
     MinecartConstantSpeed:
         speed: 0.5
         ignore-powered-rail: false
     MinecartDecay:
         time-in-ticks: 20
     MinecartDeposit:
-        block: IRON_ORE:0
+        block: minecraft:iron_ore
     MinecartDispenser:
-        block: EMERALD_ORE:0
+        block: minecraft:emerald_ore
         spawn-infront: false
         check-for-carts: true
         propel-cart: false
     MinecartEjector:
-        block: IRON_BLOCK:0
+        block: minecraft:iron_block
     MinecartElevator:
-        block: NETHER_BRICK:0
+        block: minecraft:nether_bricks
     MinecartExitRemover:
         give-item: false
     MinecartFallModifier:
         vertical-fall-speed: 0.9
         horizontal-fall-speed: 1.1
     MinecartMaxSpeed:
-        block: COAL_BLOCK:0
+        block: minecraft:coal_block
     MinecartMessenger:
-        block: ENDER_STONE:0
+        block: minecraft:end_stone
     MinecartMoreRails:
         pressure-plate-intersection: false
         ladder-vertical-rail: false
@@ -296,21 +280,21 @@ mechanics:
         remove-other-minecarts: false
         allow-empty-carts: false
     MinecartReverser:
-        block: WOOL:0
+        block: minecraft:white_wool
     MinecartSorter:
-        block: NETHERRACK:0
+        block: minecraft:netherrack
     MinecartSpeedModifiers:
         max-speed: 1.0
         off-rail-speed: 0.0
     MinecartStation:
-        block: OBSIDIAN:0
+        block: minecraft:obsidian
     MinecartTeleporter:
-        block: EMERALD_BLOCK:0
+        block: minecraft:emerald_block
     MinecartVisionSteering:
         minimum-sensitivity: 3
     Pipes:
         allow-diagonal: false
-        insulator-block: WOOL
+        insulator-block: minecraft:white_wool
         stack-per-move: true
         require-sign: false
         warn-when-too-large: false
@@ -327,13 +311,14 @@ mechanics:
         high-piling: false
         max-pile-height: 3
         replacable-blocks:
-        - DEAD_BUSH
-        - LONG_GRASS
-        - YELLOW_FLOWER
-        - RED_ROSE
-        - BROWN_MUSHROOM
-        - RED_MUSHROOM
-        - FIRE
+        - minecraft:dead_bush
+        - minecraft:grass
+        - minecraft:dandelion
+        - minecraft:poppy
+        - minecraft:brown_mushroom
+        - minecraft:red_mushroom
+        - minecraft:fire
+        - minecraft:fern
         animate-falling: false
         falldown-animation-speed: 5
         freeze-water: false
@@ -353,9 +338,7 @@ mechanics:
         max-size: 5000
         max-per-user: 30
     TreeLopper:
-        block-list:
-        - LOG
-        - LOG_2
+        block-list: []
         tool-list:
         - minecraft:iron_axe
         - minecraft:wooden_axe

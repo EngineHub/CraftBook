@@ -1,8 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.sensors;
 
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -11,15 +8,19 @@ import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 
 public class BlockSensor extends AbstractSelfTriggeredIC {
 
     private Block center;
-    private ItemInfo item;
+    private BlockStateHolder item;
 
     public BlockSensor(Server server, ChangedSign sign, ICFactory factory) {
 
@@ -30,7 +31,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
     public void load() {
 
         center = ICUtil.parseBlockLocation(getSign());
-        item = new ItemInfo(getLine(3));
+        item = BlockSyntax.getBlock(getLine(3), true);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
      */
     protected boolean hasBlock() {
 
-        return item.isSame(center);
+        return item.equalsFuzzy(BukkitAdapter.adapt(center.getBlockData()));
     }
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {

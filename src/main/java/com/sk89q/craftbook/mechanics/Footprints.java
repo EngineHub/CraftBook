@@ -2,9 +2,13 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -47,7 +51,7 @@ public class Footprints extends AbstractCraftBookMechanic {
         } else if (event.getPlayer().getLocation().getY() != below.getY() + 1)
             return;
 
-        if(blocks.contains(new ItemInfo(below))) {
+        if(Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(below.getBlockData()))) {
 
             if(footsteps.contains(event.getPlayer().getName()))
                 return;
@@ -85,12 +89,15 @@ public class Footprints extends AbstractCraftBookMechanic {
         footsteps = null;
     }
 
-    List<ItemInfo> blocks;
+    private List<BlockStateHolder> blocks;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "blocks", "The list of blocks that footprints appear on.");
-        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Arrays.asList("DIRT", "SAND", "SNOW", "SNOW_BLOCK", "ICE")));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", Arrays.asList(
+                BlockTypes.DIRT.getId(), BlockTypes.SAND.getId(), BlockTypes.SNOW.getId(), BlockTypes.SNOW_BLOCK.getId(), BlockTypes.ICE.getId(),
+                BlockTypes.RED_SAND.getId()
+        )), true);
     }
 }

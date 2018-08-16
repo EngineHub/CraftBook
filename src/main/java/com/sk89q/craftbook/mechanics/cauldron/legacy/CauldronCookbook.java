@@ -16,12 +16,19 @@
 
 package com.sk89q.craftbook.mechanics.cauldron.legacy;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.BlockSyntax;
+import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.util.StringUtil;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,14 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockSyntax;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.util.StringUtil;
-import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 
 // import java.io.*;
 
@@ -123,7 +122,7 @@ public class CauldronCookbook {
         File file = new File(CraftBookPlugin.inst().getDataFolder(), path);
         InputStreamReader input = null;
         try {
-            input = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            input = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             BufferedReader buff = new BufferedReader(input);
             String line;
             while ((line = buff.readLine()) != null) {

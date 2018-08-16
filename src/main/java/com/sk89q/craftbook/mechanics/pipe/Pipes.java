@@ -5,10 +5,10 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
@@ -18,6 +18,9 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -136,24 +139,24 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else {
 
                         if (Math.abs(x) == Math.abs(y) && Math.abs(x) == Math.abs(z)) {
-                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && pipeInsulator.isSame(block.getRelative(0, y, 0))
-                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(x, 0, 0).getBlockData()))
+                                    && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, y, 0).getBlockData()))
+                                    && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, 0, z).getBlockData()))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(y)) {
-                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && pipeInsulator.isSame(block.getRelative(0, y, 0))) {
+                            if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(x, 0, 0).getBlockData()))
+                                    && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, y, 0).getBlockData()))) {
                                 continue;
                             }
                         } else if (Math.abs(x) == Math.abs(z)) {
-                            if (pipeInsulator.isSame(block.getRelative(x, 0, 0))
-                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(x, 0, 0).getBlockData()))
+                                    && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, 0, z).getBlockData()))) {
                                 continue;
                             }
                         } else {
-                            if (pipeInsulator.isSame(block.getRelative(0, y, 0))
-                                    && pipeInsulator.isSame(block.getRelative(0, 0, z))) {
+                            if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, y, 0).getBlockData()))
+                                    && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(block.getRelative(0, 0, z).getBlockData()))) {
                                 continue;
                             }
                         }
@@ -504,7 +507,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private boolean pipesDiagonal;
-    private ItemInfo pipeInsulator;
+    private BlockStateHolder pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
     private boolean warnWhenMassive;
@@ -516,7 +519,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         pipesDiagonal = config.getBoolean(path + "allow-diagonal", false);
 
         config.setComment(path + "insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
-        pipeInsulator = new ItemInfo(config.getString(path + "insulator-block", "WOOL"));
+        pipeInsulator = BlockSyntax.getBlock(config.getString(path + "insulator-block", BlockTypes.WHITE_WOOL.getId()), true);
 
         config.setComment(path + "stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
         pipeStackPerPull = config.getBoolean(path + "stack-per-move", true);

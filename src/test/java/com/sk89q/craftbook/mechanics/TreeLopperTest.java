@@ -5,7 +5,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import com.sk89q.craftbook.BaseTestCase;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -63,7 +63,7 @@ public class TreeLopperTest extends BaseTestCase {
         when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
 
         lopper.enabledBlocks = new ArrayList<>();
-        lopper.enabledBlocks.add(new ItemInfo(Material.OAK_LOG, 0));
+        lopper.enabledBlocks.add(BlockTypes.OAK_LOG.getDefaultState());
 
         lopper.enabledItems = new ArrayList<>();
         lopper.enabledItems.add(ItemTypes.DIAMOND_AXE);

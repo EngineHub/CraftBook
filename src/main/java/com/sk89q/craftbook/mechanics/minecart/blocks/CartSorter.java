@@ -3,12 +3,13 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.minecart.StationManager;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import com.sk89q.craftbook.util.ItemInfo;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -218,6 +219,6 @@ public class CartSorter extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the sorter mechanic.");
-        material = new ItemInfo(config.getString(path + "block", "NETHERRACK:0"));
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHERRACK.getId()), true);
     }
 }
