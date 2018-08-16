@@ -3,12 +3,13 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -247,7 +248,7 @@ public class CartDispenser extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the dispenser mechanic.");
-        material = new ItemInfo(config.getString(path + "block", "EMERALD_ORE:0"));
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_ORE.getId()), true);
 
         config.setComment(path + "spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
         minecartDispenserLegacy = config.getBoolean(path + "spawn-infront", false);

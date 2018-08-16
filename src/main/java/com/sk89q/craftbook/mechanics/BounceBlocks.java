@@ -5,11 +5,15 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,15 +31,15 @@ import java.util.Map.Entry;
 
 public class BounceBlocks extends AbstractCraftBookMechanic {
 
-    List<ItemInfo> blocks;
+    private List<BlockStateHolder> blocks;
     private double sensitivity;
-    private Map<ItemInfo, Vector> autoBouncers = new HashMap<>();
+    private Map<BlockStateHolder, Vector> autoBouncers = new HashMap<>();
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "blocks", "A list of blocks that can be jumped on.");
-        blocks = ItemInfo.parseListFromString(config.getStringList(path + "blocks", Collections.singletonList("DIAMOND_BLOCK")));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
 
         config.setComment(path + "sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble(path + "sensitivity", 0.1);
@@ -63,7 +67,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 z = Double.parseDouble(bits[2]);
             }
 
-            ItemInfo block = new ItemInfo(key);
+            BlockStateHolder block = BlockSyntax.getBlock(key, true);
 
             autoBouncers.put(block, new Vector(x,y,z));
         }
@@ -79,60 +83,58 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
             Block block = event.getFrom().getBlock().getRelative(BlockFace.DOWN);
 
-            for(ItemInfo check : blocks) {
-                if(check.isSame(block)) {
+            if(Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(block.getBlockData()))) {
 
-                    CraftBookPlugin.logDebugMessage("Player jumped on a block that is a BoucneBlock!", "bounce-blocks");
+                CraftBookPlugin.logDebugMessage("Player jumped on a block that is a BoucneBlock!", "bounce-blocks");
 
-                    //Boom, headshot.
-                    Block sign = block.getRelative(BlockFace.DOWN);
+                //Boom, headshot.
+                Block sign = block.getRelative(BlockFace.DOWN);
 
-                    if(SignUtil.isSign(sign)) {
-                        final ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
+                if(SignUtil.isSign(sign)) {
+                    final ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
 
-                        if(s.getLine(1).equals("[Jump]")) {
+                    if(s.getLine(1).equals("[Jump]")) {
 
-                            CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
+                        CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
 
-                            double x = 0,y,z = 0;
-                            boolean straight = s.getLine(2).startsWith("!");
+                        double x = 0,y,z = 0;
+                        boolean straight = s.getLine(2).startsWith("!");
 
-                            String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
-                            if (bits.length == 0) {
+                        String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
+                        if (bits.length == 0) {
+                            y = 0.5;
+                        } else if (bits.length == 1) {
+                            try {
+                                y = Double.parseDouble(bits[0]);
+                            } catch (NumberFormatException e) {
                                 y = 0.5;
-                            } else if (bits.length == 1) {
-                                try {
-                                    y = Double.parseDouble(bits[0]);
-                                } catch (NumberFormatException e) {
-                                    y = 0.5;
-                                }
-                            } else {
-                                x = Double.parseDouble(bits[0]);
-                                y = Double.parseDouble(bits[1]);
-                                z = Double.parseDouble(bits[2]);
                             }
-
-                            if(!straight) {
-
-                                Vector facing = event.getTo().getDirection();
-
-                                //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
-                                double angle = Math.atan2(facing.getX(), facing.getZ());
-
-                                x = Math.sin(angle)*x;
-                                z = Math.cos(angle)*z;
-                            }
-
-                            event.getPlayer().setVelocity(new Vector(x,y,z));
-                            event.getPlayer().setFallDistance(-20f);
+                        } else {
+                            x = Double.parseDouble(bits[0]);
+                            y = Double.parseDouble(bits[1]);
+                            z = Double.parseDouble(bits[2]);
                         }
-                        return;
+
+                        if(!straight) {
+
+                            Vector facing = event.getTo().getDirection();
+
+                            //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
+                            double angle = Math.atan2(facing.getX(), facing.getZ());
+
+                            x = Math.sin(angle)*x;
+                            z = Math.cos(angle)*z;
+                        }
+
+                        event.getPlayer().setVelocity(new Vector(x,y,z));
+                        event.getPlayer().setFallDistance(-20f);
                     }
+                    return;
                 }
             }
 
-            for(Entry<ItemInfo, Vector> entry : autoBouncers.entrySet()) {
-                if(entry.getKey().isSame(block)) {
+            for(Entry<BlockStateHolder, Vector> entry : autoBouncers.entrySet()) {
+                if(entry.getKey().equalsFuzzy(BukkitAdapter.adapt(block.getBlockData()))) {
 
                     CraftBookPlugin.logDebugMessage("Player jumped on a auto block that is a BoucneBlock!", "bounce-blocks");
 

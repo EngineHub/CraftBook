@@ -5,15 +5,16 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.GameMode;
@@ -124,8 +125,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 def = new EntityCustomDropDefinition(key, drops, rewards, silkTouch, ent);
             } else if(type.equalsIgnoreCase("block")) {
-
-                ItemInfo data = new ItemInfo(config.getString("custom-drops." + key + ".block"));
+                BlockStateHolder data = BlockSyntax.getBlock(config.getString("custom-drops." + key + ".block"), true);
 
                 def = new BlockCustomDropDefinition(key, drops, rewards, silkTouch, data);
             }
@@ -239,7 +239,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         for(CustomDropDefinition def : definitions) {
             if(!(def instanceof BlockCustomDropDefinition)) continue; //Nope, we only want block drop definitions.
 
-            if(!((BlockCustomDropDefinition) def).getBlockType().isSame(event.getBlock())) continue;
+            if(!((BlockCustomDropDefinition) def).getBlockType().equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData()))) continue;
 
             if (def.getPermissionNode() != null && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission(def.getPermissionNode())) {
                 return;

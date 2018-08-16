@@ -22,6 +22,8 @@ import com.sk89q.craftbook.mechanics.drops.CustomDrops;
 import com.sk89q.craftbook.mechanics.drops.DropItemStack;
 import com.sk89q.craftbook.mechanics.drops.EntityCustomDropDefinition;
 import com.sk89q.craftbook.util.*;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
@@ -191,7 +193,12 @@ public final class LegacyCustomDropManager {
                                     append = true;
                             }
 
-                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, null, TernaryState.NONE, new ItemInfo(sourceId, data));
+                            BlockState state = LegacyMapper.getInstance().getBlockFromLegacy(sourceId, data);
+                            if (state == null) {
+                                throw new CustomDropParseException("Unknown block: " + sourceId + ":" + data);
+                            }
+
+                            BlockCustomDropDefinition converted = new BlockCustomDropDefinition(sourceId + "" + data + "" + this.converted++,stacks, null, TernaryState.NONE, state);
                             converted.setAppend(append);
 
                             ((CustomDrops) CraftBookPlugin.inst().getMechanic(CustomDrops.class)).addDefinition(converted);

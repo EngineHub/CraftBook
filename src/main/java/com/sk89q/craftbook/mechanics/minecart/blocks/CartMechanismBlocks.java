@@ -1,18 +1,18 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.LocationUtil;
+import com.sk89q.craftbook.util.RailUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.Vine;
-
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.util.ItemInfo;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.RailUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 
 /**
  * <p>
@@ -188,9 +188,8 @@ public class CartMechanismBlocks {
      *
      * @return true if the base block is the same type as the given block.
      */
-    public boolean matches(ItemInfo mat) {
-
-        return base.getType() == mat.getType() && base.getData() == mat.getData();
+    public boolean matches(BlockStateHolder mat) {
+        return mat.equalsFuzzy(BukkitAdapter.adapt(base.getBlockData()));
     }
 
     /**

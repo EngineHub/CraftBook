@@ -11,6 +11,8 @@ ics:
         blacklist: []
     MC1248:
         break-unnatural-blocks: false
+        drill-size: 3
+        max-drill-depth: 256
     MC1252:
         max-fire-range: 20
     MC1263:
@@ -19,3 +21,29 @@ ics:
         inverted: false
     MC1421:
         inverted: false
+    MC1205:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1206:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1215:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1216:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1220:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1221:
+        blacklist:
+        - BEDROCK:-1
+        - BEDROCK:-1
+    MC1270:
+        show-playing-message: true

@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.ItemInfo;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RailUtil;
@@ -9,6 +10,7 @@ import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
@@ -231,6 +233,6 @@ public class CartDeposit extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the deposit mechanic.");
-        material = new ItemInfo(config.getString(path + "block", "IRON_ORE:0"));
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_ORE.getId()), true);
     }
 }
