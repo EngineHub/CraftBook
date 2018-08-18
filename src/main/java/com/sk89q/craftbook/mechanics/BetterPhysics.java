@@ -72,7 +72,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         @Override
         public void run () {
             if(!isValid(ladder)) return;
-            ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getType(), ladder.getData());
+            ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getBlockData());
             ladder.setType(Material.AIR, false);
 
             checkForPhysics(ladder.getRelative(BlockFace.UP));
