@@ -169,10 +169,13 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             if (checkBlock.getType() == Material.LEVER) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(!powerable.isPowered());
+                checkBlock.setBlockData(powerable);
             } else if (Tag.BUTTONS.getValues().contains(checkBlock.getType())) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(true);
-                Runnable turnOff = () -> powerable.setPowered(false);
+                checkBlock.setBlockData(powerable);
+                powerable.setPowered(false);
+                Runnable turnOff = () -> checkBlock.setBlockData(powerable);
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
             }
         }
