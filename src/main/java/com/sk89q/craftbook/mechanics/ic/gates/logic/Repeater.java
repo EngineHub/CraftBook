@@ -47,7 +47,9 @@ public class Repeater extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        chip.setOutput(0, chip.getInput(0));
+        if (chip.getOutput(0) != chip.getInput(0)) {
+            chip.setOutput(0, chip.getInput(0));
+        }
     }
 
     public static class Factory extends AbstractICFactory {

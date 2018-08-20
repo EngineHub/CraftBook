@@ -70,7 +70,7 @@ public final class ICUtil {
         // return if the lever is not attached to our IC block
         Switch lever = (Switch) block.getBlockData();
 
-        if (!block.getRelative(lever.getFacing()).equals(source))
+        if (!block.getRelative(lever.getFacing().getOppositeFace()).equals(source))
             return false;
 
         // check if the lever was toggled on

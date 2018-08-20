@@ -9,6 +9,8 @@ import com.sk89q.worldedit.util.Location;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.AnaloguePowerable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
 
 /**
@@ -37,8 +39,12 @@ public abstract class AbstractChipState implements ChipState {
     public boolean get(int pin) {
         Block block = getBlock(pin);
         if(block == null) return false;
-        if(block.getBlockData() instanceof Powerable) {
-            return ((Powerable) block.getBlockData()).isPowered();
+        BlockData data = block.getBlockData();
+        if (data instanceof AnaloguePowerable) {
+            return ((AnaloguePowerable) data).getPower() > 0;
+        }
+        if (data instanceof Powerable) {
+            return ((Powerable) data).isPowered();
         }
         return block.isBlockIndirectlyPowered();
     }
