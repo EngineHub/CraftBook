@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.EquipmentSlot;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
@@ -28,7 +30,7 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
         return addItemsToInventory(container, true, stacks);
     }
 
@@ -39,14 +41,19 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack ... stacks) {
 
         if(container instanceof Furnace) {
             return addItemsToFurnace((Furnace) container, stacks);
         } else if(container instanceof BrewingStand) {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
-            ArrayList<ItemStack> leftovers = new ArrayList<>(container.getInventory().addItem(stacks).values());
+            List<ItemStack> leftovers = new ArrayList<>();
+            if (container instanceof ShulkerBox) {
+                Arrays.stream(stacks).filter(item -> ItemUtil.isShulkerBox(item.getType())).forEach(leftovers::add);
+                stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType())).toArray(ItemStack[]::new);
+            }
+            leftovers.addAll(container.getInventory().addItem(stacks).values());
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;
@@ -60,9 +67,9 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> leftovers = new ArrayList<>();
+        List<ItemStack> leftovers = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
@@ -97,9 +104,9 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static ArrayList<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
 
-        ArrayList<ItemStack> leftovers = new ArrayList<>();
+        List<ItemStack> leftovers = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
