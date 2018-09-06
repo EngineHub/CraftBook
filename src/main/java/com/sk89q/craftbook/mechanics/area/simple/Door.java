@@ -20,6 +20,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -29,12 +30,15 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -271,7 +275,7 @@ public class Door extends CuboidToggleMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
         } else throw new InvalidMechanismException("Sign is incorrectly made.");
 
-        if (blocks.contains(proximalBaseCenter.getType()))
+        if (blocks.contains(BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter;
         else throw new InvalidMechanismException("mech.door.unusable");
     }
@@ -325,14 +329,14 @@ public class Door extends CuboidToggleMechanic {
     boolean allowRedstone;
     int maxLength;
     int maxWidth;
-    List<Material> blocks;
+    List<BlockStateHolder> blocks;
 
-    public List<Material> getDefaultBlocks() {
-        List<Material> materials = new ArrayList<>();
-        materials.add(Material.COBBLESTONE);
-        materials.add(Material.GLASS);
-        materials.addAll(Tag.PLANKS.getValues());
-        materials.addAll(Tag.SLABS.getValues());
+    public List<String> getDefaultBlocks() {
+        List<String> materials = new ArrayList<>();
+        materials.add(BlockTypes.COBBLESTONE.getId());
+        materials.add(BlockTypes.GLASS.getId());
+        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::getId).collect(Collectors.toList()));
+        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::getId).collect(Collectors.toList()));
         return materials;
     }
 
@@ -350,8 +354,6 @@ public class Door extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
-        blocks = config.getStringList(path + "blocks",
-                getDefaultBlocks().stream().map(Material::getKey).map(NamespacedKey::toString).collect(Collectors.toList())
-        ).stream().map(Material::getMaterial).collect(Collectors.toList());
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks()));
     }
 }
