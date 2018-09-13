@@ -38,6 +38,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,8 +49,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.Button;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -455,9 +454,9 @@ public class Elevator extends AbstractCraftBookMechanic {
         ChangedSign info = null;
         if (!SignUtil.isSign(destination)) {
             if (Tag.BUTTONS.isTagged(destination.getType())) {
-                Attachable attachable = (Attachable) destination.getBlockData();
-                if (SignUtil.isSign(destination.getRelative(attachable.getAttachedFace(), 2)))
-                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getAttachedFace(), 2));
+                Switch attachable = (Switch) destination.getBlockData();
+                if (SignUtil.isSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2)))
+                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2));
             }
             if (info == null)
                 return;
@@ -488,10 +487,10 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if (!SignUtil.isSign(block)) {
             if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
-                Button b = (Button) block.getState().getData();
-                if(b == null || b.getAttachedFace() == null)
+                Switch b = (Switch) block.getBlockData();
+                if(b == null || b.getFacing() == null)
                     return Direction.NONE;
-                Block sign = block.getRelative(b.getAttachedFace(), 2);
+                Block sign = block.getRelative(b.getFacing().getOppositeFace(), 2);
                 if (SignUtil.isSign(sign))
                     return isLift(CraftBookBukkitUtil.toChangedSign(sign));
             }
