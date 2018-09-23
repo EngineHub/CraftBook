@@ -3,8 +3,6 @@ package com.sk89q.craftbook.bukkit;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.Metrics.Graph;
-import com.sk89q.craftbook.bukkit.Metrics.Plotter;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
@@ -104,6 +102,7 @@ import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -138,9 +137,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.annotation.Nullable;
@@ -720,36 +721,9 @@ public class CraftBookPlugin extends JavaPlugin {
         try {
             logDebugMessage("Initializing Metrics!", "startup");
             Metrics metrics = new Metrics(this);
-            metrics.start();
 
-            Graph languagesGraph = metrics.createGraph("Language");
-            for (String language : languageManager.getLanguages()) {
-                languagesGraph.addPlotter(new Plotter(language) {
-
-                    @Override
-                    public int getValue () {
-                        return 1;
-                    }
-                });
-            }
-            languagesGraph.addPlotter(new Plotter("Total") {
-
-                @Override
-                public int getValue () {
-                    return languageManager.getLanguages().size();
-                }
-            });
-
-            Graph mechanicsGraph = metrics.createGraph("Enabled Mechanics");
-
-            for(CraftBookMechanic mech : mechanics) {
-                mechanicsGraph.addPlotter(new Plotter(mech.getClass().getSimpleName()) {
-                    @Override
-                    public int getValue () {
-                        return 1;
-                    }
-                });
-            }
+            metrics.addCustomChart(new Metrics.AdvancedPie("language", () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
+            metrics.addCustomChart(new Metrics.SimpleBarChart("enabled_mechanics", () -> mechanics.stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e1) {
             CraftBookBukkitUtil.printStacktrace(e1);
         }
