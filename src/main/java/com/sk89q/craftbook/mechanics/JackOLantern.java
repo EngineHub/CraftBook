@@ -56,7 +56,9 @@ public class JackOLantern extends AbstractCraftBookMechanic {
 
         BlockFace data = ((Directional) block.getBlockData()).getFacing();
         block.setType(on ? Material.JACK_O_LANTERN : Material.CARVED_PUMPKIN);
-        ((Directional) block.getBlockData()).setFacing(data);
+        Directional directional = (Directional) block.getBlockData();
+        directional.setFacing(data);
+        block.setBlockData(directional);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -69,20 +69,6 @@ public class BlockUtilTest {
     }
 
     @Test
-    public void testIsBlockIdenticalTo() {
-
-        Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.OAK_WOOD);
-        when(mockBlock1.getData()).thenReturn((byte) 1);
-
-        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.SAND, (byte) 1));
-
-        assertTrue(BlockUtil.isBlockIdenticalTo(mockBlock1, Material.OAK_WOOD, (byte) 1));
-
-        assertTrue(!BlockUtil.isBlockIdenticalTo(mockBlock1, Material.OAK_WOOD, (byte) 4));
-    }
-
-    @Test
     public void testIsBlockReplacable() {
 
         assertTrue(!BlockUtil.isBlockReplacable(Material.STONE));

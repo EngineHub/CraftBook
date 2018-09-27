@@ -143,7 +143,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         // The block above the gate cannot be air -- it has to be some
         // non-fence block
-        if (block.getWorld().getBlockAt(x, column.getStartingY() + 1, z).getType() == Material.AIR) return false;
+        if (BlockUtil.isAir(block.getWorld().getBlockAt(x, column.getStartingY() + 1, z).getType())) return false;
 
         if (visitedColumns.contains(column)) return false;
 

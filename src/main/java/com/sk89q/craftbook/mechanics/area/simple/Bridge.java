@@ -302,10 +302,10 @@ public class Bridge extends CuboidToggleMechanic {
         return line.equals("[Bridge]");
     }
 
-    boolean allowRedstone;
-    int maxLength;
-    int maxWidth;
-    List<BlockStateHolder> blocks;
+    private boolean allowRedstone;
+    private int maxLength;
+    private int maxWidth;
+    private List<BlockStateHolder> blocks;
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();

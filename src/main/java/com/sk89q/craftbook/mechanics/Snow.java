@@ -455,8 +455,10 @@ public class Snow extends AbstractCraftBookMechanic {
                         return false;
                 } else
                     return false;
-            } else
+            } else {
                 snowData.setLayers(snowData.getLayers() + 1);
+                snow.setBlockData(snowData);
+            }
 
             if(disperse)
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(snow, 0, from), animationTicks);
@@ -489,6 +491,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 } else {
                     snowData.setLayers(snowData.getLayers() - 1);
                 }
+                snow.setBlockData(snowData);
             }
             if(disperse && realistic) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};

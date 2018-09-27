@@ -15,6 +15,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -301,7 +302,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             }
             if (type == null) {
                 type = this.getBlockBase(block).getBlockData();
-                sign.setLine(0, sign.getLine(0) + ',' + type.getAsString());
+                sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).toFuzzy()));
                 sign.update(false);
             }
             return type;
