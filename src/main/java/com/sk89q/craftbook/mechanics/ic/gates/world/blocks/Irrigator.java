@@ -72,6 +72,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
             Farmland farmland = (Farmland) b.getBlockData();
             if (farmland.getMoisture() < 1 && consumeWater()) {
                 farmland.setMoisture(farmland.getMaximumMoisture());
+                b.setBlockData(farmland);
                 return true;
             }
         }

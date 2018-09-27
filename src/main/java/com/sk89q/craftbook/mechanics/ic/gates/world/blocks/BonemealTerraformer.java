@@ -89,6 +89,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                     ageable.setAge(ageable.getMaximumAge());
                 else
                     ageable.setAge(ageable.getAge() + add);
+                b.setBlockData(ageable);
             }
             return;
         }

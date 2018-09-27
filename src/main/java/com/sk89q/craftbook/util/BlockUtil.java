@@ -14,30 +14,33 @@ import java.util.List;
 public final class BlockUtil {
 
     public static boolean areBlocksSimilar(Block block, Block block2) {
-
         return block.getType() == block2.getType();
     }
 
     public static boolean areBlocksIdentical(Block block, Block block2) {
-
-        return block.getType() == block2.getType() && block.getData() == block2.getData();
+        return block.getType() == block2.getType() && block.getBlockData().matches(block2.getBlockData());
     }
 
     public static boolean isBlockSimilarTo(Block block, Material type) {
-
         return block.getType() == type;
     }
 
-    public static boolean isBlockIdenticalTo(Block block, Material type, byte data) {
-
-        return block.getType() == type && block.getData() == data;
+    public static boolean isAir(Material id) {
+        switch (id) {
+            case AIR:
+            case CAVE_AIR:
+            case VOID_AIR:
+                return true;
+            default:
+                return false;
+        }
     }
 
     public static boolean isBlockReplacable(Material id) {
-
         switch (id) {
-
             case AIR:
+            case CAVE_AIR:
+            case VOID_AIR:
             case WHEAT:
             case DEAD_BUSH:
             case END_PORTAL:
@@ -129,7 +132,7 @@ public final class BlockUtil {
                 drops.add(new ItemStack(Material.MELON_SLICE, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
                 break;
             case COCOA:
-                drops.add(new ItemStack(Material.COCOA_BEANS, 3, (short) 3));
+                drops.add(new ItemStack(Material.COCOA_BEANS, 3));
                 break;
             default:
                 if(tool == null || ItemUtil.getMaxDurability(tool.getType()) > 0)

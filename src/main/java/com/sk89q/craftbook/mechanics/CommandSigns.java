@@ -91,7 +91,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
     public static void runCommandSign(ChangedSign sign, CraftBookPlayer player) {
 
-        String command = StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3);
+        StringBuilder command = new StringBuilder(StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3));
 
         while(BlockUtil.areBlocksIdentical(CraftBookBukkitUtil.toBlock(sign), CraftBookBukkitUtil.toBlock(sign).getRelative(0, -1, 0))) {
 
@@ -99,15 +99,18 @@ public class CommandSigns extends AbstractCraftBookMechanic {
             if(!sign.getLine(1).equals("[Command]")) break;
             if(!sign.getLine(0).equals("EXPANSION")) break;
 
-            command = command + sign.getLine(2) + sign.getLine(3);
+            command.append(sign.getLine(2)).append(sign.getLine(3));
         }
 
-        if (player == null)
-            if (command.contains("@p")) return; // We don't work with player commands.
+        if (player == null) {
+            if (command.toString().contains("@p")) {
+                return; // We don't work with player commands.
+            }
+        }
 
-        command = ParsingUtil.parseLine(command, player == null ? null : ((BukkitCraftBookPlayer) player).getPlayer());
+        command = new StringBuilder(ParsingUtil.parseLine(command.toString(), player == null ? null : ((BukkitCraftBookPlayer) player).getPlayer()));
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.toString());
     }
 
     private boolean allowRedstone;

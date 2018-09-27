@@ -130,7 +130,7 @@ public final class ItemUtil {
         return data == comparedData;
     }
 
-    private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + String.valueOf('\u00A7') + "[Rr]");
+    private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + '\u00A7' + "[Rr]");
 
     //TODO Move to a StringUtil.
     public static String stripResetChar(String message) {
