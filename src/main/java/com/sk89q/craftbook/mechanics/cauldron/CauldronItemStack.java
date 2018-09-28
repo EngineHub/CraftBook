@@ -60,7 +60,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     public CauldronItemStack add(CauldronItemStack stack) {
 
         if (stack.isSameType(this)) {
-            ItemUtil.addToStack(item, stack.getItemStack());
+            ItemUtil.addToStack(item, stack.item);
         }
         return this;
     }
@@ -72,10 +72,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
     @Override
     public int compareTo(CauldronItemStack stack) {
-
-        if (stack.getItemStack().getAmount() > item.getAmount()) return 1;
-        if (stack.getItemStack().getAmount() == item.getAmount()) return 0;
-        return -1;
+        return Integer.compare(stack.item.getAmount(), item.getAmount());
     }
 
     @Override
@@ -92,7 +89,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
         if (obj instanceof CauldronItemStack) {
             CauldronItemStack stack = (CauldronItemStack) obj;
-            return isSameType(stack) && stack.getItemStack().getAmount() == getItemStack().getAmount();
+            return isSameType(stack) && stack.item.getAmount() == item.getAmount();
         }
         return false;
     }
@@ -100,6 +97,6 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
     @Override
     public String toString() {
 
-        return ItemSyntax.getStringFromItem(getItemStack());
+        return ItemSyntax.getStringFromItem(item);
     }
 }
