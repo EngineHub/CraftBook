@@ -404,7 +404,7 @@ public final class ItemUtil {
         if(!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else {
-            return item.getType() == item2.getType() && !(item.getData().getData() != item2.getData().getData() && item.getData().getData() >= 0 && item2.getData().getData() >= 0);
+            return item.getType() == item2.getType();
         }
     }
 

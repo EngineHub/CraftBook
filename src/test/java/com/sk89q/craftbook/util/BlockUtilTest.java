@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Snow;
 import org.bukkit.inventory.ItemStack;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,28 +34,6 @@ public class BlockUtilTest {
         when(mockBlock2.getType()).thenReturn(Material.SAND);
 
         assertTrue(BlockUtil.areBlocksSimilar(mockBlock1, mockBlock2));
-    }
-
-    @Test
-    public void testAreBlocksIdentical() {
-
-        Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.SAND);
-        when(mockBlock1.getData()).thenReturn((byte) 1);
-
-        Block mockBlock2 = mock(Block.class);
-        when(mockBlock2.getType()).thenReturn(Material.STONE);
-        when(mockBlock2.getData()).thenReturn((byte) 1);
-
-        assertTrue(!BlockUtil.areBlocksIdentical(mockBlock1, mockBlock2));
-
-        when(mockBlock2.getType()).thenReturn(Material.SAND);
-
-        assertTrue(BlockUtil.areBlocksIdentical(mockBlock1, mockBlock2));
-
-        when(mockBlock2.getData()).thenReturn((byte) 2);
-
-        assertTrue(!BlockUtil.areBlocksIdentical(mockBlock1, mockBlock2));
     }
 
     @Test

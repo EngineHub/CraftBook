@@ -4,8 +4,8 @@ cauldron-recipes:
     description: "Test Recipe"
     ingredients:
       # 10 light wooden planks
-      'wood:2': 10
+      'birch_planks': 10
       # 5 brown wool
-      'wool:12': 5
+      'brown_wool': 5
     results:
       'stone': 12

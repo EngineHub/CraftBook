@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -103,7 +104,8 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 if(!found)
                     return false;
             }
-            return ((Cauldron) block.getState().getData()).isFull();
+            Levelled levelled = (Levelled) block.getBlockData();
+            return levelled.getLevel() == levelled.getMaximumLevel();
         }
         return false;
     }
