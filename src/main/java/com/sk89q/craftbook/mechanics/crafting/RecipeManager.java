@@ -118,6 +118,9 @@ public class RecipeManager {
         private CraftingItemStack result;
         private List<String> shape;
 
+        private float experience;
+        private int cookTime;
+
         @Override
         public boolean equals(Object o) {
             if(o instanceof Recipe) {
@@ -230,6 +233,10 @@ public class RecipeManager {
             type = RecipeType.getTypeFromName(config.getString("crafting-recipes." + id + ".type"));
             if (type != RecipeType.SHAPED) {
                 ingredients = getItems("crafting-recipes." + id + ".ingredients");
+                if (type == RecipeType.FURNACE) {
+                    cookTime = config.getInt("crafting-recipes." + id + ".cook-time", 200);
+                    experience = (float) config.getDouble("crafting-recipes." + id + ".experience", 0.0);
+                }
             } else {
                 items = getShapeIngredients("crafting-recipes." + id + ".ingredients");
                 shape = config.getStringList("crafting-recipes." + id + ".shape", Collections.singletonList(""));
@@ -278,6 +285,10 @@ public class RecipeManager {
                     resz.put(stack.toString() + ' ', stack.getItemStack().getAmount());
                 }
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
+                if (type == RecipeType.FURNACE) {
+                    config.setProperty("crafting-recipes." + id + ".cook-time", cookTime);
+                    config.setProperty("crafting-recipes." + id + ".experience", experience);
+                }
             } else {
                 LinkedHashMap<String, Character> resz = new LinkedHashMap<>();
                 for(Map.Entry<CraftingItemStack, Character> craftingItemStackCharacterEntry : items.entrySet())
@@ -376,6 +387,23 @@ public class RecipeManager {
 
         public CraftingItemStack getResult() {
             return result;
+        }
+
+        // Furnace
+        public float getExperience() {
+            return this.experience;
+        }
+
+        public void setExperience(float experience) {
+            this.experience = experience;
+        }
+
+        public int getCookTime() {
+            return this.cookTime;
+        }
+
+        public void setCookTime(int cookTime) {
+            this.cookTime = cookTime;
         }
 
         //Advanced data

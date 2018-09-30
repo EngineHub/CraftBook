@@ -87,7 +87,13 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                 for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet())
                     ((ShapedRecipe) sh).setIngredient(is.getValue(), is.getKey().getItemStack().getData());
             } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
-                sh = new FurnaceRecipe(r.getResult().getItemStack(), r.getIngredients().toArray(new CraftingItemStack[r.getIngredients().size()])[0].getItemStack().getType());
+                sh = new FurnaceRecipe(
+                        new NamespacedKey(CraftBookPlugin.inst(), r.getId()),
+                        r.getResult().getItemStack(),
+                        r.getIngredients().toArray(new CraftingItemStack[r.getIngredients().size()])[0].getItemStack().getType(),
+                        r.getExperience(),
+                        r.getCookTime()
+                );
                 for (CraftingItemStack is : r.getIngredients())
                     ((FurnaceRecipe) sh).setInput(is.getItemStack().getData());
             } else
