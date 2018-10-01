@@ -16,6 +16,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Sign;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
@@ -60,21 +61,29 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
 
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
         ChangedSign s = null;
-        Block testBlock = null;
+        Block signBlock = null;
         if(anyside) {
-
             for(BlockFace face : LocationUtil.getDirectFaces()) {
-                testBlock = switchBlock.getRelative(face);
-                if(testBlock.getType() == Material.WALL_SIGN) {
-                    s = CraftBookBukkitUtil.toChangedSign(testBlock);
-                    break;
+                signBlock = switchBlock.getRelative(face);
+                if(signBlock.getType() == Material.WALL_SIGN) {
+                    // This makes sure that the sign is actually attached to the block
+                    // that was clicked. Otherwise blocks in front of or alongside
+                    // the sign can be mis-identfied as switch blocks too.
+                    // Block objects here are not the same so just compare coordinates.
+                    Block signBackBlock = SignUtil.getBackBlock(signBlock);
+                    if(signBackBlock.getX() == switchBlock.getX()
+                            && signBackBlock.getY() == switchBlock.getY()
+                            && signBackBlock.getZ() == switchBlock.getZ()) {
+                        s = CraftBookBukkitUtil.toChangedSign(signBlock);
+                        break;
+                    }
                 }
             }
         } else {
             BlockFace face = eventFace.getOppositeFace();
-            testBlock = switchBlock.getRelative(face);
-            if(testBlock.getType() == Material.WALL_SIGN)
-                s = CraftBookBukkitUtil.toChangedSign(testBlock);
+            signBlock = switchBlock.getRelative(face);
+            if(signBlock.getType() == Material.WALL_SIGN)
+                s = CraftBookBukkitUtil.toChangedSign(signBlock);
         }
 
         if(s == null)
@@ -97,12 +106,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             boolean success = false;
 
             if (!ItemUtil.isStackValid(itemID)) {
-                toggleSwitches(testBlock, eventFace.getOppositeFace());
+                toggleSwitches(signBlock);
                 success = true;
             } else {
                 if (ItemUtil.areItemsIdentical(player.getInventory().getItemInMainHand(), itemID)
                         || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
-                    toggleSwitches(testBlock, eventFace.getOppositeFace());
+                    toggleSwitches(signBlock);
                     success = true;
                 } else
                     lplayer.printError("mech.hiddenswitch.key");
@@ -145,13 +154,15 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    private static void toggleSwitches(Block sign, BlockFace direction) {
+    private static void toggleSwitches(Block signBlock) {
+
+        Sign sign = (Sign) signBlock.getState().getData();
 
         BlockFace[] checkFaces = new BlockFace[4];
         checkFaces[0] = BlockFace.UP;
         checkFaces[1] = BlockFace.DOWN;
 
-        switch (direction) {
+        switch (sign.getFacing()) {
             case EAST:
             case WEST:
                 checkFaces[2] = BlockFace.NORTH;
@@ -164,7 +175,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         }
 
         for (BlockFace blockFace : checkFaces) {
-            final Block checkBlock = sign.getRelative(blockFace);
+            final Block checkBlock = signBlock.getRelative(blockFace);
 
             if (checkBlock.getType() == Material.LEVER) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
