@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.mechanics;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +20,9 @@ import org.bukkit.material.Sign;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -181,15 +183,40 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(!powerable.isPowered());
                 checkBlock.setBlockData(powerable);
+
+                Switch lever = (Switch) checkBlock.getBlockData();
+                Block targetBlock = checkBlock.getRelative(lever.getFacing().getOppositeFace());
+                applyPhysicsToBlock(targetBlock);
             } else if (Tag.BUTTONS.getValues().contains(checkBlock.getType())) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(true);
                 checkBlock.setBlockData(powerable);
-                powerable.setPowered(false);
-                Runnable turnOff = () -> checkBlock.setBlockData(powerable);
+
+                Switch button = (Switch) checkBlock.getBlockData();
+                Block targetBlock = checkBlock.getRelative(button.getFacing().getOppositeFace());
+                applyPhysicsToBlock(targetBlock);
+
+                Runnable turnOff = () -> turnOffButton(checkBlock, targetBlock, powerable);
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
             }
         }
+    }
+
+    private static void turnOffButton(Block buttonBlock, Block attachedToBlock, Powerable powerable) {
+        powerable.setPowered(false);
+        buttonBlock.setBlockData(powerable);
+        applyPhysicsToBlock(attachedToBlock);
+    }
+
+    private static void applyPhysicsToBlock(Block targetBlock) {
+        // To apply physics to a block and have redstone on attached blocks change state,
+        // we actually have to change the material of the block. Simply setting the same
+        // block data does not apply physics like it used to in prior versions. (Bug?)
+        // Dirt and stone are chosen as the temporary placeholders because their behavior is uninteresting.
+        BlockData targetBlockData = targetBlock.getBlockData();
+        Material placeholderMaterial = targetBlock.getType() == Material.DIRT ? Material.STONE : Material.DIRT;
+        targetBlock.setType(placeholderMaterial, false);
+        targetBlock.setBlockData(targetBlockData, true);
     }
 
     private boolean anyside;
