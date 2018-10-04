@@ -5,6 +5,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -64,20 +65,20 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         if(!EventUtil.passesFilter(event)) return;
 
         if (event.getBlock().getType() != Material.DISPENSER) return;
-        Dispenser dis = (Dispenser) event.getBlock().getState();
-        if (dispenseNew(dis, event.getItem(), event.getVelocity(), event)) {
+        if (dispenseNew(event.getBlock(), event.getItem(), event.getVelocity(), event)) {
             event.setCancelled(true);
         }
     }
 
-    private boolean dispenseNew(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    private boolean dispenseNew(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
+        Dispenser dis = (Dispenser) block.getState();
         if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
         ItemStack[] stacks = dis.getInventory().getContents();
         for (Recipe r : recipes) {
             Material[] recipe = r.getRecipe();
             if (checkRecipe(stacks, recipe)) {
-                boolean toReturn = r.doAction(dis, item, velocity, event);
+                boolean toReturn = r.doAction(block, item, velocity, event);
                 for (int i = 0; i < stacks.length; i++) {
                     if (recipe[i] != Material.AIR) {
                         stacks[i] = ItemUtil.getUsedItem(stacks[i]);
