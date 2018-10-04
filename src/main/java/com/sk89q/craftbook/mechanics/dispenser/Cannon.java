@@ -2,8 +2,10 @@ package com.sk89q.craftbook.mechanics.dispenser;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Dispenser;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -26,12 +28,11 @@ public class Cannon extends Recipe {
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
-
-        org.bukkit.material.Dispenser disp = (org.bukkit.material.Dispenser) dis.getData();
+    public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+        Directional disp = (Directional) block.getBlockData();
         BlockFace face = disp.getFacing();
-        Location location = dis.getBlock().getRelative(face).getLocation().add(0.5, 0.5, 0.5);
-        TNTPrimed a = (TNTPrimed) dis.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
+        Location location = block.getRelative(face).getLocation().add(0.5, 0.5, 0.5);
+        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
         a.setVelocity(velocity.normalize().multiply(2));
         return true;
     }

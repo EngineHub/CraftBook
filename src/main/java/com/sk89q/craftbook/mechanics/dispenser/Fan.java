@@ -1,17 +1,15 @@
 package com.sk89q.craftbook.mechanics.dispenser;
 
+import com.sk89q.craftbook.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Dispenser;
+import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.DirectionalContainer;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.util.EntityUtil;
 
 /**
  * @author Me4502
@@ -19,7 +17,6 @@ import com.sk89q.craftbook.util.EntityUtil;
 public class Fan extends Recipe {
 
     public Fan(Material[] recipe) {
-
         super(recipe);
     }
 
@@ -32,14 +29,13 @@ public class Fan extends Recipe {
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
-
-        MaterialData d = dis.getBlock().getState().getData();
+    public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+        Dispenser d = (Dispenser) block.getBlockData();
         BlockFace face = ((org.bukkit.material.Dispenser) d).getFacing();
-        Location dispenserLoc = dis.getBlock().getRelative(face).getLocation();
-        for (Entity e : dis.getWorld().getChunkAt(dispenserLoc).getEntities()) {
+        Location dispenserLoc = block.getRelative(face).getLocation();
+        for (Entity e : block.getWorld().getChunkAt(dispenserLoc).getEntities()) {
             if (EntityUtil.isEntityInBlock(e, dispenserLoc.getBlock())) {
-                Vector dir = new Vector(((DirectionalContainer) dis.getData()).getFacing().getModX(),((DirectionalContainer) dis.getData()).getFacing().getModY(),((DirectionalContainer) dis.getData()).getFacing().getModZ());
+                Vector dir = new Vector(d.getFacing().getModX(), d.getFacing().getModY(), d.getFacing().getModZ());
                 e.setVelocity(e.getVelocity().add(dir).normalize().multiply(10));
             }
         }

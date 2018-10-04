@@ -18,13 +18,13 @@ import com.sk89q.worldedit.util.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Button;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -97,9 +97,9 @@ public class Teleporter extends AbstractCraftBookMechanic {
             }
             trigger = event.getClickedBlock();
         } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
-            Button b = (Button) event.getClickedBlock().getState().getData();
-            if(b == null || b.getAttachedFace() == null) return;
-            Block sign = event.getClickedBlock().getRelative(b.getAttachedFace(), 2);
+            Directional b = (Directional) event.getClickedBlock().getBlockData();
+            if(b == null || b.getFacing() == null) return;
+            Block sign = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
             if (SignUtil.isSign(sign)) {
                 ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
                 if (!s.getLine(1).equals("[Teleporter]")) return;
@@ -166,8 +166,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
                     return;
                 }
             } else if (Tag.BUTTONS.isTagged(location.getType())) {
-                Button b = (Button) location.getState().getData();
-                Block sign = location.getRelative(b.getAttachedFace()).getRelative(b.getAttachedFace());
+                Directional b = (Directional) location.getBlockData();
+                Block sign = location.getRelative(b.getFacing(), 2);
                 if (!checkTeleportSign(player, sign)) {
                     return;
                 }

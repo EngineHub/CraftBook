@@ -35,6 +35,9 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.RedstoneWire;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,9 +52,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.Directional;
-import org.bukkit.material.PressureSensor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -140,14 +140,9 @@ final class MechanicListenerAdapter implements Listener {
             case REDSTONE_WIRE:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
-                if(block.getData() > 0)
-                    handleRedstoneForBlock(block, block.getData(), 0);
-                break;
-            case LEVER:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                if(((org.bukkit.material.Lever) block.getState().getData()).isPowered())
-                    handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
+                RedstoneWire wire = (RedstoneWire) block.getBlockData();
+                if(wire.getPower() > 0)
+                    handleRedstoneForBlock(block, wire.getPower(), 0);
                 break;
             case ACACIA_BUTTON:
             case BIRCH_BUTTON:
@@ -156,11 +151,7 @@ final class MechanicListenerAdapter implements Listener {
             case OAK_BUTTON:
             case SPRUCE_BUTTON:
             case STONE_BUTTON:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                if(((org.bukkit.material.Button) block.getState().getData()).isPowered())
-                    handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
-                break;
+            case LEVER:
             case STONE_PRESSURE_PLATE:
             case ACACIA_PRESSURE_PLATE:
             case BIRCH_PRESSURE_PLATE:
@@ -173,7 +164,8 @@ final class MechanicListenerAdapter implements Listener {
             case DETECTOR_RAIL:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
-                if(block.getState().getData() instanceof PressureSensor && ((PressureSensor) block.getState().getData()).isPressed())
+                Powerable powerable = (Powerable) block.getBlockData();
+                if(powerable.isPowered())
                     handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
                 break;
             default:
@@ -280,7 +272,7 @@ final class MechanicListenerAdapter implements Listener {
                 return;
             case REPEATER:
             case COMPARATOR:
-                Directional diode = (Directional) block.getState().getData();
+                Directional diode = (Directional) block.getBlockData();
                 BlockFace f = diode.getFacing();
                 handleDirectWireInput(x + f.getModX(), y, z + f.getModZ(), block, oldLevel, newLevel);
                 if(block.getRelative(f).getType() != Material.AIR) {
@@ -300,9 +292,9 @@ final class MechanicListenerAdapter implements Listener {
             case SPRUCE_BUTTON:
             case STONE_BUTTON:
             case LEVER:
-                Attachable button = (Attachable) block.getState().getData();
+                Directional button = (Directional) block.getBlockData();
                 if(button != null) {
-                    BlockFace face = button.getAttachedFace();
+                    BlockFace face = button.getFacing().getOppositeFace();
                     if(face != null)
                         handleDirectWireInput(x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2, block, oldLevel, newLevel);
                 }

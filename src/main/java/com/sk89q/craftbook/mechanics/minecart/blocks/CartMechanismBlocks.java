@@ -11,8 +11,8 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.material.Attachable;
-import org.bukkit.material.Vine;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.MultipleFacing;
 
 /**
  * <p>
@@ -83,11 +83,11 @@ public class CartMechanismBlocks {
         BlockFace face = BlockFace.DOWN;
 
         if (rail.getType() == Material.LADDER)
-            face = ((Attachable) rail.getState().getData()).getAttachedFace();
+            face = ((Directional) rail.getBlockData()).getFacing().getOppositeFace();
         else if (rail.getType() == Material.VINE) {
-            Vine vine = (Vine) rail.getState().getData();
+            MultipleFacing vine = (MultipleFacing) rail.getBlockData();
             for(BlockFace test : LocationUtil.getDirectFaces()) {
-                if(vine.isOnFace(test)) {
+                if(vine.hasFace(test.getOppositeFace())) {
                     face = test;
                     break;
                 }
