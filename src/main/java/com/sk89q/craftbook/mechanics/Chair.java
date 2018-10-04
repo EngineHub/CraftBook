@@ -28,6 +28,8 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,7 +41,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Directional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -248,8 +249,9 @@ public class Chair extends AbstractCraftBookMechanic {
 
                 Location chairLoc = event.getClickedBlock().getLocation().add(0.5,0,0.5);
 
-                if(chairFacing && event.getClickedBlock().getState().getData() instanceof Directional) {
-                    BlockFace direction = ((Directional) event.getClickedBlock().getState().getData()).getFacing();
+                BlockData blockData = event.getClickedBlock().getBlockData();
+                if(chairFacing && blockData instanceof Directional) {
+                    BlockFace direction = ((Directional) blockData).getFacing();
 
                     double dx = direction.getModX();
                     double dy = direction.getModY();

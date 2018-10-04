@@ -1,7 +1,7 @@
 package com.sk89q.craftbook.mechanics.dispenser;
 
 import org.bukkit.Material;
-import org.bukkit.block.Dispenser;
+import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -17,8 +17,7 @@ public class ItemShooter extends Recipe {
     }
 
     @Override
-    public boolean doAction(Dispenser dis, ItemStack item, Vector velocity, BlockDispenseEvent event) {
-
+    public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
         event.setItem(new ItemStack(itemId, 1));
         return false;
     }
