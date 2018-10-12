@@ -38,6 +38,7 @@ dependency-reduced-pom.xml
 *.iws
 .idea/
 .gradle/
+out/
 
 # Fern's utils
 uploadtoserver.sh

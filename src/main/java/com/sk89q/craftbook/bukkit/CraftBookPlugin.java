@@ -137,6 +137,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -443,10 +444,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 random = SecureRandom.getInstance("SHA1PRNG");
             } catch (NoSuchAlgorithmException e1) {
                 getLogger().severe(getStackTrace(e1));
-                random = new Random();
             }
-        else
-            random = new Random();
 
         // Let's start the show
         setupCraftBook();
@@ -900,9 +898,8 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return CraftBook's {@link Random}
      */
     public Random getRandom() {
-
         if(random == null)
-            return new Random(); //Use a temporary random whilst CraftBooks random is being set.
+            return ThreadLocalRandom.current(); // If none is set, use a thread local random.
         return random;
     }
 
