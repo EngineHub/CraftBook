@@ -22,6 +22,7 @@ import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.item.ItemType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -72,7 +73,10 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public boolean isHoldingBlock() {
-        return getItemInHand(HandSide.MAIN_HAND).getType().hasBlockType() || getItemInHand(HandSide.OFF_HAND).getType().hasBlockType();
+        ItemType mainitem = getItemInHand(HandSide.MAIN_HAND).getType();
+        ItemType offitem = getItemInHand(HandSide.OFF_HAND).getType();
+        return (mainitem.hasBlockType() && !mainitem.getBlockType().getMaterial().isAir())
+                || (offitem.hasBlockType() && !offitem.getBlockType().getMaterial().isAir());
     }
 
     @Override

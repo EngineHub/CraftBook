@@ -354,6 +354,6 @@ public class Door extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks()));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())));
     }
 }

@@ -172,7 +172,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
-        enabledBlocks = BlockSyntax.getBlocks(config.getStringList(path + "block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).collect(Collectors.toList())), true);
+        enabledBlocks = BlockSyntax.getBlocks(config.getStringList(path + "block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment(path + "tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
         enabledItems = config.getStringList(path + "tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),

@@ -407,7 +407,8 @@ public class Chair extends AbstractCraftBookMechanic {
         chairHealAmount = config.getDouble(path + "regen-health-amount", 1);
 
         config.setComment(path + "blocks", "A list of blocks that can be sat on.");
-        chairBlocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).collect(Collectors.toList())), true);
+        chairBlocks =
+                BlockSyntax.getBlocks(config.getStringList(path + "blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment(path + "face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean(path + "face-correct-direction", true);

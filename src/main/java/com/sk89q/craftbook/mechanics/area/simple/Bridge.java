@@ -330,6 +330,6 @@ public class Bridge extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "Blocks bridges can use.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks()));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())));
     }
 }
