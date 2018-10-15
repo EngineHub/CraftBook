@@ -209,13 +209,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     }
 
     private static void applyPhysicsToBlock(Block targetBlock) {
-        // To apply physics to a block and have redstone on attached blocks change state,
-        // we actually have to change the material of the block. Simply setting the same
-        // block data does not apply physics like it used to in prior versions. (Bug?)
-        // Dirt and stone are chosen as the temporary placeholders because their behavior is uninteresting.
         BlockData targetBlockData = targetBlock.getBlockData();
-        Material placeholderMaterial = targetBlock.getType() == Material.DIRT ? Material.STONE : Material.DIRT;
-        targetBlock.setType(placeholderMaterial, false);
         targetBlock.setBlockData(targetBlockData, true);
     }
 
