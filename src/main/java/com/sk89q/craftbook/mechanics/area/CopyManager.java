@@ -169,11 +169,12 @@ public class CopyManager {
                     missing.put(cacheKey, System.currentTimeMillis());
                     throw new IOException("Unknown clipboard format!");
                 }
-                ClipboardReader reader = format.getReader(new FileInputStream(file));
-                copy = (BlockArrayClipboard) reader.read();
-                missing.remove(cacheKey);
-                cache.put(cacheKey, copy);
-                return copy;
+                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                    copy = (BlockArrayClipboard) reader.read();
+                    missing.remove(cacheKey);
+                    cache.put(cacheKey, copy);
+                    return copy;
+                }
             } else {
                 missing.put(cacheKey, System.currentTimeMillis());
                 throw new FileNotFoundException(id);
@@ -193,7 +194,6 @@ public class CopyManager {
      * @throws IOException If the file failed to save
      */
     public void save(String namespace, String id, BlockArrayClipboard clipboard) throws IOException {
-
         File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
 
         if (!folder.exists()) {
@@ -205,8 +205,9 @@ public class CopyManager {
         String cacheKey = namespace + '/' + id;
 
         File file = new File(folder, id + getFileSuffix());
-        ClipboardWriter writer = getDefaultClipboardFormat().getWriter(new FileOutputStream(file));
-        writer.write(clipboard);
+        try (ClipboardWriter writer = getDefaultClipboardFormat().getWriter(new FileOutputStream(file))) {
+            writer.write(clipboard);
+        }
         missing.remove(cacheKey);
         cache.put(cacheKey, clipboard);
     }
@@ -238,15 +239,16 @@ public class CopyManager {
      * @throws WorldEditException If it fails
      */
     public void paste(BlockArrayClipboard clipboard) throws WorldEditException {
-        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1);
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1)) {
 
-        Operation operation = new ClipboardHolder(clipboard)
-                .createPaste(editSession)
-                .to(clipboard.getOrigin())
-                .ignoreAirBlocks(false)
-                .build();
+            Operation operation = new ClipboardHolder(clipboard)
+                    .createPaste(editSession)
+                    .to(clipboard.getOrigin())
+                    .ignoreAirBlocks(false)
+                    .build();
 
-        Operations.complete(operation);
+            Operations.complete(operation);
+        }
     }
 
     /**
@@ -255,11 +257,8 @@ public class CopyManager {
      * @param clipboard The clipboard
      */
     public void clear(BlockArrayClipboard clipboard) {
-        try {
-            EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1);
-            editSession.enableQueue();
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1)) {
             editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
-            editSession.flushQueue();
         } catch (MaxChangedBlocksException e) {
             // is never thrown
         }
