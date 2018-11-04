@@ -11,7 +11,7 @@ import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Tag;
@@ -67,7 +67,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         if(b == null) return false;
 
         if (harvestable(b)) {
-            ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(b, null));
+            ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(b, null));
             b.setType(Material.AIR);
             return true;
         }

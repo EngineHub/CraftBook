@@ -11,11 +11,11 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -82,9 +82,9 @@ public class AreaCommands {
                 sender.sendMessage(ChatColor.RED + "You have not made a selection!");
                 return;
             }
-            Vector min = sel.getMinimumPoint();
-            Vector max = sel.getMaximumPoint();
-            Vector size = max.subtract(min).add(1, 1, 1);
+            BlockVector3 min = sel.getMinimumPoint();
+            BlockVector3 max = sel.getMaximumPoint();
+            BlockVector3 size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
             if (Area.instance.maxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()

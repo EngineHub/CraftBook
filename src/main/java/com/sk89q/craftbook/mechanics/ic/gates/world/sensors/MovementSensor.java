@@ -1,12 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.sensors;
 
-import java.util.Locale;
-import java.util.Set;
-
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -17,7 +10,13 @@ import com.sk89q.craftbook.util.EntityType;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.Vector3;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement velocity support.
@@ -34,7 +33,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
     private Set<EntityType> types;
 
     private Block center;
-    private Vector radius;
+    private Vector3 radius;
 
     @Override
     public void load() {
@@ -53,9 +52,9 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-        if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-            radiusString = String.valueOf(radius.getBlockX());
+        String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
+        if(radius.getX() == radius.getY() && radius.getY() == radius.getZ())
+            radiusString = String.valueOf(radius.getX());
         if (getSign().getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());

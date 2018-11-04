@@ -9,7 +9,7 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -17,7 +17,7 @@ import org.bukkit.block.Block;
 
 public class LiquidFlood extends AbstractSelfTriggeredIC {
 
-    Vector radius;
+    BlockVector3 radius;
     String liquid;
     Location centre;
 
@@ -42,7 +42,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
     public void load() {
 
         centre = ICUtil.parseBlockLocation(getSign()).getLocation();
-        radius = ICUtil.parseRadius(getSign());
+        radius = ICUtil.parseRadius(getSign()).toBlockPoint();
 
         liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
     }

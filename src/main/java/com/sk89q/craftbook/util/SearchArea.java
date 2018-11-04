@@ -3,8 +3,9 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.apache.commons.lang.StringUtils;
@@ -16,12 +17,18 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class SearchArea {
 
     private Location center = null;
-    private Vector radius = null;
+    private Vector3 radius = null;
+    private BlockVector3 blockRadius = null;
 
     private ProtectedRegion region = null;
     private World world = null;
@@ -38,9 +45,10 @@ public final class SearchArea {
      * @param center
      * @param radius
      */
-    private SearchArea(Location center, Vector radius) {
+    private SearchArea(Location center, Vector3 radius) {
         this.center = center;
         this.radius = radius;
+        this.blockRadius = radius.toBlockPoint();
     }
 
     /**
@@ -81,7 +89,7 @@ public final class SearchArea {
 
             String[] locationParts = RegexUtil.EQUALS_PATTERN.split(line);
             Location offset = SignUtil.getBackBlock(block).getLocation();
-            Vector radius = ICUtil.parseRadius(locationParts[0]);
+            Vector3 radius = ICUtil.parseRadius(locationParts[0]);
             if(locationParts.length > 1)
                 offset = ICUtil.parseBlockLocation(CraftBookBukkitUtil.toChangedSign(block), locationParts[1], ICMechanic.instance.defaultCoordinates).getLocation();
 
@@ -174,7 +182,7 @@ public final class SearchArea {
     public boolean isWithinArea(Location location) {
 
         if(hasRegion()) {
-            if(!region.isPhysicalArea() || region.contains(CraftBookBukkitUtil.toVector(location)) && location.getWorld().equals(world))
+            if(!region.isPhysicalArea() || region.contains(CraftBookBukkitUtil.toVector(location.getBlock())) && location.getWorld().equals(world))
                 return true;
         } else if(hasRadiusAndCenter()) {
             if(LocationUtil.isWithinRadius(location, center, radius))
@@ -209,9 +217,9 @@ public final class SearchArea {
                     chunks.add(getWorld().getChunkAt(x,z));
         } else if (hasRadiusAndCenter()) {
 
-            int chunkRadiusX = radius.getBlockX() < 16 ? 1 : radius.getBlockX() / 16;
+            int chunkRadiusX = blockRadius.getBlockX() < 16 ? 1 : blockRadius.getBlockX() / 16;
+            int chunkRadiusZ = blockRadius.getBlockZ() < 16 ? 1 : blockRadius.getBlockZ() / 16;
 
-            int chunkRadiusZ = radius.getBlockZ() < 16 ? 1 : radius.getBlockZ() / 16;
             for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
                 for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
 
@@ -240,12 +248,12 @@ public final class SearchArea {
             zMin = region.getMinimumPoint().getBlockZ();
             zMax = region.getMaximumPoint().getBlockZ();
         } else if(hasRadiusAndCenter()) {
-            xMin = Math.min(center.getBlockX() - radius.getBlockX(), center.getBlockX() + radius.getBlockX());
-            xMax = Math.max(center.getBlockX() - radius.getBlockX(), center.getBlockX() + radius.getBlockX());
-            yMin = Math.min(center.getBlockY() - radius.getBlockY(), center.getBlockY() + radius.getBlockY());
-            yMax = Math.max(center.getBlockY() - radius.getBlockY(), center.getBlockY() + radius.getBlockY());
-            zMin = Math.min(center.getBlockZ() - radius.getBlockZ(), center.getBlockZ() + radius.getBlockZ());
-            zMax = Math.max(center.getBlockZ() - radius.getBlockZ(), center.getBlockZ() + radius.getBlockZ());
+            xMin = Math.min(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
+            xMax = Math.max(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
+            yMin = Math.min(center.getBlockY() - blockRadius.getBlockY(), center.getBlockY() + blockRadius.getBlockY());
+            yMax = Math.max(center.getBlockY() - blockRadius.getBlockY(), center.getBlockY() + blockRadius.getBlockY());
+            zMin = Math.min(center.getBlockZ() - blockRadius.getBlockZ(), center.getBlockZ() + blockRadius.getBlockZ());
+            zMax = Math.max(center.getBlockZ() - blockRadius.getBlockZ(), center.getBlockZ() + blockRadius.getBlockZ());
         } else
             return null;
 
@@ -293,8 +301,7 @@ public final class SearchArea {
      * 
      * @return The radius.
      */
-    public Vector getRadius() {
-
+    public Vector3 getRadius() {
         return radius;
     }
 

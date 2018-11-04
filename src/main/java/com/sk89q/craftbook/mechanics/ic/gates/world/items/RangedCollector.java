@@ -16,7 +16,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -63,7 +63,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
             chip.setOutput(0, collect());
     }
 
-    private Vector radius;
+    private Vector3 radius;
     private Location centre;
 
     private boolean include = false;
@@ -76,9 +76,9 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
     public void load() {
 
         radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getBlockX() + "," + radius.getBlockY() + "," + radius.getBlockZ();
-        if(radius.getBlockX() == radius.getBlockY() && radius.getBlockY() == radius.getBlockZ())
-            radiusString = String.valueOf(radius.getBlockX());
+        String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
+        if(radius.getX() == radius.getY() && radius.getY() == radius.getZ())
+            radiusString = String.valueOf(radius.getX());
         if (getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]);
             centre = ICUtil.parseBlockLocation(getSign(), 2).getLocation();

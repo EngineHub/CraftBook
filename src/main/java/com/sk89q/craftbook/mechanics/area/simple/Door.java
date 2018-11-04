@@ -29,8 +29,8 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
@@ -305,14 +305,14 @@ public class Door extends CuboidToggleMechanic {
         for (int i = 0; i < left; i++) {
             if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), new Vector(0, 0, 0));
+            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
             if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), new Vector(0, 0, 0));
+            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
         }
 
         // Don't toggle the end points

@@ -16,8 +16,8 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
@@ -33,15 +33,14 @@ public class DistanceComparator<T extends BlockState> implements Comparator<T> {
     /**
      * Origin to compare from.
      */
-    private final Vector origin;
+    private final Vector3 origin;
 
     /**
      * Construct the object.
      *
      * @param origin
      */
-    public DistanceComparator(Vector origin) {
-
+    public DistanceComparator(Vector3 origin) {
         this.origin = origin;
     }
 

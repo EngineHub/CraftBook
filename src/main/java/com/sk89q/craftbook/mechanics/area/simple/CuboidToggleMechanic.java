@@ -14,8 +14,8 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -45,7 +45,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
-        for (Vector bv : toggle) {
+        for (BlockVector3 bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (b.getType() == type.getMaterial() || BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getMaterial()))
@@ -61,7 +61,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
-        for (Vector bv : toggle) {
+        for (BlockVector3 bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {

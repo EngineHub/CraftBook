@@ -25,9 +25,10 @@ import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
@@ -111,11 +112,11 @@ public final class ICUtil {
                     try {
                         if(selector instanceof CuboidRegionSelector) {
 
-                            Vector centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
+                            BlockVector3 centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
 
                             centre = centre.divide(2);
 
-                            Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
+                            BlockVector3 offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector().toBlockPoint());
 
                             String x,y,z;
 
@@ -133,10 +134,8 @@ public final class ICUtil {
 
                             sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", "&" + x + ":" + y + ":" + z));
                         } else if (selector instanceof SphereRegionSelector) {
-
-                            Vector centre = selector.getRegion().getCenter();
-
-                            Vector offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
+                            Vector3 centre = selector.getRegion().getCenter();
+                            Vector3 offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
                             String x,y,z;
 
@@ -216,7 +215,7 @@ public final class ICUtil {
         sign.update(false);
     }
 
-    public static Vector parseUnsafeBlockLocation(String line) throws NumberFormatException, ArrayIndexOutOfBoundsException {
+    public static Vector3 parseUnsafeBlockLocation(String line) throws NumberFormatException, ArrayIndexOutOfBoundsException {
 
         line = StringUtils.replace(StringUtils.replace(StringUtils.replace(line, "!", ""), "^", ""), "&", "");
         double offsetX = 0, offsetY = 0, offsetZ = 0;
@@ -231,7 +230,7 @@ public final class ICUtil {
         } else
             offsetY = Double.parseDouble(line);
 
-        return new Vector(offsetX, offsetY, offsetZ);
+        return Vector3.at(offsetX, offsetY, offsetZ);
     }
 
     public static Block parseBlockLocation(ChangedSign sign, String line, LocationCheckType relative) {
@@ -245,10 +244,10 @@ public final class ICUtil {
         else if (line.contains("&"))
             relative = LocationCheckType.getTypeFromChar('&');
 
-        Vector offsets = new Vector(0,0,0);
+        BlockVector3 offsets = BlockVector3.ZERO;
 
         try {
-            offsets = parseUnsafeBlockLocation(line);
+            offsets = parseUnsafeBlockLocation(line).toBlockPoint();
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
         }
 
@@ -313,19 +312,17 @@ public final class ICUtil {
         }
     }
 
-    public static Vector parseRadius(ChangedSign sign) {
-
+    public static Vector3 parseRadius(ChangedSign sign) {
         return parseRadius(sign, 2);
     }
 
-    public static Vector parseRadius(ChangedSign sign, int lPos) {
-
+    public static Vector3 parseRadius(ChangedSign sign, int lPos) {
         return parseRadius(sign.getLine(lPos));
     }
 
-    public static Vector parseRadius(String line) {
+    public static Vector3 parseRadius(String line) {
 
-        Vector radius = new Vector(10,10,10);
+        Vector3 radius = Vector3.at(10,10,10);
         try {
             radius = parseUnsafeRadius(line);
         } catch (NumberFormatException ignored) {
@@ -333,22 +330,22 @@ public final class ICUtil {
         return radius;
     }
 
-    public static Vector parseUnsafeRadius(String line) throws NumberFormatException {
+    public static Vector3 parseUnsafeRadius(String line) throws NumberFormatException {
         String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
         if(radians.length > 1) {
             double x = VerifyUtil.verifyRadius(Double.parseDouble(radians[0]), ICMechanic.instance.maxRange);
             double y = VerifyUtil.verifyRadius(Double.parseDouble(radians[1]), ICMechanic.instance.maxRange);
             double z = VerifyUtil.verifyRadius(Double.parseDouble(radians[2]), ICMechanic.instance.maxRange);
-            return new Vector(x,y,z);
+            return Vector3.at(x,y,z);
         }
         else {
             double r = Double.parseDouble(radians[0]);
             r = VerifyUtil.verifyRadius(r, ICMechanic.instance.maxRange);
-            return new Vector(r,r,r);
+            return Vector3.at(r,r,r);
         }
     }
 
-    public static void collectItem(AbstractIC ic, Vector offset, ItemStack... items) {
+    public static void collectItem(AbstractIC ic, BlockVector3 offset, ItemStack... items) {
         Sign sign = CraftBookBukkitUtil.toSign(ic.getSign());
         Block backB = ic.getBackBlock();
         BlockFace back = SignUtil.getBack(sign.getBlock());

@@ -14,7 +14,7 @@ import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -99,7 +99,7 @@ public class Driller extends AbstractSelfTriggeredIC {
             if (brokenType == Material.BEDROCK) return false;
         }
 
-        ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
+        ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
 
         brokenType = blockToBreak.getType();
         blockToBreak.setType(Material.AIR);

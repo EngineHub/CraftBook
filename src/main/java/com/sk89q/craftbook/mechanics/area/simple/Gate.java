@@ -29,9 +29,9 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -181,8 +181,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Setting column at " + block.getX() + ':' + block.getY() + ':' + block.getZ() + " to " + item.toString(), "gates.search");
 
-        for (Vector bl : column.getRegion()) {
-            Block blo = CraftBookBukkitUtil.toLocation(block.getWorld(), bl).getBlock();
+        for (BlockVector3 bl : column.getRegion()) {
+            Block blo = CraftBookBukkitUtil.toLocation(block.getWorld(), bl.toVector3()).getBlock();
 
             //sign = CraftBookBukkitUtil.toChangedSign(sign.getSign().getBlock());
 
@@ -655,8 +655,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public CuboidRegion getRegion() {
             return new CuboidRegion(
-                    BukkitAdapter.adapt(getStartingPoint().getRelative(0, -1, 0).getLocation()).toVector(),
-                    BukkitAdapter.adapt(getEndingPoint().getLocation()).toVector()
+                    BukkitAdapter.adapt(getStartingPoint().getRelative(0, -1, 0).getLocation()).toVector().toBlockPoint(),
+                    BukkitAdapter.adapt(getEndingPoint().getLocation()).toVector().toBlockPoint()
             );
         }
 

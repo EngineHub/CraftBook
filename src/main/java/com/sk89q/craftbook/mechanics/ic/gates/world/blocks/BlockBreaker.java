@@ -14,9 +14,9 @@ import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.ICUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
@@ -86,7 +86,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         if (!item.equalsFuzzy(BukkitAdapter.adapt(broken.getBlockData())))
 
-        ICUtil.collectItem(this, new Vector(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
+        ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
         broken.setType(Material.AIR);
 
         return true;

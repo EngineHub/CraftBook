@@ -1,17 +1,5 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -26,7 +14,18 @@ import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SearchArea;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.Vector3;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
 
@@ -115,7 +114,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public Player getShootingPlayer() {
 
         Block b = getBackBlock().getRelative(0, 1, 0);
-        for(Entity ent : LocationUtil.getNearbyEntities(BlockUtil.getBlockCentre(b), new Vector(2,2,2))) {
+        for(Entity ent : LocationUtil.getNearbyEntities(BlockUtil.getBlockCentre(b), Vector3.at(2, 2, 2))) {
             if(EntityUtil.isEntityInBlock(ent, b) && ent instanceof Player)
                 return (Player) ent;
         }

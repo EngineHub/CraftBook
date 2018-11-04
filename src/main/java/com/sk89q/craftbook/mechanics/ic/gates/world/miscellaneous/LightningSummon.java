@@ -16,14 +16,9 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -31,12 +26,16 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 
 public class LightningSummon extends AbstractIC {
 
     private Location center;
-    private Vector radius;
+    private BlockVector3 radius;
     private int chance;
 
     public LightningSummon(Server server, ChangedSign sign, ICFactory factory) {
@@ -48,14 +47,14 @@ public class LightningSummon extends AbstractIC {
     public void load() {
 
         if (!getLine(2).isEmpty()) {
-            radius = ICUtil.parseRadius(getSign());
+            radius = ICUtil.parseRadius(getSign()).toBlockPoint();
             if(getLine(2).contains("="))
                 center = ICUtil.parseBlockLocation(getSign()).getLocation();
             else
                 center = getBackBlock().getLocation();
         } else {
             center = getBackBlock().getLocation();
-            radius = new Vector(1,1,1);
+            radius = BlockVector3.at(1,1,1);
         }
 
         if(!getLine(3).isEmpty()) {
