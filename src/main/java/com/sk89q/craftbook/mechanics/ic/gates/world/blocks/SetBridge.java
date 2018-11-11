@@ -49,7 +49,7 @@ public class SetBridge extends AbstractIC {
         if (!line.isEmpty()) {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);
             // parse the material data
-            if (split.length > 0) {
+            if (split.length > 1) {
                 offBlock = BlockSyntax.getBukkitBlock(split[1]);
             }
             // parse the material and data for toggle on
