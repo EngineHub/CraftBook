@@ -24,7 +24,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.entity.Player;
@@ -157,11 +156,11 @@ public class Snow extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (event.getTo().getBlock().getType() == Material.SNOW) {
-            Levelled levelled = (Levelled) event.getTo().getBlock().getBlockData();
+            org.bukkit.block.data.type.Snow levelled = (org.bukkit.block.data.type.Snow) event.getTo().getBlock().getBlockData();
             if(slowdown) {
-                if(levelled.getLevel() > 4)
+                if(levelled.getLayers() > 4)
                     event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2), true);
-                else if(levelled.getLevel() > 0)
+                else if(levelled.getLayers() > levelled.getMinimumLayers())
                     event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1), true);
             }
 
@@ -170,7 +169,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
 
                 if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
-                    if (levelled.getLevel() == 0 && partialTrample)
+                    if (levelled.getLayers() == levelled.getMinimumLayers() && partialTrample)
                         return;
 
                     if (!player.hasPermission("craftbook.mech.snow.trample"))
