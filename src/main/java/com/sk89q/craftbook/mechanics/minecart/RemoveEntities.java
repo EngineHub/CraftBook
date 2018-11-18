@@ -33,7 +33,10 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
             if(event.getEntity().isInsideVehicle())
                 return;
             ((LivingEntity) event.getEntity()).damage(10);
-            event.getEntity().setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.8).add(new Vector(0,0.5,0)));
+            Vector newVelocity = event.getVehicle().getVelocity().normalize().multiply(1.8).add(new Vector(0,0.5,0));
+            if (Double.isFinite(newVelocity.getX()) && Double.isFinite(newVelocity.getY()) && Double.isFinite(newVelocity.getZ())) {
+                event.getEntity().setVelocity(newVelocity);
+            }
         } else if (event.getEntity() instanceof Vehicle) {
 
             if(!event.getEntity().isEmpty())
