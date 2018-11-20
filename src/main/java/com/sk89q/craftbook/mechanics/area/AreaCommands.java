@@ -170,12 +170,15 @@ public class AreaCommands {
 
         List<String> areaList = new ArrayList<>();
 
-        FilenameFilter fnf = (dir, name) -> Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
+        FilenameFilter fnf = (dir, name) -> Area.instance.useSchematics
+                ? name.endsWith(".schematic") || name.endsWith(".schem")
+                : name.endsWith(".cbcopy");
 
         if (folder != null && folder.exists()) {
             for (File area : folder.listFiles(fnf)) {
                 String areaName = area.getName();
                 areaName = areaName.replace(".schematic", "");
+                areaName = areaName.replace(".schem", "");
                 areaName = areaName.replace(".cbcopy", "");
                 areaList.add(ChatColor.AQUA + folder.getName() + "   :   " + ChatColor.YELLOW + areaName);
             }
@@ -185,6 +188,7 @@ public class AreaCommands {
                     for (File area : file.listFiles(fnf)) {
                         String areaName = area.getName();
                         areaName = areaName.replace(".schematic", "");
+                        areaName = areaName.replace(".schem", "");
                         areaName = areaName.replace(".cbcopy", "");
                         areaList.add(ChatColor.AQUA + folder.getName() + "   :   " + ChatColor.YELLOW + areaName);
                     }
@@ -282,9 +286,6 @@ public class AreaCommands {
             deleteAll = true;
         } else throw new CommandException("You need to define an area or -a to delete all areas.");
 
-        // add the area suffix
-        areaId = areaId + (Area.instance.useSchematics ? ".schematic" : ".cbcopy");
-
         File areas = null;
         try {
             areas = new File(plugin.getDataFolder(), "areas/" + namespace);
@@ -299,9 +300,17 @@ public class AreaCommands {
                 player.print("All areas in the namespace " + namespace + " have been deleted.");
             }
         } else {
-            File file = new File(areas, areaId);
-            if (file.delete()) {
-                player.print("The area '" + areaId + " in the namespace '" + namespace + "' has been deleted.");
+            // add the area suffix
+            String[] possibleFilenames = {areaId + ".schematic", areaId + ".schem", areaId + ".cbcopy"};
+
+            for (String filename : possibleFilenames) {
+                File file = new File(areas, filename);
+                if (file.exists()) {
+                    if (file.delete()) {
+                        player.print("The area '" + areaId + " in the namespace '" + namespace + "' has been deleted.");
+                    }
+                    break;
+                }
             }
         }
     }
@@ -311,7 +320,9 @@ public class AreaCommands {
     // If a deletion fails, the method stops attempting to delete and returns false.
     private boolean deleteDir(File dir) {
 
-        FilenameFilter fnf = (dir1, name) -> Area.instance.useSchematics ? name.endsWith(".schematic") : name.endsWith(".cbcopy");
+        FilenameFilter fnf = (dir1, name) -> Area.instance.useSchematics
+                ? name.endsWith(".schematic") || name.endsWith(".schem")
+                : name.endsWith(".cbcopy");
 
         if (dir.isDirectory()) {
             for (File aChild : dir.listFiles(fnf)) { if (!aChild.delete()) return false; }

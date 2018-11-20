@@ -346,7 +346,7 @@ public class Area extends AbstractCraftBookMechanic {
         config.setComment(path + "allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
         allowRedstone = config.getBoolean(path + "allow-redstone", true);
 
-        config.setComment(path + "use-schematics", "Use MCEdit Schematics for saving areas. This allows support of all blocks and chest/sign data.");
+        config.setComment(path + "use-schematics", "Use Schematics for saving areas. This allows support of all blocks and chest/sign data.");
         useSchematics = config.getBoolean(path + "use-schematics", true);
 
         config.setComment(path + "shorten-long-names", "If this is enabled, namespaces too long to fit on signs will be shortened.");
