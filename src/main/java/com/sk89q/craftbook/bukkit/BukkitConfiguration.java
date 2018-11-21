@@ -153,7 +153,7 @@ public class BukkitConfiguration {
         persistentStorageType = config.getString("persistent-storage-type", "YAML");
 
         config.setComment("convert-names-to-cbids", "Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.");
-        convertNamesToCBID = config.getBoolean("convert-names-to-cbids", true);
+        convertNamesToCBID = config.getBoolean("convert-names-to-cbids", false);
 
         config.save();
     }
