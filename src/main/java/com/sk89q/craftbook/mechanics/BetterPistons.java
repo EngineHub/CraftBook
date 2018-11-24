@@ -31,6 +31,8 @@ import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.Piston;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
@@ -38,7 +40,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.PistonBaseMaterial;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -129,7 +130,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
             if(ProtectionUtil.shouldUseProtection()) {
                 if (type == Types.BOUNCE || type == Types.CRUSH) {
-                    PistonBaseMaterial pis = (PistonBaseMaterial) block.getState().getData();
+                    Piston pis = (Piston) block.getBlockData();
                     Block off = block.getRelative(pis.getFacing());
                     if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
                         if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -138,7 +139,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         return;
                     }
                 } else if (type == Types.SUPERPUSH || type == Types.SUPERSTICKY) {
-                    PistonBaseMaterial pis = (PistonBaseMaterial) block.getState().getData();
+                    Piston pis = (Piston) block.getBlockData();
 
                     int distance = 10;
                     try {
@@ -177,7 +178,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         Set<Tuple2<Types, Block>> types = new HashSet<>();
 
         // check if this looks at all like something we're interested in first
-        PistonBaseMaterial piston = (PistonBaseMaterial) event.getBlock().getState().getData();
+        Piston piston = (Piston) event.getBlock().getBlockData();
         Block sign;
         Types type;
 
@@ -226,7 +227,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    public void crush(Block trigger, PistonBaseMaterial piston, ChangedSign signState) {
+    public void crush(Block trigger, Piston piston, ChangedSign signState) {
 
         //piston.setPowered(false);
 
@@ -246,9 +247,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         trigger.getRelative(piston.getFacing()).setType(Material.AIR, false);
     }
 
-    public void bounce(Block trigger, PistonBaseMaterial piston, ChangedSign signState) {
+    public void bounce(Block trigger, Piston piston, ChangedSign signState) {
 
-        if (piston.isSticky()) return;
+        if (piston.getMaterial() == Material.STICKY_PISTON) return;
 
         double mult;
         try {
@@ -277,9 +278,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    public void superSticky(final Block trigger, final PistonBaseMaterial piston, final ChangedSign signState) {
+    public void superSticky(final Block trigger, final Piston piston, final ChangedSign signState) {
 
-        if (!piston.isSticky()) return;
+        if (piston.getMaterial() != Material.STICKY_PISTON) return;
 
         if (trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_HEAD || trigger.getRelative(piston.getFacing()).getType() == Material.MOVING_PISTON) {
 
@@ -324,7 +325,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    public void superPush(final Block trigger, final PistonBaseMaterial piston, ChangedSign signState) {
+    public void superPush(final Block trigger, final Piston piston, ChangedSign signState) {
         if (trigger.getRelative(piston.getFacing()).getType() != Material.PISTON_HEAD && trigger.getRelative(piston.getFacing()).getType() != Material.MOVING_PISTON) {
             int block = 10;
             int amount = 1;
@@ -408,18 +409,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     }
 
     private boolean canPistonPushBlock(Block block) {
-        if (block.getState() instanceof DoubleChest) return false;
+        BlockData blockData = block.getBlockData();
+        if (blockData instanceof Chest && ((Chest) blockData).getType() != Chest.Type.SINGLE) return false;
 
         if (Blocks.containsFuzzy(pistonsMovementBlacklist, BukkitAdapter.adapt(block.getBlockData()))) {
             return false;
         }
 
-        switch (block.getType()) {
-            case MOVING_PISTON:
-                return false;
-            default:
-                return true;
-        }
+        return block.getType() != Material.MOVING_PISTON;
     }
 
     public enum Types {

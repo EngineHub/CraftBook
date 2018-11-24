@@ -5,6 +5,7 @@ import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import io.papermc.lib.PaperLib;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -24,7 +25,9 @@ public class ChangedSign {
     public ChangedSign(Block block, String[] lines, CraftBookPlayer player) {
         this(block, lines);
 
-        checkPlayerVariablePermissions(player);
+        if (player != null) {
+            checkPlayerVariablePermissions(player);
+        }
     }
 
     public ChangedSign(Block block, String[] lines) {
@@ -56,7 +59,7 @@ public class ChangedSign {
                     } else
                         key = "global";
 
-                    if(player != null && !VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), key, var, "use"))
+                    if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), key, var, "use"))
                         setLine(i, StringUtils.replace(line, '%' + key + '|' + var + '%', ""));
                 }
             }
@@ -69,7 +72,7 @@ public class ChangedSign {
 
     public Sign getSign() {
         if (this.sign == null) {
-            this.sign = (Sign) this.block.getState();
+            this.sign = (Sign) PaperLib.getBlockState(this.block, false).getState();
         }
         return sign;
     }
@@ -158,8 +161,8 @@ public class ChangedSign {
     }
 
     public void flushLines () {
-        this.sign = (Sign) this.block.getState();
-        this.lines = this.sign.getLines();
+        this.sign = null;
+        this.lines = this.getSign().getLines();
         if (this.oldLines == null) {
             this.oldLines = new String[lines.length];
         }

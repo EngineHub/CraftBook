@@ -60,7 +60,8 @@ public class Monostable extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         String setting = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
-        if (chip.getInput(0) && setting.contains("H") || !chip.getInput(0) && setting.contains("L")) {
+        boolean triggered = chip.getInput(0);
+        if (triggered && setting.contains("H") || !triggered && setting.contains("L")) {
             // Trigger condition!
             int colon = setting.indexOf(':');
             if (colon <= 0) return;
@@ -140,7 +141,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             ticks = Math.max(ticks, 2);
             ticks = Math.min(ticks, 6000);
 
-            sign.setLine(2, Integer.toString(ticks) + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
+            sign.setLine(2, ticks + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
             sign.setLine(3, "0");
             sign.update(false);
         }

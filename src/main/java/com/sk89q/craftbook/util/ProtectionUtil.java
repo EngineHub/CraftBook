@@ -15,6 +15,7 @@ import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public final class ProtectionUtil {
 
@@ -50,7 +51,7 @@ public final class ProtectionUtil {
             CompatabilityUtil.disableInterferences(player);
             BlockEvent event;
             if (build)
-                event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getItemInHand(), player, true);
+                event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
             else
                 event = new BlockBreakEvent(block, player);
             EventUtil.ignoreEvent(event);

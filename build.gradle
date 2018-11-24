@@ -98,6 +98,7 @@ allprojects {
         compile 'com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT'
         compile 'com.sk89q.worldguard:worldguard-core:7.0.0-SNAPSHOT'
         compile 'com.sk89q.worldguard:worldguard-legacy:7.0.0-SNAPSHOT'
+        compile "io.papermc:paperlib:1.0.1"
         compile 'com.sk89q:squirrelid:0.1.0'
         compile 'net.milkbowl.vault:VaultAPI:1.6'
         compile 'com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT'
@@ -150,6 +151,7 @@ allprojects {
 			}
         }
         relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'
+        relocate 'io.papermc.lib', 'com.sk89q.craftbook.bukkit.paperlib'
         exclude 'GradleStart**'
         exclude '.cache'
         exclude 'LICENSE*'
