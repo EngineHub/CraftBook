@@ -145,6 +145,7 @@ allprojects {
     shadowJar {
         classifier 'dist'
         dependencies {
+            include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))
 			relocate ("org.bstats", "com.sk89q.craftbook.bukkit.bstats") {
 				include(dependency("org.bstats:bstats-bukkit:1.4"))
