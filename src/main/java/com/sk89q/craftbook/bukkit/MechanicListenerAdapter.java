@@ -35,6 +35,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.RedstoneWire;
@@ -130,19 +131,10 @@ final class MechanicListenerAdapter implements Listener {
         switch(block.getType()) {
             case REDSTONE_TORCH:
             case REDSTONE_WALL_TORCH:
-            case REPEATER:
             case REDSTONE_BLOCK:
-            case COMPARATOR:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
-                break;
-            case REDSTONE_WIRE:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                RedstoneWire wire = (RedstoneWire) block.getBlockData();
-                if(wire.getPower() > 0)
-                    handleRedstoneForBlock(block, wire.getPower(), 0);
                 break;
             case ACACIA_BUTTON:
             case BIRCH_BUTTON:
@@ -152,21 +144,31 @@ final class MechanicListenerAdapter implements Listener {
             case SPRUCE_BUTTON:
             case STONE_BUTTON:
             case LEVER:
+            case DETECTOR_RAIL:
             case STONE_PRESSURE_PLATE:
             case ACACIA_PRESSURE_PLATE:
             case BIRCH_PRESSURE_PLATE:
             case DARK_OAK_PRESSURE_PLATE:
-            case HEAVY_WEIGHTED_PRESSURE_PLATE:
             case JUNGLE_PRESSURE_PLATE:
-            case LIGHT_WEIGHTED_PRESSURE_PLATE:
             case OAK_PRESSURE_PLATE:
             case SPRUCE_PRESSURE_PLATE:
-            case DETECTOR_RAIL:
+            case COMPARATOR:
+            case REPEATER:
                 if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 Powerable powerable = (Powerable) block.getBlockData();
                 if(powerable.isPowered())
                     handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
+                break;
+            case HEAVY_WEIGHTED_PRESSURE_PLATE:
+            case LIGHT_WEIGHTED_PRESSURE_PLATE:
+            case REDSTONE_WIRE:
+                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
+                    break;
+                AnaloguePowerable analoguePowerable = (AnaloguePowerable) block.getBlockData();
+                if(analoguePowerable.getPower() > 0) {
+                    handleRedstoneForBlock(block, build ? 0 : analoguePowerable.getPower(), build ? analoguePowerable.getPower() : 0);
+                }
                 break;
             default:
                 break;
