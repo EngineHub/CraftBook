@@ -15,6 +15,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.meta.MapMeta;
 
 public class MapChanger extends AbstractCraftBookMechanic {
 
@@ -58,7 +59,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
                 player.printError("area.use-permissions");
             return;
         }
-        if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.MAP) {
+        if (event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getType() == Material.MAP) {
             byte id;
             try {
                 id = Byte.parseByte(sign.getLine(2));
@@ -69,7 +70,9 @@ public class MapChanger extends AbstractCraftBookMechanic {
                 player.printError("mech.map.invalid");
                 return;
             }
-            event.getPlayer().getItemInHand().setDurability(id);
+            MapMeta meta = (MapMeta) event.getPlayer().getInventory().getItemInMainHand().getItemMeta();
+            meta.setMapId(id);
+            event.getPlayer().getInventory().getItemInMainHand().setItemMeta(meta);
         }
     }
 
