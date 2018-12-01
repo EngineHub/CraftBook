@@ -499,7 +499,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 snow.setBlockData(snowData, false);
             } else {
                 org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
-                if (snowData.getLayers() == 0) {
+                if (snowData.getLayers() == snowData.getMinimumLayers()) {
                     snow.setType(Material.AIR, false);
                 } else {
                     snowData.setLayers(snowData.getLayers() - 1);
