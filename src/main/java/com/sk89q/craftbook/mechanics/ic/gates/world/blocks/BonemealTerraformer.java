@@ -125,7 +125,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
         if (b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getType() == Material.AIR) {
             if (consumeBonemeal()) {
-                b.setType(b.getBiome() == Biome.MUSHROOM_FIELDS || b.getBiome() == Biome.MUSHROOM_FIELD_SHORE ? Material.MYCELIUM : Material.GRASS);
+                b.setType(b.getBiome() == Biome.MUSHROOM_FIELDS || b.getBiome() == Biome.MUSHROOM_FIELD_SHORE ? Material.MYCELIUM :
+                        Material.GRASS_BLOCK);
             }
             return;
         }
