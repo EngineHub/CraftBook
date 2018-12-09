@@ -334,7 +334,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid()) {
+            if (!floor.getType().isOccluding()) {
                 foundFree++;
             } else {
                 foundGround = true;
