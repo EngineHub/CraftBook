@@ -86,7 +86,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     }
 
     private boolean isCauldron(Block block) {
-
+        if (!block.getWorld().isChunkLoaded(block.getX() >> 4, block.getZ() >> 4)) {
+            return false;
+        }
         if (block.getType() == Material.CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
             if(requireSign) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
