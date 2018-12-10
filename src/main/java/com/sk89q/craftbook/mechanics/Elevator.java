@@ -34,6 +34,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -334,7 +335,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid()) {
+            if (!floor.getType().isSolid() || floor.getType() == Material.WALL_SIGN) {
                 foundFree++;
             } else {
                 foundGround = true;
