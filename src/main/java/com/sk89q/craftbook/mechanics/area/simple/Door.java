@@ -29,6 +29,7 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -275,7 +276,7 @@ public class Door extends CuboidToggleMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
         } else throw new InvalidMechanismException("Sign is incorrectly made.");
 
-        if (blocks.contains(BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
+        if (Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter;
         else throw new InvalidMechanismException("mech.door.unusable");
     }
@@ -354,6 +355,7 @@ public class Door extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks",
+                getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }

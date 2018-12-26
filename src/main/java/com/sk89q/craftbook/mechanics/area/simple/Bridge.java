@@ -29,6 +29,7 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -183,7 +184,7 @@ public class Bridge extends CuboidToggleMechanic {
             return proximalBaseCenter; // it's below
 
         proximalBaseCenter = trigger.getRelative(SignUtil.getBack(trigger));
-        if (blocks.contains(BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
+        if (Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter; // it's behind
         else throw new InvalidMechanismException("mech.bridge.unusable");
     }
@@ -330,6 +331,7 @@ public class Bridge extends CuboidToggleMechanic {
         maxWidth = config.getInt(path + "max-width", 5);
 
         config.setComment(path + "blocks", "Blocks bridges can use.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())));
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks",
+                getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }
