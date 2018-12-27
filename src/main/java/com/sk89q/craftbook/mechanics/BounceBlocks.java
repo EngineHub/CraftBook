@@ -12,7 +12,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.block.Block;
@@ -31,9 +31,9 @@ import java.util.Map.Entry;
 
 public class BounceBlocks extends AbstractCraftBookMechanic {
 
-    private List<BlockStateHolder> blocks;
+    private List<BaseBlock> blocks;
     private double sensitivity;
-    private Map<BlockStateHolder, Vector> autoBouncers = new HashMap<>();
+    private Map<BaseBlock, Vector> autoBouncers = new HashMap<>();
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -67,7 +67,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 z = Double.parseDouble(bits[2]);
             }
 
-            BlockStateHolder block = BlockSyntax.getBlock(key, true);
+            BaseBlock block = BlockSyntax.getBlock(key, true);
 
             autoBouncers.put(block, new Vector(x,y,z));
         }
@@ -133,7 +133,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 }
             }
 
-            for(Entry<BlockStateHolder, Vector> entry : autoBouncers.entrySet()) {
+            for(Entry<BaseBlock, Vector> entry : autoBouncers.entrySet()) {
                 if(entry.getKey().equalsFuzzy(BukkitAdapter.adapt(block.getBlockData()))) {
 
                     CraftBookPlugin.logDebugMessage("Player jumped on a auto block that is a BoucneBlock!", "bounce-blocks");

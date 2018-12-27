@@ -19,8 +19,8 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Bukkit;
@@ -388,7 +388,7 @@ public class Chair extends AbstractCraftBookMechanic {
     private boolean chairAllowHeldBlock;
     private boolean chairHealth;
     private double chairHealAmount;
-    private List<BlockStateHolder> chairBlocks;
+    private List<BaseBlock> chairBlocks;
     private boolean chairFacing;
     private boolean chairRequireSign;
     private int chairMaxDistance;

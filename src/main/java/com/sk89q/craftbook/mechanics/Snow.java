@@ -13,7 +13,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -551,7 +551,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean pileHigh;
     private int maxPileHeight;
     private boolean jumpTrample;
-    private List<BlockStateHolder> realisticReplacables;
+    private List<BaseBlock> realisticReplacables;
     private int animationTicks;
     private boolean freezeWater;
     private boolean meltSunlight;

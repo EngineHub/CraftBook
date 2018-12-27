@@ -11,6 +11,7 @@ import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
@@ -62,7 +63,7 @@ public class SetBlockChest extends SetBlock {
 
         boolean above;
 
-        public List<BlockStateHolder> blockBlacklist;
+        public List<BaseBlock> blockBlacklist;
 
         public Factory(Server server, boolean above) {
 

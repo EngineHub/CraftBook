@@ -21,6 +21,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.bukkit.Material;
@@ -37,18 +38,18 @@ public class BlockSyntax {
         BLOCK_CONTEXT.setRestricted(false);
     }
 
-    public static BlockStateHolder getBlock(String line) {
+    public static BaseBlock getBlock(String line) {
         return getBlock(line, false);
     }
 
-    public static BlockStateHolder getBlock(String line, boolean wild) {
+    public static BaseBlock getBlock(String line, boolean wild) {
         if (line == null || line.trim().isEmpty()) {
             return null;
         }
 
         BLOCK_CONTEXT.setPreferringWildcard(wild);
 
-        BlockStateHolder blockState = null;
+        BaseBlock blockState = null;
         try {
             blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(line, BLOCK_CONTEXT);
         } catch (InputParseException e) {
@@ -65,7 +66,7 @@ public class BlockSyntax {
                         data = 0;
                     }
                 }
-                blockState = LegacyMapper.getInstance().getBlockFromLegacy(BukkitAdapter.asBlockType(material).getLegacyId(), data);
+                blockState = LegacyMapper.getInstance().getBlockFromLegacy(BukkitAdapter.asBlockType(material).getLegacyId(), data).toBaseBlock();
             }
             if (material == null) {
                 CraftBookPlugin.logger().warning("Invalid block format: " + line);
@@ -74,11 +75,11 @@ public class BlockSyntax {
         return blockState;
     }
 
-    public static List<BlockStateHolder> getBlocks(List<String> lines) {
+    public static List<BaseBlock> getBlocks(List<String> lines) {
         return getBlocks(lines, false);
     }
 
-    public static List<BlockStateHolder> getBlocks(List<String> lines, boolean wild) {
+    public static List<BaseBlock> getBlocks(List<String> lines, boolean wild) {
         return lines.stream().map(line -> getBlock(line, wild)).collect(Collectors.toList());
     }
 
