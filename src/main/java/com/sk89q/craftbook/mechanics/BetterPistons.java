@@ -19,6 +19,7 @@ import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
@@ -442,12 +443,12 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private int pistonMaxDistance;
     private boolean pistonsCrusher;
     private boolean pistonsCrusherInstaKill;
-    private List<BlockStateHolder> pistonsCrusherBlacklist;
+    private List<BaseBlock> pistonsCrusherBlacklist;
     private boolean pistonsSuperPush;
     private boolean pistonsSuperSticky;
-    private List<BlockStateHolder> pistonsMovementBlacklist;
+    private List<BaseBlock> pistonsMovementBlacklist;
     private boolean pistonsBounce;
-    private List<BlockStateHolder> pistonsBounceBlacklist;
+    private List<BaseBlock> pistonsBounceBlacklist;
     private double pistonBounceMaxVelocity;
 
     public static List<String> getDefaultBlacklist() {

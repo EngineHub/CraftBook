@@ -33,7 +33,7 @@ import java.util.ArrayList;
 @PrepareForTest({TreeLopper.class,BlockBreakEvent.class})
 public class TreeLopperTest extends BaseTestCase {
 
-    TreeLopper lopper;
+    private TreeLopper lopper;
 
     @Test
     public void testOnBlockBreak() {
@@ -63,7 +63,7 @@ public class TreeLopperTest extends BaseTestCase {
         when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
 
         lopper.enabledBlocks = new ArrayList<>();
-        lopper.enabledBlocks.add(BlockTypes.OAK_LOG.getDefaultState());
+        lopper.enabledBlocks.add(BlockTypes.OAK_LOG.getDefaultState().toBaseBlock());
 
         lopper.enabledItems = new ArrayList<>();
         lopper.enabledItems.add(ItemTypes.DIAMOND_AXE);

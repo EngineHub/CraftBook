@@ -33,8 +33,8 @@ import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
@@ -327,10 +327,10 @@ public class Door extends CuboidToggleMechanic {
         return line.equals("[Door Up]") || line.equals("[Door Down]");
     }
 
-    boolean allowRedstone;
-    int maxLength;
-    int maxWidth;
-    List<BlockStateHolder> blocks;
+    private boolean allowRedstone;
+    private int maxLength;
+    private int maxWidth;
+    private List<BaseBlock> blocks;
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
