@@ -34,7 +34,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.HandSide;
-import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -677,7 +676,7 @@ public class Gate extends AbstractCraftBookMechanic {
     private boolean allowRedstone;
     private boolean limitColumns;
     private int columnLimit;
-    private List<BaseBlock> blocks;
+    private List<BlockStateHolder> blocks;
     private boolean enforceType;
     private int columnHeight;
     private int searchRadius;

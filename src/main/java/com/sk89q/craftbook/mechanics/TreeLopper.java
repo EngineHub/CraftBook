@@ -14,7 +14,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
-import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -161,7 +160,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         return true;
     }
 
-    List<BaseBlock> enabledBlocks;
+    List<BlockStateHolder> enabledBlocks;
     List<ItemType> enabledItems;
     private int maxSearchSize;
     private boolean allowDiagonals;

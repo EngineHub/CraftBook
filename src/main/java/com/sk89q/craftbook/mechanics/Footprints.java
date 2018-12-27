@@ -7,7 +7,7 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -89,7 +89,7 @@ public class Footprints extends AbstractCraftBookMechanic {
         footsteps = null;
     }
 
-    private List<BaseBlock> blocks;
+    private List<BlockStateHolder> blocks;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {

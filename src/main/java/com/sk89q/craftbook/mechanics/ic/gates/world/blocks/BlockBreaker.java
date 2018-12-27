@@ -17,7 +17,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
@@ -102,7 +101,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         boolean above;
 
-        List<BaseBlock> blockBlacklist;
+        List<BlockStateHolder> blockBlacklist;
 
         public Factory(Server server, boolean above) {
 
@@ -123,7 +122,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
                 BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2), true);
                 if(item == null)
                     throw new ICVerificationException("An invalid block was provided on line 2!");
-                if(Blocks.containsFuzzy(blockBlacklist, item))
+                if(blockBlacklist.contains(item))
                     throw new ICVerificationException("A blacklisted block was provided on line 2!");
             }
         }
