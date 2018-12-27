@@ -299,10 +299,14 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             BlockData type = null;
             if (sign.getLine(0).contains(",")) {
                 type = BlockSyntax.getBukkitBlock(sign.getLine(0).split(",")[1]);
+                BlockData realType = this.getBlockBase(block).getBlockData();
+                if (type != null && realType.getMaterial() == type.getMaterial()) {
+                    return realType;
+                }
             }
             if (type == null) {
                 type = this.getBlockBase(block).getBlockData();
-                sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).toFuzzy()));
+                sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).getBlockType().getFuzzyMatcher()));
                 sign.update(false);
             }
             return type;

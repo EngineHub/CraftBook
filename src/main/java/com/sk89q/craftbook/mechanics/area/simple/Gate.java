@@ -448,7 +448,7 @@ public class Gate extends AbstractCraftBookMechanic {
         if (amount > 0) {
             BlockState type = getGateBlock(sign, sign.getLine(1).equals("[DGate]"));
             if(type == null || type.getBlockType().getMaterial().isAir())
-                type = BlockTypes.OAK_FENCE.getDefaultState().toFuzzy();
+                type = BlockTypes.OAK_FENCE.getFuzzyMatcher();
             ItemStack toDrop = new ItemStack(BukkitAdapter.adapt(type.getBlockType()), amount);
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
         }
@@ -503,7 +503,7 @@ public class Gate extends AbstractCraftBookMechanic {
             }
 
             if(enforceType && gateBlock != null && !gateBlock.getBlockType().getMaterial().isAir()) {
-                sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.toFuzzy()));
+                sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.getBlockType().getFuzzyMatcher()));
                 sign.update(false);
             }
         }
