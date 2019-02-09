@@ -40,7 +40,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         @Override
         public void run () {
 
-            if(!boat.isValid() || boat.isDead()) return;
+            if(!boat.isValid() || boat.isDead() || !boat.isEmpty()) return;
 
             if(giveItem) {
                 ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
