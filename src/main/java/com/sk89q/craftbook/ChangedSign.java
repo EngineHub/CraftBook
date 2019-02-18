@@ -72,7 +72,8 @@ public class ChangedSign {
 
     public Sign getSign() {
         if (this.sign == null) {
-            this.sign = (Sign) PaperLib.getBlockState(this.block, false).getState();
+//            this.sign = (Sign) PaperLib.getBlockState(this.block, false).getState();
+            this.sign = (Sign) this.block.getState();
         }
         return sign;
     }
