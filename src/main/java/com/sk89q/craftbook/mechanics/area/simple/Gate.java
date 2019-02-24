@@ -281,7 +281,8 @@ public class Gate extends AbstractCraftBookMechanic {
                     addBlocks(sign, amount);
 
                     if (enforceType) {
-                        sign.setLine(0, player.getItemInHand(HandSide.MAIN_HAND).getType().getId());
+                        BlockType blockType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
+                        sign.setLine(0, BlockSyntax.toMinifiedId(blockType));
                         sign.update(false);
                     }
 
@@ -503,7 +504,7 @@ public class Gate extends AbstractCraftBookMechanic {
             }
 
             if(enforceType && gateBlock != null && !gateBlock.getBlockType().getMaterial().isAir()) {
-                sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.getBlockType().getFuzzyMatcher()));
+                sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.getBlockType()));
                 sign.update(false);
             }
         }

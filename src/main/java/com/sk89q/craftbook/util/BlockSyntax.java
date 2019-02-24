@@ -23,6 +23,7 @@ import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -85,6 +86,14 @@ public class BlockSyntax {
 
     public static BlockData getBukkitBlock(String line) {
         return BukkitAdapter.adapt(getBlock(line));
+    }
+
+    public static String toMinifiedId(BlockType holder) {
+        String output = holder.getId();
+        if (output.startsWith("minecraft:")) {
+            output = output.substring(10);
+        }
+        return output;
     }
 
     public static String toMinifiedId(BlockStateHolder holder) {
