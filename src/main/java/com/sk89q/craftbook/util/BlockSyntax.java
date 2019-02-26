@@ -28,11 +28,15 @@ import com.sk89q.worldedit.world.registry.LegacyMapper;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BlockSyntax {
     private static ParserContext BLOCK_CONTEXT = new ParserContext();
+
+    private static Set<String> knownBadLines = new HashSet<>();
 
     static {
         BLOCK_CONTEXT.setPreferringWildcard(true);
@@ -44,7 +48,7 @@ public class BlockSyntax {
     }
 
     public static BaseBlock getBlock(String line, boolean wild) {
-        if (line == null || line.trim().isEmpty()) {
+        if (line == null || line.trim().isEmpty() || knownBadLines.contains(line)) {
             return null;
         }
 
@@ -71,6 +75,7 @@ public class BlockSyntax {
             }
             if (material == null) {
                 CraftBookPlugin.logger().warning("Invalid block format: " + line);
+                knownBadLines.add(line);
             }
         }
         return blockState;
