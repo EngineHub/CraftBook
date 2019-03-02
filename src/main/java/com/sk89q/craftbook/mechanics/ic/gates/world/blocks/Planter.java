@@ -170,7 +170,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         switch (item.getType()) {
             case POPPY:
             case DANDELION:
-                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK;
+                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.PODZOL;
             case WHEAT_SEEDS:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
@@ -196,7 +196,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                 return false;
             default:
                 if (Tag.SAPLINGS.isTagged(item.getType())) {
-                    return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK;
+                    return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.PODZOL;
                 }
                 return false;
         }
