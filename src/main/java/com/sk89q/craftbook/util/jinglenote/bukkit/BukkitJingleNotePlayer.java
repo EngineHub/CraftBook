@@ -2,6 +2,7 @@ package com.sk89q.craftbook.util.jinglenote.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import com.sk89q.craftbook.util.SearchArea;
@@ -23,7 +24,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
         if(!isPlaying()) return;
 
-        p.playSound(p.getLocation(), toSound(note.getInstrument()), note.getVelocity(), note.getNote());
+        p.playSound(p.getLocation(), toSound(note.getInstrument()), SoundCategory.RECORDS, note.getVelocity(), note.getNote());
     }
 
     @Override
