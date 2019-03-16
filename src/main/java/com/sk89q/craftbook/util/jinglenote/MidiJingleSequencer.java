@@ -1,8 +1,3 @@
-// $Id$
-/*
- * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
- */
-
 package com.sk89q.craftbook.util.jinglenote;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -40,7 +35,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
         5, 5, 5, 5, 5, 5, 5, 1, // 32
         1, 1, 1, 1, 1, 1, 1, 5, // 40
         1, 5, 5, 5, 5, 5, 5, 5, // 48
-        5, 5, 5, 8, 8, 8, 8, 8, // 56
+        10,5, 5, 8, 8, 8, 8, 8, // 56
         8, 8, 8, 8, 8, 8, 8, 8, // 64
         8, 8, 8, 8, 8, 8, 8, 8, // 72
         8, 8, 8, 8, 8, 8, 8, 8, // 80
