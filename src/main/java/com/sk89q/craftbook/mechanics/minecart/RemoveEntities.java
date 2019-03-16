@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.minecart;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,10 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
 
         if (!otherCarts && (event.getEntity() instanceof Minecart || event.getEntity().isInsideVehicle()))
             return;
+
+        if (!players && event.getEntity() instanceof Player) {
+            return;
+        }
 
         if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !empty)
             return;
@@ -53,6 +58,7 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
 
     private boolean otherCarts;
     private boolean empty;
+    private boolean players;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -62,5 +68,8 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
 
         config.setComment(path + "allow-empty-carts", "Allows the cart to be empty.");
         empty = config.getBoolean(path + "allow-empty-carts", false);
+
+        config.setComment(path + "damage-players", "Allows the cart to damage and kill players.");
+        players = config.getBoolean(path + "damage-players", true);
     }
 }
