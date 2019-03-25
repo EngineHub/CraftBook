@@ -160,7 +160,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
