@@ -427,7 +427,7 @@ public class Gate extends AbstractCraftBookMechanic {
             return isValidGateBlock(block);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
