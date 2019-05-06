@@ -29,8 +29,8 @@
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <id>sk89q-mvn2</id>
-            <url>http://mvn2.sk89q.com/repo</url>
+            <id>sk89q-maven</id>
+            <url>http://maven.sk89q.com/repo</url>
         </repository>
         <repository>
             <id>comphenix-rep</id>
@@ -54,23 +54,23 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>6.1</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
+            <version>6.1</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
@@ -108,12 +108,6 @@
             <groupId>fr.neatmonster</groupId>
             <artifactId>ncpcore</artifactId>
             <version>static</version>
-        </dependency>
-        <dependency>
-            <groupId>net.gravitydevelopment.anticheat</groupId>
-            <artifactId>AntiCheat</artifactId>
-            <version>2.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <distributionManagement>
