@@ -115,7 +115,7 @@ public class Bridge extends CuboidToggleMechanic {
             ChangedSign sign = event.getSign();
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
-                if (event.getPlayer().getItemInHand() != null) {
+                if (event.getPlayer().getItemInHand().getType() != Material.AIR) {
                     BlockData bridgeType = getBlockType(event.getClickedBlock());
                     if (bridgeType.getMaterial() == event.getPlayer().getItemInHand().getType()) {
 
