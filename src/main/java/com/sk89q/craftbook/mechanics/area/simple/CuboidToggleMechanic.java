@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class that can be a mechanic that toggles a cuboid. This is basically either Door or Bridge.
@@ -241,7 +242,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0).split(",")[0]);
-            if(other != null) {
+            if(other != null && Objects.equals(getStoredType(other), getStoredType(s))) {
                 try {
                     curBlocks += Integer.parseInt(other.getLine(0).split(",")[0]);
                     setBlocks(s, curBlocks);
@@ -260,31 +261,11 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return s.getLine(0).split(",")[0].equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
     }
 
-    public BlockData getStoredType(Block block) {
-        Block farBlock = getFarSign(block);
-        if (farBlock == null) {
-            return null;
+    public static BlockData getStoredType(ChangedSign sign) {
+        if (sign.getLine(0).contains(",")) {
+            return BlockSyntax.getBukkitBlock(sign.getLine(0).split(",")[1]);
         }
-
-        ChangedSign closeSign = CraftBookBukkitUtil.toChangedSign(block);
-        ChangedSign farSign = CraftBookBukkitUtil.toChangedSign(farBlock);
-
-        BlockData type = null;
-
-        if (closeSign.getLine(0).contains(",")) {
-            type = BlockSyntax.getBukkitBlock(closeSign.getLine(0).split(",")[1]);
-        }
-        if (farSign.getLine(0).contains(",")) {
-            if (type != null) {
-                return null;
-            } else {
-                closeSign.setLine(0, closeSign.getLine(0) + ',' + farSign.getLine(0).split(",")[1]);
-                type = BlockSyntax.getBukkitBlock(farSign.getLine(0).split(",")[1]);
-                closeSign.update(false);
-            }
-        }
-
-        return type;
+        return null;
     }
 
     /**
