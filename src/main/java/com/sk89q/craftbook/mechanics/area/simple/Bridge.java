@@ -33,6 +33,7 @@ import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -130,6 +131,12 @@ public class Bridge extends CuboidToggleMechanic {
                             amount = 5;
                         }
                         addBlocks(sign, CraftBookBukkitUtil.toChangedSign(getFarSign(event.getClickedBlock())), amount);
+
+                        if (enforceType) {
+                            BlockType blockType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
+                            sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(blockType.getFuzzyMatcher()));
+                            sign.update(false);
+                        }
 
                         if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
                             if (event.getPlayer().getItemInHand().getAmount() <= amount)
