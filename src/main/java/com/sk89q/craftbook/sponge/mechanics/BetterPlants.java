@@ -52,7 +52,7 @@ import org.spongepowered.api.world.Location;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
-@Module(moduleName = "BetterPhysics", onEnable="onInitialize", onDisable="onDisable")
+@Module(moduleName = "BetterPlants", onEnable="onInitialize", onDisable="onDisable")
 public class BetterPlants extends SpongeBlockMechanic implements DocumentationProvider {
 
     @Inject
@@ -96,7 +96,7 @@ public class BetterPlants extends SpongeBlockMechanic implements DocumentationPr
                     if (player.get(Keys.GAME_MODE).orElse(GameModes.SURVIVAL) != GameModes.CREATIVE) {
                         Item item = (Item) snapshot.getLocation().get().getExtent().createEntity(EntityTypes.ITEM, snapshot.getPosition());
                         item.offer(Keys.REPRESENTED_ITEM, ItemStack.builder().itemType(ItemTypes.TALLGRASS).add(Keys.SHRUB_TYPE, ShrubTypes.FERN).build().createSnapshot());
-                        snapshot.getLocation().get().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
+                        snapshot.getLocation().get().getExtent().spawnEntity(item, CraftBookPlugin.spongeInst().getCause().build());
                     }
                 }).submit(CraftBookPlugin.spongeInst().getContainer()));
     }
