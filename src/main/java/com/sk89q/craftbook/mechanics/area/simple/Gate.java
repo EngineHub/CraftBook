@@ -182,21 +182,20 @@ public class Gate extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Setting column at " + block.getX() + ':' + block.getY() + ':' + block.getZ() + " to " + item.toString(), "gates.search");
 
+        if(sign == null) {
+            CraftBookPlugin.logDebugMessage("Invalid Sign!", "gates.search");
+            return false;
+        }
+
+        ChangedSign otherSign = null;
+
+        Block ot = SignUtil.getNextSign(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
+        if(ot != null) {
+            otherSign = CraftBookBukkitUtil.toChangedSign(ot);
+        }
+
         for (BlockVector3 bl : column.getRegion()) {
             Block blo = CraftBookBukkitUtil.toLocation(block.getWorld(), bl.toVector3()).getBlock();
-
-            //sign = CraftBookBukkitUtil.toChangedSign(sign.getSign().getBlock());
-
-            if(sign == null) {
-                CraftBookPlugin.logDebugMessage("Invalid Sign!", "gates.search");
-                return false;
-            }
-
-            ChangedSign otherSign = null;
-
-            Block ot = SignUtil.getNextSign(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
-            if(ot != null)
-                otherSign = CraftBookBukkitUtil.toChangedSign(ot);
 
             if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.
@@ -208,13 +207,16 @@ public class Gate extends AbstractCraftBookMechanic {
 
             // bag.setBlockID(w, x, y1, z, ID);
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
-                if (!close || hasEnoughBlocks(sign, otherSign)) {
-                    if (!close && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData()), true))
+                boolean hasBlocks = hasEnoughBlocks(sign, otherSign);
+                if (!close || hasBlocks) {
+                    if (!close && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData()), true)) {
                         addBlocks(sign, 1);
-                    else if (close && canPassThrough(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData())) && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(item), true) && item.getMaterial() != blo.getType())
+                    } else if (close && canPassThrough(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData())) && isValidGateBlock(sign,
+                            smallSearchSize, BukkitAdapter.adapt(item), true) && item.getMaterial() != blo.getType()) {
                         removeBlocks(sign, 1);
+                    }
                     blo.setBlockData(item, true);
-                } else if (!hasEnoughBlocks(sign, otherSign) && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(item), true))
+                } else if (isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(item), true))
                     if (player != null) {
                         player.printError("mech.not-enough-blocks");
                         return false;
@@ -406,12 +408,12 @@ public class Gate extends AbstractCraftBookMechanic {
      * @param check Should search.
      * @return
      */
-    public boolean isValidGateBlock(ChangedSign sign, boolean smallSearchSize, BlockStateHolder block, boolean check) {
+    public boolean isValidGateBlock(ChangedSign sign, boolean smallSearchSize, BlockStateHolder<?> block, boolean check) {
         BlockState type;
 
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
-                BlockStateHolder def = BlockSyntax.getBlock(sign.getLine(0), true);
+                BlockStateHolder<?> def = BlockSyntax.getBlock(sign.getLine(0), true);
                 return block.equalsFuzzy(def);
             } catch (Exception e) {
                 if (check) {
