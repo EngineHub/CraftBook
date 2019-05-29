@@ -2,10 +2,13 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -54,6 +57,10 @@ public class InventoryUtil {
                 stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType())).toArray(ItemStack[]::new);
             }
             leftovers.addAll(container.getInventory().addItem(stacks).values());
+            if (container.getInventory() instanceof DoubleChestInventory) {
+                ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
+                ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
+            }
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;
