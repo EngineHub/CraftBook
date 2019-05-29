@@ -2,10 +2,13 @@ package com.sk89q.craftbook.util;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -25,7 +28,7 @@ public class InventoryUtil {
 
     /**
      * Adds items to an inventory, returning the leftovers.
-     * 
+     *
      * @param container The InventoryHolder to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
@@ -54,6 +57,10 @@ public class InventoryUtil {
                 stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType())).toArray(ItemStack[]::new);
             }
             leftovers.addAll(container.getInventory().addItem(stacks).values());
+            if (container.getInventory() instanceof DoubleChestInventory) {
+                ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
+                ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
+            }
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;
@@ -62,7 +69,7 @@ public class InventoryUtil {
 
     /**
      * Adds items to a furnace, returning the leftovers.
-     * 
+     *
      * @param furnace The Furnace to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
@@ -99,7 +106,7 @@ public class InventoryUtil {
 
     /**
      * Adds items to a BrewingStand, returning the leftovers.
-     * 
+     *
      * @param brewingStand The BrewingStand to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
@@ -133,7 +140,7 @@ public class InventoryUtil {
 
     /**
      * Checks whether the inventory contains all the given itemstacks.
-     * 
+     *
      * @param inv The inventory to check.
      * @param exact Whether the stacks need to be the exact amount.
      * @param stacks The stacks to check.
@@ -212,7 +219,7 @@ public class InventoryUtil {
 
     /**
      * Removes items from an inventory.
-     * 
+     *
      * @param inv The inventory to remove it from.
      * @param stacks The stacks to remove.
      * @return Whether the stacks were removed.
@@ -236,7 +243,7 @@ public class InventoryUtil {
 
     /**
      * Checks whether the itemstack can easily stack onto the other itemstack.
-     * 
+     *
      * @param stack The stack to add.
      * @param slot The base stack.
      * @return whether it can be added or not.
@@ -248,7 +255,7 @@ public class InventoryUtil {
 
     /**
      * Checks whether the block has an inventory.
-     * 
+     *
      * @param block The block.
      * @return If it has an inventory.
      */
