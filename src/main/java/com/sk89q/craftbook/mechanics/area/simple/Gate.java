@@ -66,7 +66,7 @@ import java.util.Set;
  */
 public class Gate extends AbstractCraftBookMechanic {
 
-    /**
+    /**get
      * Toggles the gate closest to a location.
      *
      * @param player The player
