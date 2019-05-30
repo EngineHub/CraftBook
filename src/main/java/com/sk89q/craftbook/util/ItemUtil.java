@@ -526,10 +526,8 @@ public final class ItemUtil {
                 return new ItemStack(Material.QUARTZ);
             case STONE_BRICKS:
                 return new ItemStack(Material.CRACKED_STONE_BRICKS);
-            case SPONGE:
-                if (item.getData().getData() == 0)
-                    return null;
-                else return new ItemStack(Material.SPONGE);
+            case WET_SPONGE:
+                return new ItemStack(Material.SPONGE);
             case WHITE_TERRACOTTA:
                 return new ItemStack(Material.WHITE_GLAZED_TERRACOTTA);
             case ORANGE_TERRACOTTA:
@@ -598,8 +596,6 @@ public final class ItemUtil {
 
     public static Material getWoolFromColour(DyeColor color) {
         switch (color) {
-            case WHITE:
-                return Material.WHITE_WOOL;
             case ORANGE:
                 return Material.ORANGE_WOOL;
             case MAGENTA:
@@ -637,8 +633,6 @@ public final class ItemUtil {
 
     public static Material getBoatFromTree(TreeSpecies treeSpecies) {
         switch (treeSpecies) {
-            case GENERIC:
-                return Material.OAK_BOAT;
             case REDWOOD:
                 return Material.SPRUCE_BOAT;
             case BIRCH:

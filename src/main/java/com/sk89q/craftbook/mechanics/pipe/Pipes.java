@@ -25,17 +25,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Directional;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -103,13 +103,13 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private static ChangedSign getSignOnPiston(Block block) {
-        BlockState state = block.getState();
+        BlockData blockData = block.getBlockData();
         BlockFace facing = BlockFace.SELF;
-        if(state.getData() instanceof Directional)
-            facing = ((Directional) state.getData()).getFacing();
+        if(blockData instanceof Directional) {
+            facing = ((Directional) blockData).getFacing();
+        }
 
         for(BlockFace face : LocationUtil.getDirectFaces()) {
-
             if(face == facing || !SignUtil.isSign(block.getRelative(face)))
                 continue;
             if(block.getRelative(face).getType() != Material.SIGN && (face == BlockFace.UP || face == BlockFace.DOWN))

@@ -269,11 +269,14 @@ public class Snow extends AbstractCraftBookMechanic {
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, 1), animationTicks);
                         }
                     } else if (meltMode) {
-                        if (highest.getType() == Material.SNOW && meltPartial)
-                            if (highest.getData() == 0)
+                        if (highest.getType() == Material.SNOW && meltPartial) {
+                            if (((org.bukkit.block.data.type.Snow) highest.getBlockData()).getLayers() == 0) {
                                 return;
-                        if (highest.getTemperature() > 0.05)
+                            }
+                        }
+                        if (highest.getTemperature() > 0.05) {
                             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SnowHandler(highest, -1), animationTicks);
+                        }
                     }
                 }
 
