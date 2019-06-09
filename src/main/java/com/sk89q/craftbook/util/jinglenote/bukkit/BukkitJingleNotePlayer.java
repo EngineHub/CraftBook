@@ -37,30 +37,78 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
     }
 
+    private static Sound BANJO;
+    private static Sound BIT;
+    private static Sound COWBELL;
+    private static Sound DIDGERIDOO;
+    private static Sound IRON_XYLOPHONE;
+
+    static {
+        try {
+            for (Sound sound : Sound.class.getEnumConstants()) {
+                switch (sound.name()) {
+                    case "BLOCK_NOTE_BLOCK_BANJO":
+                        BANJO = sound;
+                        break;
+                    case "BLOCK_NOTE_BLOCK_BIT":
+                        BIT = sound;
+                        break;
+                    case "BLOCK_NOTE_BLOCK_COW_BELL":
+                        COWBELL = sound;
+                        break;
+                    case "BLOCK_NOTE_BLOCK_DIDGERIDOO":
+                        DIDGERIDOO = sound;
+                        break;
+                    case "BLOCK_NOTE_BLOCK_IRON_XYLOPHONE":
+                        IRON_XYLOPHONE = sound;
+                        break;
+                }
+            }
+            if (BANJO == null) {
+                throw new RuntimeException();
+            }
+        } catch (Throwable t) {
+            BANJO = Sound.BLOCK_NOTE_BLOCK_GUITAR;
+            BIT = Sound.BLOCK_NOTE_BLOCK_PLING;
+            COWBELL = Sound.BLOCK_NOTE_BLOCK_BELL;
+            DIDGERIDOO = Sound.BLOCK_NOTE_BLOCK_BASS;
+            IRON_XYLOPHONE = Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
+        }
+    }
+
     private static Sound toSound(Instrument instrument) {
         switch(instrument) {
-            case PIANO:
-                return Sound.BLOCK_NOTE_BLOCK_HARP;
             case BASS:
                 return Sound.BLOCK_NOTE_BLOCK_BASS;
-            case SNARE_DRUM:
+            case SNARE:
                 return Sound.BLOCK_NOTE_BLOCK_SNARE;
-            case STICKS:
+            case HAT:
                 return Sound.BLOCK_NOTE_BLOCK_HAT;
-            case BASS_DRUM:
+            case BANJO:
+                return BANJO;
+            case BASEDRUM:
                 return Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
             case BELL:
                 return Sound.BLOCK_NOTE_BLOCK_BELL;
+            case BIT:
+                return BIT;
             case CHIME:
                 return Sound.BLOCK_NOTE_BLOCK_CHIME;
+            case COW_BELL:
+                return COWBELL;
+            case DIDGERIDOO:
+                return DIDGERIDOO;
             case FLUTE:
                 return Sound.BLOCK_NOTE_BLOCK_FLUTE;
             case XYLOPHONE:
                 return Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
+            case IRON_XYLOPHONE:
+                return IRON_XYLOPHONE;
             case PLING:
                 return Sound.BLOCK_NOTE_BLOCK_PLING;
             case GUITAR:
                 return Sound.BLOCK_NOTE_BLOCK_GUITAR;
+            case HARP:
             default:
                 return Sound.BLOCK_NOTE_BLOCK_HARP;
         }

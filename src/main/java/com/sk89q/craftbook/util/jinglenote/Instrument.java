@@ -2,35 +2,33 @@ package com.sk89q.craftbook.util.jinglenote;
 
 public enum Instrument {
 
-    /*
-        0 = BLOCK_NOTE_HARP = PIANO
-        1 = BLOCK_NOTE_BASS = BASS
-        2 = BLOCK_NOTE_SNARE = SNARE_DRUM
-        3 = BLOCK_NOTE_HAT = STICKS
-        4 = BLOCK_NOTE_BASEDRUM = BASS_DRUM
-        5 = BLOCK_NOTE_GUITAR = GUITAR
-        6 = BLOCK_NOTE_BELL = BELL
-        7 = BLOCK_NOTE_CHIME = CHIME
-        8 = BLOCK_NOTE_FLUTE = FLUTE
-        9 = BLOCK_NOTE_XYLOPHONE = XYLOPHONE
-        10 = BLOCK_NOTE_PLING = PLING
-     */
-
-    PIANO, BASS, SNARE_DRUM, STICKS, BASS_DRUM, GUITAR,
-    BELL, CHIME, FLUTE, XYLOPHONE, PLING;
+    BANJO,
+    BASEDRUM,
+    BASS,
+    BELL,
+    BIT,
+    CHIME,
+    COW_BELL,
+    DIDGERIDOO,
+    FLUTE,
+    GUITAR,
+    HARP,
+    HAT,
+    IRON_XYLOPHONE,
+    PLING,
+    SNARE,
+    XYLOPHONE;
 
     public static Instrument toMCSound(byte instrument) {
         switch (instrument) {
-            case 0:
-                return Instrument.PIANO;
             case 1:
                 return Instrument.BASS;
             case 2:
-                return Instrument.SNARE_DRUM;
+                return Instrument.SNARE;
             case 3:
-                return Instrument.STICKS;
+                return Instrument.HAT;
             case 4:
-                return Instrument.BASS_DRUM;
+                return Instrument.BASEDRUM;
             case 5:
                 return Instrument.GUITAR;
             case 6:
@@ -43,8 +41,19 @@ public enum Instrument {
                 return Instrument.XYLOPHONE;
             case 10:
                 return Instrument.PLING;
+            case 11:
+                return Instrument.BANJO;
+            case 12:
+                return Instrument.BIT;
+            case 13:
+                return Instrument.COW_BELL;
+            case 14:
+                return Instrument.DIDGERIDOO;
+            case 15:
+                return Instrument.IRON_XYLOPHONE;
+            case 0:
             default:
-                return Instrument.PIANO;
+                return Instrument.HARP;
         }
     }
 }
