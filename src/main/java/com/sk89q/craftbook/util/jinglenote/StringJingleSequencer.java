@@ -88,7 +88,7 @@ public class StringJingleSequencer implements JingleSequencer {
                 }
 
                 if (skip) {
-                    musicKeys.add(new Note(Instrument.PIANO, (byte) 0, 0));
+                    musicKeys.add(new Note(Instrument.HARP, (byte) 0, 0));
                 } else {
                     if (octave < 2) octave = 2;
 
