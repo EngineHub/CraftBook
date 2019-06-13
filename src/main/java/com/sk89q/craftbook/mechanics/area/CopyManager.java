@@ -220,13 +220,25 @@ public class CopyManager {
      * @throws WorldEditException If something went wrong.
      */
     public BlockArrayClipboard copy(Region region) throws WorldEditException {
+        return copy(region, false, false);
+    }
+
+    /**
+     * Copies a region into the BlockArrayClipboard.
+     *
+     * @param region The region
+     * @return The BlockArrayClipboard
+     * @throws WorldEditException If something went wrong.
+     */
+    public BlockArrayClipboard copy(Region region, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
         BlockArrayClipboard copy = new BlockArrayClipboard(region);
 //        copy.setOrigin(origin);
 
         EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy, region.getMinimumPoint());
-        forwardExtentCopy.setCopyingEntities(true);
+        forwardExtentCopy.setCopyingEntities(copyEntities);
+        forwardExtentCopy.setCopyingBiomes(copyBiomes);
         Operations.complete(forwardExtentCopy);
 
         return copy;
@@ -244,6 +256,8 @@ public class CopyManager {
             Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
                     .to(clipboard.getOrigin())
+                    .copyBiomes(true)
+                    .copyEntities(true)
                     .ignoreAirBlocks(false)
                     .build();
 
