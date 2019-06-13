@@ -20,6 +20,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -67,24 +68,27 @@ public final class ItemSyntax {
     public static String getStringFromItem(ItemStack item) {
 
         StringBuilder builder = new StringBuilder();
-        builder.append(item.getType().name());
-        if(item.getDurability() > 0)
-            builder.append(':').append(item.getDurability());
+        builder.append(item.getType().getKey().toString());
 
         if(item.hasItemMeta()) {
-            if(item.getItemMeta().hasEnchants())
-                for(Entry<Enchantment,Integer> enchants : item.getItemMeta().getEnchants().entrySet())
-                    builder.append(';').append(enchants.getKey().getName()).append(':').append(enchants.getValue());
-            if(item.getItemMeta().hasDisplayName())
-                builder.append('|').append(item.getItemMeta().getDisplayName());
-            if(item.getItemMeta().hasLore()) {
-                if(!item.getItemMeta().hasDisplayName())
-                    builder.append("|$IGNORE");
-                List<String> list = item.getItemMeta().getLore();
-                for(String s : list)
-                    builder.append('|').append(s);
-            }
             ItemMeta meta = item.getItemMeta();
+            if(meta.hasEnchants()) {
+                for (Entry<Enchantment, Integer> enchants : meta.getEnchants().entrySet()) {
+                    builder.append(';').append(enchants.getKey().getName()).append(':').append(enchants.getValue());
+                }
+            }
+            if(meta.hasDisplayName()) {
+                builder.append('|').append(meta.getDisplayName());
+            }
+            if(meta.hasLore()) {
+                if(!meta.hasDisplayName()) {
+                    builder.append("|$IGNORE");
+                }
+                List<String> list = meta.getLore();
+                for(String s : list) {
+                    builder.append('|').append(s);
+                }
+            }
 
             if (meta.isUnbreakable()) {
                 builder.append("/unbreakable:true");
@@ -120,7 +124,9 @@ public final class ItemSyntax {
             } else if (meta instanceof EnchantmentStorageMeta) {
                 if(!((EnchantmentStorageMeta) meta).hasStoredEnchants())
                     for(Entry<Enchantment, Integer> eff : ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet())
-                        builder.append("/enchant:").append(eff.getKey().getName()).append(';').append(eff.getValue());
+                        builder.append("/enchant:").append(eff.getKey().getKey().toString()).append(';').append(eff.getValue());
+            } else if (meta instanceof Damageable && ((Damageable) meta).getDamage() > 0) {
+                builder.append("/damage:").append(((Damageable) meta).getDamage());
             }
         }
 
@@ -255,6 +261,11 @@ public final class ItemSyntax {
                         for (String flag : flags) {
                             meta.addItemFlags(ItemFlag.valueOf(flag));
                         }
+                    } else if (bits[0].equalsIgnoreCase("damage") && meta instanceof Damageable) {
+                        try {
+                            int damage = Integer.parseInt(bits[1]);
+                            ((Damageable) meta).setDamage(damage);
+                        } catch(Exception ignored){}
                     }
                 }
                 rVal.setItemMeta(meta);

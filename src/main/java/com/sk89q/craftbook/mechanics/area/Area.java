@@ -241,6 +241,7 @@ public class Area extends AbstractCraftBookMechanic {
                 }
 
                 copy = CopyManager.getInstance().load(namespace, id);
+                copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
                 CopyManager.getInstance().paste(copy);
                 setToggledState(sign, true);
             }
@@ -293,6 +294,7 @@ public class Area extends AbstractCraftBookMechanic {
                     CopyManager.getInstance().save(namespace, inactiveID, copy);
                 } else {
                     copy = CopyManager.getInstance().load(namespace, id);
+                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
                 }
                 CopyManager.getInstance().paste(copy);
                 setToggledState(sign, true);
