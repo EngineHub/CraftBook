@@ -42,7 +42,7 @@ public class AreaCommands {
 
     private CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-    @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id>", flags = "n:", min = 1)
+    @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id> [-e] [-b]", flags = "ebn:", min = 1)
     public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
 
         if (!(sender instanceof Player)) return;
@@ -51,6 +51,9 @@ public class AreaCommands {
         String id;
         String namespace = player.getCraftBookId();
         boolean personal = true;
+
+        boolean copyEntities = context.hasFlag('e');
+        boolean copyBiomes = context.hasFlag('b');
 
         if (context.hasFlag('n')) {
             if (!player.hasPermission("craftbook.mech.area.save." + context.getFlag('n')))
@@ -105,7 +108,7 @@ public class AreaCommands {
             }
 
             // Copy
-            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel);
+            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel, copyEntities, copyBiomes);
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '" + namespace +
                     "' and ID '" + id + "'.");
