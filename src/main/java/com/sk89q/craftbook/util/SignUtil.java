@@ -142,7 +142,7 @@ public final class SignUtil {
      *         the result is rounded to the nearest ordinal direction.
      */
     public static BlockFace getRight(Block sign) {
-        return getClockWise(getFront(sign));
+        return getCounterClockWise(getFront(sign));
     }
 
     public static Block getLeftBlock(Block sign) {
@@ -160,7 +160,7 @@ public final class SignUtil {
      *         result is rounded to the nearest ordinal direction.
      */
     public static BlockFace getLeft(Block sign) {
-        return getCounterClockWise(getFront(sign));
+        return getClockWise(getFront(sign));
     }
 
     public static Block getRightBlock(Block sign) {
