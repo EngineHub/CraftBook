@@ -285,6 +285,7 @@ public class InventoryUtil {
             case LIME_SHULKER_BOX:
             case BLACK_SHULKER_BOX:
             case RED_SHULKER_BOX:
+            case SHULKER_BOX:
                 return true;
             default:
                 return false;

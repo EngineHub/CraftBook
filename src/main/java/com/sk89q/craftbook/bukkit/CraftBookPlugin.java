@@ -885,6 +885,10 @@ public class CraftBookPlugin extends JavaPlugin {
         return config;
     }
 
+    public YAMLProcessor getMechanismsConfig() {
+        return this.mechanismsConfig;
+    }
+
     /**
      * This method is used to get the CraftBook {@link LanguageManager}.
      *
