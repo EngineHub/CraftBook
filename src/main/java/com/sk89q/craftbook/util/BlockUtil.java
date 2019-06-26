@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,6 +20,10 @@ public final class BlockUtil {
 
     public static boolean areBlocksIdentical(Block block, Block block2) {
         return block.getType() == block2.getType() && block.getBlockData().matches(block2.getBlockData());
+    }
+
+    public static boolean areBlocksIdentical(Block block, BlockData block2) {
+        return block.getType() == block2.getMaterial() && block.getBlockData().matches(block2);
     }
 
     public static boolean isBlockSimilarTo(Block block, Material type) {

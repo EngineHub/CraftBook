@@ -270,7 +270,7 @@ public class Bridge extends CuboidToggleMechanic {
         Block proximalBaseCenter = getBlockBase(trigger);
 
         BlockData bridgeType = getBlockType(trigger);
-        if (proximalBaseCenter.getType() != bridgeType.getMaterial()) {
+        if (!BlockUtil.areBlocksIdentical(proximalBaseCenter, bridgeType)) {
             throw new InvalidMechanismException("mech.bridge.material");
         }
 

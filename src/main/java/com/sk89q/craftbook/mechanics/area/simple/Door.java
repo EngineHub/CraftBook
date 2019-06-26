@@ -189,7 +189,7 @@ public class Door extends CuboidToggleMechanic {
         Block proximalBaseCenter = getBlockBase(trigger);
 
         BlockData doorType = getBlockType(trigger);
-        if (proximalBaseCenter.getType() != doorType.getMaterial()) {
+        if (!BlockUtil.areBlocksIdentical(proximalBaseCenter, doorType)) {
             throw new InvalidMechanismException("mech.bridge.material");
         }
 
