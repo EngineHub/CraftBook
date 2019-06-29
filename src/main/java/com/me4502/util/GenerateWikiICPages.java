@@ -1,5 +1,7 @@
 package com.me4502.util;
 
+import static com.me4502.util.GenerateWikiConfigLists.createStringOfLength;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -41,27 +43,9 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
         super(args);
     }
 
-    String username, password;
-
     @Override
     public void generate(String[] args) {
         try {
-
-            boolean upload = false;
-            final List<String> toUpload = new ArrayList<>();
-
-            for(String arg : args) {
-
-                if(arg.equalsIgnoreCase("upload"))
-                    upload = true;
-                else if(arg.startsWith("u:"))
-                    username = arg.substring(2);
-                else if(arg.startsWith("p:"))
-                    password = arg.substring(2);
-                else if(upload)
-                    toUpload.add(arg.toUpperCase());
-            }
-
             final File file = new File(getGenerationFolder(), "IC-Pages/");
             if(!file.exists())
                 file.mkdir();
@@ -80,17 +64,17 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
             for(RegisteredICFactory ric : ICManager.inst().getICList()) {
 
-                PrintWriter writer = new PrintWriter(new File(file, ric.getId() + ".txt"), "UTF-8");
+                PrintWriter writer = new PrintWriter(new File(file, ric.getId().toUpperCase() + ".rst"), "UTF-8");
 
                 IC ic = ric.getFactory().create(null);
 
-                writer.println("[[../Integrated_circuits#IC_Types_List|< Return to ICs]]");
+                writer.println(":doc:`index`");
                 writer.println();
 
-                for(ICFamily family : ric.getFamilies()) {
-                    if(family instanceof FamilyAISO) continue;
-                    writer.println("{{" + family.getName() + "|id=" + ric.getId() + "|name=" + ic.getTitle() + "}}");
-                }
+                writer.println(createStringOfLength(ric.getId().length(), '='));
+                writer.println(ric.getId());
+                writer.println(createStringOfLength(ric.getId().length(), '='));
+                writer.println();
 
                 if(ric.getFactory().getLongDescription() == null || ric.getFactory().getLongDescription().length == 0 || ric.getFactory().getLongDescription()[0].equals("Missing Description")) {
                     CraftBookPlugin.logger().info("Missing Long Description for: " + ric.getId());
@@ -101,25 +85,30 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println(line);
 
                 writer.println();
-                writer.println("== Sign parameters ==");
-                writer.println("# " + ic.getSignTitle());
-                writer.println("# [" + ric.getId() + "]");
+                writer.println("Sign parameters");
+                writer.println("===============");
+                writer.println();
+                writer.println("#. " + ic.getSignTitle());
+                writer.println("#. [" + ric.getId() + "]");
                 for(String line : ric.getFactory().getLineHelp()) {
                     if(line == null) line = "Blank";
 
                     if(line.contains("{") && line.contains("}")) line = StringUtils.replace(StringUtils.replace(line, "}", "</span>''"), "{", "''<span style='color:#808080'>"); //Optional Syntax.
 
-                    if(line.contains("SearchArea")) line = StringUtils.replace(line, "SearchArea", "[[../Search_Area|Search Area]]");
-                    if(line.contains("ItemSyntax")) line = StringUtils.replace(line, "ItemSyntax", "[[../Item_Syntax|Item Syntax]]");
-                    if(line.contains("PlayerType")) line = StringUtils.replace(line, "PlayerType", "[[../Player_Type|Player Type]]");
-                    writer.println("# " + line);
+                    if(line.contains("SearchArea")) line = StringUtils.replace(line, "SearchArea", ":doc:`../../search_area`");
+                    if(line.contains("ItemSyntax")) line = StringUtils.replace(line, "ItemSyntax", ":doc:`../../item_syntax`");
+                    if(line.contains("PlayerType")) line = StringUtils.replace(line, "PlayerType", ":doc:`../../player_type`");
+                    writer.println("#. " + line);
                 }
 
                 writer.println();
-                writer.println("== Pins ==");
+                writer.println("Pins");
+                writer.println("====");
 
                 writer.println();
-                writer.println("=== Input ===");
+                writer.println("Input");
+                writer.println("-----");
+                writer.println();
                 int pins = 0;
 
                 ChipState state = ric.getFamilies()[0].detect(BukkitAdapter.adapt(Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).getLocation()),
@@ -129,10 +118,12 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                     if(pins == state.getInputCount()) {
                         writer.println();
-                        writer.println("=== Output ===");
+                        writer.println("Output");
+                        writer.println("------");
+                        writer.println();
                     }
 
-                    writer.println("# " + (pin == null ? "Nothing" : pin));
+                    writer.println("#. " + (pin == null ? "Nothing" : pin));
 
                     if(pin == null) {
                         CraftBookPlugin.logger().info("Missing pin: " + pins + " for IC: " + ric.getId());
@@ -146,7 +137,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                 if(ric.getFactory() instanceof ConfigurableIC) {
 
-                    writer.println("== Configuration ==");
+                    writer.println("Configuration");
+                    writer.println("=============");
                     writer.println();
                     writer.println("{| class=\"wiki-table sortable\"");
                     writer.println("|-");
@@ -179,7 +171,8 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
 
                 if(ric.getFactory() instanceof CommandIC) {
 
-                    writer.println("== Commands ==");
+                    writer.println("Commands");
+                    writer.println("========");
                     writer.println();
 
                     writer.println("{| class=\"wiki-table\"");
@@ -196,79 +189,12 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println();
                 }
 
-
-                writer.print("[[Category:IC]]");
-                for(ICFamily family : ric.getFamilies())
-                    writer.print("[[Category:" + family.getName() + "]]");
                 writer.close();
             }
 
             System.out.println(missingComments + " Comments Are Missing");
 
             oldState.update(true);
-
-            if(upload) {
-
-                Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), () -> {
-                    Bukkit.getLogger().info("Starting Upload");
-                    Wiki wiki = new Wiki("wiki.sk89q.com");
-                    wiki.setMaxLag(0);
-                    wiki.setThrottle(5000);
-                    wiki.setResolveRedirects(true);
-
-                    try {
-                        Bukkit.getLogger().info("Logging In");
-                        wiki.login(username, password);
-                        Bukkit.getLogger().info("Logged in Successfully!");
-
-                        int amount = 0;
-                        String failed = "";
-
-                        for(RegisteredICFactory ric : ICManager.inst().getICList()) {
-                            if(toUpload.contains("ALL") || toUpload.contains(ric.getId())) {
-
-                                if(missingDocuments.contains(ric.getId())) {
-                                    if(failed.length() == 0)
-                                        failed = ric.getId();
-                                    else
-                                        failed = failed + "," + ric.getId();
-                                    continue; //Ignore this, bad docs.
-                                }
-
-                                Bukkit.getLogger().info("Uploading " + ric.getId() + "...");
-
-                                StringBuilder builder = new StringBuilder();
-
-                                BufferedReader reader = new BufferedReader(new FileReader(new File(file, ric.getId() + ".txt")));
-
-                                String line = null;
-
-                                while((line = reader.readLine()) != null) {
-                                    builder.append(line);
-                                    builder.append("\n");
-                                }
-
-                                reader.close();
-
-                                wiki.edit("CraftBook/" + ric.getId(), builder.toString(), "Automated update of '" + ric.getId() + "' by " + username);
-
-                                Bukkit.getLogger().info("Uploaded: " + ric.getId());
-
-                                amount++;
-                            }
-                        }
-
-                        Bukkit.getLogger().info("Finished uploading! Uploaded " + amount + " IC Pages!");
-                        if(failed.length() > 0)
-                            Bukkit.getLogger().warning("Failed to upload ICs: " + failed);
-                    } catch (LoginException e) {
-                        e.printStackTrace();
-                        Bukkit.getLogger().warning("Failed to login to wiki!");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
