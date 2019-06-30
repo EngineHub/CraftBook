@@ -168,8 +168,6 @@ public class ReportWriter {
         log.put("Free memory", runtime.freeMemory() / 1024 / 1024 + " MB");
         log.put("Max memory", runtime.maxMemory() / 1024 / 1024 + " MB");
         log.put("Total memory", runtime.totalMemory() / 1024 / 1024 + " MB");
-        log.put("Server ID", server.getServerId());
-        log.put("Server name", server.getServerName());
         log.put("Implementation", server.getVersion());
         //log.put("Address", server.getIp(), server.getPort());
         log.put("Player count", "%d/%d",
