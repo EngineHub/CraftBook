@@ -251,7 +251,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
                 BlockData blockData = event.getClickedBlock().getBlockData();
                 if(chairFacing && blockData instanceof Directional) {
-                    BlockFace direction = ((Directional) blockData).getFacing();
+                    BlockFace direction = ((Directional) blockData).getFacing().getOppositeFace();
 
                     double dx = direction.getModX();
                     double dy = direction.getModY();
