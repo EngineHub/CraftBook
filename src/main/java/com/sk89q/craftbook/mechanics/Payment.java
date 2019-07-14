@@ -26,6 +26,15 @@ import com.sk89q.util.yaml.YAMLProcessor;
  */
 public class Payment extends AbstractCraftBookMechanic {
 
+    @Override
+    public boolean enable() {
+        if (CraftBookPlugin.plugins.getEconomy() == null) {
+            CraftBookPlugin.inst().getLogger().warning("An economy plugin and Vault is required for the Payment mechanic!");
+            return false;
+        }
+        return super.enable();
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
