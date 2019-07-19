@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.bukkit;
 
+import com.google.common.collect.Sets;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
@@ -554,7 +555,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
                 "");
 
-        for(String enabled : config.enabledMechanics) {
+        for(String enabled : Sets.newHashSet(config.enabledMechanics)) {
 
             Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(enabled);
             try {
