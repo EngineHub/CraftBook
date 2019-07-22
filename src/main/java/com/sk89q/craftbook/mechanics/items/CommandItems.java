@@ -317,11 +317,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
             performCommandItems(stack, event.getEntity(), event);
             for(CommandItemDefinition def : definitions) {
                 if(ItemUtil.areItemsIdentical(stack, def.getItem()) && def.keepOnDeath) {
-                    stackIt.remove();
                     List<ItemStack> items = deathPersistItems.get(event.getEntity().getUniqueId());
                     if (items == null) items = Lists.newArrayList();
                     items.add(stack);
                     deathPersistItems.put(event.getEntity().getUniqueId(), items);
+                    stackIt.remove();
+                    break;
                 }
             }
         }
