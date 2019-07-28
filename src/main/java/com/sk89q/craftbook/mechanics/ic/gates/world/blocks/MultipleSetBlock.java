@@ -68,11 +68,7 @@ public class MultipleSetBlock extends AbstractIC {
 
         onBlock = BlockSyntax.getBukkitBlock(blocks[0]);
 
-        if(blocks.length > 1) {
-            onBlock = BlockSyntax.getBukkitBlock(blocks[1]);
-        } else {
-            offblock = Material.AIR.createBlockData();
-        }
+        offblock = (blocks.length > 1) ? BlockSyntax.getBukkitBlock(blocks[1]) : Material.AIR.createBlockData();
 
         x += Integer.parseInt(coords[0]);
         y += Integer.parseInt(coords[1]);
