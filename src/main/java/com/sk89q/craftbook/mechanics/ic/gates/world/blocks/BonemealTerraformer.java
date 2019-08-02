@@ -130,7 +130,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.GRASS && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.GRASS_BLOCK && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 int t = CraftBookPlugin.inst().getRandom().nextInt(7);
                 if (t == 0) {

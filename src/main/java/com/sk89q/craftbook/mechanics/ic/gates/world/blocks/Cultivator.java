@@ -39,7 +39,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         return "CULTIVATOR";
     }
 
-    SearchArea area;
+    private SearchArea area;
 
     @Override
     public void load() {
@@ -68,8 +68,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
         if(b == null) return false;
 
-        if (b.getType() == Material.DIRT || b.getType() == Material.GRASS) {
-
+        if (b.getType() == Material.DIRT || b.getType() == Material.GRASS_BLOCK) {
             if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
                 b.setType(Material.FARMLAND);
                 return true;
