@@ -121,85 +121,98 @@ public class CartSorter extends CartBlockMechanism {
         STRAIGHT, LEFT, RIGHT
     }
 
-    public static boolean isSortApplicable(String line, Minecart minecart) {
-
-        if (line.equalsIgnoreCase("All")) return true;
-        Entity test = minecart.getPassenger();
-        Player player = null;
-        if (test instanceof Player) {
-            player = (Player) test;
-        }
-
-        if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null)
-            return true;
-
-        if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart) return true;
-        else if (line.equalsIgnoreCase("Powered") && minecart instanceof PoweredMinecart) return true;
-        else if (line.equalsIgnoreCase("Minecart")) return true;
-
-        if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null)
-            return true;
-
-        if (line.equalsIgnoreCase("Animal") && test instanceof Animals) return true;
-
-        if (line.equalsIgnoreCase("Mob") && test instanceof Monster) return true;
-
-        if ((line.equalsIgnoreCase("Player") || line.equalsIgnoreCase("Ply")) && player != null) return true;
-
-        String[] parts = RegexUtil.COLON_PATTERN.split(line);
-
-        if (parts.length >= 2) if (player != null && parts[0].equalsIgnoreCase("Held")) {
-            try {
-                ItemStack item = ItemSyntax.getItem(parts[1]);
-                if (ItemUtil.areItemsSimilar(player.getItemInHand(), item)) return true;
-            } catch (NumberFormatException ignored) {
+    public static boolean isSortApplicable(String fullLine, Minecart minecart) {
+        for (String line : RegexUtil.COMMA_PATTERN.split(fullLine)) {
+            if (line.equalsIgnoreCase("All"))
+                return true;
+            Entity test = minecart.getPassenger();
+            Player player = null;
+            if (test instanceof Player) {
+                player = (Player) test;
             }
-        } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
-            if (parts[1].equalsIgnoreCase(player.getName())) return true;
-        } else if (parts[0].equalsIgnoreCase("Mob")) {
-            String testMob = parts[1];
-            return test.getType().toString().equalsIgnoreCase(testMob);
-        } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
-            StorageMinecart storageCart = (StorageMinecart) minecart;
-            Inventory storageInventory = storageCart.getInventory();
 
-            if (parts.length == 4) {
-                try {
-                    ItemStack item = ItemSyntax.getItem(parts[1] + ':' + parts[2]);
-                    int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
-                            storageInventory.getContents().length - 1);
-                    ItemStack indexed = storageInventory.getContents()[index];
-                    if (indexed != null && indexed.equals(item)) return true;
-                } catch (NumberFormatException ignored) {
-                }
-            } else if (parts.length == 3) {
-                try {
-                    ItemStack item = ItemSyntax.getItem(parts[1] + parts[2]);
-                    if (storageInventory.contains(item)) return true;
-                } catch (NumberFormatException ignored) {
-                }
-            } else if (parts[1].equalsIgnoreCase("!")) {
-                for (ItemStack item : storageInventory.getContents()) {
-                    if (item != null) {
-                        return false;
+            if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null)
+                return true;
+
+            if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart)
+                return true;
+            else if (line.equalsIgnoreCase("Powered") && minecart instanceof PoweredMinecart)
+                return true;
+            else if (line.equalsIgnoreCase("Minecart"))
+                return true;
+
+            if ((line.equalsIgnoreCase("Occupied") || line.equalsIgnoreCase("Full")) && minecart.getPassenger() != null)
+                return true;
+
+            if (line.equalsIgnoreCase("Animal") && test instanceof Animals)
+                return true;
+
+            if (line.equalsIgnoreCase("Mob") && test instanceof Monster)
+                return true;
+
+            if ((line.equalsIgnoreCase("Player") || line.equalsIgnoreCase("Ply")) && player != null)
+                return true;
+
+            String[] parts = RegexUtil.COLON_PATTERN.split(line);
+
+            if (parts.length >= 2)
+                if (player != null && parts[0].equalsIgnoreCase("Held")) {
+                    try {
+                        ItemStack item = ItemSyntax.getItem(parts[1]);
+                        if (ItemUtil.areItemsSimilar(player.getItemInHand(), item))
+                            return true;
+                    } catch (NumberFormatException ignored) {
+                    }
+                } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {
+                    if (parts[1].equalsIgnoreCase(player.getName()))
+                        return true;
+                } else if (parts[0].equalsIgnoreCase("Mob")) {
+                    String testMob = parts[1];
+                    return test.getType().toString().equalsIgnoreCase(testMob);
+                } else if (minecart instanceof StorageMinecart && parts[0].equalsIgnoreCase("Ctns")) {
+                    StorageMinecart storageCart = (StorageMinecart) minecart;
+                    Inventory storageInventory = storageCart.getInventory();
+
+                    if (parts.length == 4) {
+                        try {
+                            ItemStack item = ItemSyntax.getItem(parts[1] + ':' + parts[2]);
+                            int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
+                                    storageInventory.getContents().length - 1);
+                            ItemStack indexed = storageInventory.getContents()[index];
+                            if (indexed != null && indexed.equals(item))
+                                return true;
+                        } catch (NumberFormatException ignored) {
+                        }
+                    } else if (parts.length == 3) {
+                        try {
+                            ItemStack item = ItemSyntax.getItem(parts[1] + parts[2]);
+                            if (storageInventory.contains(item))
+                                return true;
+                        } catch (NumberFormatException ignored) {
+                        }
+                    } else if (parts[1].equalsIgnoreCase("!")) {
+                        for (ItemStack item : storageInventory.getContents()) {
+                            if (item != null) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    } else {
+                        try {
+                            ItemStack item = ItemSyntax.getItem(parts[1]);
+                            if (storageInventory.contains(item))
+                                return true;
+                        } catch (NumberFormatException ignored) {
+                        }
                     }
                 }
-                return true;
-            } else {
-                try {
-                    ItemStack item = ItemSyntax.getItem(parts[1]);
-                    if (storageInventory.contains(item)) return true;
-                } catch (NumberFormatException ignored) {
+            if (line.startsWith("#")) {
+                if (player != null) {
+                    String selectedStation = StationManager.getStation(player.getName());
+                    return line.equalsIgnoreCase('#' + selectedStation);
                 }
             }
         }
-        if (line.startsWith("#")) {
-            if (player != null) {
-                String selectedStation = StationManager.getStation(player.getName());
-                return line.equalsIgnoreCase('#' + selectedStation);
-            }
-        }
-
         return false;
     }
 
