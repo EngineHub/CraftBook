@@ -82,7 +82,9 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
     @Override
     public void trigger(ChipState chip) {
-
+        if (handler == null) {
+            return;
+        }
         if (chip.getInput(0) && !handler.isShowRunning())
             handler.startShow();
         else if (handler.isShowRunning() && stopOnLow)
@@ -91,6 +93,9 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
     @Override
     public void think(ChipState chip) {
+        if (handler == null) {
+            return;
+        }
         if(handler.isShowRunning() != chip.getOutput(0)) {
             chip.setOutput(0, handler.isShowRunning());
         }
