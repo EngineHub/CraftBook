@@ -58,16 +58,21 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         return "FIREWORKS";
     }
 
-    String show;
-    FireworkShowHandler handler;
+    private String show;
+    private FireworkShowHandler handler;
 
-    boolean stopOnLow;
+    private boolean stopOnLow;
 
     @Override
     public void load() {
 
         show = getLine(2).trim();
-        handler = new FireworkShowHandler(show);
+        try {
+            handler = new FireworkShowHandler(show);
+        } catch (IOException e) {
+            CraftBookPlugin.logger().severe("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString());
+            CraftBookBukkitUtil.printStacktrace(e);
+        }
 
         String[] bits = RegexUtil.COMMA_PATTERN.split(getLine(3));
         if(bits.length > 0)
@@ -137,14 +142,9 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         boolean fyrestone = false;
 
-        public FireworkShowHandler(String showName) {
-
+        public FireworkShowHandler(String showName) throws IOException {
             this.showName = showName;
-            try {
-                readShow();
-            } catch (IOException e) {
-                CraftBookBukkitUtil.printStacktrace(e);
-            }
+            readShow();
         }
 
         public void readShow() throws IOException {
