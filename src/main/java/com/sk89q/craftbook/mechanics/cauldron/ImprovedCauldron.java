@@ -95,7 +95,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 boolean found = false;
                 for(BlockFace face : faces) {
                     Block sign = block.getRelative(face);
-                    if(sign.getType() == Material.WALL_SIGN) {
+                    if(SignUtil.isWallSign(sign)) {
                         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
                         if(s.getLine(1).equals("[Cauldron]")) {
                             found = true;

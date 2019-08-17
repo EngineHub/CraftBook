@@ -68,9 +68,9 @@ public class Pipes extends AbstractCraftBookMechanic {
         if(ProtectionUtil.shouldUseProtection()) {
             Block pistonBlock = null;
 
-            if (event.getBlock().getType() == Material.WALL_SIGN) {
+            if (SignUtil.isWallSign(event.getBlock())) {
                 pistonBlock = SignUtil.getBackBlock(event.getBlock());
-            } else if (event.getBlock().getType() == Material.SIGN) {
+            } else if (SignUtil.isStandingSign(event.getBlock())) {
                 if (isPiston(event.getBlock().getRelative(BlockFace.DOWN))) {
                     pistonBlock = event.getBlock().getRelative(BlockFace.DOWN);
                 } else if (isPiston(event.getBlock().getRelative(BlockFace.UP))) {
@@ -113,11 +113,11 @@ public class Pipes extends AbstractCraftBookMechanic {
         for(BlockFace face : LocationUtil.getDirectFaces()) {
             if(face == facing || !SignUtil.isSign(block.getRelative(face)))
                 continue;
-            if(block.getRelative(face).getType() != Material.SIGN && (face == BlockFace.UP || face == BlockFace.DOWN))
+            if(!SignUtil.isStandingSign(block.getRelative(face)) && (face == BlockFace.UP || face == BlockFace.DOWN))
                 continue;
-            else if (block.getRelative(face).getType() == Material.SIGN && face != BlockFace.UP && face != BlockFace.DOWN)
+            else if (SignUtil.isStandingSign(block.getRelative(face)) && face != BlockFace.UP && face != BlockFace.DOWN)
                 continue;
-            if(block.getRelative(face).getType() != Material.SIGN && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
+            if(!SignUtil.isStandingSign(block.getRelative(face)) && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block.getRelative(face));
             if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
@@ -270,7 +270,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                             Block off = bl.getRelative(x, y, z);
 
-                            if (!isValidPipeBlock(off.getType())) continue;
+                            if (!isValidPipeBlock(off)) continue;
 
                             if (visitedPipes.contains(off.getLocation().toVector())) continue;
                             visitedPipes.add(off.getLocation().toVector());
@@ -281,7 +281,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                                 searchQueue.add(off);
                             } else if (off.getType() == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(off.getType())) {
                                 Block offsetBlock = off.getRelative(x, y, z);
-                                if (!isValidPipeBlock(offsetBlock.getType())) continue;
+                                if (!isValidPipeBlock(offsetBlock)) continue;
                                 if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
                                 if(ItemUtil.isStainedGlassPane(off.getType())) {
                                     if((ItemUtil.isStainedGlass(bl.getType())
@@ -302,15 +302,19 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
-    private static boolean isValidPipeBlock(Material typeId) {
-        return typeId == Material.GLASS
-                || ItemUtil.isStainedGlass(typeId)
-                || typeId == Material.PISTON
-                || typeId == Material.STICKY_PISTON
-                || typeId == Material.WALL_SIGN
-                || typeId == Material.DROPPER
-                || typeId == Material.GLASS_PANE
-                || ItemUtil.isStainedGlassPane(typeId);
+    private static boolean isValidPipeBlock(Block block) {
+        switch (block.getType()) {
+            case GLASS:
+            case PISTON:
+            case STICKY_PISTON:
+            case DROPPER:
+            case GLASS_PANE:
+                return true;
+            default:
+                return ItemUtil.isStainedGlass(block.getType())
+                        || ItemUtil.isStainedGlassPane(block.getType())
+                        || SignUtil.isWallSign(block);
+        }
     }
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {

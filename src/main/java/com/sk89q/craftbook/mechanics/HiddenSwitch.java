@@ -33,7 +33,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     private static boolean isValidWallSign(Block b) {
 
         // Must be Wall Sign
-        if (b == null || b.getType() != Material.WALL_SIGN) return false;
+        if (b == null || !SignUtil.isWallSign(b)) return false;
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(b);
 
         return s.getLine(1).equalsIgnoreCase("[X]");
@@ -65,7 +65,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
 
             for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
-                if(testBlock.getType() == Material.WALL_SIGN) {
+                if(SignUtil.isWallSign(testBlock)) {
                     s = CraftBookBukkitUtil.toChangedSign(testBlock);
                     break;
                 }
@@ -73,8 +73,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         } else {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
-            if(testBlock.getType() == Material.WALL_SIGN)
+            if(SignUtil.isWallSign(testBlock)) {
                 s = CraftBookBukkitUtil.toChangedSign(testBlock);
+            }
         }
 
         if(s == null)

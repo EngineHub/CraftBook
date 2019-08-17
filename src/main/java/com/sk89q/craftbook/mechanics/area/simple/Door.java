@@ -253,7 +253,7 @@ public class Door extends CuboidToggleMechanic {
             // i = settings.maxLength is actually the farthest place we're
             // allowed to find the distal signpost
 
-            if (otherSide.getType() == Material.SIGN) {
+            if (SignUtil.isSign(otherSide)) {
                 String otherSignText = CraftBookBukkitUtil.toChangedSign(otherSide).getLine(1);
                 if (isApplicableSign(otherSignText))
                     break;
