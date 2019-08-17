@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -155,8 +156,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                 fyrestone = true;
                 firework = new File(ICManager.inst().getFireworkFolder(), showName + ".fwk");
                 if (!firework.exists()) {
-                    CraftBookPlugin.logger().severe("Firework File Not Found! " + firework.getName());
-                    return;
+                    throw new FileNotFoundException("Firework File Not Found! " + firework.getName());
                 }
             }
             else
