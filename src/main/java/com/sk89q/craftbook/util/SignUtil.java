@@ -17,6 +17,8 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockCategory;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -52,9 +54,35 @@ import org.bukkit.event.block.SignChangeEvent;
  */
 public final class SignUtil {
 
-    public static boolean isSign(Block block) {
+    private static BlockCategory SIGNS_CATEGORY;
+    private static BlockCategory STANDING_SIGNS_CATEGORY;
+    private static BlockCategory WALL_SIGNS_CATEGORY;
 
-        return block.getType() == Material.SIGN || block.getType() == Material.WALL_SIGN;
+    static {
+        SIGNS_CATEGORY = BlockCategory.REGISTRY.get("minecraft:signs");
+        STANDING_SIGNS_CATEGORY = BlockCategory.REGISTRY.get("minecraft:standing_signs");
+        WALL_SIGNS_CATEGORY = BlockCategory.REGISTRY.get("minecraft:wall_signs");
+    }
+
+    public static boolean isSign(Block block) {
+        if (SIGNS_CATEGORY != null) {
+            return SIGNS_CATEGORY.contains(BukkitAdapter.asBlockType(block.getType()));
+        }
+        return isStandingSign(block) || isWallSign(block);
+    }
+
+    public static boolean isStandingSign(Block block) {
+        if (STANDING_SIGNS_CATEGORY != null) {
+            return STANDING_SIGNS_CATEGORY.contains(BukkitAdapter.asBlockType(block.getType()));
+        }
+        return block.getType() == Material.SIGN;
+    }
+
+    public static boolean isWallSign(Block block) {
+        if (WALL_SIGNS_CATEGORY != null) {
+            return WALL_SIGNS_CATEGORY.contains(BukkitAdapter.asBlockType(block.getType()));
+        }
+        return block.getType() == Material.WALL_SIGN;
     }
 
     /**

@@ -91,7 +91,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public Object[] setupIC(Block block, boolean create) {
 
         // if we're not looking at a wall sign, it can't be an IC.
-        if (block.getType() != Material.WALL_SIGN) return null;
+        if (!SignUtil.isWallSign(block)) return null;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
         // detect the text on the sign to see if it's any kind of IC at all.
@@ -214,7 +214,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // abort if the current did not change
         if (event.getNewCurrent() == event.getOldCurrent()) return;
 
-        if (block.getType() == Material.WALL_SIGN) {
+        if (SignUtil.isWallSign(block)) {
             final Block source = event.getSource();
             // abort if the sign is the source or the block the sign is attached to
             if (SignUtil.getBackBlock(block).equals(source) || block.equals(source)) return;
@@ -222,7 +222,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
             Runnable runnable = () -> {
 
-                if (block.getType() != Material.WALL_SIGN) return;
+                if (!SignUtil.isWallSign(block)) return;
                 try {
                     ChipState chipState = ((ICFamily) icData[1]).detect(BukkitAdapter.adapt(source.getLocation()), CraftBookBukkitUtil.toChangedSign(block));
                     int cnt = 0;
@@ -406,7 +406,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             } else
                 suffix = "";
 
-            if (block.getType() != Material.WALL_SIGN) {
+            if (!SignUtil.isWallSign(block)) {
                 player.printError("Only wall signs are used for ICs.");
                 SignUtil.cancelSign(event);
                 return;
@@ -484,7 +484,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if (block.getType() != Material.WALL_SIGN) {
+            if (!SignUtil.isWallSign(block)) {
                 player.printError("Only wall signs are used for ICs.");
                 SignUtil.cancelSign(event);
                 return;

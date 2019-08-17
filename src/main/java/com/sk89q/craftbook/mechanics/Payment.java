@@ -40,7 +40,7 @@ public class Payment extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(event.getClickedBlock().getType() != Material.WALL_SIGN) return;
+        if(!SignUtil.isWallSign(event.getClickedBlock())) return;
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ChangedSign sign = event.getSign();
