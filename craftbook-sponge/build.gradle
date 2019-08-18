@@ -19,6 +19,7 @@ dependencies {
     compile "org.spongepowered:spongeapi:${spongeFullVersion}"
     compile 'com.me4502:modularframework-sponge:1.9.3'
     compile 'com.sk89q.worldedit:worldedit-sponge:6.1.7-SNAPSHOT'
+    compile 'org.enginehub.jinglenote:jinglenote-sponge:1.0.0-SNAPSHOT'
 }
 
 project.archivesBaseName = "${project.archivesBaseName}-S${spongeVersion}"
@@ -32,7 +33,7 @@ sponge {
 shadowJar {
     dependencies {
         include(dependency(':craftbook-core'))
-        relocate ("com.me4502.modularframework", "com.sk89q.craftbook.util.modularframework") {
+        relocate ("com.me4502.modularframework", "org.enginehub.craftbook.util.modularframework") {
             include(dependency("com.me4502:modularframework-core"))
             include(dependency("com.me4502:modularframework-sponge"))
             exclude "com.me4502.modularframework.modularframework-core"

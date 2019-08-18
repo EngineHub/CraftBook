@@ -1,0 +1,56 @@
+/*
+ * CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
+ * CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+package org.enginehub.craftbook.sponge.mechanics.ics.chips.logic;
+
+import org.enginehub.craftbook.sponge.mechanics.ics.IC;
+import org.enginehub.craftbook.sponge.mechanics.ics.factory.ICFactory;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+public abstract class TwoInputLogicGate extends IC {
+
+    public TwoInputLogicGate(ICFactory<? extends TwoInputLogicGate> icFactory, Location<World> block) {
+        super(icFactory, block);
+    }
+
+    @Override
+    public void trigger() {
+
+        Boolean a = null;
+        Boolean b = null;
+
+        // New input handling: any/first two valid inputs discovered. Moar flexibility!
+        for (int i = 0; i < getPinSet().getInputCount(); i++) {
+            if (getPinSet().isValid(i, this)) {
+                boolean pinval = getPinSet().getInput(i, this);
+                // Got pin value, assign to first free variable, break if got both.
+                if (a == null) {
+                    a = pinval;
+                } else if (b == null) {
+                    b = pinval;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (a == null || b == null) return;
+
+        getPinSet().setOutput(0, getResult(a, b), this);
+    }
+
+    abstract boolean getResult(boolean a, boolean b);
+}

@@ -5,7 +5,7 @@ println """
  If you encounter trouble:
  1) Read COMPILING.md if you haven't yet
  2) Use gradlew and not gradle
- 3) If you still need help, ask on IRC! irc.esper.net #sk89q
+ 3) If you still need help, ask on Discord! discord.gg/enginehub
 
  Output files will be in build/libs
 *******************************************
@@ -34,13 +34,11 @@ buildscript {
     }
 }
 
-import org.apache.tools.ant.filters.*
-
 defaultTasks 'licenseFormat', 'build'
 
 allprojects {
-    group = 'com.sk89q.craftbook'
-    version = '4.0-SNAPSHOT'
+    group = 'org.enginehub.craftbook'
+    version = '5.0-SNAPSHOT'
 }
 
 // Deployment Section
@@ -123,6 +121,7 @@ subprojects {
 
         compile 'com.me4502:modularframework-core:1.9.1'
         compile 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
+        compile 'org.enginehub.jinglenote:jinglenote-core:1.0.0-SNAPSHOT'
         testCompile 'org.mockito:mockito-core:2.+'
         testCompile 'junit:junit:5.+'
     }

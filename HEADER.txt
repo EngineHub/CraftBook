@@ -1,6 +1,5 @@
-CraftBook Copyright (C) 2010-${year} sk89q <http://www.sk89q.com>
-CraftBook Copyright (C) 2011-${year} me4502 <http://www.me4502.com>
-CraftBook Copyright (C) Contributors
+CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
+CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
 License as published by the Free
