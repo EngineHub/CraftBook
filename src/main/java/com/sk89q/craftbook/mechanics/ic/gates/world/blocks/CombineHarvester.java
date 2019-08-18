@@ -82,7 +82,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
             case CARROTS:
             case POTATOES:
             case BEETROOTS:
-            case NETHER_WART_BLOCK:
+            case NETHER_WART:
             case COCOA:
                 Ageable ageable = (Ageable) block.getBlockData();
                 return ageable.getAge() == ageable.getMaximumAge();
