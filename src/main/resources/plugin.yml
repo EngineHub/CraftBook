@@ -1,7 +1,0 @@
-name: CraftBook
-main: com.sk89q.craftbook.bukkit.CraftBookPlugin
-version: "${internalVersion}"
-dev-url: http://dev.bukkit.org/server-mods/craftbook/
-softdepend: [WorldEdit, WorldGuard, ProtocolLib, Vault]
-api-version: 1.13
-commands:
