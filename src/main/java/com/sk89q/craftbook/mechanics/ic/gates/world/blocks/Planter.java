@@ -222,7 +222,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case PUMPKIN_SEEDS:
                 block.setType(Material.PUMPKIN_STEM);
                 return true;
-            case NETHER_WART_BLOCK:
+            case NETHER_WART:
                 block.setType(Material.NETHER_WART);
                 return true;
             case POTATO:

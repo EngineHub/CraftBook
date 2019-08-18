@@ -78,7 +78,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                 || b.getType() == Material.POTATOES
                 || b.getType() == Material.MELON_STEM
                 || b.getType() == Material.BEETROOTS
-                || b.getType() == Material.NETHER_WART_BLOCK
+                || b.getType() == Material.NETHER_WART
                 || b.getType() == Material.COCOA
                 || b.getType() == Material.PUMPKIN_STEM)
                 && ((Ageable) b.getBlockData()).getAge() < ((Ageable) b.getBlockData()).getMaximumAge()) {

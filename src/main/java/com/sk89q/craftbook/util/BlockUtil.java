@@ -127,7 +127,7 @@ public final class BlockUtil {
                 if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
                     drops.add(new ItemStack(Material.POISONOUS_POTATO, 1));
                 break;
-            case NETHER_WART_BLOCK:
+            case NETHER_WART:
                 drops.add(new ItemStack(Material.NETHER_WART, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
                 break;
             case SUGAR_CANE:
