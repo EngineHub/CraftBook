@@ -1,0 +1,209 @@
+println """
+*******************************************
+ You are building CraftBook!
+
+ If you encounter trouble:
+ 1) Read COMPILING.md if you haven't yet
+ 2) Use gradlew and not gradle
+ 3) If you still need help, ask on IRC! irc.esper.net #sk89q
+
+ Output files will be in build/libs
+*******************************************
+"""
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.google.guava:guava:21.0'
+        }
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.3.0'
+        classpath 'org.ajoberstar:gradle-git:1.5.1'
+        classpath "gradle.plugin.net.minecrell:licenser:0.3"
+        classpath "gradle.plugin.com.mendhak.gradlecrowdin:plugin:0.0.9"
+    }
+}
+
+import org.apache.tools.ant.filters.*
+
+defaultTasks 'licenseFormat', 'build'
+
+allprojects {
+    group = 'com.sk89q.craftbook'
+    version = '4.0-SNAPSHOT'
+}
+
+// Deployment Section
+
+if (!project.hasProperty("artifactory_contextUrl")) ext.artifactory_contextUrl = "http://localhost"
+if (!project.hasProperty("artifactory_user")) ext.artifactory_user = "guest"
+if (!project.hasProperty("artifactory_password")) ext.artifactory_password = ""
+
+if (!project.hasProperty("gitCommitHash") && !JavaVersion.current().isJava6()) {
+    try {
+        def repo = org.ajoberstar.grgit.Grgit.open(dir: '..')
+        ext.gitCommitHash = repo.head().abbreviatedId
+    } catch (Exception e) {
+        ext.gitCommitHash = "no_git_id"
+        println "Error getting commit hash: " + e.getMessage()
+    }
+}
+
+apply plugin: 'com.jfrog.artifactory'
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    publish {
+        repository {
+            repoKey = project.version.contains("SNAPSHOT") ? 'libs-snapshot-local' : 'libs-release-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+            
+        }
+    }
+
+    resolve {
+        repository {
+            repoKey = 'repo'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
+    }
+}
+
+// Subproject Section
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "maven"
+    apply plugin: "signing"
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'com.jfrog.artifactory'
+    apply plugin: "net.minecrell.licenser"
+
+    ext.internalVersion = version + ";" + gitCommitHash
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spongepowered.org/maven/" }
+        maven { url "http://maven.sk89q.com/repo/" }
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url 'https://oss.sonatype.org/content/groups/public/' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://dl.bintray.com/me4502/maven' }
+        maven { url 'http://repo.bstats.org/content/repositories/releases/' }
+    }
+
+    dependencies {
+        compile 'com.google.guava:guava:21.0'
+        compile 'com.google.code.gson:gson:2.2.4'
+        compile 'org.apache.commons:commons-lang3:3.3.2'
+
+        // Configuration
+        compile 'ninja.leaping.configurate:configurate-hocon:3.2'
+        compile 'ninja.leaping.configurate:configurate-gson:3.2'
+        compile 'ninja.leaping.configurate:configurate-yaml:3.2'
+
+        // Logging
+        compile 'org.slf4j:slf4j-api:1.7.22'
+
+        compile 'com.me4502:modularframework-core:1.9.1'
+        compile 'com.sk89q.worldedit:worldedit-core:6.1.4-SNAPSHOT'
+        testCompile 'org.mockito:mockito-core:2.+'
+        testCompile 'junit:junit:5.+'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        // Java 8 turns on doclint which we fail
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+
+    license {
+        ext {
+            year = Calendar.getInstance().get(Calendar.YEAR)
+        }
+
+        header = file('../HEADER.txt')
+        include '**/*.java'
+        exclude '**/Metrics.java'
+
+        ignoreFailures = false
+        newLine = false
+    }
+
+    // The outputs
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    jar {
+        classifier 'original'
+    }
+
+    signing {
+        required false
+        sign shadowJar
+    }
+
+    shadowJar {
+        classifier 'dist'
+        exclude 'docs'
+        exclude 'GradleStart**'
+        exclude '.cache'
+        exclude 'LICENSE*'
+    }
+
+    task archivesZip(type:Zip) {
+        from ('build/libs/')
+        from ('LICENSE.txt')
+        from ('README.md')
+        exclude ('*.zip')
+        exclude ('*.asc')
+
+        destinationDir = file('build/libs')
+    }
+
+    artifacts {
+        archives shadowJar
+        archives sourcesJar
+        archives javadocJar
+        archives archivesZip.destinationDir
+    }
+
+    // Extra Depends
+    compileJava.dependsOn(licenseFormat)
+    build.dependsOn(sourcesJar)
+    build.dependsOn(javadocJar)
+    build.dependsOn(archivesZip)
+    archivesZip.dependsOn(shadowJar)
+    archivesZip.dependsOn(sourcesJar)
+    archivesZip.dependsOn(javadocJar)
+    archivesZip.dependsOn(jar)
+}
