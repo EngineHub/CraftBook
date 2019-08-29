@@ -1,3 +1,245 @@
+3.10
+* Updated to Minecraft 1.13+ (1.13/1.14)
+* Required WorldEdit 7
+* Added a setting to entirely disable self-triggering ICs
+* Fixed player language functionality
+* Fixed AdvancedEntitySpawner erroring with invalid entities
+* Fixed WaterPlaceOnly
+* Fixed some weird edge cases where chairs weren't being removed
+* Fixed InvertOutput in ST variants of PlayerSensor
+* Make Snow slowdown not require trampling
+* Improved the report writer (More coming)
+* Upped the max of monostable to 5 minutes
+* Added advanced block checks support to BetterPistons
+* SignCopier is a break, not build action
+* Fixed the tick offset for BetterPistons
+* Fixed invert mode for PlayerSensor
+* Switched to Gradle as a build system
+* Fixed issues where Shulker boxes ended up inside Shulker boxes
+* Switched to bStats over Metrics
+* Fixed a SetDoor/Bridge bug
+* Don't error if a vehicle has an infinite velocity
+* Significantly improve performance for users with PaperMC
+* Use the meta system for the MapChanger
+* Update for random Spigot breakages
+* Fixed Bonemeal Terraformer eating blocks
+* Workaround a Minecraft bug causing signs to block lifts
+* Fixed Cauldrons causing potential chunk loading
+* Cleanup piston protection code
+* Use fuzzy blocks in more places
+* Fixed non-empty boats being removed with ExitRemover
+* Bump PaperLib version to fix an issue where an optimisation wasn't applied
+* Fixed gates not using minified IDs
+* Fixed saplings and flowers not being planted on podzol
+* Added sound categories to JingleNote
+* Added an option to not damage players with MinecartRemoveEntities
+* Set the string ensembles instrument to PLING in JingleNote
+* Updated how permissions are resolved to remove legacy workaround
+* Fixed a few potential bugs relating to material enforcement of bridges and doors
+* Fixed a few issues on 1.14 due to Spigot breaking a lot of their compatibility code
+* Update JingleNote to use 1.14.2 instruments
+* Added flags to copy biomes/entities
+* Added shulker boxes to list of blocks with inventories
+* Vastly improve pipe performance
+* Warn on invalid MIDI files instead of error
+* Prevent the Payment mechanic loading without an economy plugin
+* Fixed an issue with multiple definitions of the same command item that keep on death
+* Fixed offBlock on MultipleSetBlock IC
+* Added an event for ranged collectors
+* Support all sign types
+* Print a warning on invalid firework shows
+
+3.9u22
+* Fixed a few bugs and optimised BetterSnow
+* Fixed a pulse issue with Toggle Areas
+* Fixed an issue with some plugins that improperly handle commands and CommandItems
+* Updated HeadDrops to have all the heads from the Sponge version of CraftBook
+* Allows the off-hand to be used for HiddenSwitch keys
+
+3.9u21
+* Removed the 'hd' command alias to prevent duplicates
+* Fixed a few deprecation warnings
+* Added hoppers to the list of blocks with inventories
+* Added an enforce-type option to bridges and doors
+* Added the ability for sorters to ignore enchants, meta, and durability
+* Added more compatibility with plugins that bypass the Bukkit command system entirely to CommandItems
+
+3.9u20
+* Added support for CraftBookNMS for performance boosts on Spigot (Paper is unaffected)
+* Updated dependencies
+* Fixed levers and buttons having weird behaviour when placed on the top and bottom of blocks
+* Simplify the synchronisation used in the MIDI ICs (Fixes an issue with some alternative JVMs and also slightly improves performance)
+* Allowed mechanics to compare the contents of books
+* Slightly improve dispenser recipe performance
+* Upped the limit of clock ICs to 100000
+* Fixed an issue with worldguard protections being ignored with advanced block checks enabled when using signs
+
+3.9u19
+* Fixed a major breakage in the last release
+
+3.9u18
+* Added missing fuel sources for smelters (Doors, etc)
+* Added smelting results for iron/gold equipment
+* Fixed a minor pipe jukebox issue
+* Fixed RangedCollector only working with chests
+* Fixed Irrigator only working with chests
+* Fixed Cultivator only working with chests
+* Fixed Minecart depositer with filters
+* Fixed a potential issue with thread locking for MIDI players on some specific JVMs
+* Fixed a broken polar bear skin
+* Fixed some errors caused by removals in the Spigot API
+* Fixed an issue where the Irrigator IC wouldn't correctly irrigate some soil
+* Fixed Spigot/Pump ICs still accepting the non-existent water item
+* Refactor some tile entity accesses, to allow a future companion plugin to use NMS to bypass a recent major performance regression within Spigot
+
+3.9u17
+* Fixed bugs caused by Spigot breakages in 1.12.1 (Not backwards compatible)
+* Added option to only remove 1 damage from the axe with TreeLopper
+* Remove hack-fix for Minecraft chair bug fixed in 1.12
+* Register recipes with names
+* Added new 1.12 blocks as smelt targets (Fixes cooking pot, etc)
+* Fix an issue where certain MIDI files didn't send the end code to the MIDI ICs.
+* Added per-drop permission nodes to CustomDrops
+* Catch errors created when crazy velocities are set on signs for minecart mechanics.
+* Added inline comment support to Fyrestone.
+* Added option to CustomDrops to remove all vanilla drops.
+* Added GREATERVAR and LESSVAR actions to CommandItems
+* Fixed burning furnaces not being interactable with CraftBook mechanics.
+* Fixed shulker boxes not being interactable with CraftBook mechanics.
+* Minor optimisations for RangedCollectors.
+* Fixed an issue where PoweredRails were powering mechanics.
+* Fixed CombineHarvester not collecting beetroot seeds.
+
+3.9u16
+* Fixed potential cart duplication issue.
+* Fixed new boat types not working with many boat mechanics
+* Fixed minor door/bridge dupe issue.
+* Fixed a few BetterLeads errors introduced in 1.11
+* Fixed beetroot not working in the Terraformer
+* Fixed pipes not transferring certain items with 0 durability left.
+* Allowed usage of the WorldGuard __global__ region.
+* Fixed LightSwitches
+* Added a list of ignorable heads in HeadDrops, for plugins using custom heads.
+* Added a biomes filter for CustomDrops
+* Fixed a bug caused by some weird colour plugins.
+* Many memory optimisations throughout the code.
+* Added /cb iteminfo, outputs the held item in ItemSyntax.
+* Fixed AntiCheat plugins blocking SignCopier.
+* Updated to later versions of ProtocolLib
+* Updated the MIDI backend to use the new 1.12 instruments. This sounds hecking cool, give it a try.
+* Updated the entire codebase to Java 8, as 1.12 requires Java 8 now.
+
+3.9u15
+* Fixed few irregularities on item detection for PlayerInvSensor
+* Fixed ItemStack drop chance being read as a whole number for CustomDrops, rather than as a decimal number.
+* Fixed a few mechanics potentially loading more chunks than they needed to during operation.
+* Fixed pipes not putting wool into furnaces as fuel.
+* Fixed limit issues with Bounce BetterPistons.
+* Fixed limit issues with BounceBlocks.
+* Fixed empty sign issues with BounceBlocks.
+* Improved warning output for when CraftBook encounters invalid recipes with the AutoCrafter.
+* Fixed Melody IC replacing the last line with uppercase.
+* Fixed a few minor issues with newer versions of NoCheatPlus.
+* Fixed CustomDrops items not stacking with other blocks on some servers.
+* Added ability to specify an item as unbreakable in the item syntax.
+* Added ability to specify item flags in the item syntax.
+* Fixed issue that occurs in rare circumstances and can break CustomCrafting recipes.
+* Fixed potential deadlock when using ITEM_PICKUP on servers that have plugins overriding item pickup.
+* Added required-item to CustomDrops.
+* Added more HeadDrops (Evoker, Vex, Stray)
+* Fixed escape characters remaining in ItemSyntax ItemStacks.
+* Added a command to give players headdrops.
+* Tweak item comparison algorithms to act more like the user will probably want them to act.
+
+3.9u14
+* Added option to disable playing message on Melody IC.
+* Fixed report writer failing if ST is disabled.
+* Fixed RangedCollector having issues when no filters are defined.
+* Removed now-defunct automatic updater.
+* Fixed /cb about not showing the actual version.
+* Only use persistent-storage for CommandItems across restarts.
+* Added warnings and filters to AutomaticCrafter when it detects broken recipes provided by Spigot.
+* Worked around spigot bug causing wrong sapling types to occur from TreeLopper.
+* Pre-calculate some values for CommandItems, fixing some issues caused by plugins that prematurely remove items during events.
+* Fixed Ranged Collector not playing nicely with pipes.
+* Fixed bucket issue with pumps.
+* Added support for beetroot to farming ICs.
+* Fixed the BEFORE CommandItem not cancelling consumables.
+* Added more stair types as defaults for Stairs.
+* Added offhand support for Player Inventory Sensor.
+* Fixed AnimalHarvester harvesting wool when it was full.
+
+3.9u13
+* Fix Jukebox error on 1.11 servers.
+* Fixed ranged collector requiring all filters to pass.
+
+3.9u12
+* Added a list command for variables
+* Allowed Jungle and Dark Oak trees to plant 4 saplings with TreeLopper
+* Support sorting enchanted books
+* Fixed Wooden Buttons activating for only 20 ticks with HiddenSwitch.
+* Fixed a potential dupe bug with gates that had never been activated before.
+* Added wet sponge as a smeltable resource. (Fixes pipes and a few other things regarding wet sponges)
+* Fixed a regression in CustomDrops that caused a few issues with various setups.
+* Fixed warning generated by CartBoosters with Paper.
+
+3.9u11
+* Added a few new HeadDrop types.
+* Fixed a few issues with TreeLopper on 1.10+
+* Fixed potential errors with Chairs.
+* Use ArmorStands rather than arrows with chairs. Fixes spigot dismount bug, but causes weird head movement at some angles.
+* Fixed weird spigot chunk loading oddities
+* Fixed issue where TreeLopper failed when leaves were at the bottom of a tree instead of the top.
+* Bypass consumables on CommandItems when in creative
+* Added a permission node to bypass consumables
+* Fixed AnimalBreeder not working on pigs
+* Improve performance of paintingswitcher
+* Added region support to CustomDrops
+* Added PROJECTILE_LAUNCH CommandItems event
+* Added radius mode to the XP Storer mechanic
+* Fixed an issue with ICs not putting blocks into their chest in some setups.
+* Fixed the Driller IC acting weird in some cases.
+* Added max depth option to the Driller IC.
+* Added ability to change the size of the Driller IC hole.
+* Fixed BetterPhysics ladders acting weird on 1.10
+* Fixed ItemStack validity checks in pipes, causing errors in uncommon setups.
+
+3.9u10
+* Fixed a few compatibility issues
+* Fixed another TreeLopper sapling issue
+
+3.9u9
+* Added support for Minecraft 1.10
+* Fixed TreeLopper issue with saplings
+
+3.9u8
+* Fixed another issue with the SignCopier mechanic.
+
+3.9u7
+* Fixed an issue with the SignCopier mechanic
+
+3.9u6
+* Vastly improves performance in some use cases
+* Fixed a few bugs
+
+3.9u5
+* Fixes a few 1.9-specific bugs and performance issues
+
+3.9u4
+* Adds support for Minecraft 1.9
+
+3.9u3
+* Fixed a few bugs
+
+3.9u2
+* Fixes footprints
+* Removes ProtocolLib requirement of footprints
+* Fixed Planter IC not planting all plants correctly
+
+3.9u1
+* Fixes a few bugs
+* Improves general performance
+
 3.9 (30th November)
 * Fixed a few issues with UUID resolution.
 * Fixed ItemSyntax allowing some invalid values.
