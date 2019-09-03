@@ -112,7 +112,7 @@ public class BukkitConfiguration {
         useBlockDistance = config.getBoolean("use-block-distance", false);
     
         config.setComment("respect-unbreaking-enchant", "Allow the Unbreaking enchant to prevent durability loss on items when using CraftBook mechanics.");
-        convertNamesToCBID = config.getBoolean("respect-unbreaking-enchant", true);
+        respectUnbreakingEnchant = config.getBoolean("respect-unbreaking-enchant", true);
 
         config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
         obeyWorldguard = config.getBoolean("check-worldguard-flags", true);
