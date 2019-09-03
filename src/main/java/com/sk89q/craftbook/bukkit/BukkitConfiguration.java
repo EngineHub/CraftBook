@@ -27,6 +27,7 @@ public class BukkitConfiguration {
     public boolean showPermissionMessages;
     public long signClickTimeout;
     public boolean convertNamesToCBID;
+    public boolean respectUnbreakingEnchant;
 
     public boolean easterEggs;
     public boolean realisticRandoms;
@@ -109,6 +110,9 @@ public class BukkitConfiguration {
 
         config.setComment("use-block-distance", "Rounds all distance equations to the block grid.");
         useBlockDistance = config.getBoolean("use-block-distance", false);
+    
+        config.setComment("respect-unbreaking-enchant", "Allow the Unbreaking enchant to prevent durability loss on items when using CraftBook mechanics.");
+        convertNamesToCBID = config.getBoolean("respect-unbreaking-enchant", true);
 
         config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
         obeyWorldguard = config.getBoolean("check-worldguard-flags", true);
@@ -151,7 +155,7 @@ public class BukkitConfiguration {
 
         config.setComment("persistent-storage-type", "PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite");
         persistentStorageType = config.getString("persistent-storage-type", "YAML");
-
+    
         config.setComment("convert-names-to-cbids", "Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.");
         convertNamesToCBID = config.getBoolean("convert-names-to-cbids", false);
 

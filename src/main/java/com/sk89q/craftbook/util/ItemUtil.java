@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -940,10 +941,64 @@ public final class ItemUtil {
                 return type.getMaxDurability();
         }
     }
+    
+    public static boolean isArmor(Material type){
+        switch(type) {
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+            case IRON_HELMET:
+            case IRON_CHESTPLATE:
+            case IRON_LEGGINGS:
+            case IRON_BOOTS:
+            case GOLDEN_HELMET:
+            case GOLDEN_CHESTPLATE:
+            case GOLDEN_LEGGINGS:
+            case GOLDEN_BOOTS:
+            case DIAMOND_HELMET:
+            case DIAMOND_CHESTPLATE:
+            case DIAMOND_LEGGINGS:
+            case DIAMOND_BOOTS:
+            case CHAINMAIL_HELMET:
+            case CHAINMAIL_CHESTPLATE:
+            case CHAINMAIL_LEGGINGS:
+            case CHAINMAIL_BOOTS:
+            case TURTLE_HELMET:
+                return true;
+            default:
+                return false;
+        }
+    }
+    
+    public static int getUnbreakingEnchantLevel(ItemStack stack) {
+        Map<Enchantment, Integer> enchants = stack.getEnchantments();
+        return enchants.getOrDefault(Enchantment.DURABILITY, 0);
+    }
+    
+    public static boolean doesUnbreakingNotPreventLoss(int level, boolean isArmor){
+        // general case is (100 / (level + 1))% chance
+        int chance = (int)(100d / (level + 1));
+        if(isArmor){
+            // armor has a special formula, (60+(40/(level+1)))% chance
+            chance = (int)(60d + (40d / (level + 1)));
+        }
+        int roll = CraftBookPlugin.inst().getRandom().nextInt(100);
+        return roll < chance;
+    }
 
     public static void damageHeldItem(Player player) {
         ItemStack heldItem = player.getItemInHand();
         if(heldItem != null && getMaxDurability(heldItem.getType()) > 0) {
+            // check for unbreaking enchant; if the item has it, we need to test for unbreaking
+            if(CraftBookPlugin.inst().getConfiguration().respectUnbreakingEnchant){
+                int unbreakingLevel = getUnbreakingEnchantLevel(heldItem);
+                if(unbreakingLevel > 0 && !doesUnbreakingNotPreventLoss(unbreakingLevel, isArmor(heldItem.getType()))){
+                    // do not damage the item; player succeeded in unbreaking roll
+                    return;
+                }
+            }
+            
             heldItem.setDurability((short) (heldItem.getDurability() + 1));
             if(heldItem.getDurability() <= getMaxDurability(heldItem.getType()))
                 player.setItemInHand(heldItem);
