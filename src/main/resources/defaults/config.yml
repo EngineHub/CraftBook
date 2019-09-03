@@ -109,6 +109,9 @@ indirect-redstone: false
 # Rounds all distance equations to the block grid.
 use-block-distance: false
 
+# Allow the Unbreaking enchant to prevent durability loss on items when using CraftBook mechanics.
+respect-unbreaking-enchant: true
+
 # Checks to see if WorldGuard allows building/using in the area when activating mechanics.
 check-worldguard-flags: true
 
