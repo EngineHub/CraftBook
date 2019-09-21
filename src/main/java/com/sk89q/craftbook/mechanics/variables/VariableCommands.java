@@ -138,13 +138,13 @@ public class VariableCommands {
         List<String> variablesLines = new ArrayList<>();
 
         for (Entry<Tuple2<String, String>, String> entry : VariableManager.instance.getVariableStore().entrySet()) {
-            if (key != null && !entry.getKey().a.equals(key)) {
+            if (key != null && !entry.getKey().b.equals(key)) {
                 continue;
             }
 
-            String keyName = entry.getKey().b;
+            String keyName = entry.getKey().a;
             if (key == null) {
-                keyName = entry.getKey().a + '|' + keyName;
+                keyName = entry.getKey().b + '|' + keyName;
             }
 
             variablesLines.add(ChatColor.YELLOW + keyName + ChatColor.WHITE + ": " + ChatColor.GREEN + entry.getValue());

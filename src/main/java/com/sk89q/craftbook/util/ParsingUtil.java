@@ -81,8 +81,6 @@ public final class ParsingUtil {
         if(CraftBookPlugin.inst() == null || VariableManager.instance == null || VariableManager.instance.getVariableStore().isEmpty())
             return line;
 
-        CraftBookPlugin.logDebugMessage("Attempting to parse variables. Input line: " + line, "variables.line-parsing");
-
         for(String var : getPossibleVariables(line)) {
 
             CraftBookPlugin.logDebugMessage("Possible variable: " + var + " detected!", "variables.line-parsing");
@@ -111,8 +109,9 @@ public final class ParsingUtil {
             CraftBookPlugin.logDebugMessage(var + " permissions granted!", "variables.line-parsing");
 
             for(Entry<Tuple2<String, String>, String> bit : VariableManager.instance.getVariableStore().entrySet()) {
-                if(bit.getKey().b.equals(key) && bit.getKey().a.equals(value))
+                if(bit.getKey().b.equals(key) && bit.getKey().a.equals(value)) {
                     line = StringUtils.replace(line, "%" + var + "%", bit.getValue());
+                }
             }
         }
 
