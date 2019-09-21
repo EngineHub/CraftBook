@@ -153,4 +153,4 @@ show-permission-messages: true
 persistent-storage-type: YAML
 
 # Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.
-convert-names-to-cbids: true
+convert-names-to-cbids: false
