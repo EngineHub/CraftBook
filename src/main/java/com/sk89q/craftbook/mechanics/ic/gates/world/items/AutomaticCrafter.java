@@ -268,6 +268,9 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
             return true;
         } else if (r instanceof ShapelessRecipe && (recipe == null || recipe instanceof ShapelessRecipe)) {
+            if (((ShapelessRecipe) r).getKey().getKey().equals("shulker_box_coloring")) {
+                return false;
+            }
             ShapelessRecipe shape = (ShapelessRecipe) r;
             List<ItemStack> ing = new ArrayList<>(VerifyUtil.withoutNulls(shape.getIngredientList()));
             if (ing.isEmpty()) {
