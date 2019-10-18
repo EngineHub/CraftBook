@@ -8,6 +8,7 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,10 +63,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         ChangedSign s = null;
         Block testBlock = null;
         if(anyside) {
-
             for(BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
-                if(SignUtil.isWallSign(testBlock)) {
+                if(SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
                     s = CraftBookBukkitUtil.toChangedSign(testBlock);
                     break;
                 }
@@ -73,7 +73,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         } else {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
-            if(SignUtil.isWallSign(testBlock)) {
+            if(SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
                 s = CraftBookBukkitUtil.toChangedSign(testBlock);
             }
         }
@@ -136,7 +136,10 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
             return;
 
-        if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1)) && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
+        if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0))
+                && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0))
+                && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1))
+                && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
             return;
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction()))
