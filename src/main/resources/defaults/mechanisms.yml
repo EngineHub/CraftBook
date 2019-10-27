@@ -77,27 +77,43 @@ mechanics:
         blocks:
         - minecraft:acacia_planks
         - minecraft:acacia_slab
+        - minecraft:andesite_slab
         - minecraft:birch_planks
         - minecraft:birch_slab
         - minecraft:brick_slab
         - minecraft:cobblestone
         - minecraft:cobblestone_slab
+        - minecraft:cut_red_sandstone_slab
+        - minecraft:cut_sandstone_slab
         - minecraft:dark_oak_planks
         - minecraft:dark_oak_slab
         - minecraft:dark_prismarine_slab
+        - minecraft:diorite_slab
+        - minecraft:end_stone_brick_slab
         - minecraft:glass
+        - minecraft:granite_slab
         - minecraft:jungle_planks
         - minecraft:jungle_slab
+        - minecraft:mossy_cobblestone_slab
+        - minecraft:mossy_stone_brick_slab
         - minecraft:nether_brick_slab
         - minecraft:oak_planks
         - minecraft:oak_slab
         - minecraft:petrified_oak_slab
+        - minecraft:polished_andesite_slab
+        - minecraft:polished_diorite_slab
+        - minecraft:polished_granite_slab
         - minecraft:prismarine_brick_slab
         - minecraft:prismarine_slab
         - minecraft:purpur_slab
         - minecraft:quartz_slab
+        - minecraft:red_nether_brick_slab
         - minecraft:red_sandstone_slab
         - minecraft:sandstone_slab
+        - minecraft:smooth_quartz_slab
+        - minecraft:smooth_red_sandstone_slab
+        - minecraft:smooth_sandstone_slab
+        - minecraft:smooth_stone_slab
         - minecraft:spruce_planks
         - minecraft:spruce_slab
         - minecraft:stone_brick_slab
@@ -113,22 +129,36 @@ mechanics:
         regen-health-amount: 1.0
         blocks:
         - minecraft:acacia_stairs
+        - minecraft:andesite_stairs
         - minecraft:birch_stairs
         - minecraft:brick_stairs
         - minecraft:cobblestone_stairs
         - minecraft:dark_oak_stairs
         - minecraft:dark_prismarine_stairs
+        - minecraft:diorite_stairs
+        - minecraft:end_stone_brick_stairs
+        - minecraft:granite_stairs
         - minecraft:jungle_stairs
+        - minecraft:mossy_cobblestone_stairs
+        - minecraft:mossy_stone_brick_stairs
         - minecraft:nether_brick_stairs
         - minecraft:oak_stairs
+        - minecraft:polished_andesite_stairs
+        - minecraft:polished_diorite_stairs
+        - minecraft:polished_granite_stairs
         - minecraft:prismarine_brick_stairs
         - minecraft:prismarine_stairs
         - minecraft:purpur_stairs
         - minecraft:quartz_stairs
+        - minecraft:red_nether_brick_stairs
         - minecraft:red_sandstone_stairs
         - minecraft:sandstone_stairs
+        - minecraft:smooth_quartz_stairs
+        - minecraft:smooth_red_sandstone_stairs
+        - minecraft:smooth_sandstone_stairs
         - minecraft:spruce_stairs
         - minecraft:stone_brick_stairs
+        - minecraft:stone_stairs
         face-correct-direction: true
         require-sign: false
         max-distance: 3
@@ -164,27 +194,43 @@ mechanics:
         blocks:
         - minecraft:acacia_planks
         - minecraft:acacia_slab
+        - minecraft:andesite_slab
         - minecraft:birch_planks
         - minecraft:birch_slab
         - minecraft:brick_slab
         - minecraft:cobblestone
         - minecraft:cobblestone_slab
+        - minecraft:cut_red_sandstone_slab
+        - minecraft:cut_sandstone_slab
         - minecraft:dark_oak_planks
         - minecraft:dark_oak_slab
         - minecraft:dark_prismarine_slab
+        - minecraft:diorite_slab
+        - minecraft:end_stone_brick_slab
         - minecraft:glass
+        - minecraft:granite_slab
         - minecraft:jungle_planks
         - minecraft:jungle_slab
+        - minecraft:mossy_cobblestone_slab
+        - minecraft:mossy_stone_brick_slab
         - minecraft:nether_brick_slab
         - minecraft:oak_planks
         - minecraft:oak_slab
         - minecraft:petrified_oak_slab
+        - minecraft:polished_andesite_slab
+        - minecraft:polished_diorite_slab
+        - minecraft:polished_granite_slab
         - minecraft:prismarine_brick_slab
         - minecraft:prismarine_slab
         - minecraft:purpur_slab
         - minecraft:quartz_slab
+        - minecraft:red_nether_brick_slab
         - minecraft:red_sandstone_slab
         - minecraft:sandstone_slab
+        - minecraft:smooth_quartz_slab
+        - minecraft:smooth_red_sandstone_slab
+        - minecraft:smooth_sandstone_slab
+        - minecraft:smooth_stone_slab
         - minecraft:spruce_planks
         - minecraft:spruce_slab
         - minecraft:stone_brick_slab
@@ -296,6 +342,7 @@ mechanics:
     MinecartRemoveEntities:
         remove-other-minecarts: false
         allow-empty-carts: false
+        damage-players: true
     MinecartReverser:
         block: minecraft:white_wool
     MinecartSorter:
@@ -314,7 +361,6 @@ mechanics:
         insulator-block: minecraft:white_wool
         stack-per-move: true
         require-sign: false
-        warn-when-too-large: false
     SignCopier:
         item: minecraft:ink_sac
     Snow:
@@ -345,6 +391,7 @@ mechanics:
         radius: 5
         circular-radius: true
         require-redstone: false
+        include-wet: false
     Teleporter:
         require-sign: false
         max-range: 0

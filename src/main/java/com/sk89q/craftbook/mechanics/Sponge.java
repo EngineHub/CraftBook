@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +19,10 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Sponge extends AbstractCraftBookMechanic {
 
+    private boolean isValidSponge(Block block) {
+        return block.getType() == Material.SPONGE || (includeWet && block.getType() == Material.WET_SPONGE);
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event) {
 
@@ -33,7 +38,7 @@ public class Sponge extends AbstractCraftBookMechanic {
                     Block sponge = event.getToBlock().getRelative(cx, cy, cz);
                     if(circularRadius && !LocationUtil.isWithinSphericalRadius(sponge.getLocation(), event.getToBlock().getLocation(), radius)) continue;
                     if(redstone && !sponge.isBlockIndirectlyPowered()) continue;
-                    if(sponge.getType() == Material.SPONGE) {
+                    if(isValidSponge(sponge)) {
                         event.setCancelled(true);
                         return;
                     }
@@ -45,7 +50,7 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if(event.getBlock().getType() != Material.SPONGE) return;
+        if(!isValidSponge(event.getBlock())) return;
 
         if(redstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
@@ -57,20 +62,20 @@ public class Sponge extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(event.getBlock().getType() != Material.SPONGE) return;
+        if(!isValidSponge(event.getBlock())) return;
 
         if(redstone && !event.getBlock().isBlockIndirectlyPowered()) return;
 
         if(!EventUtil.passesFilter(event)) return;
 
-        addWater(event.getBlock());
+        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> addWater(event.getBlock()));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if(!redstone) return;
-        if(event.getBlock().getType() != Material.SPONGE) return;
+        if(!isValidSponge(event.getBlock())) return;
 
         if(event.isMinor()) return;
 
@@ -206,6 +211,7 @@ public class Sponge extends AbstractCraftBookMechanic {
     private int radius;
     private boolean circularRadius;
     private boolean redstone;
+    private boolean includeWet;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -218,5 +224,8 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-redstone", "Whether to require redstone to suck up water or not.");
         redstone = config.getBoolean(path + "require-redstone", false);
+
+        config.setComment(path + "include-wet", "Whether to include wet sponges or not.");
+        includeWet = config.getBoolean(path + "include-wet", false);
     }
 }
