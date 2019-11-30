@@ -17,12 +17,14 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -891,6 +893,35 @@ public final class ItemUtil {
         return items;
     }
 
+    public static boolean isArmor(Material type){
+        switch(type) {
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+            case IRON_HELMET:
+            case IRON_CHESTPLATE:
+            case IRON_LEGGINGS:
+            case IRON_BOOTS:
+            case GOLDEN_HELMET:
+            case GOLDEN_CHESTPLATE:
+            case GOLDEN_LEGGINGS:
+            case GOLDEN_BOOTS:
+            case DIAMOND_HELMET:
+            case DIAMOND_CHESTPLATE:
+            case DIAMOND_LEGGINGS:
+            case DIAMOND_BOOTS:
+            case CHAINMAIL_HELMET:
+            case CHAINMAIL_CHESTPLATE:
+            case CHAINMAIL_LEGGINGS:
+            case CHAINMAIL_BOOTS:
+            case TURTLE_HELMET:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     /**
      * Returns the maximum durability that an item can have.
      * 
@@ -941,14 +972,35 @@ public final class ItemUtil {
         }
     }
 
+    private static boolean shouldDamageItem(ItemStack stack) {
+        Map<Enchantment, Integer> enchants = stack.getEnchantments();
+        int level = enchants.getOrDefault(Enchantment.DURABILITY, 0);
+
+        if (level > 0) {
+            int chance = (int) (100d / (level + 1));
+            if(isArmor(stack.getType())) {
+                chance = (int)(60d + (40d / (level + 1)));
+            }
+            int roll = CraftBookPlugin.inst().getRandom().nextInt(100);
+            return !(roll < chance);
+        }
+
+        return true;
+    }
+
     public static void damageHeldItem(Player player) {
-        ItemStack heldItem = player.getItemInHand();
-        if(heldItem != null && getMaxDurability(heldItem.getType()) > 0) {
-            heldItem.setDurability((short) (heldItem.getDurability() + 1));
-            if(heldItem.getDurability() <= getMaxDurability(heldItem.getType()))
-                player.setItemInHand(heldItem);
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
+        ItemMeta meta = heldItem.getItemMeta();
+        if(meta instanceof Damageable && ((Damageable) meta).hasDamage() && getMaxDurability(heldItem.getType()) > 0) {
+            if (!shouldDamageItem(heldItem)) {
+                return;
+            }
+            ((Damageable) meta).setDamage(((Damageable) meta).getDamage() + 1);
+            heldItem.setItemMeta(meta);
+            if(((Damageable) meta).getDamage() <= getMaxDurability(heldItem.getType()))
+                player.getInventory().setItemInMainHand(heldItem);
             else
-                player.setItemInHand(null);
+                player.getInventory().setItemInMainHand(null);
         }
     }
 
