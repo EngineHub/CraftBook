@@ -89,9 +89,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         for(Block block : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(usedBlock) : BlockUtil.getTouchingBlocks(usedBlock)) {
             if(block == null) continue; //Top of map, etc.
             if(visitedLocations.contains(block.getLocation())) continue;
+            Material blockMaterial = block.getType();
             if(canBreakBlock(event.getPlayer(), originalBlock, block))
                 if(searchBlock(event, block, player, originalBlock, visitedLocations, broken, planted)) {
-                    if (!singleDamageAxe) {
+                    if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(blockMaterial))) {
                         ItemUtil.damageHeldItem(event.getPlayer());
                     }
                 }
@@ -149,10 +150,12 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         visitedLocations.add(block.getLocation());
         broken += 1;
         for(BlockFace face : allowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            if(visitedLocations.contains(block.getRelative(face).getLocation())) continue;
-            if(canBreakBlock(event.getPlayer(), originalBlock, block.getRelative(face)))
-                if(searchBlock(event, block.getRelative(face), player, originalBlock, visitedLocations, broken, planted)) {
-                    if (!singleDamageAxe) {
+            Block relativeBlock = block.getRelative(face);
+            Material relativeMaterial = relativeBlock.getType();
+            if(visitedLocations.contains(relativeBlock.getLocation())) continue;
+            if(canBreakBlock(event.getPlayer(), originalBlock, relativeBlock))
+                if(searchBlock(event, relativeBlock, player, originalBlock, visitedLocations, broken, planted)) {
+                    if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(relativeMaterial))) {
                         ItemUtil.damageHeldItem(event.getPlayer());
                     }
                 }
@@ -168,6 +171,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean placeSaplings;
     private boolean breakLeaves;
     private boolean singleDamageAxe;
+    private boolean leavesDamageAxe;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -194,6 +198,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         config.setComment(path + "single-damage-axe", "Only remove one damage from the axe, regardless of the amount of logs removed.");
         singleDamageAxe = config.getBoolean(path + "single-damage-axe", false);
+
+        config.setComment(path + "leaves-damage-axe", "Whether the leaves will also damage the axe when single-damage-axe is false and break-leaves is true.");
+        leavesDamageAxe = config.getBoolean(path + "leaves-damage-axe", true);
     }
 
     private static class SaplingPlanter implements Runnable {
