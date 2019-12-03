@@ -991,7 +991,7 @@ public final class ItemUtil {
     public static void damageHeldItem(Player player) {
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         ItemMeta meta = heldItem.getItemMeta();
-        if(meta instanceof Damageable && ((Damageable) meta).hasDamage() && getMaxDurability(heldItem.getType()) > 0) {
+        if(meta instanceof Damageable && getMaxDurability(heldItem.getType()) > 0) {
             if (!shouldDamageItem(heldItem)) {
                 return;
             }
