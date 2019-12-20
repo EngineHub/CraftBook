@@ -128,6 +128,14 @@ public class TopLevelCommands {
             }
         }
 
+        @Command(aliases = {"cbid", "craftbookid"}, desc = "Gets the players CBID.")
+        public void cbid(CommandContext context, CommandSender sender) throws CommandException {
+            if(!(sender instanceof Player)) {
+                throw new CommandException("Only players can use this command!");
+            }
+            sender.sendMessage("CraftBook ID: " + CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId());
+        }
+
         @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "pi", max = 0)
         @CommandPermissions({"craftbook.report"})
         public void report(CommandContext args, final CommandSender sender) throws CommandException {
