@@ -335,7 +335,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid() || SignUtil.isWallSign(floor)) {
+            if (!floor.getType().isSolid() || SignUtil.isSign(floor)) {
                 foundFree++;
             } else {
                 foundGround = true;
