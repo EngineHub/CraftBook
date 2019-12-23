@@ -187,7 +187,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid())
+            if (!floor.getType().isSolid() || SignUtil.isSign(floor))
                 foundFree++;
             else
                 break;
