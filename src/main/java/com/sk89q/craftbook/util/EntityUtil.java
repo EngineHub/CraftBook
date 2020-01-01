@@ -10,11 +10,29 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.ChestedHorse;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
-import org.bukkit.material.MaterialData;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Pig;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.ThrownExpBottle;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -262,10 +280,12 @@ public final class EntityUtil {
             case VILLAGER:
                 if (data[0].equalsIgnoreCase("butcher")) {
                     ((Villager) ent).setProfession(Villager.Profession.BUTCHER);
-                } else if (data[0].equalsIgnoreCase("smith")) {
-                    ((Villager) ent).setProfession(Villager.Profession.BLACKSMITH);
+                } else if (data[0].equalsIgnoreCase("toolsmith")) {
+                    ((Villager) ent).setProfession(Villager.Profession.TOOLSMITH);
+                } else if (data[0].equalsIgnoreCase("wepsmith") || data[0].equalsIgnoreCase("smith")) {
+                    ((Villager) ent).setProfession(Villager.Profession.WEAPONSMITH);
                 } else if (data[0].equalsIgnoreCase("priest")) {
-                    ((Villager) ent).setProfession(Villager.Profession.PRIEST);
+                    ((Villager) ent).setProfession(Villager.Profession.CLERIC);
                 } else if (data[0].equalsIgnoreCase("library")) {
                     ((Villager) ent).setProfession(Villager.Profession.LIBRARIAN);
                 } else if (data[0].equalsIgnoreCase("farmer")) {

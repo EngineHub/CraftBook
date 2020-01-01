@@ -57,15 +57,6 @@ public class BlockUtilTest {
     }
 
     @Test
-    public void testHasTileData() {
-
-        assertTrue(!BlockUtil.hasTileData(Material.STONE));
-        assertTrue(BlockUtil.isBlockReplacable(Material.WATER));
-        assertTrue(BlockUtil.isBlockReplacable(Material.LAVA));
-        assertTrue(BlockUtil.isBlockReplacable(Material.AIR));
-    }
-
-    @Test
     public void testGetBlockCentre() {
 
         Block mlock = mock(Block.class);

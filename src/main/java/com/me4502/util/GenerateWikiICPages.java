@@ -2,40 +2,30 @@ package com.me4502.util;
 
 import static com.me4502.util.GenerateWikiConfigLists.createStringOfLength;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.security.auth.login.LoginException;
-
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.BlockState;
-import org.wikipedia.Wiki;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.CommandIC;
 import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICConfiguration;
-import com.sk89q.craftbook.mechanics.ic.ICFamily;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.mechanics.ic.RegisteredICFactory;
-import com.sk89q.craftbook.mechanics.ic.families.FamilyAISO;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.BlockState;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class GenerateWikiICPages extends ExternalUtilityBase {
 
@@ -51,7 +41,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 file.mkdir();
 
             BlockState oldState = Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).getState();
-            Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.WALL_SIGN);
+            Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.OAK_WALL_SIGN);
 
             CraftBookPlugin.inst().createDefaultConfiguration(new File(getGenerationFolder(), "ic-config.yml"), "ic-config.yml");
             ICConfiguration icConfiguration = new ICConfiguration(new YAMLProcessor(new File(getGenerationFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());

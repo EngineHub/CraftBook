@@ -93,9 +93,9 @@ allprojects {
     }
 
     dependencies {
-        compile 'com.destroystokyo.paper:paper-api:1.13.2-R0.1-SNAPSHOT'
-        compile 'com.sk89q.worldedit:worldedit-core:7.0.0-SNAPSHOT'
-        compile 'com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT'
+        compile 'com.destroystokyo.paper:paper-api:1.15.1-R0.1-SNAPSHOT'
+        compile 'com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT'
+        compile 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
         compile 'com.sk89q.worldguard:worldguard-core:7.0.0-SNAPSHOT'
         compile 'com.sk89q.worldguard:worldguard-legacy:7.0.0-SNAPSHOT'
         compile "io.papermc:paperlib:1.0.2"

@@ -3,6 +3,7 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -63,20 +64,18 @@ public final class BlockUtil {
     }
 
     public static boolean hasTileData(Material material) {
-
         switch(material) {
-
             case CHEST:
             case FURNACE:
             case BREWING_STAND:
             case DISPENSER:
             case DROPPER:
             case HOPPER:
-            case SIGN:
             case TRAPPED_CHEST:
+            case BARREL:
                 return true;
             default:
-                return false;
+                return Tag.SIGNS.isTagged(material) || Tag.SHULKER_BOXES.isTagged(material);
         }
     }
 
