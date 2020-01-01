@@ -1,19 +1,17 @@
 package com.me4502.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class GenerateWikiConfigLists extends ExternalUtilityBase {
 

@@ -1,22 +1,22 @@
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.event.world.ChunkLoadEvent;
 
 public class ChunkAnchor extends AbstractCraftBookMechanic {
 
@@ -52,6 +52,13 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     }
 
     @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        if (!EventUtil.passesFilter(event)) return;
+
+        updateChunkTicket(event.getChunk());
+    }
+
+    @EventHandler
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
@@ -65,38 +72,30 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
             sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
             sign.update(false);
+
+            updateChunkTicket(event.getBlock().getChunk());
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onUnload(final ChunkUnloadEvent event) {
+    private void updateChunkTicket(Chunk chunk) {
+        boolean shouldAnchor = false;
 
-        if(!EventUtil.passesFilter(event)) return;
-
-        try {
-            boolean isOn = false;
-            boolean foundSign = false;
-
-            for(BlockState state : event.getChunk().getTileEntities()) {
-                if(state == null) continue;
-                if(state instanceof Sign) {
-                    if(((Sign) state).getLine(1).equals("[Chunk]")) {
-                        foundSign = true;
-                        isOn = !((Sign) state).getLine(3).equalsIgnoreCase("off");
+        for(BlockState state : chunk.getTileEntities()) {
+            if(state == null) continue;
+            if(state instanceof Sign) {
+                if(((Sign) state).getLine(1).equals("[Chunk]")) {
+                    if (!allowRedstone || !((Sign) state).getLine(3).equalsIgnoreCase("off")) {
+                        shouldAnchor = true;
                         break;
                     }
                 }
             }
+        }
 
-            if (!foundSign) return;
-            if (!isOn && allowRedstone) return;
-            event.setCancelled(true);
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
-                    () -> event.getWorld().loadChunk(event.getChunk().getX(), event.getChunk().getZ(), true), 2L);
-        } catch(Throwable t) {
-            CraftBookPlugin.logger().warning("A chunk failed to be kept in memory. Is the chunk corrupt? (X:" + event.getChunk().getX() + ", Z:" + event.getChunk().getZ() + ")");
-            if(CraftBookPlugin.inst().getConfiguration().debugMode)
-                CraftBookBukkitUtil.printStacktrace(t);
+        if (shouldAnchor) {
+            chunk.addPluginChunkTicket(CraftBookPlugin.inst());
+        } else {
+            chunk.removePluginChunkTicket(CraftBookPlugin.inst());
         }
     }
 
