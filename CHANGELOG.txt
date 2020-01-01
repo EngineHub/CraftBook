@@ -1,3 +1,14 @@
+3.10.1
+* Fixed a few Variables issues
+* Disable legacy to CBID conversion by default
+* Disable a few broken recipes in Spigot for the Auto Crafter
+* Workaround a Spigot issue causing Hidden Switch to incorrectly activate
+* Added an option to include wet sponges in the sponge mechanic
+* Take unbreaking into account when damaging items
+* Added an option to prevent leaves damaging the axe with TreeLopper
+* Added a /cb cbid command to get the user's CBID
+* Add another workaround for Spigot causing signs to block the destination of Elevators/Teleporters
+
 3.10
 * Updated to Minecraft 1.13+ (1.13/1.14)
 * Required WorldEdit 7
