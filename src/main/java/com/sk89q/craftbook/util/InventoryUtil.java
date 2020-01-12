@@ -3,7 +3,6 @@ package com.sk89q.craftbook.util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.IntFunction;
 
 /**
  * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
@@ -286,6 +284,8 @@ public class InventoryUtil {
             case BLACK_SHULKER_BOX:
             case RED_SHULKER_BOX:
             case SHULKER_BOX:
+            case BLAST_FURNACE:
+            case SMOKER:
                 return true;
             default:
                 return false;
