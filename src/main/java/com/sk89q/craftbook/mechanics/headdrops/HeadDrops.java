@@ -157,7 +157,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null) {
+            if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null && skull.getOwner() != null) {
                 player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
                 skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
