@@ -40,6 +40,7 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Switch;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -434,18 +435,39 @@ public class Elevator extends AbstractCraftBookMechanic {
         } else {
             // Teleport!
             if (player.isInsideVehicle()) {
-
-                newLocation.setX(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getX());
-                newLocation.setY(floor.getY() + 2);
-                newLocation.setZ(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getZ());
-                newLocation.setYaw(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getYaw());
-                newLocation.setPitch(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
-                ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(newLocation);
+                teleportVehicle(((BukkitCraftBookPlayer)player).getPlayer(), floor, newLocation);
             }
             player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
             teleportFinish(player, destination, shift);
         }
+    }
+
+    private void teleportVehicle(Player player, Block floor, Location newLocation) {
+        Entity vehicle = player.getVehicle();
+        newLocation.setX(vehicle.getLocation().getX());
+        newLocation.setY(floor.getY() + 2);
+        newLocation.setZ(vehicle.getLocation().getZ());
+        newLocation.setYaw(vehicle.getLocation().getYaw());
+        newLocation.setPitch(vehicle.getLocation().getPitch());
+
+        // Vehicle must eject the passenger first,
+        // otherwise vehicle.teleport() will not have any effect.
+        vehicle.eject();
+        vehicle.teleport(newLocation);
+
+        // The runnableDelayInTicks = 4 was the lowest number that
+        // worked reliably across several tests.
+        long runnableDelayInTicks = 4;
+
+        // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
+        // without the delayed runnable will not set the passenger.
+        new BukkitRunnable(){
+            @Override
+            public void run () {
+                vehicle.addPassenger(player);
+            }
+        }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
     }
 
     public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
