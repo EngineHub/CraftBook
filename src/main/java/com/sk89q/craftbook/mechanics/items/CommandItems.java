@@ -14,6 +14,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
@@ -127,12 +128,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
             }, 0, 20);
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    if(player.getInventory().getItemInMainHand() != null)
+                    if(player.getInventory().getItemInMainHand().getType() != Material.AIR)
                         performCommandItems(player.getInventory().getItemInMainHand(), player, null);
-                    if(player.getInventory().getItemInOffHand() != null)
+                    if(player.getInventory().getItemInOffHand().getType() != Material.AIR)
                         performCommandItems(player.getInventory().getItemInOffHand(), player, null);
                     for(ItemStack stack : player.getInventory().getArmorContents())
-                        if(stack != null)
+                        if(stack != null && stack.getType() != Material.AIR)
                             performCommandItems(stack, player, null);
                 }
             }, 10, 10);
@@ -193,10 +194,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority=EventPriority.HIGH)
     public void onPlayerHitEntity(final PlayerInteractEntityEvent event) {
 
-        if(event.getPlayer().getItemInHand() == null)
+        if(event.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR)
             return;
 
-        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+        performCommandItems(event.getPlayer().getInventory().getItemInMainHand(), event.getPlayer(), event);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -304,7 +305,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @EventHandler(priority=EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
 
@@ -346,7 +346,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
         performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
     }
 
-    @SuppressWarnings("unchecked")
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
@@ -361,9 +360,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         deathPersistItems.remove(event.getPlayer().getUniqueId());
     }
 
-    @SuppressWarnings("deprecation")
     public void performCommandItems(ItemStack item, final Player player, final Event event) {
-        if (event == null || !EventUtil.passesFilter(event))
+        if (event != null && !EventUtil.passesFilter(event))
             return;
 
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
@@ -466,9 +464,9 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             player.getInventory().getItemInOffHand().setAmount(player.getInventory().getItemInOffHand().getAmount() - 1);
                         else
                             player.getInventory().setItemInOffHand(null);
-                    } else if (event instanceof PlayerPickupItemEvent) {
-                        ((PlayerPickupItemEvent) event).getItem().remove();
-                        ((PlayerPickupItemEvent) event).setCancelled(true);
+                    } else if (event instanceof EntityPickupItemEvent) {
+                        ((EntityPickupItemEvent) event).getItem().remove();
+                        ((EntityPickupItemEvent) event).setCancelled(true);
                     } else {
                         if (player.getInventory().getItemInMainHand().getAmount() > 1)
                             player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);

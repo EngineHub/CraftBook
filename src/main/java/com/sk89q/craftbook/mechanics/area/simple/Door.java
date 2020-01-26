@@ -184,13 +184,13 @@ public class Door extends CuboidToggleMechanic {
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
 
-        // Attempt to detect whether the bridge is above or below the sign,
+        // Attempt to detect whether the door is above or below the sign,
         // first assuming that the bridge is above
         Block proximalBaseCenter = getBlockBase(trigger);
 
         BlockData doorType = getBlockType(trigger);
         if (!BlockUtil.areBlocksIdentical(proximalBaseCenter, doorType)) {
-            throw new InvalidMechanismException("mech.bridge.material");
+            throw new InvalidMechanismException("mech.door.material");
         }
 
         // Find the other side
