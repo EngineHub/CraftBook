@@ -34,14 +34,13 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Switch;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -54,10 +53,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
@@ -68,11 +64,15 @@ import java.util.UUID;
 public class Elevator extends AbstractCraftBookMechanic {
 
     private HashSet<UUID> flyingPlayers;
+    private HashMap<UUID, Vehicle> playerVehicles;
 
     @Override
     public boolean enable() {
-        if(elevatorSlowMove)
+        if(elevatorSlowMove) {
             flyingPlayers = new HashSet<>();
+            playerVehicles = new HashMap<>();
+        }
+
         return true;
     }
 
@@ -366,11 +366,18 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if(elevatorSlowMove) {
 
+            if (player.isInsideVehicle()) {
+                Player myPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+                playerVehicles.put(player.getUniqueId(), (Vehicle)myPlayer.getVehicle());
+                LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+            }
+
             final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
 
             new BukkitRunnable(){
                 @Override
                 public void run () {
+
                     OfflinePlayer op = ((BukkitCraftBookPlayer)player).getPlayer();
                     if(!op.isOnline()) {
                         cancel();
@@ -379,6 +386,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                     Player p = op.getPlayer();
                     if(!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
                         flyingPlayers.add(p.getUniqueId());
+
                     p.setAllowFlight(true);
                     p.setFlying(true);
                     p.setFallDistance(0f);
@@ -387,9 +395,9 @@ public class Elevator extends AbstractCraftBookMechanic {
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
-                    boolean isPlayerAboutToHitCeiling = Math.abs(newLocation.getY() - p.getLocation().getY()) < 1.7;
+                    boolean isPlayerAboutToHitFloor = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
 
-                    if(isPlayerAboutToHitCeiling) {
+                    if(isPlayerAboutToHitFloor) {
                         p.teleport(newLocation);
                         teleportFinish(player, destination, shift);
                         if(flyingPlayers.contains(p.getUniqueId())) {
@@ -397,16 +405,24 @@ public class Elevator extends AbstractCraftBookMechanic {
                             p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                             flyingPlayers.remove(p.getUniqueId());
                         }
+
+                        handlePlayerInVehicle(player);
+
                         cancel();
                         return;
                     }
 
-                    if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
+                    boolean didPlayerLeaveElevator =
+                            lastLocation.getBlockX() != p.getLocation().getBlockX() ||
+                            lastLocation.getBlockZ() != p.getLocation().getBlockZ();
+
+                    if(didPlayerLeaveElevator) {
                         player.print("mech.lift.leave");
                         if(flyingPlayers.contains(p.getUniqueId())) {
                             p.setFlying(false);
                             p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                             flyingPlayers.remove(p.getUniqueId());
+                            playerVehicles.remove(p.getUniqueId());
                         }
                         cancel();
                         return;
@@ -427,6 +443,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                             p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                             flyingPlayers.remove(p.getUniqueId());
                         }
+                        handlePlayerInVehicle(player);
                         cancel();
                         return;
                     }
@@ -437,11 +454,28 @@ public class Elevator extends AbstractCraftBookMechanic {
         } else {
             // Teleport!
             if (player.isInsideVehicle()) {
-                LocationUtil.teleportPlayerVehicle(((BukkitCraftBookPlayer)player).getPlayer(), newLocation);
+                Vehicle teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+
+                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+
+                LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
+            } else {
+                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
             }
-            player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+
 
             teleportFinish(player, destination, shift);
+        }
+    }
+
+    private void handlePlayerInVehicle(CraftBookPlayer player) {
+
+        boolean wasPlayerInVehicle = playerVehicles.containsKey(player.getUniqueId());
+
+        if(wasPlayerInVehicle) {
+            Vehicle vehicle = playerVehicles.get(player.getUniqueId());
+            LocationUtil.addVehiclePassengerDelayed(vehicle, player);
+            playerVehicles.remove(player.getUniqueId());
         }
     }
 

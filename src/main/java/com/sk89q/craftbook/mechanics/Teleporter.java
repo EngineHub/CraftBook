@@ -3,18 +3,17 @@ package com.sk89q.craftbook.mechanics;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -210,10 +209,14 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         if (player.isInsideVehicle()) {
             org.bukkit.Location newLocation = CraftBookBukkitUtil.toLocation(subspaceRift);
-            LocationUtil.teleportPlayerVehicle(((BukkitCraftBookPlayer)player).getPlayer(), newLocation);
-        }
+            Vehicle teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
-        player.teleport(subspaceRift);
+            player.teleport(subspaceRift);
+
+            LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
+        } else {
+            player.teleport(subspaceRift);
+        }
 
         player.print("mech.teleport.alert");
     }

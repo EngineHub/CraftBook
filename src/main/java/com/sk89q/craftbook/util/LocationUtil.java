@@ -1,15 +1,17 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -309,9 +311,18 @@ public final class LocationUtil {
     }
 
 
-    public static void teleportPlayerVehicle(Player player, Location newLocation) {
+    public static Vehicle ejectAndTeleportPlayerVehicle(CraftBookPlayer player, Location newLocation) {
 
-        Entity vehicle = player.getVehicle();
+        Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+
+        if(bukkitPlayer == null || !bukkitPlayer.isInsideVehicle())
+            return null;
+
+        Vehicle vehicle = (Vehicle)bukkitPlayer.getVehicle();
+
+        if(vehicle == null)
+            return null;
+
         newLocation.setYaw(vehicle.getLocation().getYaw());
         newLocation.setPitch(vehicle.getLocation().getPitch());
 
@@ -319,6 +330,16 @@ public final class LocationUtil {
         // otherwise vehicle.teleport() will not have any effect.
         vehicle.eject();
         vehicle.teleport(newLocation);
+        return vehicle;
+    }
+
+
+    public static void addVehiclePassengerDelayed(Vehicle vehicle, CraftBookPlayer player) {
+
+        Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+
+        if(bukkitPlayer == null || vehicle == null)
+            return;
 
         // The runnableDelayInTicks = 4 was the lowest number that
         // worked reliably across several tests.
@@ -329,7 +350,7 @@ public final class LocationUtil {
         new BukkitRunnable(){
             @Override
             public void run () {
-                vehicle.addPassenger(player);
+                vehicle.addPassenger(bukkitPlayer);
             }
         }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
     }
