@@ -396,15 +396,8 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                     boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
 
-                    Direction playerVerticalMovement = getVerticalDirection(p.getLocation(), newLocation);
-                    boolean isPlayerAboutToHitSolidCeiling = playerVerticalMovement == Direction.UP && isSolidBlockAbovePlayer(p);
-
-                    if(isPlayerAlmostAtDestination || isPlayerAboutToHitSolidCeiling) {
-                        p.teleport(newLocation);
-                        teleportFinish(player, destination, shift);
-                        disableFlightMode(p);
-                        setPassengerIfPlayerWasInVehicle(player);
-                        cancel();
+                    if(isPlayerAlmostAtDestination) {
+                        finishElevatingPlayer(p);
                         return;
                     }
 
@@ -420,28 +413,39 @@ public class Elevator extends AbstractCraftBookMechanic {
                         return;
                     }
 
+                    Direction playerVerticalMovement = getVerticalDirection(p.getLocation(), newLocation);
+
                     switch (playerVerticalMovement) {
                         case UP:
-                            p.setVelocity(new Vector(0, elevatorMoveSpeed, 0));
-                            if (p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
-                                p.teleport(p.getLocation().add(0, elevatorMoveSpeed, 0));
+                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement)) {
+                                finishElevatingPlayer(p);
+                                return;
+                            } else {
+                                p.setVelocity(new Vector(0, elevatorMoveSpeed, 0));
+                            }
                             break;
                         case DOWN:
                             p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
-                            if (p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
+                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement))
                                 p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
                             break;
                         default:
                             // Player is not moving
-                            teleportFinish(player, destination, shift);
-                            disableFlightMode(p);
-                            setPassengerIfPlayerWasInVehicle(player);
-                            cancel();
+                            finishElevatingPlayer(p);
                             return;
                     }
 
                     lastLocation.setY(p.getLocation().getY());
                 }
+
+                private void finishElevatingPlayer(Player p) {
+                    p.teleport(newLocation);
+                    teleportFinish(player, destination, shift);
+                    disableFlightMode(p);
+                    setPassengerIfPlayerWasInVehicle(player);
+                    cancel();
+                }
+
             }.runTaskTimer(CraftBookPlugin.inst(), 1, 1);
         } else {
             // Teleport!
@@ -454,7 +458,6 @@ public class Elevator extends AbstractCraftBookMechanic {
             } else {
                 player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
             }
-
 
             teleportFinish(player, destination, shift);
         }
@@ -486,13 +489,9 @@ public class Elevator extends AbstractCraftBookMechanic {
             return Direction.NONE;
     }
 
-    private boolean isSolidBlockAbovePlayer(Player player) {
-        Location locationAbovePlayer = player.getLocation().clone();
-
-        locationAbovePlayer.setY(locationAbovePlayer.getY() + 0.7);
-        Block blockAbovePlayer = locationAbovePlayer.getBlock();
-
-        return !BlockUtil.isAir(blockAbovePlayer.getType());
+    private boolean isSolidBlockOccludingMovement(Player p, Direction direction) {
+        int verticalDistance = direction == Direction.UP ? 2 : -1;
+        return p.getLocation().clone().add(0, verticalDistance, 0).getBlock().getType().isSolid();
     }
 
     private void setPassengerIfPlayerWasInVehicle(CraftBookPlayer player) {
