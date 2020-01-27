@@ -103,7 +103,7 @@ allprojects {
         compile 'net.milkbowl.vault:VaultAPI:1.6'
         compile 'com.comphenix.protocol:ProtocolLib-API:4.4.0'
         compile 'fr.neatmonster:nocheatplus:3.15.1-RC'
-		compile 'org.bstats:bstats-bukkit:1.5'
+		compile 'org.bstats:bstats-bukkit:1.7'
         testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.1'
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.1'
@@ -148,7 +148,7 @@ allprojects {
             include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))
 			relocate ("org.bstats", "com.sk89q.craftbook.bukkit.bstats") {
-				include(dependency("org.bstats:bstats-bukkit:1.5"))
+				include(dependency("org.bstats:bstats-bukkit:1.7"))
 			}
         }
         relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'
