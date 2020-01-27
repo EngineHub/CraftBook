@@ -394,13 +394,6 @@ public class Elevator extends AbstractCraftBookMechanic {
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
-                    boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
-
-                    if(isPlayerAlmostAtDestination) {
-                        finishElevatingPlayer(p);
-                        return;
-                    }
-
                     boolean didPlayerLeaveElevator =
                             lastLocation.getBlockX() != p.getLocation().getBlockX() ||
                             lastLocation.getBlockZ() != p.getLocation().getBlockZ();
@@ -417,6 +410,10 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                     switch (playerVerticalMovement) {
                         case UP:
+                            // Teleporting the player up inside solid blocks will not execute
+                            // the teleport but rather cause the player to "swim" in mid air.
+                            // See https://dev.enginehub.org/youtrack/issue/CRAFTBOOK-3464
+                            // Thus we'll simply teleport the player to the ceiling in that case.
                             if (isSolidBlockOccludingMovement(p, playerVerticalMovement)) {
                                 finishElevatingPlayer(p);
                                 return;
