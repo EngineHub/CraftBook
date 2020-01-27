@@ -22,11 +22,7 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -54,6 +50,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
@@ -396,13 +393,16 @@ public class Elevator extends AbstractCraftBookMechanic {
                     p.setFlying(true);
                     p.setFallDistance(0f);
                     p.setNoDamageTicks(2);
-                    double speed = elevatorMoveSpeed;
+
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
-                    boolean isPlayerAboutToHitFloor = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
+                    boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
 
-                    if(isPlayerAboutToHitFloor) {
+                    boolean isPlayerMovingUp = lastLocation.getY() < newLocation.getY();
+                    boolean isPlayerAboutToHitSolidCeiling = isPlayerMovingUp && isSolidBlockAbovePlayer(p);
+
+                    if(isPlayerAlmostAtDestination || isPlayerAboutToHitSolidCeiling) {
                         p.teleport(newLocation);
                         teleportFinish(player, destination, shift);
                         if(flyingPlayers.contains(p.getUniqueId())) {
@@ -434,13 +434,13 @@ public class Elevator extends AbstractCraftBookMechanic {
                     }
 
                     if(newLocation.getY() > p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, speed,0));
+                        p.setVelocity(new Vector(0, elevatorMoveSpeed,0));
                         if(p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, speed, 0));
+                            p.teleport(p.getLocation().add(0, elevatorMoveSpeed, 0));
                     } else if (newLocation.getY() < p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, -speed,0));
+                        p.setVelocity(new Vector(0, -elevatorMoveSpeed,0));
                         if(p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, -speed, 0));
+                            p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
                     } else {
                         teleportFinish(player, destination, shift);
                         if(flyingPlayers.contains(p.getUniqueId())) {
@@ -471,6 +471,15 @@ public class Elevator extends AbstractCraftBookMechanic {
 
             teleportFinish(player, destination, shift);
         }
+    }
+
+    private boolean isSolidBlockAbovePlayer(Player player) {
+        Location locationAbovePlayer = player.getLocation().clone();
+
+        locationAbovePlayer.setY(locationAbovePlayer.getY() + 0.7);
+        Block blockAbovePlayer = locationAbovePlayer.getBlock();
+
+        return !BlockUtil.isAir(blockAbovePlayer.getType());
     }
 
     private void handlePlayerInVehicle(CraftBookPlayer player) {
