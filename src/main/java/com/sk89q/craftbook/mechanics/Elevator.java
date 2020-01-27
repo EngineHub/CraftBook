@@ -366,13 +366,18 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if(elevatorSlowMove) {
 
-            if (player.isInsideVehicle()) {
-                Player myPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
-                playerVehicles.put(player.getUniqueId(), (Vehicle)myPlayer.getVehicle());
-                LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
-            }
-
             final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
+
+            if (player.isInsideVehicle()) {
+                Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+                playerVehicles.put(player.getUniqueId(), (Vehicle)bukkitPlayer.getVehicle());
+
+                LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+
+                // Ejecting the player out of the vehicle will move
+                // the player to the side, so we have to correct this.
+                bukkitPlayer.teleport(lastLocation);
+            }
 
             new BukkitRunnable(){
                 @Override
@@ -422,8 +427,8 @@ public class Elevator extends AbstractCraftBookMechanic {
                             p.setFlying(false);
                             p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
                             flyingPlayers.remove(p.getUniqueId());
-                            playerVehicles.remove(p.getUniqueId());
                         }
+                        playerVehicles.remove(p.getUniqueId());
                         cancel();
                         return;
                     }
