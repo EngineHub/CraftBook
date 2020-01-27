@@ -394,6 +394,13 @@ public class Elevator extends AbstractCraftBookMechanic {
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
+                    boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
+
+                    if(isPlayerAlmostAtDestination) {
+                        finishElevatingPlayer(p);
+                        return;
+                    }
+
                     boolean didPlayerLeaveElevator =
                             lastLocation.getBlockX() != p.getLocation().getBlockX() ||
                             lastLocation.getBlockZ() != p.getLocation().getBlockZ();
@@ -422,6 +429,8 @@ public class Elevator extends AbstractCraftBookMechanic {
                             }
                             break;
                         case DOWN:
+                            // Contrary to moving the player up,
+                            // moving down into solid blocks works just fine.
                             p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
                             if (isSolidBlockOccludingMovement(p, playerVerticalMovement))
                                 p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
