@@ -6,11 +6,7 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -204,18 +200,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
         subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
         subspaceRift = subspaceRift.setY(floor.getY() + 1.0);
         subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
-        if (player.isInsideVehicle()) {
-            subspaceRift = BukkitAdapter.adapt(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation());
-            subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
-            subspaceRift = subspaceRift.setY(floor.getY() + 2.0);
-            subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
-            ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(CraftBookBukkitUtil.toLocation(subspaceRift));
-        }
-        if (maxRange > 0)
+
+        if (maxRange > 0) {
             if (subspaceRift.toVector().distanceSq(player.getLocation().toVector()) > maxRange * maxRange) {
                 player.print("mech.teleport.range");
                 return;
             }
+        }
+
+        if (player.isInsideVehicle()) {
+            org.bukkit.Location newLocation = CraftBookBukkitUtil.toLocation(subspaceRift);
+            LocationUtil.teleportPlayerVehicle(((BukkitCraftBookPlayer)player).getPlayer(), newLocation);
+        }
 
         player.teleport(subspaceRift);
 

@@ -3,15 +3,14 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.Vector3;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 
@@ -307,5 +306,31 @@ public final class LocationUtil {
     public static BlockFace[] getIndirectFaces() {
 
         return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST};
+    }
+
+
+    public static void teleportPlayerVehicle(Player player, Location newLocation) {
+
+        Entity vehicle = player.getVehicle();
+        newLocation.setYaw(vehicle.getLocation().getYaw());
+        newLocation.setPitch(vehicle.getLocation().getPitch());
+
+        // Vehicle must eject the passenger first,
+        // otherwise vehicle.teleport() will not have any effect.
+        vehicle.eject();
+        vehicle.teleport(newLocation);
+
+        // The runnableDelayInTicks = 4 was the lowest number that
+        // worked reliably across several tests.
+        long runnableDelayInTicks = 4;
+
+        // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
+        // without the delayed runnable will not set the passenger.
+        new BukkitRunnable(){
+            @Override
+            public void run () {
+                vehicle.addPassenger(player);
+            }
+        }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
     }
 }
