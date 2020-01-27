@@ -311,6 +311,14 @@ public final class LocationUtil {
     }
 
 
+    /**
+     * Teleports the vehicle the player is in to the given destination.
+     * Player is ejected out of the vehicle prior to teleportation,
+     * otherwise it doesn't work.
+     * @param player        The player that will be ejected and whose vehicle will be teleported.
+     * @param newLocation   The location the vehicle will be teleported to.
+     * @return The {@link Vehicle} the player was in or null if player was not in vehicle.
+     */
     public static Vehicle ejectAndTeleportPlayerVehicle(CraftBookPlayer player, Location newLocation) {
 
         Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
@@ -334,6 +342,14 @@ public final class LocationUtil {
     }
 
 
+    /**
+     * Adds the player to the vehicle. Execution is delayed
+     * by four ticks through a {@link BukkitRunnable} because
+     * it doesn't work otherwise.
+     *
+     * @param vehicle   The vehicle that will set the player as a passenger.
+     * @param player    The player that will be put inside the provided vehicle.
+     */
     public static void addVehiclePassengerDelayed(Vehicle vehicle, CraftBookPlayer player) {
 
         Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
