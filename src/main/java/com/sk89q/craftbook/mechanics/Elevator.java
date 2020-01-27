@@ -50,6 +50,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
@@ -395,8 +396,8 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                     boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
 
-                    boolean isPlayerMovingUp = lastLocation.getY() < newLocation.getY();
-                    boolean isPlayerAboutToHitSolidCeiling = isPlayerMovingUp && isSolidBlockAbovePlayer(p);
+                    Direction playerVerticalMovement = getVerticalDirection(p.getLocation(), newLocation);
+                    boolean isPlayerAboutToHitSolidCeiling = playerVerticalMovement == Direction.UP && isSolidBlockAbovePlayer(p);
 
                     if(isPlayerAlmostAtDestination || isPlayerAboutToHitSolidCeiling) {
                         p.teleport(newLocation);
@@ -419,20 +420,24 @@ public class Elevator extends AbstractCraftBookMechanic {
                         return;
                     }
 
-                    if(newLocation.getY() > p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, elevatorMoveSpeed,0));
-                        if(p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, elevatorMoveSpeed, 0));
-                    } else if (newLocation.getY() < p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, -elevatorMoveSpeed,0));
-                        if(p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
-                    } else {
-                        teleportFinish(player, destination, shift);
-                        disableFlightMode(p);
-                        setPassengerIfPlayerWasInVehicle(player);
-                        cancel();
-                        return;
+                    switch (playerVerticalMovement) {
+                        case UP:
+                            p.setVelocity(new Vector(0, elevatorMoveSpeed, 0));
+                            if (p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
+                                p.teleport(p.getLocation().add(0, elevatorMoveSpeed, 0));
+                            break;
+                        case DOWN:
+                            p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
+                            if (p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
+                                p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
+                            break;
+                        default:
+                            // Player is not moving
+                            teleportFinish(player, destination, shift);
+                            disableFlightMode(p);
+                            setPassengerIfPlayerWasInVehicle(player);
+                            cancel();
+                            return;
                     }
 
                     lastLocation.setY(p.getLocation().getY());
@@ -469,6 +474,16 @@ public class Elevator extends AbstractCraftBookMechanic {
         p.setFlying(false);
         p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
         flyingPlayers.remove(p.getUniqueId());
+    }
+
+    private Direction getVerticalDirection(Location from, Location to)
+    {
+        if(from.getY() < to.getY())
+            return Direction.UP;
+        else if (from.getY() > to.getY())
+            return Direction.DOWN;
+        else
+            return Direction.NONE;
     }
 
     private boolean isSolidBlockAbovePlayer(Player player) {
