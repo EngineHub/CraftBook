@@ -344,7 +344,7 @@ public final class LocationUtil {
 
     /**
      * Adds the player to the vehicle. Execution is delayed
-     * by four ticks through a {@link BukkitRunnable} because
+     * by six ticks through a {@link BukkitRunnable} because
      * it doesn't work otherwise.
      *
      * @param vehicle   The vehicle that will set the player as a passenger.
@@ -357,9 +357,9 @@ public final class LocationUtil {
         if(bukkitPlayer == null || vehicle == null)
             return;
 
-        // The runnableDelayInTicks = 4 was the lowest number that
+        // The runnableDelayInTicks = 6 was the lowest number that
         // worked reliably across several tests.
-        long runnableDelayInTicks = 4;
+        long runnableDelayInTicks = 6;
 
         // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
         // without the delayed runnable will not set the passenger.
