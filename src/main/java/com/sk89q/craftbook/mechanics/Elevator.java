@@ -22,11 +22,7 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -34,13 +30,13 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -53,10 +49,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
@@ -67,11 +61,15 @@ import java.util.UUID;
 public class Elevator extends AbstractCraftBookMechanic {
 
     private HashSet<UUID> flyingPlayers;
+    private HashMap<UUID, Vehicle> playerVehicles;
 
     @Override
     public boolean enable() {
-        if(elevatorSlowMove)
+        if(elevatorSlowMove) {
             flyingPlayers = new HashSet<>();
+            playerVehicles = new HashMap<>();
+        }
+
         return true;
     }
 
@@ -367,84 +365,149 @@ public class Elevator extends AbstractCraftBookMechanic {
 
             final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
 
+            if (player.isInsideVehicle()) {
+                Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+                playerVehicles.put(player.getUniqueId(), (Vehicle)bukkitPlayer.getVehicle());
+
+                LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+
+                // Ejecting the player out of the vehicle will move
+                // the player to the side, so we have to correct this.
+                bukkitPlayer.teleport(lastLocation);
+            }
+
             new BukkitRunnable(){
                 @Override
                 public void run () {
-                    OfflinePlayer op = ((BukkitCraftBookPlayer)player).getPlayer();
-                    if(!op.isOnline()) {
+
+                    OfflinePlayer offlinePlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+                    if(!offlinePlayer.isOnline()) {
                         cancel();
                         return;
                     }
-                    Player p = op.getPlayer();
+                    Player p = offlinePlayer.getPlayer();
                     if(!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
                         flyingPlayers.add(p.getUniqueId());
-                    p.setAllowFlight(true);
-                    p.setFlying(true);
-                    p.setFallDistance(0f);
-                    p.setNoDamageTicks(2);
-                    double speed = elevatorMoveSpeed;
+
+                    enableFlightMode(p);
+
                     newLocation.setPitch(p.getLocation().getPitch());
                     newLocation.setYaw(p.getLocation().getYaw());
 
-                    if(Math.abs(newLocation.getY() - p.getLocation().getY()) < 0.7) {
-                        p.teleport(newLocation);
-                        teleportFinish(player, destination, shift);
-                        if(flyingPlayers.contains(p.getUniqueId())) {
-                            p.setFlying(false);
-                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
-                            flyingPlayers.remove(p.getUniqueId());
-                        }
-                        cancel();
+                    boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
+
+                    if(isPlayerAlmostAtDestination) {
+                        finishElevatingPlayer(p);
                         return;
                     }
 
-                    if(lastLocation.getBlockX() != p.getLocation().getBlockX() || lastLocation.getBlockZ() != p.getLocation().getBlockZ()) {
+                    boolean didPlayerLeaveElevator =
+                            lastLocation.getBlockX() != p.getLocation().getBlockX() ||
+                            lastLocation.getBlockZ() != p.getLocation().getBlockZ();
+
+                    if(didPlayerLeaveElevator) {
                         player.print("mech.lift.leave");
-                        if(flyingPlayers.contains(p.getUniqueId())) {
-                            p.setFlying(false);
-                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
-                            flyingPlayers.remove(p.getUniqueId());
-                        }
+                        disableFlightMode(p);
+                        playerVehicles.remove(p.getUniqueId());
                         cancel();
                         return;
                     }
 
-                    if(newLocation.getY() > p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, speed,0));
-                        if(p.getLocation().add(0, 2, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, speed, 0));
-                    } else if (newLocation.getY() < p.getLocation().getY()) {
-                        p.setVelocity(new Vector(0, -speed,0));
-                        if(p.getLocation().add(0, -1, 0).getBlock().getType().isSolid())
-                            p.teleport(p.getLocation().add(0, -speed, 0));
-                    } else {
-                        teleportFinish(player, destination, shift);
-                        if(flyingPlayers.contains(p.getUniqueId())) {
-                            p.setFlying(false);
-                            p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
-                            flyingPlayers.remove(p.getUniqueId());
-                        }
-                        cancel();
-                        return;
+                    Direction playerVerticalMovement = getVerticalDirection(p.getLocation(), newLocation);
+
+                    switch (playerVerticalMovement) {
+                        case UP:
+                            // Teleporting the player up inside solid blocks will not execute
+                            // the teleport but rather cause the player to "swim" in mid air.
+                            // See https://dev.enginehub.org/youtrack/issue/CRAFTBOOK-3464
+                            // Thus we'll simply teleport the player to the ceiling in that case.
+                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement)) {
+                                finishElevatingPlayer(p);
+                                return;
+                            } else {
+                                p.setVelocity(new Vector(0, elevatorMoveSpeed, 0));
+                            }
+                            break;
+                        case DOWN:
+                            // Contrary to moving the player up,
+                            // moving down into solid blocks works just fine.
+                            p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
+                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement))
+                                p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
+                            break;
+                        default:
+                            // Player is not moving
+                            finishElevatingPlayer(p);
+                            return;
                     }
 
                     lastLocation.setY(p.getLocation().getY());
                 }
+
+                private void finishElevatingPlayer(Player p) {
+                    p.teleport(newLocation);
+                    teleportFinish(player, destination, shift);
+                    disableFlightMode(p);
+                    setPassengerIfPlayerWasInVehicle(player);
+                    cancel();
+                }
+
             }.runTaskTimer(CraftBookPlugin.inst(), 1, 1);
         } else {
             // Teleport!
             if (player.isInsideVehicle()) {
+                Vehicle teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
-                newLocation.setX(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getX());
-                newLocation.setY(floor.getY() + 2);
-                newLocation.setZ(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getZ());
-                newLocation.setYaw(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getYaw());
-                newLocation.setPitch(((BukkitCraftBookPlayer)player).getPlayer().getVehicle().getLocation().getPitch());
-                ((BukkitCraftBookPlayer)player).getPlayer().getVehicle().teleport(newLocation);
+                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+
+                LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
+            } else {
+                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
             }
-            player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
             teleportFinish(player, destination, shift);
+        }
+    }
+
+    private void enableFlightMode(Player p) {
+        p.setAllowFlight(true);
+        p.setFlying(true);
+        p.setFallDistance(0f);
+        p.setNoDamageTicks(2);
+    }
+
+    private void disableFlightMode(Player p) {
+        if (!flyingPlayers.contains(p.getUniqueId())) {
+            return;
+        }
+        p.setFlying(false);
+        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
+        flyingPlayers.remove(p.getUniqueId());
+    }
+
+    private Direction getVerticalDirection(Location from, Location to)
+    {
+        if(from.getY() < to.getY())
+            return Direction.UP;
+        else if (from.getY() > to.getY())
+            return Direction.DOWN;
+        else
+            return Direction.NONE;
+    }
+
+    private boolean isSolidBlockOccludingMovement(Player p, Direction direction) {
+        int verticalDistance = direction == Direction.UP ? 2 : -1;
+        return p.getLocation().clone().add(0, verticalDistance, 0).getBlock().getType().isSolid();
+    }
+
+    private void setPassengerIfPlayerWasInVehicle(CraftBookPlayer player) {
+
+        boolean wasPlayerInVehicle = playerVehicles.containsKey(player.getUniqueId());
+
+        if(wasPlayerInVehicle) {
+            Vehicle vehicle = playerVehicles.get(player.getUniqueId());
+            LocationUtil.addVehiclePassengerDelayed(vehicle, player);
+            playerVehicles.remove(player.getUniqueId());
         }
     }
 
