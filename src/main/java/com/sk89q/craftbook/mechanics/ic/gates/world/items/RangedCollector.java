@@ -108,7 +108,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         List<Item> itemsForChest = Lists.newArrayList();
 
         for (Entity entity : LocationUtil.getNearbyEntities(centre, radius)) {
-            if (entity.isValid() && entity instanceof Item) {
+            if (entity.isValid() && entity instanceof Item && ((Item) entity).getPickupDelay() < 1) {
                 ItemStack stack = ((Item) entity).getItemStack();
 
                 if(!ItemUtil.isStackValid(stack))
