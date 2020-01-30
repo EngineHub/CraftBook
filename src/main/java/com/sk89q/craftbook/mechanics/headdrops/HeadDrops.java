@@ -180,7 +180,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if(!skull.hasOwner())
                 return;
             String playerName = ChatColor.stripColor(skull.getOwner());
-            if (ignoredNames.contains(playerName)) {
+            if (playerName == null || ignoredNames.contains(playerName)) {
                 return;
             }
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
