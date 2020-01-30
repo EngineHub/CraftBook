@@ -78,9 +78,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         TreeSpecies species = null;
         if(placeSaplings && usedBlock.getState().getData() instanceof Tree
-                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM))
+                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
-        usedBlock.breakNaturally(event.getPlayer().getInventory().getItemInMainHand());
+        }
+
         if(species != null && planted < maxSaplings(species)) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, species), 2);
             planted ++;
