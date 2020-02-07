@@ -8,7 +8,13 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
-import com.sk89q.craftbook.util.*;
+import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.craftbook.util.LoadPriority;
+import com.sk89q.craftbook.util.ParsingUtil;
+import com.sk89q.craftbook.util.ProtectionUtil;
+import com.sk89q.craftbook.util.Tuple2;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.apache.commons.lang.StringUtils;
@@ -25,17 +31,35 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 
 public class CommandItems extends AbstractCraftBookMechanic {
 
@@ -391,6 +415,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     break current;
                 }
 
+                for (CommandItemAction action : comdef.actions) {
+                    if (action.stage == ActionRunStage.BEFORE) {
+                        if (!action.runAction(comdef, event, player)) {
+                            break current;
+                        }
+                    }
+                }
+
                 if (!player.hasPermission("craftbook.mech.commanditems.bypassconsumables") && !player.getGameMode().equals(GameMode.CREATIVE)) {
                     for (ItemStack stack : def.consumables) {
 
@@ -417,65 +449,62 @@ public class CommandItems extends AbstractCraftBookMechanic {
                             break current;
                         }
                     }
-                }
 
-                for(CommandItemAction action : comdef.actions)
-                    if(action.stage == ActionRunStage.BEFORE)
-                        if(!action.runAction(comdef, event, player))
-                            break current;
+                    for (ItemStack stack : def.consumables) {
 
-                for(ItemStack stack : def.consumables) {
+                        boolean found = false;
 
-                    boolean found = false;
+                        int amount = stack.getAmount();
 
-                    int amount = stack.getAmount();
+                        for (int i = 0; i < player.getInventory().getContents().length; i++) {
+                            ItemStack tStack = player.getInventory().getContents()[i];
+                            if (ItemUtil.areItemsIdentical(stack, tStack)) {
+                                ItemStack toRemove = tStack.clone();
+                                if (toRemove.getAmount() > amount) {
 
-                    for(int i = 0; i < player.getInventory().getContents().length; i++) {
-                        ItemStack tStack = player.getInventory().getContents()[i];
-                        if(ItemUtil.areItemsIdentical(stack, tStack)) {
-                            ItemStack toRemove = tStack.clone();
-                            if(toRemove.getAmount() > amount) {
-
-                                toRemove.setAmount(toRemove.getAmount() - amount);
-                                player.getInventory().setItem(i, toRemove);
-                                amount = 0;
-                            } else {
-                                amount -= toRemove.getAmount();
-                                player.getInventory().setItem(i, null);
+                                    toRemove.setAmount(toRemove.getAmount() - amount);
+                                    player.getInventory().setItem(i, toRemove);
+                                    amount = 0;
+                                } else {
+                                    amount -= toRemove.getAmount();
+                                    player.getInventory().setItem(i, null);
+                                }
+                                if (amount <= 0) {
+                                    found = true;
+                                    break;
+                                }
                             }
-                            if(amount <= 0) {
-                                found = true;
-                                break;
+                        }
+
+                        if (!found) {
+                            lplayer.printError("mech.command-items.out-of-sync");
+                            break current;
+                        }
+                    }
+
+                    if (def.consumeSelf) {
+                        if (event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getHand() == EquipmentSlot.OFF_HAND
+                                || event instanceof BlockPlaceEvent && ((BlockPlaceEvent) event).getHand() == EquipmentSlot.OFF_HAND) {
+                            if (player.getInventory().getItemInOffHand().getAmount() > 1) {
+                                player.getInventory().getItemInOffHand().setAmount(player.getInventory().getItemInOffHand().getAmount() - 1);
+                            } else {
+                                player.getInventory().setItemInOffHand(null);
+                            }
+                        } else if (event instanceof EntityPickupItemEvent) {
+                            ((EntityPickupItemEvent) event).getItem().remove();
+                            ((EntityPickupItemEvent) event).setCancelled(true);
+                        } else {
+                            if (player.getInventory().getItemInMainHand().getAmount() > 1) {
+                                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                            } else {
+                                player.getInventory().setItemInMainHand(null);
                             }
                         }
                     }
 
-                    if(!found) {
-                        lplayer.printError("mech.command-items.out-of-sync");
-                        break current;
-                    }
+                    player.updateInventory();
                 }
 
-                if(def.consumeSelf) {
-
-                    if(event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getHand() == EquipmentSlot.OFF_HAND
-                            || event instanceof BlockPlaceEvent && ((BlockPlaceEvent) event).getHand() == EquipmentSlot.OFF_HAND) {
-                        if (player.getInventory().getItemInOffHand().getAmount() > 1)
-                            player.getInventory().getItemInOffHand().setAmount(player.getInventory().getItemInOffHand().getAmount() - 1);
-                        else
-                            player.getInventory().setItemInOffHand(null);
-                    } else if (event instanceof EntityPickupItemEvent) {
-                        ((EntityPickupItemEvent) event).getItem().remove();
-                        ((EntityPickupItemEvent) event).setCancelled(true);
-                    } else {
-                        if (player.getInventory().getItemInMainHand().getAmount() > 1)
-                            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-                        else
-                            player.getInventory().setItemInMainHand(null);
-                    }
-                }
-
-                player.updateInventory();
 
                 for(String command : comdef.commands)
                     doCommand(command, event, comdef, player);
