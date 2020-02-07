@@ -30,6 +30,7 @@ import org.bukkit.block.data.BlockData;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -86,7 +87,7 @@ public class BlockSyntax {
     }
 
     public static List<BaseBlock> getBlocks(List<String> lines, boolean wild) {
-        return lines.stream().map(line -> getBlock(line, wild)).collect(Collectors.toList());
+        return lines.stream().map(line -> getBlock(line, wild)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static BlockData getBukkitBlock(String line) {
