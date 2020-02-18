@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
@@ -184,8 +185,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(!((Tameable) event.getEntity()).getOwner().equals(event.getPlayer()))
+        if(!Objects.equals(((Tameable) event.getEntity()).getOwner(), event.getPlayer())) {
             event.setCancelled(true);
+        }
     }
 
     private boolean leadsStopTarget;
