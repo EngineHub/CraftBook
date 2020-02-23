@@ -139,14 +139,15 @@ public final class BlockUtil {
                 drops.add(new ItemStack(Material.COCOA_BEANS, 3));
                 break;
             default:
-                if(tool == null || ItemUtil.getMaxDurability(tool.getType()) > 0)
+                if(tool == null) {
                     drops.addAll(block.getDrops());
-                else
+                } else {
                     drops.addAll(block.getDrops(tool));
+                }
                 break;
         }
 
-        return drops.toArray(new ItemStack[drops.size()]);
+        return drops.toArray(new ItemStack[0]);
     }
 
     public static Block[] getTouchingBlocks(Block block) {
@@ -155,7 +156,7 @@ public final class BlockUtil {
         for(BlockFace face : LocationUtil.getDirectFaces())
             blocks.add(block.getRelative(face));
 
-        return blocks.toArray(new Block[blocks.size()]);
+        return blocks.toArray(new Block[0]);
     }
 
     public static Block[] getIndirectlyTouchingBlocks(Block block) {
@@ -167,6 +168,6 @@ public final class BlockUtil {
                     if(!(x == 0 && y == 0 & z == 0))
                         blocks.add(block.getRelative(x,y,z));
 
-        return blocks.toArray(new Block[blocks.size()]);
+        return blocks.toArray(new Block[0]);
     }
 }
