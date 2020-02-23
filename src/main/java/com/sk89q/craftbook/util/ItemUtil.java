@@ -668,6 +668,7 @@ public final class ItemUtil {
 
         switch(item.getType()) {
             case COAL:
+            case CHARCOAL:
             case COAL_BLOCK:
             case WOODEN_AXE:
             case WOODEN_HOE:
