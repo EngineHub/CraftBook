@@ -31,7 +31,7 @@ public class Fan extends Recipe {
     @Override
     public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
         Dispenser d = (Dispenser) block.getBlockData();
-        BlockFace face = ((org.bukkit.material.Dispenser) d).getFacing();
+        BlockFace face = d.getFacing();
         Location dispenserLoc = block.getRelative(face).getLocation();
         for (Entity e : block.getWorld().getChunkAt(dispenserLoc).getEntities()) {
             if (EntityUtil.isEntityInBlock(e, dispenserLoc.getBlock())) {
