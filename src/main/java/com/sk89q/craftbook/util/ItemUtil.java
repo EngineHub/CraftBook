@@ -710,6 +710,8 @@ public final class ItemUtil {
             case BOW:
             case LADDER:
             case SCAFFOLDING:
+            case DRIED_KELP_BLOCK:
+            case BAMBOO:
                 return true;
             default:
                 return Tag.ITEMS_BOATS.isTagged(item.getType())
