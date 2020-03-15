@@ -80,7 +80,7 @@ public class DownCounter extends AbstractIC {
         int oldVal = curVal;
         try {
             // If clock input triggered
-            if (chip.getInput(0)) {
+            if (chip.getInput(0) && chip.isTriggered(0)) {
                 if (curVal == 0) { // If we've gotten to 0, reset if infinite mode
                     if (inf) {
                         curVal = resetVal;
@@ -92,7 +92,7 @@ public class DownCounter extends AbstractIC {
                 // Set output to high if we're at 0, otherwise low
                 chip.setOutput(0, curVal == 0);
                 // If reset input triggered, reset counter value
-            } else if (chip.getInput(1)) {
+            } else if (chip.getInput(1) && chip.isTriggered(1)) {
                 curVal = resetVal;
                 chip.setOutput(0, false);
             }
