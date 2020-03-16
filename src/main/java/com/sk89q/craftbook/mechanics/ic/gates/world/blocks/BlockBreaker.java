@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -18,12 +17,11 @@ import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.block.data.BlockData;
 
 import java.util.List;
 
@@ -60,8 +58,8 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         state.setOutput(0, breakBlock());
     }
 
-    private Block broken, chest;
-    private BlockStateHolder item;
+    private Block broken;
+    private BaseBlock item;
 
     @Override
     public void load() {
@@ -70,32 +68,30 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     public boolean breakBlock() {
 
+        boolean above = ((Factory) getFactory()).above;
         if (broken == null) {
-
             Block bl = getBackBlock();
 
-            if (((Factory)getFactory()).above) {
-                broken = bl.getRelative(0, -1, 0);
-            } else {
+            if (above) {
                 broken = bl.getRelative(0, 1, 0);
+            } else {
+                broken = bl.getRelative(0, -1, 0);
             }
         }
 
-        if (broken == null || broken.getType() == Material.AIR || broken.getType() == Material.MOVING_PISTON || Blocks
-                .containsFuzzy(((Factory) getFactory()).blockBlacklist, BukkitAdapter.adapt(broken.getBlockData())))
+        BlockData brokenData = broken.getBlockData();
+
+        if (broken.getType() == Material.AIR || broken.getType() == Material.MOVING_PISTON || Blocks
+                .containsFuzzy(((Factory) getFactory()).blockBlacklist, BukkitAdapter.adapt(brokenData))) {
             return false;
+        }
 
-        if (!item.equalsFuzzy(BukkitAdapter.adapt(broken.getBlockData())))
-
-        ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
-        broken.setType(Material.AIR);
+        if (item == null || item.equalsFuzzy(BukkitAdapter.adapt(brokenData))) {
+            ICUtil.collectItem(this, above ? BlockVector3.at(0, -1, 0) : BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
+            broken.setType(Material.AIR);
+        }
 
         return true;
-    }
-
-    public void dropItem(ItemStack item) {
-
-        CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItem(BlockUtil.getBlockCentre(CraftBookBukkitUtil.toSign(getSign()).getBlock()), item);
     }
 
     public static class Factory extends AbstractICFactory implements ConfigurableIC {
@@ -120,7 +116,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             if(!sign.getLine(2).trim().isEmpty()) {
-                BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2), true);
+                BaseBlock item = BlockSyntax.getBlock(sign.getLine(2), true);
                 if(item == null)
                     throw new ICVerificationException("An invalid block was provided on line 2!");
                 if(Blocks.containsFuzzy(blockBlacklist, item))
