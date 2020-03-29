@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -79,6 +80,19 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
         if(!minecarts.contains(event.getVehicle())) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onVehicleDestroy(final VehicleDestroyEvent event) {
+        if(!(event.getVehicle() instanceof RideableMinecart)) return;
+
+        if(!EventUtil.passesFilter(event))
+            return;
+
+        if (minecarts.contains(event.getVehicle())) {
+            event.setCancelled(true);
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
+        }
     }
 
     @Override
