@@ -592,6 +592,12 @@ public final class ItemUtil {
                 return new ItemStack(Material.GOLD_NUGGET);
             case STONE:
                 return new ItemStack(Material.SMOOTH_STONE);
+            case QUARTZ_BLOCK:
+                return new ItemStack(Material.SMOOTH_QUARTZ);
+            case SANDSTONE:
+                return new ItemStack(Material.SMOOTH_SANDSTONE);
+            case RED_SANDSTONE:
+                return new ItemStack(Material.SMOOTH_RED_SANDSTONE);
             case CHORUS_FRUIT:
                 return new ItemStack(Material.POPPED_CHORUS_FRUIT);
             case SEA_PICKLE:
