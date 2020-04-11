@@ -15,11 +15,11 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.ics;
 
-import static org.enginehub.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
+import static org.enginehub.craftbook.util.documentation.DocumentationGenerator.createStringOfLength;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.core.util.documentation.DocumentationGenerator;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.documentation.DocumentationGenerator;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.enginehub.craftbook.sponge.util.SpongePermissionNode;
 import org.spongepowered.api.service.permission.PermissionDescription;

@@ -18,7 +18,7 @@ package org.enginehub.craftbook.sponge.mechanics.boat;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeMechanic;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.entity.vehicle.Boat;

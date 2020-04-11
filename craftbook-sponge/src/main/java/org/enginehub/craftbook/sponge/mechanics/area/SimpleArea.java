@@ -18,7 +18,7 @@ package org.enginehub.craftbook.sponge.mechanics.area;
 import static org.enginehub.craftbook.sponge.util.locale.TranslationsManager.USE_PERMISSIONS;
 
 import com.me4502.modularframework.module.ModuleWrapper;
-import org.enginehub.craftbook.core.util.ConfigValue;
+import org.enginehub.craftbook.util.ConfigValue;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.mechanics.blockbags.AdminBlockBag;
 import org.enginehub.craftbook.sponge.mechanics.blockbags.BlockBag;
@@ -26,7 +26,6 @@ import org.enginehub.craftbook.sponge.mechanics.blockbags.BlockBagManager;
 import org.enginehub.craftbook.sponge.mechanics.blockbags.EmbeddedBlockBag;
 import org.enginehub.craftbook.sponge.mechanics.blockbags.IdentifiableBlockBag;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import org.enginehub.craftbook.sponge.util.SpongeBlockFilter;
 import org.enginehub.craftbook.sponge.util.BlockUtil;
 import org.enginehub.craftbook.sponge.util.SignUtil;
 import org.enginehub.craftbook.sponge.util.SpongePermissionNode;

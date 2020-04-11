@@ -16,8 +16,8 @@
 package org.enginehub.craftbook.sponge.util;
 
 import com.google.common.collect.Sets;
-import org.enginehub.craftbook.core.util.RegexUtil;
-import org.enginehub.craftbook.core.util.TernaryState;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.TernaryState;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;

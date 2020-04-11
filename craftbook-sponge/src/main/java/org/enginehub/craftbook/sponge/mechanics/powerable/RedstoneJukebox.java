@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.sponge.mechanics.powerable;
 
 import com.me4502.modularframework.module.Module;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.util.data.CraftBookKeys;
 import org.enginehub.craftbook.sponge.util.data.mutable.LastPowerData;
 import org.spongepowered.api.block.BlockTypes;

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.sponge.util;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.core.CraftBookAPI;
+import org.enginehub.craftbook.CraftBookAPI;
 import org.enginehub.craftbook.sponge.mechanics.variable.Variables;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;

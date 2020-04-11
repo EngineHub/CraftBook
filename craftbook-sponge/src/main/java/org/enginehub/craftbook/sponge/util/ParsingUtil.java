@@ -16,8 +16,8 @@
 package org.enginehub.craftbook.sponge.util;
 
 import com.flowpowered.math.vector.Vector3d;
-import org.enginehub.craftbook.core.util.CraftBookException;
-import org.enginehub.craftbook.core.util.RegexUtil;
+import org.enginehub.craftbook.util.CraftBookException;
+import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.mechanics.ics.ICSocket;
 import org.apache.commons.lang3.StringUtils;

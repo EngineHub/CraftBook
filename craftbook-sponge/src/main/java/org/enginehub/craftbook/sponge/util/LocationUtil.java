@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.sponge.util;
 
 import com.flowpowered.math.vector.Vector3d;
-import org.enginehub.craftbook.core.util.RegexUtil;
+import org.enginehub.craftbook.util.RegexUtil;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.entity.Entity;

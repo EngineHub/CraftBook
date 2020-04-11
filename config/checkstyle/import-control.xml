@@ -1,0 +1,20 @@
+<!DOCTYPE import-control PUBLIC
+    "-//Puppy Crawl//DTD Import Control 1.1//EN"
+    "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
+
+<import-control pkg="org.enginehub">
+  <allow pkg="java"/>
+  <allow pkg="javax"/>
+  <allow pkg="org.junit"/>
+  <allow pkg="org.hamcrest"/>
+  <allow pkg="org.mockito"/>
+  <allow pkg="junit.framework"/>
+  <allow pkg="org.enginehub"/>
+  <allow pkg="com.google.common"/>
+
+  <subpackage name="craftbook">
+    <allow pkg="org.yaml"/>
+    <allow pkg="org.enginehub.piston"/>
+  </subpackage>
+
+</import-control>

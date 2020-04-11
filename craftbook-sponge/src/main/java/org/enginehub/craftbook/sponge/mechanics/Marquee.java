@@ -20,9 +20,9 @@ import static org.enginehub.craftbook.sponge.util.locale.TranslationsManager.USE
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
-import org.enginehub.craftbook.core.util.CraftBookException;
-import org.enginehub.craftbook.core.util.PermissionNode;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.CraftBookException;
+import org.enginehub.craftbook.util.PermissionNode;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeSignMechanic;
 import org.enginehub.craftbook.sponge.mechanics.variable.Variables;
 import org.enginehub.craftbook.sponge.util.SignUtil;

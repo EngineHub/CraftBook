@@ -17,7 +17,6 @@ package org.enginehub.craftbook.sponge.util.type;
 
 import com.google.common.reflect.TypeToken;
 import org.enginehub.craftbook.sponge.mechanics.ics.SerializedICData;
-import org.enginehub.craftbook.sponge.util.SpongeBlockFilter;
 import org.spongepowered.api.data.value.mutable.MutableBoundedValue;
 import org.spongepowered.api.data.value.mutable.Value;
 import org.spongepowered.api.item.inventory.ItemStack;

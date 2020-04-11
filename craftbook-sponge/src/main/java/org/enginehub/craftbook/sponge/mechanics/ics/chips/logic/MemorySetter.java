@@ -15,7 +15,7 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.ics.chips.logic;
 
-import org.enginehub.craftbook.core.CraftBookAPI;
+import org.enginehub.craftbook.CraftBookAPI;
 import org.enginehub.craftbook.sponge.mechanics.ics.IC;
 import org.enginehub.craftbook.sponge.mechanics.ics.InvalidICException;
 import org.enginehub.craftbook.sponge.mechanics.ics.factory.ICFactory;

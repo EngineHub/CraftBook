@@ -15,8 +15,8 @@
  */
 package org.enginehub.craftbook.sponge.mechanics;
 
-import static org.enginehub.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
-import static org.enginehub.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
+import static org.enginehub.craftbook.util.documentation.DocumentationGenerator.createStringOfLength;
+import static org.enginehub.craftbook.util.documentation.DocumentationGenerator.padToLength;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
@@ -24,10 +24,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
-import org.enginehub.craftbook.core.util.ConfigValue;
-import org.enginehub.craftbook.core.util.CraftBookException;
-import org.enginehub.craftbook.core.util.PermissionNode;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.ConfigValue;
+import org.enginehub.craftbook.util.CraftBookException;
+import org.enginehub.craftbook.util.PermissionNode;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.enginehub.craftbook.sponge.util.SpongePermissionNode;

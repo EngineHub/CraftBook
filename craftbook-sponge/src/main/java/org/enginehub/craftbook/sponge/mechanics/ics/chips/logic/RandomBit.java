@@ -15,7 +15,7 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.ics.chips.logic;
 
-import org.enginehub.craftbook.core.util.RegexUtil;
+import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.sponge.mechanics.ics.IC;
 import org.enginehub.craftbook.sponge.mechanics.ics.factory.ICFactory;
 import org.spongepowered.api.world.Location;

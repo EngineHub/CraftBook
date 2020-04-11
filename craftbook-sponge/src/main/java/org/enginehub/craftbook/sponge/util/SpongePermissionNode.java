@@ -15,7 +15,7 @@
  */
 package org.enginehub.craftbook.sponge.util;
 
-import org.enginehub.craftbook.core.util.PermissionNode;
+import org.enginehub.craftbook.util.PermissionNode;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.ProviderRegistration;

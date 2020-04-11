@@ -16,8 +16,8 @@
 package org.enginehub.craftbook.sponge;
 
 import com.me4502.modularframework.module.ModuleWrapper;
-import org.enginehub.craftbook.core.util.ConfigValue;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.ConfigValue;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 

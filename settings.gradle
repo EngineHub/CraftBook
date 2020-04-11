@@ -1,3 +1,0 @@
-rootProject.name = 'craftbook'
-
-include 'craftbook-core', 'craftbook-sponge'

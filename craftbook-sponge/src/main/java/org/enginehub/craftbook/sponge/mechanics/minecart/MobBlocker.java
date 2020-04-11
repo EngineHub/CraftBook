@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.sponge.mechanics.minecart;
 
 import com.me4502.modularframework.module.Module;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeMechanic;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;

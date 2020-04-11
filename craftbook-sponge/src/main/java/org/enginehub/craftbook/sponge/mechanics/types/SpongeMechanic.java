@@ -15,8 +15,8 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.types;
 
-import org.enginehub.craftbook.core.Mechanic;
-import org.enginehub.craftbook.core.util.CraftBookException;
+import org.enginehub.craftbook.Mechanic;
+import org.enginehub.craftbook.util.CraftBookException;
 
 public abstract class SpongeMechanic implements Mechanic {
 

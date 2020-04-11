@@ -16,9 +16,8 @@
 package org.enginehub.craftbook.sponge.mechanics.minecart.block;
 
 import com.flowpowered.math.vector.Vector3d;
-import org.enginehub.craftbook.core.util.TernaryState;
+import org.enginehub.craftbook.util.TernaryState;
 import org.enginehub.craftbook.sponge.mechanics.types.SpongeSignMechanic;
-import org.enginehub.craftbook.sponge.util.SpongeBlockFilter;
 import org.enginehub.craftbook.sponge.util.BlockUtil;
 import org.spongepowered.api.entity.vehicle.minecart.Minecart;
 import org.spongepowered.api.event.Listener;

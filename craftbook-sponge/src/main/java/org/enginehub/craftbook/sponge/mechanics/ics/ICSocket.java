@@ -15,17 +15,17 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.ics;
 
-import static org.enginehub.craftbook.core.util.documentation.DocumentationGenerator.createStringOfLength;
-import static org.enginehub.craftbook.core.util.documentation.DocumentationGenerator.padToLength;
+import static org.enginehub.craftbook.util.documentation.DocumentationGenerator.createStringOfLength;
+import static org.enginehub.craftbook.util.documentation.DocumentationGenerator.padToLength;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.me4502.modularframework.module.Module;
 import com.me4502.modularframework.module.guice.ModuleConfiguration;
-import org.enginehub.craftbook.core.util.ConfigValue;
-import org.enginehub.craftbook.core.util.CraftBookException;
-import org.enginehub.craftbook.core.util.documentation.DocumentationGenerator;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
+import org.enginehub.craftbook.util.ConfigValue;
+import org.enginehub.craftbook.util.CraftBookException;
+import org.enginehub.craftbook.util.documentation.DocumentationGenerator;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.mechanics.ics.command.SetDataCommand;
 import org.enginehub.craftbook.sponge.mechanics.ics.command.ShowDataCommand;

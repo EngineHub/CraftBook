@@ -16,10 +16,9 @@
 package org.enginehub.craftbook.sponge.util.report;
 
 import com.me4502.modularframework.module.ModuleWrapper;
-import org.enginehub.craftbook.core.util.ConfigValue;
-import org.enginehub.craftbook.core.util.documentation.DocumentationProvider;
-import org.enginehub.craftbook.core.util.report.LogListBlock;
-import org.enginehub.craftbook.core.util.report.ReportWriter;
+import com.sk89q.worldedit.util.report.DataReport;
+import org.enginehub.craftbook.util.ConfigValue;
+import org.enginehub.craftbook.util.documentation.DocumentationProvider;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.st.SpongeSelfTriggerManager;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -32,7 +31,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SpongeReportWriter extends ReportWriter {
+public class SpongeReportWriter extends DataReport {
+
+    public SpongeReportWriter(String title) {
+        super(title);
+    }
 
     @Override
     public void appendPlatformSections() {

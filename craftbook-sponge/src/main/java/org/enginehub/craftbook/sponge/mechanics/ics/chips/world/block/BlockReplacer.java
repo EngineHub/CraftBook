@@ -15,7 +15,7 @@
  */
 package org.enginehub.craftbook.sponge.mechanics.ics.chips.world.block;
 
-import org.enginehub.craftbook.core.util.RegexUtil;
+import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.sponge.CraftBookPlugin;
 import org.enginehub.craftbook.sponge.mechanics.ics.IC;
 import org.enginehub.craftbook.sponge.mechanics.ics.InvalidICException;
