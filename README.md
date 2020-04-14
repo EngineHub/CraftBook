@@ -1,4 +1,4 @@
-![CraftBook](http://static.sk89q.com/readme/craftbook.png)
+![CraftBook](craftbook-logo.png)
 ===========
 
 CraftBook is a heavily customizable plugin adding exciting new gameplay elements and advanced redstone functions!
@@ -19,7 +19,7 @@ CraftBook is a heavily customizable plugin adding exciting new gameplay elements
 * The ability to bind commands to items, with cool-downs, permissions and timers.
 * And much more!
 
-An extensive list of features is available on [the wiki!](http://wiki.sk89q.com/wiki/CraftBook/Usage)
+An extensive list of features is available on [the docs!](https://craftbook.enginehub.org/en/3.x/mechanics/)
 
 Compiling
 ---------
@@ -29,21 +29,17 @@ See [COMPILING.md](COMPILING.md) for a guide on compiling CraftBook.
 Contributing
 ------------
 
-We happily accept contributions. The best way to do this is to fork CraftBook
-on GitHub, add your changes, and then submit a pull request. We'll look at it,
-make comments, and merge it into CraftBook if everything works out.
+We happily accept contributions, especially through pull requests on GitHub.
+Submissions must be licensed under the GNU Lesser General Public License v3.
 
-In addition, please ensure your code is compliant with the Sun/Oracle Code
-Conventions to keep things neat and readable.
-
-By submitting code, you agree to place to license your code under the 
-irrevocable GNU General Public License v3.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for important guidelines to follow.
 
 Links
 -----
 
-* [Mailing list](https://groups.google.com/d/forum/sk-dev-discuss)
-* [IRC channel](http://skq.me/irc/irc.esper.net/sk89q/) (#sk89q on irc.esper.net)
-* [Issue tracker](http://youtrack.sk89q.com/issues/CRAFTBOOK)
-* [Continuous integration](http://builds.enginehub.org) [![Build Status](https://travis-ci.org/sk89q/CraftBook.svg?branch=master)](https://travis-ci.org/sk89q/CraftBook)
-* [End-user documentation](http://wiki.sk89q.com/wiki/CraftBook)
+* [Visit our website](https://enginehub.org/)
+* [Discord](https://discord.gg/enginehub)
+* [IRC channel](https://webchat.esper.net/?join=sk89q) (#sk89q on irc.esper.net)
+* [Issue tracker](https://github.com/EngineHub/CraftBook/issues)
+* [Continuous integration](http://builds.enginehub.org) [![Build Status](https://ci.enginehub.org/app/rest/builds/buildType:bt6,branch:master/statusIcon.svg)](http://ci.enginehub.org/viewType.html?buildTypeId=bt6&guest=1)
+* [End-user documentation](https://craftbook.enginehub.org/en/3.x/)
