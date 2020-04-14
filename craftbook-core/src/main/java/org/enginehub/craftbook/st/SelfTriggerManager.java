@@ -13,13 +13,43 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
+
 package org.enginehub.craftbook.st;
 
-public interface SelfTriggerManager {
+import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.World;
+import org.enginehub.craftbook.internal.platform.CraftBookPlatform;
 
-    void initialize();
+import java.util.Collection;
+import java.util.HashSet;
 
-    void unload();
+public abstract class SelfTriggerManager {
 
-    void think();
+    private CraftBookPlatform platform;
+
+    private Collection<Location> selfTriggeringMechanics = new HashSet<>();
+
+    public SelfTriggerManager(CraftBookPlatform platform) {
+        this.platform = platform;
+    }
+
+    public void initialize() {
+
+    }
+
+    public void unload() {
+
+    }
+
+    public void think() {
+        if (selfTriggeringMechanics.isEmpty()) {
+            // Fast-fail
+            return;
+        }
+
+        for (Location location : selfTriggeringMechanics) {
+            World world = (World) location.getExtent();
+
+        }
+    }
 }

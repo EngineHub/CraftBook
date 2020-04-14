@@ -13,7 +13,10 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
+
 package org.enginehub.craftbook.internal.platform;
+
+import org.enginehub.craftbook.st.SelfTriggerManager;
 
 /**
  * A platform for implementing.
@@ -43,4 +46,11 @@ public interface CraftBookPlatform {
      * Unload the platform
      */
     void unload();
+
+    /**
+     * Gets this platforms Self Trigger Manager
+     *
+     * @return The self trigger manager
+     */
+    SelfTriggerManager getSelfTriggerManager();
 }

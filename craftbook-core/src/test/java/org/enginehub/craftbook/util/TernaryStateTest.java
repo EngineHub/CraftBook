@@ -13,9 +13,11 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
+
 package org.enginehub.craftbook.util;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -40,25 +42,25 @@ public class TernaryStateTest {
 
     @Test
     public void testParseTrue() {
-        assertTrue(TernaryState.TRUE == TernaryState.getFromString("true"));
-        assertTrue(TernaryState.TRUE == TernaryState.getFromString("yes"));
-        assertTrue(TernaryState.TRUE == TernaryState.getFromString("1"));
-        assertTrue(TernaryState.TRUE == TernaryState.getFromString("y"));
+        assertSame(TernaryState.TRUE, TernaryState.getFromString("true"));
+        assertSame(TernaryState.TRUE, TernaryState.getFromString("yes"));
+        assertSame(TernaryState.TRUE, TernaryState.getFromString("1"));
+        assertSame(TernaryState.TRUE, TernaryState.getFromString("y"));
     }
 
     @Test
     public void testParseFalse() {
-        assertTrue(TernaryState.FALSE == TernaryState.getFromString("false"));
-        assertTrue(TernaryState.FALSE == TernaryState.getFromString("no"));
-        assertTrue(TernaryState.FALSE == TernaryState.getFromString("0"));
-        assertTrue(TernaryState.FALSE == TernaryState.getFromString("n"));
+        assertSame(TernaryState.FALSE, TernaryState.getFromString("false"));
+        assertSame(TernaryState.FALSE, TernaryState.getFromString("no"));
+        assertSame(TernaryState.FALSE, TernaryState.getFromString("0"));
+        assertSame(TernaryState.FALSE, TernaryState.getFromString("n"));
     }
 
     @Test
     public void testParseNone() {
-        assertTrue(TernaryState.NONE == TernaryState.getFromString("none"));
-        assertTrue(TernaryState.NONE == TernaryState.getFromString("unknown"));
-        assertTrue(TernaryState.NONE == TernaryState.getFromString("undefined"));
-        assertTrue(TernaryState.NONE == TernaryState.getFromString("both"));
+        assertSame(TernaryState.NONE, TernaryState.getFromString("none"));
+        assertSame(TernaryState.NONE, TernaryState.getFromString("unknown"));
+        assertSame(TernaryState.NONE, TernaryState.getFromString("undefined"));
+        assertSame(TernaryState.NONE, TernaryState.getFromString("both"));
     }
 }

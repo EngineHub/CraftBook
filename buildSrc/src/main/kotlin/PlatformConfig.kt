@@ -46,8 +46,6 @@ fun Project.applyPlatformAndCoreConfiguration() {
 
     dependencies {
         "testCompile"("junit:junit:${Versions.JUNIT}")
-        "testImplementation"("org.junit.jupiter:junit-jupiter-api:${Versions.JUNIT}")
-        "testRuntime"("org.junit.jupiter:junit-jupiter-engine:${Versions.JUNIT}")
     }
 
     // Java 8 turns on doclint which we fail

@@ -11,6 +11,7 @@
   <allow pkg="junit.framework"/>
   <allow pkg="org.enginehub"/>
   <allow pkg="com.google.common"/>
+  <allow pkg="org.slf4j"/>
 
   <subpackage name="craftbook">
     <allow pkg="org.yaml"/>

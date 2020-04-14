@@ -13,11 +13,13 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
+
 package org.enginehub.craftbook;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.enginehub.craftbook.internal.platform.CraftBookPlatform;
+import org.enginehub.craftbook.mechanic.MechanicManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,7 @@ public final class CraftBook {
     private static String version;
 
     private CraftBookPlatform platform;
+    private final MechanicManager mechanicManager = new MechanicManager();
 
     static {
         getVersion();
@@ -67,6 +70,10 @@ public final class CraftBook {
     public void setPlatform(CraftBookPlatform platform) {
         checkNotNull(platform);
         this.platform = platform;
+    }
+
+    public MechanicManager getMechanicManager() {
+        return this.mechanicManager;
     }
 
     /**

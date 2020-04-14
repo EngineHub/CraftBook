@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
+
 package org.enginehub.craftbook.util;
 
 import java.util.regex.Pattern;
@@ -26,4 +27,7 @@ public final class RegexUtil {
     public static final Pattern PIPE_PATTERN = Pattern.compile("|", Pattern.LITERAL);
     public static final Pattern MINUS_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
+
+    private RegexUtil() {
+    }
 }

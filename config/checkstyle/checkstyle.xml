@@ -6,17 +6,13 @@
   <!-- Tabs are strictly banned -->
   <module name="FileTabCharacter"/>
 
-  <module name="SuppressionFilter">
-    <property name="file" value="${basedir}/config/checkstyle/suppressions.xml"/>
-  </module>
-
   <module name="TreeWalker">
     <!-- Important basics -->
     <!-- <module name="PackageDeclaration"/> Unlikely that we would miss this in a PR -->
     <module name="OuterTypeFilename"/> <!-- TypeName -> TypeName.java -->
 
     <!--
-    Control package usage, so people don't insert Bukkit into WG where it shouldn't belong, etc.
+    Control package usage, so people don't insert Bukkit into CB where it shouldn't belong, etc.
     It is a bit draconian, so update as necessary!
     -->
     <module name="ImportControl">
