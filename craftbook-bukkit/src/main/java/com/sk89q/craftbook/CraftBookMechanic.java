@@ -1,0 +1,53 @@
+/*
+ * CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
+ * CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+package com.sk89q.craftbook;
+
+import org.bukkit.event.Listener;
+
+import com.sk89q.craftbook.util.LoadPriority;
+import com.sk89q.util.yaml.YAMLProcessor;
+
+/**
+ * Represents a CraftBook Mechanic.
+ */
+public interface CraftBookMechanic extends Listener {
+
+    /**
+     * Called when a mechanic should be initialized. This includes creating of any maps, lists or singleton instances.
+     * 
+     * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
+     */
+    boolean enable();
+
+    /**
+     * Called when the mechanic should be disabled. This should make sure all memory is released.
+     */
+    void disable();
+
+    /**
+     * Loads the configuration for this mechanic.
+     * 
+     * @param config The YAMLProcessor for this config.
+     * @param path The path of the parent element.
+     */
+    void loadConfiguration(YAMLProcessor config, String path);
+
+    /**
+     * The priority at which this mechanic should load.
+     */
+    LoadPriority getLoadPriority();
+}

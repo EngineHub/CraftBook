@@ -19,7 +19,7 @@ CraftBook is a heavily customizable plugin adding exciting new gameplay elements
 * The ability to bind commands to items, with cool-downs, permissions and timers.
 * And much more!
 
-An extensive list of features is available on [the docs!](https://craftbook.enginehub.org/en/3.x/mechanics/)
+An extensive list of features is available on [the docs!](https://craftbook.enginehub.org/en/latest/mechanics/)
 
 Compiling
 ---------
@@ -42,4 +42,4 @@ Links
 * [IRC channel](https://webchat.esper.net/?join=sk89q) (#sk89q on irc.esper.net)
 * [Issue tracker](https://github.com/EngineHub/CraftBook/issues)
 * [Continuous integration](http://builds.enginehub.org) [![Build Status](https://ci.enginehub.org/app/rest/builds/buildType:bt6,branch:master/statusIcon.svg)](http://ci.enginehub.org/viewType.html?buildTypeId=bt6&guest=1)
-* [End-user documentation](https://craftbook.enginehub.org/en/3.x/)
+* [End-user documentation](https://craftbook.enginehub.org/en/latest/)

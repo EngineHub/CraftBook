@@ -1,0 +1,43 @@
+/*
+ * CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
+ * CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+package com.sk89q.craftbook.mechanics.pipe;
+
+import java.util.List;
+
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+public class PipeFinishEvent extends PipeEvent {
+
+    private Block origin;
+
+    private boolean request;
+
+    public PipeFinishEvent (Block theBlock, List<ItemStack> items, Block origin, boolean request) {
+        super(theBlock, items);
+        this.origin = origin;
+        this.request = request;
+    }
+
+    public Block getOrigin() {
+        return origin;
+    }
+
+    public boolean isRequest() {
+        return request;
+    }
+}
