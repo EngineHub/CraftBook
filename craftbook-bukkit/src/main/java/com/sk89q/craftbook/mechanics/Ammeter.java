@@ -130,9 +130,9 @@ public class Ammeter extends AbstractCraftBookMechanic {
     private ItemType item;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "item", "Set the item that is the ammeter tool.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.COAL.getId())).getType());
+        config.setComment("item", "Set the item that is the ammeter tool.");
+        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.getId())).getType());
     }
 }

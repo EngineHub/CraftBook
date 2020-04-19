@@ -261,18 +261,18 @@ public class CartDispenser extends CartBlockMechanism {
     private boolean minecartDispenserPropel;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the dispenser mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_ORE.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the dispenser mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true);
 
-        config.setComment(path + "spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
-        minecartDispenserLegacy = config.getBoolean(path + "spawn-infront", false);
+        config.setComment("spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
+        minecartDispenserLegacy = config.getBoolean("spawn-infront", false);
 
-        config.setComment(path + "check-for-carts", "Sets whether or not the mechanic checks for existing carts before spawning a new one.");
-        minecartDispenserAntiSpam = config.getBoolean(path + "check-for-carts", true);
+        config.setComment("check-for-carts", "Sets whether or not the mechanic checks for existing carts before spawning a new one.");
+        minecartDispenserAntiSpam = config.getBoolean("check-for-carts", true);
 
-        config.setComment(path + "propel-cart", "Sets whether or not the dispenser propels carts that it spawns.");
-        minecartDispenserPropel = config.getBoolean(path + "propel-cart", false);
+        config.setComment("propel-cart", "Sets whether or not the dispenser propels carts that it spawns.");
+        minecartDispenserPropel = config.getBoolean("propel-cart", false);
     }
 }

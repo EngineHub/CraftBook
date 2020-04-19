@@ -21,6 +21,8 @@ import org.bukkit.event.Listener;
 import com.sk89q.craftbook.util.LoadPriority;
 import com.sk89q.util.yaml.YAMLProcessor;
 
+import java.io.File;
+
 /**
  * Represents a CraftBook Mechanic.
  */
@@ -39,12 +41,19 @@ public interface CraftBookMechanic extends Listener {
     void disable();
 
     /**
-     * Loads the configuration for this mechanic.
-     * 
-     * @param config The YAMLProcessor for this config.
-     * @param path The path of the parent element.
+     * Load the configuration from file, and delegate
+     * to the value loader.
+     *
+     * @param configFile The configuration file
      */
-    void loadConfiguration(YAMLProcessor config, String path);
+    void loadConfiguration(File configFile);
+
+    /**
+     * Load config values from the given YAMLProcessor.
+     *
+     * @param config The YAMLProcessor for this config.
+     */
+    void loadFromConfiguration(YAMLProcessor config);
 
     /**
      * The priority at which this mechanic should load.

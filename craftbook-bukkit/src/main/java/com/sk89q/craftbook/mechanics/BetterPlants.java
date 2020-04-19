@@ -128,12 +128,12 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     private boolean fastTickRandoms;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
-        fernFarming = config.getBoolean(path + "fern-farming", true);
+        config.setComment("fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
+        fernFarming = config.getBoolean("fern-farming", true);
 
-        config.setComment(path + "fast-random-ticks", "Use a way of generating less random numbers, by only generating it once for all chunks, instead of one each chunk.");
-        fastTickRandoms = config.getBoolean(path + "fast-random-ticks", true);
+        config.setComment("fast-random-ticks", "Use a way of generating less random numbers, by only generating it once for all chunks, instead of one each chunk.");
+        fastTickRandoms = config.getBoolean("fast-random-ticks", true);
     }
 }

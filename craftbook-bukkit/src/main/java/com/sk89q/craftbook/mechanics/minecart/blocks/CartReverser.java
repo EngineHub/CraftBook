@@ -87,9 +87,9 @@ public class CartReverser extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the reverse mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.WHITE_WOOL.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the reverse mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true);
     }
 }

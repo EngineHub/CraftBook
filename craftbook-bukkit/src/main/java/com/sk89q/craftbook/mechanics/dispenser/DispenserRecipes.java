@@ -139,21 +139,21 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private boolean xpShooterEnable;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "cannon-enable", "Enables Cannon Dispenser Recipe.");
-        cannonEnable = config.getBoolean(path + "cannon-enable", true);
+        config.setComment("cannon-enable", "Enables Cannon Dispenser Recipe.");
+        cannonEnable = config.getBoolean("cannon-enable", true);
 
-        config.setComment(path + "fan-enable", "Enables Fan Dispenser Recipe.");
-        fanEnable = config.getBoolean(path + "fan-enable", true);
+        config.setComment("fan-enable", "Enables Fan Dispenser Recipe.");
+        fanEnable = config.getBoolean("fan-enable", true);
 
-        config.setComment(path + "fire-arrows-enable", "Enables Fire Arrows Dispenser Recipe.");
-        fireArrowsEnable = config.getBoolean(path + "fire-arrows-enable", true);
+        config.setComment("fire-arrows-enable", "Enables Fire Arrows Dispenser Recipe.");
+        fireArrowsEnable = config.getBoolean("fire-arrows-enable", true);
 
-        config.setComment(path + "snow-shooter-enable", "Enables Snow Shooter Dispenser Recipe.");
-        snowShooterEnable = config.getBoolean(path + "snow-shooter-enable", true);
+        config.setComment("snow-shooter-enable", "Enables Snow Shooter Dispenser Recipe.");
+        snowShooterEnable = config.getBoolean("snow-shooter-enable", true);
 
-        config.setComment(path + "xp-shooter-enable", "Enables XP Shooter Dispenser Recipe.");
-        xpShooterEnable = config.getBoolean(path + "xp-shooter-enable", true);
+        config.setComment("xp-shooter-enable", "Enables XP Shooter Dispenser Recipe.");
+        xpShooterEnable = config.getBoolean("xp-shooter-enable", true);
     }
 }

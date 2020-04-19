@@ -127,7 +127,7 @@ public class TopLevelCommands {
                 ver = CraftBookPlugin.getVersion();
             }
             sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + ver);
-            sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by Me4502 & Dark_Arc");
+            sender.sendMessage(ChatColor.YELLOW + "Founded by sk89q, and currently developed by Me4502");
         }
 
         @Command(aliases = {"iteminfo", "itemsyntax"}, desc = "Provides item syntax for held item.")

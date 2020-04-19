@@ -161,8 +161,8 @@ public class Driller extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            drillSize = config.getInt(path + "drill-size", 3);
-            maxDrillDepth = config.getInt(path + "max-drill-depth", 256);
+            drillSize = config.getInt("drill-size", 3);
+            maxDrillDepth = config.getInt("max-drill-depth", 256);
         }
 
         @Override

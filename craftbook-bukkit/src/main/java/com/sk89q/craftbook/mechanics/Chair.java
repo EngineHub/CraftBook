@@ -411,31 +411,31 @@ public class Chair extends AbstractCraftBookMechanic {
     private int chairMaxClickRadius;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
-        chairAllowHeldBlock = config.getBoolean(path + "allow-holding-blocks", false);
+        config.setComment("allow-holding-blocks", "Allow players to sit in chairs when holding blocks.");
+        chairAllowHeldBlock = config.getBoolean("allow-holding-blocks", false);
 
-        config.setComment(path + "regen-health", "Regenerate health passively when sitting down.");
-        chairHealth = config.getBoolean(path + "regen-health", true);
+        config.setComment("regen-health", "Regenerate health passively when sitting down.");
+        chairHealth = config.getBoolean("regen-health", true);
 
-        config.setComment(path + "regen-health-amount", "The amount of health regenerated passively. (Can be decimal)");
-        chairHealAmount = config.getDouble(path + "regen-health-amount", 1);
+        config.setComment("regen-health-amount", "The amount of health regenerated passively. (Can be decimal)");
+        chairHealAmount = config.getDouble("regen-health-amount", 1);
 
-        config.setComment(path + "blocks", "A list of blocks that can be sat on.");
+        config.setComment("blocks", "A list of blocks that can be sat on.");
         chairBlocks =
-                BlockSyntax.getBlocks(config.getStringList(path + "blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+                BlockSyntax.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
-        config.setComment(path + "face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
-        chairFacing = config.getBoolean(path + "face-correct-direction", true);
+        config.setComment("face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
+        chairFacing = config.getBoolean("face-correct-direction", true);
 
-        config.setComment(path + "require-sign", "Require a sign to be attached to the chair in order to work!");
-        chairRequireSign = config.getBoolean(path + "require-sign", false);
+        config.setComment("require-sign", "Require a sign to be attached to the chair in order to work!");
+        chairRequireSign = config.getBoolean("require-sign", false);
 
-        config.setComment(path + "max-distance", "The maximum distance between the click point and the sign. (When require sign is on)");
-        chairMaxDistance = config.getInt(path + "max-distance", 3);
+        config.setComment("max-distance", "The maximum distance between the click point and the sign. (When require sign is on)");
+        chairMaxDistance = config.getInt("max-distance", 3);
 
-        config.setComment(path + "max-click-radius", "The maximum distance the player can be from the sign.");
-        chairMaxClickRadius = config.getInt(path + "max-click-radius", 5);
+        config.setComment("max-click-radius", "The maximum distance the player can be from the sign.");
+        chairMaxClickRadius = config.getInt("max-click-radius", 5);
     }
 }

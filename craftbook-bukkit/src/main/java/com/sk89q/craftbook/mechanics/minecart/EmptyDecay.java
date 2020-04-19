@@ -79,9 +79,9 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
     private int delay;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "time-in-ticks", "The time in ticks that the cart will wait before decaying.");
-        delay = config.getInt(path + "time-in-ticks", 20);
+        config.setComment("time-in-ticks", "The time in ticks that the cart will wait before decaying.");
+        delay = config.getInt("time-in-ticks", 20);
     }
 }

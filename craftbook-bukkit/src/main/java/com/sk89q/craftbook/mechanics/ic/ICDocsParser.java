@@ -62,7 +62,7 @@ public class ICDocsParser {
             } else {
                 player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.getWikiDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
+            player.sendMessage(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.getDocsDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }

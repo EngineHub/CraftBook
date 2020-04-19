@@ -16,18 +16,18 @@
 
 package com.me4502.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.logging.Level;
+
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
@@ -144,7 +144,7 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
                         if (aClass != null) {
 
                             CraftBookMechanic me = aClass.newInstance();
-                            me.loadConfiguration(CraftBookPlugin.inst().getMechanismsConfig(), "mechanics." + mech + ".");
+                            me.loadFromConfiguration(CraftBookPlugin.inst().getMechanismsConfig());
                         }
                     } catch (Throwable t) {
                         Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mech, t);

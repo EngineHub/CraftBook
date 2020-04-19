@@ -71,9 +71,9 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     private boolean removeOtherBoats;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "remove-other-boats", "Allows the remove entities boats to remove other boats.");
-        removeOtherBoats = config.getBoolean(path + "remove-other-boats", false);
+        config.setComment("remove-other-boats", "Allows the remove entities boats to remove other boats.");
+        removeOtherBoats = config.getBoolean("remove-other-boats", false);
     }
 }

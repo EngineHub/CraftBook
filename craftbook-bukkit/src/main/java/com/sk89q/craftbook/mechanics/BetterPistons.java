@@ -36,7 +36,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -479,36 +478,36 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "crushers", "Enables BetterPistons Crusher Mechanic.");
-        pistonsCrusher = config.getBoolean(path + "crushers", true);
+        config.setComment("crushers", "Enables BetterPistons Crusher Mechanic.");
+        pistonsCrusher = config.getBoolean("crushers", true);
 
-        config.setComment(path + "crushers-kill-mobs", "Causes crushers to kill mobs as well as break blocks. This includes players.");
-        pistonsCrusherInstaKill = config.getBoolean(path + "crushers-kill-mobs", false);
+        config.setComment("crushers-kill-mobs", "Causes crushers to kill mobs as well as break blocks. This includes players.");
+        pistonsCrusherInstaKill = config.getBoolean("crushers-kill-mobs", false);
 
-        config.setComment(path + "crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
-        pistonsCrusherBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "crusher-blacklist", getDefaultBlacklist()), true);
+        config.setComment("crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
+        pistonsCrusherBlacklist = BlockSyntax.getBlocks(config.getStringList("crusher-blacklist", getDefaultBlacklist()), true);
 
-        config.setComment(path + "super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
-        pistonsSuperSticky = config.getBoolean(path + "super-sticky", true);
+        config.setComment("super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
+        pistonsSuperSticky = config.getBoolean("super-sticky", true);
 
-        config.setComment(path + "super-push", "Enables BetterPistons SuperPush Mechanic.");
-        pistonsSuperPush = config.getBoolean(path + "super-push", true);
+        config.setComment("super-push", "Enables BetterPistons SuperPush Mechanic.");
+        pistonsSuperPush = config.getBoolean("super-push", true);
 
-        config.setComment(path + "movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
-        pistonsMovementBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "movement-blacklist", getDefaultBlacklist()), true);
+        config.setComment("movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
+        pistonsMovementBlacklist = BlockSyntax.getBlocks(config.getStringList("movement-blacklist", getDefaultBlacklist()), true);
 
-        config.setComment(path + "bounce", "Enables BetterPistons Bounce Mechanic.");
-        pistonsBounce = config.getBoolean(path + "bounce", true);
+        config.setComment("bounce", "Enables BetterPistons Bounce Mechanic.");
+        pistonsBounce = config.getBoolean("bounce", true);
 
-        config.setComment(path + "bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
-        pistonsBounceBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "bounce-blacklist", getDefaultBlacklist()), true);
+        config.setComment("bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
+        pistonsBounceBlacklist = BlockSyntax.getBlocks(config.getStringList("bounce-blacklist", getDefaultBlacklist()), true);
 
-        config.setComment(path + "max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
-        pistonMaxDistance = config.getInt(path + "max-distance", 12);
+        config.setComment("max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
+        pistonMaxDistance = config.getInt("max-distance", 12);
 
-        config.setComment(path + "bounce-max-velocity", "The maximum velocity bounce pistons can provide.");
-        pistonBounceMaxVelocity = config.getDouble(path + "bounce-max-velocity", 5.0);
+        config.setComment("bounce-max-velocity", "The maximum velocity bounce pistons can provide.");
+        pistonBounceMaxVelocity = config.getDouble("bounce-max-velocity", 5.0);
     }
 }

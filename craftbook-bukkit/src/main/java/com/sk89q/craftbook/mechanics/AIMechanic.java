@@ -132,15 +132,15 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     private List<String> attackPassiveEnabled;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "vision-enable", "The list of entities to enable vision AI mechanics for.");
-        visionEnabled = config.getStringList(path + "vision-enable", Arrays.asList("Zombie","PigZombie"));
+        config.setComment("vision-enable", "The list of entities to enable vision AI mechanics for.");
+        visionEnabled = config.getStringList("vision-enable", Arrays.asList("Zombie","PigZombie"));
 
-        config.setComment(path + "crit-bow-enable", "The list of entities to enable bow critical AI mechanics for.");
-        critBowEnabled = config.getStringList(path + "crit-bow-enable", Collections.singletonList("Skeleton"));
+        config.setComment("crit-bow-enable", "The list of entities to enable bow critical AI mechanics for.");
+        critBowEnabled = config.getStringList("crit-bow-enable", Collections.singletonList("Skeleton"));
 
-        config.setComment(path + "attack-passive-enable", "The list of entities to enable attack passive AI mechanics for.");
-        attackPassiveEnabled = config.getStringList(path + "attack-passive-enable", Collections.singletonList("Zombie"));
+        config.setComment("attack-passive-enable", "The list of entities to enable attack passive AI mechanics for.");
+        attackPassiveEnabled = config.getStringList("attack-passive-enable", Collections.singletonList("Zombie"));
     }
 }

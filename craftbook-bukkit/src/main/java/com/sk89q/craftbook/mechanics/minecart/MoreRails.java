@@ -97,15 +97,15 @@ public class MoreRails extends AbstractCraftBookMechanic {
     public boolean pressurePlate;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "pressure-plate-intersection", "Enables the pressure plate as an intersection.");
-        pressurePlate = config.getBoolean(path + "pressure-plate-intersection", false);
+        config.setComment("pressure-plate-intersection", "Enables the pressure plate as an intersection.");
+        pressurePlate = config.getBoolean("pressure-plate-intersection", false);
 
-        config.setComment(path + "ladder-vertical-rail", "Enables the ladder as a vertical rail.");
-        ladder = config.getBoolean(path + "ladder-vertical-rail", false);
+        config.setComment("ladder-vertical-rail", "Enables the ladder as a vertical rail.");
+        ladder = config.getBoolean("ladder-vertical-rail", false);
 
-        config.setComment(path + "ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
-        ladderVerticalVelocity = config.getDouble(path + "ladder-vertical-rail-velocity", 0.5D);
+        config.setComment("ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
+        ladderVerticalVelocity = config.getDouble("ladder-vertical-rail-velocity", 0.5D);
     }
 }

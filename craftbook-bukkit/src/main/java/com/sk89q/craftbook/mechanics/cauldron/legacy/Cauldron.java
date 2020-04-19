@@ -314,9 +314,9 @@ public class Cauldron extends AbstractCraftBookMechanic {
     public BlockStateHolder cauldronBlock;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "The block to use as the casing for the legacy cauldron.");
-        cauldronBlock = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.STONE.getId()), true);
+        config.setComment("block", "The block to use as the casing for the legacy cauldron.");
+        cauldronBlock = BlockSyntax.getBlock(config.getString("block", BlockTypes.STONE.getId()), true);
     }
 }

@@ -101,9 +101,9 @@ public class CartTeleporter extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the teleport mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_BLOCK.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the teleport mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true);
     }
 }

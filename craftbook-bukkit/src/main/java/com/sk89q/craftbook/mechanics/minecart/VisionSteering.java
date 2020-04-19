@@ -57,9 +57,9 @@ public class VisionSteering extends AbstractCraftBookMechanic {
     private int minimumSensitivity;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "minimum-sensitivity", "Sets the sensitivity of Vision Steering.");
-        minimumSensitivity = config.getInt(path + "minimum-sensitivity", 3);
+        config.setComment("minimum-sensitivity", "Sets the sensitivity of Vision Steering.");
+        minimumSensitivity = config.getInt("minimum-sensitivity", 3);
     }
 }

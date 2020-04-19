@@ -207,22 +207,22 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private boolean packetMessageOverride;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
-        defaultToGlobal = config.getBoolean(path + "default-to-global", false);
+        config.setComment("default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
+        defaultToGlobal = config.getBoolean("default-to-global", false);
 
-        config.setComment(path + "enable-in-console", "Allows variables to work on the Console.");
-        consoleOverride = config.getBoolean(path + "enable-in-console", false);
+        config.setComment("enable-in-console", "Allows variables to work on the Console.");
+        consoleOverride = config.getBoolean("enable-in-console", false);
 
-        config.setComment(path + "enable-in-player-commands", "Allows variables to work in any command a player performs.");
-        playerCommandOverride = config.getBoolean(path + "enable-in-player-commands", false);
+        config.setComment("enable-in-player-commands", "Allows variables to work in any command a player performs.");
+        playerCommandOverride = config.getBoolean("enable-in-player-commands", false);
 
-        config.setComment(path + "enable-in-player-chat", "Allow variables to work in player chat.");
-        playerChatOverride = config.getBoolean(path + "enable-in-player-chat", false);
+        config.setComment("enable-in-player-chat", "Allow variables to work in player chat.");
+        playerChatOverride = config.getBoolean("enable-in-player-chat", false);
 
-        config.setComment(path + "override-all-text", "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
-        packetMessageOverride = config.getBoolean(path + "override-all-text", false);
+        config.setComment("override-all-text", "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
+        packetMessageOverride = config.getBoolean("override-all-text", false);
     }
 
     @Override

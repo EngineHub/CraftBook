@@ -128,7 +128,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            invert = config.getBoolean(path + "invert-output", false);
+            invert = config.getBoolean("invert-output", false);
         }
     }
 }

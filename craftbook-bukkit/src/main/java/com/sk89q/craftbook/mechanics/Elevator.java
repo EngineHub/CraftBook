@@ -607,24 +607,24 @@ public class Elevator extends AbstractCraftBookMechanic {
 
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
-        elevatorAllowRedstone = config.getBoolean(path + "allow-redstone", false);
+        config.setComment("allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
+        elevatorAllowRedstone = config.getBoolean("allow-redstone", false);
 
-        config.setComment(path + "redstone-player-search-radius", "The radius that elevators will look for players in when triggered by redstone.");
-        elevatorRedstoneRadius = config.getInt(path + "redstone-player-search-radius", 3);
+        config.setComment("redstone-player-search-radius", "The radius that elevators will look for players in when triggered by redstone.");
+        elevatorRedstoneRadius = config.getInt("redstone-player-search-radius", 3);
 
-        config.setComment(path + "enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
-        elevatorButtonEnabled = config.getBoolean(path + "enable-buttons", true);
+        config.setComment("enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
+        elevatorButtonEnabled = config.getBoolean("enable-buttons", true);
 
-        config.setComment(path + "allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
-        elevatorLoop = config.getBoolean(path + "allow-looping", false);
+        config.setComment("allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
+        elevatorLoop = config.getBoolean("allow-looping", false);
 
-        config.setComment(path + "smooth-movement", "Causes the elevator to slowly move the player between floors instead of instantly.");
-        elevatorSlowMove = config.getBoolean(path + "smooth-movement", false);
+        config.setComment("smooth-movement", "Causes the elevator to slowly move the player between floors instead of instantly.");
+        elevatorSlowMove = config.getBoolean("smooth-movement", false);
 
-        config.setComment(path + "smooth-movement-speed", "The speed at which players move from floor to floor when smooth movement is enabled.");
-        elevatorMoveSpeed = config.getDouble(path + "smooth-movement-speed", 0.5);
+        config.setComment("smooth-movement-speed", "The speed at which players move from floor to floor when smooth movement is enabled.");
+        elevatorMoveSpeed = config.getDouble("smooth-movement-speed", 0.5);
     }
 }

@@ -177,8 +177,8 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                if (CraftBookPlugin.inst().getRandom().nextInt(20) == 0) {
-                    if (levelled.getLayers() == levelled.getMinimumLayers() && partialTrample) {
+                if (ThreadLocalRandom.current().nextInt(20) == 0) {
+                    if (partialTrample && levelled.getLayers() == levelled.getMinimumLayers() && toBlock.getRelative(BlockFace.DOWN).getType() != Material.SNOW) {
                         return;
                     }
 
@@ -456,7 +456,7 @@ public class Snow extends AbstractCraftBookMechanic {
                             if (meltPartial) {
                                 org.bukkit.block.data.type.Snow snowBlock = (org.bukkit.block.data.type.Snow) block.getBlockData();
                                 if (snowBlock.getLayers() == snowBlock.getMinimumLayers()
-                                        || block.getRelative(BlockFace.DOWN).getType() == Material.SNOW) {
+                                        && block.getRelative(BlockFace.DOWN).getType() != Material.SNOW) {
                                     continue;
                                 }
                             }
@@ -495,48 +495,48 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "piling", "Enables the piling feature of the Snow mechanic.");
-        snowPiling = config.getBoolean(path + "piling", false);
+        config.setComment("piling", "Enables the piling feature of the Snow mechanic.");
+        snowPiling = config.getBoolean("piling", false);
 
-        config.setComment(path + "trample", "Enables the trampling feature of the Snow mechanic.");
-        trample = config.getBoolean(path + "trample", false);
+        config.setComment("trample", "Enables the trampling feature of the Snow mechanic.");
+        trample = config.getBoolean("trample", false);
 
-        config.setComment(path + "partial-trample-only", "If trampling is enabled, only trample it down to the smallest snow.");
-        partialTrample = config.getBoolean(path + "partial-trample-only", false);
+        config.setComment("partial-trample-only", "If trampling is enabled, only trample it down to the smallest snow.");
+        partialTrample = config.getBoolean("partial-trample-only", false);
 
-        config.setComment(path + "jump-trample", "Require jumping to trample snow.");
-        jumpTrample = config.getBoolean(path + "jump-trample", false);
+        config.setComment("jump-trample", "Require jumping to trample snow.");
+        jumpTrample = config.getBoolean("jump-trample", false);
 
-        config.setComment(path + "place", "Allow snowballs to create snow when they land.");
-        snowballPlacement = config.getBoolean(path + "place", false);
+        config.setComment("place", "Allow snowballs to create snow when they land.");
+        snowballPlacement = config.getBoolean("place", false);
 
-        config.setComment(path + "slowdown", "Slows down entities as they walk through thick snow.");
-        slowdown = config.getBoolean(path + "slowdown", false);
+        config.setComment("slowdown", "Slows down entities as they walk through thick snow.");
+        slowdown = config.getBoolean("slowdown", false);
 
-        config.setComment(path + "realistic", "Realistically move snow around, creating an 'avalanche' or 'mound' effect.");
-        dispersionMode = config.getBoolean(path + "realistic", false);
+        config.setComment("realistic", "Realistically move snow around, creating an 'avalanche' or 'mound' effect.");
+        dispersionMode = config.getBoolean("realistic", false);
 
-        config.setComment(path + "high-piling", "Allow piling above the 1 block height.");
-        pileHigh = config.getBoolean(path + "high-piling", false);
+        config.setComment("high-piling", "Allow piling above the 1 block height.");
+        pileHigh = config.getBoolean("high-piling", false);
 
-        config.setComment(path + "max-pile-height", "The maximum piling height of high piling snow.");
-        maxPileHeight = config.getInt(path + "max-pile-height", 3);
+        config.setComment("max-pile-height", "The maximum piling height of high piling snow.");
+        maxPileHeight = config.getInt("max-pile-height", 3);
 
-        config.setComment(path + "replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
-        realisticReplacables = BlockSyntax.getBlocks(config.getStringList(path + "replacable-blocks", getDefaultReplacables()), true);
+        config.setComment("replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
+        realisticReplacables = BlockSyntax.getBlocks(config.getStringList("replacable-blocks", getDefaultReplacables()), true);
 
-        config.setComment(path + "dispersion-tick-speed", "The speed at which dispersion actions are run");
-        dispersionTickSpeed = config.getInt(path + "dispersion-tick-speed", 20);
+        config.setComment("dispersion-tick-speed", "The speed at which dispersion actions are run");
+        dispersionTickSpeed = config.getInt("dispersion-tick-speed", 20);
 
-        config.setComment(path + "freeze-water", "Should snow freeze water?");
-        freezeWater = config.getBoolean(path + "freeze-water", false);
+        config.setComment("freeze-water", "Should snow freeze water?");
+        freezeWater = config.getBoolean("freeze-water", false);
 
-        config.setComment(path + "melt-in-sunlight", "Enables snow to melt in sunlight.");
-        meltSunlight = config.getBoolean(path + "melt-in-sunlight", false);
+        config.setComment("melt-in-sunlight", "Enables snow to melt in sunlight.");
+        meltSunlight = config.getBoolean("melt-in-sunlight", false);
 
-        config.setComment(path + "partial-melt-only", "If melt in sunlight is enabled, only melt it down to the smallest snow.");
-        meltPartial = config.getBoolean(path + "partial-melt-only", false);
+        config.setComment("partial-melt-only", "If melt in sunlight is enabled, only melt it down to the smallest snow.");
+        meltPartial = config.getBoolean("partial-melt-only", false);
     }
 }

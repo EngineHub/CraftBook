@@ -185,8 +185,8 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            config.setComment(path + "per-player", "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
-            requirename = config.getBoolean(path + "per-player", false);
+            config.setComment("per-player", "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
+            requirename = config.getBoolean("per-player", false);
         }
     }
 

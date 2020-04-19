@@ -52,23 +52,23 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     private Map<BaseBlock, Vector> autoBouncers = new HashMap<>();
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "blocks", "A list of blocks that can be jumped on.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
+        config.setComment("blocks", "A list of blocks that can be jumped on.");
+        blocks = BlockSyntax.getBlocks(config.getStringList("blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
 
-        config.setComment(path + "sensitivity", "The sensitivity of jumping.");
-        sensitivity = config.getDouble(path + "sensitivity", 0.1);
+        config.setComment("sensitivity", "The sensitivity of jumping.");
+        sensitivity = config.getDouble("sensitivity", 0.1);
 
-        if(config.getKeys(path + "auto-blocks") == null)
-            config.addNode(path + "auto-blocks");
+        if(config.getKeys("auto-blocks") == null)
+            config.addNode("auto-blocks");
 
-        config.setComment(path + "auto-blocks", "Blocks that automatically apply forces when jumped on.");
-        for(String key : config.getKeys(path + "auto-blocks")) {
+        config.setComment("auto-blocks", "Blocks that automatically apply forces when jumped on.");
+        for(String key : config.getKeys("auto-blocks")) {
 
             double x = 0,y = 0,z = 0;
 
-            String[] bits = RegexUtil.COMMA_PATTERN.split(config.getString(path + "auto-blocks." + key));
+            String[] bits = RegexUtil.COMMA_PATTERN.split(config.getString("auto-blocks." + key));
             if (bits.length == 0) {
                 y = 0.5;
             } else if (bits.length == 1) {

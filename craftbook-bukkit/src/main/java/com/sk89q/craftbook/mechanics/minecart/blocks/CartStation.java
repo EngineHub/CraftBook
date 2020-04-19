@@ -150,9 +150,9 @@ public class CartStation extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the station mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.OBSIDIAN.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the station mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true);
     }
 }

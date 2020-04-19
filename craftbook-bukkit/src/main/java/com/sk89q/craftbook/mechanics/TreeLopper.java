@@ -191,33 +191,33 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean leavesDamageAxe;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
-        enabledBlocks = BlockSyntax.getBlocks(config.getStringList(path + "block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+        config.setComment("block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
+        enabledBlocks = BlockSyntax.getBlocks(config.getStringList("block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
-        config.setComment(path + "tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = config.getStringList(path + "tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
+        config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
+        enabledItems = config.getStringList("tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
                 ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId()))
                 .stream().map(ItemSyntax::getItem).map(ItemStack::getType).map(BukkitAdapter::asItemType).collect(Collectors.toList());
 
-        config.setComment(path + "max-size", "The maximum amount of blocks the TreeLopper can break.");
-        maxSearchSize = config.getInt(path + "max-size", 30);
+        config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
+        maxSearchSize = config.getInt("max-size", 30);
 
-        config.setComment(path + "allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
-        allowDiagonals = config.getBoolean(path + "allow-diagonals", false);
+        config.setComment("allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
+        allowDiagonals = config.getBoolean("allow-diagonals", false);
 
-        config.setComment(path + "place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
-        placeSaplings = config.getBoolean(path + "place-saplings", false);
+        config.setComment("place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
+        placeSaplings = config.getBoolean("place-saplings", false);
 
-        config.setComment(path + "break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
-        breakLeaves = config.getBoolean(path + "break-leaves", false);
+        config.setComment("break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
+        breakLeaves = config.getBoolean("break-leaves", false);
 
-        config.setComment(path + "single-damage-axe", "Only remove one damage from the axe, regardless of the amount of logs removed.");
-        singleDamageAxe = config.getBoolean(path + "single-damage-axe", false);
+        config.setComment("leaves-damage-axe", "Whether the leaves will also damage the axe when single-damage-axe is false and break-leaves is true.");
+        leavesDamageAxe = config.getBoolean("leaves-damage-axe", true);
 
-        config.setComment(path + "leaves-damage-axe", "Whether the leaves will also damage the axe when single-damage-axe is false and break-leaves is true.");
-        leavesDamageAxe = config.getBoolean(path + "leaves-damage-axe", true);
+        config.setComment("single-damage-axe", "Only remove one damage from the axe, regardless of the amount of logs removed.");
+        singleDamageAxe = config.getBoolean("single-damage-axe", false);
     }
 
     private static class SaplingPlanter implements Runnable {

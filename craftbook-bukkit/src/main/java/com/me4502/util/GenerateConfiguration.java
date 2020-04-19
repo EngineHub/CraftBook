@@ -59,42 +59,22 @@ public class GenerateConfiguration extends ExternalUtilityBase {
         BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(file, true, YAMLFormat.EXTENDED), Bukkit.getLogger());
         config.load();
 
-        file = new File(getGenerationFolder(), "mechanisms.yml");
-        if(!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            file.delete();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        File mechanicsFolder = new File(getGenerationFolder(), "mechanics");
+        if (mechanicsFolder.exists()) {
+            mechanicsFolder.delete();
         }
-
-        YAMLProcessor proc = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);
-
-        try {
-            proc.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mechanicsFolder.mkdirs();
 
         List<String> mechs = new ArrayList<>(CraftBookPlugin.availableMechanics.keySet());
 
         Collections.sort(mechs);
 
         for(String enabled : mechs) {
-
             Class<? extends CraftBookMechanic> mechClass = CraftBookPlugin.availableMechanics.get(enabled);
             try {
                 if(mechClass != null) {
-
                     CraftBookMechanic mech = mechClass.newInstance();
-                    mech.loadConfiguration(proc, "mechanics." + enabled + ".");
+                    mech.loadConfiguration(new File(mechanicsFolder, enabled + ".yml"));
                 }
             } catch (Throwable t) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
@@ -102,7 +82,5 @@ public class GenerateConfiguration extends ExternalUtilityBase {
         }
 
         Bukkit.getLogger().info("Created config files!");
-
-        proc.save();
     }
 }

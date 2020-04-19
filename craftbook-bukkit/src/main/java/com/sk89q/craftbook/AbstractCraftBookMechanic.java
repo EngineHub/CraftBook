@@ -16,7 +16,14 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.LoadPriority;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Comparable<LoadPriority> {
 
@@ -27,18 +34,46 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Co
 
     @Override
     public void disable() {
+    }
 
+    @Override
+    public void loadConfiguration(File configFile) {
+        YAMLProcessor mechanicConfig = new YAMLProcessor(configFile, true, YAMLFormat.EXTENDED);
+
+        try {
+            mechanicConfig.load();
+        } catch (FileNotFoundException e) {
+            // Ignore this one.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mechanicConfig.setWriteDefaults(true);
+
+        String mechName = configFile.getName().substring(0, configFile.getName().length() - 4);
+
+        mechanicConfig.setHeader(
+                "# CraftBook " + mechName + " Configuration",
+                "# -- Generated for version: " + CraftBookPlugin.getVersion(),
+                "# ",
+                "# More information about these features are available at...",
+                "# " + CraftBookPlugin.getDocsDomain(),
+                "#",
+                "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
+                "");
+
+        loadFromConfiguration(mechanicConfig);
+
+        mechanicConfig.save();
     }
 
     @Override
     public LoadPriority getLoadPriority() {
-
         return LoadPriority.STANDARD;
     }
 
     @Override
     public int compareTo(LoadPriority compare) {
-
         return compare.index < getLoadPriority().index ? -1 : 1;
     }
 }

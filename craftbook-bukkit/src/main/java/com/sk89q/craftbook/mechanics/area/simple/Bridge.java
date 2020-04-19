@@ -341,20 +341,20 @@ public class Bridge extends CuboidToggleMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
-        super.loadConfiguration(config, path);
+    public void loadFromConfiguration(YAMLProcessor config) {
+        super.loadFromConfiguration(config);
 
-        config.setComment(path + "allow-redstone", "Enable bridges via redstone.");
-        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Enable bridges via redstone.");
+        allowRedstone = config.getBoolean("allow-redstone", true);
 
-        config.setComment(path + "max-length", "Max length of a bridge.");
-        maxLength = config.getInt(path + "max-length", 30);
+        config.setComment("max-length", "Max length of a bridge.");
+        maxLength = config.getInt("max-length", 30);
 
-        config.setComment(path + "max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side.");
-        maxWidth = config.getInt(path + "max-width", 5);
+        config.setComment("max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side.");
+        maxWidth = config.getInt("max-width", 5);
 
-        config.setComment(path + "blocks", "Blocks bridges can use.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks",
+        config.setComment("blocks", "Blocks bridges can use.");
+        blocks = BlockSyntax.getBlocks(config.getStringList("blocks",
                 getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }

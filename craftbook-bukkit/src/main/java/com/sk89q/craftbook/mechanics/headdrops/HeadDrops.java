@@ -329,46 +329,46 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     private List<String> ignoredNames;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
-        enableMobs = config.getBoolean(path + "drop-mob-heads", true);
+        config.setComment("drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
+        enableMobs = config.getBoolean("drop-mob-heads", true);
 
-        config.setComment(path + "drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
-        enablePlayers = config.getBoolean(path + "drop-player-heads", true);
+        config.setComment("drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
+        enablePlayers = config.getBoolean("drop-player-heads", true);
 
-        config.setComment(path + "require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
-        playerKillsOnly = config.getBoolean(path + "require-player-killed", true);
+        config.setComment("require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
+        playerKillsOnly = config.getBoolean("require-player-killed", true);
 
-        config.setComment(path + "drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
-        miningDrops = config.getBoolean(path + "drop-head-when-mined", true);
+        config.setComment("drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
+        miningDrops = config.getBoolean("drop-head-when-mined", true);
 
-        config.setComment(path + "override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
-        overrideNatural = config.getBoolean(path + "override-natural-head-drops", false);
+        config.setComment("override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
+        overrideNatural = config.getBoolean("override-natural-head-drops", false);
 
-        config.setComment(path + "drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
-        dropRate = config.getDouble(path + "drop-rate", 0.05);
+        config.setComment("drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
+        dropRate = config.getDouble("drop-rate", 0.05);
 
-        config.setComment(path + "looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
-        rateModifier = config.getDouble(path + "looting-rate-modifier", 0.05);
+        config.setComment("looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
+        rateModifier = config.getDouble("looting-rate-modifier", 0.05);
 
-        config.setComment(path + "show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
-        showNameClick = config.getBoolean(path + "show-name-right-click", true);
+        config.setComment("show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
+        showNameClick = config.getBoolean("show-name-right-click", true);
 
         customDropRates = new HashMap<>();
-        if(config.getKeys(path + "drop-rates") != null) {
-            for(String key : config.getKeys(path + "drop-rates"))
-                customDropRates.put(key.toUpperCase(), config.getDouble(path + "drop-rates." + key));
+        if(config.getKeys("drop-rates") != null) {
+            for(String key : config.getKeys("drop-rates"))
+                customDropRates.put(key.toUpperCase(), config.getDouble("drop-rates." + key));
         } else
-            config.addNode(path + "drop-rates");
+            config.addNode("drop-rates");
         customSkins = new HashMap<>();
-        if(config.getKeys(path + "custom-mob-skins") != null) {
-            for(String key : config.getKeys(path + "custom-mob-skins"))
-                customSkins.put(key.toUpperCase(), config.getString(path + "custom-mob-skins." + key));
+        if(config.getKeys("custom-mob-skins") != null) {
+            for(String key : config.getKeys("custom-mob-skins"))
+                customSkins.put(key.toUpperCase(), config.getString("custom-mob-skins." + key));
         } else
-            config.addNode(path + "custom-mob-skins");
+            config.addNode("custom-mob-skins");
 
-        config.setComment(path + "ignored-names", "List of usernames to ignore when the head is touched.");
-        ignoredNames = config.getStringList(path + "ignored-names", Lists.newArrayList("cscorelib"));
+        config.setComment("ignored-names", "List of usernames to ignore when the head is touched.");
+        ignoredNames = config.getStringList("ignored-names", Lists.newArrayList("cscorelib"));
     }
 }

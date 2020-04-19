@@ -204,9 +204,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     private boolean anyside;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "any-side", "Allows the Hidden Switch to be activated from any side of the block.");
-        anyside = config.getBoolean(path + "any-side", true);
+        config.setComment("any-side", "Allows the Hidden Switch to be activated from any side of the block.");
+        anyside = config.getBoolean("any-side", true);
     }
 }

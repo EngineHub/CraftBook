@@ -355,28 +355,28 @@ public class CookingPot extends AbstractCraftBookMechanic {
     private boolean cookingPotHeating;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-redstone", "Allows for redstone to be used as a fuel source.");
-        cookingPotAllowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Allows for redstone to be used as a fuel source.");
+        cookingPotAllowRedstone = config.getBoolean("allow-redstone", true);
 
-        config.setComment(path + "require-fuel", "Require fuel to cook.");
-        cookingPotFuel = config.getBoolean(path + "require-fuel", true);
+        config.setComment("require-fuel", "Require fuel to cook.");
+        cookingPotFuel = config.getBoolean("require-fuel", true);
 
-        config.setComment(path + "cook-ores", "Allows the cooking pot to cook ores and other smeltable items.");
-        cookingPotOres = config.getBoolean(path + "cook-ores", false);
+        config.setComment("cook-ores", "Allows the cooking pot to cook ores and other smeltable items.");
+        cookingPotOres = config.getBoolean("cook-ores", false);
 
-        config.setComment(path + "sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
-        cookingPotSignOpen = config.getBoolean(path + "sign-click-open", true);
+        config.setComment("sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
+        cookingPotSignOpen = config.getBoolean("sign-click-open", true);
 
-        config.setComment(path + "take-buckets", "When enabled, lava buckets being used as fuel will consume the bucket.");
-        cookingPotDestroyBuckets = config.getBoolean(path + "take-buckets", false);
+        config.setComment("take-buckets", "When enabled, lava buckets being used as fuel will consume the bucket.");
+        cookingPotDestroyBuckets = config.getBoolean("take-buckets", false);
 
-        config.setComment(path + "super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
-        cookingPotSuperFast = config.getBoolean(path + "super-fast-cooking", false);
+        config.setComment("super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
+        cookingPotSuperFast = config.getBoolean("super-fast-cooking", false);
 
-        cookingPotHeating = config.getBoolean(path + "heating", false);
+        cookingPotHeating = config.getBoolean("heating", false);
 
-        cookingPotChunkLimit = config.getBoolean(path + "chunk-limit", false);
+        cookingPotChunkLimit = config.getBoolean("chunk-limit", false);
     }
 }

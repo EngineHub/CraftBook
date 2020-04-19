@@ -45,7 +45,7 @@ public class RailPlacer extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
     }
 }

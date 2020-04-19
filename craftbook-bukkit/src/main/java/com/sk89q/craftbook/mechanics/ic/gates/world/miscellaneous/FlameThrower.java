@@ -165,8 +165,8 @@ public class FlameThrower extends AbstractIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            config.setComment(path + "max-fire-range", "The maximum range the Flamethrower IC can be set to.");
-            maxRange = config.getInt(path + "max-fire-range", 20);
+            config.setComment("max-fire-range", "The maximum range the Flamethrower IC can be set to.");
+            maxRange = config.getInt("max-fire-range", 20);
         }
     }
 }

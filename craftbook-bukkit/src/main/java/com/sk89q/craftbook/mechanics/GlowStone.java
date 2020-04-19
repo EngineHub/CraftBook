@@ -86,9 +86,9 @@ public class GlowStone extends AbstractCraftBookMechanic {
     private BlockStateHolder offBlock;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
-        offBlock = BlockSyntax.getBlock(config.getString(path + "glowstone-off-block", BlockTypes.GLASS.getId()), true);
+        config.setComment("glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
+        offBlock = BlockSyntax.getBlock(config.getString("glowstone-off-block", BlockTypes.GLASS.getId()), true);
     }
 }

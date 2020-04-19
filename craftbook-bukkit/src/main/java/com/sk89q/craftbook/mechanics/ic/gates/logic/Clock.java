@@ -174,7 +174,7 @@ public class Clock extends AbstractSelfTriggeredIC {
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            inverted = config.getBoolean(path + "inverted", false);
+            inverted = config.getBoolean("inverted", false);
         }
     }
 }

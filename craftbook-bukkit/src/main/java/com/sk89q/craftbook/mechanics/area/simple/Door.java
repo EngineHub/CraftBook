@@ -365,20 +365,20 @@ public class Door extends CuboidToggleMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
-        super.loadConfiguration(config, path);
+    public void loadFromConfiguration(YAMLProcessor config) {
+        super.loadFromConfiguration(config);
 
-        config.setComment(path + "allow-redstone", "Allow doors to be toggled via redstone.");
-        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Allow doors to be toggled via redstone.");
+        allowRedstone = config.getBoolean("allow-redstone", true);
 
-        config.setComment(path + "max-length", "The maximum length(height) of a door.");
-        maxLength = config.getInt(path + "max-length", 30);
+        config.setComment("max-length", "The maximum length(height) of a door.");
+        maxLength = config.getInt("max-length", 30);
 
-        config.setComment(path + "max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side");
-        maxWidth = config.getInt(path + "max-width", 5);
+        config.setComment("max-width", "Max width either side. 5 = 11, 1 in middle, 5 on either side");
+        maxWidth = config.getInt("max-width", 5);
 
-        config.setComment(path + "blocks", "A list of blocks that a door can be made out of.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks",
+        config.setComment("blocks", "A list of blocks that a door can be made out of.");
+        blocks = BlockSyntax.getBlocks(config.getStringList("blocks",
                 getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }

@@ -52,12 +52,12 @@ public class ConstantSpeed extends AbstractCraftBookMechanic {
     private boolean ignorePoweredRail;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "speed", "Sets the speed to move at constantly.");
-        speed = config.getDouble(path + "speed", 0.5);
+        config.setComment("speed", "Sets the speed to move at constantly.");
+        speed = config.getDouble("speed", 0.5);
 
-        config.setComment(path + "ignore-powered-rail", "Whether or not powered rails should be ignored.");
-        ignorePoweredRail = config.getBoolean(path + "ignore-powered-rail", false);
+        config.setComment("ignore-powered-rail", "Whether or not powered rails should be ignored.");
+        ignorePoweredRail = config.getBoolean("ignore-powered-rail", false);
     }
 }

@@ -426,12 +426,12 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     private boolean removeVanillaDrops;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "require-permissions", "Require a permission node to get custom drops.");
-        customDropPermissions = config.getBoolean(path + "require-permissions", false);
+        config.setComment("require-permissions", "Require a permission node to get custom drops.");
+        customDropPermissions = config.getBoolean("require-permissions", false);
 
-        config.setComment(path + "remove-vanilla-drops", "Remove all vanilla drops.");
-        removeVanillaDrops = config.getBoolean(path + "remove-vanilla-drops", false);
+        config.setComment("remove-vanilla-drops", "Remove all vanilla drops.");
+        removeVanillaDrops = config.getBoolean("remove-vanilla-drops", false);
     }
 }

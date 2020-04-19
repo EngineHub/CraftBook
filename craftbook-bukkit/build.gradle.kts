@@ -62,6 +62,8 @@ tasks.named<Copy>("processResources") {
     }
 }
 
+addJarManifest();
+
 tasks.named<Jar>("jar") {
     manifest {
         attributes("Implementation-Version" to project.version)

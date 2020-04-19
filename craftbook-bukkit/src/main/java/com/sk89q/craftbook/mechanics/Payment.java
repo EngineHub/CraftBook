@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook.mechanics;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -140,7 +139,7 @@ public class Payment extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
     }
 }

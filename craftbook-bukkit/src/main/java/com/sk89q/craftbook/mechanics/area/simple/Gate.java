@@ -716,27 +716,27 @@ public class Gate extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-redstone", "Allows the gate mechanic to be toggled via redstone.");
-        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Allows the gate mechanic to be toggled via redstone.");
+        allowRedstone = config.getBoolean("allow-redstone", true);
 
-        config.setComment(path + "limit-columns", "Limit the amount of columns a gate can toggle.");
-        limitColumns = config.getBoolean(path + "limit-columns", true);
+        config.setComment("limit-columns", "Limit the amount of columns a gate can toggle.");
+        limitColumns = config.getBoolean("limit-columns", true);
 
-        config.setComment(path + "max-columns", "If limit-columns is enabled, the maximum number of columns that a gate can toggle.");
-        columnLimit = config.getInt(path + "max-columns", 14);
+        config.setComment("max-columns", "If limit-columns is enabled, the maximum number of columns that a gate can toggle.");
+        columnLimit = config.getInt("max-columns", 14);
 
-        config.setComment(path + "blocks", "The list of blocks that a gate can use.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", getDefaultBlocks()), true);
+        config.setComment("blocks", "The list of blocks that a gate can use.");
+        blocks = BlockSyntax.getBlocks(config.getStringList("blocks", getDefaultBlocks()), true);
 
-        config.setComment(path + "enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
-        enforceType = config.getBoolean(path + "enforce-type", true);
+        config.setComment("enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
+        enforceType = config.getBoolean("enforce-type", true);
 
-        config.setComment(path + "max-column-height", "The max height of a column.");
-        columnHeight = config.getInt(path + "max-column-height", 12);
+        config.setComment("max-column-height", "The max height of a column.");
+        columnHeight = config.getInt("max-column-height", 12);
 
-        config.setComment(path + "gate-search-radius", "The radius around the sign the gate checks for fences in. Note: This is doubled upwards.");
-        searchRadius = config.getInt(path + "gate-search-radius", 3);
+        config.setComment("gate-search-radius", "The radius around the sign the gate checks for fences in. Note: This is doubled upwards.");
+        searchRadius = config.getInt("gate-search-radius", 3);
     }
 }

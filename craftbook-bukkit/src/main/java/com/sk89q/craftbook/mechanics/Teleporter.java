@@ -261,12 +261,12 @@ public class Teleporter extends AbstractCraftBookMechanic {
     private int maxRange;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "require-sign", "Require a sign to be at the destination of the teleportation.");
-        requireSign = config.getBoolean(path + "require-sign", false);
+        config.setComment("require-sign", "Require a sign to be at the destination of the teleportation.");
+        requireSign = config.getBoolean("require-sign", false);
 
-        config.setComment(path + "max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
-        maxRange = config.getInt(path + "max-range", 0);
+        config.setComment("max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
+        maxRange = config.getInt("max-range", 0);
     }
 }

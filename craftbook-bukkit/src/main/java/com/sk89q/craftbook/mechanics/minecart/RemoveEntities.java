@@ -77,15 +77,15 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     private boolean players;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
-        otherCarts = config.getBoolean(path + "remove-other-minecarts", false);
+        config.setComment("remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
+        otherCarts = config.getBoolean("remove-other-minecarts", false);
 
-        config.setComment(path + "allow-empty-carts", "Allows the cart to be empty.");
-        empty = config.getBoolean(path + "allow-empty-carts", false);
+        config.setComment("allow-empty-carts", "Allows the cart to be empty.");
+        empty = config.getBoolean("allow-empty-carts", false);
 
-        config.setComment(path + "damage-players", "Allows the cart to damage and kill players.");
-        players = config.getBoolean(path + "damage-players", true);
+        config.setComment("damage-players", "Allows the cart to damage and kill players.");
+        players = config.getBoolean("damage-players", true);
     }
 }

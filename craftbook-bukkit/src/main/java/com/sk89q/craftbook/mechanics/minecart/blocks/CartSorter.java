@@ -245,9 +245,9 @@ public class CartSorter extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the sorter mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHERRACK.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the sorter mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.NETHERRACK.getId()), true);
     }
 }

@@ -44,12 +44,12 @@ public class NoCollide extends AbstractCraftBookMechanic {
     private boolean full;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "empty-carts", "Enable No Collide for empty carts.");
-        empty = config.getBoolean(path + "empty-carts", true);
+        config.setComment("empty-carts", "Enable No Collide for empty carts.");
+        empty = config.getBoolean("empty-carts", true);
 
-        config.setComment(path + "full-carts", "Enable No Collide for occupied carts.");
-        full = config.getBoolean(path + "full-carts", false);
+        config.setComment("full-carts", "Enable No Collide for occupied carts.");
+        full = config.getBoolean("full-carts", false);
     }
 }

@@ -53,7 +53,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -562,36 +561,36 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public boolean disableSelfTriggered;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
-        cache = config.getBoolean(path + "cache", true);
+        config.setComment("cache", "Saves many CPU cycles with a VERY small cost to memory (Highly Recommended)");
+        cache = config.getBoolean("cache", true);
 
-        config.setComment(path + "max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
-        maxRange = config.getDouble(path + "max-radius", 10);
+        config.setComment("max-radius", "The max radius IC's with a radius setting can use. (WILL cause lag at higher values)");
+        maxRange = config.getDouble("max-radius", 10);
 
-        config.setComment(path + "allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
-        shortHand = config.getBoolean(path + "allow-short-hand", true);
+        config.setComment("allow-short-hand", "Allows the usage of IC Shorthand, which is an easier way to create ICs.");
+        shortHand = config.getBoolean("allow-short-hand", true);
 
-        config.setComment(path + "keep-loaded", "Keep any chunk with an ST IC in it loaded.");
-        keepLoaded = config.getBoolean(path + "keep-loaded", false);
+        config.setComment("keep-loaded", "Keep any chunk with an ST IC in it loaded.");
+        keepLoaded = config.getBoolean("keep-loaded", false);
 
-        config.setComment(path + "disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
-        disabledICs = config.getStringList(path + "disallowed-ics", new ArrayList<>());
+        config.setComment("disallowed-ics", "A list of IC's which are never loaded. They will not work or show up in /ic list.");
+        disabledICs = config.getStringList("disallowed-ics", new ArrayList<>());
 
-        config.setComment(path + "default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
-        defaultCoordinates = LocationCheckType.getTypeFromName(config.getString(path + "default-coordinate-system", "RELATIVE"));
+        config.setComment("default-coordinate-system", "The default coordinate system for ICs. This changes the way IC offsets work. From RELATIVE, OFFSET and ABSOLUTE.");
+        defaultCoordinates = LocationCheckType.getTypeFromName(config.getString("default-coordinate-system", "RELATIVE"));
 
-        config.setComment(path + "save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
-        savePersistentData = config.getBoolean(path + "save-persistent-data", true);
+        config.setComment("save-persistent-data", "Saves extra data to the CraftBook folder that allows some ICs to work better on server restart.");
+        savePersistentData = config.getBoolean("save-persistent-data", true);
 
-        config.setComment(path + "midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
-        usePercussionMidi = config.getBoolean(path + "midi-use-percussion", false);
+        config.setComment("midi-use-percussion", "Plays the MIDI percussion channel when using a MIDI playing IC. Note: This may sound horrible on some songs.");
+        usePercussionMidi = config.getBoolean("midi-use-percussion", false);
 
-        config.setComment(path + "break-on-error", "Break the IC sign when an error occurs from that specific IC.");
-        breakOnError = config.getBoolean(path + "break-on-error", false);
+        config.setComment("break-on-error", "Break the IC sign when an error occurs from that specific IC.");
+        breakOnError = config.getBoolean("break-on-error", false);
         
-        config.setComment(path + "disable-self-triggered", "Disable creation and checking of self-triggered ICs.");
-        disableSelfTriggered = config.getBoolean(path + "disable-self-triggered", false);
+        config.setComment("disable-self-triggered", "Disable creation and checking of self-triggered ICs.");
+        disableSelfTriggered = config.getBoolean("disable-self-triggered", false);
     }
 }

@@ -315,8 +315,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     protected boolean enforceType;
 
     @Override
-    public void loadConfiguration(YAMLProcessor config, String path) {
-        config.setComment(path + "enforce-type", "Allow doors to be toggled via redstone.");
-        enforceType = config.getBoolean(path + "enforce-type", true);
+    public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("enforce-type", "Allow doors to be toggled via redstone.");
+        enforceType = config.getBoolean("enforce-type", true);
     }
 }

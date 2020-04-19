@@ -119,12 +119,12 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     private boolean checkChunks;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "enable-redstone", "Enable toggling with redstone.");
-        allowRedstone = config.getBoolean(path + "enable-redstone", true);
+        config.setComment("enable-redstone", "Enable toggling with redstone.");
+        allowRedstone = config.getBoolean("enable-redstone", true);
 
-        config.setComment(path + "check-chunks", "On creation, check the chunk for already existing chunk anchors.");
-        checkChunks = config.getBoolean(path + "check-chunks", true);
+        config.setComment("check-chunks", "On creation, check the chunk for already existing chunk anchors.");
+        checkChunks = config.getBoolean("check-chunks", true);
     }
 }

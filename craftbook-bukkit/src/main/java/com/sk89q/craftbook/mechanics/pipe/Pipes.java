@@ -515,18 +515,18 @@ public class Pipes extends AbstractCraftBookMechanic {
     private boolean pipeRequireSign;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-diagonal", "Allow pipes to work diagonally. Required for insulators to work.");
-        pipesDiagonal = config.getBoolean(path + "allow-diagonal", false);
+        config.setComment("allow-diagonal", "Allow pipes to work diagonally. Required for insulators to work.");
+        pipesDiagonal = config.getBoolean("allow-diagonal", false);
 
-        config.setComment(path + "insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
-        pipeInsulator = BlockSyntax.getBlock(config.getString(path + "insulator-block", BlockTypes.WHITE_WOOL.getId()), true);
+        config.setComment("insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
+        pipeInsulator = BlockSyntax.getBlock(config.getString("insulator-block", BlockTypes.WHITE_WOOL.getId()), true);
 
-        config.setComment(path + "stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
-        pipeStackPerPull = config.getBoolean(path + "stack-per-move", true);
+        config.setComment("stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
+        pipeStackPerPull = config.getBoolean("stack-per-move", true);
 
-        config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
-        pipeRequireSign = config.getBoolean(path + "require-sign", false);
+        config.setComment("require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
+        pipeRequireSign = config.getBoolean("require-sign", false);
     }
 }

@@ -69,9 +69,9 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     private boolean giveItem;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "give-item", "Sets whether to give the player the item back or not.");
-        giveItem = config.getBoolean(path + "give-item", false);
+        config.setComment("give-item", "Sets whether to give the player the item back or not.");
+        giveItem = config.getBoolean("give-item", false);
     }
 }

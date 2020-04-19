@@ -98,9 +98,9 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     private boolean ladders;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "falling-ladders", "Enables BetterPhysics Falling Ladders.");
-        ladders = config.getBoolean(path + "falling-ladders", true);
+        config.setComment("falling-ladders", "Enables BetterPhysics Falling Ladders.");
+        ladders = config.getBoolean("falling-ladders", true);
     }
 }

@@ -59,13 +59,13 @@ public class FallModifier extends AbstractCraftBookMechanic {
     private Vector fallSpeed;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "vertical-fall-speed", "Sets the vertical fall speed of the minecart");
-        verticalSpeed = config.getDouble(path + "vertical-fall-speed", 0.9D);
+        config.setComment("vertical-fall-speed", "Sets the vertical fall speed of the minecart");
+        verticalSpeed = config.getDouble("vertical-fall-speed", 0.9D);
 
-        config.setComment(path + "horizontal-fall-speed", "Sets the horizontal fall speed of the minecart");
-        horizontalSpeed = config.getDouble(path + "horizontal-fall-speed", 1.1D);
+        config.setComment("horizontal-fall-speed", "Sets the horizontal fall speed of the minecart");
+        horizontalSpeed = config.getDouble("horizontal-fall-speed", 1.1D);
 
         fallSpeed = new Vector(horizontalSpeed, verticalSpeed, horizontalSpeed);
     }

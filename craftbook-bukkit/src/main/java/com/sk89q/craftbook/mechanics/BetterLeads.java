@@ -213,21 +213,21 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     private List<String> leadsAllowedMobs;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
-        leadsStopTarget = config.getBoolean(path + "stop-mob-target", false);
+        config.setComment("stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
+        leadsStopTarget = config.getBoolean("stop-mob-target", false);
 
-        config.setComment(path + "owner-unleash-only", "Only allow the owner of tameable entities to unleash them from a leash hitch.");
-        leadsOwnerBreakOnly = config.getBoolean(path + "owner-unleash-only", false);
+        config.setComment("owner-unleash-only", "Only allow the owner of tameable entities to unleash them from a leash hitch.");
+        leadsOwnerBreakOnly = config.getBoolean("owner-unleash-only", false);
 
-        config.setComment(path + "hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
-        leadsHitchPersists = config.getBoolean(path + "hitch-persists", false);
+        config.setComment("hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
+        leadsHitchPersists = config.getBoolean("hitch-persists", false);
 
-        config.setComment(path + "mob-repel", "If you have a mob tethered to you, mobs of that type will not target you.");
-        leadsMobRepellant = config.getBoolean(path + "mob-repel", false);
+        config.setComment("mob-repel", "If you have a mob tethered to you, mobs of that type will not target you.");
+        leadsMobRepellant = config.getBoolean("mob-repel", false);
 
-        config.setComment(path + "allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        leadsAllowedMobs = config.getStringList(path + "allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
+        config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
+        leadsAllowedMobs = config.getStringList("allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
     }
 }

@@ -107,9 +107,9 @@ public class SignCopier extends AbstractCraftBookMechanic {
     private ItemType item;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "item", "The item the Sign Copy mechanic uses.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.INK_SAC.getId())).getType());
+        config.setComment("item", "The item the Sign Copy mechanic uses.");
+        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString("item", ItemTypes.INK_SAC.getId())).getType());
     }
 }

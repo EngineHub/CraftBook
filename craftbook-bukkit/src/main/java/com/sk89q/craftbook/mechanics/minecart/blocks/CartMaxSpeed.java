@@ -72,9 +72,9 @@ public class CartMaxSpeed extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "block", "Sets the block that is the base of the max speed mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.COAL_BLOCK.getId()), true);
+        config.setComment("block", "Sets the block that is the base of the max speed mechanic.");
+        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.COAL_BLOCK.getId()), true);
     }
 }

@@ -361,21 +361,21 @@ public class Area extends AbstractCraftBookMechanic {
     int maxAreasPerUser;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
-        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
+        allowRedstone = config.getBoolean("allow-redstone", true);
 
-        config.setComment(path + "use-schematics", "Use Schematics for saving areas. This allows support of all blocks and chest/sign data.");
-        useSchematics = config.getBoolean(path + "use-schematics", true);
+        config.setComment("use-schematics", "Use Schematics for saving areas. This allows support of all blocks and chest/sign data.");
+        useSchematics = config.getBoolean("use-schematics", true);
 
-        config.setComment(path + "shorten-long-names", "If this is enabled, namespaces too long to fit on signs will be shortened.");
-        shortenNames = config.getBoolean(path + "shorten-long-names", true);
+        config.setComment("shorten-long-names", "If this is enabled, namespaces too long to fit on signs will be shortened.");
+        shortenNames = config.getBoolean("shorten-long-names", true);
 
-        config.setComment(path + "max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
-        maxAreaSize = config.getInt(path + "max-size", 5000);
+        config.setComment("max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
+        maxAreaSize = config.getInt("max-size", 5000);
 
-        config.setComment(path + "max-per-user", "Sets the max amount of ToggleAreas that can be within one namespace.");
-        maxAreasPerUser = config.getInt(path + "max-per-user", 30);
+        config.setComment("max-per-user", "Sets the max amount of ToggleAreas that can be within one namespace.");
+        maxAreasPerUser = config.getInt("max-per-user", 30);
     }
 }

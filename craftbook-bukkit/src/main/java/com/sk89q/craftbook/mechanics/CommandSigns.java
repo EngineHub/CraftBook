@@ -132,9 +132,9 @@ public class CommandSigns extends AbstractCraftBookMechanic {
     private boolean allowRedstone;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "allow-redstone", "Enable CommandSigns via redstone.");
-        allowRedstone = config.getBoolean(path + "allow-redstone", true);
+        config.setComment("allow-redstone", "Enable CommandSigns via redstone.");
+        allowRedstone = config.getBoolean("allow-redstone", true);
     }
 }

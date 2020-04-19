@@ -18,6 +18,7 @@ package com.sk89q.craftbook.bukkit;
 
 import com.google.common.collect.Sets;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.craftbook.CraftBookManifest;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
@@ -143,10 +144,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -161,8 +159,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
-import javax.annotation.Nullable;
-
 public class CraftBookPlugin extends JavaPlugin {
 
     /**
@@ -174,16 +170,12 @@ public class CraftBookPlugin extends JavaPlugin {
      * The instance for CraftBook
      */
     private static CraftBookPlugin instance;
+    private static String version;
 
     /**
      * The language manager
      */
     private LanguageManager languageManager;
-
-    /**
-     * The random
-     */
-    private Random random;
 
     /**
      * Manager for commands. This automatically handles nested commands,
@@ -332,11 +324,6 @@ public class CraftBookPlugin extends JavaPlugin {
         super();
         // Set the instance
         instance = this;
-    }
-
-    @Nullable
-    public static String getVersion() {
-        return null;
     }
 
     public List<CraftBookMechanic> getMechanics() {
@@ -541,27 +528,9 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanics = new ArrayList<>();
 
         logDebugMessage("Initializing Mechanisms!", "startup");
-
-        createDefaultConfiguration(new File(getDataFolder(), "mechanisms.yml"), "mechanisms.yml");
-        mechanismsConfig = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
-
         try {
-            mechanismsConfig.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mechanismsConfig.setWriteDefaults(true);
-
-        mechanismsConfig.setHeader(
-                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
-                "# This configuration will automatically add new configuration options for you,",
-                "# So there is no need to regenerate this configuration unless you need to.",
-                "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
-                "#",
-                "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
-                "");
+            new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
+        } catch (Exception e) {};
 
         for(String enabled : Sets.newHashSet(config.enabledMechanics)) {
 
@@ -570,15 +539,13 @@ public class CraftBookPlugin extends JavaPlugin {
                 if(mechClass != null) {
 
                     CraftBookMechanic mech = mechClass.newInstance();
-                    mech.loadConfiguration(mechanismsConfig, "mechanics." + enabled + '.');
+                    mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), enabled + ".yml"));
                     mechanics.add(mech);
                 }
             } catch (Throwable t) {
                 getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
             }
         }
-
-        mechanismsConfig.save();
 
         boolean hasSTMechanic = false;
 
@@ -613,29 +580,12 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and enabled.
      */
     public boolean enableMechanic(String mechanic) {
-
-        try {
-            mechanismsConfig.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mechanismsConfig.setHeader(
-                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
-                "# This configuration will automatically add new configuration options for you,",
-                "# So there is no need to regenerate this configuration unless you need to.",
-                "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
-                "#",
-                "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
-                "");
-
         Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
         try {
             if(mechClass != null) {
 
                 CraftBookMechanic mech = mechClass.newInstance();
-                mech.loadConfiguration(mechanismsConfig, "mechanics." + mechanic + '.');
+                mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanic + ".yml"));
                 mechanics.add(mech);
 
                 if(!mech.enable()) {
@@ -651,7 +601,7 @@ public class CraftBookPlugin extends JavaPlugin {
             return false;
         }
 
-        mechanismsConfig.save();
+        config.enabledMechanics.add(mechanic);
         config.save();
 
         return true;
@@ -879,12 +829,12 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * This method is used to get CraftBook's {@link Random}.
      *
+     * @deprecated Use ThreadLocalRandom.current()
      * @return CraftBook's {@link Random}
      */
+    @Deprecated
     public Random getRandom() {
-        if(random == null)
-            return ThreadLocalRandom.current(); // If none is set, use a thread local random.
-        return random;
+        return ThreadLocalRandom.current();
     }
 
     /**
@@ -1232,7 +1182,22 @@ public class CraftBookPlugin extends JavaPlugin {
         return item;
     }
 
-    public static String getWikiDomain() {
-        return "http://wiki.sk89q.com/wiki/CraftBook";
+    public static String getDocsDomain() {
+        return "https://craftbook.enginehub.org/en/latest/";
+    }
+
+    /**
+     * Get the version.
+     *
+     * @return the version of CraftBook
+     */
+    public static String getVersion() {
+        if (version != null) {
+            return version;
+        }
+
+        CraftBookManifest manifest = CraftBookManifest.load();
+
+        return version = manifest.getCraftBookVersion();
     }
 }

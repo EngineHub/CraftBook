@@ -47,15 +47,15 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
     private double occupiedDeceleration;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "max-speed", "Sets the maximum speed of a boat. 0.4D is normal maximum speed.");
-        maxSpeed = config.getDouble(path + "max-speed", 0.4D);
+        config.setComment("max-speed", "Sets the maximum speed of a boat. 0.4D is normal maximum speed.");
+        maxSpeed = config.getDouble("max-speed", 0.4D);
 
-        config.setComment(path + "unnoccupied-deceleration", "Sets the unnoccupied deceleration of a boat. -1 is disabled.");
-        unnoccupiedDeceleration = config.getDouble(path + "unnoccupied-deceleration", -1);
+        config.setComment("unnoccupied-deceleration", "Sets the unnoccupied deceleration of a boat. -1 is disabled.");
+        unnoccupiedDeceleration = config.getDouble("unnoccupied-deceleration", -1);
 
-        config.setComment(path + "occupied-deceleration", "Sets the occupied deceleration of a boat. 0.3 is normal occupied deceleration");
-        occupiedDeceleration = config.getDouble(path + "occupied-deceleration", 0.2);
+        config.setComment("occupied-deceleration", "Sets the occupied deceleration of a boat. 0.3 is normal occupied deceleration");
+        occupiedDeceleration = config.getDouble("occupied-deceleration", 0.2);
     }
 }

@@ -193,12 +193,12 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     private int maxLights;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "max-range", "The maximum range that the mechanic searches for lights in.");
-        maxRange = config.getInt(path + "max-range", 10);
+        config.setComment("max-range", "The maximum range that the mechanic searches for lights in.");
+        maxRange = config.getInt("max-range", 10);
 
-        config.setComment(path + "max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
-        maxLights = config.getInt(path + "max-lights", 20);
+        config.setComment("max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
+        maxLights = config.getInt("max-lights", 20);
     }
 }

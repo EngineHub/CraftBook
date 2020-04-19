@@ -230,18 +230,18 @@ public class Sponge extends AbstractCraftBookMechanic {
     private boolean includeWet;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "radius", "The maximum radius of the sponge.");
-        radius = config.getInt(path + "radius", 5);
+        config.setComment("radius", "The maximum radius of the sponge.");
+        radius = config.getInt("radius", 5);
 
-        config.setComment(path + "circular-radius", "Whether the radius should be circular or square.");
-        circularRadius = config.getBoolean(path + "circular-radius", true);
+        config.setComment("circular-radius", "Whether the radius should be circular or square.");
+        circularRadius = config.getBoolean("circular-radius", true);
 
-        config.setComment(path + "require-redstone", "Whether to require redstone to suck up water or not.");
-        redstone = config.getBoolean(path + "require-redstone", false);
+        config.setComment("include-wet", "Whether to include wet sponges or not.");
+        includeWet = config.getBoolean("include-wet", false);
 
-        config.setComment(path + "include-wet", "Whether to include wet sponges or not.");
-        includeWet = config.getBoolean(path + "include-wet", false);
+        config.setComment("require-redstone", "Whether to require redstone to suck up water or not.");
+        redstone = config.getBoolean("require-redstone", false);
     }
 }

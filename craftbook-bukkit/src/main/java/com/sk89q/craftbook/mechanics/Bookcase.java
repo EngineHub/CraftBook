@@ -153,13 +153,13 @@ public class Bookcase extends AbstractCraftBookMechanic {
     private TernaryState bookcaseReadWhenSneaking;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
 
-        config.setComment(path + "read-when-sneaking", "Enable reading while sneaking.");
-        bookcaseReadWhenSneaking = TernaryState.getFromString(config.getString(path + "read-when-sneaking", "no"));
+        config.setComment("read-when-sneaking", "Enable reading while sneaking.");
+        bookcaseReadWhenSneaking = TernaryState.getFromString(config.getString("read-when-sneaking", "no"));
 
-        config.setComment(path + "read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
-        bookcaseReadHoldingBlock = config.getBoolean(path + "read-when-holding-block", false);
+        config.setComment("read-when-holding-block", "Allow bookshelves to work when the player is holding a block.");
+        bookcaseReadHoldingBlock = config.getBoolean("read-when-holding-block", false);
     }
 }

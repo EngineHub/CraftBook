@@ -304,24 +304,24 @@ public class XPStorer extends AbstractCraftBookMechanic {
     private int radius;
 
     @Override
-    public void loadConfiguration(YAMLProcessor config, String path) {
+    public void loadFromConfiguration(YAMLProcessor config) {
 
-        config.setComment(path + "require-bottle", "Requires the player to be holding a glass bottle to use.");
-        requireBottle = config.getBoolean(path + "require-bottle", false);
+        config.setComment("require-bottle", "Requires the player to be holding a glass bottle to use.");
+        requireBottle = config.getBoolean("require-bottle", false);
 
-        config.setComment(path + "xp-per-bottle", "Sets the amount of XP points required per each bottle.");
-        xpPerBottle = config.getInt(path + "xp-per-bottle", 16);
+        config.setComment("xp-per-bottle", "Sets the amount of XP points required per each bottle.");
+        xpPerBottle = config.getInt("xp-per-bottle", 16);
 
-        config.setComment(path + "block", "The block that is an XP Storer.");
-        block = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.SPAWNER.getId()), true);
+        config.setComment("block", "The block that is an XP Storer.");
+        block = BlockSyntax.getBlock(config.getString("block", BlockTypes.SPAWNER.getId()), true);
 
-        config.setComment(path + "require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
-        sneakingState = TernaryState.getFromString(config.getString(path + "require-sneaking-state", "no"));
+        config.setComment("require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
+        sneakingState = TernaryState.getFromString(config.getString("require-sneaking-state", "no"));
 
-        config.setComment(path + "radius-mode", "Allows XP Storer mechanics with a sign attached to work in a radius.");
-        autonomousMode = config.getBoolean(path + "radius-mode", false);
+        config.setComment("radius-mode", "Allows XP Storer mechanics with a sign attached to work in a radius.");
+        autonomousMode = config.getBoolean("radius-mode", false);
 
-        config.setComment(path + "radius", "The radius for radius-mode.");
-        radius = config.getInt(path + "radius", 5);
+        config.setComment("radius", "The radius for radius-mode.");
+        radius = config.getInt("radius", 5);
     }
 }

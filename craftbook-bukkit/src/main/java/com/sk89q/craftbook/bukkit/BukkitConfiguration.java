@@ -91,7 +91,7 @@ public class BukkitConfiguration {
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
+                "# " + CraftBookPlugin.getDocsDomain() + "/Usage",
                 "#",
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");

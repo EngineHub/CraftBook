@@ -120,8 +120,8 @@ public class SetBlockChest extends SetBlock {
         @Override
         public void addConfiguration (YAMLProcessor config, String path) {
 
-            config.setComment(path + "blacklist", "Stops the IC from placing the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
+            config.setComment("blacklist", "Stops the IC from placing the listed blocks.");
+            blockBlacklist = BlockSyntax.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
         }
     }
 }
