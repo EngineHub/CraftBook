@@ -24,6 +24,8 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
+import com.sk89q.craftbook.core.mechanic.MechanicCategory;
+import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
 import com.sk89q.craftbook.core.st.MechanicClock;
 import com.sk89q.craftbook.core.st.SelfTriggeringManager;
 import com.sk89q.craftbook.mechanics.AIMechanic;
@@ -68,7 +70,6 @@ import com.sk89q.craftbook.mechanics.cauldron.legacy.Cauldron;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
 import com.sk89q.craftbook.mechanics.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mechanics.drops.CustomDrops;
-import com.sk89q.craftbook.mechanics.drops.legacy.LegacyCustomDrops;
 import com.sk89q.craftbook.mechanics.headdrops.HeadDrops;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
@@ -224,95 +225,98 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private NMSAdapter nmsAdapter;
 
-    public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
+    public static final Map<String, MechanicRegistration> availableMechanics;
 
     public boolean useLegacyCartSystem = false;
 
     private static final int BSTATS_ID = 3319;
 
+    public static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
+        availableMechanics.put(name, new MechanicRegistration(name, mechanicClass, category));
+    }
+
     static {
         availableMechanics = new TreeMap<>();
 
-        availableMechanics.put("Variables", VariableManager.class);
-        availableMechanics.put("CommandItems", CommandItems.class);
-        availableMechanics.put("CustomCrafting", CustomCrafting.class);
-        availableMechanics.put("DispenserRecipes", DispenserRecipes.class);
-        availableMechanics.put("Snow", Snow.class);
-        availableMechanics.put("CustomDrops", CustomDrops.class);
-        availableMechanics.put("LegacyCustomDrops", LegacyCustomDrops.class);
-        availableMechanics.put("AI", AIMechanic.class);
-        availableMechanics.put("PaintingSwitcher", PaintingSwitch.class);
-        availableMechanics.put("BetterPhysics", BetterPhysics.class);
-        availableMechanics.put("HeadDrops", HeadDrops.class);
-        availableMechanics.put("BetterLeads", BetterLeads.class);
-        availableMechanics.put("Marquee", Marquee.class);
-        availableMechanics.put("TreeLopper", TreeLopper.class);
-        availableMechanics.put("MapChanger", MapChanger.class);
-        availableMechanics.put("XPStorer", XPStorer.class);
-        availableMechanics.put("LightStone", LightStone.class);
-        availableMechanics.put("CommandSigns", CommandSigns.class);
-        availableMechanics.put("LightSwitch", LightSwitch.class);
-        availableMechanics.put("ChunkAnchor", ChunkAnchor.class);
-        availableMechanics.put("Ammeter", Ammeter.class);
-        availableMechanics.put("HiddenSwitch", HiddenSwitch.class);
-        availableMechanics.put("Bookcase", Bookcase.class);
-        availableMechanics.put("SignCopier", SignCopier.class);
-        availableMechanics.put("Bridge", Bridge.class);
-        availableMechanics.put("Door", Door.class);
-        availableMechanics.put("Elevator", Elevator.class);
-        availableMechanics.put("Teleporter", Teleporter.class);
-        availableMechanics.put("ToggleArea", Area.class);
-        availableMechanics.put("Cauldron", ImprovedCauldron.class);
-        availableMechanics.put("LegacyCauldron", Cauldron.class);
-        availableMechanics.put("Gate", Gate.class);
-        availableMechanics.put("BetterPistons", BetterPistons.class);
-        availableMechanics.put("CookingPot", CookingPot.class);
-        availableMechanics.put("Sponge", Sponge.class);
-        availableMechanics.put("BetterPlants", BetterPlants.class);
-        availableMechanics.put("Chairs", Chair.class);
-        availableMechanics.put("Pay", Payment.class);
-        availableMechanics.put("Jukebox", RedstoneJukebox.class);
-        availableMechanics.put("Glowstone", GlowStone.class);
-        availableMechanics.put("Netherrack", Netherrack.class);
-        availableMechanics.put("JackOLantern", JackOLantern.class);
-        availableMechanics.put("Pipes", Pipes.class);
-        availableMechanics.put("BounceBlocks", BounceBlocks.class);
-        availableMechanics.put("ICs", ICMechanic.class);
-        availableMechanics.put("MinecartBooster", CartBooster.class);
-        availableMechanics.put("MinecartReverser", CartReverser.class);
-        availableMechanics.put("MinecartSorter", CartSorter.class);
-        availableMechanics.put("MinecartStation", CartStation.class);
-        availableMechanics.put("MinecartEjector", CartEjector.class);
-        availableMechanics.put("MinecartDeposit", CartDeposit.class);
-        availableMechanics.put("MinecartTeleporter", CartTeleporter.class);
-        availableMechanics.put("MinecartElevator", CartLift.class);
-        availableMechanics.put("MinecartDispenser", CartDispenser.class);
-        availableMechanics.put("MinecartMessenger", CartMessenger.class);
-        availableMechanics.put("MinecartMaxSpeed", CartMaxSpeed.class);
-        availableMechanics.put("MinecartMoreRails", MoreRails.class);
-        availableMechanics.put("MinecartRemoveEntities", com.sk89q.craftbook.mechanics.minecart.RemoveEntities.class);
-        availableMechanics.put("MinecartVisionSteering", VisionSteering.class);
-        availableMechanics.put("MinecartDecay", EmptyDecay.class);
-        availableMechanics.put("MinecartMobBlocker", MobBlocker.class);
-        availableMechanics.put("MinecartExitRemover", com.sk89q.craftbook.mechanics.minecart.ExitRemover.class);
-        availableMechanics.put("MinecartCollisionEntry", CollisionEntry.class);
-        availableMechanics.put("MinecartItemPickup", ItemPickup.class);
-        availableMechanics.put("MinecartFallModifier", FallModifier.class);
-        availableMechanics.put("MinecartConstantSpeed", ConstantSpeed.class);
-        availableMechanics.put("MinecartRailPlacer", RailPlacer.class);
-        availableMechanics.put("MinecartSpeedModifiers", com.sk89q.craftbook.mechanics.minecart.SpeedModifiers.class);
-        availableMechanics.put("MinecartEmptySlowdown", EmptySlowdown.class);
-        availableMechanics.put("MinecartNoCollide", NoCollide.class);
-        availableMechanics.put("MinecartPlaceAnywhere", PlaceAnywhere.class);
-        availableMechanics.put("MinecartTemporaryCart", TemporaryCart.class);
-        availableMechanics.put("BoatRemoveEntities", com.sk89q.craftbook.mechanics.boat.RemoveEntities.class);
-        availableMechanics.put("BoatUncrashable", Uncrashable.class);
-        availableMechanics.put("BoatDrops", Drops.class);
-        availableMechanics.put("BoatDecay", com.sk89q.craftbook.mechanics.boat.EmptyDecay.class);
-        availableMechanics.put("BoatSpeedModifiers", com.sk89q.craftbook.mechanics.boat.SpeedModifiers.class);
-        availableMechanics.put("LandBoats", LandBoats.class);
-        availableMechanics.put("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class);
-        availableMechanics.put("BoatWaterPlaceOnly", WaterPlaceOnly.class);
+        registerMechanic("Variables", VariableManager.class, MechanicCategory.GENERAL);
+        registerMechanic("CommandItems", CommandItems.class, MechanicCategory.CUSTOMISATION);
+        registerMechanic("CustomCrafting", CustomCrafting.class, MechanicCategory.CUSTOMISATION);
+        registerMechanic("DispenserRecipes", DispenserRecipes.class, MechanicCategory.GENERAL);
+        registerMechanic("Snow", Snow.class, MechanicCategory.GENERAL);
+        registerMechanic("CustomDrops", CustomDrops.class, MechanicCategory.CUSTOMISATION);
+        registerMechanic("AI", AIMechanic.class, MechanicCategory.GENERAL);
+        registerMechanic("PaintingSwitcher", PaintingSwitch.class, MechanicCategory.GENERAL);
+        registerMechanic("BetterPhysics", BetterPhysics.class, MechanicCategory.GENERAL);
+        registerMechanic("HeadDrops", HeadDrops.class, MechanicCategory.GENERAL);
+        registerMechanic("BetterLeads", BetterLeads.class, MechanicCategory.GENERAL);
+        registerMechanic("Marquee", Marquee.class, MechanicCategory.GENERAL);
+        registerMechanic("TreeLopper", TreeLopper.class, MechanicCategory.GENERAL);
+        registerMechanic("MapChanger", MapChanger.class, MechanicCategory.GENERAL);
+        registerMechanic("XPStorer", XPStorer.class, MechanicCategory.GENERAL);
+        registerMechanic("LightStone", LightStone.class, MechanicCategory.TOOL);
+        registerMechanic("CommandSigns", CommandSigns.class, MechanicCategory.GENERAL);
+        registerMechanic("LightSwitch", LightSwitch.class, MechanicCategory.GENERAL);
+        registerMechanic("ChunkAnchor", ChunkAnchor.class, MechanicCategory.GENERAL);
+        registerMechanic("Ammeter", Ammeter.class, MechanicCategory.TOOL);
+        registerMechanic("HiddenSwitch", HiddenSwitch.class, MechanicCategory.GENERAL);
+        registerMechanic("Bookcase", Bookcase.class, MechanicCategory.GENERAL);
+        registerMechanic("SignCopier", SignCopier.class, MechanicCategory.TOOL);
+        registerMechanic("Bridge", Bridge.class, MechanicCategory.GENERAL);
+        registerMechanic("Door", Door.class, MechanicCategory.GENERAL);
+        registerMechanic("Elevator", Elevator.class, MechanicCategory.GENERAL);
+        registerMechanic("Teleporter", Teleporter.class, MechanicCategory.GENERAL);
+        registerMechanic("ToggleArea", Area.class, MechanicCategory.GENERAL);
+        registerMechanic("Cauldron", ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
+        registerMechanic("LegacyCauldron", Cauldron.class, MechanicCategory.CUSTOMISATION);
+        registerMechanic("Gate", Gate.class, MechanicCategory.GENERAL);
+        registerMechanic("BetterPistons", BetterPistons.class, MechanicCategory.GENERAL);
+        registerMechanic("CookingPot", CookingPot.class, MechanicCategory.GENERAL);
+        registerMechanic("Sponge", Sponge.class, MechanicCategory.GENERAL);
+        registerMechanic("BetterPlants", BetterPlants.class, MechanicCategory.GENERAL);
+        registerMechanic("Chairs", Chair.class, MechanicCategory.GENERAL);
+        registerMechanic("Pay", Payment.class, MechanicCategory.CIRCUIT);
+        registerMechanic("Jukebox", RedstoneJukebox.class, MechanicCategory.CIRCUIT);
+        registerMechanic("Glowstone", GlowStone.class, MechanicCategory.CIRCUIT);
+        registerMechanic("Netherrack", Netherrack.class, MechanicCategory.CIRCUIT);
+        registerMechanic("JackOLantern", JackOLantern.class, MechanicCategory.CIRCUIT);
+        registerMechanic("Pipes", Pipes.class, MechanicCategory.CIRCUIT);
+        registerMechanic("BounceBlocks", BounceBlocks.class, MechanicCategory.GENERAL);
+        registerMechanic("ICs", ICMechanic.class, MechanicCategory.CIRCUIT);
+        registerMechanic("MinecartBooster", CartBooster.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartReverser", CartReverser.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartSorter", CartSorter.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartStation", CartStation.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartEjector", CartEjector.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartDeposit", CartDeposit.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartTeleporter", CartTeleporter.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartElevator", CartLift.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartDispenser", CartDispenser.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartMessenger", CartMessenger.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartMaxSpeed", CartMaxSpeed.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartMoreRails", MoreRails.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartRemoveEntities", com.sk89q.craftbook.mechanics.minecart.RemoveEntities.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartVisionSteering", VisionSteering.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartDecay", EmptyDecay.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartMobBlocker", MobBlocker.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartExitRemover", com.sk89q.craftbook.mechanics.minecart.ExitRemover.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartCollisionEntry", CollisionEntry.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartItemPickup", ItemPickup.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartFallModifier", FallModifier.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartConstantSpeed", ConstantSpeed.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartRailPlacer", RailPlacer.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartSpeedModifiers", com.sk89q.craftbook.mechanics.minecart.SpeedModifiers.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartEmptySlowdown", EmptySlowdown.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartNoCollide", NoCollide.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartPlaceAnywhere", PlaceAnywhere.class, MechanicCategory.MINECART);
+        registerMechanic("MinecartTemporaryCart", TemporaryCart.class, MechanicCategory.MINECART);
+        registerMechanic("BoatRemoveEntities", com.sk89q.craftbook.mechanics.boat.RemoveEntities.class, MechanicCategory.BOAT);
+        registerMechanic("BoatUncrashable", Uncrashable.class, MechanicCategory.BOAT);
+        registerMechanic("BoatDrops", Drops.class, MechanicCategory.BOAT);
+        registerMechanic("BoatDecay", com.sk89q.craftbook.mechanics.boat.EmptyDecay.class, MechanicCategory.BOAT);
+        registerMechanic("BoatSpeedModifiers", com.sk89q.craftbook.mechanics.boat.SpeedModifiers.class, MechanicCategory.BOAT);
+        registerMechanic("LandBoats", LandBoats.class, MechanicCategory.BOAT);
+        registerMechanic("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
+        registerMechanic("BoatWaterPlaceOnly", WaterPlaceOnly.class, MechanicCategory.BOAT);
     }
 
     /**
@@ -534,12 +538,11 @@ public class CraftBookPlugin extends JavaPlugin {
 
         for(String enabled : Sets.newHashSet(config.enabledMechanics)) {
 
-            Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(enabled);
+            MechanicRegistration mechanicRegistration = availableMechanics.get(enabled);
             try {
-                if(mechClass != null) {
-
-                    CraftBookMechanic mech = mechClass.newInstance();
-                    mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), enabled + ".yml"));
+                if(mechanicRegistration != null) {
+                    CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
+                    mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml"));
                     mechanics.add(mech);
                 }
             } catch (Throwable t) {
@@ -580,12 +583,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and enabled.
      */
     public boolean enableMechanic(String mechanic) {
-        Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
+        MechanicRegistration mechanicRegistration = availableMechanics.get(mechanic);
         try {
-            if(mechClass != null) {
-
-                CraftBookMechanic mech = mechClass.newInstance();
-                mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanic + ".yml"));
+            if(mechanicRegistration != null) {
+                CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
+                mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml"));
                 mechanics.add(mech);
 
                 if(!mech.enable()) {
@@ -614,15 +616,16 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and disabled.
      */
     public boolean disableMechanic(String mechanic) {
+        MechanicRegistration mechanicRegistration = availableMechanics.get(mechanic);
 
-        Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
-
-        if(mechClass == null) return false;
+        if(mechanicRegistration == null) {
+            return false;
+        }
 
         boolean found = false;
 
         for(CraftBookMechanic mech : mechanics) {
-            if(mech.getClass().equals(mechClass)) {
+            if(mech.getClass().equals(mechanicRegistration.getMechanicClass())) {
                 found = true;
                 break;
             }

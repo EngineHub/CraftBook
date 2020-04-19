@@ -1,98 +1,99 @@
-# CraftBook Configuration for Bukkit. Generated for version: 3.9-SNAPSHOT;fe303e6
+# CraftBook Configuration for Bukkit. Generated for version: 5.0.0-SNAPSHOT;4156677
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
-# http://wiki.sk89q.com/wiki/CraftBook/Usage
+# https://craftbook.enginehub.org/en/latest//Usage
 #
 # NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!
 
 
-# List of mechanics to enable! If they aren't in this list, the server won't load them!
-enabled-mechanics:
-- Variables
-
-# A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.
-disabled-mechanics:
-- AI
-- Ammeter
-- BetterLeads
-- BetterPhysics
-- BetterPistons
-- BetterPlants
-- BoatDecay
-- BoatDrops
-- BoatExitRemover
-- BoatRemoveEntities
-- BoatSpeedModifiers
-- BoatUncrashable
-- BoatWaterPlaceOnly
-- Bookcase
-- BounceBlocks
-- Bridge
-- Cauldron
-- Chairs
-- ChunkAnchor
-- CommandItems
-- CommandSigns
-- CookingPot
-- CustomCrafting
-- CustomDrops
-- DispenserRecipes
-- Door
-- Elevator
-- Footprints
-- Gate
-- Glowstone
-- HeadDrops
-- HiddenSwitch
-- ICs
-- JackOLantern
-- Jukebox
-- LandBoats
-- LegacyCauldron
-- LegacyCustomDrops
-- LightStone
-- LightSwitch
-- MapChanger
-- Marquee
-- MinecartBooster
-- MinecartCollisionEntry
-- MinecartConstantSpeed
-- MinecartDecay
-- MinecartDeposit
-- MinecartDispenser
-- MinecartEjector
-- MinecartElevator
-- MinecartEmptySlowdown
-- MinecartExitRemover
-- MinecartFallModifier
-- MinecartItemPickup
-- MinecartMaxSpeed
-- MinecartMessenger
-- MinecartMobBlocker
-- MinecartMoreRails
-- MinecartNoCollide
-- MinecartPlaceAnywhere
-- MinecartRailPlacer
-- MinecartRemoveEntities
-- MinecartReverser
-- MinecartSorter
-- MinecartSpeedModifiers
-- MinecartStation
-- MinecartTeleporter
-- MinecartTemporaryCart
-- MinecartVisionSteering
-- Netherrack
-- PaintingSwitcher
-- Pay
-- Pipes
-- SignCopier
-- Snow
-- Sponge
-- Teleporter
-- ToggleArea
-- TreeLopper
-- XPStorer
+# List of mechanics and whether they are enabled or not
+mechanics:
+  general:
+    AI: false
+    BetterLeads: false
+    BetterPhysics: false
+    BetterPistons: false
+    BetterPlants: false
+    Bookcase: false
+    BounceBlocks: false
+    Bridge: false
+    Chairs: false
+    ChunkAnchor: false
+    CommandSigns: false
+    CookingPot: false
+    DispenserRecipes: false
+    Door: false
+    Elevator: false
+    Gate: false
+    HeadDrops: false
+    HiddenSwitch: false
+    LightSwitch: false
+    MapChanger: false
+    Marquee: false
+    PaintingSwitcher: false
+    Snow: false
+    Sponge: false
+    Teleporter: false
+    ToggleArea: false
+    TreeLopper: false
+    Variables: true
+    XPStorer: false
+  tool:
+    Ammeter: false
+    LightStone: false
+    SignCopier: false
+  boat:
+    BoatDecay: false
+    BoatDrops: false
+    BoatExitRemover: false
+    BoatRemoveEntities: false
+    BoatSpeedModifiers: false
+    BoatUncrashable: false
+    BoatWaterPlaceOnly: false
+    LandBoats: false
+  customisation:
+    Cauldron: false
+    CommandItems: false
+    CustomCrafting: false
+    CustomDrops: false
+    LegacyCauldron: false
+  circuit:
+    Glowstone: false
+    ICs: false
+    JackOLantern: false
+    Jukebox: false
+    Netherrack: false
+    Pay: false
+    Pipes: false
+  minecart:
+    MinecartBooster: false
+    MinecartCollisionEntry: false
+    MinecartConstantSpeed: false
+    MinecartDecay: false
+    MinecartDeposit: false
+    MinecartDispenser: false
+    MinecartEjector: false
+    MinecartElevator: false
+    MinecartEmptySlowdown: false
+    MinecartExitRemover: false
+    MinecartFallModifier: false
+    MinecartItemPickup: false
+    MinecartMaxSpeed: false
+    MinecartMessenger: false
+    MinecartMobBlocker: false
+    MinecartMoreRails: false
+    MinecartNoCollide: false
+    MinecartPlaceAnywhere: false
+    MinecartRailPlacer: false
+    MinecartRemoveEntities: false
+    MinecartReverser: false
+    MinecartSorter: false
+    MinecartSpeedModifiers: false
+    MinecartStation: false
+    MinecartTeleporter: false
+    MinecartTemporaryCart: false
+    MinecartVisionSteering: false
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2
@@ -126,7 +127,7 @@ language: en_US
 
 # A list of languages supported by craftbook, if a user requests a language not listed... They will see default.
 languages:
-- en_US
+  - en_US
 
 # If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.
 scan-text-for-localization: false
@@ -139,12 +140,6 @@ debug-mode-file-logging: false
 
 # Enable certain debug types when debug mode is enabled.
 debug-flags: []
-
-# Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)
-easter-eggs: true
-
-# Random numbers are much more random, with a small cost to CPU usage.
-realistic-randoms: false
 
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true

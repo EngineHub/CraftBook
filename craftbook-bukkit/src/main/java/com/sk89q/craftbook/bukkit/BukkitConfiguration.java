@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**
@@ -96,18 +97,15 @@ public class BukkitConfiguration {
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
 
-        config.setComment("enabled-mechanics", "List of mechanics to enable! If they aren't in this list, the server won't load them!");
-        enabledMechanics = config.getStringList("enabled-mechanics", Collections.singletonList("Variables"));
-
-        List<String> disabledMechanics = new ArrayList<>();
-
-        for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
-            if(!enabledMechanics.contains(mech))
-                disabledMechanics.add(mech);
+        enabledMechanics = new ArrayList<>();
+        config.setComment("mechanics", "List of mechanics and whether they are enabled or not");
+        for (MechanicRegistration availableMechanic : CraftBookPlugin.availableMechanics.values()) {
+            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
+            boolean enabled = config.getBoolean(path, availableMechanic.getName().equals("Variables"));
+            if (enabled) {
+                enabledMechanics.add(availableMechanic.getName());
+            }
         }
-
-        config.setComment("disabled-mechanics", "A list of CraftBook mechanics that are disabled, for easy copy/pastability to the enabled list.");
-        config.setProperty("disabled-mechanics", disabledMechanics);
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
@@ -167,17 +165,10 @@ public class BukkitConfiguration {
     }
 
     public void save() {
-
-        config.setProperty("enabled-mechanics", enabledMechanics);
-
-        List<String> disabledMechanics = new ArrayList<>();
-
-        for(String mech : CraftBookPlugin.availableMechanics.keySet()) {
-            if(!enabledMechanics.contains(mech))
-                disabledMechanics.add(mech);
+        for (MechanicRegistration availableMechanic : CraftBookPlugin.availableMechanics.values()) {
+            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
+            config.setProperty(path, enabledMechanics.contains(availableMechanic.getName()));
         }
-
-        config.setProperty("disabled-mechanics", disabledMechanics);
 
         config.save();
     }

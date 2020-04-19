@@ -143,7 +143,7 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
                     try {
                         if (aClass != null) {
 
-                            CraftBookMechanic me = aClass.newInstance();
+                            CraftBookMechanic me = aClass.getMechanicClass().newInstance();
                             me.loadFromConfiguration(CraftBookPlugin.inst().getMechanismsConfig());
                         }
                     } catch (Throwable t) {

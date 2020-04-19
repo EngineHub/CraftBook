@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
 import org.bukkit.Bukkit;
 
 import com.sk89q.craftbook.CraftBookMechanic;
@@ -70,11 +71,11 @@ public class GenerateConfiguration extends ExternalUtilityBase {
         Collections.sort(mechs);
 
         for(String enabled : mechs) {
-            Class<? extends CraftBookMechanic> mechClass = CraftBookPlugin.availableMechanics.get(enabled);
+            MechanicRegistration mechanicRegistration = CraftBookPlugin.availableMechanics.get(enabled);
             try {
-                if(mechClass != null) {
-                    CraftBookMechanic mech = mechClass.newInstance();
-                    mech.loadConfiguration(new File(mechanicsFolder, enabled + ".yml"));
+                if(mechanicRegistration != null) {
+                    CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
+                    mech.loadConfiguration(new File(mechanicsFolder, mechanicRegistration.getName() + ".yml"));
                 }
             } catch (Throwable t) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
