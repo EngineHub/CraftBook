@@ -15,6 +15,7 @@
  */
 
 package com.sk89q.craftbook.bukkit;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,9 +44,6 @@ public class BukkitConfiguration {
     public boolean showPermissionMessages;
     public long signClickTimeout;
     public boolean convertNamesToCBID;
-
-    public boolean easterEggs;
-    public boolean realisticRandoms;
 
     public String language;
     public List<String> languages;
@@ -155,12 +153,6 @@ public class BukkitConfiguration {
 
         config.setComment("debug-flags", "Enable certain debug types when debug mode is enabled.");
         debugFlags = config.getStringList("debug-flags", new ArrayList<>());
-
-        config.setComment("easter-eggs", "Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)");
-        easterEggs = config.getBoolean("easter-eggs", true);
-
-        config.setComment("realistic-randoms", "Random numbers are much more random, with a small cost to CPU usage.");
-        realisticRandoms = config.getBoolean("realistic-randoms", false);
 
         config.setComment("show-permission-messages", "Show messages when a player does not have permission to do something.");
         showPermissionMessages = config.getBoolean("show-permission-messages", true);

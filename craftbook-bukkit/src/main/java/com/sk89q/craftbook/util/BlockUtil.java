@@ -65,14 +65,12 @@ public final class BlockUtil {
             case AIR:
             case CAVE_AIR:
             case VOID_AIR:
-            case WHEAT:
             case DEAD_BUSH:
-            case END_PORTAL:
             case FIRE:
             case GRASS:
+            case FERN:
             case LAVA:
             case WATER:
-            case VINE:
             case SNOW:
             case MOVING_PISTON:
                 return true;

@@ -30,7 +30,7 @@ public final class EventUtil {
 
     private static final Map<Event, Long> ignoredEvents = new WeakHashMap<>();
 
-    private static Set<Class<?>> ignoredEventTypes = new HashSet<>();
+    private static final Set<Class<?>> ignoredEventTypes = new HashSet<>();
 
     public static boolean shouldIgnoreEvent(Event ev) {
 

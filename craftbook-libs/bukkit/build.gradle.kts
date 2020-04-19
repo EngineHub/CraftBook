@@ -1,5 +1,5 @@
 applyLibrariesConfiguration()
 
 dependencies {
-    "shade"("org.enginehub.jinglenote:jinglenote-bukkit:${Versions.JINGLENOTE}") { isTransitive = false }
+//    "shade"("org.enginehub.jinglenote:jinglenote-bukkit:${Versions.JINGLENOTE}") { isTransitive = false }
 }

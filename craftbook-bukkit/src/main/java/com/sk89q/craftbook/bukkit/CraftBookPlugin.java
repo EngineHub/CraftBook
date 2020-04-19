@@ -38,7 +38,6 @@ import com.sk89q.craftbook.mechanics.ChunkAnchor;
 import com.sk89q.craftbook.mechanics.CommandSigns;
 import com.sk89q.craftbook.mechanics.CookingPot;
 import com.sk89q.craftbook.mechanics.Elevator;
-import com.sk89q.craftbook.mechanics.Footprints;
 import com.sk89q.craftbook.mechanics.GlowStone;
 import com.sk89q.craftbook.mechanics.HiddenSwitch;
 import com.sk89q.craftbook.mechanics.JackOLantern;
@@ -237,7 +236,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public boolean useLegacyCartSystem = false;
 
-    private static int BSTATS_ID = 3319;
+    private static final int BSTATS_ID = 3319;
 
     static {
         availableMechanics = new TreeMap<>();
@@ -279,7 +278,6 @@ public class CraftBookPlugin extends JavaPlugin {
         availableMechanics.put("Sponge", Sponge.class);
         availableMechanics.put("BetterPlants", BetterPlants.class);
         availableMechanics.put("Chairs", Chair.class);
-        availableMechanics.put("Footprints", Footprints.class);
         availableMechanics.put("Pay", Payment.class);
         availableMechanics.put("Jukebox", RedstoneJukebox.class);
         availableMechanics.put("Glowstone", GlowStone.class);
@@ -457,13 +455,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
         reg.register(TopLevelCommands.class);
-
-        if(config.realisticRandoms)
-            try {
-                random = SecureRandom.getInstance("SHA1PRNG");
-            } catch (NoSuchAlgorithmException e1) {
-                getLogger().severe(getStackTrace(e1));
-            }
 
         // Let's start the show
         setupCraftBook();
@@ -702,40 +693,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         logDebugMessage("Registring managers!", "startup");
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
-
-        if(config.easterEggs) {
-            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-
-                @Override
-                public void run () {
-
-                    logDebugMessage("Checking easter eggs!", "startup");
-                    Calendar date = Calendar.getInstance();
-
-                    if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
-                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2012) + " reddit cakeday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
-                        getLogger().info("Happy birthday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
-                        getLogger().info("Happy new years! Happy " + date.get(Calendar.YEAR) + "!!!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
-                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2010) + " birthday CraftBook!");
-                    else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
-                        getLogger().info("CraftBook has been under Me4502's 'harsh dictatorship :P' for " + (date.get(Calendar.YEAR) - 2012) + " year(s) today!");
-                }
-
-                private String formatDate(int date) {
-                    if (String.valueOf(date).endsWith("1"))
-                        return date + "st";
-                    else if (String.valueOf(date).endsWith("2"))
-                        return date + "nd";
-                    else if (String.valueOf(date).endsWith("3"))
-                        return date + "rd";
-                    else
-                        return date + "th";
-                }
-            }, 20L);
-        }
 
         try {
             logDebugMessage("Initializing Metrics!", "startup");
