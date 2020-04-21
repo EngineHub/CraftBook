@@ -16,18 +16,19 @@
 
 package com.me4502.util;
 
+import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.logging.Level;
-
-import com.sk89q.craftbook.CraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Bukkit;
 
 public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
@@ -36,23 +37,13 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
     }
 
     public static void createConfigSectionFile(File folder, YAMLProcessor config, String path) throws IOException {
-
-        String fpath = path;
-        if(fpath == null) fpath = "root";
-        else if(fpath.contains("."))
-            fpath = RegexUtil.PERIOD_PATTERN.split(fpath)[RegexUtil.PERIOD_PATTERN.split(fpath).length-1];
-        File file = new File(folder, fpath + ".txt");
+        File file = new File(folder, (path == null ? "root" : path) + ".txt");
         if(!file.exists()) {
             new File(file.getParent()).mkdirs();
-            file.createNewFile();
         } else {
             file.delete();
-            file.createNewFile();
         }
-        if (config.getKeys(path) == null) {
-            return;
-        }
-
+        file.createNewFile();
         PrintWriter pw = new PrintWriter(file, "UTF-8");
 
         pw.print("Configuration\n");
@@ -60,17 +51,17 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
         int nodeLength = "Node".length(), commentLength = "Comment".length(), defaultLength = "Default".length();
 
-        for(String key : config.getKeys(path)) {
-            if(config.getProperty(path == null ? key : path + "." + key) != null && !(config.getProperty(path == null ? key : path + "." + key) instanceof Map)) {
-                String node = (path == null ? key : path + "." + key);
-                if (nodeLength < node.length()) {
-                    nodeLength = node.length();
+        for(String key : config.getKeys(null)) {
+            Object property = config.getProperty(key);
+            if(property != null && !(property instanceof Map)) {
+                if (nodeLength < key.length()) {
+                    nodeLength = key.length();
                 }
-                String def = String.valueOf(config.getProperty(path == null ? key : path + "." + key));
+                String def = String.valueOf(property);
                 if (defaultLength < def.length()) {
                     defaultLength = def.length();
                 }
-                String comment = config.getComment(path == null ? key : path + "." + key);
+                String comment = config.getComment(key);
                 if(comment == null) {
                     comment = "";
                 }
@@ -89,21 +80,18 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
         pw.println(padToLength("Default", defaultLength + 1));;
         pw.println(border);
 
-        for(String key : config.getKeys(path)) {
-            if(config.getProperty(path == null ? key : path + "." + key) != null && !(config.getProperty(path == null ? key : path + "." + key) instanceof Map)) {
-                String comment = config.getComment(path == null ? key : path + "." + key);
-                if(comment == null) {
-                    System.out.println("[WARNING] Key " + path == null ? key : path + "." + key + " is missing a comment!");
-                    comment = "";
-                    missingComments ++;
-                }
-                if(!comment.trim().isEmpty()) comment = comment.trim().substring(2);
+        for(String key : config.getKeys(null)) {
+            String comment = config.getComment(key);
+            if(comment == null) {
+                System.out.println("[WARNING] Key " + key + " is missing a comment!");
+                comment = "";
+                missingComments ++;
+            }
+            if(!comment.trim().isEmpty()) comment = comment.trim().substring(2);
 
-                pw.print(padToLength((path == null ? key : path + "." + key), nodeLength + 1));
-                pw.print(padToLength(comment, commentLength + 1));
-                pw.println(padToLength(String.valueOf(config.getProperty(path == null ? key : path + "." + key)), defaultLength + 1));
-            } else
-                createConfigSectionFile(new File(folder, key + "/"), config, path == null ? key : path + "." + key);
+            pw.print(padToLength(key, nodeLength + 1));
+            pw.print(padToLength(comment, commentLength + 1));
+            pw.println(padToLength(String.valueOf(config.getProperty(key)), defaultLength + 1));
         }
         pw.println(border);
 
@@ -140,19 +128,26 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
             CraftBookPlugin.availableMechanics.forEach((mech, aClass) -> {
                 try {
-                    try {
-                        if (aClass != null) {
+                    if (aClass != null) {
+                        CraftBookMechanic me = aClass.getMechanicClass().newInstance();
+                        File file = new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), aClass.getName() + ".yml");
 
-                            CraftBookMechanic me = aClass.getMechanicClass().newInstance();
-                            me.loadFromConfiguration(CraftBookPlugin.inst().getMechanismsConfig());
+                        YAMLProcessor mechanicConfig = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);
+
+                        try {
+                            mechanicConfig.load();
+                        } catch (FileNotFoundException e) {
+                            // Ignore this one.
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (Throwable t) {
-                        Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mech, t);
-                    }
 
-                    createConfigSectionFile(configFolder, CraftBookPlugin.inst().getMechanismsConfig(), "mechanics." + mech);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        me.loadFromConfiguration(mechanicConfig);
+
+                        createConfigSectionFile(configFolder, mechanicConfig, mech);
+                    }
+                } catch (Throwable t) {
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mech, t);
                 }
             });
         } catch (IOException e) {

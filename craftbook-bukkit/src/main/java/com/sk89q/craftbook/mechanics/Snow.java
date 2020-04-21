@@ -109,7 +109,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean isReplacable(Block block) {
         return !(block.getType() == Material.WATER || block.getType() == Material.LAVA)
                 && (BlockUtil.isBlockReplacable(block.getType())
-                || Blocks.containsFuzzy(realisticReplacables, BukkitAdapter.adapt(block.getBlockData())));
+                || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(block.getBlockData())));
     }
 
     private boolean canLandOn(Block block) {
@@ -480,7 +480,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean pileHigh;
     private int maxPileHeight;
     private boolean jumpTrample;
-    private List<BaseBlock> realisticReplacables;
+    private List<BaseBlock> dispersionReplacables;
     private int dispersionTickSpeed;
     private boolean freezeWater;
     private boolean meltSunlight;
@@ -509,14 +509,14 @@ public class Snow extends AbstractCraftBookMechanic {
         config.setComment("jump-trample", "Require jumping to trample snow.");
         jumpTrample = config.getBoolean("jump-trample", false);
 
-        config.setComment("place", "Allow snowballs to create snow when they land.");
-        snowballPlacement = config.getBoolean("place", false);
+        config.setComment("place-snowball", "Allow snowballs to create snow when they land.");
+        snowballPlacement = config.getBoolean("place-snowball", false);
 
         config.setComment("slowdown", "Slows down entities as they walk through thick snow.");
         slowdown = config.getBoolean("slowdown", false);
 
-        config.setComment("realistic", "Realistically move snow around, creating an 'avalanche' or 'mound' effect.");
-        dispersionMode = config.getBoolean("realistic", false);
+        config.setComment("dispersion", "Enable realistic snow dispersion.");
+        dispersionMode = config.getBoolean("dispersion", false);
 
         config.setComment("high-piling", "Allow piling above the 1 block height.");
         pileHigh = config.getBoolean("high-piling", false);
@@ -524,8 +524,8 @@ public class Snow extends AbstractCraftBookMechanic {
         config.setComment("max-pile-height", "The maximum piling height of high piling snow.");
         maxPileHeight = config.getInt("max-pile-height", 3);
 
-        config.setComment("replacable-blocks", "A list of blocks that can be replaced by realistic snow.");
-        realisticReplacables = BlockSyntax.getBlocks(config.getStringList("replacable-blocks", getDefaultReplacables()), true);
+        config.setComment("replaceable-blocks", "A list of blocks that can be replaced by snow dispersion.");
+        dispersionReplacables = BlockSyntax.getBlocks(config.getStringList("replaceable-blocks", getDefaultReplacables()), true);
 
         config.setComment("dispersion-tick-speed", "The speed at which dispersion actions are run");
         dispersionTickSpeed = config.getInt("dispersion-tick-speed", 20);
