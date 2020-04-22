@@ -113,7 +113,11 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     private boolean canLandOn(Block block) {
-        return block.getType() == Material.SNOW || block.getPistonMoveReaction() != PistonMoveReaction.BREAK;
+        Material type = block.getType();
+        if (freezeWater && type == Material.WATER) {
+            return true;
+        }
+        return type != Material.ICE && (type == Material.SNOW || block.getPistonMoveReaction() != PistonMoveReaction.BREAK);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -203,13 +207,8 @@ public class Snow extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (event.getBlock().getType() == Material.SNOW) {
-            event.setCancelled(true);
-            event.getBlock().setType(Material.AIR);
-
-            for (BlockFace dir : UPDATE_FACES) {
-                addToDispersionQueue(event.getBlock().getRelative(dir));
-            }
+        for (BlockFace dir : UPDATE_FACES) {
+            addToDispersionQueue(event.getBlock().getRelative(dir));
         }
     }
 
@@ -342,6 +341,10 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
+        if (snowData.getLayers() == snowData.getMinimumLayers()) {
+            // Don't disperse bottom layer snow.
+            return;
+        }
 
         Block below = snow.getRelative(BlockFace.DOWN);
         Material belowType = below.getType();
@@ -440,30 +443,27 @@ public class Snow extends AbstractCraftBookMechanic {
                     Material type = block.getType();
                     double temperature = block.getTemperature();
 
-                    if (type == Material.ICE && meltMode && temperature > SNOW_MELTING_TEMPERATURE) {
+                    Block above = block.getRelative(BlockFace.UP);
+                    Material aboveType = above.getType();
+                    double aboveTemperature = above.getTemperature();
+
+                    if (type == Material.ICE && aboveType != Material.SNOW && meltMode && temperature > SNOW_MELTING_TEMPERATURE) {
                         block.setType(Material.WATER);
                         continue;
                     }
 
-                    if (type == Material.SNOW) {
-                        System.out.println("Found snow here :thonk:");
-                    }
-
-                    block = block.getRelative(BlockFace.UP);
-                    type = block.getType();
-                    if (type == Material.SNOW) {
-                        if (meltMode && temperature > SNOW_MELTING_TEMPERATURE) {
+                    if (aboveType == Material.SNOW) {
+                        if (meltMode) {
                             if (meltPartial) {
-                                org.bukkit.block.data.type.Snow snowBlock = (org.bukkit.block.data.type.Snow) block.getBlockData();
-                                if (snowBlock.getLayers() == snowBlock.getMinimumLayers()
-                                        && block.getRelative(BlockFace.DOWN).getType() != Material.SNOW) {
+                                org.bukkit.block.data.type.Snow snowBlock = (org.bukkit.block.data.type.Snow) above.getBlockData();
+                                if (aboveTemperature <= SNOW_MELTING_TEMPERATURE && snowBlock.getLayers() == snowBlock.getMinimumLayers() && type != Material.SNOW) {
                                     continue;
                                 }
                             }
 
-                            decreaseSnow(block, false);
-                        } else if (!meltMode && temperature < SNOW_FORM_TEMPERATURE) {
-                            increaseSnow(block, true);
+                            decreaseSnow(above, false);
+                        } else if (aboveTemperature <= SNOW_FORM_TEMPERATURE) {
+                            increaseSnow(above, true);
                         }
                     }
                 }
@@ -536,7 +536,7 @@ public class Snow extends AbstractCraftBookMechanic {
         config.setComment("melt-in-sunlight", "Enables snow to melt in sunlight.");
         meltSunlight = config.getBoolean("melt-in-sunlight", false);
 
-        config.setComment("partial-melt-only", "If melt in sunlight is enabled, only melt it down to the smallest snow.");
-        meltPartial = config.getBoolean("partial-melt-only", false);
+        config.setComment("partial-melt-only", "If melt in sunlight is enabled, only melt it down to the smallest snow similar to vanilla MC.");
+        meltPartial = config.getBoolean("partial-melt-only", true);
     }
 }
