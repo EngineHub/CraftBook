@@ -508,8 +508,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         flyingPlayers.remove(p.getUniqueId());
     }
 
-    private Direction getVerticalDirection(Location from, Location to)
-    {
+    private Direction getVerticalDirection(Location from, Location to) {
         if(from.getY() < to.getY())
             return Direction.UP;
         else if (from.getY() > to.getY())
