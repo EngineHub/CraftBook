@@ -18,7 +18,7 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -214,7 +214,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         if (player.isInsideVehicle()) {
             org.bukkit.Location newLocation = CraftBookBukkitUtil.toLocation(subspaceRift);
-            Vehicle teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
             player.teleport(subspaceRift);
 
