@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +19,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        Vehicle vehicle = event.getVehicle();
+        Entity vehicle = event.getVehicle();
 
         if (!(vehicle instanceof RideableMinecart)) return;
 

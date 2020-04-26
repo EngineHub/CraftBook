@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -21,7 +21,7 @@ public class MobBlocker extends AbstractCraftBookMechanic {
         if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
             return;
 
-        Vehicle vehicle = event.getVehicle();
+        Entity vehicle = event.getVehicle();
 
         if (!(vehicle instanceof Minecart)) return;
 

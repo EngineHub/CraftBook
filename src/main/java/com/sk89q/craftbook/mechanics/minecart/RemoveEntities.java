@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mechanics.minecart;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,14 +41,12 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
             if (Double.isFinite(newVelocity.getX()) && Double.isFinite(newVelocity.getY()) && Double.isFinite(newVelocity.getZ())) {
                 event.getEntity().setVelocity(newVelocity);
             }
-        } else if (event.getEntity() instanceof Vehicle) {
-
-            if(!event.getEntity().isEmpty())
+        } else {
+            if(!event.getEntity().getPassengers().isEmpty())
                 return;
             else
                 event.getEntity().remove();
-        } else
-            event.getEntity().remove();
+        }
 
         event.setCancelled(true);
         event.setPickupCancelled(true);

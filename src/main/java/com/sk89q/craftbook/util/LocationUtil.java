@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -320,16 +319,16 @@ public final class LocationUtil {
      * otherwise it doesn't work.
      * @param player        The player that will be ejected and whose vehicle will be teleported.
      * @param newLocation   The location the vehicle will be teleported to.
-     * @return The {@link Vehicle} the player was in or null if player was not in vehicle.
+     * @return The {@link Entity} the player was in or null if player was not in vehicle.
      */
-    public static Vehicle ejectAndTeleportPlayerVehicle(CraftBookPlayer player, Location newLocation) {
+    public static Entity ejectAndTeleportPlayerVehicle(CraftBookPlayer player, Location newLocation) {
 
         Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
 
         if(bukkitPlayer == null || !bukkitPlayer.isInsideVehicle())
             return null;
 
-        Vehicle vehicle = (Vehicle)bukkitPlayer.getVehicle();
+        Entity vehicle = bukkitPlayer.getVehicle();
 
         if(vehicle == null)
             return null;
@@ -353,7 +352,7 @@ public final class LocationUtil {
      * @param vehicle   The vehicle that will set the player as a passenger.
      * @param player    The player that will be put inside the provided vehicle.
      */
-    public static void addVehiclePassengerDelayed(Vehicle vehicle, CraftBookPlayer player) {
+    public static void addVehiclePassengerDelayed(Entity vehicle, CraftBookPlayer player) {
 
         Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
 

@@ -39,8 +39,8 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Switch;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -68,7 +68,7 @@ import java.util.UUID;
 public class Elevator extends AbstractCraftBookMechanic {
 
     private HashSet<UUID> flyingPlayers;
-    private HashMap<UUID, Vehicle> playerVehicles;
+    private HashMap<UUID, Entity> playerVehicles;
 
     @Override
     public boolean enable() {
@@ -374,7 +374,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
             if (player.isInsideVehicle()) {
                 Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
-                playerVehicles.put(player.getUniqueId(), (Vehicle)bukkitPlayer.getVehicle());
+                playerVehicles.put(player.getUniqueId(), bukkitPlayer.getVehicle());
 
                 LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
@@ -463,7 +463,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         } else {
             // Teleport!
             if (player.isInsideVehicle()) {
-                Vehicle teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+                Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
                 player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
@@ -512,7 +512,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         boolean wasPlayerInVehicle = playerVehicles.containsKey(player.getUniqueId());
 
         if(wasPlayerInVehicle) {
-            Vehicle vehicle = playerVehicles.get(player.getUniqueId());
+            Entity vehicle = playerVehicles.get(player.getUniqueId());
             LocationUtil.addVehiclePassengerDelayed(vehicle, player);
             playerVehicles.remove(player.getUniqueId());
         }

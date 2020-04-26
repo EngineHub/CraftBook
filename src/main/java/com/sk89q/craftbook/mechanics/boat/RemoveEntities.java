@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mechanics.boat;
 
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
@@ -38,14 +37,13 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
             } catch(IllegalArgumentException e) {
                 event.getEntity().setVelocity(HALF_BLOCK_UP);
             }
-        } else if (event.getEntity() instanceof Vehicle) {
+        } else {
 
-            if(!event.getEntity().isEmpty())
+            if(!event.getEntity().getPassengers().isEmpty())
                 return;
             else
                 event.getEntity().remove();
-        } else
-            event.getEntity().remove();
+        }
 
         event.setCancelled(true);
         event.setPickupCancelled(true);
