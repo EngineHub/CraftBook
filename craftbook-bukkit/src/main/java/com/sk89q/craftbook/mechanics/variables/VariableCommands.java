@@ -20,7 +20,6 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.exceptions.FastCommandException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -35,11 +34,8 @@ import java.util.Map.Entry;
 
 public class VariableCommands {
 
-    private CraftBookPlugin plugin;
 
     public VariableCommands(CraftBookPlugin plugin) {
-
-        this.plugin = plugin;
     }
 
     @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
@@ -61,17 +57,17 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "define", desc = "Defines a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
@@ -95,14 +91,14 @@ public class VariableCommands {
             if(!hasVariablePermission(sender, key, context.getString(0), "define"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
-            throw new FastCommandException("Existing Variable!");
+            throw new CommandException("Existing Variable!");
     }
 
     @Command(aliases = "get", desc = "Checks a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
@@ -126,10 +122,10 @@ public class VariableCommands {
             if(!hasVariablePermission(sender, key, context.getString(0), "get"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
             sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "list", desc = "Lists variables", flags="an:p:", usage = "-p <page> -n <Namespace> -a")
@@ -210,12 +206,12 @@ public class VariableCommands {
             if(!hasVariablePermission(sender, key, context.getString(0), "erase"))
                 throw new CommandPermissionsException();
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
             VariableManager.instance.removeVariable(context.getString(0), key);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Removed variable: " + context.getString(0));
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     private static void resetICCache(String variable, String namespace) {
@@ -246,17 +242,17 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, VariableManager.instance.getVariable(context.getString(0), key) + context.getString(1));
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "prepend", desc = "Prepend to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Prepended Value> -n <Namespace>")
@@ -278,17 +274,17 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, context.getString(1) + VariableManager.instance.getVariable(context.getString(0), key));
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
@@ -310,7 +306,7 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
@@ -322,12 +318,12 @@ public class VariableCommands {
             else if(var.equalsIgnoreCase("yes") || var.equalsIgnoreCase("no"))
                 var = var.equalsIgnoreCase("yes") ? "no" : "yes";
             else
-                throw new FastCommandException("Variable not of boolean type!");
+                throw new CommandException("Variable not of boolean type!");
             VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Added Value> -n <Namespace>")
@@ -349,12 +345,12 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
@@ -365,13 +361,13 @@ public class VariableCommands {
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
             } catch(Exception e) {
-                throw new FastCommandException("Variable not of numeric type!");
+                throw new CommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Subtracting Value> -n <Namespace>")
@@ -393,12 +389,12 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
@@ -409,13 +405,13 @@ public class VariableCommands {
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
             } catch(Exception e) {
-                throw new FastCommandException("Variable not of numeric type!");
+                throw new CommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = {"multiply","multiple"}, desc = "Multiply a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Multiplying Value> -n <Namespace>")
@@ -437,12 +433,12 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
@@ -453,13 +449,13 @@ public class VariableCommands {
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
             } catch(Exception e) {
-                throw new FastCommandException("Variable not of numeric type!");
+                throw new CommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Dividing Value> -n <Namespace>")
@@ -481,19 +477,19 @@ public class VariableCommands {
         if(VariableManager.instance.hasVariable(context.getString(0), key)) {
 
             if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
-                throw new FastCommandException("Invalid Variable Name!");
+                throw new CommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
-                throw new FastCommandException("Invalid Variable Value!");
+                throw new CommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
                 if(f == 0)
-                    throw new FastCommandException("Can't divide by 0!");
+                    throw new CommandException("Can't divide by 0!");
                 f /= context.getDouble(1);
                 var = String.valueOf(f);
                 if (var.endsWith(".0"))
@@ -501,13 +497,13 @@ public class VariableCommands {
             } catch (RuntimeException e) {
                 throw e;
             } catch(Exception e) {
-                throw new FastCommandException("Variable not of numeric type!");
+                throw new CommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
             resetICCache(context.getString(0), key);
             sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + var);
         } else
-            throw new FastCommandException("Unknown Variable!");
+            throw new CommandException("Unknown Variable!");
     }
 
     private static void checkModifyPermissions(CommandSender sender, String key, String var) throws CommandException {

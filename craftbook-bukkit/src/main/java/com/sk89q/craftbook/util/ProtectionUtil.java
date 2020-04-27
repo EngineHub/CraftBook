@@ -67,7 +67,6 @@ public final class ProtectionUtil {
 
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
-            CompatabilityUtil.disableInterferences(player);
             BlockEvent event;
             if (build)
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
@@ -75,7 +74,6 @@ public final class ProtectionUtil {
                 event = new BlockBreakEvent(block, player);
             EventUtil.ignoreEvent(event);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
-            CompatabilityUtil.enableInterferences(player);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
         return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || (CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block));
@@ -85,11 +83,9 @@ public final class ProtectionUtil {
     public static boolean canSendCommand(Player player, String command) {
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
-            CompatabilityUtil.disableInterferences(player);
             PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, command);
             EventUtil.ignoreEvent(event);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
-            CompatabilityUtil.enableInterferences(player);
             return !event.isCancelled();
         }
         return true;
@@ -108,11 +104,9 @@ public final class ProtectionUtil {
 
         if (!shouldUseProtection()) return true;
         if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
-            CompatabilityUtil.disableInterferences(player);
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             EventUtil.ignoreEvent(event);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
-            CompatabilityUtil.enableInterferences(player);
             if (!event.isCancelled() && CraftBookPlugin.inst().getConfiguration().obeyWorldguard && CraftBookPlugin.plugins.getWorldGuard() != null) {
                 return CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
             }

@@ -1,0 +1,77 @@
+/*
+ * CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
+ * CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
+package com.sk89q.craftbook.bukkit.report;
+
+import com.sk89q.worldedit.util.report.DataReport;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.generator.ChunkGenerator;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class WorldReport extends DataReport {
+
+    public WorldReport() {
+        super("Worlds");
+
+        List<World> worlds = Bukkit.getServer().getWorlds();
+
+        append("World Count", worlds.size());
+
+        for (World world : worlds) {
+            DataReport report = new DataReport("World: " + world.getName());
+            report.append("UUID", world.getUID());
+            report.append("World Type", world.getWorldType());
+            report.append("Environment", world.getEnvironment());
+            ChunkGenerator generator = world.getGenerator();
+            report.append("Chunk Generator", generator != null ? generator.getClass().getName() : "<Default>");
+
+            DataReport spawning = new DataReport("Spawning");
+            spawning.append("Animals?", world.getAllowAnimals());
+            spawning.append("Monsters?", world.getAllowMonsters());
+            spawning.append("Ambient Spawn Limit", world.getAmbientSpawnLimit());
+            spawning.append("Animal Spawn Limit", world.getAnimalSpawnLimit());
+            spawning.append("Monster Spawn Limit", world.getMonsterSpawnLimit());
+            spawning.append("Water Creature Spawn Limit", world.getWaterAnimalSpawnLimit());
+            report.append(spawning.getTitle(), spawning);
+
+            DataReport config = new DataReport("Configuration");
+            config.append("Difficulty", world.getDifficulty());
+            config.append("Max Height", world.getMaxHeight());
+            config.append("Sea Level", world.getSeaLevel());
+            report.append(config.getTitle(), config);
+
+            DataReport state = new DataReport("State");
+            state.append("Spawn Location", world.getSpawnLocation());
+            state.append("Full Time", world.getFullTime());
+            state.append("Weather Duration", world.getWeatherDuration());
+            state.append("Thunder Duration", world.getThunderDuration());
+            report.append(state.getTitle(), state);
+
+            DataReport protection = new DataReport("Protection");
+            protection.append("PVP?", world.getPVP());
+            protection.append("Game Rules", Arrays.stream(world.getGameRules())
+                    .map(name -> name + "=" + world.getGameRuleValue(name))
+                    .collect(Collectors.joining(", ")));
+            report.append(protection.getTitle(), protection);
+
+            append(report.getTitle(), report);
+        }
+    }
+}

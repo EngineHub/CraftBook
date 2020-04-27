@@ -14,23 +14,28 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.exceptions;
+package com.sk89q.craftbook.bukkit.report;
 
-import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.worldedit.util.report.DataReport;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.ServicesManager;
 
-public class FastCommandException extends CommandException {
+import java.util.Collection;
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3320261678457961218L;
+public class ServicesReport extends DataReport {
 
-    public FastCommandException(String message) {
-        super(message);
+    public ServicesReport() {
+        super("Services");
+
+        ServicesManager manager = Bukkit.getServer().getServicesManager();
+        Collection<Class<?>> services = manager.getKnownServices();
+
+        for (Class<?> service : services) {
+            Object provider = manager.load(service);
+            if (provider != null) {
+                append(service.getName(), provider);
+            }
+        }
     }
 
-    @Override
-    public Throwable fillInStackTrace() {
-        return null;
-    }
 }

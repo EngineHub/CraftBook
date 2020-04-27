@@ -16,17 +16,19 @@
 
 package com.sk89q.craftbook.core.mechanic;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.sk89q.craftbook.CraftBookMechanic;
 
-public class MechanicRegistration {
+public class MechanicRegistration<T extends CraftBookMechanic> {
 
     private final String name;
-    private final Class<? extends CraftBookMechanic> mechanicClass;
+    private final String className;
     private final MechanicCategory category;
 
-    public MechanicRegistration(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
+    private MechanicRegistration(String name, String className, MechanicCategory category) {
         this.name = name;
-        this.mechanicClass = mechanicClass;
+        this.className = className;
         this.category = category;
     }
 
@@ -34,11 +36,51 @@ public class MechanicRegistration {
         return this.name;
     }
 
-    public Class<? extends CraftBookMechanic> getMechanicClass() {
-        return this.mechanicClass;
+    @SuppressWarnings("unchecked")
+    public T create() throws ReflectiveOperationException {
+        Class<T> clazz = (Class<T>) Class.forName(this.className);
+        return clazz.getDeclaredConstructor().newInstance();
     }
 
     public MechanicCategory getCategory() {
         return this.category;
+    }
+
+    public boolean matches(CraftBookMechanic mechanic) {
+        return mechanic.getClass().getName().equals(this.className);
+    }
+
+    public static class Builder<T extends CraftBookMechanic> {
+
+        private String name;
+        private String className;
+        private MechanicCategory mechanicCategory;
+
+        public Builder<T> name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder<T> className(String className) {
+            this.className = className;
+            return this;
+        }
+
+        public Builder<T> category(MechanicCategory mechanicCategory) {
+            this.mechanicCategory = mechanicCategory;
+            return this;
+        }
+
+        public MechanicRegistration<T> build() {
+            checkNotNull(name, "Name must be provided");
+            checkNotNull(className, "Class name must be provided");
+            checkNotNull(mechanicCategory, "Mechanic category must be provided");
+
+            return new MechanicRegistration<>(this.name, this.className, this.mechanicCategory);
+        }
+
+        public static <T extends CraftBookMechanic> Builder<T> create() {
+            return new Builder<>();
+        }
     }
 }

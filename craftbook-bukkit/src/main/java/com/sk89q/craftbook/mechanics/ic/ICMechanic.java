@@ -452,7 +452,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             }
 
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-                ChangedSign sign = CraftBookPlugin.inst().getNmsAdapter().getChangedSign(event.getBlock(), event.getLines(), null);
+                ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock(), event.getLines(), null);
 
                 //WorldEdit offset/radius tools.
                 ICUtil.parseSignFlags(player, sign);

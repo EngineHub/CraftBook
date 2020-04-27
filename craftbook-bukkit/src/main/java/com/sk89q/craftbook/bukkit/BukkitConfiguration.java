@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.report.Unreported;
 
 /**
  * A CraftBook implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration}.
@@ -56,8 +57,8 @@ public class BukkitConfiguration {
 
     public String persistentStorageType;
 
-    public YAMLProcessor config;
-    public Logger logger;
+    @Unreported public YAMLProcessor config;
+    @Unreported public Logger logger;
 
     public BukkitConfiguration(YAMLProcessor config, Logger logger) {
 
@@ -99,7 +100,7 @@ public class BukkitConfiguration {
 
         enabledMechanics = new ArrayList<>();
         config.setComment("mechanics", "List of mechanics and whether they are enabled or not");
-        for (MechanicRegistration availableMechanic : CraftBookPlugin.availableMechanics.values()) {
+        for (MechanicRegistration<?> availableMechanic : CraftBookPlugin.availableMechanics.values()) {
             String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
             boolean enabled = config.getBoolean(path, availableMechanic.getName().equals("Variables"));
             if (enabled) {
@@ -165,7 +166,7 @@ public class BukkitConfiguration {
     }
 
     public void save() {
-        for (MechanicRegistration availableMechanic : CraftBookPlugin.availableMechanics.values()) {
+        for (MechanicRegistration<?> availableMechanic : CraftBookPlugin.availableMechanics.values()) {
             String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
             config.setProperty(path, enabledMechanics.contains(availableMechanic.getName()));
         }

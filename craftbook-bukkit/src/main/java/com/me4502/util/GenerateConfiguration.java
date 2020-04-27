@@ -74,7 +74,7 @@ public class GenerateConfiguration extends ExternalUtilityBase {
             MechanicRegistration mechanicRegistration = CraftBookPlugin.availableMechanics.get(enabled);
             try {
                 if(mechanicRegistration != null) {
-                    CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
+                    CraftBookMechanic mech = mechanicRegistration.create();
                     mech.loadConfiguration(new File(mechanicsFolder, mechanicRegistration.getName() + ".yml"));
                 }
             } catch (Throwable t) {

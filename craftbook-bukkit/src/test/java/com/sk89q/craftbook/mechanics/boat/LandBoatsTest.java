@@ -22,11 +22,13 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 
 import org.bukkit.entity.Boat;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Boat.class, VehicleCreateEvent.class, LandBoats.class})
 public class LandBoatsTest {

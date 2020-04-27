@@ -17,15 +17,28 @@
 package com.sk89q.craftbook.bukkit.commands;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
+import com.google.common.io.Files;
+import com.sk89q.craftbook.bukkit.report.GlobalConfigReport;
+import com.sk89q.craftbook.bukkit.report.LoadedICsReport;
+import com.sk89q.craftbook.bukkit.report.MechanicReport;
 import com.sk89q.craftbook.mechanics.headdrops.HeadDropsCommands;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.worldedit.util.paste.ActorCallbackPaste;
+import com.sk89q.worldedit.util.report.ReportList;
+import com.sk89q.worldedit.util.report.SystemInfoReport;
+import com.sk89q.worldguard.bukkit.util.report.PerformanceReport;
+import com.sk89q.worldguard.bukkit.util.report.PluginReport;
+import com.sk89q.worldguard.bukkit.util.report.SchedulerReport;
+import com.sk89q.worldguard.bukkit.util.report.ServerReport;
+import com.sk89q.worldguard.bukkit.util.report.ServicesReport;
+import com.sk89q.worldguard.bukkit.util.report.WorldReport;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.ReportWriter;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.area.AreaCommands;
 import com.sk89q.craftbook.mechanics.cauldron.CauldronCommands;
@@ -34,8 +47,6 @@ import com.sk89q.craftbook.mechanics.ic.ICCommands;
 import com.sk89q.craftbook.mechanics.items.CommandItemCommands;
 import com.sk89q.craftbook.mechanics.signcopier.SignEditCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
-import com.sk89q.craftbook.util.PastebinPoster;
-import com.sk89q.craftbook.util.PastebinPoster.PasteCallback;
 import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
@@ -47,7 +58,6 @@ import org.bukkit.entity.Player;
 public class TopLevelCommands {
 
     public TopLevelCommands(CraftBookPlugin plugin) {
-
     }
 
     @Command(aliases = {"craftbook", "cb"}, desc = "CraftBook Plugin commands")
@@ -95,8 +105,10 @@ public class TopLevelCommands {
 
     public static class Commands {
 
-        public Commands(CraftBookPlugin plugin) {
+        private final CraftBookPlugin plugin;
 
+        public Commands(CraftBookPlugin plugin) {
+            this.plugin = plugin;
         }
 
         @Command(aliases = {"var"}, desc = "Variable commands")
@@ -136,12 +148,9 @@ public class TopLevelCommands {
             if(!(sender instanceof Player)) {
                 throw new CommandException("Only players can use this command!");
             }
-            if (((Player) sender).getInventory().getItemInMainHand() != null) {
-                sender.sendMessage(ChatColor.YELLOW + "Main hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInMainHand()));
-            }
-            if (((Player) sender).getInventory().getItemInOffHand() != null) {
-                sender.sendMessage(ChatColor.YELLOW + "Off hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInOffHand()));
-            }
+
+            sender.sendMessage(ChatColor.YELLOW + "Main hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInMainHand()));
+            sender.sendMessage(ChatColor.YELLOW + "Off hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInOffHand()));
         }
 
         @Command(aliases = {"cbid", "craftbookid"}, desc = "Gets the players CBID.")
@@ -155,19 +164,28 @@ public class TopLevelCommands {
         @Command(aliases = {"report"}, desc = "Writes a report on CraftBook", flags = "pi", max = 0)
         @CommandPermissions({"craftbook.report"})
         public void report(CommandContext args, final CommandSender sender) throws CommandException {
+            ReportList report = new ReportList("Report");
 
-            File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
-            ReportWriter report = new ReportWriter(CraftBookPlugin.inst());
+            report.add(new ServerReport());
+            report.add(new PluginReport());
+            report.add(new SchedulerReport());
+            report.add(new ServicesReport());
+            report.add(new WorldReport());
+            report.add(new PerformanceReport());
+            report.add(new SystemInfoReport());
+            report.add(new GlobalConfigReport());
+            report.add(new MechanicReport());
 
-            if(args.hasFlag('i'))
-                report.appendFlags("i");
+            if (args.hasFlag('i')) {
+                report.add(new LoadedICsReport());
+            }
 
-            report.generate();
+            String result = report.toString();
 
             try {
-                report.write(dest);
-                sender.sendMessage(ChatColor.YELLOW + "CraftBook report written to "
-                        + dest.getAbsolutePath());
+                File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
+                Files.write(result, dest, StandardCharsets.UTF_8);
+                sender.sendMessage(ChatColor.YELLOW + "CraftBook report written to " + dest.getAbsolutePath());
             } catch (IOException e) {
                 throw new CommandException("Failed to write report: " + e.getMessage());
             }
@@ -175,21 +193,12 @@ public class TopLevelCommands {
             if (args.hasFlag('p')) {
                 CraftBookPlugin.inst().checkPermission(sender, "craftbook.report.pastebin");
 
-                sender.sendMessage(ChatColor.YELLOW + "Now uploading to Pastebin...");
-                PastebinPoster.paste(report.toString(), new PasteCallback() {
-
-                    @Override
-                    public void handleSuccess(String url) {
-                        // Hope we don't have a thread safety issue here
-                        sender.sendMessage(ChatColor.YELLOW + "CraftBook report (1 hour): " + url);
-                    }
-
-                    @Override
-                    public void handleError(String err) {
-                        // Hope we don't have a thread safety issue here
-                        sender.sendMessage(ChatColor.YELLOW + "CraftBook report pastebin error: " + err);
-                    }
-                });
+                ActorCallbackPaste.pastebin(
+                        plugin.getSupervisor(),
+                        plugin.wrapCommandSender(sender),
+                        result,
+                        "CraftBook report: %s.report"
+                );
             }
         }
 
@@ -213,10 +222,15 @@ public class TopLevelCommands {
         public void enable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
 
             if(args.argsLength() > 0) {
-                if(CraftBookPlugin.inst().enableMechanic(args.getString(0)))
-                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully enabled " + args.getString(0));
-                else
-                    sender.sendMessage(ChatColor.RED + "Failed to load " + args.getString(0));
+                String mechanic = args.getString(0);
+                if (CraftBookPlugin.inst().enableMechanic(mechanic)) {
+                    plugin.getConfiguration().enabledMechanics.add(mechanic);
+                    plugin.getConfiguration().save();
+
+                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully enabled " + mechanic);
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Failed to load " + mechanic);
+                }
             }
         }
 

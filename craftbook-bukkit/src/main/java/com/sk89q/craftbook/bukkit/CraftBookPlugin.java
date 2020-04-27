@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.google.common.collect.Sets;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookManifest;
 import com.sk89q.craftbook.CraftBookMechanic;
@@ -52,7 +51,6 @@ import com.sk89q.craftbook.mechanics.Netherrack;
 import com.sk89q.craftbook.mechanics.PaintingSwitch;
 import com.sk89q.craftbook.mechanics.Payment;
 import com.sk89q.craftbook.mechanics.RedstoneJukebox;
-import com.sk89q.craftbook.mechanics.Snow;
 import com.sk89q.craftbook.mechanics.Sponge;
 import com.sk89q.craftbook.mechanics.Teleporter;
 import com.sk89q.craftbook.mechanics.TreeLopper;
@@ -87,7 +85,6 @@ import com.sk89q.craftbook.mechanics.minecart.PlaceAnywhere;
 import com.sk89q.craftbook.mechanics.minecart.RailPlacer;
 import com.sk89q.craftbook.mechanics.minecart.TemporaryCart;
 import com.sk89q.craftbook.mechanics.minecart.VisionSteering;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartBooster;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartDeposit;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartDispenser;
@@ -103,12 +100,10 @@ import com.sk89q.craftbook.mechanics.pipe.Pipes;
 import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.ArrayUtil;
-import com.sk89q.craftbook.util.CompatabilityUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.UUIDMappings;
-import com.sk89q.craftbook.util.compat.companion.CompanionPlugins;
-import com.sk89q.craftbook.util.compat.nms.NMSAdapter;
+import com.sk89q.craftbook.util.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -120,6 +115,10 @@ import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
+import com.sk89q.worldedit.bukkit.BukkitCommandSender;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.util.task.SimpleSupervisor;
+import com.sk89q.worldedit.util.task.Supervisor;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -146,7 +145,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -213,7 +211,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * List of common mechanics.
      */
-    private List<CraftBookMechanic> mechanics;
+    private List<CraftBookMechanic> loadedMechanics;
 
     /**
      * The manager for SelfTriggering components.
@@ -221,18 +219,29 @@ public class CraftBookPlugin extends JavaPlugin {
     private SelfTriggeringManager selfTriggerManager;
 
     /**
-     * The NMS Adapter.
+     * The Supervisor for CraftBook tasks.
      */
-    private NMSAdapter nmsAdapter;
+    private final Supervisor supervisor = new SimpleSupervisor();
 
-    public static final Map<String, MechanicRegistration> availableMechanics;
-
-    public boolean useLegacyCartSystem = false;
+    public static final Map<String, MechanicRegistration<? extends CraftBookMechanic>> availableMechanics;
 
     private static final int BSTATS_ID = 3319;
 
+    @Deprecated
     public static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
-        availableMechanics.put(name, new MechanicRegistration(name, mechanicClass, category));
+//        logger().warning("Registered legacy mechanic: " + name);
+        MechanicRegistration<?> mechanicRegistration = MechanicRegistration.Builder
+                .create()
+                .name(name)
+                .className(mechanicClass.getName())
+                .category(category)
+                .build();
+
+        registerMechanic(mechanicRegistration);
+    }
+
+    public static void registerMechanic(MechanicRegistration<?> mechanicRegistration) {
+        availableMechanics.put(mechanicRegistration.getName(), mechanicRegistration);
     }
 
     static {
@@ -242,7 +251,6 @@ public class CraftBookPlugin extends JavaPlugin {
         registerMechanic("CommandItems", CommandItems.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("CustomCrafting", CustomCrafting.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("DispenserRecipes", DispenserRecipes.class, MechanicCategory.GENERAL);
-        registerMechanic("Snow", Snow.class, MechanicCategory.GENERAL);
         registerMechanic("CustomDrops", CustomDrops.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("AI", AIMechanic.class, MechanicCategory.GENERAL);
         registerMechanic("PaintingSwitcher", PaintingSwitch.class, MechanicCategory.GENERAL);
@@ -317,6 +325,14 @@ public class CraftBookPlugin extends JavaPlugin {
         registerMechanic("LandBoats", LandBoats.class, MechanicCategory.BOAT);
         registerMechanic("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
         registerMechanic("BoatWaterPlaceOnly", WaterPlaceOnly.class, MechanicCategory.BOAT);
+
+        registerMechanic(MechanicRegistration.Builder
+                .create()
+                .name("Snow")
+                .className("com.sk89q.craftbook.mechanics.Snow")
+                .category(MechanicCategory.GENERAL)
+                .build()
+        );
     }
 
     /**
@@ -324,20 +340,19 @@ public class CraftBookPlugin extends JavaPlugin {
      * this merely instantiates the objects.
      */
     public CraftBookPlugin() {
-
         super();
+
         // Set the instance
         instance = this;
     }
 
-    public List<CraftBookMechanic> getMechanics() {
-
-        return mechanics;
+    public List<CraftBookMechanic> getLoadedMechanics() {
+        return this.loadedMechanics;
     }
 
     public boolean isMechanicEnabled(Class<? extends CraftBookMechanic> clazz) {
 
-        for(CraftBookMechanic mech : mechanics) {
+        for(CraftBookMechanic mech : loadedMechanics) {
             if(mech.getClass().equals(clazz))
                 return true;
         }
@@ -347,7 +362,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public CraftBookMechanic getMechanic(Class<? extends CraftBookMechanic> clazz) {
 
-        for(CraftBookMechanic mech : mechanics) {
+        for(CraftBookMechanic mech : loadedMechanics) {
             if(mech.getClass().equals(clazz))
                 return mech;
         }
@@ -366,36 +381,12 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Retrieve the NMS Adapter.
-     *
-     * <p>
-     *     Note: This may not actually be using NMS.
-     * </p>
-     *
-     * @return The NMS Adapter
-     */
-    public NMSAdapter getNmsAdapter() {
-        return this.nmsAdapter;
-    }
-
-    /**
-     * Sets the NMS Adapter.
-     *
-     * @param nmsAdapter The NMS Adapter
-     */
-    public void setNmsAdapter(NMSAdapter nmsAdapter) {
-        this.nmsAdapter = nmsAdapter;
-    }
-
-    /**
      * Called on plugin enable.
      */
     @Override
     public void onEnable() {
 
         ItemSyntax.plugin = this;
-
-        nmsAdapter = new NMSAdapter();
 
         plugins = new CompanionPlugins();
         plugins.initiate(this);
@@ -479,7 +470,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
                 boolean foundAMech = false;
 
-                for(CraftBookMechanic mech : getMechanics())
+                for(CraftBookMechanic mech : getLoadedMechanics())
                     if(!(mech instanceof VariableManager)) {
                         foundAMech = true;
                         break;
@@ -493,7 +484,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         boolean foundAMech = false;
 
-        for(CraftBookMechanic mech : mechanics)
+        for(CraftBookMechanic mech : loadedMechanics)
             if(!(mech instanceof VariableManager)) {
                 foundAMech = true;
                 break;
@@ -506,8 +497,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         PaperLib.suggestPaper(this);
     }
-
-    private YAMLProcessor mechanismsConfig;
 
     /**
      * Register basic things to the plugin. For example, languages.
@@ -527,53 +516,19 @@ public class CraftBookPlugin extends JavaPlugin {
         languageManager = new LanguageManager();
         languageManager.init();
 
-        getServer().getScheduler().runTask(this, CompatabilityUtil::init);
-
-        mechanics = new ArrayList<>();
+        loadedMechanics = new ArrayList<>();
 
         logDebugMessage("Initializing Mechanisms!", "startup");
         try {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
-        } catch (Exception e) {};
+        } catch (Exception ignored) {}
 
-        for(String enabled : Sets.newHashSet(config.enabledMechanics)) {
+        availableMechanics.keySet()
+                .stream()
+                .filter(mechanic -> config.enabledMechanics.contains(mechanic))
+                .forEach(this::enableMechanic);
 
-            MechanicRegistration mechanicRegistration = availableMechanics.get(enabled);
-            try {
-                if(mechanicRegistration != null) {
-                    CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
-                    mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml"));
-                    mechanics.add(mech);
-                }
-            } catch (Throwable t) {
-                getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
-            }
-        }
-
-        boolean hasSTMechanic = false;
-
-        Iterator<CraftBookMechanic> iter = mechanics.iterator();
-        while(iter.hasNext()) {
-            CraftBookMechanic mech = iter.next();
-            try {
-                if(!mech.enable()) {
-                    getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
-                    mech.disable();
-                    iter.remove();
-                    continue;
-                }
-                getServer().getPluginManager().registerEvents(mech, this);
-                if(mech instanceof CookingPot || (mech instanceof ICMechanic && !((ICMechanic) mech).disableSelfTriggered)) //TODO make this a better check.
-                    hasSTMechanic = true;
-                if(mech instanceof CartBlockMechanism)
-                    useLegacyCartSystem = true;
-            } catch(Throwable t) {
-                getLogger().log(Level.WARNING, "Failed to enable mechanic: " + mech.getClass().getSimpleName(), t);
-            }
-        }
-
-        if(hasSTMechanic)
-            setupSelfTriggered();
+        setupSelfTriggered();
     }
 
     /**
@@ -583,28 +538,26 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and enabled.
      */
     public boolean enableMechanic(String mechanic) {
-        MechanicRegistration mechanicRegistration = availableMechanics.get(mechanic);
-        try {
-            if(mechanicRegistration != null) {
-                CraftBookMechanic mech = mechanicRegistration.getMechanicClass().newInstance();
+        MechanicRegistration<?> mechanicRegistration = availableMechanics.get(mechanic);
+        if(mechanicRegistration != null) {
+            try {
+                CraftBookMechanic mech = mechanicRegistration.create();
                 mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml"));
-                mechanics.add(mech);
+                loadedMechanics.add(mech);
 
                 if(!mech.enable()) {
-                    getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
+                    getLogger().warning("Failed to enable mechanic: " + mechanicRegistration.getName());
                     mech.disable();
                     return false;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
-            } else
+            } catch (Throwable t) {
+                getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanicRegistration.getName(), t);
                 return false;
-        } catch (Throwable t) {
-            getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanic, t);
+            }
+        } else {
             return false;
         }
-
-        config.enabledMechanics.add(mechanic);
-        config.save();
 
         return true;
     }
@@ -616,7 +569,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and disabled.
      */
     public boolean disableMechanic(String mechanic) {
-        MechanicRegistration mechanicRegistration = availableMechanics.get(mechanic);
+        MechanicRegistration<?> mechanicRegistration = availableMechanics.get(mechanic);
 
         if(mechanicRegistration == null) {
             return false;
@@ -624,8 +577,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         boolean found = false;
 
-        for(CraftBookMechanic mech : mechanics) {
-            if(mech.getClass().equals(mechanicRegistration.getMechanicClass())) {
+        for (CraftBookMechanic mech : loadedMechanics) {
+            if (mechanicRegistration.matches(mech)) {
                 found = true;
                 break;
             }
@@ -654,7 +607,7 @@ public class CraftBookPlugin extends JavaPlugin {
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.AdvancedPie("language",
                     () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
-                    () -> mechanics.stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
+                    () -> loadedMechanics.stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e1) {
             CraftBookBukkitUtil.printStacktrace(e1);
         }
@@ -668,10 +621,10 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(languageManager != null)
             languageManager.close();
-        if(mechanics != null) {
-            for(CraftBookMechanic mech : mechanics)
+        if(loadedMechanics != null) {
+            for(CraftBookMechanic mech : loadedMechanics)
                 mech.disable();
-            mechanics = null;
+            loadedMechanics = null;
         }
 
         if(hasPersistentStorage()) {
@@ -815,18 +768,22 @@ public class CraftBookPlugin extends JavaPlugin {
         return config;
     }
 
-    public YAMLProcessor getMechanismsConfig() {
-        return this.mechanismsConfig;
-    }
-
     /**
      * This method is used to get the CraftBook {@link LanguageManager}.
      *
      * @return The CraftBook {@link LanguageManager}
      */
     public LanguageManager getLanguageManager() {
+        return this.languageManager;
+    }
 
-        return languageManager;
+    /**
+     * Gets the CraftBook {@link Supervisor}.
+     *
+     * @return The supervisor
+     */
+    public Supervisor getSupervisor() {
+        return this.supervisor;
     }
 
     /**
@@ -975,6 +932,14 @@ public class CraftBookPlugin extends JavaPlugin {
         }
     }
 
+    public Actor wrapCommandSender(CommandSender sender) {
+        if (sender instanceof Player) {
+            return wrapPlayer((Player) sender);
+        }
+
+        return new BukkitCommandSender(plugins.getWorldEdit(), sender);
+    }
+
     /**
      * Wrap a player as a CraftBookPlayer.
      *
@@ -1000,10 +965,10 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void reloadConfiguration() throws Throwable {
 
-        if(mechanics != null)
-            for(CraftBookMechanic mech : mechanics)
+        if(loadedMechanics != null)
+            for(CraftBookMechanic mech : loadedMechanics)
                 mech.disable();
-        mechanics = null;
+        loadedMechanics = null;
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
@@ -1089,12 +1054,6 @@ public class CraftBookPlugin extends JavaPlugin {
                 file.close();
             } catch (IOException ignored) {
             }
-    }
-
-    @Override
-    public File getFile() {
-
-        return super.getFile();
     }
 
     public static String getStackTrace(Throwable ex) {

@@ -19,7 +19,8 @@ package com.sk89q.craftbook.bukkit.util;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.craftbook.util.SignUtil;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.util.Location;
@@ -68,7 +69,8 @@ public final class CraftBookBukkitUtil {
     }
 
     public static ChangedSign toChangedSign(Block block, String[] lines, CraftBookPlayer player) {
-        return CraftBookPlugin.inst().getNmsAdapter().getChangedSign(block, lines, player);
+        if (!SignUtil.isSign(block)) return null;
+        return new ChangedSign(block, lines, player);
     }
 
     public static Block toBlock(ChangedSign sign) {
@@ -124,17 +126,13 @@ public final class CraftBookBukkitUtil {
 
     public static org.bukkit.Location toLocation(Location teleportLocation) {
         return new org.bukkit.Location(
-                toWorld((com.sk89q.worldedit.world.World) teleportLocation.getExtent()),
+                BukkitAdapter.adapt((com.sk89q.worldedit.world.World) teleportLocation.getExtent()),
                 teleportLocation.getX(),
                 teleportLocation.getY(),
                 teleportLocation.getZ(),
                 teleportLocation.getYaw(),
                 teleportLocation.getPitch()
         );
-    }
-
-    public static World toWorld(final com.sk89q.worldedit.world.World world) {
-        return ((BukkitWorld) world).getWorld();
     }
 
     private static Set<Material> isRedstoneBlock = new HashSet<>();
