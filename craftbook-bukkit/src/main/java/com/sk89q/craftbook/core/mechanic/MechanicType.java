@@ -19,17 +19,28 @@ package com.sk89q.craftbook.core.mechanic;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.worldedit.registry.Keyed;
+import com.sk89q.worldedit.registry.Registry;
 
-public class MechanicRegistration<T extends CraftBookMechanic> {
+public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
+    public static final Registry<MechanicType<? extends CraftBookMechanic>> REGISTRY = new Registry<>("mechanic type");
+
+    private final String id;
     private final String name;
     private final String className;
     private final MechanicCategory category;
 
-    private MechanicRegistration(String name, String className, MechanicCategory category) {
+    private MechanicType(String id, String name, String className, MechanicCategory category) {
+        this.id = id;
         this.name = name;
         this.className = className;
         this.category = category;
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     public String getName() {
@@ -37,24 +48,33 @@ public class MechanicRegistration<T extends CraftBookMechanic> {
     }
 
     @SuppressWarnings("unchecked")
+    public Class<T> getMechanicClass() throws ReflectiveOperationException {
+        return (Class<T>) Class.forName(this.className);
+    }
+
     public T create() throws ReflectiveOperationException {
-        Class<T> clazz = (Class<T>) Class.forName(this.className);
-        return clazz.getDeclaredConstructor().newInstance();
+        return getMechanicClass().getDeclaredConstructor().newInstance();
     }
 
     public MechanicCategory getCategory() {
         return this.category;
     }
 
-    public boolean matches(CraftBookMechanic mechanic) {
+    public boolean isInstance(CraftBookMechanic mechanic) {
         return mechanic.getClass().getName().equals(this.className);
     }
 
     public static class Builder<T extends CraftBookMechanic> {
 
+        private String id;
         private String name;
         private String className;
         private MechanicCategory mechanicCategory;
+
+        public Builder<T> id(String id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder<T> name(String name) {
             this.name = name;
@@ -71,12 +91,13 @@ public class MechanicRegistration<T extends CraftBookMechanic> {
             return this;
         }
 
-        public MechanicRegistration<T> build() {
+        public MechanicType<T> build() {
+            checkNotNull(id, "ID must be provided");
             checkNotNull(name, "Name must be provided");
             checkNotNull(className, "Class name must be provided");
             checkNotNull(mechanicCategory, "Mechanic category must be provided");
 
-            return new MechanicRegistration<>(this.name, this.className, this.mechanicCategory);
+            return new MechanicType<>(this.id, this.name, this.className, this.mechanicCategory);
         }
 
         public static <T extends CraftBookMechanic> Builder<T> create() {

@@ -381,12 +381,12 @@ public class Elevator extends AbstractCraftBookMechanic {
 
     public void teleportPlayer(final CraftBookPlayer player, final Block floor, final Block destination, final BlockFace shift) {
 
-        final Location newLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
+        final Location newLocation = BukkitAdapter.adapt(player.getLocation());
         newLocation.setY(floor.getY() + 1);
 
         if(elevatorSlowMove) {
 
-            final Location lastLocation = CraftBookBukkitUtil.toLocation(player.getLocation());
+            final Location lastLocation = BukkitAdapter.adapt(player.getLocation());
 
             if (player.isInsideVehicle()) {
                 Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();

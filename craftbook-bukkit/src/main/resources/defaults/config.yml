@@ -1,4 +1,4 @@
-# CraftBook Configuration for Bukkit. Generated for version: 5.0.0-SNAPSHOT;4156677
+# CraftBook Configuration for Bukkit. Generated for version: 5.0.0-SNAPSHOT;838050c
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you need to.
 # More information about these features are available at...
@@ -9,91 +9,91 @@
 
 # List of mechanics and whether they are enabled or not
 mechanics:
-  general:
-    AI: false
-    BetterLeads: false
-    BetterPhysics: false
-    BetterPistons: false
-    BetterPlants: false
-    Bookcase: false
-    BounceBlocks: false
-    Bridge: false
-    Chairs: false
-    ChunkAnchor: false
-    CommandSigns: false
-    CookingPot: false
-    DispenserRecipes: false
-    Door: false
-    Elevator: false
-    Gate: false
-    HeadDrops: false
-    HiddenSwitch: false
-    LightSwitch: false
-    MapChanger: false
-    Marquee: false
-    PaintingSwitcher: false
-    Snow: false
-    Sponge: false
-    Teleporter: false
-    ToggleArea: false
-    TreeLopper: false
-    Variables: true
-    XPStorer: false
-  tool:
-    Ammeter: false
-    LightStone: false
-    SignCopier: false
   boat:
-    BoatDecay: false
-    BoatDrops: false
-    BoatExitRemover: false
-    BoatRemoveEntities: false
-    BoatSpeedModifiers: false
-    BoatUncrashable: false
-    BoatWaterPlaceOnly: false
-    LandBoats: false
-  customisation:
-    Cauldron: false
-    CommandItems: false
-    CustomCrafting: false
-    CustomDrops: false
-    LegacyCauldron: false
+    boat_decay: false
+    boat_drops: false
+    boat_exit_remover: false
+    boat_remove_entities: false
+    boat_speed_modifiers: false
+    boat_uncrashable: false
+    boat_water_place_only: false
+    land_boats: false
   circuit:
-    Glowstone: false
-    ICs: false
-    JackOLantern: false
-    Jukebox: false
-    Netherrack: false
-    Pay: false
-    Pipes: false
+    glowstone: false
+    integrated_circuits: false
+    jack_o_lantern: false
+    jukebox: false
+    netherrack: false
+    pay: false
+    pipes: false
+  customisation:
+    cauldron: false
+    command_items: false
+    custom_crafting: false
+    custom_drops: false
+    legacy_cauldron: false
+  general:
+    better_ai: false
+    better_leads: false
+    better_physics: false
+    better_pistons: false
+    better_plants: false
+    bookcase: false
+    bounce_blocks: false
+    bridge: false
+    chairs: false
+    chunk_anchor: false
+    command_signs: false
+    cooking_pot: false
+    dispenser_recipes: false
+    door: false
+    elevator: false
+    gate: false
+    head_drops: false
+    hidden_switch: false
+    light_switch: false
+    map_changer: false
+    marquee: false
+    painting_switcher: false
+    snow: false
+    sponge: false
+    teleporter: false
+    toggle_area: false
+    tree_lopper: false
+    variables: true
+    xp_storer: false
   minecart:
-    MinecartBooster: false
-    MinecartCollisionEntry: false
-    MinecartConstantSpeed: false
-    MinecartDecay: false
-    MinecartDeposit: false
-    MinecartDispenser: false
-    MinecartEjector: false
-    MinecartElevator: false
-    MinecartEmptySlowdown: false
-    MinecartExitRemover: false
-    MinecartFallModifier: false
-    MinecartItemPickup: false
-    MinecartMaxSpeed: false
-    MinecartMessenger: false
-    MinecartMobBlocker: false
-    MinecartMoreRails: false
-    MinecartNoCollide: false
-    MinecartPlaceAnywhere: false
-    MinecartRailPlacer: false
-    MinecartRemoveEntities: false
-    MinecartReverser: false
-    MinecartSorter: false
-    MinecartSpeedModifiers: false
-    MinecartStation: false
-    MinecartTeleporter: false
-    MinecartTemporaryCart: false
-    MinecartVisionSteering: false
+    minecart_booster: false
+    minecart_collision_entry: false
+    minecart_constant_speed: false
+    minecart_decay: false
+    minecart_deposit: false
+    minecart_dispenser: false
+    minecart_ejector: false
+    minecart_elevator: false
+    minecart_empty_slowdown: false
+    minecart_exit_remover: false
+    minecart_fall_modifier: false
+    minecart_item_pickup: false
+    minecart_max_speed: false
+    minecart_messenger: false
+    minecart_mob_blocker: false
+    minecart_more_rails: false
+    minecart_no_collide: false
+    minecart_place_anywhere: false
+    minecart_rail_placer: false
+    minecart_remove_entities: false
+    minecart_reverser: false
+    minecart_sorter: false
+    minecart_speed_modifiers: false
+    minecart_station: false
+    minecart_teleporter: false
+    minecart_temporary_cart: false
+    minecart_vision_steering: false
+  tool:
+    ammeter: false
+    light_stone: false
+    sign_copier: false
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2

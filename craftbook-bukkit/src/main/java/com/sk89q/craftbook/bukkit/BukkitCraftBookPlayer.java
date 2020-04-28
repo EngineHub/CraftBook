@@ -33,8 +33,8 @@
 package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.Location;
@@ -77,8 +77,7 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public void teleport(Location location) {
-
-        player.teleport(CraftBookBukkitUtil.toLocation(location));
+        player.teleport(BukkitAdapter.adapt(location));
     }
 
     @Override

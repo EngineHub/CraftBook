@@ -41,7 +41,7 @@ import java.util.Set;
 
 public class TemporaryCart extends AbstractCraftBookMechanic {
 
-    private Set<RideableMinecart> minecarts = new HashSet<>();
+    private final Set<RideableMinecart> minecarts = new HashSet<>();
 
     public Set<RideableMinecart> getMinecarts() {
 

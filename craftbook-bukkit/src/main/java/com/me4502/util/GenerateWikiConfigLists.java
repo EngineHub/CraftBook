@@ -18,6 +18,7 @@ package com.me4502.util;
 
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.core.mechanic.MechanicType;
 import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -126,28 +127,26 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
         try {
             createConfigSectionFile(configFolder, CraftBookPlugin.inst().getConfiguration().config, null);
 
-            CraftBookPlugin.availableMechanics.forEach((mech, aClass) -> {
+            MechanicType.REGISTRY.values().forEach(mechanicRegistration -> {
                 try {
-                    if (aClass != null) {
-                        CraftBookMechanic me = aClass.create();
-                        File file = new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), aClass.getName() + ".yml");
+                    CraftBookMechanic me = mechanicRegistration.create();
+                    File file = new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml");
 
-                        YAMLProcessor mechanicConfig = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);
+                    YAMLProcessor mechanicConfig = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);
 
-                        try {
-                            mechanicConfig.load();
-                        } catch (FileNotFoundException e) {
-                            // Ignore this one.
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        me.loadFromConfiguration(mechanicConfig);
-
-                        createConfigSectionFile(configFolder, mechanicConfig, mech);
+                    try {
+                        mechanicConfig.load();
+                    } catch (FileNotFoundException e) {
+                        // Ignore this one.
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+
+                    me.loadFromConfiguration(mechanicConfig);
+
+                    createConfigSectionFile(configFolder, mechanicConfig, mechanicRegistration.getName());
                 } catch (Throwable t) {
-                    Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mech, t);
+                    Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanicRegistration.getName(), t);
                 }
             });
         } catch (IOException e) {

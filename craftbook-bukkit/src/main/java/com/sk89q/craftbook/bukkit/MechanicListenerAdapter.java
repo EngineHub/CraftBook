@@ -38,6 +38,7 @@ import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -256,11 +257,11 @@ final class MechanicListenerAdapter implements Listener {
                     Material southSideBelow = world.getBlockAt(x + 1, y - 1, z).getType();
 
                     // Make sure that the wire points to only this block
-                    if (!CraftBookBukkitUtil.isRedstoneBlock(westSide) && !CraftBookBukkitUtil.isRedstoneBlock(eastSide)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideBelow) || westSide != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideBelow) || eastSide != Material.AIR)) {
+                    if (!BlockUtil.isRedstoneBlock(westSide) && !BlockUtil.isRedstoneBlock(eastSide)
+                            && (!BlockUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR || above != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR || above != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(westSideBelow) || westSide != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(eastSideBelow) || eastSide != Material.AIR)) {
                         // Possible blocks north / south
                         handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
                         handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
@@ -268,11 +269,11 @@ final class MechanicListenerAdapter implements Listener {
                         handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
                     }
 
-                    if (!CraftBookBukkitUtil.isRedstoneBlock(northSide) && !CraftBookBukkitUtil.isRedstoneBlock(southSide)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideBelow) || northSide != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideBelow) || southSide != Material.AIR)) {
+                    if (!BlockUtil.isRedstoneBlock(northSide) && !BlockUtil.isRedstoneBlock(southSide)
+                            && (!BlockUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR || above != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR || above != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(northSideBelow) || northSide != Material.AIR)
+                            && (!BlockUtil.isRedstoneBlock(southSideBelow) || southSide != Material.AIR)) {
                         // Possible blocks west / east
                         handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
                         handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);

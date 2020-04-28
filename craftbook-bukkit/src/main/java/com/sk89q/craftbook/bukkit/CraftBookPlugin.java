@@ -16,6 +16,9 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.google.common.base.CaseFormat;
+import com.google.common.base.Converter;
+import com.google.common.collect.ImmutableList;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookManifest;
 import com.sk89q.craftbook.CraftBookMechanic;
@@ -24,7 +27,7 @@ import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.mechanic.MechanicCategory;
-import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
+import com.sk89q.craftbook.core.mechanic.MechanicType;
 import com.sk89q.craftbook.core.st.MechanicClock;
 import com.sk89q.craftbook.core.st.SelfTriggeringManager;
 import com.sk89q.craftbook.mechanics.AIMechanic;
@@ -147,9 +150,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
-import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.jar.JarFile;
@@ -157,6 +159,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+
+import javax.annotation.Nullable;
 
 public class CraftBookPlugin extends JavaPlugin {
 
@@ -223,36 +227,34 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private final Supervisor supervisor = new SimpleSupervisor();
 
-    public static final Map<String, MechanicRegistration<? extends CraftBookMechanic>> availableMechanics;
-
     private static final int BSTATS_ID = 3319;
 
     @Deprecated
-    public static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
-//        logger().warning("Registered legacy mechanic: " + name);
-        MechanicRegistration<?> mechanicRegistration = MechanicRegistration.Builder
+    private static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
+        Converter<String, String> camelToSnake = CaseFormat.UPPER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
+
+        MechanicType<?> mechanicType = MechanicType.Builder
                 .create()
+                .id(camelToSnake.convert(name))
                 .name(name)
                 .className(mechanicClass.getName())
                 .category(category)
                 .build();
 
-        registerMechanic(mechanicRegistration);
+        registerMechanic(mechanicType);
     }
 
-    public static void registerMechanic(MechanicRegistration<?> mechanicRegistration) {
-        availableMechanics.put(mechanicRegistration.getName(), mechanicRegistration);
+    public static void registerMechanic(MechanicType<?> mechanicType) {
+        MechanicType.REGISTRY.register(mechanicType.getId(), mechanicType);
     }
 
     static {
-        availableMechanics = new TreeMap<>();
-
         registerMechanic("Variables", VariableManager.class, MechanicCategory.GENERAL);
         registerMechanic("CommandItems", CommandItems.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("CustomCrafting", CustomCrafting.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("DispenserRecipes", DispenserRecipes.class, MechanicCategory.GENERAL);
         registerMechanic("CustomDrops", CustomDrops.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("AI", AIMechanic.class, MechanicCategory.GENERAL);
+        registerMechanic("BetterAi", AIMechanic.class, MechanicCategory.GENERAL);
         registerMechanic("PaintingSwitcher", PaintingSwitch.class, MechanicCategory.GENERAL);
         registerMechanic("BetterPhysics", BetterPhysics.class, MechanicCategory.GENERAL);
         registerMechanic("HeadDrops", HeadDrops.class, MechanicCategory.GENERAL);
@@ -260,7 +262,7 @@ public class CraftBookPlugin extends JavaPlugin {
         registerMechanic("Marquee", Marquee.class, MechanicCategory.GENERAL);
         registerMechanic("TreeLopper", TreeLopper.class, MechanicCategory.GENERAL);
         registerMechanic("MapChanger", MapChanger.class, MechanicCategory.GENERAL);
-        registerMechanic("XPStorer", XPStorer.class, MechanicCategory.GENERAL);
+        registerMechanic("XpStorer", XPStorer.class, MechanicCategory.GENERAL);
         registerMechanic("LightStone", LightStone.class, MechanicCategory.TOOL);
         registerMechanic("CommandSigns", CommandSigns.class, MechanicCategory.GENERAL);
         registerMechanic("LightSwitch", LightSwitch.class, MechanicCategory.GENERAL);
@@ -289,7 +291,7 @@ public class CraftBookPlugin extends JavaPlugin {
         registerMechanic("JackOLantern", JackOLantern.class, MechanicCategory.CIRCUIT);
         registerMechanic("Pipes", Pipes.class, MechanicCategory.CIRCUIT);
         registerMechanic("BounceBlocks", BounceBlocks.class, MechanicCategory.GENERAL);
-        registerMechanic("ICs", ICMechanic.class, MechanicCategory.CIRCUIT);
+        registerMechanic("IntegratedCircuits", ICMechanic.class, MechanicCategory.CIRCUIT);
         registerMechanic("MinecartBooster", CartBooster.class, MechanicCategory.MINECART);
         registerMechanic("MinecartReverser", CartReverser.class, MechanicCategory.MINECART);
         registerMechanic("MinecartSorter", CartSorter.class, MechanicCategory.MINECART);
@@ -326,8 +328,9 @@ public class CraftBookPlugin extends JavaPlugin {
         registerMechanic("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
         registerMechanic("BoatWaterPlaceOnly", WaterPlaceOnly.class, MechanicCategory.BOAT);
 
-        registerMechanic(MechanicRegistration.Builder
+        registerMechanic(MechanicType.Builder
                 .create()
+                .id("snow")
                 .name("Snow")
                 .className("com.sk89q.craftbook.mechanics.Snow")
                 .category(MechanicCategory.GENERAL)
@@ -346,28 +349,31 @@ public class CraftBookPlugin extends JavaPlugin {
         instance = this;
     }
 
+    /**
+     * Gets a list of loaded mechanics.
+     *
+     * <p>
+     *     This list is immutable
+     * </p>
+     *
+     * @return A list of loaded mechanics
+     */
     public List<CraftBookMechanic> getLoadedMechanics() {
-        return this.loadedMechanics;
+        return ImmutableList.copyOf(this.loadedMechanics);
     }
 
-    public boolean isMechanicEnabled(Class<? extends CraftBookMechanic> clazz) {
-
-        for(CraftBookMechanic mech : loadedMechanics) {
-            if(mech.getClass().equals(clazz))
-                return true;
+    public boolean isMechanicEnabled(@Nullable MechanicType<?> mechanicType) {
+        if (mechanicType == null) {
+            return false;
         }
-
-        return false;
+        return this.loadedMechanics.stream().anyMatch(mechanicType::isInstance);
     }
 
-    public CraftBookMechanic getMechanic(Class<? extends CraftBookMechanic> clazz) {
-
-        for(CraftBookMechanic mech : loadedMechanics) {
-            if(mech.getClass().equals(clazz))
-                return mech;
+    public Optional<CraftBookMechanic> getMechanic(@Nullable MechanicType<?> mechanicType) {
+        if (mechanicType == null) {
+            return Optional.empty();
         }
-
-        return null;
+        return this.loadedMechanics.stream().filter(mechanicType::isInstance).findAny();
     }
 
     /**
@@ -523,7 +529,7 @@ public class CraftBookPlugin extends JavaPlugin {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
         } catch (Exception ignored) {}
 
-        availableMechanics.keySet()
+        MechanicType.REGISTRY.keySet()
                 .stream()
                 .filter(mechanic -> config.enabledMechanics.contains(mechanic))
                 .forEach(this::enableMechanic);
@@ -538,21 +544,21 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and enabled.
      */
     public boolean enableMechanic(String mechanic) {
-        MechanicRegistration<?> mechanicRegistration = availableMechanics.get(mechanic);
-        if(mechanicRegistration != null) {
+        MechanicType<?> mechanicType = MechanicType.REGISTRY.get(mechanic);
+        if(mechanicType != null) {
             try {
-                CraftBookMechanic mech = mechanicRegistration.create();
-                mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml"));
+                CraftBookMechanic mech = mechanicType.create();
+                mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicType.getName() + ".yml"));
                 loadedMechanics.add(mech);
 
                 if(!mech.enable()) {
-                    getLogger().warning("Failed to enable mechanic: " + mechanicRegistration.getName());
+                    getLogger().warning("Failed to enable mechanic: " + mechanicType.getName());
                     mech.disable();
                     return false;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
             } catch (Throwable t) {
-                getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanicRegistration.getName(), t);
+                getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanicType.getName(), t);
                 return false;
             }
         } else {
@@ -569,16 +575,16 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return If the mechanic could be found and disabled.
      */
     public boolean disableMechanic(String mechanic) {
-        MechanicRegistration<?> mechanicRegistration = availableMechanics.get(mechanic);
+        MechanicType<?> mechanicType = MechanicType.REGISTRY.get(mechanic);
 
-        if(mechanicRegistration == null) {
+        if(mechanicType == null) {
             return false;
         }
 
         boolean found = false;
 
         for (CraftBookMechanic mech : loadedMechanics) {
-            if (mechanicRegistration.matches(mech)) {
+            if (mechanicType.isInstance(mech)) {
                 found = true;
                 break;
             }

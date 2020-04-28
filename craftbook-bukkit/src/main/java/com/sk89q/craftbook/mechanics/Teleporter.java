@@ -29,6 +29,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -229,7 +230,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         if (player.isInsideVehicle()) {
-            org.bukkit.Location newLocation = CraftBookBukkitUtil.toLocation(subspaceRift);
+            org.bukkit.Location newLocation = BukkitAdapter.adapt(subspaceRift);
             Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
             player.teleport(subspaceRift);

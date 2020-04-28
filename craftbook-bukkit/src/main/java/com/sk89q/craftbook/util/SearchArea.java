@@ -198,7 +198,7 @@ public final class SearchArea {
     public boolean isWithinArea(Location location) {
 
         if(hasRegion()) {
-            if(!region.isPhysicalArea() || region.contains(CraftBookBukkitUtil.toVector(location.getBlock())) && location.getWorld().equals(world))
+            if(!region.isPhysicalArea() || region.contains(BukkitAdapter.adapt(location).toVector().toBlockPoint()) && location.getWorld().equals(world))
                 return true;
         } else if(hasRadiusAndCenter()) {
             if(LocationUtil.isWithinRadius(location, center, radius))

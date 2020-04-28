@@ -20,11 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
+import com.sk89q.craftbook.core.mechanic.MechanicType;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.report.Unreported;
 
@@ -100,13 +101,16 @@ public class BukkitConfiguration {
 
         enabledMechanics = new ArrayList<>();
         config.setComment("mechanics", "List of mechanics and whether they are enabled or not");
-        for (MechanicRegistration<?> availableMechanic : CraftBookPlugin.availableMechanics.values()) {
-            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
-            boolean enabled = config.getBoolean(path, availableMechanic.getName().equals("Variables"));
+        MechanicType.REGISTRY.values()
+                .stream()
+                .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::getId))
+                .forEach(mechanicType -> {
+            String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
+            boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
             if (enabled) {
-                enabledMechanics.add(availableMechanic.getName());
+                enabledMechanics.add(mechanicType.getId());
             }
-        }
+        });
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
@@ -166,9 +170,9 @@ public class BukkitConfiguration {
     }
 
     public void save() {
-        for (MechanicRegistration<?> availableMechanic : CraftBookPlugin.availableMechanics.values()) {
-            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getName();
-            config.setProperty(path, enabledMechanics.contains(availableMechanic.getName()));
+        for (MechanicType<?> availableMechanic : MechanicType.REGISTRY.values()) {
+            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getId();
+            config.setProperty(path, enabledMechanics.contains(availableMechanic.getId()));
         }
 
         config.save();

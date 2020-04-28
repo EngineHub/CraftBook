@@ -16,22 +16,20 @@
 
 package com.me4502.util;
 
+import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.bukkit.BukkitConfiguration;
+import com.sk89q.craftbook.core.mechanic.MechanicType;
+import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-
-import com.sk89q.craftbook.core.mechanic.MechanicRegistration;
-import org.bukkit.Bukkit;
-
-import com.sk89q.craftbook.CraftBookMechanic;
-import com.sk89q.craftbook.bukkit.BukkitConfiguration;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.developer.ExternalUtilityBase;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class GenerateConfiguration extends ExternalUtilityBase {
 
@@ -66,16 +64,16 @@ public class GenerateConfiguration extends ExternalUtilityBase {
         }
         mechanicsFolder.mkdirs();
 
-        List<String> mechs = new ArrayList<>(CraftBookPlugin.availableMechanics.keySet());
+        List<String> mechs = new ArrayList<>(MechanicType.REGISTRY.keySet());
 
         Collections.sort(mechs);
 
         for(String enabled : mechs) {
-            MechanicRegistration mechanicRegistration = CraftBookPlugin.availableMechanics.get(enabled);
+            MechanicType<?> mechanicType = MechanicType.REGISTRY.get(enabled);
             try {
-                if(mechanicRegistration != null) {
-                    CraftBookMechanic mech = mechanicRegistration.create();
-                    mech.loadConfiguration(new File(mechanicsFolder, mechanicRegistration.getName() + ".yml"));
+                if(mechanicType != null) {
+                    CraftBookMechanic mech = mechanicType.create();
+                    mech.loadConfiguration(new File(mechanicsFolder, mechanicType.getName() + ".yml"));
                 }
             } catch (Throwable t) {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to load mechanic: " + enabled, t);
