@@ -66,7 +66,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         }
 
         public static boolean isValid(Block block) {
-            return block.getType() == Material.LADDER && instance.ladders && block.getRelative(0, -1, 0).getType() == Material.AIR;
+            return block.getType() == Material.LADDER && instance.ladders && block.getRelative(0, -1, 0).getType().isAir();
         }
 
         @Override
