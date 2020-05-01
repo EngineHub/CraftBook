@@ -52,10 +52,6 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
         return (Class<T>) Class.forName(this.className);
     }
 
-    public T create() throws ReflectiveOperationException {
-        return getMechanicClass().getDeclaredConstructor().newInstance();
-    }
-
     public MechanicCategory getCategory() {
         return this.category;
     }

@@ -23,6 +23,7 @@ import com.google.common.io.Files;
 import com.sk89q.craftbook.bukkit.report.GlobalConfigReport;
 import com.sk89q.craftbook.bukkit.report.LoadedICsReport;
 import com.sk89q.craftbook.bukkit.report.MechanicReport;
+import com.sk89q.craftbook.core.mechanic.MechanicCommands;
 import com.sk89q.craftbook.mechanics.headdrops.HeadDropsCommands;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.minecraft.util.commands.CommandException;
@@ -217,33 +218,10 @@ public class TopLevelCommands {
             }
         }
 
-        @Command(aliases = {"enable"}, desc = "Enable a mechanic")
-        @CommandPermissions({"craftbook.enable-mechanic"})
-        public void enable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+        @Command(aliases = {"mech", "mechs", "mechanic", "mechanics"}, desc = "Mechanic commands")
+        @NestedCommand(MechanicCommands.class)
+        public void mechanicCmds(CommandContext context, CommandSender sender) {
 
-            if(args.argsLength() > 0) {
-                String mechanic = args.getString(0);
-                if (CraftBookPlugin.inst().enableMechanic(mechanic)) {
-                    plugin.getConfiguration().enabledMechanics.add(mechanic);
-                    plugin.getConfiguration().save();
-
-                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully enabled " + mechanic);
-                } else {
-                    sender.sendMessage(ChatColor.RED + "Failed to load " + mechanic);
-                }
-            }
-        }
-
-        @Command(aliases = {"disable"}, desc = "Disable a mechanic")
-        @CommandPermissions({"craftbook.disable-mechanic"})
-        public void disable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
-
-            if(args.argsLength() > 0) {
-                if(CraftBookPlugin.inst().disableMechanic(args.getString(0)))
-                    sender.sendMessage(ChatColor.YELLOW + "Sucessfully disabled " + args.getString(0));
-                else
-                    sender.sendMessage(ChatColor.RED + "Failed to remove " + args.getString(0));
-            }
         }
     }
 }

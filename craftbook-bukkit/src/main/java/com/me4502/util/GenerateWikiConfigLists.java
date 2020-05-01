@@ -129,7 +129,7 @@ public class GenerateWikiConfigLists extends ExternalUtilityBase {
 
             MechanicType.REGISTRY.values().forEach(mechanicRegistration -> {
                 try {
-                    CraftBookMechanic me = mechanicRegistration.create();
+                    CraftBookMechanic me = mechanicRegistration.getMechanicClass().getDeclaredConstructor().newInstance();
                     File file = new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicRegistration.getName() + ".yml");
 
                     YAMLProcessor mechanicConfig = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);

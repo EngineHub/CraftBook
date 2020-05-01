@@ -28,10 +28,10 @@ public class MechanicReport extends DataReport  {
 
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-        append("Mechanics Loaded", plugin.getLoadedMechanics().size());
+        append("Mechanics Loaded", plugin.getMechanicManager().getLoadedMechanics().size());
         append("ST Mechanics Loaded", plugin.getSelfTriggerManager() == null ? 0 : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
 
-        for (CraftBookMechanic mechanic : CraftBookPlugin.inst().getLoadedMechanics()) {
+        for (CraftBookMechanic mechanic : plugin.getMechanicManager().getLoadedMechanics()) {
             DataReport report = new DataReport("Mechanic: " + mechanic.getClass().getSimpleName());
             report.append("Configuration", new HierarchyObjectReport("Configuration", mechanic));
 

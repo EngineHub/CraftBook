@@ -72,7 +72,7 @@ public class GenerateConfiguration extends ExternalUtilityBase {
             MechanicType<?> mechanicType = MechanicType.REGISTRY.get(enabled);
             try {
                 if(mechanicType != null) {
-                    CraftBookMechanic mech = mechanicType.create();
+                    CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
                     mech.loadConfiguration(new File(mechanicsFolder, mechanicType.getName() + ".yml"));
                 }
             } catch (Throwable t) {
