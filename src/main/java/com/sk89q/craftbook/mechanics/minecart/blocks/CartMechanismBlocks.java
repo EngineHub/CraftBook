@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
@@ -77,18 +76,17 @@ public class CartMechanismBlocks {
      * @param rail the block containing the rails.
      */
     public static CartMechanismBlocks findByRail(Block rail) throws InvalidMechanismException {
-
         if (!RailUtil.isTrack(rail.getType()))
             throw new InvalidMechanismException("rail argument must be a rail!");
         BlockFace face = BlockFace.DOWN;
 
-        if (rail.getType() == Material.LADDER)
+        if (rail.getType() == Material.LADDER) {
             face = ((Directional) rail.getBlockData()).getFacing().getOppositeFace();
-        else if (rail.getType() == Material.VINE) {
+        } else if (rail.getType() == Material.VINE) {
             MultipleFacing vine = (MultipleFacing) rail.getBlockData();
-            for(BlockFace test : LocationUtil.getDirectFaces()) {
-                if(vine.hasFace(test.getOppositeFace())) {
-                    face = test;
+            for(BlockFace test : vine.getAllowedFaces()) {
+                if(vine.hasFace(test)) {
+                    face = test.getOppositeFace();
                     break;
                 }
             }
