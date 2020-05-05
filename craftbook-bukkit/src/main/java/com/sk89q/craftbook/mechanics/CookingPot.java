@@ -42,6 +42,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CookingPot extends AbstractCraftBookMechanic {
 
@@ -115,7 +116,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         if(cookingPotHeating && sign.getLine(0).equals("HEATING")) {
 
             //So it's waiting.
-            if(CraftBookPlugin.inst().getRandom().nextInt(200) != 0)
+            if(ThreadLocalRandom.current().nextInt(200) != 0)
                 return;
             sign.setLine(0, "");
         }

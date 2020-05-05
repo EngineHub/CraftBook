@@ -245,7 +245,7 @@ public class Perlstone implements PlcLanguage<boolean[], WithLineInfo<String>[]>
                                     " at column " + li[i].col);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    CraftBookBukkitUtil.printStacktrace(e);
+                    e.printStackTrace();
                     i = li.length - 1;
                     throw new ICVerificationException("Unexpected function end " + "around line " + li[i].line);
                 }

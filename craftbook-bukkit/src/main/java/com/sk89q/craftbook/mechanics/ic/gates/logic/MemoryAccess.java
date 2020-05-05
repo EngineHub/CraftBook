@@ -71,7 +71,7 @@ public class MemoryAccess extends AbstractIC {
             try {
                 f.createNewFile();
             } catch (IOException e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
         }
     }
@@ -90,7 +90,7 @@ public class MemoryAccess extends AbstractIC {
             br.close();
             return true;
         } catch (Exception e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
         return false;
     }

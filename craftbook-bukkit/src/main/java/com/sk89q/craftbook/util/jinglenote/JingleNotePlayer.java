@@ -55,14 +55,14 @@ public abstract class JingleNotePlayer implements Runnable {
             try {
                 sequencer.play(this);
             } catch (Throwable t) {
-                CraftBookBukkitUtil.printStacktrace(t);
+                t.printStackTrace();
             }
 
             while(isPlaying()){
                 Thread.sleep(10L);
             }
         } catch (InterruptedException e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         } finally {
             CraftBookPlugin.logDebugMessage("Finished playing for: " + player, "midi.stop");
             stop();

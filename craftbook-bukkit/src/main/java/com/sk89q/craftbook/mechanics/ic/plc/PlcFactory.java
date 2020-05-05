@@ -43,6 +43,8 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.craftbook.util.RegexUtil;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements ICFactory {
 
     private Lang lang;
@@ -69,7 +71,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public void verify(ChangedSign sign) throws ICVerificationException {
 
         new PlcIC<>(sign, lang); // Huge ugly hack!!
-        sign.setLine(2, "id:" + CraftBookPlugin.inst().getRandom().nextInt());
+        sign.setLine(2, "id:" + ThreadLocalRandom.current().nextInt());
         if (!sign.getLine(3).isEmpty()) {
             String line = sign.getLine(3);
             if (!RegexUtil.PLC_NAME_PATTERN.matcher(line).matches())

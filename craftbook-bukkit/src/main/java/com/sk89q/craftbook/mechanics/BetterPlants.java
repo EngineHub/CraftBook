@@ -37,6 +37,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
 
@@ -87,9 +88,9 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                 int x = 0, y = 0, z = 0;
 
                 if(fastTickRandoms) {
-                    x = CraftBookPlugin.inst().getRandom().nextInt(16);
-                    y = CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight());
-                    z = CraftBookPlugin.inst().getRandom().nextInt(16);
+                    x = ThreadLocalRandom.current().nextInt(16);
+                    y = ThreadLocalRandom.current().nextInt(world.getMaxHeight());
+                    z = ThreadLocalRandom.current().nextInt(16);
                 }
 
                 for(Chunk chunk : world.getLoadedChunks()) {
@@ -97,7 +98,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                     if(fastTickRandoms)
                         block = chunk.getBlock(x,y,z);
                     else
-                        block = chunk.getBlock(CraftBookPlugin.inst().getRandom().nextInt(16), CraftBookPlugin.inst().getRandom().nextInt(world.getMaxHeight()), CraftBookPlugin.inst().getRandom().nextInt(16));
+                        block = chunk.getBlock(ThreadLocalRandom.current().nextInt(16), ThreadLocalRandom.current().nextInt(world.getMaxHeight()), ThreadLocalRandom.current().nextInt(16));
 
                     if(fernFarming && block.getType() == Material.FERN) {
                         block.setType(Material.LARGE_FERN, false);

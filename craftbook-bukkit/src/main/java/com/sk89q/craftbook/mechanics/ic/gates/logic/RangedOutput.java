@@ -27,6 +27,8 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.util.RegexUtil;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author Me4502
  */
@@ -85,7 +87,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0)) {
 
-            maxAmount = min + CraftBookPlugin.inst().getRandom().nextInt(max - min + 1);
+            maxAmount = min + ThreadLocalRandom.current().nextInt(max - min + 1);
             amountDone = 0;
             ticks = 0;
 

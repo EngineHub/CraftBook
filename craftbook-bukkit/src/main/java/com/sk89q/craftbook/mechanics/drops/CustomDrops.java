@@ -64,7 +64,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
         definitions = new LinkedHashSet<>();
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("custom-drops.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
 
         load();
@@ -79,7 +79,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             return false;
         }
 

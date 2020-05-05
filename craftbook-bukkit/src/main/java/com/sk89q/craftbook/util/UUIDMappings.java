@@ -16,10 +16,15 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class UUIDMappings {
 
@@ -133,7 +138,7 @@ public final class UUIDMappings {
                 while(!foundOne) {
                     StringBuilder sb = new StringBuilder();
                     for(int i = 0; i < 6; i++)
-                        sb.append(Integer.toHexString(CraftBookPlugin.inst().getRandom().nextInt(16)));
+                        sb.append(Integer.toHexString(ThreadLocalRandom.current().nextInt(16)));
 
                     sb.setLength(6); //Just makin' sure.
 

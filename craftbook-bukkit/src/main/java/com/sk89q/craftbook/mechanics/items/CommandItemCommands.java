@@ -405,7 +405,7 @@ public class CommandItemCommands {
                 CommandItems.INSTANCE.save();
                 return ChatColor.YELLOW + "Successfully added CommandItem: " + name;
             } catch(Exception e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
                 return ChatColor.RED + "Failed to add CommandItem! See Console for more details!";
             }
         }

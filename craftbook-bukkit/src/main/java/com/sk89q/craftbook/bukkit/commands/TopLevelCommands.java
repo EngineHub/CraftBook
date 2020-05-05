@@ -125,7 +125,7 @@ public class TopLevelCommands {
             try {
                 CraftBookPlugin.inst().reloadConfiguration();
             } catch (Throwable e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
                 sender.sendMessage("An error occured while reloading the CraftBook config.");
                 return;
             }

@@ -20,6 +20,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
+import com.sk89q.craftbook.mechanics.items.CommandItems;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.BaseItemStack;
@@ -42,11 +44,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -70,11 +70,6 @@ public final class ItemSyntax {
     private static final Pattern COMMA_PATTERN = Pattern.compile("(?<=[^\\\\])([,])");
     private static final Pattern PIPE_PATTERN = Pattern.compile("(?<=[^\\\\])([|])");
     private static final Pattern FSLASH_PATTERN = Pattern.compile("(?<=[^\\\\])([/])");
-
-    /**
-     * The plugin that stores this ItemSyntax reference. Only set this if you have a method: "public String parseItemSyntax(String item) {" in your plugin class.
-     */
-    public static JavaPlugin plugin;
 
     /**
      * The opposite of {@link ItemSyntax#getItem(String)}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
@@ -152,7 +147,7 @@ public final class ItemSyntax {
         return StringUtils.replace(builder.toString(), "\u00A7", "&");
     }
 
-    private static ParserContext ITEM_CONTEXT = new ParserContext();
+    private static final ParserContext ITEM_CONTEXT = new ParserContext();
 
     static {
         ITEM_CONTEXT.setPreferringWildcard(true);
@@ -307,12 +302,10 @@ public final class ItemSyntax {
         if (line == null || line.isEmpty())
             return null;
 
-        if(plugin != null) {
-            try {
-                line = (String) plugin.getClass().getMethod("parseItemSyntax", String.class).invoke(plugin, line);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
-                plugin = null;
-                e.printStackTrace();
+        if(CommandItems.INSTANCE != null)  {
+            CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(line);
+            if(def != null) {
+                line = ItemSyntax.getStringFromItem(def.getItem());
             }
         }
 

@@ -42,7 +42,7 @@ public class CauldronCommands {
     public void reload(CommandContext context, CommandSender sender) {
 
         if(ImprovedCauldron.instance == null) return;
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("cauldron-recipes.yml");
         ImprovedCauldron.instance.recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.inst().getLogger());
         sender.sendMessage(ChatColor.YELLOW + "Reloaded Cauldron Recipes...");
     }

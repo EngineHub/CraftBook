@@ -59,7 +59,7 @@ public class SelfTriggeringManager implements Listener {
         } catch (Throwable e) {
             Bukkit.getLogger().warning("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName() + " x: " + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.");
             if(CraftBookPlugin.inst().getConfiguration().debugMode)
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
         }
     }
 
@@ -130,7 +130,7 @@ public class SelfTriggeringManager implements Listener {
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
                 CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
-                CraftBookBukkitUtil.printStacktrace(t);
+                t.printStackTrace();
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
         }
@@ -142,7 +142,7 @@ public class SelfTriggeringManager implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> registerSelfTrigger(event.getChunk()), 2);
+        Bukkit.getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> registerSelfTrigger(event.getChunk()), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -53,7 +53,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
         try {
             processor.load();
         } catch (Throwable e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
         }
 
@@ -64,7 +64,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
             try {
                 processor.load();
             } catch (Exception e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
                 CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
             }
         }

@@ -137,7 +137,7 @@ public class CauldronCookbook {
 
     private CauldronCookbook readCauldronRecipes(String path) throws IOException {
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), path), path);
+        CraftBookPlugin.inst().createDefaultConfiguration(path);
 
         File file = new File(CraftBookPlugin.inst().getDataFolder(), path);
         InputStreamReader input = null;

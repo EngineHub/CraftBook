@@ -19,7 +19,6 @@ package com.sk89q.craftbook.mechanics;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import com.sk89q.craftbook.BaseTestCase;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemTypes;
@@ -47,15 +46,12 @@ import java.util.ArrayList;
 @Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TreeLopper.class,BlockBreakEvent.class})
-public class TreeLopperTest extends BaseTestCase {
+public class TreeLopperTest {
 
     private TreeLopper lopper;
 
     @Test
     public void testOnBlockBreak() {
-
-        setup();
-
         if(lopper == null)
             lopper = new TreeLopper();
 
@@ -83,8 +79,6 @@ public class TreeLopperTest extends BaseTestCase {
 
         lopper.enabledItems = new ArrayList<>();
         lopper.enabledItems.add(ItemTypes.DIAMOND_AXE);
-
-        getConfig().showPermissionMessages = true;
 
         when(CraftBookPlugin.inst().hasPermission(Matchers.any(), Matchers.anyString())).thenReturn(false);
 

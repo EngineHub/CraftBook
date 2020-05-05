@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
 public final class ItemUtil {
@@ -1018,7 +1019,7 @@ public final class ItemUtil {
             if(isArmor(stack.getType())) {
                 chance = (int)(60d + (40d / (level + 1)));
             }
-            int roll = CraftBookPlugin.inst().getRandom().nextInt(100);
+            int roll = ThreadLocalRandom.current().nextInt(100);
             return !(roll < chance);
         }
 

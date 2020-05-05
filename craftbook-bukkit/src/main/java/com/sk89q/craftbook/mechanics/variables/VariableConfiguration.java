@@ -48,7 +48,7 @@ public class VariableConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             return;
         }
 

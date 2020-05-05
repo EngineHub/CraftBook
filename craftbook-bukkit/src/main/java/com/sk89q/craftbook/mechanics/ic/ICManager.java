@@ -93,7 +93,7 @@ public class ICManager {
     }
 
     public void enable() {
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), "ic-config.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("ic-config.yml");
         icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
         midiFolder = new File(CraftBookPlugin.inst().getDataFolder(), "midi/");
@@ -108,7 +108,7 @@ public class ICManager {
         try {
             icConfiguration.load();
         } catch (Throwable e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
     }
 

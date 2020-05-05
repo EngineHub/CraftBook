@@ -67,7 +67,7 @@ public class RecipeManager {
                 try {
                     recipes.add(new Recipe(key, config));
                 } catch (InvalidCraftingException e) {
-                    CraftBookBukkitUtil.printStacktrace(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -352,7 +352,7 @@ public class RecipeManager {
                 }
             } catch (Exception e) {
                 CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
             return items;
         }
@@ -376,7 +376,7 @@ public class RecipeManager {
                 }
             } catch (Exception e) {
                 CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for recipe: " + id);
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
             return items;
         }

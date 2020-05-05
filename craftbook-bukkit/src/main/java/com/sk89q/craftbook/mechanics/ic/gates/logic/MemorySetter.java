@@ -67,7 +67,7 @@ public class MemorySetter extends AbstractIC {
             try {
                 f.createNewFile();
             } catch (IOException e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
         }
     }
@@ -81,7 +81,7 @@ public class MemorySetter extends AbstractIC {
             pw.close();
             return true;
         } catch (Exception e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
         return false;
     }

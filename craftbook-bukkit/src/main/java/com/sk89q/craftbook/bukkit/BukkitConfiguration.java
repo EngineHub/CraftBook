@@ -16,6 +16,10 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.core.mechanic.MechanicType;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.report.Unreported;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +27,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.core.mechanic.MechanicType;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.util.report.Unreported;
 
 /**
  * A CraftBook implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration}.
@@ -73,13 +72,13 @@ public class BukkitConfiguration {
             config.load();
         } catch (IOException e) {
             logger.severe("Error loading CraftBook configuration: " + e);
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
 
         if(config.getNode("mechanics") != null) {
 
             new File(CraftBookPlugin.inst().getDataFolder(), "config.yml").renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml.old"));
-            CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml"), "config.yml");
+            CraftBookPlugin.inst().createDefaultConfiguration("config.yml");
             try {
                 config.load();
             } catch (IOException e) {

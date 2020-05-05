@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
@@ -253,7 +254,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case COCOA_BEANS:
                 List<BlockFace> faces =
                         new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
-                Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
+                Collections.shuffle(faces, ThreadLocalRandom.current());
                 for(BlockFace face : faces) {
                     if(block.getRelative(face).getType() == Material.JUNGLE_LOG) {
                         block.setType(Material.COCOA);

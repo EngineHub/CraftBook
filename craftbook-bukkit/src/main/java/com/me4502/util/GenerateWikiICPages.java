@@ -59,7 +59,6 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
             BlockState oldState = Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).getState();
             Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.OAK_WALL_SIGN);
 
-            CraftBookPlugin.inst().createDefaultConfiguration(new File(getGenerationFolder(), "ic-config.yml"), "ic-config.yml");
             ICConfiguration icConfiguration = new ICConfiguration(new YAMLProcessor(new File(getGenerationFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
             icConfiguration.load();

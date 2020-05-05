@@ -35,6 +35,8 @@ import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * @author Me4502
  */
@@ -124,9 +126,9 @@ public class FireShooter extends AbstractIC {
             double nx = x/f2;
             double ny = vert/f2;
             double nz = z/f2;
-            nx += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
-            ny += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
-            nz += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
+            nx += ThreadLocalRandom.current().nextGaussian() * 0.007499999832361937D * spread;
+            ny += ThreadLocalRandom.current().nextGaussian() * 0.007499999832361937D * spread;
+            nz += ThreadLocalRandom.current().nextGaussian() * 0.007499999832361937D * spread;
             nx *= speed;
             ny *= speed;
             nz *= speed;

@@ -109,9 +109,9 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
         StringBuilder command = new StringBuilder(StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3));
 
-        while(BlockUtil.areBlocksIdentical(CraftBookBukkitUtil.toBlock(sign), CraftBookBukkitUtil.toBlock(sign).getRelative(0, -1, 0))) {
+        while(BlockUtil.areBlocksIdentical(sign.getBlock(), sign.getBlock().getRelative(0, -1, 0))) {
 
-            sign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toBlock(sign).getRelative(0, -1, 0));
+            sign = CraftBookBukkitUtil.toChangedSign(sign.getBlock().getRelative(0, -1, 0));
             if(!sign.getLine(1).equals("[Command]")) break;
             if(!sign.getLine(0).equals("EXPANSION")) break;
 

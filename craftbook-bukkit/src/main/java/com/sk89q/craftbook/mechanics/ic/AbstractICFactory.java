@@ -108,10 +108,10 @@ public abstract class AbstractICFactory implements ICFactory {
                 if(((PersistentDataIC) this).getStorageFile().exists())
                     ((PersistentDataIC) this).loadPersistentData(new DataInputStream(new FileInputStream(((PersistentDataIC) this).getStorageFile())));
             } catch (FileNotFoundException e) {
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             } catch (IOException e) {
                 CraftBookPlugin.logger().severe("An invalid ic save file was found!");
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
         }
     }

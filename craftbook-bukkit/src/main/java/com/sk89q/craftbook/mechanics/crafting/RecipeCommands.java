@@ -174,7 +174,7 @@ public class RecipeCommands {
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
 
         } else if (type == RecipeType.SHAPELESS || type == RecipeType.FURNACE) {
@@ -217,7 +217,7 @@ public class RecipeCommands {
                 player.print("Successfully added a new " + type.name() + " recipe!");
             } catch (Exception e) {
                 player.printError("Error adding recipe! See console for more details!");
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
         }
     }

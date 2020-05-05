@@ -38,6 +38,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
@@ -100,7 +101,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                 && ((Ageable) b.getBlockData()).getAge() < ((Ageable) b.getBlockData()).getMaximumAge()) {
             if (consumeBonemeal()) {
                 Ageable ageable = (Ageable) b.getBlockData();
-                int add = CraftBookPlugin.inst().getRandom().nextInt(3);
+                int add = ThreadLocalRandom.current().nextInt(3);
                 if(ageable.getAge() + add > ageable.getMaximumAge())
                     ageable.setAge(ageable.getMaximumAge());
                 else
@@ -111,7 +112,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
         if (Tag.SAPLINGS.isTagged(b.getType())) {
             if (consumeBonemeal()) {
-                if (!growTree(b, CraftBookPlugin.inst().getRandom())) refundBonemeal();
+                if (!growTree(b, ThreadLocalRandom.current())) refundBonemeal();
                 else return;
             }
         }
@@ -146,9 +147,9 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.GRASS_BLOCK && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.GRASS_BLOCK && b.getRelative(0, 1, 0).getType() == Material.AIR && ThreadLocalRandom.current().nextInt(15) == 0) {
             if (consumeBonemeal()) {
-                int t = CraftBookPlugin.inst().getRandom().nextInt(7);
+                int t = ThreadLocalRandom.current().nextInt(7);
                 if (t == 0) {
                     b.getRelative(0, 1, 0).setType(Material.GRASS);
                 } else if (t == 1) {
@@ -163,28 +164,28 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && ThreadLocalRandom.current().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(Material.DEAD_BUSH);
             }
             return;
         }
-        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR && ThreadLocalRandom.current().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, -1, 0).setBlockData(b.getBlockData(), true);
             }
             return;
         }
-        if (b.getType() == Material.WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+        if (b.getType() == Material.WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && ThreadLocalRandom.current().nextInt(30) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(Material.LILY_PAD);
             }
             return;
         }
         if (b.getType() == Material.MYCELIUM && b.getRelative(0, 1, 0).getType() == Material.AIR
-                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+                && ThreadLocalRandom.current().nextInt(15) == 0) {
             if (consumeBonemeal()) {
-                int t = CraftBookPlugin.inst().getRandom().nextInt(2);
+                int t = ThreadLocalRandom.current().nextInt(2);
                 if (t == 0) {
                     b.getRelative(0, 1, 0).setType(Material.RED_MUSHROOM);
                 } else if (t == 1) {

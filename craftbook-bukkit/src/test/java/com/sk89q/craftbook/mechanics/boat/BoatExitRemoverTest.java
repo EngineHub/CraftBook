@@ -87,8 +87,6 @@ public class BoatExitRemoverTest {
         when(plugin.getConfiguration()).thenReturn(config);
         rem.giveItem = true;
 
-        CraftBookPlugin.setInstance(plugin);
-
         rem.new BoatRemover(null, boat).run();
 
         LivingEntity player = mock(LivingEntity.class);

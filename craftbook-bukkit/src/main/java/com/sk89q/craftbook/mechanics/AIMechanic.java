@@ -31,6 +31,7 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AIMechanic extends AbstractCraftBookMechanic {
 
@@ -75,7 +76,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
             if (event.getTarget() instanceof Player)
                 if (((Player) event.getTarget()).isSneaking()) {
                     int distance = (int) Math.floor(event.getTarget().getLocation().distanceSquared(enemy.getLocation()));
-                    if (distance != 0 && CraftBookPlugin.inst().getRandom().nextInt(distance) > (diff == Difficulty.HARD ? 4 : 2)) {
+                    if (distance != 0 && ThreadLocalRandom.current().nextInt(distance) > (diff == Difficulty.HARD ? 4 : 2)) {
                         CraftBookPlugin.logDebugMessage("Disabling entity target - Player is sneaking.", "ai-mechanics.entity-target.vision");
                         event.setCancelled(true);
                     }
@@ -105,7 +106,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
                 case PEACEFUL:
                     return;
             }
-            if (CraftBookPlugin.inst().getRandom().nextInt(amount) == 0) {
+            if (ThreadLocalRandom.current().nextInt(amount) == 0) {
                 CraftBookPlugin.logDebugMessage("Performing critical hit.", "ai-mechanics.shoot-bow.critical");
                 event.getProjectile().setFireTicks(5000);
             }

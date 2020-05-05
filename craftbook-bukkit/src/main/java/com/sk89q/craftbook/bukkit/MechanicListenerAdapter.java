@@ -360,7 +360,7 @@ final class MechanicListenerAdapter implements Listener {
 
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
 
-        CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+        Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
             try {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
                 CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));

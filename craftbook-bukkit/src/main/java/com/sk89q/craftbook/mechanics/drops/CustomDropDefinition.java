@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class CustomDropDefinition {
 
@@ -114,10 +115,10 @@ public abstract class CustomDropDefinition {
         List<ItemStack> ndrops = new ArrayList<>();
 
         for(DropItemStack drop : drops) {
-            if(drop.getChance() < CraftBookPlugin.inst().getRandom().nextDouble()*100d) continue;
+            if(drop.getChance() < ThreadLocalRandom.current().nextDouble()*100d) continue;
             ItemStack stack = drop.getStack().clone();
             if(drop.getMaximum() >= 0 && drop.getMinimum() >= 0) {
-                int amount = drop.getMinimum() + CraftBookPlugin.inst().getRandom().nextInt(drop.getMaximum() - drop.getMinimum() + 1);
+                int amount = drop.getMinimum() + ThreadLocalRandom.current().nextInt(drop.getMaximum() - drop.getMinimum() + 1);
                 if(amount <= 0) continue; //Invalid stack.
                 stack.setAmount(amount);
             }

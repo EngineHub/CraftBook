@@ -48,6 +48,8 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class LightningSummon extends AbstractIC {
 
     private Location center;
@@ -109,7 +111,7 @@ public class LightningSummon extends AbstractIC {
                         int rz = center.getBlockZ() - z;
                         Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
-                        if(b.getType() != Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(100) <= chance)
+                        if(b.getType() != Material.AIR && ThreadLocalRandom.current().nextInt(100) <= chance)
                             b.getWorld().strikeLightning(b.getLocation());
                     }
                 }

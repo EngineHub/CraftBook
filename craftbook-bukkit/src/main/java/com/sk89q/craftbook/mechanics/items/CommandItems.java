@@ -124,14 +124,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
         definitions = new HashSet<>();
         cooldownPeriods = new HashMap<>();
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("command-items.yml");
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
 
         try {
             config.load();
         } catch (IOException e) {
             CraftBookPlugin.logger().severe("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             return false;
         }
 

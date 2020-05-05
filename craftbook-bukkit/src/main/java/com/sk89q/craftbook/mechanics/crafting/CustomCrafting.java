@@ -40,6 +40,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Custom Crafting Recipe Handler
@@ -58,7 +59,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
         INSTANCE = this;
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("crafting-recipes.yml");
         manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = manager.getRecipes();
         int recipes = 0;
@@ -126,10 +127,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         } catch (IllegalArgumentException e) {
             CraftBookPlugin.inst().getLogger().severe("Corrupt or invalid recipe!");
             CraftBookPlugin.inst().getLogger().severe("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         } catch (Exception e) {
             CraftBookPlugin.inst().getLogger().severe("Failed to load recipe! Is it incorrectly written?");
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
 
         return false;
@@ -227,7 +228,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
             return;
         } catch (Exception e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
             return;
         }
@@ -353,7 +354,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             ArrayList<CraftingItemStack> stacks = new ArrayList<>((Collection<CraftingItemStack>) recipe.getAdvancedData("extra-results"));
             for(CraftingItemStack stack : stacks) {
                 if(stack.hasAdvancedData("chance"))
-                    if(CraftBookPlugin.inst().getRandom().nextDouble() < (Double)stack.getAdvancedData("chance"))
+                    if(ThreadLocalRandom.current().nextDouble() < (Double)stack.getAdvancedData("chance"))
                         continue;
                 HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
                 if(!leftovers.isEmpty()) {

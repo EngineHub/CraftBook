@@ -37,6 +37,8 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Driller extends AbstractSelfTriggeredIC {
 
     public Driller (Server server, ChangedSign sign, ICFactory factory) {
@@ -83,7 +85,7 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if (CraftBookPlugin.inst().getRandom().nextInt(100) < 60) return false;
+        if (ThreadLocalRandom.current().nextInt(100) < 60) return false;
 
         Block center = getBackBlock().getRelative(0, -1, 0);
         ItemStack tool = null;
@@ -95,7 +97,7 @@ public class Driller extends AbstractSelfTriggeredIC {
             }
         }
 
-        int random = CraftBookPlugin.inst().getRandom().nextInt(signDrillSize*signDrillSize);
+        int random = ThreadLocalRandom.current().nextInt(signDrillSize*signDrillSize);
         int x = random / signDrillSize;
         int y = random % signDrillSize;
 

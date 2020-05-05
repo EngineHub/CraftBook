@@ -55,6 +55,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Silthus
@@ -68,7 +69,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         instance = this;
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), "cauldron-recipes.yml");
+        CraftBookPlugin.inst().createDefaultConfiguration("cauldron-recipes.yml");
         recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
         return recipes.hasRecipes();
@@ -259,7 +260,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
             } else if(player != null) { // Spoons
                 if (isItemSpoon(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
                     double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
-                    double ran = CraftBookPlugin.inst().getRandom().nextDouble();
+                    double ran = ThreadLocalRandom.current().nextDouble();
                     ((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().setDurability((short) (((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().getDurability() - (short) 1));
                     if (chance <= ran) {
                         cook(block, recipe, items);

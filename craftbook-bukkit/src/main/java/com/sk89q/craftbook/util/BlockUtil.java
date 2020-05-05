@@ -31,6 +31,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class BlockUtil {
 
@@ -111,33 +112,33 @@ public final class BlockUtil {
                 break;
             case WHEAT: {
                 drops.add(new ItemStack(Material.WHEAT, 1));
-                int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
+                int amount = ThreadLocalRandom.current().nextInt(4);
                 if (amount > 0)
                     drops.add(new ItemStack(Material.WHEAT_SEEDS, amount));
                 break;
             }
             case BEETROOTS:
                 drops.add(new ItemStack(Material.BEETROOT, 1));
-                int amount = CraftBookPlugin.inst().getRandom().nextInt(4);
+                int amount = ThreadLocalRandom.current().nextInt(4);
                 if(amount > 0)
                     drops.add(new ItemStack(Material.BEETROOT_SEEDS, amount));
                 break;
             case CARROTS:
-                drops.add(new ItemStack(Material.CARROT, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
+                drops.add(new ItemStack(Material.CARROT, 1 + ThreadLocalRandom.current().nextInt(4)));
                 break;
             case POTATOES:
-                drops.add(new ItemStack(Material.POTATO, 1 + CraftBookPlugin.inst().getRandom().nextInt(4)));
-                if(CraftBookPlugin.inst().getRandom().nextInt(50) == 0)
+                drops.add(new ItemStack(Material.POTATO, 1 + ThreadLocalRandom.current().nextInt(4)));
+                if(ThreadLocalRandom.current().nextInt(50) == 0)
                     drops.add(new ItemStack(Material.POISONOUS_POTATO, 1));
                 break;
             case NETHER_WART:
-                drops.add(new ItemStack(Material.NETHER_WART, 2 + CraftBookPlugin.inst().getRandom().nextInt(3)));
+                drops.add(new ItemStack(Material.NETHER_WART, 2 + ThreadLocalRandom.current().nextInt(3)));
                 break;
             case SUGAR_CANE:
                 drops.add(new ItemStack(Material.SUGAR_CANE, 1));
                 break;
             case MELON:
-                drops.add(new ItemStack(Material.MELON_SLICE, 3 + CraftBookPlugin.inst().getRandom().nextInt(5)));
+                drops.add(new ItemStack(Material.MELON_SLICE, 3 + ThreadLocalRandom.current().nextInt(5)));
                 break;
             case COCOA:
                 drops.add(new ItemStack(Material.COCOA_BEANS, 3));

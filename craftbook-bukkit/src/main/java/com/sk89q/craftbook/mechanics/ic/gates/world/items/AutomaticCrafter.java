@@ -90,7 +90,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 }
             }
         } catch (Exception e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
             disp.getInventory().setContents(disp.getInventory().getContents());
         }
     }
@@ -262,7 +262,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                             require = ingredientMap.get(item);
                     }
                     catch(Exception e){
-                        CraftBookBukkitUtil.printStacktrace(e);
+                        e.printStackTrace();
                     }
                     if (require != null && require.getType() != Material.AIR) {
                         validRecipeItems ++;
@@ -270,7 +270,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                     if (!ItemUtil.areItemsIdentical(require, stack))
                         return false;
                 } catch (Exception e) {
-                    CraftBookBukkitUtil.printStacktrace(e);
+                    e.printStackTrace();
                     return false;
                 }
             }

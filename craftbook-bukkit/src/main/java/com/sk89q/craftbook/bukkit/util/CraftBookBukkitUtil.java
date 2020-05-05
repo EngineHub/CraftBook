@@ -18,40 +18,17 @@ package com.sk89q.craftbook.bukkit.util;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
-import com.sk89q.worldedit.util.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-// $Id$
-/*
- * WorldEdit Copyright (C) 2010 sk89q <http://www.sk89q.com> and contributors
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 public final class CraftBookBukkitUtil {
 
     private CraftBookBukkitUtil() {
-    }
-
-    public static void printStacktrace(Throwable e) {
-        CraftBookPlugin.inst().getLogger().severe(CraftBookPlugin.getStackTrace(e));
     }
 
     public static ChangedSign toChangedSign(Block sign) {
@@ -65,10 +42,6 @@ public final class CraftBookBukkitUtil {
     public static ChangedSign toChangedSign(Block block, String[] lines, CraftBookPlayer player) {
         if (!SignUtil.isSign(block)) return null;
         return new ChangedSign(block, lines, player);
-    }
-
-    public static Block toBlock(ChangedSign sign) {
-        return sign.getBlock();
     }
 
     public static Sign toSign(ChangedSign sign) {

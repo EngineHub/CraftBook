@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
@@ -85,7 +86,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
             chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
 
-        if(CraftBookPlugin.inst().getRandom().nextDouble() > chance)
+        if(ThreadLocalRandom.current().nextDouble() > chance)
             return;
 
         ItemStack toDrop = null;

@@ -169,10 +169,10 @@ public final class MidiJingleSequencer implements JingleSequencer {
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
             } catch(Exception e){
-                CraftBookBukkitUtil.printStacktrace(e);
+                e.printStackTrace();
             }
         } catch (MidiUnavailableException e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
     }
 

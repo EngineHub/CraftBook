@@ -43,6 +43,8 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.util.RegexUtil;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class RandomBit extends AbstractSelfTriggeredIC {
 
     public RandomBit(Server server, ChangedSign sign, ICFactory factory) {
@@ -112,7 +114,7 @@ public class RandomBit extends AbstractSelfTriggeredIC {
                 if(!chip.isValid(i)) continue;
                 if(first)
                     chip.setOutput(i, false); //Turn it off before changing it.
-                boolean state = CraftBookPlugin.inst().getRandom().nextBoolean();
+                boolean state = ThreadLocalRandom.current().nextBoolean();
                 boolean changed = false;
                 if(on >= maxOn && maxOn >= 0)
                     state = false;

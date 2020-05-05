@@ -49,6 +49,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import java.io.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
@@ -80,7 +81,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "books.txt"), "books.txt");
+        CraftBookPlugin.inst().createDefaultConfiguration("books.txt");
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
@@ -118,7 +119,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
      * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
     private static String getBookLine() throws Exception {
-        return lines[CraftBookPlugin.inst().getRandom().nextInt(lines.length)];
+        return lines[ThreadLocalRandom.current().nextInt(lines.length)];
     }
 
     @EventHandler(priority = EventPriority.HIGH)

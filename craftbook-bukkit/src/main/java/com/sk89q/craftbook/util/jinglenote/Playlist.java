@@ -57,7 +57,7 @@ public class Playlist {
         try {
             readPlaylist();
         } catch (IOException e) {
-            CraftBookBukkitUtil.printStacktrace(e);
+            e.printStackTrace();
         }
     }
 
@@ -188,7 +188,7 @@ public class Playlist {
                         try {
                             Thread.sleep(10L);
                         } catch (InterruptedException e) {
-                            CraftBookBukkitUtil.printStacktrace(e);
+                            e.printStackTrace();
                         }
 
                         if(!isPlaying()) {
@@ -219,7 +219,7 @@ public class Playlist {
                     try {
                         Thread.sleep(100L);
                     } catch (InterruptedException e) {
-                        CraftBookBukkitUtil.printStacktrace(e);
+                        e.printStackTrace();
                     }
                 }
 
@@ -279,10 +279,10 @@ public class Playlist {
                         try {
                             Thread.sleep(1000L);
                         } catch (InterruptedException e) {
-                            CraftBookBukkitUtil.printStacktrace(e);
+                            e.printStackTrace();
                         }
                     } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
-                        CraftBookBukkitUtil.printStacktrace(e);
+                        e.printStackTrace();
                     }
                 } else if (line.startsWith("tune ")) {
 
@@ -300,7 +300,7 @@ public class Playlist {
                     try {
                         Thread.sleep(1000L);
                     } catch (InterruptedException e) {
-                        CraftBookBukkitUtil.printStacktrace(e);
+                        e.printStackTrace();
                     }
                 } else if (line.startsWith("send ")) {
 
