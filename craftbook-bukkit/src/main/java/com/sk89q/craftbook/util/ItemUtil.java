@@ -137,21 +137,6 @@ public final class ItemUtil {
         return true;
     }
 
-    public static boolean areItemsSimilar(ItemStack item, Material type) {
-
-        return areItemsSimilar(item.getType(), type);
-    }
-
-    public static boolean areItemsSimilar(ItemStack item, ItemStack item2) {
-
-        return areItemsSimilar(item.getType(), item2.getType());
-    }
-
-    public static boolean areItemsSimilar(Material data, Material comparedData) {
-
-        return data == comparedData;
-    }
-
     private static final Pattern STRIP_RESET_PATTERN = Pattern.compile("(?i)" + '\u00A7' + "[Rr]");
 
     //TODO Move to a StringUtil.

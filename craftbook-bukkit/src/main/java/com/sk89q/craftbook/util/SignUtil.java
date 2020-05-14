@@ -269,16 +269,4 @@ public final class SignUtil {
         event.setCancelled(true);
         event.getBlock().breakNaturally();
     }
-
-    /**
-     * Check whether or not the block is a sign, and if so, does it contain the said text on that specific line.
-     * 
-     * @param sign The sign to check.
-     * @param text The text to check.
-     * @param line The line to check the text on.
-     * @return
-     */
-    public static boolean doesSignHaveText(Block sign, String text, int line) {
-        return isSign(sign) && CraftBookBukkitUtil.toChangedSign(sign).getLine(line).equals(text);
-    }
 }

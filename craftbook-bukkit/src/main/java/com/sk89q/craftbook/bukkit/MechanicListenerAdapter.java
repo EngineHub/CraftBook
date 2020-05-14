@@ -32,16 +32,14 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.HistoryHashMap;
 import com.sk89q.craftbook.util.LocationUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -49,14 +47,16 @@ import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.AnaloguePowerable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.RedstoneWire;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -70,152 +70,140 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This adapter hooks a mechanic manager up to Bukkit.
- *
- * @author sk89q
  */
 final class MechanicListenerAdapter implements Listener {
 
-    private final Set<String> signClickTimer = new HashSet<>();
+    private final Map<UUID, Long> signClickTimer = new HistoryHashMap<>(10);
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (SignClickEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
+        }
 
-        Block block = null;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        // TODO Determine if still necessary
+        Block block;
         Action action = null;
-        if(event.getAction() == Action.RIGHT_CLICK_AIR) {
-            try {
-                block = event.getPlayer().getTargetBlock(null, 5);
-                if(block != null && block.getType() != Material.AIR)
-                    action = Action.RIGHT_CLICK_BLOCK;
-                else
-                    action = Action.RIGHT_CLICK_AIR;
-            } catch(Exception e) {
-                //Bukkit randomly errors. Catch the error.
+        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+            block = event.getPlayer().getTargetBlock(null, 5);
+            if (!block.getType().isAir()) {
+                action = Action.RIGHT_CLICK_BLOCK;
             }
         } else {
             block = event.getClickedBlock();
             action = event.getAction();
         }
 
-        if(block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
-            if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
-                if(signClickTimer.contains(event.getPlayer().getName())) {
+        if (block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
+            if (CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
+                long lastClick = signClickTimer.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> 0L);
+                if (lastClick > System.currentTimeMillis() - (CraftBookPlugin.inst().getConfiguration().signClickTimeout * 1000)) {
                     return;
                 } else {
-                    signClickTimer.add(event.getPlayer().getName());
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> signClickTimer.remove(event.getPlayer().getName()), CraftBookPlugin.inst().getConfiguration().signClickTimeout);
+                    signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
                 }
             }
             SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            if(ev.isCancelled())
+            if (ev.isCancelled()) {
                 event.setCancelled(true);
+            }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
+                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
-
-        if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
-            checkBlockChange(event.getPlayer(), event.getBlock(), false);
         }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        checkBlockChange(event.getBlock(), false);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
+                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
-
-        if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
-            checkBlockChange(event.getPlayer(), event.getBlock(), true);
         }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        checkBlockChange(event.getBlock(), true);
     }
 
-    private static void checkBlockChange(Player player, Block block, boolean build) {
-        switch(block.getType()) {
-            case REDSTONE_TORCH:
-            case REDSTONE_WALL_TORCH:
-            case REDSTONE_BLOCK:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
-                break;
-            case ACACIA_BUTTON:
-            case BIRCH_BUTTON:
-            case DARK_OAK_BUTTON:
-            case JUNGLE_BUTTON:
-            case OAK_BUTTON:
-            case SPRUCE_BUTTON:
-            case STONE_BUTTON:
-            case LEVER:
-            case DETECTOR_RAIL:
-            case STONE_PRESSURE_PLATE:
-            case ACACIA_PRESSURE_PLATE:
-            case BIRCH_PRESSURE_PLATE:
-            case DARK_OAK_PRESSURE_PLATE:
-            case JUNGLE_PRESSURE_PLATE:
-            case OAK_PRESSURE_PLATE:
-            case SPRUCE_PRESSURE_PLATE:
-            case COMPARATOR:
-            case REPEATER:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                Powerable powerable = (Powerable) block.getBlockData();
-                if(powerable.isPowered())
-                    handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
-                break;
-            case HEAVY_WEIGHTED_PRESSURE_PLATE:
-            case LIGHT_WEIGHTED_PRESSURE_PLATE:
-            case REDSTONE_WIRE:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
-                    break;
-                AnaloguePowerable analoguePowerable = (AnaloguePowerable) block.getBlockData();
-                if(analoguePowerable.getPower() > 0) {
-                    handleRedstoneForBlock(block, build ? 0 : analoguePowerable.getPower(), build ? analoguePowerable.getPower() : 0);
+    private static void checkBlockChange(Block block, boolean build) {
+        Material type = block.getType();
+        int power = 0;
+
+        if (type == Material.REDSTONE_BLOCK) {
+            power = 15;
+        } else if (type == Material.REDSTONE_WALL_TORCH || type == Material.REDSTONE_TORCH) {
+            Lightable lightable = (Lightable) block.getBlockData();
+            if (lightable.isLit()) {
+                power = 15;
+            }
+        } else {
+            BlockData blockData = block.getBlockData();
+
+            if (blockData instanceof Powerable) {
+                if(((Powerable) blockData).isPowered()) {
+                    power = 15;
                 }
-                break;
-            default:
-                break;
+            } else if (blockData instanceof AnaloguePowerable) {
+                power = ((AnaloguePowerable) blockData).getPower();
+            }
+        }
+
+        if (power != 0) {
+            handleRedstoneForBlock(block, build ? 0 : power, build ? power : 0);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
+                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
+        }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent());
     }
 
     private static void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
-
-        World world = block.getWorld();
-
-        // Give the method a BlockWorldVector instead of a Block
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
         boolean wasChange = wasOn != isOn;
 
         // For efficiency reasons, we're only going to consider changes between
         // off and on state, and ignore simple current changes (i.e. 15->13)
-        if (!wasChange) return;
-
-        int x = block.getX();
-        int y = block.getY();
-        int z = block.getZ();
+        if (!wasChange) {
+            return;
+        }
 
         // When this hook has been called, the level in the world has not
         // yet been updated, so we're going to do this very ugly thing of
@@ -224,82 +212,51 @@ final class MechanicListenerAdapter implements Listener {
         switch(block.getType()) {
             case REDSTONE_WIRE:
                 if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) {
-
                     // power all blocks around the redstone wire on the same y level
                     // north/south
-                    handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
-                    handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
+                    handleDirectWireInput(block.getRelative(BlockFace.NORTH), block, oldLevel, newLevel);
+                    handleDirectWireInput(block.getRelative(BlockFace.SOUTH), block, oldLevel, newLevel);
                     // east/west
-                    handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
-                    handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
-
-                    // Can be triggered from below
-                    handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
-
-                    // Can be triggered from above (Eg, glass->glowstone like redstone lamps)
-                    handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
+                    handleDirectWireInput(block.getRelative(BlockFace.EAST), block, oldLevel, newLevel);
+                    handleDirectWireInput(block.getRelative(BlockFace.WEST), block, oldLevel, newLevel);
                 } else {
+                    RedstoneWire redstoneWire = (RedstoneWire) block.getBlockData();
 
-                    Material above = world.getBlockAt(x, y + 1, z).getType();
-
-                    Material westSide = world.getBlockAt(x, y, z + 1).getType();
-                    Material westSideAbove = world.getBlockAt(x, y + 1, z + 1).getType();
-                    Material westSideBelow = world.getBlockAt(x, y - 1, z + 1).getType();
-                    Material eastSide = world.getBlockAt(x, y, z - 1).getType();
-                    Material eastSideAbove = world.getBlockAt(x, y + 1, z - 1).getType();
-                    Material eastSideBelow = world.getBlockAt(x, y - 1, z - 1).getType();
-
-                    Material northSide = world.getBlockAt(x - 1, y, z).getType();
-                    Material northSideAbove = world.getBlockAt(x - 1, y + 1, z).getType();
-                    Material northSideBelow = world.getBlockAt(x - 1, y - 1, z).getType();
-                    Material southSide = world.getBlockAt(x + 1, y, z).getType();
-                    Material southSideAbove = world.getBlockAt(x + 1, y + 1, z).getType();
-                    Material southSideBelow = world.getBlockAt(x + 1, y - 1, z).getType();
-
-                    // Make sure that the wire points to only this block
-                    if (!BlockUtil.isRedstoneBlock(westSide) && !BlockUtil.isRedstoneBlock(eastSide)
-                            && (!BlockUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR || above != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR || above != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(westSideBelow) || westSide != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(eastSideBelow) || eastSide != Material.AIR)) {
-                        // Possible blocks north / south
-                        handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
-                        handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
-                        handleDirectWireInput(x - 1, y - 1, z, block, oldLevel, newLevel);
-                        handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
+                    // Redstone wire only connects to known redstone blocks, not signs etc.
+                    int connectedFaces = 0;
+                    for (BlockFace face : redstoneWire.getAllowedFaces()) {
+                        if (redstoneWire.getFace(face) != RedstoneWire.Connection.NONE) {
+                            connectedFaces ++;
+                        }
                     }
 
-                    if (!BlockUtil.isRedstoneBlock(northSide) && !BlockUtil.isRedstoneBlock(southSide)
-                            && (!BlockUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR || above != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR || above != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(northSideBelow) || northSide != Material.AIR)
-                            && (!BlockUtil.isRedstoneBlock(southSideBelow) || southSide != Material.AIR)) {
-                        // Possible blocks west / east
-                        handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
-                        handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
-                        handleDirectWireInput(x, y - 1, z - 1, block, oldLevel, newLevel);
-                        handleDirectWireInput(x, y - 1, z + 1, block, oldLevel, newLevel);
+                    for (BlockFace face : redstoneWire.getAllowedFaces()) {
+                        RedstoneWire.Connection connection = redstoneWire.getFace(face);
+                        // TODO Re-test in 1.16
+                        if (connection != RedstoneWire.Connection.NONE
+                                || connectedFaces == 0
+                                || connectedFaces == 1 && redstoneWire.getFace(face.getOppositeFace()) != RedstoneWire.Connection.NONE) {
+                            handleDirectWireInput(block.getRelative(face), block, oldLevel, newLevel);
+                        }
                     }
-
-                    // Can be triggered from below
-                    handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
-
-                    // Can be triggered from above
-                    handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 }
+
+                // Can be triggered from below
+                handleDirectWireInput(block.getRelative(BlockFace.UP), block, oldLevel, newLevel);
+
+                // Can be triggered from above (Eg, glass->glowstone like redstone lamps)
+                handleDirectWireInput(block.getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
                 return;
             case REPEATER:
             case COMPARATOR:
+            case OBSERVER:
                 Directional diode = (Directional) block.getBlockData();
-                BlockFace f = diode.getFacing();
-                handleDirectWireInput(x + f.getModX(), y, z + f.getModZ(), block, oldLevel, newLevel);
-                if(block.getRelative(f).getType() != Material.AIR) {
-                    handleDirectWireInput(x + f.getModX(), y - 1, z + f.getModZ(), block, oldLevel, newLevel);
-                    handleDirectWireInput(x + f.getModX(), y + 1, z + f.getModZ(), block, oldLevel, newLevel);
-                    handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
-                    handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
-                    handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ() + 1, block, oldLevel, newLevel);
-                    handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ() - 1, block, oldLevel, newLevel);
+                BlockFace f = diode.getFacing().getOppositeFace();
+                Block relativeBlock = block.getRelative(f);
+                handleDirectWireInput(relativeBlock, block, oldLevel, newLevel);
+
+                if (relativeBlock.getPistonMoveReaction() != PistonMoveReaction.BREAK) {
+                    handleRedstoneForBlock(relativeBlock, oldLevel, newLevel);
                 }
                 return;
             case ACACIA_BUTTON:
@@ -311,11 +268,8 @@ final class MechanicListenerAdapter implements Listener {
             case STONE_BUTTON:
             case LEVER:
                 Directional button = (Directional) block.getBlockData();
-                if(button != null) {
-                    BlockFace face = button.getFacing().getOppositeFace();
-                    if(face != null)
-                        handleDirectWireInput(x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2, block, oldLevel, newLevel);
-                }
+                BlockFace face = button.getFacing().getOppositeFace();
+                handleRedstoneForBlock(block.getRelative(face), oldLevel, newLevel);
                 break;
             case POWERED_RAIL:
             case ACTIVATOR_RAIL:
@@ -325,56 +279,62 @@ final class MechanicListenerAdapter implements Listener {
         // For redstone wires and repeaters, the code already exited this method
         // Non-wire blocks proceed
 
-        handleDirectWireInput(x - 1, y, z, block, oldLevel, newLevel);
-        handleDirectWireInput(x + 1, y, z, block, oldLevel, newLevel);
-        handleDirectWireInput(x - 1, y - 1, z, block, oldLevel, newLevel);
-        handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
-        handleDirectWireInput(x, y, z - 1, block, oldLevel, newLevel);
-        handleDirectWireInput(x, y, z + 1, block, oldLevel, newLevel);
-        handleDirectWireInput(x, y - 1, z - 1, block, oldLevel, newLevel);
-        handleDirectWireInput(x, y - 1, z + 1, block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.WEST), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.EAST), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.WEST).getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.EAST).getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.NORTH), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.SOUTH), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.NORTH).getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.SOUTH).getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
 
         // Can be triggered from below
-        handleDirectWireInput(x, y + 1, z, block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.UP), block, oldLevel, newLevel);
 
         // Can be triggered from above
-        handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
+        handleDirectWireInput(block.getRelative(BlockFace.DOWN), block, oldLevel, newLevel);
     }
 
     /**
      * Handle the direct wire input.
      *
-     * @param x
-     * @param y
-     * @param z
-     * @param sourceBlock
-     * @param oldLevel
-     * @param newLevel
+     * @param block The block that was triggered
+     * @param sourceBlock The source block
+     * @param oldLevel The old power level
+     * @param newLevel The new power level
      */
-    private static void handleDirectWireInput(int x, int y, int z, Block sourceBlock, int oldLevel, int newLevel) {
-
-        Block block = sourceBlock.getWorld().getBlockAt(x, y, z);
-        if(CraftBookBukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
+    private static void handleDirectWireInput(Block block, Block sourceBlock, int oldLevel, int newLevel) {
+        if (block.getBlockKey() == sourceBlock.getBlockKey()) { //The same block, don't run.
             return;
+        }
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
 
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
 
-        Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-            try {
-                CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));
-                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            } catch (InvalidMechanismException ignored) {
-            }
-        });
+        if (CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length != 0) {
+            Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+                try {
+                    CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
+                    CartBlockRedstoneEvent ev =
+                            new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
+                                    CartBlockMechanism.getCart(cmb.rail));
+                    CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                } catch (InvalidMechanismException ignored) {
+                }
+            });
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (CartBlockImpactEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
+        }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         if (event.getVehicle() instanceof Minecart) {
             try {
@@ -383,8 +343,9 @@ final class MechanicListenerAdapter implements Listener {
                 cmb.setFromBlock(event.getFrom().getBlock());
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                if (LocationUtil.getDistanceSquared(from, to) > 2 * 2) //Further than max distance
+                if (LocationUtil.getDistanceSquared(from, to) > 2 * 2) {//Further than max distance
                     return;
+                }
                 boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
                 CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, minor);
                 CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
@@ -395,12 +356,19 @@ final class MechanicListenerAdapter implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (CartBlockEnterEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            // Don't run this code when we have no listeners.
             return;
+        }
 
-        if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
+
+        // TODO Determine if necessary
+        if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4)) {
+            return;
+        }
 
         if (event.getVehicle() instanceof Minecart) {
             try {
@@ -419,6 +387,7 @@ final class MechanicListenerAdapter implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSignChange(SignChangeEvent event) {
+        // TODO Determine if necessary
         for (int i = 0; i < 4; i++) {
             String line = event.getLine(i);
             if (line.startsWith("&0") || line.startsWith("\u00A70")) {

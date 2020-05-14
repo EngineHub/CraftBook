@@ -16,9 +16,9 @@
 
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.BlockSyntax;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -56,7 +56,7 @@ public class CartEjector extends CartBlockMechanism {
         // the cart also comes to a dead halt at the time of writing, and i have no idea why.
         List<Entity> passengers = event.getMinecart().getPassengers();
         event.getMinecart().eject();
-        passengers.forEach(ent -> ent.teleport(CraftBookBukkitUtil.center(ejectTarget.getLocation())));
+        passengers.forEach(ent -> ent.teleport(LocationUtil.center(ejectTarget.getLocation())));
 
         // notice!
         // if a client tries to board a cart immediately before it crosses an ejector,

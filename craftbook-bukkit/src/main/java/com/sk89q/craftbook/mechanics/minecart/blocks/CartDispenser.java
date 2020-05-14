@@ -16,11 +16,11 @@
 
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EntityUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RailUtil;
 import com.sk89q.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.craftbook.util.SignUtil;
@@ -178,7 +178,7 @@ public class CartDispenser extends CartBlockMechanism {
      */
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
-        Location location = CraftBookBukkitUtil.center(blocks.rail.getLocation());
+        Location location = LocationUtil.center(blocks.rail.getLocation());
 
         if(minecartDispenserLegacy) {
             BlockFace direction =  SignUtil.getFront(blocks.sign).getOppositeFace();

@@ -18,7 +18,7 @@ package com.sk89q.craftbook;
 
 import org.bukkit.event.Listener;
 
-import com.sk89q.craftbook.util.LoadPriority;
+import com.sk89q.craftbook.core.mechanic.LoadPriority;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.File;

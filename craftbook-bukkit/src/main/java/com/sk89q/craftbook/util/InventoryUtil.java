@@ -204,7 +204,7 @@ public class InventoryUtil {
                     continue;
                 }
 
-                if(ItemUtil.areItemsSimilar(base, item)) {
+                if(base.getType() == item.getType()) {
                     if(!ignoreStackSize && base.getAmount() != item.getAmount())
                         continue;
 

@@ -18,10 +18,10 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.CartUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -67,7 +67,7 @@ public class CartTeleporter extends CartBlockMechanism {
             CartUtil.stop(event.getMinecart());
         }
 
-        Location loc = CraftBookBukkitUtil
+        Location loc = LocationUtil
                 .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()));
         loc.getChunk().load(true);
         CartUtil.teleport(event.getMinecart(), loc);

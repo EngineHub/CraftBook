@@ -388,4 +388,22 @@ public final class LocationUtil {
             }
         }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
     }
+
+    public static Location center(Location loc) {
+
+        return new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 0.5,
+                loc.getBlockZ() + 0.5, loc.getPitch(),
+                loc.getYaw());
+    }
+
+    public static final double EQUALS_PRECISION = 0.0001;
+
+    /**
+     * Bukkit's Location class has serious problems with floating point precision.
+     */
+    public static boolean equals(Location a, Location b) {
+
+        return Math.abs(a.getX() - b.getX()) <= EQUALS_PRECISION && Math.abs(a.getY() - b.getY()) <= EQUALS_PRECISION
+                && Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
+    }
 }

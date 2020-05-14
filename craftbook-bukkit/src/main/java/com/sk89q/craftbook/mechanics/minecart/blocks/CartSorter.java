@@ -21,7 +21,6 @@ import com.sk89q.craftbook.mechanics.minecart.StationManager;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -175,8 +174,9 @@ public class CartSorter extends CartBlockMechanism {
                 if (player != null && parts[0].equalsIgnoreCase("Held")) {
                     try {
                         ItemStack item = ItemSyntax.getItem(parts[1]);
-                        if (ItemUtil.areItemsSimilar(player.getItemInHand(), item))
+                        if (item.getType() == player.getInventory().getItemInMainHand().getType()) {
                             return true;
+                        }
                     } catch (NumberFormatException ignored) {
                     }
                 } else if (player != null && parts[0].equalsIgnoreCase("Ply")) {

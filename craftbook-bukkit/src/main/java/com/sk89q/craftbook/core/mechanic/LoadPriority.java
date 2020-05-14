@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package com.sk89q.craftbook.core.mechanic;
 
 public enum LoadPriority {
 

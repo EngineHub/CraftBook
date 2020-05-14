@@ -81,16 +81,6 @@ public class ItemUtilTest {
     }
 
     @Test
-    public void testAreItemsSimilar() {
-
-        ItemStack test1 = newMockItemStack(Material.OAK_PLANKS,(byte) 4,1);
-        ItemStack test2 = newMockItemStack(Material.OAK_PLANKS,(byte) 8,1);
-        assertTrue(ItemUtil.areItemsSimilar(test1, test2));
-        test2 = newMockItemStack(Material.GRASS_BLOCK,(byte) 8,1);
-        assertTrue(!ItemUtil.areItemsSimilar(test1, test2));
-    }
-
-    @Test
     public void testAreItemsIdentical() {
 
         ItemStack test1 = newMockItemStack(Material.OAK_PLANKS,(byte) 4,1);

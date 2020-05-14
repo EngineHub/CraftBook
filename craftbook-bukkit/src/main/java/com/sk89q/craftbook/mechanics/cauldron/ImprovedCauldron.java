@@ -25,6 +25,7 @@ import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EntityUtil;
 import com.sk89q.craftbook.util.EventUtil;
+import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLFormat;
@@ -185,7 +186,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if (trackCauldronItem(item) || CraftBookBukkitUtil.equals(lastLocation, item.getLocation()))
+            if (trackCauldronItem(item) || LocationUtil.equals(lastLocation, item.getLocation()))
                 cancel();
         }
     }

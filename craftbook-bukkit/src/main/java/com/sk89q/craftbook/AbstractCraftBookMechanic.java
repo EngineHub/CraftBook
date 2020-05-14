@@ -17,7 +17,7 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.LoadPriority;
+import com.sk89q.craftbook.core.mechanic.LoadPriority;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
