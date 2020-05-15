@@ -759,6 +759,10 @@ public final class ItemUtil {
             case GUNPOWDER:
             case GOLDEN_CARROT:
             case RABBIT_FOOT:
+            case PUFFERFISH:
+            case PHANTOM_MEMBRANE:
+            case DRAGON_BREATH:
+            case TURTLE_HELMET:
                 return true;
             default:
                 return false;

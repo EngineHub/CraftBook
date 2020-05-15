@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
@@ -125,6 +126,29 @@ public class InventoryUtil {
                     inv.setIngredient(stack);
                 } else {
                     leftovers.add(ItemUtil.addToStack(inv.getIngredient(), stack));
+                }
+            } else if (stack.getType() == Material.BLAZE_POWDER && InventoryUtil.fitsInSlot(stack, inv.getFuel())) {
+                if (inv.getFuel() == null) {
+                    inv.setFuel(stack);
+                } else {
+                    leftovers.add(ItemUtil.addToStack(inv.getFuel(), stack));
+                }
+            } else if (stack.getType() == Material.GLASS_BOTTLE
+                    || stack.getType() == Material.POTION
+                    || stack.getType() == Material.LINGERING_POTION
+                    || stack.getType() == Material.SPLASH_POTION) {
+                for (int i = 0; i < 3; i++) {
+                    if (stack == null) {
+                        break;
+                    }
+                    if (inv.getItem(i) == null) {
+                        inv.setItem(i, stack);
+                    } else {
+                        stack = ItemUtil.addToStack(inv.getItem(i), stack);
+                    }
+                }
+                if (stack != null) {
+                    leftovers.add(stack);
                 }
             } else {
                 leftovers.add(stack);
@@ -286,6 +310,7 @@ public class InventoryUtil {
             case SHULKER_BOX:
             case BLAST_FURNACE:
             case SMOKER:
+            case BARREL:
                 return true;
             default:
                 return false;
