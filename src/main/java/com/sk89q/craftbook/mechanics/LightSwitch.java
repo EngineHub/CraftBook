@@ -140,7 +140,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
             Long lastUse = recentLightToggles.remove(block.getLocation());
             long currTime = System.currentTimeMillis();
 
-            if (lastUse != null && currTime - lastUse < 500) {
+            if (lastUse != null && currTime - lastUse < 100) {
                 recentLightToggles.put(block.getLocation(), lastUse);
                 return true;
             }
@@ -152,13 +152,15 @@ public class LightSwitch extends AbstractCraftBookMechanic {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         Block relBlock = block.getWorld().getBlockAt(x, y, z);
                         Material id = relBlock.getType();
-                        boolean wall = id == Material.WALL_TORCH || id == Material.REDSTONE_WALL_TORCH;
                         if (id == Material.TORCH || id == Material.WALL_TORCH || id == Material.REDSTONE_TORCH || id == Material.REDSTONE_WALL_TORCH) {
                             // Limit the maximum number of changed lights
                             if (changed >= maximum) return true;
 
-                            if (wall) {
+                            if (id == Material.WALL_TORCH || id == Material.REDSTONE_WALL_TORCH) {
+                                Directional currentData = (Directional) relBlock.getBlockData();
+
                                 Directional directional = (Directional) (on ? Material.WALL_TORCH : Material.REDSTONE_WALL_TORCH).createBlockData();
+                                directional.setFacing(currentData.getFacing());
                                 relBlock.setBlockData(directional, false);
                             } else {
                                 relBlock.setType(on ? Material.TORCH : Material.REDSTONE_TORCH, false);
