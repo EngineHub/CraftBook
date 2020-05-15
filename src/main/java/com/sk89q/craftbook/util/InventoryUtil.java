@@ -115,13 +115,8 @@ public class InventoryUtil {
         List<ItemStack> leftovers = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
-
-            if (!ItemUtil.isAPotionIngredient(stack)) {
-                leftovers.add(stack);
-                continue;
-            }
             BrewerInventory inv = brewingStand.getInventory();
-            if (InventoryUtil.fitsInSlot(stack, inv.getIngredient())) {
+            if (ItemUtil.isAPotionIngredient(stack) && InventoryUtil.fitsInSlot(stack, inv.getIngredient())) {
                 if (inv.getIngredient() == null) {
                     inv.setIngredient(stack);
                 } else {
