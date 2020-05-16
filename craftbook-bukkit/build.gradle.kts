@@ -34,7 +34,7 @@ dependencies {
     "compile"(project(":craftbook-libs:bukkit"))
     "api"("com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT")
     "implementation"("io.papermc:paperlib:1.0.2")
-    "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") { isTransitive = false }
+    "implementation"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}")
     "api"("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLDGUARD}") { isTransitive = false }
     "api"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
     "api"("com.comphenix.protocol:ProtocolLib:4.5.0") { isTransitive = false }

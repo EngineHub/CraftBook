@@ -28,6 +28,7 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
@@ -197,12 +198,12 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 Double.parseDouble(bits[2]);
             }
         } catch(Exception e){
-            lplayer.printError("mech.bounceblocks.invalid-velocity");
+            lplayer.printError(TranslatableComponent.of("craftbook.mech.bounceblocks.invalid-velocity"));
             SignUtil.cancelSign(event);
             return;
         }
 
         event.setLine(1, "[Jump]");
-        lplayer.print("mech.bounceblocks.create");
+        lplayer.printInfo(TranslatableComponent.of("craftbook.mech.bounceblocks.create"));
     }
 }

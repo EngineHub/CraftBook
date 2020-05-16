@@ -34,10 +34,14 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.core.LanguageManager;
+import com.sk89q.craftbook.util.CraftBookText;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.adapter.bukkit.TextAdapter;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.item.ItemType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -52,6 +56,17 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
         this.plugin = plugin;
         this.player = player;
+    }
+
+    @Override
+    public void print(Component component) {
+        TextAdapter.sendComponent(player, CraftBookText.format(component, getLocale()));
+    }
+
+    @Override
+    public void printInfo(Component component) {
+        // Override to change the colour.
+        print(component.color(TextColor.YELLOW));
     }
 
     @Override

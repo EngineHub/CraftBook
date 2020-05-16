@@ -145,11 +145,6 @@ public class LanguageManager {
         put("mech.group","You are not in the required group!");
         put("mech.restock","Mechanism Restocked!");
 
-        put("mech.ammeter.ammeter", "Ammeter");
-
-        put("mech.bounceblocks.create", "BounceBlock Created!");
-        put("mech.bounceblocks.invalid-velocity", "You need to enter a valid velocity on the 3rd line!");
-
         put("mech.anchor.create","Chunk Anchor Created!");
         put("mech.anchor.already-anchored","This chunk is already anchored!");
 

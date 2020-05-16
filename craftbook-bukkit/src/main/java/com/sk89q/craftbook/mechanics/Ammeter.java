@@ -41,6 +41,9 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.ChatColor;
@@ -86,7 +89,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         int data = getSpecialData(block);
         if (data >= 0) {
             String line = getCurrentLine(data);
-            player.print(player.translate("mech.ammeter.ammeter") + ": " + line + ChatColor.WHITE + ' ' + data + " A");
+            player.printInfo(TranslatableComponent.of("craftbook.mech.ammeter.line", TextComponent.of(line).color(TextColor.WHITE)));
             event.setCancelled(true);
         }
     }

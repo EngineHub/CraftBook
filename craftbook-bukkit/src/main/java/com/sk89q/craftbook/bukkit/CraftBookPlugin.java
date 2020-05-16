@@ -21,6 +21,7 @@ import com.sk89q.craftbook.CraftBookManifest;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.craftbook.core.CraftBookResourceLoader;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.mechanic.MechanicManager;
 import com.sk89q.craftbook.core.mechanic.MechanicType;
@@ -44,8 +45,10 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.util.io.ResourceLoader;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
+import com.sk89q.worldedit.util.translation.TranslationManager;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -88,6 +91,8 @@ public class CraftBookPlugin extends JavaPlugin {
     private static CraftBookPlugin instance;
     private static String version;
 
+    private final ResourceLoader resourceLoader = new CraftBookResourceLoader();
+
     /**
      * The mechanic manager
      */
@@ -96,7 +101,13 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * The language manager
      */
+    @Deprecated
     private LanguageManager languageManager;
+
+    /**
+     * The translation manager
+     */
+    private final TranslationManager translationManager = new TranslationManager(resourceLoader);
 
     /**
      * Manager for commands. This automatically handles nested commands,
@@ -456,10 +467,20 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
+     * Gets the Translation Manager.
+     *
+     * @return The translation manager
+     */
+    public TranslationManager getTranslationManager() {
+        return this.translationManager;
+    }
+
+    /**
      * This method is used to get the CraftBook {@link LanguageManager}.
      *
      * @return The CraftBook {@link LanguageManager}
      */
+    @Deprecated
     public LanguageManager getLanguageManager() {
         return this.languageManager;
     }
