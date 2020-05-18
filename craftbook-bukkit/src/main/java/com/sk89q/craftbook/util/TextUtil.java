@@ -19,12 +19,13 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.piston.config.ConfigHolder;
 import org.enginehub.piston.config.TextConfig;
 
 import java.util.Locale;
 
-public class CraftBookText {
+public class TextUtil {
 
     public static final ConfigHolder CONFIG_HOLDER = ConfigHolder.create();
 
@@ -36,6 +37,6 @@ public class CraftBookText {
         return CraftBookPlugin.inst().getTranslationManager().convertText(CONFIG_HOLDER.replace(component), locale);
     }
 
-    private CraftBookText() {
+    private TextUtil() {
     }
 }

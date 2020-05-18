@@ -1,5 +1,5 @@
 {
-    "craftbook.mech.ammeter.line": "Ammeter: {0}A",
+    "craftbook.mech.ammeter.line": "Ammeter: {0} {1}A"
 
     "craftbook.mech.bounceblocks.create": "BounceBlock Created!",
     "craftbook.mech.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!"

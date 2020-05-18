@@ -34,7 +34,7 @@ package com.sk89q.craftbook.bukkit;
 
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.core.LanguageManager;
-import com.sk89q.craftbook.util.CraftBookText;
+import com.sk89q.craftbook.util.TextUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
@@ -60,7 +60,13 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public void print(Component component) {
-        TextAdapter.sendComponent(player, CraftBookText.format(component, getLocale()));
+        TextAdapter.sendComponent(player, TextUtil.format(component, getLocale()));
+    }
+
+
+    @Override
+    public void printActionBar(Component component) {
+        TextAdapter.sendActionBar(player, TextUtil.format(component, getLocale()));
     }
 
     @Override

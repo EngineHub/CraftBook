@@ -34,6 +34,7 @@ package com.sk89q.craftbook;
 
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**
  * Holds an abstraction for players.
@@ -51,5 +52,13 @@ public interface CraftBookPlayer extends Player {
 
     boolean isHoldingBlock(); // TODO Add to WorldEdit
 
+    @Deprecated
     String translate(String message);
+
+    /**
+     * Print a {@link Component} to the action bar.
+     *
+     * @param component The component to print
+     */
+    void printActionBar(Component component);
 }

@@ -18,6 +18,7 @@ package com.sk89q.craftbook.core.mechanic;
 
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.util.exceptions.CraftbookException;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
@@ -37,12 +38,13 @@ public class MechanicCommands {
 
     @Command(aliases = {"enable"}, desc = "Enable a mechanic")
     @CommandPermissions({"craftbook.enable-mechanic"})
-    public void enable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
+    public void enable(CommandContext args, final CommandSender sender) throws CraftbookException {
 
         if(args.argsLength() > 0) {
             String mechanic = args.getString(0);
             MechanicType<?> mechanicType = MechanicType.REGISTRY.get(mechanic);
-            if (mechanicType != null && plugin.getMechanicManager().enableMechanic(mechanicType)) {
+            if (mechanicType != null) {
+                plugin.getMechanicManager().enableMechanic(mechanicType);
                 plugin.getConfiguration().enabledMechanics.add(mechanic);
                 plugin.getConfiguration().save();
 

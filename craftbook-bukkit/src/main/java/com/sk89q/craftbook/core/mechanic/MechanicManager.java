@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.AIMechanic;
-import com.sk89q.craftbook.mechanics.Ammeter;
 import com.sk89q.craftbook.mechanics.BetterLeads;
 import com.sk89q.craftbook.mechanics.BetterPhysics;
 import com.sk89q.craftbook.mechanics.BetterPistons;
@@ -92,6 +91,7 @@ import com.sk89q.craftbook.mechanics.minecart.blocks.CartTeleporter;
 import com.sk89q.craftbook.mechanics.pipe.Pipes;
 import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
@@ -99,7 +99,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
 import javax.annotation.Nullable;
 
@@ -155,7 +154,6 @@ public class MechanicManager {
         registerMechanic("CommandSigns", CommandSigns.class, MechanicCategory.GENERAL);
         registerMechanic("LightSwitch", LightSwitch.class, MechanicCategory.GENERAL);
         registerMechanic("ChunkAnchor", ChunkAnchor.class, MechanicCategory.GENERAL);
-        registerMechanic("Ammeter", Ammeter.class, MechanicCategory.TOOL);
         registerMechanic("HiddenSwitch", HiddenSwitch.class, MechanicCategory.GENERAL);
         registerMechanic("Bookcase", Bookcase.class, MechanicCategory.GENERAL);
         registerMechanic("SignCopier", SignCopier.class, MechanicCategory.TOOL);
@@ -224,6 +222,15 @@ public class MechanicManager {
                 .category(MechanicCategory.GENERAL)
                 .build()
         );
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("ammeter")
+                .name("Ammeter")
+                .className("com.sk89q.craftbook.mechanics.Ammeter")
+                .category(MechanicCategory.TOOL)
+                .build()
+        );
     }
 
     public void shutdown() {
@@ -265,26 +272,25 @@ public class MechanicManager {
      * Enables the mechanic with the specified type.
      *
      * @param mechanicType The type of the mechanic.
-     * @return If the mechanic could be found and enabled.
+     * @throws MechanicInitializationException If the mechanic could not be enabled.
      */
-    public boolean enableMechanic(MechanicType<?> mechanicType) {
+    public void enableMechanic(MechanicType<?> mechanicType) throws MechanicInitializationException {
+        if (isMechanicEnabled(mechanicType)) {
+            throw new MechanicInitializationException(mechanicType, "Mechanic " + mechanicType.getId() + " is already enabled.");
+        }
         try {
             CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
             mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicType.getName() + ".yml"));
             loadedMechanics.add(mech);
 
             if (!mech.enable()) {
-                plugin.getLogger().warning("Failed to enable mechanic: " + mechanicType.getName());
                 mech.disable();
-                return false;
+                throw new MechanicInitializationException(mechanicType, "An error occurred while enabling");
             }
             Bukkit.getPluginManager().registerEvents(mech, plugin);
         } catch (Throwable t) {
-            plugin.getLogger().log(Level.WARNING, "Failed to load mechanic: " + mechanicType.getName(), t);
-            return false;
+            throw new MechanicInitializationException(mechanicType, "An error occurred while enabling", t);
         }
-
-        return true;
     }
 
     /**

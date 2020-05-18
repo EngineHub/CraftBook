@@ -39,14 +39,11 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
@@ -57,7 +54,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * This allows users to Right-click to check the power level of redstone.
@@ -66,43 +63,54 @@ public class Ammeter extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() == null || block == null) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        if (!event.getPlayer().getInventory().getItem(event.getHand()).isSimilar(item)) {
+            return;
+        }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
-        if(!player.hasPermission("craftbook.mech.ammeter.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.ammeter.use")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
+            }
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), block.getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages) {
                 player.printError("area.use-permissions");
+            }
             return;
         }
 
-        Block block = event.getClickedBlock();
         int data = getSpecialData(block);
         if (data >= 0) {
-            String line = getCurrentLine(data);
-            player.printInfo(TranslatableComponent.of("craftbook.mech.ammeter.line", TextComponent.of(line).color(TextColor.WHITE)));
+            // TODO Change to printActionBar when kashike fixes things
+            player.print(TranslatableComponent
+                    .of("craftbook.mech.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
+                    .color(TextColor.YELLOW));
             event.setCancelled(true);
         }
     }
 
-    private static int getSpecialData(Block block) {
-
+    private int getSpecialData(Block block) {
+        Material type = block.getType();
         BlockData blockData = block.getBlockData();
         int current = -1;
         if (blockData instanceof Powerable) {
             current = ((Powerable) blockData).isPowered() ? 15 : 0;
         } else if (blockData instanceof AnaloguePowerable) {
             current = ((AnaloguePowerable) blockData).getPower();
-        } else if (blockData instanceof Lightable) {
+        } else if ((type == Material.REDSTONE_TORCH || type == Material.REDSTONE_WALL_TORCH) && blockData instanceof Lightable) {
             current = ((Lightable) blockData).isLit() ? 15 : 0;
         } else if (block.getType() == Material.REDSTONE_BLOCK) {
             current = 15;
@@ -111,31 +119,41 @@ public class Ammeter extends AbstractCraftBookMechanic {
         return current;
     }
 
-    private static String getCurrentLine(int data) {
+    private Component getCurrentLine(int data) {
+        TextComponent.Builder line = TextComponent.builder();
+        line.append("[", TextColor.YELLOW);
 
-        StringBuilder line = new StringBuilder(25);
-        line.append(ChatColor.YELLOW).append('[');
-        if (data > 10)
-            line.append(ChatColor.DARK_GREEN);
-        else if (data > 5)
-            line.append(ChatColor.GOLD);
-        else if (data > 0)
-            line.append(ChatColor.DARK_RED);
-        for (int i = 0; i < data; i++)
-            line.append('|');
-        line.append(ChatColor.BLACK);
-        for (int i = data; i < 15; i++)
-            line.append('|');
-        line.append(ChatColor.YELLOW).append(']');
-        return line.toString();
+        TextComponent.Builder colorBuilder = TextComponent.builder();
+        if (data > 10) {
+            line.color(TextColor.DARK_GREEN);
+        } else if (data > 5) {
+            line.color(TextColor.GOLD);
+        } else if (data > 0) {
+            line.color(TextColor.DARK_RED);
+        }
+        for (int i = 0; i < data; i++) {
+            colorBuilder.append("|");
+        }
+        line.append(colorBuilder.build());
+
+        if (data < 15) {
+            TextComponent.Builder blackBuilder = TextComponent.builder();
+            blackBuilder.color(TextColor.BLACK);
+            for (int i = data; i < 15; i++) {
+                blackBuilder.append("|");
+            }
+            line.append(blackBuilder.build());
+        }
+
+        line.append("]", TextColor.YELLOW);
+        return line.build();
     }
 
-    private ItemType item;
+    private ItemStack item;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("item", "Set the item that is the ammeter tool.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.getId())).getType());
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.getId()));
     }
 }

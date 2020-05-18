@@ -32,6 +32,7 @@ import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.UUIDMappings;
 import com.sk89q.craftbook.util.companion.CompanionPlugins;
+import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -304,12 +305,21 @@ public class CraftBookPlugin extends JavaPlugin {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
         } catch (Exception ignored) {}
 
-        MechanicType.REGISTRY.keySet()
-                .stream()
-                .filter(mechanic -> config.enabledMechanics.contains(mechanic))
-                .map(MechanicType.REGISTRY::get)
-                .filter(Objects::nonNull)
-                .forEach(mechanicManager::enableMechanic);
+        for (String mechanic : MechanicType.REGISTRY.keySet()) {
+            if (config.enabledMechanics.contains(mechanic)) {
+                MechanicType<? extends CraftBookMechanic> mechanicType = MechanicType.REGISTRY.get(mechanic);
+                if (mechanicType != null) {
+                    try {
+                        mechanicManager.enableMechanic(mechanicType);
+                    } catch (MechanicInitializationException e) {
+                        logger().warning("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
+                        if (e.getCause() != null) {
+                            e.getCause().printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
 
         setupSelfTriggered();
     }
