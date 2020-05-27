@@ -165,6 +165,7 @@ public class ICSocket extends SpongeBlockMechanic implements SelfTriggeringMecha
 
         if (!icType.getPermissionNode().hasPermission(player)) {
             player.sendMessage(Text.of(TextColors.RED, "You don't have permission to create this IC!"));
+            event.setCancelled(true);
         } else {
             List<Text> lines = event.getText().lines().get();
             lines.set(0, Text.of(icType.getShorthand().toUpperCase()));
