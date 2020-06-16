@@ -61,16 +61,4 @@ public final class CraftBookBukkitUtil {
         return BlockVector3.at(face.getModX(), face.getModY(), face.getModZ());
     }
 
-    public static Vector3 toVector(org.bukkit.Location loc) {
-        return Vector3.at(loc.getX(), loc.getY(), loc.getZ());
-    }
-
-    public static Vector3 toVector(org.bukkit.util.Vector vector) {
-        return Vector3.at(vector.getX(), vector.getY(), vector.getZ());
-    }
-
-    public static org.bukkit.Location toLocation(World world, Vector3 pt) {
-        return new org.bukkit.Location(world, pt.getX(), pt.getY(), pt.getZ());
-    }
-
 }

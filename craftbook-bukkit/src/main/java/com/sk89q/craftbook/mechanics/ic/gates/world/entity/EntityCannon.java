@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
 
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
@@ -103,7 +104,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
 
         boolean resultBoolean = false;
 
-        for (Entity e : LocationUtil.getNearbyEntities(location, CraftBookBukkitUtil.toVector(new Vector(3,3,3)))) {
+        for (Entity e : LocationUtil.getNearbyEntities(location, Vector3.at(3,3,3))) {
 
             if (e.isDead() || !e.isValid())
                 continue;

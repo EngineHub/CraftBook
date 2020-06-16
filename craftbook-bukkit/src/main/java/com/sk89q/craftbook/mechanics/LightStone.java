@@ -39,18 +39,19 @@ import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.util.HandSide;
-import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.item.ItemTypes;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
+// TODO Potentially turn into a WE tool
 /**
  * This allows users to Right-click to check the light level.
  */
@@ -58,51 +59,86 @@ public class LightStone extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onRightClick(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
 
-        if (!EventUtil.passesFilter(event))
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() == null || block == null) {
             return;
+        }
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        if (!event.getPlayer().getInventory().getItem(event.getHand()).isSimilar(item)) {
+            return;
+        }
+
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        if(player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
-        if(!player.hasPermission("craftbook.mech.lightstone.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.lightstone.use")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
+            }
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages) {
                 player.printError("area.use-permissions");
+            }
             return;
         }
 
-        Block block = event.getClickedBlock().getRelative(event.getBlockFace());
-        player.printRaw(ChatColor.YELLOW + player.translate("mech.lightstone.lightstone") + " [" + getLightLine(block.getLightLevel()) + ChatColor.YELLOW + "] " + block.getLightLevel() + " L");
+        block = event.getClickedBlock().getRelative(event.getBlockFace());
+        Component component = TranslatableComponent
+                .of("craftbook.mech.lightstone.line",
+                        getCurrentLine(block.getLightLevel()),
+                        TextComponent.of(block.getLightLevel(), TextColor.YELLOW))
+                .color(TextColor.YELLOW);
+        if (actionBar) {
+            player.printActionBar(component);
+        } else {
+            player.print(component);
+        }
+        event.setCancelled(true);
     }
 
-    private static String getLightLine(int data) {
+    private Component getCurrentLine(byte data) {
+        TextComponent.Builder line = TextComponent.builder();
+        line.append("[", TextColor.YELLOW);
 
-        StringBuilder line = new StringBuilder(25);
-        if (data >= 9)
-            line.append(ChatColor.GREEN);
-        else
-            line.append(ChatColor.DARK_RED);
-        for (int i = 0; i < data; i++)
-            line.append('|');
-        line.append(ChatColor.BLACK);
-        for (int i = data; i < 15; i++)
-            line.append('|');
-        return line.toString();
+        TextComponent.Builder colorBuilder = TextComponent.builder();
+        if (data > 8) {
+            line.color(TextColor.GREEN);
+        } else {
+            line.color(TextColor.DARK_RED);
+        }
+        for (int i = 0; i < data; i++) {
+            colorBuilder.append("|");
+        }
+        line.append(colorBuilder.build());
+
+        if (data < 15) {
+            TextComponent.Builder blackBuilder = TextComponent.builder();
+            blackBuilder.color(TextColor.BLACK);
+            for (int i = data; i < 15; i++) {
+                blackBuilder.append("|");
+            }
+            line.append(blackBuilder.build());
+        }
+
+        line.append("]", TextColor.YELLOW);
+        return line.build();
     }
 
-    public ItemType item;
+    private ItemStack item;
+    private boolean actionBar;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("item", "The item for the lightstone tool.");
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.GLOWSTONE_DUST.getId()));
 
-        config.setComment("item", "The item that the lightstone mechanic uses.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString("item", ItemTypes.GLOWSTONE_DUST.getId())).getType());
+        config.setComment("use-action-bar", "Whether to use the action bar or the player's chat.");
+        actionBar = config.getBoolean("use-action-bar", true);
     }
 }

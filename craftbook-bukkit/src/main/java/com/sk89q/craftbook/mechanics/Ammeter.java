@@ -56,6 +56,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+// TODO Potentially turn into a WE tool
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
@@ -94,10 +95,14 @@ public class Ammeter extends AbstractCraftBookMechanic {
 
         int data = getSpecialData(block);
         if (data >= 0) {
-            // TODO Change to printActionBar when kashike fixes things
-            player.print(TranslatableComponent
+            Component component = TranslatableComponent
                     .of("craftbook.mech.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
-                    .color(TextColor.YELLOW));
+                    .color(TextColor.YELLOW);
+            if (actionBar) {
+                player.printActionBar(component);
+            } else {
+                player.print(component);
+            }
             event.setCancelled(true);
         }
     }
@@ -150,10 +155,14 @@ public class Ammeter extends AbstractCraftBookMechanic {
     }
 
     private ItemStack item;
+    private boolean actionBar;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("item", "Set the item that is the ammeter tool.");
+        config.setComment("item", "The item for the ammeter tool.");
         item = ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.getId()));
+
+        config.setComment("use-action-bar", "Whether to use the action bar or the player's chat.");
+        actionBar = config.getBoolean("use-action-bar", true);
     }
 }

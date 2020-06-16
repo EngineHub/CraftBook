@@ -211,7 +211,7 @@ public class Gate extends AbstractCraftBookMechanic {
         }
 
         for (BlockVector3 bl : column.getRegion()) {
-            Block blo = CraftBookBukkitUtil.toLocation(block.getWorld(), bl.toVector3()).getBlock();
+            Block blo = BukkitAdapter.adapt(block.getWorld(), bl).getBlock();
 
             if (sign.getLine(2).equalsIgnoreCase("NoReplace")) {
                 // If NoReplace is on line 3 of sign, do not replace blocks.

@@ -36,7 +36,6 @@ import com.sk89q.craftbook.mechanics.Elevator;
 import com.sk89q.craftbook.mechanics.GlowStone;
 import com.sk89q.craftbook.mechanics.HiddenSwitch;
 import com.sk89q.craftbook.mechanics.JackOLantern;
-import com.sk89q.craftbook.mechanics.LightStone;
 import com.sk89q.craftbook.mechanics.LightSwitch;
 import com.sk89q.craftbook.mechanics.MapChanger;
 import com.sk89q.craftbook.mechanics.Marquee;
@@ -150,7 +149,6 @@ public class MechanicManager {
         registerMechanic("TreeLopper", TreeLopper.class, MechanicCategory.GENERAL);
         registerMechanic("MapChanger", MapChanger.class, MechanicCategory.GENERAL);
         registerMechanic("XpStorer", XPStorer.class, MechanicCategory.GENERAL);
-        registerMechanic("LightStone", LightStone.class, MechanicCategory.TOOL);
         registerMechanic("CommandSigns", CommandSigns.class, MechanicCategory.GENERAL);
         registerMechanic("LightSwitch", LightSwitch.class, MechanicCategory.GENERAL);
         registerMechanic("ChunkAnchor", ChunkAnchor.class, MechanicCategory.GENERAL);
@@ -228,6 +226,15 @@ public class MechanicManager {
                 .id("ammeter")
                 .name("Ammeter")
                 .className("com.sk89q.craftbook.mechanics.Ammeter")
+                .category(MechanicCategory.TOOL)
+                .build()
+        );
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("lightstone")
+                .name("LightStone")
+                .className("com.sk89q.craftbook.mechanics.LightStone")
                 .category(MechanicCategory.TOOL)
                 .build()
         );
