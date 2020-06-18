@@ -72,6 +72,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
     private Map<Tuple2<String, String>, Integer> cooldownPeriods;
     private Map<UUID, List<ItemStack>> deathPersistItems = Maps.newHashMap();
 
+    private boolean doChat = false;
+
     public CommandItemDefinition getDefinitionByName(String name) {
 
         for(CommandItemDefinition def : definitions)
@@ -179,6 +181,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
             items.clear();
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
         }
+
+        doChat = definitions.stream().anyMatch(def -> def.clickType == ClickType.PLAYER_CHAT);
 
         return true;
     }
@@ -364,10 +368,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
-        if(event.getPlayer().getItemInHand() == null)
+        if(!doChat || event.getPlayer().getItemInHand() == null)
             return;
 
-        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(),
+                () -> performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
