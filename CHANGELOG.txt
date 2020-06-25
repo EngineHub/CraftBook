@@ -1,3 +1,32 @@
+3.10.2
+* Target 1.15.2 as the minimum version
+* Fixed issues where new blocks added in 1.14 and 1.15 couldn't be added to furnaces by pipes
+* Fixed pipes not recognising blast furnaces
+* Fixed PASSIVE command items
+* Fixed elevator and teleporter while riding entities
+* Fixed TreeLopper "single-damage" mode
+* Ignore HeadDrops without a name for better compatibility
+* Fixed Ranged Collector picking up items that weren't allowed to be picked up
+* Fixed potential for errors when using unsupported forks of WorldEdit
+* Fixed an issue that could cause an out of sync message for commanditems
+* Worked around a Spigot bug causing errors for BetterLeads
+* Fixed pipes not seeing charcoal, bamboo, or dried kelp as a furnace fuel item
+* Fixed an error with DispenserRecipes, a Spigot bug still prevents these working with only a single of each item
+* Fixed DownCounter not resetting when input is high
+* Fixed a few issues with the BlockBreaker ICs
+* Ensure that other plugins cannot remove TemporaryMinecarts to prevent item drops
+* Fixed an off-by-one issue with the Distributor IC
+* Fixed an error where Spigot calls vehicle events for non-vehicles
+* Fixed BetterPhysics not working inside caves
+* Worked around a Spigot bug causing errors for MoreRails
+* Worked around a Spigot bug causing north-facing ladders to cause errors
+* Fixed LightSwitch causing incorrectly facing torches
+* Fixed issue where XPStorer in ranged mode wouldn't work when it was the only mechanic loaded
+* Fixed barrels not working with pipes
+* Fixed brewing stands not working with pipes
+* Fixed smokers not working with pipes
+* Fixed CHAT command item actions failing on newer 1.15.2 builds of Spigot
+
 3.10.1
 * Fixed a few Variables issues
 * Disable legacy to CBID conversion by default
