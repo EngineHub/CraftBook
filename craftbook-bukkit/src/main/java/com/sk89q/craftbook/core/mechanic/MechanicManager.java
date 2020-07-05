@@ -42,7 +42,6 @@ import com.sk89q.craftbook.mechanics.JackOLantern;
 import com.sk89q.craftbook.mechanics.LightSwitch;
 import com.sk89q.craftbook.mechanics.MapChanger;
 import com.sk89q.craftbook.mechanics.Marquee;
-import com.sk89q.craftbook.mechanics.Netherrack;
 import com.sk89q.craftbook.mechanics.PaintingSwitch;
 import com.sk89q.craftbook.mechanics.Payment;
 import com.sk89q.craftbook.mechanics.RedstoneJukebox;
@@ -54,7 +53,6 @@ import com.sk89q.craftbook.mechanics.area.Area;
 import com.sk89q.craftbook.mechanics.area.simple.Bridge;
 import com.sk89q.craftbook.mechanics.area.simple.Door;
 import com.sk89q.craftbook.mechanics.area.simple.Gate;
-import com.sk89q.craftbook.mechanics.boat.Drops;
 import com.sk89q.craftbook.mechanics.boat.LandBoats;
 import com.sk89q.craftbook.mechanics.boat.Uncrashable;
 import com.sk89q.craftbook.mechanics.boat.WaterPlaceOnly;
@@ -174,7 +172,6 @@ public class MechanicManager {
         registerMechanic("Pay", Payment.class, MechanicCategory.CIRCUIT);
         registerMechanic("Jukebox", RedstoneJukebox.class, MechanicCategory.CIRCUIT);
         registerMechanic("Glowstone", GlowStone.class, MechanicCategory.CIRCUIT);
-        registerMechanic("Netherrack", Netherrack.class, MechanicCategory.CIRCUIT);
         registerMechanic("JackOLantern", JackOLantern.class, MechanicCategory.CIRCUIT);
         registerMechanic("Pipes", Pipes.class, MechanicCategory.CIRCUIT);
         registerMechanic("BounceBlocks", BounceBlocks.class, MechanicCategory.GENERAL);
@@ -208,7 +205,6 @@ public class MechanicManager {
         registerMechanic("MinecartTemporaryCart", TemporaryCart.class, MechanicCategory.MINECART);
         registerMechanic("BoatRemoveEntities", com.sk89q.craftbook.mechanics.boat.RemoveEntities.class, MechanicCategory.BOAT);
         registerMechanic("BoatUncrashable", Uncrashable.class, MechanicCategory.BOAT);
-        registerMechanic("BoatDrops", Drops.class, MechanicCategory.BOAT);
         registerMechanic("BoatDecay", com.sk89q.craftbook.mechanics.boat.EmptyDecay.class, MechanicCategory.BOAT);
         registerMechanic("BoatSpeedModifiers", com.sk89q.craftbook.mechanics.boat.SpeedModifiers.class, MechanicCategory.BOAT);
         registerMechanic("LandBoats", LandBoats.class, MechanicCategory.BOAT);
@@ -239,6 +235,15 @@ public class MechanicManager {
                 .name("LightStone")
                 .className("com.sk89q.craftbook.mechanics.LightStone")
                 .category(MechanicCategory.TOOL)
+                .build()
+        );
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("redstone_fire")
+                .name("RedstoneFire")
+                .className("com.sk89q.craftbook.mechanics.RedstoneFire")
+                .category(MechanicCategory.CIRCUIT)
                 .build()
         );
 

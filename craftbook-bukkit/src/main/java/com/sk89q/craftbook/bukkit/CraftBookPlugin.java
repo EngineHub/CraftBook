@@ -662,7 +662,6 @@ public class CraftBookPlugin extends JavaPlugin {
         registerGlobalEvents();
     }
 
-
     /**
      * Create a default configuration file from the .jar.
      *

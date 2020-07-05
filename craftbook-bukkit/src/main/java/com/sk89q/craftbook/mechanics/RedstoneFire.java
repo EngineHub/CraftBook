@@ -44,52 +44,74 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.inventory.EquipmentSlot;
 
 /**
- * This mechanism allow players to toggle the fire on top of Netherrack.
- *
- * @author sk89q
+ * This mechanism allow players to toggle the fire on top of Netherrack or Soul Soil.
  */
-public class Netherrack extends AbstractCraftBookMechanic {
+public class RedstoneFire extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-
-        if(!EventUtil.passesFilter(event)) return;
-
-        if(event.isMinor())
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
 
-        if(event.getBlock().getType() != Material.NETHERRACK) return;
+        if (event.isMinor()) {
+            return;
+        }
 
-        Block above = event.getBlock().getRelative(0, 1, 0);
+        Material type = event.getBlock().getType();
 
-        if (event.isOn() && canReplaceWithFire(above.getType())) {
-            above.setType(Material.FIRE);
-        } else if (!event.isOn() && above != null && above.getType() == Material.FIRE) {
+        if (!doesAffectBlock(event.getBlock().getType())) {
+            return;
+        }
+
+        Block above = event.getBlock().getRelative(BlockFace.UP);
+        Material aboveType = above.getType();
+
+        if (event.isOn() && canReplaceWithFire(aboveType)) {
+            above.setType(getFireForBlock(type));
+        } else if (!event.isOn() && (aboveType == Material.FIRE || aboveType == Material.SOUL_FIRE)) {
             above.setType(Material.AIR);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeftClick(PlayerInteractEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (event.getAction() != Action.LEFT_CLICK_BLOCK || !doesAffectBlock(event.getClickedBlock().getType())) {
+            return;
+        }
 
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
-        if(event.getClickedBlock().getType() != Material.NETHERRACK) return;
         if (event.getBlockFace() == BlockFace.UP) {
             Block fire = event.getClickedBlock().getRelative(event.getBlockFace());
-            if (fire.getType() == Material.FIRE && fire.getRelative(BlockFace.DOWN).isBlockPowered()) {
+            Material fireMaterial = fire.getType();
+            if ((fireMaterial == Material.FIRE || fireMaterial == Material.SOUL_FIRE) && fire.getRelative(BlockFace.DOWN).isBlockPowered()) {
                 event.setCancelled(true);
             }
         }
     }
 
-    private static boolean canReplaceWithFire(Material t) {
+    private boolean doesAffectBlock(Material type) {
+        return (enableNetherrack && type == Material.NETHERRACK) || (enableSoulSoil && type == Material.SOUL_SOIL);
+    }
 
-        switch (t) {
+    private Material getFireForBlock(Material type) {
+        switch (type) {
+            case NETHERRACK:
+                return Material.FIRE;
+            case SOUL_SOIL:
+                return Material.SOUL_FIRE;
+        }
+
+        return null;
+    }
+
+    private static boolean canReplaceWithFire(Material type) {
+        switch (type) {
             case SNOW:
             case GRASS:
             case VINE:
@@ -101,8 +123,15 @@ public class Netherrack extends AbstractCraftBookMechanic {
         }
     }
 
+    private boolean enableNetherrack;
+    private boolean enableSoulSoil;
+
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("enable-netherrack", "Whether the mechanic should affect Netherrack.");
+        enableNetherrack = config.getBoolean("enable-netherrack", true);
 
+        config.setComment("enable-soul-soil", "Whether the mechanic should affect Soul Soil.");
+        enableSoulSoil = config.getBoolean("enable-soul-soil", true);
     }
 }

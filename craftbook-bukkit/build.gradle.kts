@@ -32,7 +32,7 @@ repositories {
 dependencies {
     "compile"(project(":craftbook-core"))
     "compile"(project(":craftbook-libs:bukkit"))
-    "api"("com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT")
+    "api"("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
     "implementation"("io.papermc:paperlib:1.0.2")
     "implementation"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}")
     "api"("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLDGUARD}") { isTransitive = false }
