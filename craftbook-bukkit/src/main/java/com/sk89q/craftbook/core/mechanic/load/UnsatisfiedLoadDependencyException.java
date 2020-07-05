@@ -14,18 +14,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.core.mechanic;
+package com.sk89q.craftbook.core.mechanic.load;
 
-public enum LoadPriority {
+import com.sk89q.craftbook.core.mechanic.MechanicType;
+import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 
-    EARLY(0),
-    STANDARD(1),
-    LATE(2);
+public class UnsatisfiedLoadDependencyException extends MechanicInitializationException {
 
-    public int index;
-
-    LoadPriority(int index) {
-
-        this.index = index;
+    public UnsatisfiedLoadDependencyException(MechanicType<?> mechanicType, LoadDependency dependency) {
+        super(mechanicType, "Dependency not satisfied: " + dependency.getDependencyId());
     }
+
 }

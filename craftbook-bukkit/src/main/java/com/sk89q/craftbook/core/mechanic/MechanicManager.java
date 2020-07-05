@@ -21,6 +21,9 @@ import com.google.common.base.Converter;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.core.mechanic.load.LoadComparator;
+import com.sk89q.craftbook.core.mechanic.load.LoadDependency;
+import com.sk89q.craftbook.core.mechanic.load.UnsatisfiedLoadDependencyException;
 import com.sk89q.craftbook.mechanics.AIMechanic;
 import com.sk89q.craftbook.mechanics.BetterLeads;
 import com.sk89q.craftbook.mechanics.BetterPhysics;
@@ -238,6 +241,8 @@ public class MechanicManager {
                 .category(MechanicCategory.TOOL)
                 .build()
         );
+
+        // TODO Variables & CommandItems need to load early (variables before CommandItems). Marquee *depends* on Variables
     }
 
     public void shutdown() {
@@ -271,6 +276,31 @@ public class MechanicManager {
         return (Optional<T>) this.loadedMechanics.stream().filter(mechanicType::isInstance).findAny();
     }
 
+    /**
+     * Load and enable all mechanics that are enabled in the configuration.
+     */
+    public void enableMechanics() {
+        List<MechanicType<? extends CraftBookMechanic>> mechanicTypes = new ArrayList<>(MechanicType.REGISTRY.values());
+        mechanicTypes.sort(new LoadComparator());
+
+        // We explicitly do not filter out unmet plugin dependencies here, so that they can throw an error when enabling.
+
+        for (MechanicType<?> mechanicType : mechanicTypes) {
+            if (CraftBookPlugin.inst().getConfiguration().enabledMechanics.contains(mechanicType.getId())) {
+                try {
+                    enableMechanic(mechanicType);
+                } catch (UnsatisfiedLoadDependencyException e) {
+                    CraftBookPlugin.logger().warning("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
+                } catch (MechanicInitializationException e) {
+                    CraftBookPlugin.logger().warning("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
+                    if (e.getCause() != null) {
+                        e.getCause().printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
     public boolean isMechanicEnabled(@Nullable MechanicType<?> mechanicType) {
         return getMechanic(mechanicType).isPresent();
     }
@@ -286,6 +316,11 @@ public class MechanicManager {
             throw new MechanicInitializationException(mechanicType, "Mechanic " + mechanicType.getId() + " is already enabled.");
         }
         try {
+            for (LoadDependency dependency : mechanicType.getDependencies()) {
+                if (!dependency.isMet()) {
+                    throw new UnsatisfiedLoadDependencyException(mechanicType, dependency);
+                }
+            }
             CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
             mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicType.getName() + ".yml"));
             loadedMechanics.add(mech);

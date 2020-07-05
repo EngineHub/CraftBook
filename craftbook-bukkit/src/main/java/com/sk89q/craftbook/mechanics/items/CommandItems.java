@@ -26,7 +26,6 @@ import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.core.mechanic.LoadPriority;
 import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.Tuple2;
@@ -659,9 +658,4 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     }
 
-    @Override
-    public LoadPriority getLoadPriority() {
-
-        return LoadPriority.EARLY;
-    }
 }

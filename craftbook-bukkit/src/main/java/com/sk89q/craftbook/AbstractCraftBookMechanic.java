@@ -17,7 +17,6 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.core.mechanic.LoadPriority;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -25,7 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Comparable<LoadPriority> {
+public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
 
     @Override
     public boolean enable() {
@@ -65,15 +64,5 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Co
         loadFromConfiguration(mechanicConfig);
 
         mechanicConfig.save();
-    }
-
-    @Override
-    public LoadPriority getLoadPriority() {
-        return LoadPriority.STANDARD;
-    }
-
-    @Override
-    public int compareTo(LoadPriority compare) {
-        return compare.index < getLoadPriority().index ? -1 : 1;
     }
 }

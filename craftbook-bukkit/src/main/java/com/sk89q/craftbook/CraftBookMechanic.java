@@ -18,7 +18,6 @@ package com.sk89q.craftbook;
 
 import org.bukkit.event.Listener;
 
-import com.sk89q.craftbook.core.mechanic.LoadPriority;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.File;
@@ -54,9 +53,4 @@ public interface CraftBookMechanic extends Listener {
      * @param config The YAMLProcessor for this config.
      */
     void loadFromConfiguration(YAMLProcessor config);
-
-    /**
-     * The priority at which this mechanic should load.
-     */
-    LoadPriority getLoadPriority();
 }

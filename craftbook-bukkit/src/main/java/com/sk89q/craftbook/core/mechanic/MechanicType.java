@@ -18,9 +18,15 @@ package com.sk89q.craftbook.core.mechanic;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.core.mechanic.load.LoadDependency;
+import com.sk89q.craftbook.core.mechanic.load.LoadPriority;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
@@ -30,12 +36,17 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     private final String name;
     private final String className;
     private final MechanicCategory category;
+    private final LoadPriority loadPriority;
+    private final List<LoadDependency> dependencies;
 
-    private MechanicType(String id, String name, String className, MechanicCategory category) {
+    private MechanicType(String id, String name, String className, MechanicCategory category, LoadPriority loadPriority,
+            List<LoadDependency> dependencies) {
         this.id = id;
         this.name = name;
         this.className = className;
         this.category = category;
+        this.loadPriority = loadPriority;
+        this.dependencies = ImmutableList.copyOf(dependencies);
     }
 
     @Override
@@ -56,6 +67,14 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
         return this.category;
     }
 
+    public LoadPriority getLoadPriority() {
+        return this.loadPriority;
+    }
+
+    public List<LoadDependency> getDependencies() {
+        return this.dependencies;
+    }
+
     public boolean isInstance(CraftBookMechanic mechanic) {
         return mechanic.getClass().getName().equals(this.className);
     }
@@ -66,6 +85,9 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
         private String name;
         private String className;
         private MechanicCategory mechanicCategory;
+        private LoadPriority loadPriority = LoadPriority.NORMAL;
+
+        private final List<LoadDependency> dependencies = new ArrayList<>();
 
         public Builder<T> id(String id) {
             this.id = id;
@@ -87,13 +109,23 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
             return this;
         }
 
+        public Builder<T> loadPriority(LoadPriority loadPriority) {
+            this.loadPriority = loadPriority;
+            return this;
+        }
+
+        public Builder<T> dependsOn(LoadDependency loadDependency) {
+            this.dependencies.add(loadDependency);
+            return this;
+        }
+
         public MechanicType<T> build() {
             checkNotNull(id, "ID must be provided");
             checkNotNull(name, "Name must be provided");
             checkNotNull(className, "Class name must be provided");
             checkNotNull(mechanicCategory, "Mechanic category must be provided");
 
-            return new MechanicType<>(this.id, this.name, this.className, this.mechanicCategory);
+            return new MechanicType<>(this.id, this.name, this.className, this.mechanicCategory, this.loadPriority, this.dependencies);
         }
 
         public static <T extends CraftBookMechanic> Builder<T> create() {

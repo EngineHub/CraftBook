@@ -24,7 +24,6 @@ import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
 import com.sk89q.craftbook.core.CraftBookResourceLoader;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.mechanic.MechanicManager;
-import com.sk89q.craftbook.core.mechanic.MechanicType;
 import com.sk89q.craftbook.core.st.MechanicClock;
 import com.sk89q.craftbook.core.st.SelfTriggeringManager;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
@@ -32,7 +31,6 @@ import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.UUIDMappings;
 import com.sk89q.craftbook.util.companion.CompanionPlugins;
-import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -73,7 +71,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -305,22 +302,7 @@ public class CraftBookPlugin extends JavaPlugin {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
         } catch (Exception ignored) {}
 
-        for (String mechanic : MechanicType.REGISTRY.keySet()) {
-            if (config.enabledMechanics.contains(mechanic)) {
-                MechanicType<? extends CraftBookMechanic> mechanicType = MechanicType.REGISTRY.get(mechanic);
-                if (mechanicType != null) {
-                    try {
-                        mechanicManager.enableMechanic(mechanicType);
-                    } catch (MechanicInitializationException e) {
-                        logger().warning("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
-                        if (e.getCause() != null) {
-                            e.getCause().printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-
+        this.mechanicManager.enableMechanics();
         setupSelfTriggered();
     }
 
