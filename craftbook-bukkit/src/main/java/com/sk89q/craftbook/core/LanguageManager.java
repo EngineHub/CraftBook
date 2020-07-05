@@ -32,6 +32,7 @@ import java.util.Set;
 /**
  * @author Me4502
  */
+@Deprecated
 public class LanguageManager {
 
     private Map<String, YAMLProcessor> languageMap = new HashMap<>();

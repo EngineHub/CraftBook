@@ -57,7 +57,6 @@ import com.sk89q.craftbook.mechanics.boat.LandBoats;
 import com.sk89q.craftbook.mechanics.boat.Uncrashable;
 import com.sk89q.craftbook.mechanics.boat.WaterPlaceOnly;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron;
-import com.sk89q.craftbook.mechanics.cauldron.legacy.Cauldron;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
 import com.sk89q.craftbook.mechanics.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mechanics.drops.CustomDrops;
@@ -162,7 +161,6 @@ public class MechanicManager {
         registerMechanic("Teleporter", Teleporter.class, MechanicCategory.GENERAL);
         registerMechanic("ToggleArea", Area.class, MechanicCategory.GENERAL);
         registerMechanic("Cauldron", ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("LegacyCauldron", Cauldron.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("Gate", Gate.class, MechanicCategory.GENERAL);
         registerMechanic("BetterPistons", BetterPistons.class, MechanicCategory.GENERAL);
         registerMechanic("CookingPot", CookingPot.class, MechanicCategory.GENERAL);

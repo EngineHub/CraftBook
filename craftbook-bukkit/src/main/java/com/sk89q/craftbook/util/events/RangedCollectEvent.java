@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ranged;
+package com.sk89q.craftbook.util.events;
 
 import com.sk89q.craftbook.mechanics.pipe.PipeRequestEvent;
 import org.bukkit.block.Block;

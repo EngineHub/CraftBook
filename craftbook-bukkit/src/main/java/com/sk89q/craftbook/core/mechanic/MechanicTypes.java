@@ -54,7 +54,6 @@ import com.sk89q.craftbook.mechanics.boat.LandBoats;
 import com.sk89q.craftbook.mechanics.boat.Uncrashable;
 import com.sk89q.craftbook.mechanics.boat.WaterPlaceOnly;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron;
-import com.sk89q.craftbook.mechanics.cauldron.legacy.Cauldron;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
 import com.sk89q.craftbook.mechanics.dispenser.DispenserRecipes;
 import com.sk89q.craftbook.mechanics.drops.CustomDrops;
@@ -131,7 +130,6 @@ public class MechanicTypes {
     @Nullable public static final MechanicType<JackOLantern> JACK_O_LANTERN = get("jack_o_lantern");
     @Nullable public static final MechanicType<RedstoneJukebox> JUKEBOX = get("jukebox");
     @Nullable public static final MechanicType<LandBoats> LAND_BOATS = get("land_boats");
-    @Nullable public static final MechanicType<Cauldron> LEGACY_CAULDRON = get("legacy_cauldron");
     @Nullable public static final MechanicType<LightStone> LIGHT_STONE = get("light_stone");
     @Nullable public static final MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
     @Nullable public static final MechanicType<MapChanger> MAP_CHANGER = get("map_changer");
