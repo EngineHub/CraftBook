@@ -16,32 +16,44 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.util.EventUtil;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
 
+/**
+ * This mechanism allows a jukebox to be started and stopped via redstone.
+ */
 public class RedstoneJukebox extends AbstractCraftBookMechanic {
 
     @EventHandler
     public void onRedstonePower(SourcedBlockRedstoneEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if(event.isMinor()) return;
-        if(event.getBlock().getType() != Material.JUKEBOX) return; //Only listen for Jukeboxes.
-        Jukebox juke = (org.bukkit.block.Jukebox) event.getBlock().getState();
-        if(!event.isOn()) {
-            //FIXME byte data = juke.getRawData();
-            //juke.setPlaying(Material.AIR);
-            //event.getBlock().setTypeIdAndData(BlockID.JUKEBOX, data, false);
-        } else
-            juke.setPlaying(juke.getPlaying());
-        juke.update();
+        // Only listen for Jukeboxes.
+        if (event.isMinor() || event.getBlock().getType() != Material.JUKEBOX) {
+            return;
+        }
+
+        Jukebox jukebox = (Jukebox) event.getBlock().getState();
+
+        if (jukebox.getRecord().getType() == Material.AIR) {
+            // We only care if the jukebox has a record.
+            return;
+        }
+
+        if (!event.isOn()) {
+            event.getBlock().getWorld().playEffect(event.getBlock().getLocation(), Effect.RECORD_PLAY, Material.AIR);
+        } else {
+            jukebox.setRecord(jukebox.getRecord());
+            jukebox.update();
+        }
     }
 
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-    }
 }

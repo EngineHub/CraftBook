@@ -38,13 +38,11 @@ import com.sk89q.craftbook.mechanics.CookingPot;
 import com.sk89q.craftbook.mechanics.Elevator;
 import com.sk89q.craftbook.mechanics.GlowStone;
 import com.sk89q.craftbook.mechanics.HiddenSwitch;
-import com.sk89q.craftbook.mechanics.JackOLantern;
 import com.sk89q.craftbook.mechanics.LightSwitch;
 import com.sk89q.craftbook.mechanics.MapChanger;
 import com.sk89q.craftbook.mechanics.Marquee;
 import com.sk89q.craftbook.mechanics.PaintingSwitch;
 import com.sk89q.craftbook.mechanics.Payment;
-import com.sk89q.craftbook.mechanics.RedstoneJukebox;
 import com.sk89q.craftbook.mechanics.Sponge;
 import com.sk89q.craftbook.mechanics.Teleporter;
 import com.sk89q.craftbook.mechanics.TreeLopper;
@@ -168,9 +166,7 @@ public class MechanicManager {
         registerMechanic("BetterPlants", BetterPlants.class, MechanicCategory.GENERAL);
         registerMechanic("Chairs", Chair.class, MechanicCategory.GENERAL);
         registerMechanic("Pay", Payment.class, MechanicCategory.CIRCUIT);
-        registerMechanic("Jukebox", RedstoneJukebox.class, MechanicCategory.CIRCUIT);
         registerMechanic("Glowstone", GlowStone.class, MechanicCategory.CIRCUIT);
-        registerMechanic("JackOLantern", JackOLantern.class, MechanicCategory.CIRCUIT);
         registerMechanic("Pipes", Pipes.class, MechanicCategory.CIRCUIT);
         registerMechanic("BounceBlocks", BounceBlocks.class, MechanicCategory.GENERAL);
         registerMechanic("IntegratedCircuits", ICMechanic.class, MechanicCategory.CIRCUIT);
@@ -241,6 +237,24 @@ public class MechanicManager {
                 .id("redstone_fire")
                 .name("RedstoneFire")
                 .className("com.sk89q.craftbook.mechanics.RedstoneFire")
+                .category(MechanicCategory.CIRCUIT)
+                .build()
+        );
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("jukebox")
+                .name("Jukebox")
+                .className("com.sk89q.craftbook.mechanics.RedstoneJukebox")
+                .category(MechanicCategory.CIRCUIT)
+                .build()
+        );
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("jack_o_lantern")
+                .name("JackOLantern")
+                .className("com.sk89q.craftbook.mechanics.JackOLantern")
                 .category(MechanicCategory.CIRCUIT)
                 .build()
         );

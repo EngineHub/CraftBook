@@ -52,5 +52,6 @@ public interface CraftBookMechanic extends Listener {
      *
      * @param config The YAMLProcessor for this config.
      */
-    void loadFromConfiguration(YAMLProcessor config);
+    default void loadFromConfiguration(YAMLProcessor config) {
+    }
 }
