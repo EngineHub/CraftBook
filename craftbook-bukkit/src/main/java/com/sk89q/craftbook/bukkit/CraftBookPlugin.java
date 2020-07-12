@@ -460,6 +460,10 @@ public class CraftBookPlugin extends JavaPlugin {
         return this.languageManager;
     }
 
+    public PlatformCommandManager getCommandManager() {
+        return this.commandManager;
+    }
+
     /**
      * Gets the CraftBook {@link Supervisor}.
      *

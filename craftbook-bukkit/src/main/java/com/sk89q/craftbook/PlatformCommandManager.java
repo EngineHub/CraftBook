@@ -29,7 +29,6 @@ import com.sk89q.craftbook.bukkit.commands.CraftBookCommands;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.argument.Arguments;
 import com.sk89q.worldedit.command.util.PermissionCondition;
-import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandArgParser;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
@@ -72,7 +71,7 @@ public class PlatformCommandManager {
     private final InjectedValueStore globalInjectedValues;
     private final DynamicStreamHandler dynamicHandler = new DynamicStreamHandler();
     private final CommandRegistrationHandler registration;
-    private final MechanicCommandRegistrar componentRegistrar;
+    private final MechanicCommandRegistrar mechanicCommandRegistrar;
 
     public PlatformCommandManager(final CraftBookPlugin plugin) {
         checkNotNull(plugin);
@@ -82,7 +81,7 @@ public class PlatformCommandManager {
         this.commandManager = commandManagerService.newCommandManager();
         this.globalInjectedValues = MapBackedValueStore.create();
         this.registration = new CommandRegistrationHandler(ImmutableList.of());
-        this.componentRegistrar = new MechanicCommandRegistrar(commandManagerService, commandManager, registration);
+        this.mechanicCommandRegistrar = new MechanicCommandRegistrar(commandManagerService, commandManager, registration);
 
         // setup separate from main constructor
         // ensures that everything is definitely assigned
@@ -107,8 +106,8 @@ public class PlatformCommandManager {
         CraftBookCommands.register(commandManagerService, commandManager, registration);
     }
 
-    public MechanicCommandRegistrar getComponentRegistrar() {
-        return componentRegistrar;
+    public MechanicCommandRegistrar getMechanicRegistrar() {
+        return mechanicCommandRegistrar;
     }
 
     public void registerCommandsWith(CraftBookPlugin plugin) {

@@ -86,7 +86,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         String namespace = event.getLine(3).isEmpty() ? "global" : event.getLine(3);
         String variable = event.getLine(2);
 
-        if(!VariableCommands.hasVariablePermission(event.getPlayer(), namespace, variable, "get")) {
+        if(!VariableCommands.hasVariablePermission(lplayer, namespace, variable, "get")) {
             lplayer.printError("variable.use-permissions");
             SignUtil.cancelSign(event);
         }

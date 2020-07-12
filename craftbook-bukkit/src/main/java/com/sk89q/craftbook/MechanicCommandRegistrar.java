@@ -21,8 +21,6 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
-import org.enginehub.piston.converter.ArgumentConverter;
-import org.enginehub.piston.inject.Key;
 import org.enginehub.piston.part.SubCommandPart;
 
 import java.util.ArrayList;
@@ -62,14 +60,15 @@ public class MechanicCommandRegistrar {
         registerAsSubCommand(command, new ArrayList<>(), description, parentManager, op);
     }
 
+    public void registerTopLevelWithSubCommands(String command, Collection<String> aliases, String description,
+            BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+        registerAsSubCommand(command, aliases, description, topLevelCommandManager, op);
+    }
+
     public void registerTopLevelCommands(BiConsumer<CommandManager, CommandRegistrationHandler> op) {
         CommandManager componentManager = service.newCommandManager();
         op.accept(componentManager, registration);
         topLevelCommandManager.registerManager(componentManager);
     }
 
-    @Deprecated
-    public <T> void registerConverter(Key<T> key, ArgumentConverter<T> converter) {
-        topLevelCommandManager.registerConverter(key, converter);
-    }
 }

@@ -123,7 +123,7 @@ public final class ParsingUtil {
             }
 
             if(player != null)
-                if(!VariableCommands.hasVariablePermission(player, key, value, "use"))
+                if(!VariableCommands.hasVariablePermission(CraftBookPlugin.inst().wrapCommandSender(player), key, value, "use"))
                     continue;
             CraftBookPlugin.logDebugMessage(var + " permissions granted!", "variables.line-parsing");
 
