@@ -16,11 +16,11 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.google.common.base.Joiner;
 import com.sk89q.craftbook.CraftBookManifest;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.commands.TopLevelCommands;
+import com.sk89q.craftbook.PlatformCommandManager;
 import com.sk89q.craftbook.core.CraftBookResourceLoader;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.mechanic.MechanicManager;
@@ -34,16 +34,13 @@ import com.sk89q.craftbook.util.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.command.CommandUtil;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.io.ResourceLoader;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
@@ -53,6 +50,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -70,6 +68,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -112,7 +111,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * permissions checking, and a number of other fancy command things.
      * We just set it up and register commands against it.
      */
-    private CommandsManager<CommandSender> commands;
+    private final PlatformCommandManager commandManager = new PlatformCommandManager(this);
 
     /**
      * Handles all configuration.
@@ -205,17 +204,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Register command classes
         logDebugMessage("Initializing Commands!", "startup");
-        commands = new CommandsManager<CommandSender>() {
-            @Override
-            public boolean hasPermission(CommandSender player, String perm) {
-                return CraftBookPlugin.inst().hasPermission(player, perm);
-            }
-        };
-        // Set the proper command injector
-        commands.setInjector(new SimpleInjector(this));
-
-        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-        reg.register(TopLevelCommands.class);
+        commandManager.registerCommandsWith(this);
 
         // Let's start the show
         setupCraftBook();
@@ -346,33 +335,35 @@ public class CraftBookPlugin extends JavaPlugin {
         }
     }
 
+    // FIXME: Backport to WorldEdit/common lib
+    private String rebuildArguments(String commandLabel, String[] args) {
+        int plSep = commandLabel.indexOf(":");
+        if (plSep >= 0 && plSep < commandLabel.length() + 1) {
+            commandLabel = commandLabel.substring(plSep + 1);
+        }
+
+        StringBuilder sb = new StringBuilder("/").append(commandLabel);
+        if (args.length > 0) {
+            sb.append(" ");
+        }
+
+        return Joiner.on(" ").appendTo(sb, args).toString();
+    }
+
     /**
      * Handle a command.
      */
     @Override
-    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label,
-            String[] args) {
-        try {
-            commands.execute(cmd.getName(), args, sender, sender);
-        } catch (CommandPermissionsException e) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission.");
-        } catch (MissingNestedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getUsage());
-        } catch (CommandUsageException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-            sender.sendMessage(ChatColor.RED + e.getUsage());
-        } catch (WrappedCommandException e) {
-            if (e.getCause() instanceof NumberFormatException) {
-                sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
-            } else {
-                sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
-                e.printStackTrace();
-            }
-        } catch (CommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-        }
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+        commandManager.handleCommand(wrapCommandSender(sender), rebuildArguments(label, args));
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        String arguments = rebuildArguments(alias, args);
+        return CommandUtil.fixSuggestions(arguments, commandManager.handleCommandSuggestion(wrapCommandSender(sender), arguments));
     }
 
     /**
@@ -420,14 +411,6 @@ public class CraftBookPlugin extends JavaPlugin {
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
         getServer().getPluginManager().registerEvents(selfTriggerManager, this);
-    }
-
-    /**
-     * This is a method used to register commands for a class.
-     */
-    public void registerCommands(Class<?> clazz) {
-        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
-        reg.register(clazz);
     }
 
     /**
@@ -591,9 +574,9 @@ public class CraftBookPlugin extends JavaPlugin {
      * @throws CommandPermissionsException if {@code sender} doesn't have {@code perm}
      */
     public void checkPermission(CommandSender sender, String perm)
-            throws CommandPermissionsException {
+            throws AuthorizationException {
         if (!hasPermission(sender, perm)) {
-            throw new CommandPermissionsException();
+            throw new AuthorizationException();
         }
     }
 

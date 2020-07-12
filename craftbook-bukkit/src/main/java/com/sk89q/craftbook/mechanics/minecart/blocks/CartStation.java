@@ -18,7 +18,6 @@ package com.sk89q.craftbook.mechanics.minecart.blocks;
 
 import static com.sk89q.craftbook.util.CartUtil.stop;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
@@ -41,8 +40,8 @@ public class CartStation extends CartBlockMechanism {
 
     @Override
     public boolean enable() {
-
-        CraftBookPlugin.inst().registerCommands(StationCommands.class);
+        // TODO
+//        CraftBookPlugin.inst().registerCommands(StationCommands.class);
         return true;
     }
 
