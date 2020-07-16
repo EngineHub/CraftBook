@@ -16,8 +16,10 @@
 
 package com.sk89q.craftbook.mechanics.variables;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.*;
@@ -70,6 +72,14 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         if(packetMessageOverride)
             new VariablePacketModifier();
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "variables",
+                Lists.newArrayList("var", "variable", "vars"),
+                "CraftBook Variable Commands",
+                VariableCommands::register
+        );
 
         return true;
     }

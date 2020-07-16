@@ -16,11 +16,12 @@
 
 package com.sk89q.craftbook.mechanics.crafting;
 
-import com.google.common.base.*;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -33,13 +34,31 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.FurnaceInventory;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -59,6 +78,15 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() {
         INSTANCE = this;
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "recp",
+                Lists.newArrayList("recps"),
+                "CraftBook Custom Crafting Commands",
+                RecipeCommands::register
+        );
+
         CraftBookPlugin.inst().createDefaultConfiguration("crafting-recipes.yml");
         manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = manager.getRecipes();

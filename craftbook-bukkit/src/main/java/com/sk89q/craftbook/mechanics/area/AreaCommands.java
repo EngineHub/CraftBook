@@ -21,24 +21,28 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.craftbook.util.exceptions.CraftbookException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.command.util.CommandPermissions;
+import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
+import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
-import org.bukkit.Bukkit;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
+import org.enginehub.piston.annotation.param.Switch;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -47,58 +51,61 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * @author Silthus
- */
+@CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class AreaCommands {
 
-    public AreaCommands(CraftBookPlugin plugin) {
-
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+        registration.register(
+                commandManager,
+                AreaCommandsRegistration.builder(),
+                new AreaCommands()
+        );
     }
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
+    public AreaCommands() {
+    }
 
-    @Command(aliases = {"save"}, desc = "Saves the selected area", usage = "[-n namespace ] <id> [-e] [-b]", flags = "ebn:", min = 1)
-    public void saveArea(CommandContext context, CommandSender sender) throws CommandException {
+    private final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-        if (!(sender instanceof Player)) return;
-        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
-
-        String id;
-        String namespace = player.getCraftBookId();
+    @Command(name = "save", desc = "Saves the selected area")
+    public void saveArea(CraftBookPlayer player,
+            @ArgFlag(name = 'n', desc = "The namespace") String namespace,
+            @Arg(desc = "The area name") String name,
+            @Switch(name = 'b', desc = "Save biomes") boolean saveBiomes,
+            @Switch(name = 'e', desc = "Save entities") boolean saveEntities
+    ) throws AuthorizationException, CraftbookException {
         boolean personal = true;
 
-        boolean copyEntities = context.hasFlag('e');
-        boolean copyBiomes = context.hasFlag('b');
-
-        if (context.hasFlag('n')) {
-            if (!player.hasPermission("craftbook.mech.area.save." + context.getFlag('n')))
-                throw new CommandException("You do not have permission to use this namespace.");
-            namespace = context.getFlag('n');
+        if (namespace != null) {
+            if (!player.hasPermission("craftbook.mech.area.save." + namespace))
+                throw new CraftbookException("You do not have permission to use this namespace.");
             personal = false;
-        } else if (!player.hasPermission("craftbook.mech.area.save.self"))
-            throw new CommandPermissionsException();
+        } else {
+            if (!player.hasPermission("craftbook.mech.area.save.self")) {
+                throw new AuthorizationException();
+            }
+
+            namespace = player.getCraftBookId();
+        }
 
         if (Area.instance.shortenNames && namespace.length() > 14)
             namespace = namespace.substring(0, 14);
 
         if (!CopyManager.isValidNamespace(namespace))
-            throw new CommandException("Invalid namespace. Needs to be between 1 and 14 letters long.");
+            throw new CraftbookException("Invalid namespace. Needs to be between 1 and 14 letters long.");
 
         if (personal) {
             namespace = '~' + namespace;
         }
 
-        id = context.getString(0);
-
-        if (!CopyManager.isValidName(id))
-            throw new CommandException("Invalid area name. Needs to be between 1 and 13 letters long.");
+        if (!CopyManager.isValidName(name))
+            throw new CraftbookException("Invalid area name. Needs to be between 1 and 13 letters long.");
 
         try {
-            com.sk89q.worldedit.world.World world = BukkitAdapter.adapt(((Player) sender).getWorld());
-            Region sel = WorldEdit.getInstance().getSessionManager().findByName(sender.getName()).getSelection(world);
+            com.sk89q.worldedit.world.World world = player.getWorld();
+            Region sel = WorldEdit.getInstance().getSessionManager().findByName(player.getName()).getSelection(world);
             if(sel == null) {
-                sender.sendMessage(ChatColor.RED + "You have not made a selection!");
+                player.printError("You have not made a selection!");
                 return;
             }
             BlockVector3 min = sel.getMinimumPoint();
@@ -108,76 +115,71 @@ public class AreaCommands {
             // Check maximum size
             if (Area.instance.maxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()
                     > Area.instance.maxAreaSize) {
-                throw new CommandException("Area is larger than allowed " + Area.instance.maxAreaSize + " blocks.");
+                throw new CraftbookException("Area is larger than allowed " + Area.instance.maxAreaSize + " blocks.");
             }
 
             // Check to make sure that a user doesn't have too many toggle
             // areas (to prevent flooding the server with files)
             if (Area.instance.maxAreasPerUser >= 0 && !namespace.equals("global") && !player.hasPermission("craftbook.mech.area.bypass-limit")) {
-                int count = CopyManager.meetsQuota(namespace, id,
+                int count = CopyManager.meetsQuota(namespace, name,
                         Area.instance.maxAreasPerUser);
 
                 if (count > -1) {
-                    throw new CommandException("You are limited to " + Area.instance.maxAreasPerUser + " toggle area(s). "
+                    throw new CraftbookException("You are limited to " + Area.instance.maxAreasPerUser + " toggle area(s). "
                             + "You have " + count + " areas.");
                 }
             }
 
             // Copy
-            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel, copyEntities, copyBiomes);
+            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel, saveEntities, saveBiomes);
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '" + namespace +
-                    "' and ID '" + id + "'.");
+                    "' and ID '" + name + "'.");
 
             // Save
             try {
-                CopyManager.getInstance().save(namespace, id.toLowerCase(Locale.ENGLISH), copy);
-                player.print("Area saved as '" + id + "' under the '" + namespace + "' namespace.");
+                CopyManager.getInstance().save(namespace, name.toLowerCase(Locale.ENGLISH), copy);
+                player.print("Area saved as '" + name + "' under the '" + namespace + "' namespace.");
             } catch (IOException e) {
                 player.printError("Could not save area: " + e.getMessage());
             }
         } catch (NoClassDefFoundError e) {
-            throw new CommandException("WorldEdit.jar does not exist in plugins/, or is outdated. (Or you are using an outdated version of CraftBook)");
+            throw new CraftbookException("WorldEdit.jar does not exist in plugins/, or is outdated. (Or you are using an outdated version of CraftBook)");
         } catch (IncompleteRegionException e) {
-            throw new CommandException("Invalid selection");
+            throw new CraftbookException("Invalid selection");
         } catch (WorldEditException e) {
             player.printError(e.getMessage());
         }
     }
 
-    @Command(aliases = {"list"}, desc = "Lists the areas of the given namespace or lists all areas.",
-            usage = "[-n namespace] [page #]",
-            flags = "an:")
-    public void list(CommandContext context, CommandSender sender) throws CommandException {
-
-        if (!(sender instanceof Player)) return;
-        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) sender);
-
-        String namespace = "~" + player.getCraftBookId();
-
+    @Command(name = "list", desc = "Lists the areas of the given namespace or lists all areas.")
+    public void list(Actor actor,
+            @ArgFlag(name = 'n', desc = "The namespace") String namespace,
+            @Switch(name = 'a', desc = "List from all namespaces") boolean listAll,
+            @Arg(desc = "The page", def = "1") int page
+    ) throws AuthorizationException, CraftbookException {
         // get the namespace from the flag (if set)
-        if (context.hasFlag('n')) {
-            if(!player.hasPermission("craftbook.mech.area.list." + context.getFlag('n')))
-                throw new CommandException("You do not have permission to use this namespace.");
-            namespace = context.getFlag('n');
-        } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.list.all")) {
+        if (namespace != null) {
+            if(!actor.hasPermission("craftbook.mech.area.list." + namespace))
+                throw new AuthorizationException("You do not have permission to use this namespace.");
+        } else if (listAll && actor.hasPermission("craftbook.mech.area.list.all")) {
             namespace = "";
-        } else if (!player.hasPermission("craftbook.mech.area.list.self")) throw new CommandPermissionsException();
+        } else if (actor instanceof CraftBookPlayer) {
+            if (!actor.hasPermission("craftbook.mech.area.list.self")) {
+                throw new AuthorizationException();
+            }
+            namespace = "~" + ((CraftBookPlayer) actor).getCraftBookId();
+        } else {
+            throw new CraftbookException("Must supply a player");
+        }
 
         if (Area.instance.shortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
 
-        int page = 1;
-        try {
-            page = context.getInteger(0);
-        } catch (Exception ignored) {
-            // use default page: 1
-        }
-
         // get the areas for the defined namespace
         File areas = new File(CraftBookPlugin.inst().getDataFolder(), "areas");
 
-        if (!areas.exists()) throw new CommandException("There are no saved areas.");
+        if (!areas.exists()) throw new CraftbookException("There are no saved areas.");
 
         File folder = null;
         if (!namespace.isEmpty()) {
@@ -185,7 +187,7 @@ public class AreaCommands {
         }
 
         if (folder != null && !folder.exists())
-            throw new CommandException("The namespace '" + namespace + "' does not exist.");
+            throw new CraftbookException("The namespace '" + namespace + "' does not exist.");
 
         List<String> areaList = new ArrayList<>();
 
@@ -218,92 +220,62 @@ public class AreaCommands {
         // now lets list the areas with a nice pagination
         if (!areaList.isEmpty()) {
             String tmp = namespace.isEmpty() ? "All Areas " : "Areas for " + namespace;
-            player.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
+            actor.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
             // list the areas one by one
             for (String str : ArrayUtil.getArrayPage(areaList, page)) {
                 if (str != null && !str.isEmpty()) {
-                    player.print(str);
+                    actor.print(str);
                 }
             }
         } else {
-            player.printError("There are no saved areas in the '" + namespace + "' namespace.");
+            actor.printError("There are no saved areas in the '" + namespace + "' namespace.");
         }
     }
 
-    @Command(aliases = "toggle", desc = "Toggle an area sign at the given location.",
-            usage = "[-w world] <x,y,z>",
-            flags = "sw:",
-            min = 1
-            )
+    @Command(name = "toggle", desc = "Toggle an area sign at the given location.")
     @CommandPermissions("craftbook.mech.area.command.toggle")
-    public void toggle(CommandContext context, CommandSender sender) throws CommandException  {
-
-        World world = null;
-        boolean hasWorldFlag = context.hasFlag('w');
-
-        if (hasWorldFlag) {
-            world = Bukkit.getWorld(context.getFlag('w'));
-        } else if (sender instanceof Player) {
-            world = ((Player) sender).getWorld();
+    public void toggle(Actor actor,
+            @ArgFlag(name = 'w', desc = "The world") World world,
+            @Arg(desc = "The location") BlockVector3 position,
+            @Switch(name = 's', desc = "Silence output") boolean silent
+    ) throws CraftbookException  {
+        if (world == null && actor instanceof CraftBookPlayer) {
+            world = BukkitAdapter.adapt(((CraftBookPlayer) actor).getWorld());
         }
 
         if (world == null) {
-            throw new CommandException("You must be a player or specify a valid world to use this command.");
+            throw new CraftbookException("You must be a player or specify a valid world to use this command.");
         }
 
-        int[] xyz = new int[3];
-        String[] loc = context.getString(0).split(",");
-
-        if (loc.length != 3) {
-            throw new CommandException("Invalid location specified.");
-        }
-
-        try {
-            for (int i = 0; i < xyz.length; i++) {
-                xyz[i] = Integer.parseInt(loc[i]);
-            }
-        } catch (NumberFormatException ex) {
-            throw new CommandException("Invalid location specified.");
-        }
-
-        Block block = world.getBlockAt(xyz[0], xyz[1], xyz[2]);
-        if (!SignUtil.isSign(block)) throw new CommandException("No sign found at the specified location.");
+        Block block = world.getBlockAt(position.getX(), position.getY(), position.getZ());
+        if (!SignUtil.isSign(block)) throw new CraftbookException("No sign found at the specified location.");
 
         if (!Area.toggleCold(CraftBookBukkitUtil.toChangedSign(block))) {
-            throw new CommandException("Failed to toggle an area at the specified location.");
+            throw new CraftbookException("Failed to toggle an area at the specified location.");
         }
-        // TODO Make a sender wrap for this
-        if (!context.hasFlag('s')) sender.sendMessage(ChatColor.YELLOW + "Area toggled!");
+        if (!silent) {
+            actor.print("Area toggled!");
+        }
     }
 
-    @Command(aliases = {"delete"}, desc = "Lists the areas of the given namespace or lists all areas.",
-            usage = "[-n namespace] [area]",
-            flags = "an:")
-    public void delete(CommandContext context, CommandSender sender) throws CommandException {
-
-        if (!(sender instanceof Player)) return;
-        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
-
-        String namespace = "~" + player.getCraftBookId();
-        String areaId = null;
-
-
+    @Command(name = "delete", desc = "Lists the areas of the given namespace or lists all areas.")
+    public void delete(Actor actor,
+            @ArgFlag(name = 'n', desc = "The namespace") String namespace,
+            @Arg(desc = "The area name") String name
+    ) throws AuthorizationException, CraftbookException {
         // Get the namespace
-        if (context.hasFlag('n')) {
-            if(!player.hasPermission("craftbook.mech.area.delete." + context.getFlag('n')))
-                throw new CommandException("You do not have permission to use this namespace.");
-            namespace = context.getFlag('n');
-        } else if (!player.hasPermission("craftbook.mech.area.delete.self")) throw new CommandPermissionsException();
+        if (namespace != null) {
+            if(!actor.hasPermission("craftbook.mech.area.delete." + namespace))
+                throw new CraftbookException("You do not have permission to use this namespace.");
+        } else if (actor instanceof CraftBookPlayer) {
+            if (!actor.hasPermission("craftbook.mech.area.delete.self")) throw new AuthorizationException();
+            namespace = "~" + ((CraftBookPlayer) actor).getCraftBookId();
+        } else {
+            throw new CraftbookException("Must provide a player");
+        }
 
         if (Area.instance.shortenNames && namespace.length() > 15)
             namespace = namespace.substring(0, 15);
-
-        boolean deleteAll = false;
-        if (context.argsLength() > 0 && !context.hasFlag('a')) {
-            areaId = context.getString(0);
-        } else if (context.hasFlag('a') && player.hasPermission("craftbook.mech.area.delete." + namespace + ".all")) {
-            deleteAll = true;
-        } else throw new CommandException("You need to define an area or -a to delete all areas.");
 
         File areas = null;
         try {
@@ -312,25 +284,53 @@ public class AreaCommands {
         }
 
         if (areas == null || !areas.exists())
-            throw new CommandException("The namespace " + namespace + " does not exist.");
+            throw new CraftbookException("The namespace " + namespace + " does not exist.");
 
-        if (deleteAll) {
-            if (deleteDir(areas)) {
-                player.print("All areas in the namespace " + namespace + " have been deleted.");
-            }
-        } else {
-            // add the area suffix
-            String[] possibleFilenames = {areaId + ".schematic", areaId + ".schem", areaId + ".cbcopy"};
+        // add the area suffix
+        String[] possibleFilenames = {name + ".schematic", name + ".schem", name + ".cbcopy"};
 
-            for (String filename : possibleFilenames) {
-                File file = new File(areas, filename);
-                if (file.exists()) {
-                    if (file.delete()) {
-                        player.print("The area '" + areaId + " in the namespace '" + namespace + "' has been deleted.");
-                    }
-                    break;
+        for (String filename : possibleFilenames) {
+            File file = new File(areas, filename);
+            if (file.exists()) {
+                if (file.delete()) {
+                    actor.print("The area '" + name + " in the namespace '" + namespace + "' has been deleted.");
                 }
+                break;
             }
+        }
+    }
+
+    @Command(name = "delete-all", desc = "Deletes all the areas in a namespace.")
+    public void delete(Actor actor,
+            @Arg(desc = "The namespace", variable = true) String namespace
+    ) throws AuthorizationException, CraftbookException {
+        String areaId = null;
+
+        // Get the namespace
+        if (namespace != null) {
+            if(!actor.hasPermission("craftbook.mech.area.delete." + namespace + ".all"))
+                throw new CraftbookException("You do not have permission to use this namespace.");
+        } else if (actor instanceof CraftBookPlayer) {
+            if (!actor.hasPermission("craftbook.mech.area.delete.self.all")) throw new AuthorizationException();
+            namespace = "~" + ((CraftBookPlayer) actor).getCraftBookId();
+        } else {
+            throw new CraftbookException("Must provide a player");
+        }
+
+        if (Area.instance.shortenNames && namespace.length() > 15)
+            namespace = namespace.substring(0, 15);
+
+        File areas = null;
+        try {
+            areas = new File(plugin.getDataFolder(), "areas/" + namespace);
+        } catch (Exception ignored) {
+        }
+
+        if (areas == null || !areas.exists())
+            throw new CraftbookException("The namespace " + namespace + " does not exist.");
+
+        if (deleteDir(areas)) {
+            actor.print("All areas in the namespace " + namespace + " have been deleted.");
         }
     }
 

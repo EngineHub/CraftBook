@@ -16,14 +16,8 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.variables;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Server;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -36,6 +30,10 @@ import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Server;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 public class ItemCounter extends AbstractIC {
 
@@ -144,10 +142,10 @@ public class ItemCounter extends AbstractIC {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
             if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global", parts[0], "use"))
+                if(!VariableCommands.hasVariablePermission(player, "global", parts[0], "use"))
                     throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
             } else
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0], parts[1], "use"))
+                if(!VariableCommands.hasVariablePermission(player, parts[0], parts[1], "use"))
                     throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 

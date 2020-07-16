@@ -16,7 +16,6 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.ParsingUtil;
@@ -75,7 +74,7 @@ public class ChangedSign {
                     } else
                         key = "global";
 
-                    if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), key, var, "use"))
+                    if(!VariableCommands.hasVariablePermission(player, key, var, "use"))
                         setLine(i, StringUtils.replace(line, '%' + key + '|' + var + '%', ""));
                 }
             }

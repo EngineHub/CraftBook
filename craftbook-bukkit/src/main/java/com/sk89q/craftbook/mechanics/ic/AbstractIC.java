@@ -109,7 +109,8 @@ public abstract class AbstractIC implements IC {
     public void onRightClick(Player p) {
 
         if (p.isSneaking()) {
-            ICDocsParser.generateICDocs(p, RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
+            ICDocsParser.generateICDocs(CraftBookPlugin.inst().wrapPlayer(p),
+                    RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
         }
     }
 

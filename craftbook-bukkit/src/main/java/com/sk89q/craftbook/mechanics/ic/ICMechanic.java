@@ -32,9 +32,11 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
@@ -51,6 +53,7 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.platform.Actor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -94,6 +97,15 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         ICManager.inst().enable();
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "ic",
+                Lists.newArrayList("ics"),
+                "CraftBook Integrated Circuit Commands",
+                ICCommands::register
+        );
+
         return true;
     }
 
@@ -512,7 +524,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         }
     }
 
-    public static boolean checkPermissionsBoolean(CraftBookPlayer player, ICFactory factory, String id) {
+    public static boolean checkPermissionsBoolean(Actor player, ICFactory factory, String id) {
 
         try {
             checkPermissions(player, factory, id);
@@ -522,7 +534,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public static void checkPermissions(CraftBookPlayer player, ICFactory factory, String id) throws ICVerificationException {
+    public static void checkPermissions(Actor player, ICFactory factory, String id) throws ICVerificationException {
 
         if (player.hasPermission("craftbook.ic." + id.toLowerCase(Locale.ENGLISH))) {
             return;
@@ -541,11 +553,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         throw new ICVerificationException("You don't have permission to use " + id.toLowerCase(Locale.ENGLISH) + ".");
     }
 
-    public static boolean hasRestrictedPermissions(CraftBookPlayer player, ICFactory factory, String id) {
+    public static boolean hasRestrictedPermissions(Actor player, ICFactory factory, String id) {
         return player.hasPermission("craftbook.ic.restricted." + id.toLowerCase(Locale.ENGLISH));
     }
 
-    public static boolean hasSafePermissions(CraftBookPlayer player, ICFactory factory, String id) {
+    public static boolean hasSafePermissions(Actor player, ICFactory factory, String id) {
         return player.hasPermission("craftbook.ic.safe." + id.toLowerCase(Locale.ENGLISH));
     }
 

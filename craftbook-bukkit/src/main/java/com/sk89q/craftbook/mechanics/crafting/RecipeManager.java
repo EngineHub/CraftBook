@@ -16,17 +16,24 @@
 
 package com.sk89q.craftbook.mechanics.crafting;
 
-import java.io.IOException;
-import java.util.*;
-
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RecipeManager {
 

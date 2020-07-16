@@ -16,123 +16,149 @@
 
 package com.sk89q.craftbook.mechanics.items;
 
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.command.util.CommandPermissions;
+import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import com.sk89q.worldedit.math.Vector3;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.*;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.conversations.BooleanPrompt;
+import org.bukkit.conversations.Conversation;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.MessagePrompt;
+import org.bukkit.conversations.NullConversationPrefix;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
+import org.enginehub.piston.annotation.param.Switch;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class CommandItemCommands {
 
-    public CommandItemCommands(CraftBookPlugin plugin) {
-        setupAddCommand(plugin);
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+        registration.register(
+                commandManager,
+                CommandItemCommandsRegistration.builder(),
+                new CommandItemCommands()
+        );
     }
 
-    @Command(aliases = {"give"}, desc = "Gives the player the item.", flags = "p:a:s", usage = "[-p player] <CommandItem Name> [-a amount] [-s]", min = 1)
-    public void giveItem(CommandContext context, CommandSender sender) throws CommandException {
+    public CommandItemCommands() {
+        setupAddCommand(CraftBookPlugin.inst());
+    }
+
+    @Command(name = "give", desc = "Gives the player the item.")
+    public void giveItem(Actor actor,
+            @Arg(desc = "The commanditem to give") String name,
+            @ArgFlag(name = 'p', desc = "The player to target") String otherPlayer,
+            @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
+            @Switch(name = 's', desc = "Silence output") boolean silent
+    ) throws CraftbookException, AuthorizationException {
 
         Player player;
 
-        if(context.hasFlag('p'))
-            player = Bukkit.getPlayer(context.getFlag('p'));
-        else if(!(sender instanceof Player))
-            throw new CommandException("Please provide a player! (-p flag)");
+        if(otherPlayer != null)
+            player = Bukkit.getPlayer(otherPlayer);
+        else if(!(actor instanceof CraftBookPlayer))
+            throw new CraftbookException("Please provide a player! (-p flag)");
         else
-            player = (Player) sender;
+            player = ((BukkitCraftBookPlayer) actor).getPlayer();
 
         if(player == null)
-            throw new CommandException("Unknown Player!");
+            throw new CraftbookException("Unknown Player!");
 
-        if(CommandItems.INSTANCE == null)
-            throw new CommandException("CommandItems are not enabled!");
+        if(!actor.hasPermission("craftbook.mech.commanditems.give" + (otherPlayer != null ? ".others" : "") + "." + name))
+            throw new AuthorizationException();
 
-        if(!sender.hasPermission("craftbook.mech.commanditems.give" + (context.hasFlag('p') ? ".others" : "") + "." + context.getString(0)))
-            throw new CommandPermissionsException();
-
-        CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(context.getString(0));
+        CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(name);
         if(def == null)
-            throw new CommandException("Invalid CommandItem!");
+            throw new CraftbookException("Invalid CommandItem!");
 
         ItemStack stack = ItemUtil.makeItemValid(def.getItem().clone());
-        if(context.hasFlag('a'))
-            stack.setAmount(stack.getAmount() * context.getFlagInteger('a', 1));
+        stack.setAmount(stack.getAmount() * amount);
 
         if(!player.getInventory().addItem(stack).isEmpty())
-            throw new CommandException("Failed to add item to inventory!");
+            throw new CraftbookException("Failed to add item to inventory!");
 
-        if(!context.hasFlag('s'))
-            sender.sendMessage(ChatColor.YELLOW + "Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
+        if(!silent)
+            actor.print("Gave CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " to " + player.getName());
     }
 
-    @Command(aliases = {"spawn"}, desc = "Spawns the item at the coordinates", flags = "w:a:s", usage = "<CommandItem Name> <x> <y> <z> [-w world] [-a amount] [-s]", min = 4)
-    public void spawnItem(CommandContext context, CommandSender sender) throws CommandException {
+    @Command(name = "spawn", desc = "Spawns the item at the coordinates")
+    public void spawnItem(Actor actor,
+            @Arg(desc = "The commanditem to give") String name,
+            @Arg(desc = "The location to spawn") Vector3 location,
+            @ArgFlag(name = 'w', desc = "The world") World world,
+            @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
+            @Switch(name = 's', desc = "Silence output") boolean silent
+    ) throws CraftbookException, AuthorizationException {
+        if(!actor.hasPermission("craftbook.mech.commanditems.spawn" + name))
+            throw new AuthorizationException();
 
-        if(CommandItems.INSTANCE == null)
-            throw new CommandException("CommandItems are not enabled!");
-
-        if(!sender.hasPermission("craftbook.mech.commanditems.spawn" + context.getString(0)))
-            throw new CommandPermissionsException();
-
-        CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(context.getString(0));
+        CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(name);
         if(def == null)
-            throw new CommandException("Invalid CommandItem!");
+            throw new CraftbookException("Invalid CommandItem!");
 
-        World world = null;
-        if(context.hasFlag('w'))
-            world = Bukkit.getWorld(context.getFlag('w'));
-        else if(sender instanceof Player)
-            world = ((Player) sender).getWorld();
-        else
-            throw new CommandException("Either a player or world is required!");
+        if (world == null && actor instanceof CraftBookPlayer) {
+            world = BukkitAdapter.adapt(((CraftBookPlayer) actor).getWorld());
+        }
+
+        if (world == null) {
+            throw new CraftbookException("You must be a player or specify a valid world to use this command.");
+        }
 
         ItemStack stack = def.getItem().clone();
 
         stack = ItemUtil.makeItemValid(stack);
-        if(context.hasFlag('a'))
-            stack.setAmount(stack.getAmount() * context.getFlagInteger('a', 1));
+        stack.setAmount(stack.getAmount() * amount);
 
-        world.dropItem(new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)), stack);
+        world.dropItem(new Location(world, location.getX(), location.getY(), location.getZ()), stack);
 
-        if(!context.hasFlag('s'))
-            sender.sendMessage(ChatColor.YELLOW + "Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + new Location(world, context.getInteger(1), context.getInteger(2), context.getInteger(3)).toString());
+        if(!silent)
+            actor.print("Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + location.toString() + " in " + world.getName());
     }
 
     private ConversationFactory conversationFactory;
 
-    @Command(aliases = {"add", "create"}, desc = "Create a new CommandItem.")
+    @Command(name = "create", aliases = {"add"}, desc = "Create a new CommandItem.")
     @CommandPermissions("craftbook.mech.commanditems.create")
-    public void addCommandItem(CommandContext context, CommandSender sender) throws CommandException {
-
-        if(CommandItems.INSTANCE == null) {
-            sender.sendMessage("CommandItems are not enabled!");
-            return;
-        }
-
-        if(!(sender instanceof Player))
-            throw new CommandException("Can only add CommandItems as a player!");
-        if(((Player) sender).getInventory().getItemInHand() == null)
-            throw new CommandException("Invalid Item for CommandItems!");
-        Conversation convo = conversationFactory.buildConversation((Conversable) sender);
-        convo.getContext().setSessionData("item", ((HumanEntity) sender).getInventory().getItemInHand());
+    public void create(CraftBookPlayer player) throws CraftbookException {
+        Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
+        if(bukkitPlayer.getInventory().getItemInMainHand().getType() == Material.AIR)
+            throw new CraftbookException("Invalid Item for CommandItems!");
+        Conversation convo = conversationFactory.buildConversation(bukkitPlayer);
+        convo.getContext().setSessionData("item", bukkitPlayer.getInventory().getItemInHand());
         List<ItemStack> consumables = new ArrayList<>();
         for(int i = 0; i <= 8; i++) {
-            if(i == ((HumanEntity) sender).getInventory().getHeldItemSlot())
+            if(i == bukkitPlayer.getInventory().getHeldItemSlot())
                 continue;
-            ItemStack stack = ((HumanEntity) sender).getInventory().getItem(i);
+            ItemStack stack = bukkitPlayer.getInventory().getItem(i);
             if(!ItemUtil.isStackValid(stack))
                 continue;
             consumables.add(stack);

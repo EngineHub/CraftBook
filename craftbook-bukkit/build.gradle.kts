@@ -39,6 +39,10 @@ dependencies {
     "api"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
     "api"("com.comphenix.protocol:ProtocolLib:4.5.0") { isTransitive = false }
     "implementation"("org.bstats:bstats-bukkit:1.7")
+
+    "compileOnly"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
+    "annotationProcessor"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
+    "annotationProcessor"("com.google.guava:guava:21.0")
 }
 
 tasks.named<Upload>("install") {

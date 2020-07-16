@@ -4,5 +4,7 @@
     "craftbook.mech.lightstone.line": "LightStone: {0} {1}L",
 
     "craftbook.mech.bounceblocks.create": "BounceBlock Created!",
-    "craftbook.mech.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!"
+    "craftbook.mech.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
+
+    "craftbook.version.version": "CraftBook version {0}"
 }

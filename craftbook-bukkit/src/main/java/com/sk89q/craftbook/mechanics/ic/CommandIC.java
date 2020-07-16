@@ -20,6 +20,7 @@ import org.bukkit.command.CommandSender;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
 
+@Deprecated
 public interface CommandIC {
 
     /**
