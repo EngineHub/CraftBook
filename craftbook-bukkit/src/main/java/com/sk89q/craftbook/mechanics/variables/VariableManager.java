@@ -70,9 +70,6 @@ public class VariableManager extends AbstractCraftBookMechanic {
             return false;
         }
 
-        if(packetMessageOverride)
-            new VariablePacketModifier();
-
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
                 "variables",
@@ -86,6 +83,12 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("variables");
+        registrar.unregisterTopLevel("var");
+        registrar.unregisterTopLevel("variable");
+        registrar.unregisterTopLevel("vars");
 
         if(variableConfiguration != null) {
             variableConfiguration.save();
@@ -214,7 +217,6 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private boolean consoleOverride;
     private boolean playerCommandOverride;
     private boolean playerChatOverride;
-    private boolean packetMessageOverride;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -230,9 +232,6 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         config.setComment("enable-in-player-chat", "Allow variables to work in player chat.");
         playerChatOverride = config.getBoolean("enable-in-player-chat", false);
-
-        config.setComment("override-all-text", "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
-        packetMessageOverride = config.getBoolean("override-all-text", false);
     }
 
 }

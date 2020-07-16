@@ -72,6 +72,10 @@ public class MechanicCommands {
             plugin.getConfiguration().enabledMechanics.add(mechanicType.getId());
             plugin.getConfiguration().save();
 
+            if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
+                plugin.getCommandManager().resetCommandRegistration(plugin);
+            }
+
             actor.print("Sucessfully enabled " + mechanicType.getName());
         } catch (MechanicInitializationException e) {
             actor.printError("Failed to load " + mechanicType.getName());
@@ -86,6 +90,10 @@ public class MechanicCommands {
         if (mech.isPresent() && plugin.getMechanicManager().disableMechanic((CraftBookMechanic) mech.get())) {
             plugin.getConfiguration().enabledMechanics.remove(mechanicType.getId());
             plugin.getConfiguration().save();
+
+            if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
+                plugin.getCommandManager().resetCommandRegistration(plugin);
+            }
 
             actor.print("Sucessfully disabled " + mechanicType.getName());
         } else {

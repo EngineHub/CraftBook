@@ -52,7 +52,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
                 "signedit",
-                Lists.newArrayList("edsign", "signcopy", "signpaste"),
+                Lists.newArrayList("edsign", "signcopy"),
                 "CraftBook SignCopier Commands",
                 SignEditCommands::register
         );
@@ -62,6 +62,11 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("signedit");
+        registrar.unregisterTopLevel("edsign");
+        registrar.unregisterTopLevel("signcopy");
 
         signs = null;
     }

@@ -22,7 +22,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.crafting.RecipeCommands;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EventUtil;
@@ -112,6 +111,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
         }
 
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("commanditems");
+        registrar.unregisterTopLevel("comitems");
+
         definitions = null;
         cooldownPeriods = null;
         config = null;
@@ -126,7 +129,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
                 "commanditems",
-                Lists.newArrayList("comitems", "citems", "commanditem"),
+                Lists.newArrayList("comitems"),
                 "CraftBook CommandItems Commands",
                 CommandItemCommands::register
         );

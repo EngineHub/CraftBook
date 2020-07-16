@@ -19,19 +19,25 @@ package com.sk89q.craftbook;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
+import org.enginehub.piston.impl.CommandManagerImpl;
 import org.enginehub.piston.part.SubCommandPart;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class MechanicCommandRegistrar {
-    private CommandManagerService service;
-    private CommandManager topLevelCommandManager;
-    private CommandRegistrationHandler registration;
+    private final CommandManagerService service;
+    private final CommandManager topLevelCommandManager;
+    private final CommandRegistrationHandler registration;
+
+    private boolean dirty;
 
     public MechanicCommandRegistrar(CommandManagerService service, CommandManager topLevelCommandManager, CommandRegistrationHandler registration) {
         this.service = service;
@@ -39,8 +45,21 @@ public class MechanicCommandRegistrar {
         this.registration = registration;
     }
 
+    private void markDirty() {
+        this.dirty = true;
+    }
+
+    public boolean isDirty() {
+        return this.dirty;
+    }
+
+    protected void unmarkDirty() {
+        this.dirty = false;
+    }
+
     public void registerAsSubCommand(String command, Collection<String> aliases, String description,
             CommandManager parentManager, BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+        markDirty();
         parentManager.register(command, builder -> {
             builder.description(TextComponent.of(description));
             builder.aliases(aliases);
@@ -66,9 +85,23 @@ public class MechanicCommandRegistrar {
     }
 
     public void registerTopLevelCommands(BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+        markDirty();
         CommandManager componentManager = service.newCommandManager();
         op.accept(componentManager, registration);
         topLevelCommandManager.registerManager(componentManager);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void unregisterTopLevel(String command) {
+        try {
+            Field field = CommandManagerImpl.class.getDeclaredField("commands");
+            field.setAccessible(true);
+            Map<String, Command> commandMap = (Map<String, Command>) field.get(topLevelCommandManager);
+            commandMap.remove(command);
+            field.set(topLevelCommandManager, commandMap);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 }

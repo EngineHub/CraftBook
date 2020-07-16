@@ -75,6 +75,15 @@ public class Area extends AbstractCraftBookMechanic {
         return true;
     }
 
+    @Override
+    public void disable() {
+        super.disable();
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("area");
+        registrar.unregisterTopLevel("togglearea");
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 

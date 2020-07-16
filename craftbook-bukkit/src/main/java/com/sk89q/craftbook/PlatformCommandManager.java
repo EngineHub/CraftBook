@@ -26,10 +26,10 @@ import com.sk89q.bukkit.util.CommandRegistration;
 import com.sk89q.craftbook.bukkit.BukkitCommandInspector;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.CraftBookCommands;
+import com.sk89q.craftbook.core.command.argument.RegistryConverter;
 import com.sk89q.craftbook.core.command.argument.WorldConverter;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.argument.Arguments;
-import com.sk89q.craftbook.core.command.argument.RegistryConverter;
 import com.sk89q.worldedit.command.argument.VectorConverter;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -40,6 +40,8 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.util.logging.DynamicStreamHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.exception.CommandException;
@@ -138,6 +140,15 @@ public class PlatformCommandManager {
                             reduceToText(command.getDescription(), WorldEdit.getInstance().getConfiguration().defaultLocale), aliases,
                             inspector, permissionsArray);
                 }).collect(Collectors.toList()));
+
+        this.mechanicCommandRegistrar.unmarkDirty();
+    }
+
+    public void resetCommandRegistration(CraftBookPlugin plugin) {
+        CommandRegistration registration = new CommandRegistration(plugin);
+        registration.unregisterCommands();
+        registerCommandsWith(plugin);
+        Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
     }
 
     private Stream<Substring> parseArgs(String input) {

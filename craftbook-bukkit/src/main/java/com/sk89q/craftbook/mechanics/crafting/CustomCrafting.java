@@ -106,6 +106,11 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         advancedRecipes.clear();
         manager.disable();
         manager = null;
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("recp");
+        registrar.unregisterTopLevel("recps");
+
         INSTANCE = null;
     }
 

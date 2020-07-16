@@ -113,6 +113,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public void disable() {
 
         manager.disable();
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.unregisterTopLevel("ic");
+        registrar.unregisterTopLevel("ics");
     }
 
     public Object[] setupIC(Block block, boolean create) {
