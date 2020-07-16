@@ -93,6 +93,7 @@ public class MechanicCommandRegistrar {
 
     @SuppressWarnings({"unchecked"})
     public void unregisterTopLevel(String command) {
+        markDirty();
         try {
             Field field = CommandManagerImpl.class.getDeclaredField("commands");
             field.setAccessible(true);
