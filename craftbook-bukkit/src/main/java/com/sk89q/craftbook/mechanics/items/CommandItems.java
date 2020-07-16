@@ -20,7 +20,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.crafting.RecipeCommands;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EventUtil;
@@ -120,6 +122,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         INSTANCE = this;
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "commanditems",
+                Lists.newArrayList("comitems", "citems", "commanditem"),
+                "CraftBook CommandItems Commands",
+                CommandItemCommands::register
+        );
 
         definitions = new HashSet<>();
         cooldownPeriods = new HashMap<>();

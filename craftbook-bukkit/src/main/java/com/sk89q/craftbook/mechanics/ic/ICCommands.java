@@ -16,151 +16,84 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import org.bukkit.ChatColor;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-
+@CommandContainer
 public class ICCommands {
 
-    public ICCommands(CraftBookPlugin plugin) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+        registration.register(
+                commandManager,
+                ICCommandsRegistration.builder(),
+                new ICCommands()
+        );
+    }
+
+    public ICCommands() {
 
     }
 
-    @Command (aliases = {"ic","circuit"}, desc = "Information for a specific IC", usage = "<ic> (Further arguments depend on IC)", min = 1)
-    public void icCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if(args.getString(0).equalsIgnoreCase("list")) {
-
-            String list = "";
-
-            for(RegisteredICFactory factory : ICManager.inst().registered.values()) {
-                if(factory.getFactory() instanceof CommandIC) {
-
-                    if(list.isEmpty())
-                        list = factory.getId();
-                    else
-                        list = list + ", " + factory.getId();
-                }
-            }
-
-            sender.sendMessage(ChatColor.YELLOW + "Command IC List: " + list);
-        } else {
-
-            RegisteredICFactory factory = ICManager.inst().registered.get(args.getString(0));
-
-            if(factory != null && factory.getFactory() instanceof CommandIC) {
-                if(((CommandIC) factory.getFactory()).getMinCommandArgs()+1 > args.argsLength())
-                    throw new CommandException();
-                ((CommandIC) factory.getFactory()).onICCommand(args, sender);
-            }
-        }
+    @Command(name = "info", aliases = {"doc", "docs", "help", "man"}, desc = "Documentation on CraftBook IC's")
+    public void info(Actor actor, @Arg(desc = "The IC ID") String ic) {
+        ICDocsParser.generateICDocs(actor, ic);
     }
 
-    @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's",
-            usage = "<ic>", min = 1, max = 1)
-    public void docsCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
-        Player player = (Player) sender;
-        ICDocsParser.generateICDocs(player, args.getString(0));
-    }
-
-    @Command(aliases = {"list"}, desc = "List available IC's",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
-    public void listCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
-        Player player = (Player) sender;
-        char[] ar = null;
-        try {
-            ar = args.getString(1).toCharArray();
-        } catch (Exception ignored) {
-        }
-        String[] lines = ICManager.inst().generateICText(player, null, ar);
+    @Command(name = "list", desc = "List available IC's")
+    public void listCmd(Actor actor,
+            @ArgFlag(name = 'p', desc = "The page", def = "1") int page
+    ) {
+        String[] lines = ICManager.inst().generateICText(actor, null, null);
         int pages = (lines.length - 1) / 9 + 1;
-        int accessedPage;
 
-        try {
-            accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
-            if (accessedPage < 0 || accessedPage >= pages) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + '"');
+        if (page < 1 || page >= pages) {
+            actor.printError("Invalid page \"" + page + "\"");
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook ICs (Page " + (accessedPage + 1) + " of " + pages + "):");
+        actor.print(ChatColor.BLUE + "  ");
+        actor.print(ChatColor.BLUE + "CraftBook ICs (Page " + page + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
-            player.sendMessage(lines[i]);
+        for (int i = (page - 1) * 9; i < lines.length && i < page * 9; i++) {
+            actor.print(lines[i]);
         }
     }
 
-    @Command(aliases = {"search"}, desc = "Search available IC's with names",
-            flags = "p:", usage = "[-p page] <name>", min = 1, max = 1)
-    public void searchCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
-        Player player = (Player) sender;
-        char[] ar = null;
-        try {
-            ar = args.getString(2).toCharArray();
-        } catch (Exception ignored) {
-        }
-        String[] lines = ICManager.inst().generateICText(player, args.getString(0), ar);
+    @Command(name = "search", desc = "Search available IC's with names")
+    public void searchCmd(Actor actor,
+            @Arg(desc = "The search term") String term,
+            @ArgFlag(name = 'p', desc = "The page", def = "1") int page
+    ) {
+        String[] lines = ICManager.inst().generateICText(actor, term, null);
         int pages = (lines.length - 1) / 9 + 1;
-        int accessedPage;
 
-        try {
-            accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
-            if (accessedPage < 0 || accessedPage >= pages) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + '"');
-                return;
-            }
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + '"');
+        if (page < 1 || page >= pages) {
+            actor.printError("Invalid page \"" + page + "\"");
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook ICs \"" + args.getString(0) + "\" (Page " +
-                (accessedPage + 1) + " of " + pages + "):");
+        actor.print(ChatColor.BLUE + "  ");
+        actor.print(ChatColor.BLUE + "CraftBook ICs \"" + term + "\" (Page " + page + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.length && i < (accessedPage + 1) * 9; i++) {
-            player.sendMessage(lines[i]);
+        for (int i = (page - 1) * 9; i < lines.length && i < page * 9; i++) {
+            actor.print(lines[i]);
         }
     }
 
-    @Command(aliases = {"midis"}, desc = "List MIDI's available for Melody IC",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
-    public void midiListCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
-        Player player = (Player) sender;
+    @Command(name = "midis", aliases = {"midilist"}, desc = "List MIDI's available for Melody IC")
+    public void midis(Actor actor, @ArgFlag(name = 'p', desc = "Page number", def = "1") int page) {
         List<String> lines = new ArrayList<>();
 
         FilenameFilter fnf = (dir, name) -> name.endsWith("mid") || name.endsWith(".midi");
@@ -169,35 +102,22 @@ public class ICCommands {
         }
         lines.sort(Comparator.naturalOrder());
         int pages = (lines.size() - 1) / 9 + 1;
-        int accessedPage;
 
-        try {
-            accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
-            if (accessedPage < 0 || accessedPage >= pages) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
+        if (page < 1 || page >= pages) {
+            actor.printError("Invalid page \"" + page + "\"");
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook MIDIs (Page " + (accessedPage + 1) + " of " + pages + "):");
+        actor.print(ChatColor.BLUE + "  ");
+        actor.print(ChatColor.BLUE + "CraftBook MIDIs (Page " + page + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
-            player.sendMessage(ChatColor.GREEN + lines.get(i));
+        for (int i = (page - 1) * 9; i < lines.size() && i < page * 9; i++) {
+            actor.print(ChatColor.GREEN + lines.get(i));
         }
     }
 
-    @Command(aliases = {"fireworks"}, desc = "List Fireworks available for PFD IC",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
-    public void fireworkListCmd(CommandContext args, CommandSender sender) throws CommandException {
-
-        if(ICManager.inst() == null)
-            throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
-        Player player = (Player) sender;
+    @Command(name = "fireworks", desc = "List Fireworks available for PFD IC")
+    public void fireworks(Actor actor, @ArgFlag(name = 'p', desc = "Page number", def = "1") int page) {
         List<String> lines = new ArrayList<>();
 
         FilenameFilter fnf = (dir, name) -> name.endsWith(".fwk") || name.endsWith(".txt");
@@ -206,24 +126,17 @@ public class ICCommands {
         }
         lines.sort(String::compareTo);
         int pages = (lines.size() - 1) / 9 + 1;
-        int accessedPage;
 
-        try {
-            accessedPage = !args.hasFlag('p') ? 0 : args.getFlagInteger('p') - 1;
-            if (accessedPage < 0 || accessedPage >= pages) {
-                player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlagInteger('p') + "\"");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid page \"" + args.getFlag('p') + "\"");
+        if (page < 1 || page >= pages) {
+            actor.printError("Invalid page \"" + page + "\"");
             return;
         }
 
-        player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook Firework Displays (Page " + (accessedPage + 1) + " of " + pages + "):");
+        actor.print(ChatColor.BLUE + "  ");
+        actor.print(ChatColor.BLUE + "CraftBook Firework Displays (Page " + page + " of " + pages + "):");
 
-        for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
-            player.sendMessage(ChatColor.GREEN + lines.get(i));
+        for (int i = (page - 1) * 9; i < lines.size() && i < page * 9; i++) {
+            actor.print(ChatColor.GREEN + lines.get(i));
         }
     }
 }

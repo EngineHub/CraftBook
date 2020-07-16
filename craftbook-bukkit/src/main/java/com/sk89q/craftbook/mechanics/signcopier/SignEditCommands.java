@@ -16,46 +16,47 @@
 
 package com.sk89q.craftbook.mechanics.signcopier;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.worldedit.command.util.CommandPermissions;
+import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
 
+@CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class SignEditCommands {
 
-    public SignEditCommands(CraftBookPlugin plugin) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+        registration.register(
+                commandManager,
+                SignEditCommandsRegistration.builder(),
+                new SignEditCommands()
+        );
     }
 
-    @Command(aliases = {"edit"}, desc = "Edits the copied sign.", usage = "<Line> <Text>", min = 1, max = 2)
-    public void editSign(CommandContext context, CommandSender sender) throws CommandException {
+    public SignEditCommands() {
+    }
 
-        if(SignCopier.signs == null)
-            throw new CommandException("SignCopier mechanic is not enabled!");
+    @Command(name = "edit", desc = "Edits the copied sign.")
+    @CommandPermissions({"craftbook.mech.signcopy.edit"})
+    public void editSign(CraftBookPlayer player,
+            @Arg(desc = "The line to edit") int line,
+            @Arg(desc = "The text to use", variable = true) String text) throws CraftbookException {
 
-        if(!(sender instanceof Player))
-            throw new CommandException("This command can only be performed by a player!");
-
-        if(!sender.hasPermission("craftbook.mech.signcopy.edit"))
-            throw new CommandPermissionsException();
-
-        if(!SignCopier.signs.containsKey(sender.getName()))
-            throw new CommandException("You haven't copied a sign!");
-
-        int line = context.getInteger(0, 1);
-        String text = context.getString(1, "");
+        if(!SignCopier.signs.containsKey(player.getName()))
+            throw new CraftbookException("You haven't copied a sign!");
 
         if (line < 1 || line > 4) {
-            throw new CommandException("Line out of bounds. Must be between 1 and 4.");
+            throw new CraftbookException("Line out of bounds. Must be between 1 and 4.");
         }
 
-        String[] signCache = SignCopier.signs.get(sender.getName());
+        String[] signCache = SignCopier.signs.get(player.getName());
         signCache[line - 1] = text;
-        SignCopier.signs.put(sender.getName(), signCache);
+        SignCopier.signs.put(player.getName(), signCache);
 
-        sender.sendMessage(ChatColor.YELLOW + "Edited line " + line + ". Text is now: " + text);
+        player.print("Edited line " + line + ". Text is now: " + text);
     }
 }

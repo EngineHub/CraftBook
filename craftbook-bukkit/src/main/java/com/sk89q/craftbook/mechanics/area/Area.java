@@ -16,11 +16,14 @@
 
 package com.sk89q.craftbook.mechanics.area;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -60,6 +63,15 @@ public class Area extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         instance = this;
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "area",
+                Lists.newArrayList("togglearea"),
+                "CraftBook Area Commands",
+                AreaCommands::register
+        );
+
         return true;
     }
 

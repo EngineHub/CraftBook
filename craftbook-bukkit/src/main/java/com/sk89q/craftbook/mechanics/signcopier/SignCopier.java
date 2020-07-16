@@ -16,9 +16,12 @@
 
 package com.sk89q.craftbook.mechanics.signcopier;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.items.CommandItemCommands;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -44,8 +47,16 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-
         signs = new HashMap<>();
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "signedit",
+                Lists.newArrayList("edsign", "signcopy", "signpaste"),
+                "CraftBook SignCopier Commands",
+                SignEditCommands::register
+        );
+
         return true;
     }
 

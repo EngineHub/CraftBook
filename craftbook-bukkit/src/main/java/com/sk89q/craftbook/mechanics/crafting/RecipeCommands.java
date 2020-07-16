@@ -16,6 +16,24 @@
 
 package com.sk89q.craftbook.mechanics.crafting;
 
+import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
+import com.sk89q.craftbook.util.ItemUtil;
+import com.sk89q.worldedit.command.util.CommandPermissions;
+import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,69 +41,52 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissions;
-
+@CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class RecipeCommands {
 
-    public RecipeCommands(CraftBookPlugin plugin) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+        registration.register(
+                commandManager,
+                RecipeCommandsRegistration.builder(),
+                new RecipeCommands()
+        );
     }
 
-    private CraftBookPlugin plugin = CraftBookPlugin.inst();
+    public RecipeCommands() {
+    }
 
-    @Command(aliases = {"delete", "remove"}, desc = "Delete a recipe", usage = "RecipeName", min = 1, max = 1)
+    private final CraftBookPlugin plugin = CraftBookPlugin.inst();
+
+    @Command(name = "remove", aliases = {"delete"}, desc = "Delete a recipe")
     @CommandPermissions(value = "craftbook.mech.recipes.remove")
-    public void deleteRecipe(CommandContext context, CommandSender sender) throws CommandException {
-
-        if(RecipeManager.INSTANCE == null) {
-            sender.sendMessage(ChatColor.RED + "CustomCrafting is not enabled!");
-            return;
-        }
-
-        if(RecipeManager.INSTANCE.removeRecipe(context.getString(0))) {
-            sender.sendMessage(ChatColor.RED + "Recipe removed successfully! This will be in effect after a restart!");
+    public void remove(Actor actor, @Arg(desc = "The recipe to remove") String recipe) {
+        if(RecipeManager.INSTANCE.removeRecipe(recipe)) {
+            actor.print("Recipe removed successfully! This will be in effect after a restart!");
             RecipeManager.INSTANCE.save();
         } else
-            sender.sendMessage(ChatColor.RED + "Recipe doesn't exist!");
+            actor.printError("Recipe doesn't exist!");
     }
 
-    @Command(aliases = {"save", "add"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
+    @Command(name = "save", aliases = {"add"}, desc = "Saves the current recipe")
     @CommandPermissions(value = "craftbook.mech.recipes.add")
-    public void saveRecipe(CommandContext context, CommandSender sender) throws CommandException {
+    public void saveRecipe(CraftBookPlayer player,
+            @Arg(desc = "The recipe to remove") String name,
+            @Arg(desc = "The recipe type") String recipeType,
+            @ArgFlag(name = 'p', desc = "The permission node to assign") String permissionNode
+    ) {
+        Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
 
-        if(RecipeManager.INSTANCE == null) {
-            sender.sendMessage(ChatColor.RED + "CustomCrafting is not enabled!");
-            return;
-        }
-
-        if (!(sender instanceof Player)) return;
-        CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
-
-        String name = context.getString(0);
-        RecipeType type = RecipeType.getTypeFromName(context.getString(1));
+        RecipeType type = RecipeType.getTypeFromName(recipeType);
         HashMap<String, Object> advancedData = new HashMap<>();
 
-        if (context.hasFlag('p')) {
-            advancedData.put("permission-node", context.getFlag('p'));
+        if (permissionNode != null) {
+            advancedData.put("permission-node", permissionNode);
         }
 
-        ItemStack[] slots = new ItemStack[]{((Player) sender).getInventory().getItem(9),((Player) sender).getInventory().getItem(10),
-                ((Player) sender).getInventory().getItem(11),((Player) sender).getInventory().getItem(18),((Player) sender).getInventory().getItem(19),
-                ((Player) sender).getInventory().getItem(20),((Player) sender).getInventory().getItem(27),((Player) sender).getInventory().getItem(28),
-                ((Player) sender).getInventory().getItem(29)};
+        ItemStack[] slots = new ItemStack[]{bukkitPlayer.getInventory().getItem(9), bukkitPlayer.getInventory().getItem(10),
+                bukkitPlayer.getInventory().getItem(11), bukkitPlayer.getInventory().getItem(18), bukkitPlayer.getInventory().getItem(19),
+                bukkitPlayer.getInventory().getItem(20), bukkitPlayer.getInventory().getItem(27), bukkitPlayer.getInventory().getItem(28),
+                bukkitPlayer.getInventory().getItem(29)};
 
         if(type == RecipeType.SHAPED) {
 
@@ -155,7 +156,7 @@ public class RecipeCommands {
                 }
             }
 
-            List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
+            List<CraftingItemStack> results = getResults(bukkitPlayer.getInventory());
             if(results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
             else if (results.isEmpty()) {
@@ -202,7 +203,7 @@ public class RecipeCommands {
                     ingredients.add(stack);
             }
 
-            List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
+            List<CraftingItemStack> results = getResults(bukkitPlayer.getInventory());
             if(results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
             else if (results.isEmpty()) {

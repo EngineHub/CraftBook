@@ -27,7 +27,7 @@ public class ExternalUtilityManager {
     private ExternalUtilityManager() {
     }
 
-    public static void performExternalUtility(String name, String[] args) throws Exception {
+    public static void performExternalUtility(String name) throws Exception {
 
         URL[] url = new URL[3];
         /*url[0] = new URL("file://" + CraftBookPlugin.inst().getDataFolder().getAbsolutePath() + "/");
@@ -42,7 +42,7 @@ public class ExternalUtilityManager {
         URLClassLoader loader = new URLClassLoader(url, CraftBookPlugin.class.getClassLoader());
         Class<?> base = loader.loadClass(name);
         if(ExternalUtilityBase.class.isAssignableFrom(base))
-            base.getConstructors()[0].newInstance(new Object[]{args});
+            base.getConstructors()[0].newInstance(new Object[]{new String[]{}});
         else
             throw new ClassNotFoundException("Class found, but was wrong type!");
     }

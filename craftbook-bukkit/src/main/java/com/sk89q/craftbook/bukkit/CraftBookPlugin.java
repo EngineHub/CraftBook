@@ -202,13 +202,13 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Initializing Permission!", "startup");
         PermissionsResolverManager.initialize(this);
 
-        // Register command classes
-        logDebugMessage("Initializing Commands!", "startup");
-        commandManager.registerCommandsWith(this);
-
         // Let's start the show
         setupCraftBook();
         registerGlobalEvents();
+
+        // Register command classes
+        logDebugMessage("Initializing Commands!", "startup");
+        commandManager.registerCommandsWith(this);
 
         getServer().getPluginManager().registerEvents(new Listener() {
 

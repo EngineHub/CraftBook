@@ -19,7 +19,9 @@ package com.sk89q.craftbook.mechanics.headdrops;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.area.AreaCommands;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -57,6 +59,15 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     public boolean enable() {
 
         instance = this;
+
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+                "headdrops",
+                Lists.newArrayList(),
+                "CraftBook HeadDrops Commands",
+                HeadDropsCommands::register
+        );
+
         return true;
     }
 

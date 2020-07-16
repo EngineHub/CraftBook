@@ -23,8 +23,11 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.report.GlobalConfigReport;
 import com.sk89q.craftbook.bukkit.report.LoadedICsReport;
 import com.sk89q.craftbook.bukkit.report.MechanicReport;
+import com.sk89q.craftbook.core.mechanic.MechanicCommands;
 import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
 import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -48,6 +51,7 @@ import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
 import org.enginehub.piston.annotation.param.Switch;
 import org.enginehub.piston.part.SubCommandPart;
 
@@ -71,18 +75,14 @@ public class CraftBookCommands {
                     new CraftBookCommands()
             );
 
+            MechanicCommands.register(service, manager, registration);
+
             builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
                     .withCommands(manager.getAllCommands().collect(Collectors.toList()))
                     .required()
                     .build());
         });
     }
-//
-//    @Command(aliases = {"var"}, desc = "Variable commands")
-//    @NestedCommand(VariableCommands.class)
-//    public void variableCmds(CommandContext context, CommandSender sender) {
-//
-//    }
 
     @Command(name = "reload", desc = "Reloads the CraftBook Common config")
     @CommandPermissions("craftbook.reload")
@@ -163,59 +163,18 @@ public class CraftBookCommands {
         }
     }
 
-//    @Command(aliases = {"dev"}, desc = "Advanced developer commands")
-//    @CommandPermissions({"craftbook.developer"})
-//    public void dev(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
-//
-//        if(args.argsLength() > 1 && args.getString(0).equalsIgnoreCase("util")) {
-//            try {
-//                ExternalUtilityManager.performExternalUtility(args.getString(1), args.getSlice(1));
-//                sender.sendMessage(ChatColor.YELLOW + "Performed utility successfully!");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                sender.sendMessage(ChatColor.RED + "Failed to perform utility: See console for details!");
-//            }
-//        }
-//    }
-//
-//    @Command(aliases = {"mech", "mechs", "mechanic", "mechanics"}, desc = "Mechanic commands")
-//    @NestedCommand(MechanicCommands.class)
-//    public void mechanicCmds(CommandContext context, CommandSender sender) {
-//
-//    }
+    @Command(name = "dev", desc = "Advanced developer commands")
+    @CommandPermissions({"craftbook.developer"})
+    public void dev(Actor actor, @Arg(desc = "The class to run") String className) throws CommandPermissionsException {
+        try {
+            ExternalUtilityManager.performExternalUtility(className);
+            actor.print("Performed utility successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            actor.printError("Failed to perform utility: See console for details!");
+        }
+    }
 
-//    @Command(aliases = {"area", "togglearea"}, desc = "Commands to manage Craftbook Areas")
-//    @NestedCommand(AreaCommands.class)
-//    public void area(CommandContext context, CommandSender sender) {
-//    }
-//
-//    @Command(aliases = {"headdrops"}, desc = "Commands to manage Craftbook Head Drops")
-//    @NestedCommand(HeadDropsCommands.class)
-//    public void headdrops(CommandContext context, CommandSender sender) {
-//    }
-//
-//    @Command(aliases = {"recp", "recps"}, desc = "Commands to manage Craftbook Custom Recipes")
-//    @NestedCommand(RecipeCommands.class)
-//    public void recipe(CommandContext context, CommandSender sender) {
-//
-//    }
-//
-//    @Command(aliases = {"comitems", "commanditems", "citems", "commanditem"}, desc = "Commands to manage Craftbook Command Items")
-//    @NestedCommand(CommandItemCommands.class)
-//    public void commandItems(CommandContext context, CommandSender sender) {
-//    }
-//
-//    @Command(aliases = {"cauldron"}, desc = "Commands to manage the Craftbook Cauldron")
-//    @NestedCommand(CauldronCommands.class)
-//    public void cauldron(CommandContext context, CommandSender sender) {
-//
-//    }
-//
-//    @Command(aliases = {"sign", "signcopy", "signpaste", "signedit"}, desc = "Commands to manage the Sign Copier")
-//    @NestedCommand(SignEditCommands.class)
-//    public void signedit(CommandContext context, CommandSender sender) {
-//    }
-//
 //    @Command(aliases = {"ic", "circuit"}, desc = "Commands to manage Craftbook IC's")
 //    @NestedCommand(ICCommands.class)
 //    public void icCmd(CommandContext context, CommandSender sender) {

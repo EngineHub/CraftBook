@@ -26,8 +26,11 @@ import com.sk89q.bukkit.util.CommandRegistration;
 import com.sk89q.craftbook.bukkit.BukkitCommandInspector;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.CraftBookCommands;
+import com.sk89q.craftbook.core.command.argument.WorldConverter;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.argument.Arguments;
+import com.sk89q.craftbook.core.command.argument.RegistryConverter;
+import com.sk89q.worldedit.command.argument.VectorConverter;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandArgParser;
@@ -100,6 +103,10 @@ public class PlatformCommandManager {
     }
 
     private void registerArgumentConverters() {
+        RegistryConverter.register(commandManager);
+        com.sk89q.worldedit.command.argument.RegistryConverter.register(commandManager);
+        VectorConverter.register(commandManager);
+        WorldConverter.register(commandManager);
     }
 
     private void registerCoreCommands() {
