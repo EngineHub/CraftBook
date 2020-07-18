@@ -93,7 +93,7 @@ allprojects {
     }
 
     dependencies {
-        compile 'org.bukkit:bukkit:1.16.1-R0.1-SNAPSHOT'
+        compile 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
         compile 'com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT'
         compile 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
         compile 'com.sk89q.worldguard:worldguard-core:7.0.0-SNAPSHOT'
