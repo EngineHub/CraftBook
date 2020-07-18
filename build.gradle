@@ -63,8 +63,8 @@ allprojects {
             url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
         }
         maven {
-            name = 'sk89q-repo'
-            url = 'http://maven.sk89q.com/repo/'
+            name = 'enginehub-repo'
+            url = 'https://maven.enginehub.org/repo/'
         }
         maven {
             name = 'md_5-rep'
@@ -75,12 +75,8 @@ allprojects {
             url = 'https://jitpack.io'
         }
 		maven {
-            name = 'Gravity Repo'
-            url = 'http://repo.gravitydevelopment.net/'
-        }
-		maven {
             name = 'Dmulloy2 Repo'
-            url = 'http://repo.dmulloy2.net/content/groups/public/'
+            url = 'https://repo.dmulloy2.net/nexus/repository/public/'
         }
         maven {
             name = 'Destroystokyo Repo'
