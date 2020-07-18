@@ -272,7 +272,7 @@ public final class EntityUtil {
                     ((ThrownExpBottle) ent).setBounce(true);
                 }
                 break;
-            case PIG_ZOMBIE:
+            case ZOMBIFIED_PIGLIN:
                 if (data[0].equalsIgnoreCase("angry")) {
                     ((PigZombie) ent).setAngry(true);
                 }

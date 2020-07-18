@@ -240,7 +240,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         OCELOT("MHF_Ocelot", "scraftbrothers3"),
         PARROT("MHF_Parrot"),
         PIG("MHF_Pig", "XlexerX"),
-        PIG_ZOMBIE("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
+        ZOMBIFIED_PIGLIN("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
         POLAR_BEAR("Polar_Bear", "ice_bear", "_DmacK_"),
         RABBIT("MHF_Rabbit", "rabbit2077"),
         SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
