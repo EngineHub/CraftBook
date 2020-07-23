@@ -50,7 +50,7 @@ import javax.annotation.Nullable;
 public class VariableManager extends AbstractCraftBookMechanic {
 
     public static final Pattern ALLOWED_VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9_]+");
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9_]+)\\|)?([a-zA-Z0-9_]+)%");
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9_\\-]+)\\|)?([a-zA-Z0-9_]+)%");
     protected static final Pattern DIRECT_VARIABLE_PATTERN = Pattern.compile("^(?:([a-zA-Z0-9_\\-]+)\\|)?([a-zA-Z0-9_]+)$");
 
     public static final String GLOBAL_NAMESPACE = "global";
