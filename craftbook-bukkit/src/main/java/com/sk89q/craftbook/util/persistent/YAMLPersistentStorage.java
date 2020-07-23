@@ -16,15 +16,14 @@
 
 package com.sk89q.craftbook.util.persistent;
 
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class YAMLPersistentStorage extends PersistentStorage {
 
@@ -33,7 +32,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public void open () {
 
-        CraftBookPlugin.logger().info("Loading persistent data from YAML!");
+        CraftBookPlugin.logger.info("Loading persistent data from YAML!");
 
         File oldFile = new File(CraftBookPlugin.inst().getDataFolder(), "persistance.yml");
         if(oldFile.exists()) {
@@ -54,18 +53,18 @@ public class YAMLPersistentStorage extends PersistentStorage {
             processor.load();
         } catch (Throwable e) {
             e.printStackTrace();
-            CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
+            CraftBookPlugin.logger.warn("Persistent Data Corrupt! Data will be reset!");
         }
 
         if(getVersion() != getCurrentVersion()) { //Convert.
-            CraftBookPlugin.logger().info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
+            CraftBookPlugin.logger.info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
             convertVersion(getCurrentVersion());
             processor.clear();
             try {
                 processor.load();
             } catch (Exception e) {
                 e.printStackTrace();
-                CraftBookPlugin.logger().warning("Persistent Data Corrupt! Data will be reset!");
+                CraftBookPlugin.logger.warn("Persistent Data Corrupt! Data will be reset!");
             }
         }
     }
@@ -73,7 +72,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public void close () {
 
-        CraftBookPlugin.logger().info("Saving persistent data to YAML!");
+        CraftBookPlugin.logger.info("Saving persistent data to YAML!");
 
         processor.save();
         processor.clear();

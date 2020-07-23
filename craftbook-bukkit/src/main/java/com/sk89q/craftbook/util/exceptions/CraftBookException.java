@@ -32,28 +32,43 @@
 
 package com.sk89q.craftbook.util.exceptions;
 
+import com.sk89q.craftbook.util.TextUtil;
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+
+import java.util.Locale;
+
 /**
  * Parent type for all exceptions specific to CraftBook.
- *
- * @author hash
  */
-public class CraftbookException extends Exception {
+public class CraftBookException extends Exception {
 
-    private static final long serialVersionUID = -2562837738752646780L;
+    private final Component message;
 
-    public CraftbookException() {
+    protected CraftBookException() {
         super();
+
+        this.message = null;
     }
 
-    public CraftbookException(String message, Throwable cause) {
-        super(message, cause);
+    public CraftBookException(Component message, Throwable cause) {
+        super(TextUtil.reduceToText(message, Locale.getDefault()), cause);
+
+        this.message = message;
     }
 
-    public CraftbookException(String message) {
-        super(message);
+    @Deprecated
+    public CraftBookException(String message) {
+        this(TextComponent.of(message));
     }
 
-    public CraftbookException(Throwable cause) {
-        super(cause);
+    public CraftBookException(Component message) {
+        super(TextUtil.reduceToText(message, Locale.getDefault()));
+
+        this.message = message;
+    }
+
+    public Component getRichMessage() {
+        return message;
     }
 }

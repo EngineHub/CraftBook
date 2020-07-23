@@ -61,6 +61,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,11 +72,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CraftBookPlugin extends JavaPlugin {
+
+    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(CraftBookPlugin.class);
 
     /**
      * Companion Plugins for CraftBook.
@@ -176,13 +177,13 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Load the configuration
         createDefaultConfiguration("config.yml");
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
+        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED));
 
         try {
             config.load();
         } catch (Throwable e) {
-            getLogger().log(Level.SEVERE, "Failed to load CraftBook Configuration File! Is it corrupt?", e);
-            getLogger().severe("Disabling CraftBook due to invalid Configuration File!");
+            logger.error("Failed to load CraftBook Configuration File! Is it corrupt?", e);
+            logger.error("Disabling CraftBook due to invalid Configuration File!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -376,22 +377,13 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * This retrieves the CraftBookPlugin logger.
-     *
-     * @return Returns the CraftBookPlugin {@link Logger}
-     */
-    public static Logger logger() {
-        return inst().getLogger();
-    }
-
-    /**
      * Setup the required components of self-triggered Mechanics.
      */
     private void setupSelfTriggered() {
         mechanicClock = new MechanicClock();
         selfTriggerManager = new SelfTriggeringManager();
 
-        getLogger().info("Enumerating chunks for self-triggered components...");
+        logger.info("Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
         int numChunks = 0;
@@ -406,7 +398,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        getLogger().info(numChunks + " chunk(s) for " + getServer().getWorlds().size() + " world(s) processed " + "(" + time + "ms elapsed)");
+        logger.info(numChunks + " chunk(s) for " + getServer().getWorlds().size() + " world(s) processed " + "(" + time + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
@@ -661,7 +653,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 if (stream == null) throw new FileNotFoundException();
                 copyDefaultConfig(stream, actual, name);
             } catch (IOException e) {
-                getLogger().severe("Unable to read default configuration: " + name);
+                logger.error("Unable to read default configuration: " + name);
             }
         }
     }
@@ -674,9 +666,9 @@ public class CraftBookPlugin extends JavaPlugin {
                 output.write(buf, 0, length);
             }
 
-            getLogger().info("Default configuration file written: " + name);
+            logger.info("Default configuration file written: " + name);
         } catch (IOException e) {
-            getLogger().log(Level.WARNING, "Failed to write default config file", e);
+            logger.warn("Failed to write default config file", e);
         }
     }
 
@@ -717,7 +709,7 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
         }
 
-        logger().info("[Debug][" + code + "] " + message);
+        logger.info("[Debug][" + code + "] " + message);
 
         if (CraftBookPlugin.inst().config.debugLogToFile) {
             debugLogger.println("[" + code + "] " + message);

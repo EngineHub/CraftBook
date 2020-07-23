@@ -53,9 +53,4 @@ public class ICVerificationException extends InvalidMechanismException {
         super(msg);
     }
 
-    public ICVerificationException(Throwable throwable) {
-
-        super(throwable);
-    }
-
 }

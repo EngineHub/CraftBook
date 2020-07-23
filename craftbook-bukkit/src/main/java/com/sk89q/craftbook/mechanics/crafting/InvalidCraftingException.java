@@ -16,9 +16,9 @@
 
 package com.sk89q.craftbook.mechanics.crafting;
 
-import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 
-public class InvalidCraftingException extends CraftbookException {
+public class InvalidCraftingException extends CraftBookException {
 
     /**
      * 

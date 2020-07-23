@@ -140,7 +140,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public void set (String location, Object data) {
 
         if(!(data instanceof Serializable) && !(data instanceof ConfigurationSerializable)) {
-            CraftBookPlugin.logger().warning("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
+            CraftBookPlugin.logger.warn("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
             return;
         }
 

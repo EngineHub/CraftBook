@@ -87,8 +87,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         try {
             handler = new FireworkShowHandler(show);
         } catch (IOException e) {
-            CraftBookPlugin.logger().severe("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString());
-            e.printStackTrace();
+            CraftBookPlugin.logger.error("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString(), e);
         }
 
         String[] bits = RegexUtil.COMMA_PATTERN.split(getLine(3));
@@ -483,8 +482,8 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
-                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + showName + "!");
-                            e.printStackTrace();
+                            CraftBookPlugin.logger.error("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of "
+                                    + "the firework file " + showName + "!", e);
                         }
                     }
                 }

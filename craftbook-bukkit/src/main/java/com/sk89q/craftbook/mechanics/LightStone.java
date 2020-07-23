@@ -90,7 +90,7 @@ public class LightStone extends AbstractCraftBookMechanic {
 
         block = event.getClickedBlock().getRelative(event.getBlockFace());
         Component component = TranslatableComponent
-                .of("craftbook.mech.lightstone.line",
+                .of("craftbook.lightstone.line",
                         getCurrentLine(block.getLightLevel()),
                         TextComponent.of(block.getLightLevel(), TextColor.YELLOW))
                 .color(TextColor.YELLOW);

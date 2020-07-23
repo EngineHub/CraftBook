@@ -94,7 +94,7 @@ public class BlockSyntax {
                 blockState = LegacyMapper.getInstance().getBlockFromLegacy(BukkitAdapter.asBlockType(material).getLegacyId(), data).toBaseBlock();
             }
             if (material == null) {
-                CraftBookPlugin.logger().warning("Invalid block format: " + line);
+                CraftBookPlugin.logger.warn("Invalid block format: " + line);
                 knownBadLines.add(line);
             }
         }

@@ -196,7 +196,7 @@ public class Door extends CuboidToggleMechanic {
 
     public boolean flipState(Block trigger, CraftBookPlayer player) throws InvalidMechanismException {
 
-        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException();
+        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException("");
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
 

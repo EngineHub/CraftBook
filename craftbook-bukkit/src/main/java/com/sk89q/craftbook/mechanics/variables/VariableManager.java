@@ -16,57 +16,68 @@
 
 package com.sk89q.craftbook.mechanics.variables;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.*;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.craftbook.util.profile.Profile;
-import com.sk89q.craftbook.util.profile.resolver.HttpRepositoryService;
-import com.sk89q.craftbook.util.profile.resolver.ProfileService;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import com.sk89q.worldedit.extension.platform.Actor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 public class VariableManager extends AbstractCraftBookMechanic {
 
-    private VariableConfiguration variableConfiguration;
+    public static final Pattern ALLOWED_VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9_]+");
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9_]+)\\|)?([a-zA-Z0-9_]+)%");
+    protected static final Pattern DIRECT_VARIABLE_PATTERN = Pattern.compile("^(?:([a-zA-Z0-9_\\-]+)\\|)?([a-zA-Z0-9_]+)$");
+
+    public static final String GLOBAL_NAMESPACE = "global";
 
     public static VariableManager instance;
 
-    /**
-     * Stores the variables used in VariableStore ((Variable, Namespace), Value).
-     */
-    private HashMap<Tuple2<String, String>, String> variableStore;
+    private VariableConfiguration variableConfiguration;
+
+    private Map<String, Map<String, String>> variableStore;
 
     @Override
     public boolean enable() {
-
         instance = this;
-        variableStore = new HashMap<>();
+
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
+        variableStore = new ConcurrentHashMap<>();
 
         try {
             File varFile = new File(CraftBookPlugin.inst().getDataFolder(), "variables.yml");
-            if(!varFile.exists())
+            if (!varFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 varFile.createNewFile();
-            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+            }
+            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED));
             variableConfiguration.load();
-        } catch(Exception ignored){
-            ignored.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -83,7 +94,6 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
-
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.unregisterTopLevel("variables");
         registrar.unregisterTopLevel("var");
@@ -94,143 +104,173 @@ public class VariableManager extends AbstractCraftBookMechanic {
             variableConfiguration.save();
             variableConfiguration = null;
         }
+
         variableStore.clear();
         instance = null;
     }
 
-    public boolean hasVariable(String variable, String namespace) {
+    /**
+     * Gets whether a variable is set.
+     *
+     * @param key The variable key
+     * @return If the variable exists
+     */
+    public boolean hasVariable(VariableKey key) {
+        checkNotNull(key);
 
-        return variableStore.containsKey(new Tuple2<>(variable, namespace));
-    }
-
-    public String getVariable(String variable, String namespace) {
-
-        return variableStore.get(new Tuple2<>(variable, namespace));
-    }
-
-    public String setVariable(String variable, String namespace, String value) {
-
-        return variableStore.put(new Tuple2<>(variable, namespace), value);
-    }
-
-    public String removeVariable(String variable, String namespace) {
-
-        return variableStore.remove(new Tuple2<>(variable, namespace));
-    }
-
-    public HashMap<Tuple2<String, String>, String> getVariableStore() {
-
-        return variableStore;
+        Map<String, String> namespacedVariables = this.variableStore.getOrDefault(key.getNamespace(), ImmutableMap.of());
+        return namespacedVariables.containsKey(key.getVariable());
     }
 
     /**
-     * Grabs the namespace off a variable. Returns global if none.
-     * 
-     * @param variable The variable
-     * @return The namespace or global.
+     * Gets the value of a variable, with the given namespace.
+     *
+     * @param key The variable key
+     * @return The value, or null if unset
      */
-    public static String getNamespace(String variable) {
+    @Nullable
+    public String getVariable(VariableKey key) {
+        checkNotNull(key);
 
-        if(variable.contains("|")) {
-            String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
-            if(bits.length < 2) return "global";
-            return bits[0];
-        } else {
-            return "global";
+        Map<String, String> namespacedVariables = this.variableStore.getOrDefault(key.getNamespace(), ImmutableMap.of());
+        return namespacedVariables.get(key.getVariable());
+    }
+
+    /**
+     * Sets the value of a variable, with the given namespace.
+     * 
+     * <p>
+     *     To remove variables, use {@link VariableManager#removeVariable(VariableKey)}.
+     * </p>
+     *
+     * @param key The variable key
+     * @param value The value to set
+     */
+    public void setVariable(VariableKey key, String value) {
+        checkNotNull(key);
+        checkNotNull(value);
+
+        Map<String, String> namespacedVariables = this.variableStore.computeIfAbsent(key.getNamespace(), s -> Maps.newHashMap());
+        namespacedVariables.put(key.getVariable(), value);
+        resetICCache(key);
+    }
+
+    /**
+     * Removes a variable, with the given namespace.
+     *
+     * @param key The variable key
+     */
+    public void removeVariable(VariableKey key) {
+        checkNotNull(key);
+
+        Map<String, String> namespacedVariables = this.variableStore.get(key.getNamespace());
+        if (namespacedVariables != null) {
+            namespacedVariables.remove(key.getVariable());
+            resetICCache(key);
+        }
+    }
+
+    private void resetICCache(VariableKey variableKey) {
+        // TODO Revisit once doing ICs
+        if (ICManager.inst() != null) { //Make sure IC's are enabled.
+            ICManager.getCachedICs().entrySet()
+                    .removeIf(ic -> ic.getValue().getSign().hasVariable(variableKey.toString())
+                            || ic.getValue().getSign().hasVariable(variableKey.getVariable()));
         }
     }
 
     /**
-     * Grabs the variable name off a variable.
-     * 
-     * @param variable The variable
-     * @return The name.
+     * Gets an immutable copy of the current variable store.
+     *
+     * @return The variable store
      */
-    public static String getVariableName(String variable) {
+    public Map<String, Map<String, String>> getVariableStore() {
+        return ImmutableMap.copyOf(this.variableStore);
+    }
 
-        if(variable.contains("|")) {
-            String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
-            if(bits.length < 2) return variable;
-            return bits[1];
-        } else {
-            return variable;
+    public static Collection<VariableKey> getPossibleVariables(String line, @Nullable Actor actor) {
+        if (!line.contains("%")) {
+            return ImmutableList.of();
         }
+
+        Set<VariableKey> variables = new HashSet<>();
+
+        Matcher matcher = VARIABLE_PATTERN.matcher(line);
+
+        while (matcher.find()) {
+            String namespace = matcher.group(1);
+            String key = matcher.group(2);
+            try {
+                variables.add(VariableKey.of(namespace, key, actor));
+            } catch (VariableException ignored) {
+                // We can ignore this, it wasn't a valid match.
+            }
+        }
+
+        return variables;
     }
 
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
+    public static String renderVariables(String line, @Nullable Actor actor) {
+        checkNotNull(line);
 
-        if(playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
-            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
-    }
+        for (VariableKey possibleVariable : getPossibleVariables(line, actor)) {
+            CraftBookPlugin.logDebugMessage("Possible variable: (" + possibleVariable.toString() + ") detected!", "variables.line-parsing");
 
-    @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
-        if(playerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
-            event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
-    }
-
-    @EventHandler
-    public void onConsoleCommandPreprocess(ServerCommandEvent event) {
-
-        if(consoleOverride)
-            event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
-    }
-
-    @EventHandler
-    public void onSelfTriggerPing(SelfTriggerPingEvent event) {
-
-        if(!CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) return;
-        if(SignUtil.isSign(event.getBlock())) {
-
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
-
-            int i = 0;
-
-            for(String line : sign.getLines()) {
-                for(String var : ParsingUtil.getPossibleVariables(line)) {
-                    String namespace = getNamespace(var);
-                    if(namespace == null || namespace.isEmpty() || namespace.equals("global")) continue;
-                    if(CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace) != null) continue;
-                    OfflinePlayer player = Bukkit.getOfflinePlayer(namespace);
-                    if(player.hasPlayedBefore()) {
-                        try {
-                            ProfileService resolver = HttpRepositoryService.forMinecraft();
-                            Profile profile = resolver.findByName(player.getName()); // May be null
-
-                            UUID uuid = profile.getUniqueId();
-                            line = StringUtils.replace(line, var, var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid)));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+            if (actor != null) {
+                if (!possibleVariable.hasPermission(actor, "use")) {
+                    continue;
                 }
-                sign.setLine(i++, line);
             }
 
-            sign.update(false);
+            CraftBookPlugin.logDebugMessage(possibleVariable.toString() + " permissions granted!", "variables.line-parsing");
+
+            String value = instance.getVariable(possibleVariable);
+            if (value != null) {
+                line = line.replace("%" + possibleVariable.getOriginalForm() + "%", value);
+            }
+        }
+
+        return line.replace("\\%", "%");
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if (playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat")) {
+            event.setMessage(renderVariables(event.getMessage(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer())));
         }
     }
 
-    boolean defaultToGlobal;
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (playerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands")) {
+            event.setMessage(renderVariables(event.getMessage(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer())));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onConsoleCommandPreprocess(ServerCommandEvent event) {
+        if (consoleOverride) {
+            event.setCommand(renderVariables(event.getCommand(), null));
+        }
+    }
+
+    protected boolean defaultToGlobal;
     private boolean consoleOverride;
     private boolean playerCommandOverride;
     private boolean playerChatOverride;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
+        config.setComment("default-to-global", "Whether to default to global or the player's namespace when no namespace is provided");
         defaultToGlobal = config.getBoolean("default-to-global", false);
 
-        config.setComment("enable-in-console", "Allows variables to work on the Console.");
+        config.setComment("enable-in-console", "Allows variables to work when used in console commands");
         consoleOverride = config.getBoolean("enable-in-console", false);
 
-        config.setComment("enable-in-player-commands", "Allows variables to work in any command a player performs.");
+        config.setComment("enable-in-player-commands", "Allows variables to work when used in player commands");
         playerCommandOverride = config.getBoolean("enable-in-player-commands", false);
 
-        config.setComment("enable-in-player-chat", "Allow variables to work in player chat.");
+        config.setComment("enable-in-player-chat", "Allows variables to work when used in chat");
         playerChatOverride = config.getBoolean("enable-in-player-chat", false);
     }
 

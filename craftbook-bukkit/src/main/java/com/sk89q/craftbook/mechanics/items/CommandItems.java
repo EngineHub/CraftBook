@@ -24,6 +24,7 @@ import com.sk89q.craftbook.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -143,8 +144,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger().severe("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
-            e.printStackTrace();
+            CraftBookPlugin.logger.error("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
+                    + "are no tabs!", e);
             return false;
         }
 
@@ -157,14 +158,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
             } else
-                CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
+                CraftBookPlugin.logger.warn("Failed to add CommandItem: " + key);
         }
 
         if(amount == 0) return false;
 
         config.save();
 
-        CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
+        CraftBookPlugin.logger.info("Successfully added " + amount + " CommandItems!");
 
         if(definitions.size() > 0) {
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
@@ -449,8 +450,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
                 for (CommandItemAction action : comdef.actions) {
                     if (action.stage == ActionRunStage.BEFORE) {
-                        if (!action.runAction(comdef, event, player)) {
-                            break current;
+                        try {
+                            if (!action.runAction(comdef, event, player)) {
+                                break current;
+                            }
+                        } catch (VariableException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -542,8 +547,13 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     doCommand(command, event, comdef, player);
 
                 for(CommandItemAction action : comdef.actions)
-                    if(action.stage == ActionRunStage.AFTER)
-                        action.runAction(comdef, event, player);
+                    if(action.stage == ActionRunStage.AFTER) {
+                        try {
+                            action.runAction(comdef, event, player);
+                        } catch (VariableException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
                 if(comdef.cooldown > 0 && !lplayer.hasPermission("craftbook.mech.commanditems.bypasscooldown"))
                     cooldownPeriods.put(new Tuple2<>(lplayer.getName(), comdef.name), comdef.cooldown);
@@ -660,8 +670,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(event instanceof AsyncPlayerChatEvent && command.contains("@m"))
             command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
 
-        command = ParsingUtil.parsePlayerTags(command, player);
-        command = ParsingUtil.parseVariables(command, null);
+        command = ParsingUtil.parseLine(command, player);
 
         return command;
     }

@@ -14,36 +14,31 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.exceptions;
+package com.sk89q.craftbook.mechanics.variables.exception;
 
-import com.sk89q.craftbook.core.mechanic.MechanicType;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**
- * This exception is thrown when a CraftBook mechanism fails to initialize.
+ * Refers to an error relating to variables or variable usage.
  */
-public class MechanicInitializationException extends CraftBookException {
+public class VariableException extends CraftBookException {
 
-    private final MechanicType<?> mechanicType;
+    private final VariableKey variableKey;
 
-    public MechanicInitializationException(MechanicType<?> mechanicType, Component message) {
+    public VariableException(Component message, VariableKey variableKey) {
         super(message);
 
-        this.mechanicType = mechanicType;
-    }
-
-    public MechanicInitializationException(MechanicType<?> mechanicType, Component message, Throwable cause) {
-        super(message, cause);
-
-        this.mechanicType = mechanicType;
+        this.variableKey = variableKey;
     }
 
     /**
-     * Get the mechanic type that failed to initialize.
+     * Gets the variable key.
      *
-     * @return The mechanic type
+     * @return
      */
-    public MechanicType<?> getMechanicType() {
-        return this.mechanicType;
+    public VariableKey getVariableKey() {
+        return this.variableKey;
     }
 }

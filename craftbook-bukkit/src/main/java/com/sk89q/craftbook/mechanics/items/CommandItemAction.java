@@ -16,14 +16,16 @@
 
 package com.sk89q.craftbook.mechanics.items;
 
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
+import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
+import com.sk89q.craftbook.util.RegexUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-
-import com.sk89q.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.util.RegexUtil;
 
 /**
  * An action that can be performed by a {@link CommandItemDefinition}
@@ -72,26 +74,25 @@ public class CommandItemAction {
      * 
      * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link CommandItemDefinition} to not run.
      */
-    public boolean runAction(CommandItemDefinition definition, Event event, Player player) {
+    public boolean runAction(CommandItemDefinition definition, Event event, Player player) throws VariableException {
 
         String newVal = CommandItems.parseLine(value, event, player);
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
 
         switch(type) {
             case SETVAR:
                 String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
-                String snamespace = VariableManager.getNamespace(svarParts[0]);
-                String svar = VariableManager.getVariableName(svarParts[0]);
-                VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
+                VariableKey sVariableKey = VariableKey.fromString(svarParts[0], localPlayer);
+                VariableManager.instance.setVariable(sVariableKey, svarParts[1]);
                 return true;
             case MATHVAR:
                 String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
-                String mnamespace = VariableManager.getNamespace(mvarParts[0]);
-                String mvar = VariableManager.getVariableName(mvarParts[0]);
+                VariableKey mVariableKey = VariableKey.fromString(mvarParts[0], localPlayer);
 
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
 
-                String cur = VariableManager.instance.getVariable(mvar,mnamespace);
+                String cur = VariableManager.instance.getVariable(mVariableKey);
                 if(cur == null || cur.isEmpty()) cur = "0";
 
                 double currentValue = Double.parseDouble(cur);
@@ -103,39 +104,36 @@ public class CommandItemAction {
                 if (val.endsWith(".0"))
                     val = StringUtils.replace(val, ".0", "");
 
-                VariableManager.instance.setVariable(mvar, mnamespace, val);
+                VariableManager.instance.setVariable(mVariableKey, val);
                 return true;
             case ISVAR: {
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
-                String isnamespace = VariableManager.getNamespace(isparts[0]);
-                String isvar = VariableManager.getVariableName(isparts[0]);
-                return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
+                VariableKey isVariableKey = VariableKey.fromString(isparts[0], localPlayer);
+                return VariableManager.instance.getVariable(isVariableKey).equals(isparts[1]);
             }
             case GREATERVAR: {
                 String[] isparts = RegexUtil.GREATER_THAN_PATTERN.split(newVal, 2);
-                String isnamespace = VariableManager.getNamespace(isparts[0]);
-                String isvar = VariableManager.getVariableName(isparts[0]);
+                VariableKey isVariableKey = VariableKey.fromString(isparts[0], localPlayer);
                 double variable = 0;
                 double test = 0;
                 try {
-                    variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
+                    variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch(NumberFormatException e) {
-                    CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
+                    CraftBookPlugin.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable > test;
             }
             case LESSVAR: {
                 String[] isparts = RegexUtil.LESS_THAN_PATTERN.split(newVal, 2);
-                String isnamespace = VariableManager.getNamespace(isparts[0]);
-                String isvar = VariableManager.getVariableName(isparts[0]);
+                VariableKey isVariableKey = VariableKey.fromString(isparts[0], localPlayer);
                 double variable = 0;
                 double test = 0;
                 try {
-                    variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
+                    variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch(NumberFormatException e) {
-                    CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
+                    CraftBookPlugin.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable < test;
             }

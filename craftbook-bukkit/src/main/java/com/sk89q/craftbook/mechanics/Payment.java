@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -42,9 +43,9 @@ import com.sk89q.util.yaml.YAMLProcessor;
 public class Payment extends AbstractCraftBookMechanic {
 
     @Override
-    public boolean enable() {
+    public boolean enable() throws MechanicInitializationException {
         if (CraftBookPlugin.plugins.getEconomy() == null) {
-            CraftBookPlugin.inst().getLogger().warning("An economy plugin and Vault is required for the Payment mechanic!");
+            CraftBookPlugin.logger.warn("An economy plugin and Vault is required for the Payment mechanic!");
             return false;
         }
         return super.enable();

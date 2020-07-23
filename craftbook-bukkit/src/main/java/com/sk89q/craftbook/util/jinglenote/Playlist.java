@@ -17,7 +17,6 @@
 package com.sk89q.craftbook.util.jinglenote;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.util.SearchArea;
 import org.apache.commons.lang.StringUtils;
@@ -69,7 +68,7 @@ public class Playlist {
         lines.clear();
         File file = new File(new File(ICManager.inst().getMidiFolder(), "playlists"), playlist + ".txt");
         if(!file.exists()) {
-            CraftBookPlugin.logger().severe("Playlist File Not Found! " + file.getName());
+            CraftBookPlugin.logger.error("Playlist File Not Found! " + file.getName());
             return;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -204,7 +203,7 @@ public class Playlist {
                 if(sequencer != null) continue; //Don't continue until they've closed.
 
                 if(position >= lines.size()) {
-                    CraftBookPlugin.inst().getLogger().warning("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
+                    CraftBookPlugin.logger.warn("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
                     break; //He's dead, Jim
                 }
 
@@ -257,7 +256,7 @@ public class Playlist {
                     }
 
                     if(file == null) {
-                        CraftBookPlugin.inst().getLogger().warning("Failed to find midi file: " + midiName + " for playlist file: " + playlist + ". Skipping midi!");
+                        CraftBookPlugin.logger.warn("Failed to find midi file: " + midiName + " for playlist file: " + playlist + ". Skipping midi!");
                         continue;
                     }
 

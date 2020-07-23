@@ -96,7 +96,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         int data = getSpecialData(block);
         if (data >= 0) {
             Component component = TranslatableComponent
-                    .of("craftbook.mech.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
+                    .of("craftbook.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
                     .color(TextColor.YELLOW);
             if (actionBar) {
                 player.printActionBar(component);

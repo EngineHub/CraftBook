@@ -169,7 +169,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     itemMeta.setOwner(mobName);
                     toDrop.setItemMeta(itemMeta);
                 } else
-                    CraftBookPlugin.logger().warning("Bukkit has failed to set a HeadDrop item to a head!");
+                    CraftBookPlugin.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
                 break;
         }
 

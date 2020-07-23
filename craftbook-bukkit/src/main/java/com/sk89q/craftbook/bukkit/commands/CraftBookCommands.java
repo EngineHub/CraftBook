@@ -26,7 +26,7 @@ import com.sk89q.craftbook.bukkit.report.MechanicReport;
 import com.sk89q.craftbook.core.mechanic.MechanicCommands;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
-import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
@@ -113,18 +113,13 @@ public class CraftBookCommands {
         player.print("Off hand: " + ItemSyntax.getStringFromItem(BukkitAdapter.adapt(player.getItemInHand(HandSide.OFF_HAND))));
     }
 
-    @Command(name = "cbid", aliases = {"craftbookid"}, desc = "Gets the players CBID.")
-    public void cbid(CraftBookPlayer player) {
-        player.print("CraftBook ID: " + player.getCraftBookId());
-    }
-
     @Command(name = "report", desc = "Writes a report on CraftBook")
     @CommandPermissions({"craftbook.report"})
     public void report(Actor actor,
             @Switch(name = 'i', desc = "Include the loaded ICs Report.")
                 boolean loadedIcReport,
             @Switch(name = 'p', desc = "Submit the report to pastebin.")
-                boolean pastebin) throws CraftbookException, AuthorizationException {
+                boolean pastebin) throws CraftBookException, AuthorizationException {
         ReportList report = new ReportList("Report");
 
         report.add(new ServerReport());
@@ -148,7 +143,7 @@ public class CraftBookCommands {
             Files.write(result, dest, StandardCharsets.UTF_8);
             actor.print("CraftBook report written to " + dest.getAbsolutePath());
         } catch (IOException e) {
-            throw new CraftbookException("Failed to write report: " + e.getMessage());
+            throw new CraftBookException("Failed to write report: " + e.getMessage());
         }
 
         if (pastebin) {

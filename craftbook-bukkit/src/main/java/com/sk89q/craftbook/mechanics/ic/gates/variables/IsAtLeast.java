@@ -16,19 +16,19 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.variables;
 
-import org.bukkit.Server;
-
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.mechanics.variables.VariableCommands;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.util.RegexUtil;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
+import org.bukkit.Server;
 
 public class IsAtLeast extends AbstractSelfTriggeredIC {
 
@@ -72,13 +72,16 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
     }
 
     public boolean isAtLeast() {
-        String var,key;
-        var = VariableManager.getVariableName(variable);
-        key = VariableManager.getNamespace(variable);
+        try {
+            VariableKey variableKey = VariableKey.fromString(variable, null);
+            double existing = Double.parseDouble(VariableManager.instance.getVariable(variableKey));
 
-        double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
+            return existing >= amount;
+        } catch (VariableException e) {
+            CraftBookPlugin.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
+        }
 
-        return existing >= amount;
+        return false;
     }
 
     public static class Factory extends AbstractICFactory {
@@ -127,29 +130,28 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
-
-            String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(player, "global", parts[0], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
-            } else
-                if(!VariableCommands.hasVariablePermission(player, parts[0], parts[1], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+            try {
+                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), player);
+                if (variableKey != null && !variableKey.hasPermission(player, "use")) {
+                    throw new ICVerificationException("You do not have permissions to use " + variableKey.toString() + "");
+                }
+            } catch (VariableException e) {
+                throw new ICVerificationException("Can't use this variable", e);
+            }
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-                if(parts.length == 1) {
-                    if(!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
-                        throw new ICVerificationException("Unknown Variable!");
-                } else
-                    if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
-                        throw new ICVerificationException("Unknown Variable!");
+                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), null);
+                if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
+                    throw new ICVerificationException("Unknown Variable!");
+                }
                 Double.parseDouble(sign.getLine(3));
             } catch(NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
+            } catch (VariableException e) {
+                throw new ICVerificationException("Can't use this variable", e);
             }
         }
     }

@@ -23,6 +23,8 @@ import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.core.mechanic.load.LoadComparator;
 import com.sk89q.craftbook.core.mechanic.load.LoadDependency;
+import com.sk89q.craftbook.core.mechanic.load.LoadPriority;
+import com.sk89q.craftbook.core.mechanic.load.MechanicDependency;
 import com.sk89q.craftbook.core.mechanic.load.UnsatisfiedLoadDependencyException;
 import com.sk89q.craftbook.mechanics.AIMechanic;
 import com.sk89q.craftbook.mechanics.BetterLeads;
@@ -87,8 +89,9 @@ import com.sk89q.craftbook.mechanics.minecart.blocks.CartStation;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartTeleporter;
 import com.sk89q.craftbook.mechanics.pipe.Pipes;
 import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 
@@ -114,7 +117,7 @@ public class MechanicManager {
 
     @Deprecated
     private static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
-        CraftBookPlugin.logger().warning("Legacy mechanic registered: " + name);
+        CraftBookPlugin.logger.warn("Legacy mechanic registered: " + name);
         Converter<String, String> camelToSnake = CaseFormat.UPPER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
 
         MechanicType<?> mechanicType = MechanicType.Builder
@@ -133,7 +136,6 @@ public class MechanicManager {
     }
 
     public void setup() {
-        registerMechanic("Variables", VariableManager.class, MechanicCategory.GENERAL);
         registerMechanic("CommandItems", CommandItems.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("CustomCrafting", CustomCrafting.class, MechanicCategory.CUSTOMISATION);
         registerMechanic("DispenserRecipes", DispenserRecipes.class, MechanicCategory.GENERAL);
@@ -204,6 +206,16 @@ public class MechanicManager {
         registerMechanic("LandBoats", LandBoats.class, MechanicCategory.BOAT);
         registerMechanic("BoatExitRemover", com.sk89q.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
         registerMechanic("BoatWaterPlaceOnly", WaterPlaceOnly.class, MechanicCategory.BOAT);
+
+        registerMechanic(MechanicType.Builder
+                .create()
+                .id("variables")
+                .name("Variables")
+                .className("com.sk89q.craftbook.mechanics.variables.VariableManager")
+                .category(MechanicCategory.GENERAL)
+                .loadPriority(LoadPriority.EARLY)
+                .build()
+        );
 
         registerMechanic(MechanicType.Builder
                 .create()
@@ -307,9 +319,9 @@ public class MechanicManager {
                 try {
                     enableMechanic(mechanicType);
                 } catch (UnsatisfiedLoadDependencyException e) {
-                    CraftBookPlugin.logger().warning("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
+                    CraftBookPlugin.logger.warn("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
                 } catch (MechanicInitializationException e) {
-                    CraftBookPlugin.logger().warning("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
+                    CraftBookPlugin.logger.warn("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
                     if (e.getCause() != null) {
                         e.getCause().printStackTrace();
                     }
@@ -330,7 +342,10 @@ public class MechanicManager {
      */
     public void enableMechanic(MechanicType<?> mechanicType) throws MechanicInitializationException {
         if (isMechanicEnabled(mechanicType)) {
-            throw new MechanicInitializationException(mechanicType, "Mechanic " + mechanicType.getId() + " is already enabled.");
+            throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
+                    "craftbook.mechanisms.already-enabled",
+                    TextComponent.of(mechanicType.getId())
+            ));
         }
         try {
             for (LoadDependency dependency : mechanicType.getDependencies()) {
@@ -340,15 +355,24 @@ public class MechanicManager {
             }
             CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
             mech.loadConfiguration(new File(new File(CraftBookPlugin.inst().getDataFolder(), "mechanics"), mechanicType.getName() + ".yml"));
-            loadedMechanics.add(mech);
 
             if (!mech.enable()) {
                 mech.disable();
-                throw new MechanicInitializationException(mechanicType, "An error occurred while enabling");
+                throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
+                        "craftbook.mechanisms.enable-failed",
+                        TextComponent.of(mechanicType.getId())
+                ));
             }
+            loadedMechanics.add(mech);
             Bukkit.getPluginManager().registerEvents(mech, plugin);
+        } catch (MechanicInitializationException e) {
+            // Re-throw
+            throw e;
         } catch (Throwable t) {
-            throw new MechanicInitializationException(mechanicType, "An error occurred while enabling", t);
+            throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
+                    "craftbook.mechanisms.enable-failed",
+                    TextComponent.of(mechanicType.getId())
+            ), t);
         }
     }
 
@@ -361,6 +385,20 @@ public class MechanicManager {
     public boolean disableMechanic(CraftBookMechanic mechanic) {
         if (mechanic == null) {
             return false;
+        }
+
+        MechanicType<?> mechanicType = getMechanicType(mechanic);
+
+        // Unload any dependent mechanics
+        for (CraftBookMechanic enabledMechanic : this.getLoadedMechanics()) {
+            for (LoadDependency dependency : getMechanicType(enabledMechanic).getDependencies()) {
+                if (dependency instanceof MechanicDependency) {
+                    if (((MechanicDependency) dependency).getMechanicType() == mechanicType) {
+                        disableMechanic(enabledMechanic);
+                        break;
+                    }
+                }
+            }
         }
 
         mechanic.disable();

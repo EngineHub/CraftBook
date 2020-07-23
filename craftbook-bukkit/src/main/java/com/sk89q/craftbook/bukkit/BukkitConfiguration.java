@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * A CraftBook implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration}.
@@ -58,12 +57,10 @@ public class BukkitConfiguration {
     public String persistentStorageType;
 
     @Unreported public YAMLProcessor config;
-    @Unreported public Logger logger;
 
-    public BukkitConfiguration(YAMLProcessor config, Logger logger) {
+    public BukkitConfiguration(YAMLProcessor config) {
 
         this.config = config;
-        this.logger = logger;
     }
 
     public void load() {
@@ -71,7 +68,7 @@ public class BukkitConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            logger.severe("Error loading CraftBook configuration: " + e);
+            CraftBookPlugin.logger.error("Error loading CraftBook configuration", e);
             e.printStackTrace();
         }
 

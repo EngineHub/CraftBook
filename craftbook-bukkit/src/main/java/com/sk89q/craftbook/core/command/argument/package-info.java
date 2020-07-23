@@ -14,20 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.core.mechanic.load;
+@NonnullByDefault
+package com.sk89q.craftbook.core.command.argument;
 
-import com.sk89q.craftbook.core.mechanic.MechanicType;
-import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
-
-public class UnsatisfiedLoadDependencyException extends MechanicInitializationException {
-
-    public UnsatisfiedLoadDependencyException(MechanicType<?> mechanicType, LoadDependency dependency) {
-        super(mechanicType, TranslatableComponent.of(
-                "craftbook.mechanisms.missing-dependency",
-                TextComponent.of(dependency.getDependencyId())
-        ));
-    }
-
-}
+import org.enginehub.piston.util.NonnullByDefault;

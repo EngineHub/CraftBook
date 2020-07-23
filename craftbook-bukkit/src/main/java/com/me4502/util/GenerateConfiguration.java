@@ -55,7 +55,7 @@ public class GenerateConfiguration extends ExternalUtilityBase {
                 e.printStackTrace();
             }
         }
-        BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(file, true, YAMLFormat.EXTENDED), Bukkit.getLogger());
+        BukkitConfiguration config = new BukkitConfiguration(new YAMLProcessor(file, true, YAMLFormat.EXTENDED));
         config.load();
 
         File mechanicsFolder = new File(getGenerationFolder(), "mechanics");

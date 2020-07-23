@@ -43,7 +43,6 @@ import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.adapter.bukkit.TextAdapter;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.item.ItemType;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBookPlayer {
@@ -60,7 +59,7 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public void print(Component component) {
-        TextAdapter.sendComponent(player, TextUtil.format(component, getLocale()));
+        TextAdapter.sendMessage(player, TextUtil.format(component, getLocale()));
     }
 
 
@@ -76,23 +75,7 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
     }
 
     @Override
-    public void print(String message) {
-        player.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('&', translate(message)));
-    }
-
-    @Override
-    public void printError(String message) {
-        player.sendMessage(ChatColor.RED + ChatColor.translateAlternateColorCodes('&', translate(message)));
-    }
-
-    @Override
-    public void printRaw(String message) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', translate(message)));
-    }
-
-    @Override
     public boolean hasPermission(String perm) {
-
         return plugin.hasPermission(player, perm);
     }
 
@@ -103,7 +86,6 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public boolean isInsideVehicle() {
-
         return player.isInsideVehicle();
     }
 
@@ -117,7 +99,6 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public String translate(String message) {
-
         return plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player));
     }
 

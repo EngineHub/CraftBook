@@ -32,6 +32,8 @@
 
 package com.sk89q.craftbook.util.exceptions;
 
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+
 /**
  * Thrown when a MechanicFactory is considering whether or not to produce a Mechanic and finds that an area of the
  * world looks like it it was intended
@@ -42,28 +44,18 @@ package com.sk89q.craftbook.util.exceptions;
  *
  * @author hash
  */
-public class InvalidMechanismException extends CraftbookException {
+public class InvalidMechanismException extends CraftBookException {
 
     private static final long serialVersionUID = -6917162805444409894L;
 
-    public InvalidMechanismException() {
-
-        super();
-    }
-
     public InvalidMechanismException(String message, Throwable cause) {
 
-        super(message, cause);
+        super(TextComponent.of(message), cause);
     }
 
     public InvalidMechanismException(String message) {
 
-        super(message);
-    }
-
-    public InvalidMechanismException(Throwable cause) {
-
-        super(cause);
+        super(TextComponent.of(message));
     }
 
     @Override

@@ -19,7 +19,7 @@ package com.sk89q.craftbook.core.mechanic;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
@@ -65,7 +65,7 @@ public class MechanicCommands {
 
     @Command(name = "enable", desc = "Enable a mechanic")
     @CommandPermissions({"craftbook.enable-mechanic"})
-    public void enable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CraftbookException {
+    public void enable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CraftBookException {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         try {
             plugin.getMechanicManager().enableMechanic(mechanicType);

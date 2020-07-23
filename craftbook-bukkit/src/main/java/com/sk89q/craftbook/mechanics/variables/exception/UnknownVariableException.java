@@ -14,20 +14,19 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.core.mechanic.load;
+package com.sk89q.craftbook.mechanics.variables.exception;
 
-import com.sk89q.craftbook.core.mechanic.MechanicType;
-import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 
-public class UnsatisfiedLoadDependencyException extends MechanicInitializationException {
+public class UnknownVariableException extends VariableException {
 
-    public UnsatisfiedLoadDependencyException(MechanicType<?> mechanicType, LoadDependency dependency) {
-        super(mechanicType, TranslatableComponent.of(
-                "craftbook.mechanisms.missing-dependency",
-                TextComponent.of(dependency.getDependencyId())
-        ));
+    public UnknownVariableException(VariableKey variableKey) {
+        super(TranslatableComponent.of(
+                "craftbook.variables.unknown-variable",
+                TextComponent.of(variableKey.getOriginalForm())),
+                variableKey
+        );
     }
-
 }

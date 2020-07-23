@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook;
 
+import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
 import org.bukkit.event.Listener;
 
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -31,8 +32,9 @@ public interface CraftBookMechanic extends Listener {
      * Called when a mechanic should be initialized. This includes creating of any maps, lists or singleton instances.
      * 
      * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
+     * @throws MechanicInitializationException if the mechanic failed to initialise
      */
-    boolean enable();
+    boolean enable() throws MechanicInitializationException;
 
     /**
      * Called when the mechanic should be disabled. This should make sure all memory is released.

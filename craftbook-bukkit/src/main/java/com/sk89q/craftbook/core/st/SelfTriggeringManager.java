@@ -129,7 +129,7 @@ public class SelfTriggeringManager implements Listener {
                     unregisterSelfTrigger(location, UnregisterReason.NOT_HANDLED);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
-                CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
+                CraftBookPlugin.logger.warn("CraftBook mechanic: Failed to think for " + location.toString());
                 t.printStackTrace();
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }

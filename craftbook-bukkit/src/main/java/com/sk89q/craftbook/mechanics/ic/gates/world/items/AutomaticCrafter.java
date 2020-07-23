@@ -119,7 +119,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         if(!ItemUtil.isStackValid(result)) {
             if (!hasWarnedNoResult) {
-                CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
+                CraftBookPlugin.logger.warn("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
                         + " has an invalid recipe! Result: " + result);
                 hasWarnedNoResult = true;
             }
@@ -276,7 +276,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
             if (validRecipeItems == 0) {
                 if (!hasWarned) {
-                    CraftBookPlugin.logger().warning("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe ingredients are air. Recipe result: " + r.getResult().toString());
+                    CraftBookPlugin.logger.warn("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe "
+                            + "ingredients are air. Recipe result: " + r.getResult().toString());
                     hasWarned = true;
                 }
                 return false;

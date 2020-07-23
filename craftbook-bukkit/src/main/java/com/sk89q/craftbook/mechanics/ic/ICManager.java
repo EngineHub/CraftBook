@@ -222,7 +222,7 @@ public class ICManager {
 
     public void enable() {
         CraftBookPlugin.inst().createDefaultConfiguration("ic-config.yml");
-        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED));
 
         midiFolder = new File(CraftBookPlugin.inst().getDataFolder(), "midi/");
         new File(midiFolder, "playlists").mkdirs();
@@ -694,8 +694,8 @@ public class ICManager {
                         + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
-                CraftBookPlugin.logger().warning("An error occurred generating the docs for IC: " + ic + ".");
-                CraftBookPlugin.logger().warning("Please report this error on: http://youtrack.sk89q.com/.");
+                CraftBookPlugin.logger.warn("An error occurred generating the docs for IC: " + ic + ".");
+                CraftBookPlugin.logger.warn("Please report this error on: https://discord.gg/enginehub");
             }
         }
 

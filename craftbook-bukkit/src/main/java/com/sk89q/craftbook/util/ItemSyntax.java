@@ -183,7 +183,7 @@ public final class ItemSyntax {
                         int type = LegacyMapper.getInstance().getLegacyFromItem(BukkitAdapter.asItemType(material))[0];
                         item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(type, data));
                     } catch (Exception ee) {
-                        CraftBookPlugin.logger().warning("Failed to convert legacy item: " + material.getId() + ':' + data);
+                        CraftBookPlugin.logger.warn("Failed to convert legacy item: " + material.getId() + ':' + data);
                         ee.printStackTrace();
                     }
                 }

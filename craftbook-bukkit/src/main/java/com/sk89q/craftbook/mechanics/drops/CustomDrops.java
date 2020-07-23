@@ -166,7 +166,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                             Biome biome = Biome.valueOf(biomeString);
                             biomes.add(biome);
                         } catch (IllegalArgumentException e) {
-                            CraftBookPlugin.logger().warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                            CraftBookPlugin.logger.warn("Tried to assign invalid biome " + biomeString + " to custom drop!");
                         }
                     }
                     def.setBiomes(biomes);

@@ -16,20 +16,18 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.util.yaml.YAMLProcessor;
+
+import java.io.IOException;
 
 public class ICConfiguration {
 
     public final YAMLProcessor config;
-    protected final Logger logger;
 
-    public ICConfiguration(YAMLProcessor config, Logger logger) {
+    public ICConfiguration(YAMLProcessor config) {
 
         this.config = config;
-        this.logger = logger;
     }
 
     public void load () {
@@ -37,8 +35,7 @@ public class ICConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            logger.severe("Error loading CraftBook IC configuration: " + e);
-            e.printStackTrace();
+            CraftBookPlugin.logger.error("Error loading CraftBook IC configuration", e);
         }
 
         for (RegisteredICFactory factory : ICManager.inst().getICList())

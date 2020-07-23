@@ -19,7 +19,7 @@ package com.sk89q.craftbook.mechanics.headdrops;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -62,28 +62,28 @@ public class HeadDropsCommands {
             @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
             @Switch(name = 's', desc = "Silence output") boolean silent
     ) throws AuthorizationException,
-            CraftbookException {
+            CraftBookException {
         Player player;
 
         if(otherPlayer != null)
             player = Bukkit.getPlayer(otherPlayer);
         else if(!(actor instanceof CraftBookPlayer))
-            throw new CraftbookException("Please provide a player! (-p flag)");
+            throw new CraftBookException("Please provide a player! (-p flag)");
         else
             player = ((BukkitCraftBookPlayer) actor).getPlayer();
 
         if(player == null)
-            throw new CraftbookException("Unknown Player!");
+            throw new CraftBookException("Unknown Player!");
 
         if(HeadDrops.instance == null)
-            throw new CraftbookException("HeadDrops are not enabled!");
+            throw new CraftBookException("HeadDrops are not enabled!");
 
         if(!actor.hasPermission("craftbook.mech.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId()))
             throw new AuthorizationException();
 
         HeadDrops.MobSkullType skullType = HeadDrops.MobSkullType.getFromEntityType(BukkitAdapter.adapt(entityType));
         if(skullType == null)
-            throw new CraftbookException("Invalid Skull Type!");
+            throw new CraftBookException("Invalid Skull Type!");
 
         String mobName = skullType.getPlayerName();
 
@@ -95,11 +95,11 @@ public class HeadDropsCommands {
             itemMeta.setOwner(mobName);
             stack.setItemMeta(itemMeta);
         } else {
-            CraftBookPlugin.logger().warning("Bukkit has failed to set a HeadDrop item to a head!");
+            CraftBookPlugin.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
         }
 
         if(!player.getInventory().addItem(stack).isEmpty()) {
-            throw new CraftbookException("Failed to add item to inventory!");
+            throw new CraftBookException("Failed to add item to inventory!");
         }
 
         if(!silent)

@@ -168,7 +168,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
         if (registration == null) {
-            CraftBookPlugin.logger().warning("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
+            CraftBookPlugin.logger.warn("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
             block.breakNaturally();
             return null;
         }

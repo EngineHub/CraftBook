@@ -284,7 +284,7 @@ public class Area extends AbstractCraftBookMechanic {
             }
             return true;
         } catch (IOException | WorldEditException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to toggle Area: " + e.getMessage());
+            CraftBookPlugin.logger.error("Failed to toggle Area: " + e.getMessage());
         }
         return false;
     }
@@ -338,7 +338,7 @@ public class Area extends AbstractCraftBookMechanic {
             }
             return true;
         } catch (IOException | WorldEditException e) {
-            CraftBookPlugin.logger().log(Level.SEVERE, "Failed to cold toggle Area: " + e.getMessage());
+            CraftBookPlugin.logger.error("Failed to cold toggle Area: " + e.getMessage());
         }
         return false;
     }

@@ -59,7 +59,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
             BlockState oldState = Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).getState();
             Bukkit.getWorlds().get(0).getBlockAt(0, 255, 0).setType(Material.OAK_WALL_SIGN);
 
-            ICConfiguration icConfiguration = new ICConfiguration(new YAMLProcessor(new File(getGenerationFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+            ICConfiguration icConfiguration = new ICConfiguration(new YAMLProcessor(new File(getGenerationFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED));
 
             icConfiguration.load();
 
@@ -82,7 +82,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                 writer.println();
 
                 if(ric.getFactory().getLongDescription() == null || ric.getFactory().getLongDescription().length == 0 || ric.getFactory().getLongDescription()[0].equals("Missing Description")) {
-                    CraftBookPlugin.logger().info("Missing Long Description for: " + ric.getId());
+                    CraftBookPlugin.logger.info("Missing Long Description for: " + ric.getId());
                     missingDocuments.add(ric.getId());
                 }
 
@@ -131,7 +131,7 @@ public class GenerateWikiICPages extends ExternalUtilityBase {
                     writer.println("#. " + (pin == null ? "Nothing" : pin));
 
                     if(pin == null) {
-                        CraftBookPlugin.logger().info("Missing pin: " + pins + " for IC: " + ric.getId());
+                        CraftBookPlugin.logger.info("Missing pin: " + pins + " for IC: " + ric.getId());
                         missingDocuments.add(ric.getId());
                     }
 

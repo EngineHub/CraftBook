@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics.signcopier;
 
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.util.exceptions.CraftbookException;
+import com.sk89q.craftbook.util.exceptions.CraftBookException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
@@ -44,13 +44,13 @@ public class SignEditCommands {
     @CommandPermissions({"craftbook.mech.signcopy.edit"})
     public void editSign(CraftBookPlayer player,
             @Arg(desc = "The line to edit") int line,
-            @Arg(desc = "The text to use", variable = true) String text) throws CraftbookException {
+            @Arg(desc = "The text to use", variable = true) String text) throws CraftBookException {
 
         if(!SignCopier.signs.containsKey(player.getName()))
-            throw new CraftbookException("You haven't copied a sign!");
+            throw new CraftBookException("You haven't copied a sign!");
 
         if (line < 1 || line > 4) {
-            throw new CraftbookException("Line out of bounds. Must be between 1 and 4.");
+            throw new CraftBookException("Line out of bounds. Must be between 1 and 4.");
         }
 
         String[] signCache = SignCopier.signs.get(player.getName());

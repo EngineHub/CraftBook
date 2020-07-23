@@ -279,7 +279,7 @@ public class Bridge extends CuboidToggleMechanic {
 
     public boolean flipState(Block trigger, CraftBookPlayer player) throws InvalidMechanismException {
 
-        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException();
+        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException("");
 
         // Attempt to detect whether the bridge is above or below the sign,
         // first assuming that the bridge is above

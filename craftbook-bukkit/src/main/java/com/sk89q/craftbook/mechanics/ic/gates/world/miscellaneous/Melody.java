@@ -138,8 +138,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
                 hasRun = false;
             } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
-                CraftBookPlugin.logger().warning("Found invalid MIDI file: " + file);
-                e.printStackTrace();
+                CraftBookPlugin.logger.warn("Found invalid MIDI file: " + file, e);
                 foundFile = false;
             }
         }

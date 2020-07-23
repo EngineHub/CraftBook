@@ -71,7 +71,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
         instance = this;
         CraftBookPlugin.inst().createDefaultConfiguration("cauldron-recipes.yml");
-        recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+        recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED));
 
         return recipes.hasRecipes();
     }

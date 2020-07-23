@@ -1,10 +1,26 @@
 {
-    "craftbook.mech.ammeter.line": "Ammeter: {0} {1}A",
+    "craftbook.ammeter.line": "Ammeter: {0} {1}A",
 
-    "craftbook.mech.lightstone.line": "LightStone: {0} {1}L",
+    "craftbook.lightstone.line": "LightStone: {0} {1}L",
 
-    "craftbook.mech.bounceblocks.create": "BounceBlock Created!",
-    "craftbook.mech.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
+    "craftbook.bounceblocks.create": "BounceBlock Created!",
+    "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 
+    "craftbook.variables.unknown-variable": "Unknown variable: \"{0}\"",
+    "craftbook.variables.already-exists": "Variable already exists: \"{0}\"",
+    "craftbook.variables.invalid-key": "Invalid variable key: \"{0}\"",
+    "craftbook.variables.invalid-namespace": "Invalid variable namespace: \"{0}\"",
+    "craftbook.variables.invalid-value": "Invalid variable value: \"{0}\"",
+    "craftbook.variables.get": "Variable {0} is: \"{1}\"",
+    "craftbook.variables.set": "Variable {0} is now set to: \"{1}\"",
+    "craftbook.variables.remove": "Variable {0} has been removed",
+    "craftbook.variables.list.copy": "Click to Copy",
+    "craftbook.variables.list.all-and-namespace": "You can't provide a namespace when using -a",
+    "craftbook.variables.not-numeric": "Variable {0} not of type 'number'",
+    "craftbook.variables.not-boolean": "Variable {0} not of type 'boolean'",
+
+    "craftbook.mechanisms.missing-dependency": "Dependency not satisfied: {0}",
+    "craftbook.mechanisms.already-enabled": "Mechanic {0} is already enabled",
+    "craftbook.mechanisms.enable-failed": "An error occurred while enabling {0}",
     "craftbook.version.version": "CraftBook version {0}"
 }

@@ -17,34 +17,22 @@
 package com.sk89q.craftbook.mechanics.variables;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.Tuple2;
-import com.sk89q.craftbook.util.profile.Profile;
-import com.sk89q.craftbook.util.profile.resolver.HttpRepositoryService;
-import com.sk89q.craftbook.util.profile.resolver.ProfileService;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 
 import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.logging.Logger;
+import java.util.Map;
 
 public class VariableConfiguration {
 
     public final YAMLProcessor config;
-    protected final Logger logger;
 
-    public VariableConfiguration(YAMLProcessor config, Logger logger) {
-
+    public VariableConfiguration(YAMLProcessor config) {
         this.config = config;
-        this.logger = logger;
     }
 
     public void load() {
-
         try {
             config.load();
         } catch (IOException e) {
@@ -52,51 +40,37 @@ public class VariableConfiguration {
             return;
         }
 
-        boolean shouldSave = false;
+        // If we don't have any variables, don't bother.
+        if (config.getKeys("variables") == null) {
+            return;
+        }
+        for (String namespace : config.getKeys("variables")) {
+            for (String variable : config.getNode("variables").getKeys(namespace)) {
+                String value = String.valueOf(config.getProperty("variables." + namespace + "." + variable));
 
-        if(config.getKeys("variables") == null) return;
-        for(String key : config.getKeys("variables")) {
+                try {
+                    VariableKey key = VariableKey.of(namespace, variable, null);
 
-            String[] keys = RegexUtil.PIPE_PATTERN.split(key, 2);
-            if(keys.length == 1) {
-                keys = new String[]{"global", key};
-            } else if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
-                if(CraftBookPlugin.inst().getUUIDMappings().getUUID(keys[0]) != null) continue;
-                OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
-                if(player.hasPlayedBefore()) {
-                    try {
-                        ProfileService resolver = HttpRepositoryService.forMinecraft();
-                        Profile profile = resolver.findByName(player.getName()); // May be null
-
-                        UUID uuid = profile.getUniqueId();
-                        keys[0] = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (VariableManager.DIRECT_VARIABLE_PATTERN.matcher(key.toString()).matches()
+                            && VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
+                        VariableManager.instance.setVariable(key, value);
+                    } else {
+                        throw new VariableException(TextComponent.of("Invalid variable " + key.toString() + " with value " + value), key);
                     }
-                    shouldSave = true;
+                } catch (VariableException e) {
+                    CraftBookPlugin.logger.error("Invalid variable in variables file", e);
                 }
             }
-
-            String value = String.valueOf(config.getProperty("variables." + key));
-
-            if(RegexUtil.VARIABLE_KEY_PATTERN.matcher(keys[1]).find() && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(value).find()) {
-                VariableManager.instance.setVariable(keys[1], keys[0], value);
-            }
         }
-
-        if(shouldSave)
-            save();
     }
 
     public void save() {
-
         config.clear();
 
-        for(Entry<Tuple2<String, String>, String> var : VariableManager.instance.getVariableStore().entrySet()) {
-
-            if(RegexUtil.VARIABLE_KEY_PATTERN.matcher(var.getKey().a).find() && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(var.getValue()).find())
-                config.setProperty("variables." + var.getKey().b + '|' + var.getKey().a, var.getValue());
+        for (Map.Entry<String, Map<String, String>> namespaceEntry : VariableManager.instance.getVariableStore().entrySet()) {
+            config.setProperty("variables." + namespaceEntry.getKey(), namespaceEntry.getValue());
         }
+
         config.save();
     }
 }

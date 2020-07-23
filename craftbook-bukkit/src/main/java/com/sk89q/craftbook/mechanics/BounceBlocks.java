@@ -198,12 +198,12 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 Double.parseDouble(bits[2]);
             }
         } catch(Exception e){
-            lplayer.printError(TranslatableComponent.of("craftbook.mech.bounceblocks.invalid-velocity"));
+            lplayer.printError(TranslatableComponent.of("craftbook.bounceblocks.invalid-velocity"));
             SignUtil.cancelSign(event);
             return;
         }
 
         event.setLine(1, "[Jump]");
-        lplayer.printInfo(TranslatableComponent.of("craftbook.mech.bounceblocks.create"));
+        lplayer.printInfo(TranslatableComponent.of("craftbook.bounceblocks.create"));
     }
 }

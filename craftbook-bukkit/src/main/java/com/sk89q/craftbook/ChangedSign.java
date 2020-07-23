@@ -16,23 +16,21 @@
 
 package com.sk89q.craftbook;
 
-import com.sk89q.craftbook.mechanics.variables.VariableCommands;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
 import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import io.papermc.lib.PaperLib;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ChangedSign {
 
-    private Block block;
+    private final Block block;
     private Sign sign;
     private String[] lines;
     private String[] oldLines;
@@ -60,22 +58,13 @@ public class ChangedSign {
     }
 
     public void checkPlayerVariablePermissions(CraftBookPlayer player) {
-        if(this.lines != null && VariableManager.instance != null) {
-            for(int i = 0; i < 4; i++) {
-
+        if (this.lines != null && VariableManager.instance != null) {
+            for (int i = 0; i < 4; i++) {
                 String line = this.lines[i];
-                for(String var : ParsingUtil.getPossibleVariables(line)) {
-
-                    String key;
-
-                    if(var.contains("|")) {
-                        String[] bits = RegexUtil.PIPE_PATTERN.split(var);
-                        key = bits[0];
-                    } else
-                        key = "global";
-
-                    if(!VariableCommands.hasVariablePermission(player, key, var, "use"))
-                        setLine(i, StringUtils.replace(line, '%' + key + '|' + var + '%', ""));
+                for (VariableKey variableKey : VariableManager.getPossibleVariables(line, player)) {
+                    if (!variableKey.hasPermission(player, "use")) {
+                        setLine(i, line.replace('%' + variableKey.getOriginalForm() + '%', ""));
+                    }
                 }
             }
         }
@@ -95,11 +84,6 @@ public class ChangedSign {
     public Material getType() {
 
         return block.getType();
-    }
-
-    public byte getLightLevel() {
-
-        return block.getLightLevel();
     }
 
     public int getX() {
@@ -217,12 +201,7 @@ public class ChangedSign {
 
     @Override
     public int hashCode() {
-        return (getType().hashCode() * 1103515245 + 12345
-                ^ Arrays.hashCode(lines) * 1103515245 + 12345
-                ^ getX() * 1103515245 + 12345
-                ^ getY() * 1103515245 + 12345
-                ^ getZ() * 1103515245 + 12345
-                ^ block.getWorld().getUID().hashCode() * 1103515245 + 12345);
+        return Objects.hash(getType(), lines, getX(), getY(), getZ(), block.getWorld().getUID());
     }
 
     @Override

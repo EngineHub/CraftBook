@@ -61,7 +61,7 @@ public class LanguageManager {
             try {
                 lang.load();
             } catch (Throwable e) {
-                CraftBookPlugin.inst().getLogger().severe("An error occured loading the languages file for: " + language + "! This language WILL NOT WORK UNTIL FIXED!");
+                CraftBookPlugin.logger.error("An error occured loading the languages file for: " + language + "! This language WILL NOT WORK UNTIL FIXED!");
                 e.printStackTrace();
                 continue;
             }
@@ -133,10 +133,6 @@ public class LanguageManager {
         put("area.permissions", "You don't have permissions to do that in this area!");
         put("area.use-permissions", "You don't have permissions to use that in this area!");
         put("area.break-permissions", "You don't have permissions to break that in this area!");
-
-
-        put("variable.missing", "This variable is missing!");
-        put("variable.use-permissions", "You don't have permission to use that variable!");
 
 
         put("mech.create-permission", "You don't have permission to create this mechanic.");

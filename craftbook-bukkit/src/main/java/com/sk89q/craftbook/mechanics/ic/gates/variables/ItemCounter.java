@@ -18,18 +18,19 @@ package com.sk89q.craftbook.mechanics.ic.gates.variables;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractIC;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
 import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.mechanics.variables.VariableCommands;
+import com.sk89q.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.inventory.InventoryHolder;
@@ -80,17 +81,19 @@ public class ItemCounter extends AbstractIC {
 
             chip.setOutput(0, amount > 0);
 
-            String var,key;
-            var = VariableManager.getVariableName(variable);
-            key = VariableManager.getNamespace(variable);
+            try {
+                VariableKey variableKey = VariableKey.fromString(variable, null);
 
-            double existing = Double.parseDouble(VariableManager.instance.getVariable(var, key));
+                double existing = Double.parseDouble(VariableManager.instance.getVariable(variableKey));
 
-            String val = String.valueOf(existing + amount);
-            if (val.endsWith(".0"))
-                val = StringUtils.replace(val, ".0", "");
+                String val = String.valueOf(existing + amount);
+                if (val.endsWith(".0"))
+                    val = StringUtils.replace(val, ".0", "");
 
-            VariableManager.instance.setVariable(var, key, val);
+                VariableManager.instance.setVariable(variableKey, val);
+            } catch (VariableException e) {
+                CraftBookPlugin.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
+            }
         }
     }
 
@@ -139,25 +142,26 @@ public class ItemCounter extends AbstractIC {
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
-
-            String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(player, "global", parts[0], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
-            } else
-                if(!VariableCommands.hasVariablePermission(player, parts[0], parts[1], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+            try {
+                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), player);
+                if (variableKey != null && !variableKey.hasPermission(player, "use")) {
+                    throw new ICVerificationException("You do not have permissions to use " + variableKey.toString() + "");
+                }
+            } catch (VariableException e) {
+                throw new ICVerificationException("Can't use variable", e);
+            }
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
+            try {
+                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), null);
+                if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
-            } else
-                if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
-                    throw new ICVerificationException("Unknown Variable!");
+                }
+            } catch (VariableException e) {
+                throw new ICVerificationException("Can't use variable", e);
+            }
         }
     }
 }

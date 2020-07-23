@@ -16,20 +16,17 @@
 
 package com.sk89q.craftbook.mechanics.cauldron;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
-
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.bukkit.inventory.ItemStack;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -38,12 +35,10 @@ public class ImprovedCauldronCookbook {
 
     private Collection<Recipe> recipes;
     protected final YAMLProcessor config;
-    protected final Logger logger;
 
-    public ImprovedCauldronCookbook(YAMLProcessor config, Logger logger) {
+    public ImprovedCauldronCookbook(YAMLProcessor config) {
 
         this.config = config;
-        this.logger = logger;
         load();
     }
 
@@ -56,7 +51,7 @@ public class ImprovedCauldronCookbook {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger().severe("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
+            CraftBookPlugin.logger.error("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
@@ -128,7 +123,7 @@ public class ImprovedCauldronCookbook {
                     }
                 }
             } catch (Exception e) {
-                CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for cauldron recipe: " + id);
+                CraftBookPlugin.logger.error("An error occured generating ingredients for cauldron recipe: " + id);
                 e.printStackTrace();
             }
             return items;
