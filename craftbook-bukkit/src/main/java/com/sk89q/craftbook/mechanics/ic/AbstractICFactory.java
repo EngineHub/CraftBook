@@ -37,12 +37,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.CraftBook;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * Abstract IC factory.
@@ -110,7 +109,7 @@ public abstract class AbstractICFactory implements ICFactory {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                CraftBookPlugin.logger.error("An invalid ic save file was found!", e);
+                CraftBook.logger.error("An invalid ic save file was found!", e);
             }
         }
     }

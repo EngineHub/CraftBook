@@ -17,23 +17,25 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.core.mechanic.MechanicType;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
-import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
+import com.sk89q.craftbook.mechanic.CraftBookMechanic;
+import com.sk89q.craftbook.mechanic.MechanicType;
+import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
+import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
+public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Listener {
 
     private MechanicType<? extends CraftBookMechanic> mechanicType;
 
     public MechanicType<? extends CraftBookMechanic> getMechanicType() throws InvalidMechanismException {
         if (this.mechanicType == null) {
-            this.mechanicType = CraftBookPlugin.inst().getMechanicManager().getMechanicType(this);
+            this.mechanicType = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanicType(this);
             if (this.mechanicType == null) {
                 throw new InvalidMechanismException("");
             }

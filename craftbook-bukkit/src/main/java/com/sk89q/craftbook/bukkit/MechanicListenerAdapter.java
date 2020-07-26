@@ -32,6 +32,7 @@
 
 package com.sk89q.craftbook.bukkit;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
@@ -43,7 +44,7 @@ import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -105,9 +106,9 @@ final class MechanicListenerAdapter implements Listener {
         }
 
         if (block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
-            if (CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().signClickTimeout > 0) {
                 long lastClick = signClickTimer.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> 0L);
-                if (lastClick > System.currentTimeMillis() - (CraftBookPlugin.inst().getConfiguration().signClickTimeout * 1000)) {
+                if (lastClick > System.currentTimeMillis() - (CraftBook.getInstance().getPlatform().getConfiguration().signClickTimeout * 1000)) {
                     return;
                 } else {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
@@ -211,7 +212,7 @@ final class MechanicListenerAdapter implements Listener {
         // block is requested -- it is quite ugly
         switch(block.getType()) {
             case REDSTONE_WIRE:
-                if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().indirectRedstone) {
                     // power all blocks around the redstone wire on the same y level
                     // north/south
                     handleDirectWireInput(block.getRelative(BlockFace.NORTH), block, oldLevel, newLevel);

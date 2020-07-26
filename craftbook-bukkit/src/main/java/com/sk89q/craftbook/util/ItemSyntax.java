@@ -19,7 +19,7 @@ package com.sk89q.craftbook.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
 import com.sk89q.craftbook.mechanics.items.CommandItems;
 import com.sk89q.worldedit.WorldEdit;
@@ -183,7 +183,7 @@ public final class ItemSyntax {
                         int type = LegacyMapper.getInstance().getLegacyFromItem(BukkitAdapter.asItemType(material))[0];
                         item = new BaseItem(LegacyMapper.getInstance().getItemFromLegacy(type, data));
                     } catch (Exception ee) {
-                        CraftBookPlugin.logger.warn("Failed to convert legacy item: " + material.getId() + ':' + data);
+                        CraftBook.logger.warn("Failed to convert legacy item: " + material.getId() + ':' + data);
                         ee.printStackTrace();
                     }
                 }

@@ -34,6 +34,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import java.util.UUID;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -68,7 +69,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
+            if(CraftBook.getInstance().getPlatform().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
                 String line3 = getLine(3);
                 OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
                 if(player.hasPlayedBefore()) {

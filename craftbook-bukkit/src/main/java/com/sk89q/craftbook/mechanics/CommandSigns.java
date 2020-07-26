@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.apache.commons.lang.StringUtils;
@@ -48,7 +49,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if(!event.getLine(1).equalsIgnoreCase("[command]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.command")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -72,13 +73,13 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!localPlayer.hasPermission("craftbook.mech.command.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("area.use-permissions");
             return;
         }

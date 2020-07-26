@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.mechanics.minecart;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockUtil;
@@ -75,7 +76,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
             return;
 
         if(!player.hasPermission("craftbook.vehicles.temporary-cart.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             return;
         }

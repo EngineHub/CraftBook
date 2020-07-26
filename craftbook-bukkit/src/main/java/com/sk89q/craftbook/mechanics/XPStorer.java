@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -85,13 +86,13 @@ public class XPStorer extends AbstractCraftBookMechanic {
         }
 
         if(!player.hasPermission("craftbook.mech.xpstore.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         if(event.getClickedBlock() != null && !ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -183,7 +184,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.xpstore")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;

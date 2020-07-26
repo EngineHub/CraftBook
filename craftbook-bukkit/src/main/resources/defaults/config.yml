@@ -1,99 +1,97 @@
-# CraftBook Configuration for Bukkit. Generated for version: 5.0.0-SNAPSHOT;838050c
+# CraftBook Configuration for Bukkit.
 # This configuration will automatically add new configuration options for you,
-# So there is no need to regenerate this configuration unless you need to.
-# More information about these features are available at...
-# https://craftbook.enginehub.org/en/latest//Usage
+# So there is no need to regenerate this configuration unless you want to.
+# More information about these features are available at:
+# https://craftbook.enginehub.org/en/latest/mechanics/
 #
 # NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!
 
 
 # List of mechanics and whether they are enabled or not
 mechanics:
-  boat:
-    boat_decay: false
-    boat_drops: false
-    boat_exit_remover: false
-    boat_remove_entities: false
-    boat_speed_modifiers: false
-    boat_uncrashable: false
-    boat_water_place_only: false
-    land_boats: false
-  circuit:
-    glowstone: false
-    integrated_circuits: false
-    jack_o_lantern: false
-    jukebox: false
-    netherrack: false
-    pay: false
-    pipes: false
-  customisation:
-    cauldron: false
-    command_items: false
-    custom_crafting: false
-    custom_drops: false
-    legacy_cauldron: false
-  general:
-    better_ai: false
-    better_leads: false
-    better_physics: false
-    better_pistons: false
-    better_plants: false
-    bookcase: false
-    bounce_blocks: false
-    bridge: false
-    chairs: false
-    chunk_anchor: false
-    command_signs: false
-    cooking_pot: false
-    dispenser_recipes: false
-    door: false
-    elevator: false
-    gate: false
-    head_drops: false
-    hidden_switch: false
-    light_switch: false
-    map_changer: false
-    marquee: false
-    painting_switcher: false
-    snow: false
-    sponge: false
-    teleporter: false
-    toggle_area: false
-    tree_lopper: false
-    variables: true
-    xp_storer: false
-  minecart:
-    minecart_booster: false
-    minecart_collision_entry: false
-    minecart_constant_speed: false
-    minecart_decay: false
-    minecart_deposit: false
-    minecart_dispenser: false
-    minecart_ejector: false
-    minecart_elevator: false
-    minecart_empty_slowdown: false
-    minecart_exit_remover: false
-    minecart_fall_modifier: false
-    minecart_item_pickup: false
-    minecart_max_speed: false
-    minecart_messenger: false
-    minecart_mob_blocker: false
-    minecart_more_rails: false
-    minecart_no_collide: false
-    minecart_place_anywhere: false
-    minecart_rail_placer: false
-    minecart_remove_entities: false
-    minecart_reverser: false
-    minecart_sorter: false
-    minecart_speed_modifiers: false
-    minecart_station: false
-    minecart_teleporter: false
-    minecart_temporary_cart: false
-    minecart_vision_steering: false
-  tool:
-    ammeter: false
-    light_stone: false
-    sign_copier: false
+    boat:
+        boat_decay: false
+        boat_exit_remover: false
+        boat_remove_entities: false
+        boat_speed_modifiers: false
+        boat_uncrashable: false
+        boat_water_place_only: false
+        land_boats: false
+    circuit:
+        glowstone: false
+        integrated_circuits: false
+        jack_o_lantern: false
+        jukebox: false
+        pay: false
+        pipes: false
+        redstone_fire: false
+    customisation:
+        cauldron: false
+        command_items: false
+        custom_crafting: false
+        custom_drops: false
+    general:
+        better_ai: false
+        better_leads: false
+        better_physics: false
+        better_pistons: false
+        better_plants: false
+        bookcase: false
+        bounce_blocks: false
+        bridge: false
+        chairs: false
+        chunk_anchor: false
+        command_signs: false
+        cooking_pot: false
+        dispenser_recipes: false
+        door: false
+        elevator: false
+        gate: false
+        head_drops: false
+        hidden_switch: false
+        light_switch: false
+        map_changer: false
+        marquee: false
+        painting_switcher: false
+        snow: false
+        sponge: false
+        teleporter: false
+        toggle_area: false
+        tree_lopper: false
+        variables: true
+        xp_storer: false
+    minecart:
+        minecart_booster: false
+        minecart_collision_entry: false
+        minecart_constant_speed: false
+        minecart_decay: false
+        minecart_deposit: false
+        minecart_dispenser: false
+        minecart_ejector: false
+        minecart_elevator: false
+        minecart_empty_slowdown: false
+        minecart_exit_remover: false
+        minecart_fall_modifier: false
+        minecart_item_pickup: false
+        minecart_max_speed: false
+        minecart_messenger: false
+        minecart_mob_blocker: false
+        minecart_more_rails: false
+        minecart_no_collide: false
+        minecart_place_anywhere: false
+        minecart_rail_placer: false
+        minecart_remove_entities: false
+        minecart_reverser: false
+        minecart_sorter: false
+        minecart_speed_modifiers: false
+        minecart_station: false
+        minecart_teleporter: false
+        minecart_temporary_cart: false
+        minecart_vision_steering: false
+    tool:
+        ammeter: false
+        lightstone: false
+        sign_copier: false
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2
@@ -127,7 +125,7 @@ language: en_US
 
 # A list of languages supported by craftbook, if a user requests a language not listed... They will see default.
 languages:
-  - en_US
+- en_US
 
 # If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.
 scan-text-for-localization: false

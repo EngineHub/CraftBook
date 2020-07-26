@@ -16,7 +16,8 @@
 
 package com.sk89q.craftbook.mechanics;
 
-import com.sk89q.craftbook.util.exceptions.MechanicInitializationException;
+import com.sk89q.craftbook.CraftBook;
+import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -45,7 +46,7 @@ public class Payment extends AbstractCraftBookMechanic {
     @Override
     public boolean enable() throws MechanicInitializationException {
         if (CraftBookPlugin.plugins.getEconomy() == null) {
-            CraftBookPlugin.logger.warn("An economy plugin and Vault is required for the Payment mechanic!");
+            CraftBook.logger.warn("An economy plugin and Vault is required for the Payment mechanic!");
             return false;
         }
         return super.enable();
@@ -66,13 +67,13 @@ public class Payment extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.pay.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }

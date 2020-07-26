@@ -35,8 +35,9 @@ package com.sk89q.craftbook.mechanics.ic;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
@@ -168,7 +169,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // now actually try to pull up an IC of that id number.
         RegisteredICFactory registration = manager.get(id);
         if (registration == null) {
-            CraftBookPlugin.logger.warn("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
+            CraftBook.logger.warn("\"" + sign.getLine(1) + "\" should be an IC ID, but no IC registered under that ID could be found.");
             block.breakNaturally();
             return null;
         }

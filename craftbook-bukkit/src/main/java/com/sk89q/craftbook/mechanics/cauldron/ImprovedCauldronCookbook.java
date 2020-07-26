@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.cauldron;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -51,7 +51,7 @@ public class ImprovedCauldronCookbook {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger.error("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
+            CraftBook.logger.error("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
@@ -123,7 +123,7 @@ public class ImprovedCauldronCookbook {
                     }
                 }
             } catch (Exception e) {
-                CraftBookPlugin.logger.error("An error occured generating ingredients for cauldron recipe: " + id);
+                CraftBook.logger.error("An error occured generating ingredients for cauldron recipe: " + id);
                 e.printStackTrace();
             }
             return items;

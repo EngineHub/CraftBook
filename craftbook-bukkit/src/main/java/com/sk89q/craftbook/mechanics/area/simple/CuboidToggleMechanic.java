@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics.area.simple;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -28,7 +29,7 @@ import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -65,7 +66,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         for (BlockVector3 bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (b.getType() == type.getMaterial() || BlockUtil.isBlockReplacable(b.getType())) {
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getMaterial()))
+                if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction && (b.getType() == type.getMaterial()))
                     addBlocks(s, other, 1);
                 b.setType(Material.AIR);
             }
@@ -81,7 +82,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         for (BlockVector3 bv : toggle) {
             Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
             if (BlockUtil.isBlockReplacable(b.getType())) {
-                if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
                     if (hasEnoughBlocks(s, other)) {
                         b.setBlockData(data);
                         removeBlocks(s, other, 1);

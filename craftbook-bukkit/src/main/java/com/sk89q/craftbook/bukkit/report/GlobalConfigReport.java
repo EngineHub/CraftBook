@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.bukkit.report;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
 
@@ -25,6 +25,6 @@ public class GlobalConfigReport extends DataReport {
     public GlobalConfigReport() {
         super("CraftBook Configuration");
 
-        append("Configuration", new HierarchyObjectReport("Configuration", CraftBookPlugin.inst().getConfiguration()));
+        append("Configuration", new HierarchyObjectReport("Configuration", CraftBook.getInstance().getPlatform().getConfiguration()));
     }
 }

@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockSyntax;
@@ -72,7 +73,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(!Blocks.containsFuzzy(enabledBlocks, BukkitAdapter.adapt(event.getBlock().getBlockData()))) return;
         if(!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType())) return;
         if(!player.hasPermission("craftbook.mech.treelopper.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }

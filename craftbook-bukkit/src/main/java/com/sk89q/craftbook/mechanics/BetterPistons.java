@@ -19,6 +19,7 @@ package com.sk89q.craftbook.mechanics;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -138,7 +139,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             if (type == null) return;
 
             if(!player.hasPermission("craftbook.mech.pistons." + type.name().toLowerCase(Locale.ENGLISH))) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -149,7 +150,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     Piston pis = (Piston) block.getBlockData();
                     Block off = block.getRelative(pis.getFacing());
                     if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
-                        if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("area.use-permission");
                         SignUtil.cancelSign(event);
                         return;
@@ -168,7 +169,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     for (int i = 0; i < distance; i++) {
                         off = off.getRelative(pis.getFacing());
                         if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
-                            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                                 player.printError("area.use-permission");
                             SignUtil.cancelSign(event);
                             return;

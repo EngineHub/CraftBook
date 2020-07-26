@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.items;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
@@ -120,7 +121,7 @@ public class CommandItemAction {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch(NumberFormatException e) {
-                    CraftBookPlugin.logger.warn("Variable " + isparts[0] + " is not a number!");
+                    CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable > test;
             }
@@ -133,7 +134,7 @@ public class CommandItemAction {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch(NumberFormatException e) {
-                    CraftBookPlugin.logger.warn("Variable " + isparts[0] + " is not a number!");
+                    CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable < test;
             }

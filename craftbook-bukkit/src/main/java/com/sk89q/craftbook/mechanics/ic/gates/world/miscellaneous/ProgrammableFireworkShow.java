@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.CraftBook;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -87,7 +88,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         try {
             handler = new FireworkShowHandler(show);
         } catch (IOException e) {
-            CraftBookPlugin.logger.error("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString(), e);
+            CraftBook.logger.error("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString(), e);
         }
 
         String[] bits = RegexUtil.COMMA_PATTERN.split(getLine(3));
@@ -482,7 +483,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
-                            CraftBookPlugin.logger.error("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of "
+                            CraftBook.logger.error("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of "
                                     + "the firework file " + showName + "!", e);
                         }
                     }

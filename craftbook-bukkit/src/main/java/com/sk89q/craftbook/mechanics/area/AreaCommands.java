@@ -21,7 +21,7 @@ import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;

@@ -32,7 +32,7 @@
 
 package com.sk89q.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
@@ -94,7 +94,7 @@ public class BlockSyntax {
                 blockState = LegacyMapper.getInstance().getBlockFromLegacy(BukkitAdapter.asBlockType(material).getLegacyId(), data).toBaseBlock();
             }
             if (material == null) {
-                CraftBookPlugin.logger.warn("Invalid block format: " + line);
+                CraftBook.logger.warn("Invalid block format: " + line);
                 knownBadLines.add(line);
             }
         }

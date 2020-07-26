@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.util.jinglenote;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
@@ -160,7 +161,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
                     sequencer.start();
                     running = true;
                     playedBefore = true;
-                    if (CraftBookPlugin.inst().getConfiguration().debugMode) {
+                    if (CraftBook.getInstance().getPlatform().getConfiguration().debugMode) {
                         synchronized (PLAYER_LOCK) {
                             for (JingleNotePlayer player : players)
                                 CraftBookPlugin.logDebugMessage("Opening midi sequencer: " + player.player, "midi");

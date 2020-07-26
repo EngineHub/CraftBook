@@ -16,7 +16,8 @@
 
 package com.sk89q.craftbook.mechanics.minecart;
 
-import com.sk89q.craftbook.core.mechanic.MechanicTypes;
+import com.sk89q.craftbook.CraftBook;
+import com.sk89q.craftbook.mechanic.MechanicTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Minecart;
@@ -44,8 +45,8 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(CraftBookPlugin.inst().getMechanicManager().isMechanicEnabled(MechanicTypes.MINECART_TEMPORARY_CART)) {
-            if(CraftBookPlugin.inst().getMechanicManager().getMechanic(MechanicTypes.MINECART_TEMPORARY_CART).get().getMinecarts().contains(event.getVehicle()))
+        if(CraftBook.getInstance().getPlatform().getMechanicManager().isMechanicEnabled(MechanicTypes.MINECART_TEMPORARY_CART)) {
+            if(CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MINECART_TEMPORARY_CART).get().getMinecarts().contains(event.getVehicle()))
                 return;
         }
 

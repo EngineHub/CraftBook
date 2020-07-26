@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.EventUtil;
@@ -67,13 +68,13 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
             Painting paint = (Painting) event.getRightClicked();
 
             if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.use-permissions");
                 return;
             }
 
             if(!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("area.use-permissions");
                 return;
             }

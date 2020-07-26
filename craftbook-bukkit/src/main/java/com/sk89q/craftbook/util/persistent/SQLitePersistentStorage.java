@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sk89q.craftbook.CraftBook;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -140,7 +141,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     public void set (String location, Object data) {
 
         if(!(data instanceof Serializable) && !(data instanceof ConfigurationSerializable)) {
-            CraftBookPlugin.logger.warn("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
+            CraftBook.logger.warn("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
             return;
         }
 

@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
 import com.sk89q.craftbook.mechanics.variables.exception.VariableException;

@@ -23,6 +23,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockSyntax;
@@ -233,12 +234,12 @@ public class Chair extends AbstractCraftBookMechanic {
             if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     lplayer.printError("mech.use-permission");
                 return;
             }
             if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     lplayer.printError("area.use-permissions");
                 return;
             }
@@ -385,7 +386,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 }
             }).syncStart();
         } catch(Throwable e) {
-            CraftBookPlugin.logger.warn("ProtocolLib is required for chairs! Disabling chairs!");
+            CraftBook.logger.warn("ProtocolLib is required for chairs! Disabling chairs!");
             return false;
         }
 

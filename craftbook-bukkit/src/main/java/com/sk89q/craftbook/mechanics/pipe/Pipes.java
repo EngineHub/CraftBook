@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -76,7 +77,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.circuits.pipes")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -99,7 +100,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 Block off = pistonBlock.getRelative(pis.getFacing());
                 if (InventoryUtil.doesBlockHaveInventory(off)) {
                     if (!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
-                        if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("area.use-permission");
                         SignUtil.cancelSign(event);
                         return;

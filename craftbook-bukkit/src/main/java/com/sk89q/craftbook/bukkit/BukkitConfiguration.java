@@ -16,67 +16,41 @@
 
 package com.sk89q.craftbook.bukkit;
 
-import com.sk89q.craftbook.core.mechanic.MechanicType;
+import com.sk89q.craftbook.CraftBook;
+import com.sk89q.craftbook.YamlConfiguration;
+import com.sk89q.craftbook.mechanic.MechanicType;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.util.report.Unreported;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
-/**
- * A CraftBook implementation of {@link com.sk89q.worldedit.bukkit.BukkitConfiguration}.
- */
-public class BukkitConfiguration {
-
-    public List<String> enabledMechanics;
-
-    public boolean noOpPermissions;
-    public boolean indirectRedstone;
-    public boolean useBlockDistance;
-    public boolean safeDestruction;
-    public int stThinkRate;
-    public boolean obeyWorldguard;
-    public boolean advancedBlockChecks;
-    public boolean pedanticBlockChecks;
-    public boolean showPermissionMessages;
-    public long signClickTimeout;
-    public boolean convertNamesToCBID;
-
-    public String language;
-    public List<String> languages;
-    public boolean languageScanText;
-
-    public boolean debugMode;
-    public boolean debugLogToFile;
-    public List<String> debugFlags;
-
-    public String persistentStorageType;
-
-    @Unreported public YAMLProcessor config;
+public class BukkitConfiguration extends YamlConfiguration {
 
     public BukkitConfiguration(YAMLProcessor config) {
-
-        this.config = config;
+        super(config);
     }
 
+    @Override
     public void load() {
-
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger.error("Error loading CraftBook configuration", e);
+            CraftBook.logger.error("Error loading CraftBook configuration", e);
             e.printStackTrace();
         }
 
-        if(config.getNode("mechanics") != null) {
-
-            new File(CraftBookPlugin.inst().getDataFolder(), "config.yml").renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "config.yml.old"));
-            CraftBookPlugin.inst().createDefaultConfiguration("config.yml");
+        if(config.getNode("enabled-mechanics") != null) {
             try {
+                Files.move(
+                        CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml"),
+                        CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml.old")
+                );
+
+                CraftBookPlugin.inst().createDefaultConfiguration("config.yml");
+
                 config.load();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -86,11 +60,11 @@ public class BukkitConfiguration {
         config.setWriteDefaults(true);
 
         config.setHeader(
-                "# CraftBook Configuration for Bukkit. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
+                "# CraftBook Configuration for Bukkit.",
                 "# This configuration will automatically add new configuration options for you,",
-                "# So there is no need to regenerate this configuration unless you need to.",
-                "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getDocsDomain() + "/Usage",
+                "# So there is no need to regenerate this configuration unless you want to.",
+                "# More information about these features are available at:",
+                "# " + CraftBookPlugin.getDocsDomain() + "mechanics/",
                 "#",
                 "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
                 "");
@@ -101,12 +75,12 @@ public class BukkitConfiguration {
                 .stream()
                 .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::getId))
                 .forEach(mechanicType -> {
-            String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
-            boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
-            if (enabled) {
-                enabledMechanics.add(mechanicType.getId());
-            }
-        });
+                    String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
+                    boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
+                    if (enabled) {
+                        enabledMechanics.add(mechanicType.getId());
+                    }
+                });
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);
@@ -165,6 +139,7 @@ public class BukkitConfiguration {
         config.save();
     }
 
+    @Override
     public void save() {
         for (MechanicType<?> availableMechanic : MechanicType.REGISTRY.values()) {
             String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getId();

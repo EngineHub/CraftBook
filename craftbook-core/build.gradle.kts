@@ -12,8 +12,14 @@ applyPlatformAndCoreConfiguration()
 
 dependencies {
     "compile"(project(":craftbook-libs:core"))
-    "compile"("com.sk89q.worldedit:worldedit-core:${Versions.WORLDEDIT}")
-    "compile"("com.sk89q.worldguard:worldguard-core:${Versions.WORLDGUARD}")
+    "api"("com.sk89q.worldedit:worldedit-core:${Versions.WORLDEDIT}")
+    "api"("com.sk89q.worldguard:worldguard-core:${Versions.WORLDGUARD}")
+    "implementation"("org.yaml:snakeyaml:1.9")
+    "implementation"("com.google.guava:guava:${Versions.GUAVA}")
+    "implementation"("com.google.code.findbugs:jsr305:1.3.9")
+    "implementation"("com.google.code.gson:gson:${Versions.GSON}")
+    "implementation"("org.slf4j:slf4j-api:1.7.26")
+    "implementation"("it.unimi.dsi:fastutil:${Versions.FAST_UTIL}")
 
     "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
     "testImplementation"("org.hamcrest:hamcrest-library:1.2.1")

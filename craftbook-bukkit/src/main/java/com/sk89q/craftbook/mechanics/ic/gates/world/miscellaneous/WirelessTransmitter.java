@@ -40,6 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.sk89q.craftbook.CraftBook;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -81,7 +82,7 @@ public class WirelessTransmitter extends AbstractIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
+            if(CraftBook.getInstance().getPlatform().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
                 String line3 = getLine(3);
                 OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
                 if(player.hasPlayedBefore()) {

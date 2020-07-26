@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -104,7 +105,7 @@ public final class LocationUtil {
 
         if(!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
 
-        if (CraftBookPlugin.inst().getConfiguration().useBlockDistance)
+        if (CraftBook.getInstance().getPlatform().getConfiguration().useBlockDistance)
             return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
         else return l1.distanceSquared(l2);
     }

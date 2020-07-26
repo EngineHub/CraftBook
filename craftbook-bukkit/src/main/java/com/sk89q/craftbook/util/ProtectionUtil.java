@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.util;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,7 +67,7 @@ public final class ProtectionUtil {
     public static boolean canBuild(Player player, Block block, boolean build) {
 
         if (!shouldUseProtection()) return true;
-        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks) {
             BlockEvent event;
             if (build)
                 event = new BlockPlaceEvent(block, block.getState(), block.getRelative(0, -1, 0), player.getInventory().getItemInMainHand(), player, true, EquipmentSlot.HAND);
@@ -75,13 +76,13 @@ public final class ProtectionUtil {
             EventUtil.callEventSafely(event);
             return !(((Cancellable) event).isCancelled() || event instanceof BlockPlaceEvent && !((BlockPlaceEvent) event).canBuild());
         }
-        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || (CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block));
+        return !CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard || (CraftBookPlugin.plugins.getWorldGuard() == null || build ? CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(player, block.getLocation(), block.getType()) : CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockBreak(player, block));
 
     }
 
     public static boolean canSendCommand(Player player, String command) {
         if (!shouldUseProtection()) return true;
-        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks) {
             PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, command);
             EventUtil.callEventSafely(event);
             return !event.isCancelled();
@@ -101,15 +102,15 @@ public final class ProtectionUtil {
     public static boolean canUse(Player player, Location loc, BlockFace face, Action action) {
 
         if (!shouldUseProtection()) return true;
-        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks) {
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             EventUtil.callEventSafely(event);
-            if (!event.isCancelled() && CraftBookPlugin.inst().getConfiguration().obeyWorldguard && CraftBookPlugin.plugins.getWorldGuard() != null) {
+            if (!event.isCancelled() && CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard && CraftBookPlugin.plugins.getWorldGuard() != null) {
                 return CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
             }
             return !event.isCancelled();
         }
-        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
+        return !CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, loc.getBlock());
     }
 
     /**
@@ -124,12 +125,12 @@ public final class ProtectionUtil {
     public static boolean canAccessInventory(Player player, Block block) {
 
         if (!shouldUseProtection()) return true;
-        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks) {
 
             if (!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK))
                 return false;
         }
-        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
+        return !CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
     }
 
     /**
@@ -144,13 +145,13 @@ public final class ProtectionUtil {
     public static boolean canBlockForm(Block block, BlockState newState) {
 
         if (!shouldUseProtection()) return true;
-        if (CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks) {
 
             BlockFormEvent event = new BlockFormEvent(block, newState);
             EventUtil.callEventSafely(event);
             return !event.isCancelled();
         }
-        return !CraftBookPlugin.inst().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || !(newState.getType() == Material.SNOW || newState.getType() == Material.ICE) || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(null, block.getLocation(), newState.getType());
+        return !CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard || CraftBookPlugin.plugins.getWorldGuard() == null || !(newState.getType() == Material.SNOW || newState.getType() == Material.ICE) || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockPlace(null, block.getLocation(), newState.getType());
 
     }
 
@@ -161,6 +162,6 @@ public final class ProtectionUtil {
      */
     public static boolean shouldUseProtection() {
 
-        return CraftBookPlugin.inst().getConfiguration().advancedBlockChecks || CraftBookPlugin.inst().getConfiguration().obeyWorldguard;
+        return CraftBook.getInstance().getPlatform().getConfiguration().advancedBlockChecks || CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldguard;
     }
 }

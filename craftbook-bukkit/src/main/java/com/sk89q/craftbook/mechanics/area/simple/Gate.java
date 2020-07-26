@@ -34,6 +34,7 @@ package com.sk89q.craftbook.mechanics.area.simple;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -222,7 +223,7 @@ public class Gate extends AbstractCraftBookMechanic {
                     break;
 
             // bag.setBlockID(w, x, y1, z, ID);
-            if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
                 boolean hasBlocks = hasEnoughBlocks(sign, otherSign);
                 if (!close || hasBlocks) {
                     if (!close && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData()), true)) {
@@ -282,13 +283,13 @@ public class Gate extends AbstractCraftBookMechanic {
 
         BlockState gateBlock = getGateBlock(sign, smallSearchSize);
 
-        if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
             if (player.getItemInHand(HandSide.MAIN_HAND).getType().hasBlockType()) {
                 BlockType heldType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
                 if ((gateBlock == null || gateBlock.getBlockType().getMaterial().isAir() || gateBlock.getBlockType() == heldType)
                         && isValidGateBlock(sign, smallSearchSize, heldType.getDefaultState(), false)) {
                     if (!player.hasPermission("craftbook.mech.gate.restock")) {
-                        if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                        if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("mech.restock-permission");
                         return;
                     }
@@ -318,13 +319,13 @@ public class Gate extends AbstractCraftBookMechanic {
         }
 
         if (!player.hasPermission("craftbook.mech.gate.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -366,7 +367,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if (event.getLine(1).equalsIgnoreCase("[Gate]")) {
             if(!player.hasPermission("craftbook.mech.gate")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -388,7 +389,7 @@ public class Gate extends AbstractCraftBookMechanic {
             player.print("mech.gate.create");
         } else if (event.getLine(1).equalsIgnoreCase("[DGate]")) {
             if (!player.hasPermission("craftbook.mech.gate") && !player.hasPermission("craftbook.mech.dgate")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -458,7 +459,7 @@ public class Gate extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.break-permissions");
             return;
         }

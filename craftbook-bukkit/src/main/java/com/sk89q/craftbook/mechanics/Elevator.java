@@ -34,6 +34,7 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -158,7 +159,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.elevator")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -220,7 +221,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             }
 
             if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     localPlayer.printError("mech.use-permission");
                 continue;
             }
@@ -281,13 +282,13 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             event.setCancelled(true);
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("area.use-permissions");
             return;
         }

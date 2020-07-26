@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics.cauldron;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
@@ -92,7 +93,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cauldron")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -238,7 +239,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public boolean performCauldron(Block block, CraftBookPlayer player) {
 
         if (player != null && !player.hasPermission("craftbook.mech.cauldron.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return false;
         }

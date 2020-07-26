@@ -18,16 +18,15 @@ package com.sk89q.craftbook.bukkit.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.report.GlobalConfigReport;
 import com.sk89q.craftbook.bukkit.report.LoadedICsReport;
 import com.sk89q.craftbook.bukkit.report.MechanicReport;
-import com.sk89q.craftbook.core.mechanic.MechanicCommands;
+import com.sk89q.craftbook.exception.CraftBookException;
+import com.sk89q.craftbook.mechanic.MechanicCommands;
 import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -51,13 +50,12 @@ import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
-import org.enginehub.piston.annotation.param.Arg;
 import org.enginehub.piston.annotation.param.Switch;
 import org.enginehub.piston.part.SubCommandPart;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
@@ -139,9 +137,9 @@ public class CraftBookCommands {
         String result = report.toString();
 
         try {
-            File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
-            Files.write(result, dest, StandardCharsets.UTF_8);
-            actor.print("CraftBook report written to " + dest.getAbsolutePath());
+            Path dest = CraftBook.getInstance().getPlatform().getConfigDir().resolve("report.txt");
+            Files.write(result, dest.toFile(), StandardCharsets.UTF_8);
+            actor.print("CraftBook report written to " + dest.toAbsolutePath().toString());
         } catch (IOException e) {
             throw new CraftBookException("Failed to write report: " + e.getMessage());
         }
@@ -150,29 +148,12 @@ public class CraftBookCommands {
             CraftBookPlugin.inst().checkPermission(BukkitAdapter.adapt(actor), "craftbook.report.pastebin");
 
             ActorCallbackPaste.pastebin(
-                    CraftBookPlugin.inst().getSupervisor(),
+                    CraftBook.getInstance().getSupervisor(),
                     actor,
                     result,
                     "CraftBook report: %s.report"
             );
         }
     }
-
-    @Command(name = "dev", desc = "Advanced developer commands")
-    @CommandPermissions({"craftbook.developer"})
-    public void dev(Actor actor, @Arg(desc = "The class to run") String className) throws CommandPermissionsException {
-        try {
-            ExternalUtilityManager.performExternalUtility(className);
-            actor.print("Performed utility successfully!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            actor.printError("Failed to perform utility: See console for details!");
-        }
-    }
-
-//    @Command(aliases = {"ic", "circuit"}, desc = "Commands to manage Craftbook IC's")
-//    @NestedCommand(ICCommands.class)
-//    public void icCmd(CommandContext context, CommandSender sender) {
-//    }
 
 }

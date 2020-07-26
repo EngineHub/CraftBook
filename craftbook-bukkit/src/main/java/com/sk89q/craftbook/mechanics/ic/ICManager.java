@@ -33,6 +33,7 @@
 package com.sk89q.craftbook.mechanics.ic;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.ic.families.Family3I3O;
 import com.sk89q.craftbook.mechanics.ic.families.Family3ISO;
 import com.sk89q.craftbook.mechanics.ic.families.FamilyAISO;
@@ -694,8 +695,8 @@ public class ICManager {
                         + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
-                CraftBookPlugin.logger.warn("An error occurred generating the docs for IC: " + ic + ".");
-                CraftBookPlugin.logger.warn("Please report this error on: https://discord.gg/enginehub");
+                CraftBook.logger.warn("An error occurred generating the docs for IC: " + ic + ".");
+                CraftBook.logger.warn("Please report this error on: https://discord.gg/enginehub");
             }
         }
 

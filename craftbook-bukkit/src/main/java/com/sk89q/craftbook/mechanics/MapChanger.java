@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -43,7 +44,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
         if(!event.getLine(1).equalsIgnoreCase("[map]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.map")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("You don't have permission for this.");
             SignUtil.cancelSign(event);
             return;
@@ -65,13 +66,13 @@ public class MapChanger extends AbstractCraftBookMechanic {
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.map.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }

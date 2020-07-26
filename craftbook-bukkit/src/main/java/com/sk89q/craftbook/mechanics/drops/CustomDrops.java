@@ -18,7 +18,7 @@ package com.sk89q.craftbook.mechanics.drops;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
 import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
 import com.sk89q.craftbook.util.BlockSyntax;
@@ -166,7 +166,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                             Biome biome = Biome.valueOf(biomeString);
                             biomes.add(biome);
                         } catch (IllegalArgumentException e) {
-                            CraftBookPlugin.logger.warn("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                            CraftBook.logger.warn("Tried to assign invalid biome " + biomeString + " to custom drop!");
                         }
                     }
                     def.setBiomes(biomes);

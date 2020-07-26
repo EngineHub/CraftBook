@@ -16,7 +16,8 @@
 
 package com.sk89q.craftbook.bukkit.report;
 
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
+import com.sk89q.craftbook.mechanic.CraftBookMechanic;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
@@ -28,10 +29,10 @@ public class MechanicReport extends DataReport  {
 
         CraftBookPlugin plugin = CraftBookPlugin.inst();
 
-        append("Mechanics Loaded", plugin.getMechanicManager().getLoadedMechanics().size());
+        append("Mechanics Loaded", CraftBook.getInstance().getPlatform().getMechanicManager().getLoadedMechanics().size());
         append("ST Mechanics Loaded", plugin.getSelfTriggerManager() == null ? 0 : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
 
-        for (CraftBookMechanic mechanic : plugin.getMechanicManager().getLoadedMechanics()) {
+        for (CraftBookMechanic mechanic : CraftBook.getInstance().getPlatform().getMechanicManager().getLoadedMechanics()) {
             DataReport report = new DataReport("Mechanic: " + mechanic.getClass().getSimpleName());
             report.append("Configuration", new HierarchyObjectReport("Configuration", mechanic));
 

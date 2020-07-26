@@ -49,8 +49,5 @@ debug.log
 debug.txt
 
 # Generated Files
-/configs/
-/ICList.txt
-/config.yml
-/en_US.yml
 run/
+docgen_output/

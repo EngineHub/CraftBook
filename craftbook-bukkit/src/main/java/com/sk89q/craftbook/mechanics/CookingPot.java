@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -56,7 +57,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cook")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -211,13 +212,13 @@ public class CookingPot extends AbstractCraftBookMechanic {
             if (cb.getType() == Material.CHEST) {
                 Player player = event.getPlayer();
                 if(!player.hasPermission("craftbook.mech.cook.refuel")) {
-                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                         p.printError("mech.restock-permission");
                     event.setCancelled(true);
                     return;
                 }
                 if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                         p.printError("area.use-permissions");
                     return;
                 }

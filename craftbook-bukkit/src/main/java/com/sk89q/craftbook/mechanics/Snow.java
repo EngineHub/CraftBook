@@ -18,6 +18,7 @@ package com.sk89q.craftbook.mechanics;
 
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.BlockSyntax;
@@ -135,7 +136,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
                     return;
                 }
             }
@@ -190,7 +191,7 @@ public class Snow extends AbstractCraftBookMechanic {
                         return;
                     }
 
-                    if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks
+                    if (CraftBook.getInstance().getPlatform().getConfiguration().pedanticBlockChecks
                             && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) {
                         return;
                     }

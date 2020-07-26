@@ -4,6 +4,9 @@ object Versions {
     const val JUNIT = "4.11"
     const val POWERMOCK = "1.6.1"
     const val WORLDEDIT = "7.2.0-SNAPSHOT"
-    const val WORLDGUARD = "7.0.1"
+    const val WORLDGUARD = "7.0.4-SNAPSHOT"
     const val SQUIRRELID = "0.2.0"
+    const val FAST_UTIL = "8.2.1"
+    const val GUAVA = "21.0"
+    const val GSON = "2.8.0"
 }

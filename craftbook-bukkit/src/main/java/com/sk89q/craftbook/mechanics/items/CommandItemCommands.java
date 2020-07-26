@@ -23,7 +23,7 @@ import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import com.sk89q.craftbook.util.EnumUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.TernaryState;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;

@@ -24,7 +24,7 @@ import com.sk89q.craftbook.mechanics.variables.exception.ExistingVariableExcepti
 import com.sk89q.craftbook.mechanics.variables.exception.InvalidVariableException;
 import com.sk89q.craftbook.mechanics.variables.exception.UnknownVariableException;
 import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -76,7 +76,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-        checkModifyPermissions(actor, key);
+        checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
         VariableManager.instance.setVariable(key, value);
@@ -100,10 +100,7 @@ public class VariableCommands {
             throw new ExistingVariableException(key);
         }
 
-        if (!key.hasPermission(actor, "define")) {
-            throw new AuthorizationException();
-        }
-
+        checkVariablePermission(actor, key, "define");
         checkVariableValue(value);
 
         VariableManager.instance.setVariable(key, value);
@@ -121,10 +118,7 @@ public class VariableCommands {
             @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-
-        if (!key.hasPermission(actor, "get")) {
-            throw new AuthorizationException();
-        }
+        checkVariablePermission(actor, key, "get");
 
         String value = VariableManager.instance.getVariable(key);
 
@@ -178,7 +172,7 @@ public class VariableCommands {
         actor.printInfo(variableListBox.create(page));
     }
 
-    @Command(name = "remove", aliases = {"erase","delete","rm"}, desc = "Erase a variable.")
+    @Command(name = "remove", aliases = {"delete","rm"}, desc = "Remove a variable.")
     @CommandPermissions({"craftbook.variables.remove"})
     public void remove(Actor actor,
             @Arg(desc = "The variable name") String variable,
@@ -186,10 +180,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-
-        if (!key.hasPermission(actor, "erase")) {
-            throw new AuthorizationException();
-        }
+        checkVariablePermission(actor, key, "remove");
 
         VariableManager.instance.removeVariable(key);
         actor.printInfo(TranslatableComponent.of("craftbook.variables.remove", key.getRichName()));
@@ -204,7 +195,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-        checkModifyPermissions(actor, key);
+        checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
         VariableManager.instance.setVariable(key, VariableManager.instance.getVariable(key) + value);
@@ -224,7 +215,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-        checkModifyPermissions(actor, key);
+        checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
         VariableManager.instance.setVariable(key, value + VariableManager.instance.getVariable(key));
@@ -243,7 +234,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-        checkModifyPermissions(actor, key);
+        checkVariablePermission(actor, key, "modify");
 
         String var = VariableManager.instance.getVariable(key);
         if (var != null) {
@@ -279,7 +270,7 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
-        checkModifyPermissions(actor, key);
+        checkVariablePermission(actor, key, "modify");
 
         String var = VariableManager.instance.getVariable(key);
         if (var != null) {
@@ -312,8 +303,8 @@ public class VariableCommands {
         }
     }
 
-    private void checkModifyPermissions(Actor actor, VariableKey variableKey) throws AuthorizationException {
-        if (!variableKey.hasPermission(actor, "modify")) {
+    private void checkVariablePermission(Actor actor, VariableKey variableKey, String action) throws AuthorizationException {
+        if (!variableKey.hasPermission(actor, action)) {
             throw new AuthorizationException();
         }
     }

@@ -19,8 +19,9 @@ package com.sk89q.craftbook.mechanics.crafting;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import com.sk89q.craftbook.util.EventUtil;
@@ -96,7 +97,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                 recipes++;
             }
         }
-        CraftBookPlugin.logger.info("Registered " + recipes + " custom recipes!");
+        CraftBook.logger.info("Registered " + recipes + " custom recipes!");
 
         return true;
     }
@@ -119,7 +120,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
      */
     public boolean addRecipe(RecipeManager.Recipe r) {
         if (registeredNames.contains(r.getId())) {
-            CraftBookPlugin.logger.warn("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
+            CraftBook.logger.warn("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
                     + "limitation in Bukkit-derivitive servers, this can't be registered again without a restart.");
             return false;
         }
@@ -158,11 +159,11 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
             return true;
         } catch (IllegalArgumentException e) {
-            CraftBookPlugin.logger.error("Corrupt or invalid recipe!");
-            CraftBookPlugin.logger.error("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
+            CraftBook.logger.error("Corrupt or invalid recipe!");
+            CraftBook.logger.error("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
             e.printStackTrace();
         } catch (Exception e) {
-            CraftBookPlugin.logger.error("Failed to load recipe! Is it incorrectly written?", e);
+            CraftBook.logger.error("Failed to load recipe! Is it incorrectly written?", e);
         }
 
         return false;

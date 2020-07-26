@@ -16,10 +16,10 @@
 
 package com.sk89q.craftbook.mechanics.headdrops;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -95,7 +95,7 @@ public class HeadDropsCommands {
             itemMeta.setOwner(mobName);
             stack.setItemMeta(itemMeta);
         } else {
-            CraftBookPlugin.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
+            CraftBook.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
         }
 
         if(!player.getInventory().addItem(stack).isEmpty()) {

@@ -19,8 +19,9 @@ package com.sk89q.craftbook.mechanics.items;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
@@ -144,7 +145,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger.error("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
+            CraftBook.logger.error("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
                     + "are no tabs!", e);
             return false;
         }
@@ -158,14 +159,14 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
             } else
-                CraftBookPlugin.logger.warn("Failed to add CommandItem: " + key);
+                CraftBook.logger.warn("Failed to add CommandItem: " + key);
         }
 
         if(amount == 0) return false;
 
         config.save();
 
-        CraftBookPlugin.logger.info("Successfully added " + amount + " CommandItems!");
+        CraftBook.logger.info("Successfully added " + amount + " CommandItems!");
 
         if(definitions.size() > 0) {
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
@@ -433,7 +434,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 if(!comdef.requireSneaking.doesPass(lplayer.isSneaking())) break current;
 
                 if(!lplayer.hasPermission("craftbook.mech.commanditems") || comdef.permNode != null && !comdef.permNode.isEmpty() && !lplayer.hasPermission(comdef.permNode)) {
-                    if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                    if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                         lplayer.printError("mech.use-permission");
                     break current;
                 }

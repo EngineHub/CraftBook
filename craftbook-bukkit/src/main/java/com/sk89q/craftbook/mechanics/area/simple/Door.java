@@ -33,6 +33,7 @@ package com.sk89q.craftbook.mechanics.area.simple;
  */
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -43,7 +44,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -87,7 +88,7 @@ public class Door extends CuboidToggleMechanic {
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if(!player.hasPermission("craftbook.mech.door")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -118,13 +119,13 @@ public class Door extends CuboidToggleMechanic {
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.door.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -132,12 +133,12 @@ public class Door extends CuboidToggleMechanic {
         try {
             ChangedSign sign = event.getSign();
 
-            if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
+            if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
                 if (event.getPlayer().getItemInHand().getType() != Material.AIR)
                     if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getItemInHand().getType() && getBlockBase(event.getClickedBlock()).getData() == event.getPlayer().getItemInHand().getData().getData()) {
 
                         if (!player.hasPermission("craftbook.mech.door.restock")) {
-                            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                                 player.printError("mech.restock-permission");
                             return;
                         }

@@ -17,6 +17,7 @@
 package com.sk89q.craftbook.util.persistent;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 
@@ -32,7 +33,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public void open () {
 
-        CraftBookPlugin.logger.info("Loading persistent data from YAML!");
+        CraftBook.logger.info("Loading persistent data from YAML!");
 
         File oldFile = new File(CraftBookPlugin.inst().getDataFolder(), "persistance.yml");
         if(oldFile.exists()) {
@@ -53,18 +54,18 @@ public class YAMLPersistentStorage extends PersistentStorage {
             processor.load();
         } catch (Throwable e) {
             e.printStackTrace();
-            CraftBookPlugin.logger.warn("Persistent Data Corrupt! Data will be reset!");
+            CraftBook.logger.warn("Persistent Data Corrupt! Data will be reset!");
         }
 
         if(getVersion() != getCurrentVersion()) { //Convert.
-            CraftBookPlugin.logger.info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
+            CraftBook.logger.info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
             convertVersion(getCurrentVersion());
             processor.clear();
             try {
                 processor.load();
             } catch (Exception e) {
                 e.printStackTrace();
-                CraftBookPlugin.logger.warn("Persistent Data Corrupt! Data will be reset!");
+                CraftBook.logger.warn("Persistent Data Corrupt! Data will be reset!");
             }
         }
     }
@@ -72,7 +73,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
     @Override
     public void close () {
 
-        CraftBookPlugin.logger.info("Saving persistent data to YAML!");
+        CraftBook.logger.info("Saving persistent data to YAML!");
 
         processor.save();
         processor.clear();

@@ -135,8 +135,7 @@ public class VariableKey {
             }
         }
 
-        return actor.hasPermission("craftbook.variables." + action + "")
-                || actor.hasPermission("craftbook.variables." + action + '.' + getNamespace())
+        return actor.hasPermission("craftbook.variables." + action + '.' + getNamespace())
                 || actor.hasPermission("craftbook.variables." + action + '.' + getNamespace() + '.' + getVariable());
     }
 

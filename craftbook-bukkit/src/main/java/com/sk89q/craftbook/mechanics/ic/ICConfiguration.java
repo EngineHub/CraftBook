@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class ICConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger.error("Error loading CraftBook IC configuration", e);
+            CraftBook.logger.error("Error loading CraftBook IC configuration", e);
         }
 
         for (RegisteredICFactory factory : ICManager.inst().getICList())

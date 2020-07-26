@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
@@ -64,7 +65,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if(!event.getLine(1).equalsIgnoreCase("[x]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;

@@ -16,7 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.variables;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -58,7 +58,7 @@ public class VariableConfiguration {
                         throw new VariableException(TextComponent.of("Invalid variable " + key.toString() + " with value " + value), key);
                     }
                 } catch (VariableException e) {
-                    CraftBookPlugin.logger.error("Invalid variable in variables file", e);
+                    CraftBook.logger.error("Invalid variable in variables file", e);
                 }
             }
         }

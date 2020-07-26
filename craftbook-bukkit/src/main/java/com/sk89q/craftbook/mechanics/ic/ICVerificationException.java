@@ -32,7 +32,7 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
-import com.sk89q.craftbook.util.exceptions.InvalidMechanismException;
+import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
 
 /**
  * Thrown when an IC verification fails.

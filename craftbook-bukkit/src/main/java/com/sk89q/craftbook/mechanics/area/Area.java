@@ -19,11 +19,11 @@ package com.sk89q.craftbook.mechanics.area;
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
@@ -47,7 +47,6 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 /**
@@ -104,7 +103,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         if (event.getLine(1).equalsIgnoreCase("[Area]")) {
             if(!player.hasPermission("craftbook.mech.area.sign.area")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -112,7 +111,7 @@ public class Area extends AbstractCraftBookMechanic {
             event.setLine(1, "[Area]");
         } else if (event.getLine(1).equalsIgnoreCase("[SaveArea]")) {
             if(!player.hasPermission("craftbook.mech.area.sign.savearea")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -143,13 +142,13 @@ public class Area extends AbstractCraftBookMechanic {
         if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
 
         if (!player.hasPermission("craftbook.mech.area.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.print("mech.use-permission");
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -180,7 +179,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         String namespace = sign.getLine(0).trim();
 
-        if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID
+        if(CraftBook.getInstance().getPlatform().getConfiguration().convertNamesToCBID
                 && namespace.startsWith("~") && CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace.replace("~", "")) == null) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
             if(player.hasPlayedBefore()) {
@@ -284,7 +283,7 @@ public class Area extends AbstractCraftBookMechanic {
             }
             return true;
         } catch (IOException | WorldEditException e) {
-            CraftBookPlugin.logger.error("Failed to toggle Area: " + e.getMessage());
+            CraftBook.logger.error("Failed to toggle Area: " + e.getMessage());
         }
         return false;
     }
@@ -338,7 +337,7 @@ public class Area extends AbstractCraftBookMechanic {
             }
             return true;
         } catch (IOException | WorldEditException e) {
-            CraftBookPlugin.logger.error("Failed to cold toggle Area: " + e.getMessage());
+            CraftBook.logger.error("Failed to cold toggle Area: " + e.getMessage());
         }
         return false;
     }

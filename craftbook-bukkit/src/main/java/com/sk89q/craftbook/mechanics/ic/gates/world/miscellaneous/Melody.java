@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -138,7 +139,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                 player = new MelodyPlayer(new MidiJingleSequencer(file, loop));
                 hasRun = false;
             } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
-                CraftBookPlugin.logger.warn("Found invalid MIDI file: " + file, e);
+                CraftBook.logger.warn("Found invalid MIDI file: " + file, e);
                 foundFile = false;
             }
         }

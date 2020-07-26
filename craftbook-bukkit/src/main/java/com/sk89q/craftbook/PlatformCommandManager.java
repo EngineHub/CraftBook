@@ -16,19 +16,12 @@
 
 package com.sk89q.craftbook;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.sk89q.worldedit.util.formatting.WorldEditText.reduceToText;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.sk89q.bukkit.util.CommandInfo;
-import com.sk89q.bukkit.util.CommandRegistration;
-import com.sk89q.craftbook.bukkit.BukkitCommandInspector;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.commands.CraftBookCommands;
-import com.sk89q.craftbook.core.command.argument.RegistryConverter;
-import com.sk89q.craftbook.core.command.argument.WorldConverter;
-import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.craftbook.command.argument.RegistryConverter;
+import com.sk89q.craftbook.command.argument.WorldConverter;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.worldedit.command.argument.Arguments;
 import com.sk89q.worldedit.command.argument.VectorConverter;
 import com.sk89q.worldedit.command.util.PermissionCondition;
@@ -39,9 +32,6 @@ import com.sk89q.worldedit.internal.util.Substring;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import com.sk89q.worldedit.util.logging.DynamicStreamHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.exception.CommandException;
@@ -70,18 +60,13 @@ public class PlatformCommandManager {
     public static final Pattern COMMAND_CLEAN_PATTERN = Pattern.compile("^[/]+");
     private static final Logger log = LoggerFactory.getLogger(PlatformCommandManager.class);
 
-    private final CraftBookPlugin plugin;
     private final CommandManagerServiceImpl commandManagerService;
     private final CommandManager commandManager;
     private final InjectedValueStore globalInjectedValues;
-    private final DynamicStreamHandler dynamicHandler = new DynamicStreamHandler();
     private final CommandRegistrationHandler registration;
     private final MechanicCommandRegistrar mechanicCommandRegistrar;
 
-    public PlatformCommandManager(final CraftBookPlugin plugin) {
-        checkNotNull(plugin);
-
-        this.plugin = plugin;
+    public PlatformCommandManager() {
         this.commandManagerService = new CommandManagerServiceImpl();
         this.commandManager = commandManagerService.newCommandManager();
         this.globalInjectedValues = MapBackedValueStore.create();
@@ -119,36 +104,9 @@ public class PlatformCommandManager {
         return mechanicCommandRegistrar;
     }
 
-    public void registerCommandsWith(CraftBookPlugin plugin) {
-        BukkitCommandInspector inspector = new BukkitCommandInspector(plugin, commandManager);
-
-        CommandRegistration registration = new CommandRegistration(plugin);
-        registration.register(commandManager.getAllCommands()
-                .map(command -> {
-                    String[] permissionsArray = command.getCondition()
-                            .as(PermissionCondition.class)
-                            .map(PermissionCondition::getPermissions)
-                            .map(s -> s.toArray(new String[0]))
-                            .orElseGet(() -> new String[0]);
-
-                    String[] aliases = Stream.concat(
-                            Stream.of(command.getName()),
-                            command.getAliases().stream()
-                    ).toArray(String[]::new);
-                    // TODO Handle localisation correctly
-                    return new CommandInfo(reduceToText(command.getUsage(), WorldEdit.getInstance().getConfiguration().defaultLocale),
-                            reduceToText(command.getDescription(), WorldEdit.getInstance().getConfiguration().defaultLocale), aliases,
-                            inspector, permissionsArray);
-                }).collect(Collectors.toList()));
-
+    public void registerCommandsWith(CraftBookPlatform platform) {
+        platform.registerCommands(this.commandManager);
         this.mechanicCommandRegistrar.unmarkDirty();
-    }
-
-    public void resetCommandRegistration(CraftBookPlugin plugin) {
-        CommandRegistration registration = new CommandRegistration(plugin);
-        registration.unregisterCommands();
-        registerCommandsWith(plugin);
-        Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
     }
 
     private Stream<Substring> parseArgs(String input) {
@@ -282,4 +240,14 @@ public class PlatformCommandManager {
 
         return Collections.emptyList();
     }
+
+    /**
+     * Get the command manager instance.
+     *
+     * @return the command manager
+     */
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
 }

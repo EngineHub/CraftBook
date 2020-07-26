@@ -17,16 +17,16 @@
 package com.sk89q.craftbook.bukkit;
 
 import com.google.common.base.Joiner;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookManifest;
-import com.sk89q.craftbook.CraftBookMechanic;
+import com.sk89q.craftbook.CraftBookPlatform;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.LanguageManager;
 import com.sk89q.craftbook.PlatformCommandManager;
-import com.sk89q.craftbook.core.CraftBookResourceLoader;
-import com.sk89q.craftbook.core.LanguageManager;
-import com.sk89q.craftbook.core.mechanic.MechanicManager;
-import com.sk89q.craftbook.core.st.MechanicClock;
-import com.sk89q.craftbook.core.st.SelfTriggeringManager;
+import com.sk89q.craftbook.mechanic.CraftBookMechanic;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import com.sk89q.craftbook.st.MechanicClock;
+import com.sk89q.craftbook.st.SelfTriggeringManager;
 import com.sk89q.craftbook.util.ArrayUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.UUIDMappings;
@@ -34,17 +34,11 @@ import com.sk89q.craftbook.util.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
-import com.sk89q.worldedit.util.io.ResourceLoader;
-import com.sk89q.worldedit.util.task.SimpleSupervisor;
-import com.sk89q.worldedit.util.task.Supervisor;
-import com.sk89q.worldedit.util.translation.TranslationManager;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -61,7 +55,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,14 +62,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CraftBookPlugin extends JavaPlugin {
-
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(CraftBookPlugin.class);
 
     /**
      * Companion Plugins for CraftBook.
@@ -88,13 +81,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private static CraftBookPlugin instance;
     private static String version;
-
-    private final ResourceLoader resourceLoader = new CraftBookResourceLoader();
-
-    /**
-     * The mechanic manager
-     */
-    private final MechanicManager mechanicManager = new MechanicManager(this);
+    private static CraftBookPlatform platform;
 
     /**
      * The language manager
@@ -103,21 +90,11 @@ public class CraftBookPlugin extends JavaPlugin {
     private LanguageManager languageManager;
 
     /**
-     * The translation manager
-     */
-    private final TranslationManager translationManager = new TranslationManager(resourceLoader);
-
-    /**
      * Manager for commands. This automatically handles nested commands,
      * permissions checking, and a number of other fancy command things.
      * We just set it up and register commands against it.
      */
-    private final PlatformCommandManager commandManager = new PlatformCommandManager(this);
-
-    /**
-     * Handles all configuration.
-     */
-    private BukkitConfiguration config;
+    private final PlatformCommandManager commandManager = new PlatformCommandManager();
 
     /**
      * The adapter for events to the manager.
@@ -144,11 +121,6 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private SelfTriggeringManager selfTriggerManager;
 
-    /**
-     * The Supervisor for CraftBook tasks.
-     */
-    private final Supervisor supervisor = new SimpleSupervisor();
-
     private static final int BSTATS_ID = 3319;
 
     /**
@@ -163,32 +135,38 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
+     * Create a default configuration file from the .jar.
+     *
+     * @param name the filename
+     */
+    public void createDefaultConfiguration(String name) {
+        Path actual = CraftBook.getInstance().getPlatform().getConfigDir().resolve(name);;
+        if (Files.notExists(actual)) {
+            try (InputStream stream = getResource("defaults/" + name)) {
+                if (stream == null) throw new FileNotFoundException();
+                copyDefaultConfig(stream, actual.toFile(), name);
+            } catch (IOException e) {
+                CraftBook.logger.error("Unable to read default configuration: " + name);
+            }
+        }
+    }
+
+    /**
      * Called on plugin enable.
      */
     @Override
     public void onEnable() {
-        this.mechanicManager.setup();
-
-        plugins = new CompanionPlugins();
-        plugins.initiate(this);
 
         // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
 
-        // Load the configuration
-        createDefaultConfiguration("config.yml");
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED));
+        CraftBook.getInstance().setPlatform(platform = new BukkitCraftBookPlatform()); // Initialise CraftBook
+        CraftBook.getInstance().setup();
 
-        try {
-            config.load();
-        } catch (Throwable e) {
-            logger.error("Failed to load CraftBook Configuration File! Is it corrupt?", e);
-            logger.error("Disabling CraftBook due to invalid Configuration File!");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        plugins = new CompanionPlugins();
+        plugins.initiate(this);
 
-        persistentStorage = PersistentStorage.createFromType(config.persistentStorageType);
+        persistentStorage = PersistentStorage.createFromType(platform.getConfiguration().persistentStorageType);
 
         if (persistentStorage != null) {
             persistentStorage.open();
@@ -209,7 +187,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Register command classes
         logDebugMessage("Initializing Commands!", "startup");
-        commandManager.registerCommandsWith(this);
+        commandManager.registerCommandsWith(platform);
 
         getServer().getPluginManager().registerEvents(new Listener() {
 
@@ -241,7 +219,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
                 boolean foundAMech = false;
 
-                for (CraftBookMechanic mech : mechanicManager.getLoadedMechanics())
+                for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics())
                     if (!(mech instanceof VariableManager)) {
                         foundAMech = true;
                         break;
@@ -255,7 +233,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         boolean foundAMech = false;
 
-        for (CraftBookMechanic mech : mechanicManager.getLoadedMechanics()) {
+        for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics()) {
             if (!(mech instanceof VariableManager)) {
                 foundAMech = true;
                 break;
@@ -274,7 +252,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Register basic things to the plugin. For example, languages.
      */
     public void setupCraftBook() {
-        if (config.debugLogToFile) {
+        if (platform.getConfiguration().debugLogToFile) {
             try {
                 debugLogger = new PrintWriter(new File(getDataFolder(), "debug.log"));
             } catch (FileNotFoundException e1) {
@@ -292,7 +270,7 @@ public class CraftBookPlugin extends JavaPlugin {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
         } catch (Exception ignored) {}
 
-        this.mechanicManager.enableMechanics();
+        platform.getMechanicManager().enableMechanics();
         setupSelfTriggered();
     }
 
@@ -310,7 +288,7 @@ public class CraftBookPlugin extends JavaPlugin {
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.AdvancedPie("language",
                     () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
-                    () -> mechanicManager.getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
+                    () -> platform.getMechanicManager().getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -321,7 +299,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        this.mechanicManager.shutdown();
+        platform.unload();
 
         if (languageManager != null) {
             languageManager.close();
@@ -383,7 +361,7 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanicClock = new MechanicClock();
         selfTriggerManager = new SelfTriggeringManager();
 
-        logger.info("Enumerating chunks for self-triggered components...");
+        CraftBook.logger.info("Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
         int numChunks = 0;
@@ -398,21 +376,11 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        logger.info(numChunks + " chunk(s) for " + getServer().getWorlds().size() + " world(s) processed " + "(" + time + "ms elapsed)");
+        CraftBook.logger.info(numChunks + " chunk(s) for " + getServer().getWorlds().size() + " world(s) processed " + "(" + time + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
+        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, platform.getConfiguration().stThinkRate);
         getServer().getPluginManager().registerEvents(selfTriggerManager, this);
-    }
-
-    /**
-     * Get the global ConfigurationManager.
-     * Use this to access global configuration values and per-world configuration values.
-     *
-     * @return The global ConfigurationManager
-     */
-    public BukkitConfiguration getConfiguration() {
-        return this.config;
     }
 
     /**
@@ -422,24 +390,6 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public UUIDMappings getUUIDMappings() {
         return this.uuidMappings;
-    }
-
-    /**
-     * Gets the Mechanic manager.
-     *
-     * @return The mechanic manager
-     */
-    public MechanicManager getMechanicManager() {
-        return this.mechanicManager;
-    }
-
-    /**
-     * Gets the Translation Manager.
-     *
-     * @return The translation manager
-     */
-    public TranslationManager getTranslationManager() {
-        return this.translationManager;
     }
 
     /**
@@ -454,15 +404,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public PlatformCommandManager getCommandManager() {
         return this.commandManager;
-    }
-
-    /**
-     * Gets the CraftBook {@link Supervisor}.
-     *
-     * @return The supervisor
-     */
-    public Supervisor getSupervisor() {
-        return this.supervisor;
     }
 
     /**
@@ -544,7 +485,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public boolean hasPermission(CommandSender sender, String perm) {
         if (sender.isOp()) {
             if (sender instanceof Player) {
-                if (!config.noOpPermissions) {
+                if (!platform.getConfiguration().noOpPermissions) {
                     return true;
                 }
             } else {
@@ -624,41 +565,24 @@ public class CraftBookPlugin extends JavaPlugin {
      * Reload configuration
      */
     public void reloadConfiguration() {
-        mechanicManager.shutdown();
+        platform.getMechanicManager().shutdown();
         // TODO Replace these with better handles systems
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
-        if(config.debugLogToFile) {
+        if(platform.getConfiguration().debugLogToFile) {
             debugLogger.close();
             debugLogger = null;
         }
 
-        config.load();
+        platform.getConfiguration().load();
         managerAdapter = new MechanicListenerAdapter();
         mechanicClock = new MechanicClock();
         setupCraftBook();
         registerGlobalEvents();
     }
 
-    /**
-     * Create a default configuration file from the .jar.
-     *
-     * @param name the filename
-     */
-    public void createDefaultConfiguration(String name) {
-        File actual = new File(getDataFolder(), name);
-        if (!actual.exists()) {
-            try (InputStream stream = getResource("defaults/" + name)) {
-                if (stream == null) throw new FileNotFoundException();
-                copyDefaultConfig(stream, actual, name);
-            } catch (IOException e) {
-                logger.error("Unable to read default configuration: " + name);
-            }
-        }
-    }
-
-    private void copyDefaultConfig(InputStream input, File actual, String name) {
+    private static void copyDefaultConfig(InputStream input, File actual, String name) {
         try (FileOutputStream output = new FileOutputStream(actual)) {
             byte[] buf = new byte[8192];
             int length;
@@ -666,9 +590,9 @@ public class CraftBookPlugin extends JavaPlugin {
                 output.write(buf, 0, length);
             }
 
-            logger.info("Default configuration file written: " + name);
+            CraftBook.logger.info("Default configuration file written: " + name);
         } catch (IOException e) {
-            logger.warn("Failed to write default config file", e);
+            CraftBook.logger.warn("Failed to write default config file", e);
         }
     }
 
@@ -677,7 +601,9 @@ public class CraftBookPlugin extends JavaPlugin {
             return false;
         }
 
-        if (!inst().config.debugMode || inst().config.debugFlags == null || inst().config.debugFlags.isEmpty()) {
+        if (!CraftBook.getInstance().getPlatform().getConfiguration().debugMode
+                || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags == null
+                || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags.isEmpty()) {
             return false;
         }
 
@@ -692,7 +618,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 tempFlag = tempFlag + "." + flagBits[i];
             }
 
-            for (String testflag : inst().config.debugFlags) {
+            for (String testflag : CraftBook.getInstance().getPlatform().getConfiguration().debugFlags) {
                 if (testflag.toLowerCase(Locale.ENGLISH).equals(tempFlag)) {
                     return true;
                 }
@@ -709,9 +635,9 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
         }
 
-        logger.info("[Debug][" + code + "] " + message);
+        CraftBook.logger.info("[Debug][" + code + "] " + message);
 
-        if (CraftBookPlugin.inst().config.debugLogToFile) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().debugLogToFile) {
             debugLogger.println("[" + code + "] " + message);
         }
     }
@@ -727,11 +653,11 @@ public class CraftBookPlugin extends JavaPlugin {
     public void setPersistentStorage(PersistentStorage storage) {
         persistentStorage = storage;
 
-        config.persistentStorageType = storage.getType();
+        platform.getConfiguration().persistentStorageType = storage.getType();
 
-        config.config.setProperty("persistent-storage-type", storage.getType());
+        platform.getConfiguration().config.setProperty("persistent-storage-type", storage.getType());
 
-        config.config.save();
+        platform.getConfiguration().config.save();
     }
 
     public static String getDocsDomain() {

@@ -19,6 +19,7 @@ package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.mechanics.crafting.CustomCrafting;
 import com.sk89q.craftbook.mechanics.ic.*;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
@@ -119,7 +120,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         if(!ItemUtil.isStackValid(result)) {
             if (!hasWarnedNoResult) {
-                CraftBookPlugin.logger.warn("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
+                CraftBook.logger.warn("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
                         + " has an invalid recipe! Result: " + result);
                 hasWarnedNoResult = true;
             }
@@ -276,7 +277,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
             if (validRecipeItems == 0) {
                 if (!hasWarned) {
-                    CraftBookPlugin.logger.warn("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe "
+                    CraftBook.logger.warn("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe "
                             + "ingredients are air. Recipe result: " + r.getResult().toString());
                     hasWarned = true;
                 }

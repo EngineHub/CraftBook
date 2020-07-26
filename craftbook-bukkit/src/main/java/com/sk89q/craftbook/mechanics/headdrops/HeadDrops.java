@@ -18,10 +18,10 @@ package com.sk89q.craftbook.mechanics.headdrops;
 
 import com.google.common.collect.Lists;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.MechanicCommandRegistrar;
+import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.area.AreaCommands;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
@@ -169,7 +169,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     itemMeta.setOwner(mobName);
                     toDrop.setItemMeta(itemMeta);
                 } else
-                    CraftBookPlugin.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
+                    CraftBook.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
                 break;
         }
 

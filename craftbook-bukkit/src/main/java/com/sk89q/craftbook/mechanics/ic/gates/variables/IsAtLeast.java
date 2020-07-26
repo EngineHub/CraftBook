@@ -17,8 +17,8 @@
 package com.sk89q.craftbook.mechanics.ic.gates.variables;
 
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -78,7 +78,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
 
             return existing >= amount;
         } catch (VariableException e) {
-            CraftBookPlugin.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
+            CraftBook.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
         }
 
         return false;

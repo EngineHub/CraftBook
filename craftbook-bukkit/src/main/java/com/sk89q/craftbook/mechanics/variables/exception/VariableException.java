@@ -17,7 +17,7 @@
 package com.sk89q.craftbook.mechanics.variables.exception;
 
 import com.sk89q.craftbook.mechanics.variables.VariableKey;
-import com.sk89q.craftbook.util.exceptions.CraftBookException;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**
