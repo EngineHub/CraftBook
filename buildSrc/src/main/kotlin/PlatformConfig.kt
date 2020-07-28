@@ -107,7 +107,7 @@ fun Project.applyShadowConfiguration() {
             include(project(":craftbook-core"))
 
             relocate("org.enginehub.jinglenote", "com.sk89q.craftbook.util.jinglenote")
-            relocate("com.sk89q.squirrelid", "com.sk89q.craftbook.util.profile")
+            relocate("org.enginehub.squirrelid", "com.sk89q.craftbook.util.profile")
         }
         exclude("GradleStart**")
         exclude(".cache")

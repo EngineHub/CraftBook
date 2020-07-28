@@ -29,10 +29,21 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.util.PermissionCondition;
+import com.sk89q.worldedit.util.report.ReportList;
+import com.sk89q.craftbook.util.profile.cache.ProfileCache;
+import com.sk89q.craftbook.util.profile.resolver.BukkitPlayerService;
+import com.sk89q.craftbook.util.profile.resolver.CacheForwardingService;
+import com.sk89q.craftbook.util.profile.resolver.CombinedProfileService;
+import com.sk89q.craftbook.util.profile.resolver.HttpRepositoryService;
+import com.sk89q.craftbook.util.profile.resolver.ProfileService;
+import com.sk89q.craftbook.util.profile.resolver.PaperPlayerService;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -121,6 +132,24 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     @Override
     public YamlConfiguration getConfiguration() {
         return this.config;
+    }
+
+    @Override
+    public void addPlatformReports(ReportList report) {
+
+    }
+
+    @Override
+    public ProfileService createProfileService(ProfileCache profileCache) {
+        List<ProfileService> services = new ArrayList<>();
+        if (PaperLib.isPaper()) {
+            // Paper has a shared cache
+            services.add(PaperPlayerService.getInstance());
+        } else {
+            services.add(BukkitPlayerService.getInstance());
+        }
+        services.add(HttpRepositoryService.forMinecraft());
+        return new CacheForwardingService(new CombinedProfileService(services), profileCache);
     }
 
     @Override

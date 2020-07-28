@@ -18,11 +18,22 @@ package com.sk89q.craftbook;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.sk89q.craftbook.util.concurrent.EvenMoreExecutors;
+import com.sk89q.craftbook.util.profile.cache.HashMapCache;
+import com.sk89q.craftbook.util.profile.cache.ProfileCache;
+import com.sk89q.craftbook.util.profile.cache.SQLiteCache;
+import com.sk89q.craftbook.util.profile.resolver.ProfileService;
 import com.sk89q.worldedit.util.io.ResourceLoader;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
 import com.sk89q.worldedit.util.translation.TranslationManager;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class CraftBook {
 
@@ -35,12 +46,36 @@ public class CraftBook {
     private final TranslationManager translationManager = new TranslationManager(resourceLoader);
 
     private final Supervisor supervisor = new SimpleSupervisor();
+    private ProfileCache profileCache;
+    private ProfileService profileService;
+    private ListeningExecutorService executorService;
 
     public static CraftBook getInstance() {
         return instance;
     }
 
     public void setup() {
+        executorService = MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20,
+                "CraftBook Task Executor - %s"));
+
+        Path cacheDir = getPlatform().getConfigDir().resolve("cache");
+        if (!Files.exists(cacheDir)) {
+            try {
+                Files.createDirectories(cacheDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            profileCache = new SQLiteCache(cacheDir.resolve("profiles.sqlite").toFile());
+        } catch (IOException | UnsatisfiedLinkError ignored) {
+            logger.warn("Failed to initialize SQLite profile cache. Cache is memory-only.");
+            profileCache = new HashMapCache();
+        }
+
+        profileService = getPlatform().createProfileService(profileCache);
+
         getPlatform().load();
     }
 
@@ -66,6 +101,34 @@ public class CraftBook {
      */
     public Supervisor getSupervisor() {
         return this.supervisor;
+    }
+
+    /**
+     * Get the global executor service for internal usage (please use your
+     * own executor service).
+     *
+     * @return the global executor service
+     */
+    public ListeningExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    /**
+     * Get the profile lookup service.
+     *
+     * @return the profile lookup service
+     */
+    public ProfileService getProfileService() {
+        return this.profileService;
+    }
+
+    /**
+     * Get the profile cache.
+     *
+     * @return the profile cache
+     */
+    public ProfileCache getProfileCache() {
+        return this.profileCache;
     }
 
     /**

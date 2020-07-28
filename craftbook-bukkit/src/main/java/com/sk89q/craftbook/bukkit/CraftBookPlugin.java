@@ -32,6 +32,7 @@ import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.UUIDMappings;
 import com.sk89q.craftbook.util.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
+import com.sk89q.craftbook.util.profile.Profile;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.wepif.PermissionsResolverManager;
@@ -213,6 +214,9 @@ public class CraftBookPlugin extends JavaPlugin {
 
             @EventHandler(priority = EventPriority.HIGH)
             public void playerJoin(PlayerJoinEvent event) {
+                CraftBook.getInstance().getExecutorService().submit(() ->
+                    CraftBook.getInstance().getProfileCache().put(new Profile(event.getPlayer().getUniqueId(), event.getPlayer().getName())));
+
                 if (!event.getPlayer().isOp()) {
                     return;
                 }

@@ -34,7 +34,7 @@ fun Project.applyLibrariesConfiguration() {
         }
 
         relocate("org.enginehub.jinglenote", "com.sk89q.craftbook.util.jinglenote")
-        relocate("com.sk89q.squirrelid", "com.sk89q.craftbook.util.profile")
+        relocate("org.enginehub.squirrelid", "com.sk89q.craftbook.util.profile")
     }
     val altConfigFiles = { artifactType: String ->
         val deps = configurations["shade"].incoming.dependencies

@@ -16,15 +16,15 @@
 
 package com.sk89q.craftbook.mechanics.variables;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.ImmutableMap;
+import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
+import com.sk89q.craftbook.exception.CraftBookException;
 import com.sk89q.craftbook.mechanics.variables.exception.ExistingVariableException;
 import com.sk89q.craftbook.mechanics.variables.exception.InvalidVariableException;
 import com.sk89q.craftbook.mechanics.variables.exception.UnknownVariableException;
 import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
-import com.sk89q.craftbook.exception.CraftBookException;
+import com.sk89q.craftbook.util.profile.Profile;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -40,7 +40,6 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import org.bukkit.Bukkit;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -48,6 +47,7 @@ import org.enginehub.piston.annotation.param.Arg;
 import org.enginehub.piston.annotation.param.ArgFlag;
 import org.enginehub.piston.annotation.param.Switch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +55,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class VariableCommands {
@@ -334,7 +336,14 @@ public class VariableCommands {
                 return "All";
             }
             if (namespace.contains("-")) {
-                return Bukkit.getOfflinePlayer(UUID.fromString(namespace)).getName();
+                try {
+                    Profile profile = CraftBook.getInstance().getProfileService().findByUuid(UUID.fromString(namespace));
+                    if (profile != null) {
+                        namespace = profile.getName();
+                    }
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             return namespace;
         }

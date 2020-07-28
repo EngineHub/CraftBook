@@ -17,6 +17,9 @@
 package com.sk89q.craftbook;
 
 import com.sk89q.craftbook.mechanic.MechanicManager;
+import com.sk89q.worldedit.util.report.ReportList;
+import com.sk89q.craftbook.util.profile.cache.ProfileCache;
+import com.sk89q.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;
@@ -78,6 +81,18 @@ public interface CraftBookPlatform {
      * @return The global ConfigurationManager
      */
     YamlConfiguration getConfiguration();
+
+    /**
+     * Adds reports specific to this platform.
+     *
+     * @param report The report list
+     */
+    void addPlatformReports(ReportList report);
+
+    /**
+     * Internal use.
+     */
+    ProfileService createProfileService(ProfileCache profileCache);
 
     /**
      * Gets whether this platform has a plugin by that name.
